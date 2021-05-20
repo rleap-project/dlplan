@@ -8,10 +8,12 @@ Hence, objects are typically constructed and returned as std::shared_ptr. We beg
 ```cpp
 #include <dlf.h>
 #include <memory>
+#include <vector>
+#include <utility>
 
 using namespace std;
-using Concept = shared_ptr<dlf::Concept>;
-using Role = shared_ptr<dlf::Role>;
+using ConceptElement = shared_ptr<dlf::DLConceptElement>;
+using RoleElement = shared_ptr<dlf::RoleElement>;
 using NumericalFeature = shared_ptr<dlf::NumericalFeature>;
 using BooleanFeature = shared_ptr<dlf::BooleanFeature>;
 ```
@@ -21,7 +23,7 @@ The library supports a vector state representation.
 In the vector representation, each element corresponds to the index of an atom.
 
 ```cpp
-typedef dlf::State = std::vector<int>;
+typedef dlf::State = vector<unsigned>;
 ```
 
 ## Library Initialization
@@ -61,16 +63,33 @@ int main() {
     // Initialize library
     // ...
     // The parsed term yields a concept. Can throw parsing errors if unsuccesful.
-    Concept concept = dlf.make_concept("AND(on(0))");
+    ConceptElement concept_element = dlf.make_concept_element("AND(on(0))");
     // The parsed term yields a role. Can throw parsing errors if unsuccesful.
-    Role role = dlf.make_role("AND(on(0,1)");
+    RoleElement role_element = dlf.make_role_element("AND(on(0,1)");
 }
 ```
 
 ## Evaluating Concepts and Roles
 
 ```cpp
-typedef dlf::
+typedef dlf::Concept = unsigned;
+typedef dlf::Concepts = vector<Concept>;
+typedef dlf::Role = pair<Concept, Concept>;
+typedef dlf::Roles = vector<Role>;
+
+int main() {
+    // Initialize library
+    // ...
+    // An example state
+    dlf::State state({1, 2, 42});
+    // Evaluate a concept_element.
+    ConceptElement concept_element = dlf.make_concept_element("AND(on(0))");
+    dlf::Concepts concepts = concept_element.evaluate(state);
+    // Evaluate a role_element.
+    RoleElement role_element = dlf.make_role_element("AND(on(0,1)");
+    dlf::Roles roles = role_element.evaluate(state);
+
+}
 ```
 
 ## From Concepts and Roles to Features
@@ -80,25 +99,23 @@ int main() {
     // Initialize library
     // ...
     // The parsed term yields a concept. Can throw parsing errors if unsuccesful.
-    Concept concept = dlf.make_concept("AND(on(0))");
-    NumericalFeature count_feature = dlf.make_count_feature(concept);
-    BooleanFeature count_feature = dlf.make_empty_feature(concept);
+    ConceptElement concept_element = dlf.make_concept_element("AND(on(0))");
+    NumericalFeature count_feature = dlf.make_count_feature(concept_element);
+    BooleanFeature count_feature = dlf.make_empty_feature(concept_element);
 }
 ```
 
 ## Evaluating Features
 
-
 ```cpp
 int main() {
     // Initialize library
     // ...
-    // The parsed term yields a concept. Can throw parsing errors if unsuccesful.
-    Concept concept = dlf.make_concept("AND(on(0))");
-    NumericalFeature count_feature = dlf.make_count_feature(concept);
-    // The current state
+    // An example state
     dlf::State state({1, 2, 42});
-    count_feature.evaluate(state);
-    int value = count_feature.value();
+    // Evaluate a numerical feature.
+    ConceptElement concept_element = dlf.make_concept_element("AND(on(0))");
+    NumericalFeature count_feature = dlf.make_count_feature(concept_element);
+    int value = count_feature.evaluate(state);
 }
 ```
