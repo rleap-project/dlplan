@@ -16,6 +16,10 @@ using ConceptElement = shared_ptr<dlf::DLConceptElement>;
 using RoleElement = shared_ptr<dlf::RoleElement>;
 using NumericalFeature = shared_ptr<dlf::NumericalFeature>;
 using BooleanFeature = shared_ptr<dlf::BooleanFeature>;
+using Concept = unsigned;
+using Concepts = vector<Concept>;
+using Role = pair<Concept, Concept>;
+using Roles = vector<Role>;
 ```
 
 ## State Representation
@@ -23,7 +27,7 @@ The library supports a vector state representation.
 In the vector representation, each element corresponds to the index of an atom.
 
 ```cpp
-typedef dlf::State = vector<unsigned>;
+using State = vector<unsigned>;
 ```
 
 ## Library Initialization
@@ -72,22 +76,20 @@ int main() {
 ## Evaluating Concepts and Roles
 
 ```cpp
-typedef dlf::Concept = unsigned;
-typedef dlf::Concepts = vector<Concept>;
-typedef dlf::Role = pair<Concept, Concept>;
-typedef dlf::Roles = vector<Role>;
 
 int main() {
     // Initialize library
     // ...
-    // An example state
-    dlf::State state({1, 2, 42});
-    // Evaluate a concept_element.
+    // Construct an example State.
+    State state({1, 2, 42});
+    // Construct a ConceptElement.
     ConceptElement concept_element = dlf.make_concept_element("AND(on(0))");
-    dlf::Concepts concepts = concept_element.evaluate(state);
-    // Evaluate a role_element.
+    // Evaluate a ConceptElement.
+    Concepts concepts = concept_element.evaluate(state);
+    // Construct a RoleElement.
     RoleElement role_element = dlf.make_role_element("AND(on(0,1)");
-    dlf::Roles roles = role_element.evaluate(state);
+    // Evaluate a RoleElement.
+    Roles roles = role_element.evaluate(state);
 
 }
 ```
@@ -98,9 +100,11 @@ int main() {
 int main() {
     // Initialize library
     // ...
-    // The parsed term yields a concept. Can throw parsing errors if unsuccesful.
+    // Construct a ConceptElement
     ConceptElement concept_element = dlf.make_concept_element("AND(on(0))");
+    // Construct a CountFeature using the ConceptElement
     NumericalFeature count_feature = dlf.make_count_feature(concept_element);
+    // Construct an EmptyFeature using the ConceptElement
     BooleanFeature count_feature = dlf.make_empty_feature(concept_element);
 }
 ```
@@ -111,11 +115,13 @@ int main() {
 int main() {
     // Initialize library
     // ...
-    // An example state
-    dlf::State state({1, 2, 42});
-    // Evaluate a numerical feature.
+    // Construct an example State.
+    State state({1, 2, 42});
+    // Construct a ConceptElement.
     ConceptElement concept_element = dlf.make_concept_element("AND(on(0))");
+    // Construct a CountFeature using the ConceptElement.
     NumericalFeature count_feature = dlf.make_count_feature(concept_element);
+    // Evaluate the CountFeature.
     int value = count_feature.evaluate(state);
 }
 ```
