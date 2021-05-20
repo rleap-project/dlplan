@@ -38,90 +38,57 @@ the second index (1) to the second added atom and so on.
 The caller must only take care that atoms are added in the correct order.
 
 ```cpp
-int main() {
-    // Initialize library
-    dlf::DLF dlf();
-    // Pass each ground atoms of the planning instance
-    dlf.add_atom(dlf::Atom(predicate_name="on", object_names={"objA", "objB"}));
-    // ...
-}
+dlf::DLF dlf();
+// Pass each ground atoms of the planning instance
+dlf.add_atom(dlf::Atom(predicate_name="on", object_names={"objA", "objB"}));
+// ...
 ```
 
 Alternatively, the caller can take responsibility of assigning the indices to predicates and objects.
 
 ```cpp
-int  main() {
-    // Initialize library
-    dlf::DLF dlf();
-    // Pass each ground atoms of the planning instance
-    dlf.add_atom(dlf::Atom(predicate_name="on", predicate_idx=0,
-                           object_names={"objA", "objB"}, object_idx={0, 1}));
-    // ...
-}
+dlf::DLF dlf();
+// Pass each ground atoms of the planning instance
+dlf.add_atom(dlf::Atom(predicate_name="on", predicate_idx=0,
+                        object_names={"objA", "objB"}, object_idx={0, 1}));
+// ...
 ```
 
 ##  Constructing Concepts and Roles
 
 ```cpp
-int main() {
-    // Initialize library
-    // ...
-    // The parsed term yields a concept. Can throw parsing errors if unsuccesful.
-    ConceptElement concept_element = dlf.make_concept_element("AND(on(0))");
-    // The parsed term yields a role. Can throw parsing errors if unsuccesful.
-    RoleElement role_element = dlf.make_role_element("AND(on(0,1)");
-}
+// The parsed term yields a concept. Can throw parsing errors if unsuccesful.
+ConceptElement concept_element = dlf.make_concept_element("AND(on(0))");
+// The parsed term yields a role. Can throw parsing errors if unsuccesful.
+RoleElement role_element = dlf.make_role_element("AND(on(0,1)");
 ```
 
 ## Evaluating Concepts and Roles
 
 ```cpp
+// Construct an example State.
+State state({1, 2, 42});
+// Evaluate a ConceptElement.
+Concepts concepts = concept_element.evaluate(state);
+// Evaluate a RoleElement.
+Roles roles = role_element.evaluate(state);
 
-int main() {
-    // Initialize library
-    // ...
-    // Construct an example State.
-    State state({1, 2, 42});
-    // Construct a ConceptElement.
-    ConceptElement concept_element = dlf.make_concept_element("AND(on(0))");
-    // Evaluate a ConceptElement.
-    Concepts concepts = concept_element.evaluate(state);
-    // Construct a RoleElement.
-    RoleElement role_element = dlf.make_role_element("AND(on(0,1)");
-    // Evaluate a RoleElement.
-    Roles roles = role_element.evaluate(state);
-
-}
 ```
 
 ## From Concepts and Roles to Features
 
 ```cpp
-int main() {
-    // Initialize library
-    // ...
-    // Construct a ConceptElement
-    ConceptElement concept_element = dlf.make_concept_element("AND(on(0))");
-    // Construct a CountFeature using the ConceptElement
-    NumericalFeature count_feature = dlf.make_count_feature(concept_element);
-    // Construct an EmptyFeature using the ConceptElement
-    BooleanFeature count_feature = dlf.make_empty_feature(concept_element);
-}
+// Construct a CountFeature using the ConceptElement
+NumericalFeature count_feature = dlf.make_count_feature(concept_element);
+// Construct an EmptyFeature using the ConceptElement
+BooleanFeature count_feature = dlf.make_empty_feature(concept_element);
 ```
 
 ## Evaluating Features
 
 ```cpp
-int main() {
-    // Initialize library
-    // ...
-    // Construct an example State.
-    State state({1, 2, 42});
-    // Construct a ConceptElement.
-    ConceptElement concept_element = dlf.make_concept_element("AND(on(0))");
-    // Construct a CountFeature using the ConceptElement.
-    NumericalFeature count_feature = dlf.make_count_feature(concept_element);
-    // Evaluate the CountFeature.
-    int value = count_feature.evaluate(state);
-}
+// Construct a CountFeature using the ConceptElement.
+NumericalFeature count_feature = dlf.make_count_feature(concept_element);
+// Evaluate the CountFeature.
+int value = count_feature.evaluate(state);
 ```
