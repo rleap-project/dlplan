@@ -11,8 +11,6 @@ namespace dlp {
 class ConceptElement : public Element {
 public:
     ConceptElement();
-
-    virtual std::size_t hash_value() const override;
 };
 
 }

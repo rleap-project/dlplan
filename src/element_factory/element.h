@@ -8,11 +8,6 @@ namespace dlp {
 class Element {
 public:
     Element();
-
-    /**
-     * Computes a hash value.
-     */
-    virtual std::size_t hash_value() const = 0;
 };
 
 }

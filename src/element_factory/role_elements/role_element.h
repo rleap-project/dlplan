@@ -10,8 +10,6 @@ namespace dlp {
 class RoleElement : public Element {
 public:
     RoleElement();
-
-    virtual std::size_t hash_value() const override;
 };
 
 }
