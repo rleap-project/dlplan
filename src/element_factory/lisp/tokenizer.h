@@ -5,27 +5,16 @@
 #include <unordered_map>
 #include <vector>
 
+#include "types.h"
+
 namespace dlp {
 namespace lisp {
-
-enum TYPE {
-    LBRACKET,
-    RBRACKET,
-    COMMA,
-    ELEMENT,
-    FEATURE,
-    PREDICATE,
-};
-
-using Tokens = std::vector<std::pair<TYPE, std::string>>;
 
 class Tokenizer {
 public:
     Tokenizer();
 
-    Tokens tokenize(
-        const std::unordered_map<std::string, unsigned> &predicate_name_to_predicate_idx,
-        const std::string &description) const;
+    Tokens tokenize(const std::string &description) const;
 };
 
 }

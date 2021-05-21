@@ -6,20 +6,19 @@
 
 #include "ast.h"
 #include "tokenizer.h"
+#include "types.h"
 
 namespace dlp {
 namespace lisp {
 
 class Parser {
 private:
-    AST parse_ast(const Tokens &tokens) const;
+    AST parse_ast(Tokens &tokens) const;
 
 public:
     Parser();
 
-    AST parse(
-        const std::unordered_map<std::string, unsigned> &predicate_name_to_predicate_idx,
-        const std::string &description) const;
+    AST parse(const std::string &description) const;
 };
 
 }

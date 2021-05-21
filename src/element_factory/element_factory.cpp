@@ -7,7 +7,7 @@ ElementFactory::ElementFactory() {
 }
 
 ConceptElement_Ptr ElementFactory::make_concept_element(const std::string &description) {
-    lisp::AST ast = lisp::Parser().parse(m_predicate_name_to_predicate_idx, description);
+    lisp::AST ast = lisp::Parser().parse(description);
     return std::make_shared<ConceptElement>(ConceptElement());
 }
 
