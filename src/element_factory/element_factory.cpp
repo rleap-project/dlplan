@@ -1,16 +1,17 @@
 #include "../../include/dlp/element_factory.h"
-
+#include "lisp/parser.h"
 
 namespace dlp {
 
 ElementFactory::ElementFactory() {
 }
 
-std::shared_ptr<ConceptElement> ElementFactory::make_concept_element(const std::string &description) {
+ConceptElement_Ptr ElementFactory::make_concept_element(const std::string &description) {
+    lisp::AST ast = lisp::Parser().parse(m_predicate_name_to_predicate_idx, description);
     return std::make_shared<ConceptElement>(ConceptElement());
 }
 
-std::shared_ptr<RoleElement> ElementFactory::make_role_element(const std::string &description) {
+RoleElement_Ptr ElementFactory::make_role_element(const std::string &description) {
     return std::make_shared<RoleElement>(RoleElement());
 }
 

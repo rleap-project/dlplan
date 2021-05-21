@@ -6,7 +6,7 @@
 
 namespace dlp {
 
-class Atom {
+struct Atom {
 private:
     const std::string m_predicate_name;
     const unsigned m_predicate_idx;

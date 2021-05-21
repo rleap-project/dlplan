@@ -3,4 +3,7 @@ add_library(element_factory
     element.cpp
     role_elements/role_element.cpp
     concept_elements/concept_element.cpp
+    lisp/parser.cpp
+    lisp/tokenizer.cpp
+    lisp/ast.cpp
 )
