@@ -4,7 +4,7 @@ project(dlp VERSION 0.1 LANGUAGES CXX)
 # Build the library
 add_subdirectory(src)
 add_library(dlp SHARED)
-target_link_libraries(dlp elements)
+target_link_libraries(dlp element_factory feature_factory)
 
 set_target_properties(dlp PROPERTIES VERSION 1)
 set_target_properties(dlp PROPERTIES PUBLIC_HEADER include/dlp_element_Factory.h)
