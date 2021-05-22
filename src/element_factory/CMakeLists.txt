@@ -1,0 +1,9 @@
+add_library(element_factory
+    cache.cpp
+    element_factory.cpp
+    element_factory_impl.cpp
+    lisp/parser.cpp
+    lisp/tokenizer.cpp
+    lisp/ast.cpp
+    task_info.cpp
+)

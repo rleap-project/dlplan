@@ -1,0 +1,26 @@
+#ifndef DLP_SRC_ELEMENT_FACTORY_ELEMENTS_CONCEPTS_PRIMITIVE_H_
+#define DLP_SRC_ELEMENT_FACTORY_ELEMENTS_CONCEPTS_PRIMITIVE_H_
+
+#include "../concept.h"
+#include "../../types.h"
+
+namespace dlp {
+
+class PrimitiveConceptElement : public ConceptElement {
+protected:
+    unsigned m_predicate_idx;
+    unsigned m_object_idx;
+
+protected:
+    virtual Concepts evaluate_impl(const Index_Vec& atoms) override {
+        // TODO(dominik):
+    }
+
+public:
+    PrimitiveConceptElement(bool goal, const Index_Vec& goal_atoms, unsigned predicate_idx, unsigned object_idx)
+    : ConceptElement(goal, goal_atoms), m_predicate_idx(predicate_idx), m_object_idx(object_idx) {}
+};
+
+}
+
+#endif
