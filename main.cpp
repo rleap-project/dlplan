@@ -3,5 +3,5 @@
 
 int main() {
     dlp::ElementFactory factory;
-    std::shared_ptr<dlp::ConceptElement> element = factory.make_concept_element("(count(and(g_on(0),on(0))))");
+    std::shared_ptr<dlp::ConceptElement> element = factory.make_concept_element("f_count(c_and(g_on(0),s_on(0)))");
 };

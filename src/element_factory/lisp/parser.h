@@ -13,12 +13,12 @@ namespace lisp {
 
 class Parser {
 private:
-    AST parse_ast(Tokens &tokens) const;
+    Expression_Ptr parse_ast(Tokens &tokens) const;
 
 public:
     Parser();
 
-    AST parse(const std::string &description) const;
+    Expression_Ptr parse(const std::string &description) const;
 };
 
 }
