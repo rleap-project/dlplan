@@ -1,7 +1,13 @@
 add_library(feature_factory
+    concept_elements/concept_element.cpp
+    element.cpp
     feature_factory.cpp
+    feature_factory_impl.cpp
     feature.cpp
+    lisp/parser.cpp
+    lisp/tokenizer.cpp
+    lisp/ast.cpp
     numerical_features/numerical_feature.cpp
     numerical_features/count_feature.cpp
+    role_elements/role_element.cpp
 )
-target_link_libraries(feature_factory element_factory)

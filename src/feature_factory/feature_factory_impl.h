@@ -1,16 +1,14 @@
-#ifndef DLP_INCLUDE_DLP_ELEMENT_FACTORY_H_
-#define DLP_INCLUDE_DLP_ELEMENT_FACTORY_H_
+#ifndef DLP_SRC_FEATURE_FACTORY_FACTORY_IMPL_H_
+#define DLP_SRC_FEATURE_FACTORY_FACTORY_IMPL_H_
 
 #include <memory>
 #include <string>
 #include <vector>
 #include <unordered_map>
 
-#include "../../src/element_factory/concept_elements/concept_element.h"
-#include "../../src/element_factory/role_elements/role_element.h"
-#include "../../src/element_factory/cache.h"
-#include "../../src/element_factory/types.h"
-#include "../../src/element_factory/atom.h"
+#include "cache.h"
+#include "types.h"
+#include "atom.h"
 
 
 namespace dlp {
@@ -20,7 +18,7 @@ namespace dlp {
  * nested composites of description logics elements
  * that can be evaluated on state of planning instances.
  */
-class ElementFactory {
+class FeatureFactoryImpl {
 protected:
     // The registered atoms
     std::vector<Atom> m_atoms;
@@ -33,7 +31,7 @@ protected:
     // TODO(dominik): The parser must transform descriptions into canonical representation.
     Cache<std::string, Element_Ptr> m_element_cache;
 public:
-    ElementFactory();
+    FeatureFactoryImpl();
 
     void add_atom(const std::string &predicate_name,
         Name_Vec &object_names,
@@ -45,17 +43,13 @@ public:
         Index_Vec &object_idxs,
         bool constant=false);
 
-    /**
-     * Returns a pointer to a ConceptElement if the description is correct.
-     * If description is incorrect, throw an error with human readable information.
-     */
     ConceptElement_Ptr make_concept_element(const std::string &description);
 
-    /**
-     * Returns a pointer to a RoleElement if the description is correct.
-     * If description is incorrect, throw an error with human readable information.
-     */
     RoleElement_Ptr make_role_element(const std::string &description);
+
+    NumericalFeature_Ptr make_numerical_feature(const std::string &description);
+
+    BooleanFeature_Ptr make_boolean_feature(const std::string &description);
 };
 
 }

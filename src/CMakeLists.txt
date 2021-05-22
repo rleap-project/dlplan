@@ -1,3 +1,2 @@
-add_subdirectory(element_factory)
 add_subdirectory(feature_factory)
 #add_subdirectory(feature_generator)
