@@ -12,10 +12,8 @@ int main() {
     factory.set_constant_atoms({});
     // Parse text to NumericalElement
     dlp::core::NumericalElement numerical(factory, "n_count(c_and(g_on(0),s_on(0)))");
-    // Parse text to ConceptElement: this throw and error because n_count cannot be parsed into a ConceptElement
-    // dlp::NumericalElement numerical(factory, "n_count(c_and(g_on(0),s_on(0)))");
-    // Parse text to ConceptElement: will return the ConceptElement that is already cached.
-    dlp::core::NumericalElement concept(factory, "c_and(s_on(0),g_on(0))");
+    // Parse text to ConceptElement: returns the ConceptElement that is already cached because canonical representation is equal.
+    dlp::core::ConceptElement concept(factory, "c_and(s_on(0),g_on(0))");
     // Evaluate NumericalElement on state.
     dlp::core::Index_Vec state({1,2,42});
     int value = numerical.evaluate(state);

@@ -20,6 +20,10 @@ protected:
 public:
     PrimitiveConceptElement(std::shared_ptr<TaskInfo> task_info, bool goal, unsigned predicate_idx, unsigned object_idx)
     : ConceptElement(task_info, goal), m_predicate_idx(predicate_idx), m_object_idx(object_idx) {}
+
+    virtual unsigned complexity() const override {
+        return 1;
+    }
 };
 
 }

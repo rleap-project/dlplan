@@ -44,12 +44,20 @@ Concepts ConceptElement::evaluate(const Index_Vec& atoms) const {
     m_pImpl->evaluate(atoms);
 }
 
+unsigned ConceptElement::complexity() const {
+    return m_pImpl->complexity();
+}
+
 RoleElement::RoleElement(ElementFactory& factory, const std::string& description)
     : Element<Roles>(), m_pImpl(factory.make_role_element(description)) {
 }
 
 Roles RoleElement::evaluate(const Index_Vec& atoms) const {
     m_pImpl->evaluate(atoms);
+}
+
+unsigned RoleElement::complexity() const {
+    return m_pImpl->complexity();
 }
 
 NumericalElement::NumericalElement(ElementFactory& factory, const std::string& description)
@@ -60,12 +68,20 @@ int NumericalElement::evaluate(const Index_Vec& atoms) const {
     m_pImpl->evaluate(atoms);
 }
 
+unsigned NumericalElement::complexity() const {
+    return m_pImpl->complexity();
+}
+
 BooleanElement::BooleanElement(ElementFactory& factory, const std::string& description)
     : Element<bool>(), m_pImpl(factory.make_boolean_element(description)) {
 }
 
 bool BooleanElement::evaluate(const Index_Vec& atoms) const {
     m_pImpl->evaluate(atoms);
+}
+
+unsigned BooleanElement::complexity() const {
+    return m_pImpl->complexity();
 }
 
 }

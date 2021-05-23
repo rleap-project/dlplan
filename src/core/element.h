@@ -42,6 +42,11 @@ public:
     }
 
     /**
+     * Returns the complexity of the element.
+     */
+    virtual unsigned complexity() const = 0;
+
+    /**
      * The size of the result.
      */
     virtual size_t size() const = 0;

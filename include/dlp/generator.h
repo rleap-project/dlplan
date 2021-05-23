@@ -4,7 +4,9 @@
 
 namespace dlp {
 
-
+/**
+ * Exhaustively generates features up to certain complexity.
+ */
 class FeatureGenerator {
 public:
 

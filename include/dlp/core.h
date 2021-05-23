@@ -18,6 +18,12 @@ public:
      * Evaluates the element of a state given as a vector of atom indices.
      */
     virtual T evaluate(const Index_Vec& atoms) const = 0;
+
+    /**
+     * Returns the complexity of the element
+     * measured in the size of the abstract syntax tree.
+     */
+    virtual unsigned complexity() const = 0;
 };
 
 /**
@@ -31,6 +37,8 @@ public:
     ConceptElement(ElementFactory& factory, const std::string& description);
 
     virtual Concepts evaluate(const Index_Vec& atoms) const override;
+
+    virtual unsigned complexity() const override;
 };
 
 /**
@@ -44,6 +52,8 @@ public:
     RoleElement(ElementFactory& factory, const std::string& description);
 
     virtual Roles evaluate(const Index_Vec& atoms) const override;
+
+    virtual unsigned complexity() const override;
 };
 
 /**
@@ -57,6 +67,8 @@ public:
     NumericalElement(ElementFactory& factory, const std::string& description);
 
     virtual int evaluate(const Index_Vec& atoms) const override;
+
+    virtual unsigned complexity() const override;
 };
 
 /**
@@ -70,6 +82,8 @@ public:
     BooleanElement(ElementFactory& factory, const std::string& description);
 
     virtual bool evaluate(const Index_Vec& atoms) const override;
+
+    virtual unsigned complexity() const override;
 };
 
 
