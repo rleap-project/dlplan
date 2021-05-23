@@ -1,4 +1,4 @@
-add_library(element_factory
+add_library(core
     atom.cpp
     cache.cpp
     core.cpp

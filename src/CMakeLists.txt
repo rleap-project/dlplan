@@ -1,2 +1,2 @@
-add_subdirectory(element_factory)
+add_subdirectory(core)
 #add_subdirectory(element_generator)

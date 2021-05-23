@@ -1,7 +1,7 @@
 #ifndef DLP_INCLUDE_DLP_CORE_H_
 #define DLP_INCLUDE_DLP_CORE_H_
 
-#include "../../src/element_factory/element_factory.h"
+#include "../../src/core/element_factory.h"
 
 
 namespace dlp {

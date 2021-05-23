@@ -9,8 +9,8 @@
 
 using namespace std::string_literals;
 
-
 namespace dlp {
+
 class ConceptElement;
 class RoleElement;
 class NumericalElement;
