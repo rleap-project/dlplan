@@ -1,10 +1,11 @@
-#ifndef DLP_SRC_ELEMENT_FACTORY_ELEMENTS_BOOLEAN_H_
-#define DLP_SRC_ELEMENT_FACTORY_ELEMENTS_BOOLEAN_H_
+#ifndef DLP_SRC_CORE_ELEMENTS_BOOLEAN_H_
+#define DLP_SRC_CORE_ELEMENTS_BOOLEAN_H_
 
 #include "../element.h"
 #include "../types.h"
 
 namespace dlp {
+namespace core {
 
 class BooleanElement : public Element<bool> {
 public:
@@ -15,6 +16,7 @@ public:
     }
 };
 
+}
 }
 
 #endif

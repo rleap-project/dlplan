@@ -4,7 +4,8 @@
 #include <iostream>
 
 namespace dlp {
-namespace lisp {
+namespace core {
+namespace parser {
 
 Tokenizer::Tokenizer() {
 }
@@ -62,5 +63,6 @@ Tokens Tokenizer::tokenize(const std::string &description) const {
     return tokens;
 }
 
+}
 }
 }

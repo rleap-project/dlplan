@@ -1,10 +1,11 @@
-#ifndef DLP_SRC_ELEMENT_FACTORY_ELEMENTS_CONCEPTS_AND_H_
-#define DLP_SRC_ELEMENT_FACTORY_ELEMENTS_CONCEPTS_AND_H_
+#ifndef DLP_SRC_CORE_ELEMENTS_CONCEPTS_AND_H_
+#define DLP_SRC_CORE_ELEMENTS_CONCEPTS_AND_H_
 
 #include "../concept.h"
 #include "../../types.h"
 
 namespace dlp {
+namespace core {
 
 class AndConceptElement : public ConceptElement {
 protected:
@@ -21,6 +22,7 @@ public:
     : ConceptElement(task_info, goal), m_l(l), m_r(r) {}
 };
 
+}
 }
 
 #endif

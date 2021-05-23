@@ -1,6 +1,7 @@
 #include "task_info.h"
 
 namespace dlp {
+namespace core {
 
 void TaskInfo::add_atom(const std::string &predicate_name, const Name_Vec &object_names) {
 
@@ -38,4 +39,5 @@ const std::vector<Atom>& TaskInfo::atoms() const {
     return m_atoms;
 }
 
+}
 }

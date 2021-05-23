@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_ELEMENT_FACTORY_LISP_UTILS_H_
-#define DLP_SRC_ELEMENT_FACTORY_LISP_UTILS_H_
+#ifndef DLP_SRC_CORE_PARSER_UTILS_H_
+#define DLP_SRC_CORE_PARSER_UTILS_H_
 
 #include <string>
 #include <string.h>
@@ -10,7 +10,8 @@ using namespace std::string_literals;
 
 
 namespace dlp {
-namespace lisp {
+namespace core {
+namespace parser {
 
 int try_parse(const std::string& name) {
     if (!std::all_of(name.begin(), name.end(), [](char c){ return isdigit(c); })) {
@@ -27,6 +28,7 @@ std::string strip_type_identifier(const std::string& name) {
     return name.substr(2);
 }
 
+}
 }
 }
 

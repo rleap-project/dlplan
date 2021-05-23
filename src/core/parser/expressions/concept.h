@@ -1,10 +1,11 @@
-#ifndef DLP_SRC_ELEMENT_FACTORY_LISP_EXPRESSIONS_CONCEPT_H_
-#define DLP_SRC_ELEMENT_FACTORY_LISP_EXPRESSIONS_CONCEPT_H_
+#ifndef DLP_SRC_CORE_PARSER_EXPRESSIONS_CONCEPT_H_
+#define DLP_SRC_CORE_PARSER_EXPRESSIONS_CONCEPT_H_
 
 #include "../expression.h"
 
 namespace dlp {
-namespace lisp {
+namespace core {
+namespace parser {
 
 class ConceptExpression : public Expression {
 protected:
@@ -29,6 +30,7 @@ public:
     }
 };
 
+}
 }
 }
 

@@ -1,11 +1,12 @@
-#ifndef DLP_SRC_ELEMENT_FACTORY_LISP_EXPRESSIONS_NUMERICAL_COUNT_H_
-#define DLP_SRC_ELEMENT_FACTORY_LISP_EXPRESSIONS_NUMERICAL_COUNT_H_
+#ifndef DLP_SRC_CORE_PARSER_EXPRESSIONS_NUMERICAL_COUNT_H_
+#define DLP_SRC_CORE_PARSER_EXPRESSIONS_NUMERICAL_COUNT_H_
 
 #include "../numerical.h"
 #include "../../../elements/numericals/count.h"
 
 namespace dlp {
-namespace lisp {
+namespace core {
+namespace parser {
 
 class CountNumericalExpression : public NumericalExpression {
 protected:
@@ -29,6 +30,7 @@ public:
     : NumericalExpression(name, std::move(children)) { }
 };
 
+}
 }
 }
 

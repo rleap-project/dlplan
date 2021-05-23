@@ -1,6 +1,7 @@
 #include "cache.h"
 
 namespace dlp {
+namespace core {
 
 Cache<std::string, ConceptElement_Ptr>& ElementCache::concept_element_cache() {
     return m_concept_element_cache;
@@ -18,4 +19,5 @@ Cache<std::string, BooleanElement_Ptr>& ElementCache::boolean_element_cache() {
     return m_boolean_element_cache;
 }
 
+}
 }

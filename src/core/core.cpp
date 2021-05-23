@@ -2,6 +2,7 @@
 
 
 namespace dlp {
+namespace core {
 
 ElementFactory::ElementFactory()
     : m_pImpl(std::make_unique<ElementFactoryImpl>(ElementFactoryImpl())) {
@@ -67,4 +68,5 @@ bool BooleanElement::evaluate(const Index_Vec& atoms) const {
     m_pImpl->evaluate(atoms);
 }
 
+}
 }

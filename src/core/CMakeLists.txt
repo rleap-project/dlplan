@@ -3,8 +3,8 @@ add_library(core
     cache.cpp
     core.cpp
     element_factory.cpp
-    lisp/parser.cpp
-    lisp/tokenizer.cpp
-    lisp/ast_factory.cpp
     task_info.cpp
+    parser/parser.cpp
+    parser/tokenizer.cpp
+    parser/ast_factory.cpp
 )

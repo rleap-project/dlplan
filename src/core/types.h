@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_FEATURE_FACTORY_TYPES_H_
-#define DLP_SRC_FEATURE_FACTORY_TYPES_H_
+#ifndef DLP_SRC_CORE_TYPES_H_
+#define DLP_SRC_CORE_TYPES_H_
 
 #include <unordered_set>
 #include <utility>
@@ -10,6 +10,7 @@
 using namespace std::string_literals;
 
 namespace dlp {
+namespace core {
 
 class ConceptElement;
 class RoleElement;
@@ -35,6 +36,7 @@ using Index_Vec = std::vector<int>;
 const int UNDEFINED = -1;
 const int INF = std::numeric_limits<int>::max();
 
+}
 }
 
 #endif

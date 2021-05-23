@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_ELEMENT_FACTORY_ATOM_H_
-#define DLP_SRC_ELEMENT_FACTORY_ATOM_H_
+#ifndef DLP_SRC_CORE_ATOM_H_
+#define DLP_SRC_CORE_ATOM_H_
 
 #include <string>
 #include <vector>
@@ -7,6 +7,7 @@
 #include "types.h"
 
 namespace dlp {
+namespace core {
 
 struct Atom {
     const std::string m_predicate_name;
@@ -22,6 +23,7 @@ struct Atom {
         bool constant);
 };
 
+}
 }
 
 #endif

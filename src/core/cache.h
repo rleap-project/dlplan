@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_ELEMENT_FACTORY_CACHE_H_
-#define DLP_SRC_ELEMENT_FACTORY_CACHE_H_
+#ifndef DLP_SRC_CORE_CACHE_H_
+#define DLP_SRC_CORE_CACHE_H_
 
 #include <unordered_map>
 
@@ -9,6 +9,7 @@
 
 
 namespace dlp {
+namespace core {
 
 /**
  * A simple cache.
@@ -62,6 +63,7 @@ public:
 };
 
 
+}
 }
 
 #endif

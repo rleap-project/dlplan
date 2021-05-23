@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_ELEMENT_FACTORY_LISP_AST_H_
-#define DLP_SRC_ELEMENT_FACTORY_LISP_AST_H_
+#ifndef DLP_SRC_CORE_PARSER_AST_FACTORY_H_
+#define DLP_SRC_CORE_PARSER_AST_FACTORY_H_
 
 #include <memory>
 #include <unordered_map>
@@ -9,7 +9,8 @@
 #include "types.h"
 
 namespace dlp {
-namespace lisp {
+namespace core {
+namespace parser {
 
 
 enum EXPRESSION_TYPE {
@@ -42,6 +43,7 @@ public:
     Expression_Ptr make_ast(const std::string &name, std::vector<Expression_Ptr> &&children);
 };
 
+}
 }
 }
 

@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_ELEMENT_FACTORY_LISP_TOKENIZER_H_
-#define DLP_SRC_ELEMENT_FACTORY_LISP_TOKENIZER_H_
+#ifndef DLP_SRC_CORE_PARSER_TOKENIZER_H_
+#define DLP_SRC_CORE_PARSER_TOKENIZER_H_
 
 #include <string>
 #include <unordered_map>
@@ -8,7 +8,9 @@
 #include "types.h"
 
 namespace dlp {
-namespace lisp {
+namespace core {
+namespace parser {
+
 
 class Tokenizer {
 public:
@@ -17,6 +19,8 @@ public:
     Tokens tokenize(const std::string &description) const;
 };
 
+
+}
 }
 }
 

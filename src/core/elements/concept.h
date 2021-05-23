@@ -1,10 +1,11 @@
-#ifndef DLP_SRC_ELEMENT_FACTORY_ELEMENTS_CONCEPT_H_
-#define DLP_SRC_ELEMENT_FACTORY_ELEMENTS_CONCEPT_H_
+#ifndef DLP_SRC_CORE_ELEMENTS_CONCEPT_H_
+#define DLP_SRC_CORE_ELEMENTS_CONCEPT_H_
 
 #include "../element.h"
 #include "../types.h"
 
 namespace dlp {
+namespace core {
 
 class ConceptElement : public Element<Concepts> {
 public:
@@ -15,6 +16,7 @@ public:
     }
 };
 
+}
 }
 
 #endif

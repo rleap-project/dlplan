@@ -10,7 +10,8 @@
 #include "tokenizer.h"
 
 namespace dlp {
-namespace lisp {
+namespace core {
+namespace parser {
 
 /**
  * Parses the canonical AST from the given tokens.
@@ -53,5 +54,6 @@ Expression_Ptr Parser::parse(
     return parse_ast(tokens);
 }
 
+}
 }
 }

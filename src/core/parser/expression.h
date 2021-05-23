@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_ELEMENT_FACTORY_LISP_EXPRESSIONS_EXPRESSION_H_
-#define DLP_SRC_ELEMENT_FACTORY_LISP_EXPRESSIONS_EXPRESSION_H_
+#ifndef DLP_SRC_CORE_PARSER_EXPRESSION_H_
+#define DLP_SRC_CORE_PARSER_EXPRESSION_H_
 
 #include <iostream>
 #include <memory>
@@ -13,7 +13,8 @@
 
 
 namespace dlp {
-namespace lisp {
+namespace core {
+namespace parser {
 
 /**
  * An Expression represents a node in an abstract syntax tree.
@@ -88,6 +89,7 @@ public:
     }
 };
 
+}
 }
 }
 

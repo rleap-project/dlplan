@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_ELEMENT_FACTORY_LISP_EXPRESSIONS_CONCEPTS_PRIMITIVE_H_
-#define DLP_SRC_ELEMENT_FACTORY_LISP_EXPRESSIONS_CONCEPTS_PRIMITIVE_H_
+#ifndef DLP_SRC_CORE_PARSER_EXPRESSIONS_CONCEPTS_PRIMITIVE_H_
+#define DLP_SRC_CORE_PARSER_EXPRESSIONS_CONCEPTS_PRIMITIVE_H_
 
 #include "../concept.h"
 #include "../../utils.h"
@@ -7,7 +7,8 @@
 
 
 namespace dlp {
-namespace lisp {
+namespace core {
+namespace parser {
 
 class PrimitiveConceptExpression : public ConceptExpression {
 protected:
@@ -34,6 +35,7 @@ public:
     : ConceptExpression(name, std::move(children)) { }
 };
 
+}
 }
 }
 

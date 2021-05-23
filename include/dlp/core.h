@@ -5,6 +5,7 @@
 
 
 namespace dlp {
+namespace core {
 class ElementFactory;
 
 /**
@@ -123,6 +124,7 @@ public:
     void set_goal_atoms(const Index_Vec& goal_atom_idxs);
 };
 
+}
 }
 
 #endif

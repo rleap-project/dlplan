@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_ELEMENT_FACTORY_ELEMENT_FACTORY_IMPL_H_
-#define DLP_SRC_ELEMENT_FACTORY_ELEMENT_FACTORY_IMPL_H_
+#ifndef DLP_SRC_CORE_ELEMENT_FACTORY_H_
+#define DLP_SRC_CORE_ELEMENT_FACTORY_H_
 
 #include <memory>
 #include <string>
@@ -12,6 +12,7 @@
 
 
 namespace dlp {
+namespace core {
 
 /**
  * ElementFactory provides functionality for constructing
@@ -56,6 +57,7 @@ public:
     BooleanElement_Ptr make_boolean_element(const std::string &description);
 };
 
+}
 }
 
 #endif

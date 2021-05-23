@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_FEATURE_FACTORY_TASK_INFO_H_
-#define DLP_SRC_FEATURE_FACTORY_TASK_INFO_H_
+#ifndef DLP_SRC_CORE_TASK_INFO_H_
+#define DLP_SRC_CORE_TASK_INFO_H_
 
 #include <unordered_map>
 #include <string>
@@ -10,6 +10,7 @@
 
 
 namespace dlp {
+namespace core {
 
 class TaskInfo {
 private:
@@ -57,6 +58,7 @@ public:
     const std::vector<Atom>& atoms() const;
 };
 
+}
 }
 
 #endif

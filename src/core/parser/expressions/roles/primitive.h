@@ -1,10 +1,11 @@
-#ifndef DLP_SRC_ELEMENT_FACTORY_LISP_EXPRESSIONS_ROLES_PRIMITIVE_H_
-#define DLP_SRC_ELEMENT_FACTORY_LISP_EXPRESSIONS_ROLES_PRIMITIVE_H_
+#ifndef DLP_SRC_CORE_PARSER_EXPRESSIONS_ROLES_PRIMITIVE_H_
+#define DLP_SRC_CORE_PARSER_EXPRESSIONS_ROLES_PRIMITIVE_H_
 
 #include "../../expression.h"
 
 namespace dlp {
-namespace lisp {
+namespace core {
+namespace parser {
 
 class PrimitiveRoleExpression : public Expression {
 public:
@@ -12,6 +13,7 @@ public:
     : Expression(name, std::move(children)) { }
 };
 
+}
 }
 }
 

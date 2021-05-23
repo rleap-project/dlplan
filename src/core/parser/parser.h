@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_ELEMENT_FACTORY_LISP_PARSER_H_
-#define DLP_SRC_ELEMENT_FACTORY_LISP_PARSER_H_
+#ifndef DLP_SRC_CORE_PARSER_PARSER_H_
+#define DLP_SRC_CORE_PARSER_PARSER_H_
 
 #include <string>
 #include <unordered_map>
@@ -7,7 +7,8 @@
 #include "types.h"
 
 namespace dlp {
-namespace lisp {
+namespace core {
+namespace parser {
 
 class Parser {
 private:
@@ -25,6 +26,7 @@ public:
     Expression_Ptr parse(const std::string &description) const;
 };
 
+}
 }
 }
 

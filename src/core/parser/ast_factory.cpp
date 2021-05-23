@@ -9,7 +9,8 @@
 #include "expressions/numericals/count.h"
 
 namespace dlp {
-namespace lisp {
+namespace core {
+namespace parser {
 
 
 Expression_Ptr AST_Factory::make_ast(const std::string &name, std::vector<Expression_Ptr> &&children) {
@@ -17,13 +18,13 @@ Expression_Ptr AST_Factory::make_ast(const std::string &name, std::vector<Expres
         // case 1: all children are leafs
         if (children.size() == 0) {
             // case 1.3: index
-            return std::make_unique<lisp::Expression>(lisp::Expression(name, std::move(children)));
+            return std::make_unique<Expression>(Expression(name, std::move(children)));
         } else if (children.size() == 1) {
             // case 1.2: primitive concept
-            return std::make_unique<lisp::PrimitiveConceptExpression>(lisp::PrimitiveConceptExpression(name, std::move(children)));
+            return std::make_unique<PrimitiveConceptExpression>(PrimitiveConceptExpression(name, std::move(children)));
         } else if (children.size() == 2) {
             // case 1.3: primitive role
-            return std::make_unique<lisp::PrimitiveRoleExpression>(lisp::PrimitiveRoleExpression(name, std::move(children)));
+            return std::make_unique<PrimitiveRoleExpression>(PrimitiveRoleExpression(name, std::move(children)));
         } else {
             throw std::runtime_error("AST_Factory::make_ast - invalid number ("s + std::to_string(children.size()) + ") of children in primitive ("s + name + ")");
         }
@@ -32,10 +33,10 @@ Expression_Ptr AST_Factory::make_ast(const std::string &name, std::vector<Expres
         EXPRESSION_TYPE expression_type = name_to_expression_type(name);
         switch (expression_type) {
             case C_AND: {
-                return std::make_unique<lisp::AndConceptExpression>(lisp::AndConceptExpression(name, std::move(children)));
+                return std::make_unique<AndConceptExpression>(AndConceptExpression(name, std::move(children)));
             }
             case N_COUNT: {
-                return std::make_unique<lisp::CountNumericalExpression>(lisp::CountNumericalExpression(name, std::move(children)));
+                return std::make_unique<CountNumericalExpression>(CountNumericalExpression(name, std::move(children)));
             }
         }
     } else {
@@ -57,5 +58,6 @@ EXPRESSION_TYPE AST_Factory::name_to_expression_type(const std::string &name) {
 }
 
 
+}
 }
 }

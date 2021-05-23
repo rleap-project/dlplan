@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_ELEMENT_FACTORY_ELEMENTS_NUMERICAL_COUNT_H_
-#define DLP_SRC_ELEMENT_FACTORY_ELEMENTS_NUMERICAL_COUNT_H_
+#ifndef DLP_SRC_CORE_ELEMENTS_NUMERICAL_COUNT_H_
+#define DLP_SRC_CORE_ELEMENTS_NUMERICAL_COUNT_H_
 
 #include "../numerical.h"
 #include "../concept.h"
@@ -7,6 +7,7 @@
 #include "../../types.h"
 
 namespace dlp {
+namespace core {
 
 template<typename T>
 class CountNumericalElement : public NumericalElement {
@@ -23,6 +24,7 @@ public:
     : NumericalElement(task_info, goal), m_element(element) {}
 };
 
+}
 }
 
 #endif
