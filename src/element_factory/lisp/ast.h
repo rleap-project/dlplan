@@ -14,20 +14,19 @@ namespace lisp {
 
 enum EXPRESSION_TYPE {
     // concepts
-    C_PRIMITIVE,
     C_AND,
     C_OR,
     // roles
-    R_PRIMITIVE,
     R_AND,
     R_OR,
-    // features
-    F_COUNT,
-    F_EMPTY,
-    F_CONCEPT_DISTANCE,
-    F_SUM_CONCEPT_DISTANCE,
-    F_ROLE_DISTANCE,
-    F_SUM_ROLE_DISTANCE,
+    // numerical
+    N_COUNT,
+    N_CONCEPT_DISTANCE,
+    N_SUM_CONCEPT_DISTANCE,
+    N_ROLE_DISTANCE,
+    N_SUM_ROLE_DISTANCE,
+    // boolean
+    B_EMPTY,
 };
 
 /**

@@ -1,7 +1,6 @@
 #ifndef DLP_INCLUDE_DLP_CORE_H_
 #define DLP_INCLUDE_DLP_CORE_H_
 
-#include "../../src/element_factory/types.h"
 #include "../../src/element_factory/element_factory.h"
 
 

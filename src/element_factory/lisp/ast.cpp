@@ -34,7 +34,7 @@ Expression_Ptr AST_Factory::make_ast(const std::string &name, std::vector<Expres
             case C_AND: {
                 return std::make_unique<lisp::AndConceptExpression>(lisp::AndConceptExpression(name, std::move(children)));
             }
-            case F_COUNT: {
+            case N_COUNT: {
                 return std::make_unique<lisp::CountNumericalExpression>(lisp::CountNumericalExpression(name, std::move(children)));
             }
         }
@@ -45,7 +45,7 @@ Expression_Ptr AST_Factory::make_ast(const std::string &name, std::vector<Expres
 
 std::unordered_map<std::string, EXPRESSION_TYPE> AST_Factory::m_name_to_expression_type = {
     {"c_and", C_AND },
-    {"f_count", F_COUNT },
+    {"n_count", N_COUNT },
 };
 
 EXPRESSION_TYPE AST_Factory::name_to_expression_type(const std::string &name) {
