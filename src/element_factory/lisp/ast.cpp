@@ -25,8 +25,7 @@ Expression_Ptr AST_Factory::make_ast(const std::string &name, std::vector<Expres
             // case 1.3: primitive role
             return std::make_unique<lisp::PrimitiveRoleExpression>(lisp::PrimitiveRoleExpression(name, std::move(children)));
         } else {
-            std::cout << "AST_Factory::make_ast - invalid number (" << children.size() << ") of children in primitive (" << name << ")" << std::endl;
-            throw std::exception();
+            throw std::runtime_error("AST_Factory::make_ast - invalid number ("s + std::to_string(children.size()) + ") of children in primitive ("s + name + ")");
         }
     } else if (!std::all_of(children.begin(), children.end(), [](const Expression_Ptr &c){ return c->is_leaf(); })) {
         // case 2: all childrens are inner nodes
@@ -34,16 +33,13 @@ Expression_Ptr AST_Factory::make_ast(const std::string &name, std::vector<Expres
         switch (expression_type) {
             case C_AND: {
                 return std::make_unique<lisp::AndConceptExpression>(lisp::AndConceptExpression(name, std::move(children)));
-                break;
             }
             case F_COUNT: {
                 return std::make_unique<lisp::CountNumericalExpression>(lisp::CountNumericalExpression(name, std::move(children)));
-                break;
             }
         }
     } else {
-        std::cout << "AST_Factory::make_ast - children containing leafs and inner nodes not allowed." << std::endl;
-        throw std::exception();
+        throw std::runtime_error("AST_Factory::make_ast - children containing leafs and inner nodes not allowed.");
     }
 }
 
@@ -55,8 +51,7 @@ std::unordered_map<std::string, EXPRESSION_TYPE> AST_Factory::m_name_to_expressi
 EXPRESSION_TYPE AST_Factory::name_to_expression_type(const std::string &name) {
     auto p = AST_Factory::m_name_to_expression_type.find(name);
     if (p == AST_Factory::m_name_to_expression_type.end()) {
-        std::cout << "AST_Factory::name_to_expression_type - undefined expression name (" << name << ")." << std::endl;
-        throw std::exception();
+        throw std::runtime_error("AST_Factory::name_to_expression_type - undefined expression name ("s + name + ").");
     }
     return p->second;
 }

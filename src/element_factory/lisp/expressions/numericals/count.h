@@ -9,21 +9,19 @@ namespace lisp {
 
 class CountNumericalExpression : public NumericalExpression {
 protected:
-    virtual NumericalElement_Ptr make_numerical_element_impl(const TaskInfo& task_info, ElementCache &cache) const override {
+    virtual NumericalElement_Ptr make_numerical_element_impl(std::shared_ptr<TaskInfo> task_info, ElementCache &cache) const override {
         if (m_children.size() != 1) {
-            std::cout << "CountNumericalExpression::make_numerical_element - number of children (" << m_children.size() << " != 1)." << std::endl;
-            throw std::exception();
+            throw std::runtime_error("CountNumericalExpression::make_numerical_element - number of children ("s + std::to_string(m_children.size()) + " != 1).");
         }
         ConceptElement_Ptr concept_element = m_children[0]->make_concept_element(task_info, cache);
         if (concept_element) {
-            return std::make_shared<CountNumericalElement<ConceptElement_Ptr>>(concept_element);
+            return std::make_shared<CountNumericalElement<ConceptElement_Ptr>>(task_info, concept_element->goal(), concept_element);
         }
         RoleElement_Ptr role_element = m_children[0]->make_role_element(task_info, cache);
         if (role_element) {
-            return std::make_shared<CountNumericalElement<RoleElement_Ptr>>(role_element);
+            return std::make_shared<CountNumericalElement<RoleElement_Ptr>>(task_info, role_element->goal(), role_element);
         }
-        std::cout << "CountNumericalExpression::make_numerical_element - unable to construct children elements." << std::endl;
-        throw std::exception();
+        throw std::runtime_error("CountNumericalExpression::make_numerical_element - unable to construct children elements.");
     }
 
 public:

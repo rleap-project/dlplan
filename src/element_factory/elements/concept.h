@@ -8,8 +8,7 @@ namespace dlp {
 
 class ConceptElement : public Element<Concepts> {
 public:
-    ConceptElement(bool goal, const Index_Vec& goal_atoms)
-    : Element<Concepts>(goal, goal_atoms) { }
+    ConceptElement(std::shared_ptr<TaskInfo> task_info, bool goal) : Element<Concepts>(task_info, goal) { }
 
     size_t size() const override {
         return m_result.size();

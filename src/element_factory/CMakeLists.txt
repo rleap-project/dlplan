@@ -1,4 +1,5 @@
 add_library(element_factory
+    atom.cpp
     cache.cpp
     element_factory.cpp
     element_factory_impl.cpp

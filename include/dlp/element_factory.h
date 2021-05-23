@@ -7,9 +7,11 @@
 
 namespace dlp {
 
+
+
 /**
  * The FeatureFactory allow the construction of ConceptElement,
- * RoleElement, NumericalElement, and BooleanElement from text.
+ * RoleElement, NumericalElement, and BooleanElement from textual description.
  */
 class ElementFactory {
 private:
@@ -18,15 +20,12 @@ private:
 public:
     ElementFactory();
 
-    void add_atom(const std::string &predicate_name,
-        Name_Vec &object_names,
-        bool constant=false);
-
-    void add_atom(const std::string &predicate_name,
-        unsigned predicate_idx,
-        Name_Vec &object_names,
-        Index_Vec &object_idxs,
-        bool constant=false);
+    /**
+     * Methods for initializing task information.
+     */
+    void add_atom(const std::string &predicate_name, const Name_Vec &object_names);
+    void set_constant_atoms(const Index_Vec& constant_atom_idxs);
+    void set_goal_atoms(const Index_Vec& goal_atom_idxs);
 
     /**
      * Returns a pointer to a ConceptElement if the description is correct.

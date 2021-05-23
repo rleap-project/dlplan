@@ -8,8 +8,7 @@ namespace dlp {
 
 class RoleElement : public Element<Roles> {
 public:
-    RoleElement(bool goal, const Index_Vec& goal_atoms)
-    : Element<Roles>(goal, goal_atoms) { }
+    RoleElement(std::shared_ptr<TaskInfo> task_info, bool goal) : Element<Roles>(task_info, goal) { }
 
     size_t size() const override {
         return m_result.size();

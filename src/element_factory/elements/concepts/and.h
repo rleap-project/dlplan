@@ -17,8 +17,8 @@ protected:
     }
 
 public:
-    AndConceptElement(bool goal, const Index_Vec& goal_atoms, ConceptElement_Ptr l, ConceptElement_Ptr r)
-    : ConceptElement(goal, goal_atoms), m_l(l), m_r(r) {}
+    AndConceptElement(std::shared_ptr<TaskInfo> task_info, bool goal, ConceptElement_Ptr l, ConceptElement_Ptr r)
+    : ConceptElement(task_info, goal), m_l(l), m_r(r) {}
 };
 
 }

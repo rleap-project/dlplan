@@ -17,8 +17,8 @@ protected:
     }
 
 public:
-    PrimitiveConceptElement(bool goal, const Index_Vec& goal_atoms, unsigned predicate_idx, unsigned object_idx)
-    : ConceptElement(goal, goal_atoms), m_predicate_idx(predicate_idx), m_object_idx(object_idx) {}
+    PrimitiveConceptElement(std::shared_ptr<TaskInfo> task_info, bool goal, unsigned predicate_idx, unsigned object_idx)
+    : ConceptElement(task_info, goal), m_predicate_idx(predicate_idx), m_object_idx(object_idx) {}
 };
 
 }

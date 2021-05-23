@@ -2,6 +2,7 @@
 #define DLP_SRC_ELEMENT_FACTORY_LISP_EXPRESSIONS_CONCEPTS_PRIMITIVE_H_
 
 #include "../concept.h"
+#include "../../utils.h"
 #include "../../../elements/concepts/primitive.h"
 
 
@@ -10,24 +11,22 @@ namespace lisp {
 
 class PrimitiveConceptExpression : public ConceptExpression {
 protected:
-    virtual ConceptElement_Ptr make_concept_element_impl(const TaskInfo& task_info, ElementCache &cache) const override {
+    virtual ConceptElement_Ptr make_concept_element_impl(std::shared_ptr<TaskInfo> task_info, ElementCache &cache) const override {
         if (m_children.size() != 1) {
-            std::cout << "PrimitiveConceptExpression::make_concept_element - number of children (" << m_children.size() << " != 1)." << std::endl;
-            throw std::exception();
+            throw std::runtime_error("PrimitiveConceptExpression::make_concept_element - number of children ("s + std::to_string(m_children.size()) + " != 1).");
         }
-        if (!task_info.exists_predicate_name(m_name)) {
-            std::cout << "PrimitiveConceptExpression::make_concept_element - predicate is missing in TaskInfo." << std::endl;
-            throw std::exception();
+        std::string predicate_name = strip_type_identifier(m_name);
+        if (!task_info->exists_predicate_name(predicate_name)) {
+            throw std::runtime_error("PrimitiveConceptExpression::make_concept_element - predicate ("s + predicate_name + ") is missing in TaskInfo.");
         }
-        unsigned predicate_idx = task_info.predicate_idx(m_name);
-        unsigned predicate_arity = task_info.predicate_arity(predicate_idx);
-        // TODO(dominik): Add check that this works and add error message
-        unsigned object_idx = atoi(m_children[0]->str().c_str());
+        bool goal = is_goal_version(m_name);
+        unsigned predicate_idx = task_info->predicate_idx(predicate_name);
+        unsigned predicate_arity = task_info->predicate_arity(predicate_idx);
+        unsigned object_idx = try_parse(m_children[0]->str());
         if (object_idx > predicate_arity) {
-            std::cout << "PrimitiveConceptExpression::make_concept_element - object index does not match predicate arity (" << object_idx << " > " << predicate_arity << ")." << std::endl;
-            throw std::exception();
+            throw std::runtime_error("PrimitiveConceptExpression::make_concept_element - object index does not match predicate arity ("s + std::to_string(object_idx) + " > " + std::to_string(predicate_arity) + ").");
         }
-        return std::make_shared<PrimitiveConceptElement>(predicate_idx, object_idx);
+        return std::make_shared<PrimitiveConceptElement>(task_info, goal, predicate_idx, object_idx);
     }
 
 public:

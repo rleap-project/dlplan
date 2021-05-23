@@ -9,18 +9,24 @@ namespace dlp {
 template<typename T>
 class Element {
 protected:
+    std::shared_ptr<TaskInfo> m_task_info;
+    bool m_goal;
     T m_result;
     const Index_Vec *m_state_atoms;
-    bool m_goal;
 
 protected:
-
     virtual T evaluate_impl(const Index_Vec& atoms) = 0;
 
 public:
-    Element(bool goal, const Index_Vec& goal_atoms) : m_goal(goal) {
-        if (goal) {
-            m_result = evaluate_impl(goal_atoms);
+    Element(std::shared_ptr<TaskInfo> task_info, bool goal)
+    : m_task_info(task_info), m_goal(goal) { }
+
+    /**
+     * Initializes the element if defined to be evaluated in the goal only.
+     */
+    void initialize() {
+        if (m_goal) {
+            evaluate_impl(m_task_info, m_task_info->goal_atom_idxs());
         }
     }
 
@@ -39,6 +45,13 @@ public:
      * The size of the result.
      */
     virtual size_t size() const = 0;
+
+    /**
+     * Getters.
+     */
+    virtual bool goal() const {
+        return m_goal;
+    }
 };
 
 }

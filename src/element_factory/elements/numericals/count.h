@@ -19,8 +19,8 @@ protected:
     }
 
 public:
-    CountNumericalElement(bool goal, const Index_Vec& goal_atoms, T element)
-    : NumericalElement(goal, goal_atoms), m_element(element) {}
+    CountNumericalElement(std::shared_ptr<TaskInfo> task_info, bool goal, T element)
+    : NumericalElement(task_info, goal), m_element(element) {}
 };
 
 }

@@ -4,19 +4,20 @@
 
 namespace dlp {
 
-ElementFactoryImpl::ElementFactoryImpl() {
+ElementFactoryImpl::ElementFactoryImpl()
+    : m_task_info(std::make_shared<TaskInfo>()) {
 }
 
-void ElementFactoryImpl::add_atom(const std::string &predicate_name,
-    Name_Vec &object_names,
-    bool constant) {
+void ElementFactoryImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names) {
+    m_task_info->add_atom(predicate_name, object_names);
 }
 
-void ElementFactoryImpl::add_atom(const std::string &predicate_name,
-    unsigned predicate_idx,
-    Name_Vec &object_names,
-    Index_Vec &object_idxs,
-    bool constant) {
+void ElementFactoryImpl::set_constant_atoms(const Index_Vec& constant_atom_idxs) {
+    m_task_info->set_constant_atoms(constant_atom_idxs);
+}
+
+void ElementFactoryImpl::set_goal_atoms(const Index_Vec& goal_atom_idxs) {
+    m_task_info->set_goal_atoms(goal_atom_idxs);
 }
 
 ConceptElement_Ptr ElementFactoryImpl::make_concept_element(const std::string &description) {

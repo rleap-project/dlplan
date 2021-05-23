@@ -14,10 +14,6 @@ namespace dlp {
 class TaskInfo {
 private:
     /**
-     * The registered atoms.
-     */
-    std::vector<Atom> m_atoms;
-    /**
      * Mappings between names and indices of predicates and objects.
      */
     std::unordered_map<std::string, unsigned> m_predicate_name_to_predicate_idx;
@@ -25,25 +21,40 @@ private:
     std::vector<std::string> m_predicate_idx_to_predicate_name;
     std::vector<std::string> m_object_idx_to_to_object_name;
     /**
-     * Arities
+     * Predicate arities
      */
     std::vector<unsigned> m_predicate_arities;
     /**
-     * Goal state information.
+     * Atoms satisfied in the goal.
      */
-    Index_Vec m_goal_atoms;
+    Index_Vec m_goal_atom_idxs;
     /**
-     * Initial state information.
+     * Trivially satisfied atoms.
      */
-    Index_Vec m_init_atoms;
+    Index_Vec m_constant_atom_idxs;
+    /**
+     * All atoms
+     */
+    std::vector<Atom> m_atoms;
+
 public:
+    /**
+     * Methods for initializing the TaskInfo successively.
+     */
+    void add_atom(const std::string &predicate_name, const Name_Vec &object_names);
+    void set_constant_atoms(const Index_Vec& constant_atom_idxs);
+    void set_goal_atoms(const Index_Vec& goal_atom_idxs);
 
     bool exists_predicate_name(const std::string& name) const;
     bool predicate_idx(const std::string& name) const;
     unsigned predicate_arity(unsigned predicate_idx) const;
 
-    const Index_Vec& goal_atoms() const;
-    const Index_Vec& init_atoms() const;
+    /**
+     * Getters.
+     */
+    const Index_Vec& goal_atom_idxs() const;
+    const Index_Vec& constant_atom_idxs() const;
+    const std::vector<Atom>& atoms() const;
 };
 
 }

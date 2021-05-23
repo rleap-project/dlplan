@@ -16,8 +16,7 @@ namespace lisp {
  */
 Expression_Ptr Parser::parse_ast(Tokens &tokens) const {
     if (tokens.empty()) {
-        std::cout << "Unexpected EOF\n" << std::endl;
-        throw std::exception();
+        throw std::runtime_error("Unexpected EOF\n");
     }
     Token token = tokens.front();
     tokens.pop_front();
@@ -34,13 +33,10 @@ Expression_Ptr Parser::parse_ast(Tokens &tokens) const {
         // Sort children lexicographically to obtain canonical representation.
         std::sort(children.begin(), children.end(),
             [](const Expression_Ptr &l, const Expression_Ptr &r){ return l->name() < r->name(); });
-        // TODO(dominik): Ensure that either all children are leafs or inner node by definition of primitive concepts and roles.
-        // If we detect primitives, mark them in the AST accordingly.
+        // Construct an expression that can be parsed into an element if the description is correct.
         return AST_Factory().make_ast(token.second, std::move(children));
-        //return AST(token.second, std::move(children));
     } else if (token.second == ")") {
-        std::cout << "Unexpected ')'" << std::endl;
-        throw std::exception();
+        throw std::runtime_error("Unexpected ')'");
     } else {
         return AST_Factory().make_ast(token.second, {});
     }

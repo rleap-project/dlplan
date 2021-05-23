@@ -13,11 +13,17 @@ namespace lisp {
 
 class Parser {
 private:
+    /**
+     * Parses tokens into an abstract syntax tree.
+     */
     Expression_Ptr parse_ast(Tokens &tokens) const;
 
 public:
     Parser();
 
+    /**
+     * Parses a textual description into an abstract syntax tree.
+     */
     Expression_Ptr parse(const std::string &description) const;
 };
 

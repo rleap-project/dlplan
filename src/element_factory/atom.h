@@ -4,24 +4,22 @@
 #include <string>
 #include <vector>
 
+#include "types.h"
+
 namespace dlp {
 
 struct Atom {
-private:
     const std::string m_predicate_name;
-    const unsigned m_predicate_idx;
-    const std::vector<std::string> m_object_names;
-    const bool constant;
-public:
-    Atom(std::string &&predicate_name,
-        std::vector<std::string> &&object_names,
-        bool constant=false);
+    int m_predicate_idx;
+    const Name_Vec m_object_names;
+    const Index_Vec m_object_idxs;
+    bool m_constant;
 
     Atom(const std::string &predicate_name,
-        unsigned predicate_idx,
-        const std::vector<const std::string> &object_names,
-        const std::vector<unsigned> &object_idxs,
-        bool constant=false);
+        int predicate_idx,
+        const Name_Vec &object_names,
+        const Index_Vec &object_idxs,
+        bool constant);
 };
 
 }
