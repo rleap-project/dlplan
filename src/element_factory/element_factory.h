@@ -1,28 +1,32 @@
-#ifndef DLP_INCLUDE_DLP_ELEMENT_FACTORY_H_
-#define DLP_INCLUDE_DLP_ELEMENT_FACTORY_H_
+#ifndef DLP_SRC_ELEMENT_FACTORY_ELEMENT_FACTORY_IMPL_H_
+#define DLP_SRC_ELEMENT_FACTORY_ELEMENT_FACTORY_IMPL_H_
 
-#include "../../src/element_factory/types.h"
-#include "../../src/element_factory/element_factory_impl.h"
 #include <memory>
+#include <string>
+#include <vector>
+#include <unordered_map>
+
+#include "task_info.h"
+#include "cache.h"
+#include "types.h"
+
 
 namespace dlp {
 
-
-
 /**
- * The FeatureFactory allow the construction of ConceptElement,
- * RoleElement, NumericalElement, and BooleanElement from textual description.
+ * ElementFactory provides functionality for constructing
+ * nested composites of description logics elements
+ * that can be evaluated on state of planning instances.
  */
-class ElementFactory {
-private:
-    std::unique_ptr<ElementFactoryImpl> m_pImpl;
+class ElementFactoryImpl {
+protected:
+    std::shared_ptr<TaskInfo> m_task_info;
+
+    ElementCache m_cache;
 
 public:
-    ElementFactory();
+    ElementFactoryImpl();
 
-    /**
-     * Methods for initializing task information.
-     */
     void add_atom(const std::string &predicate_name, const Name_Vec &object_names);
     void set_constant_atoms(const Index_Vec& constant_atom_idxs);
     void set_goal_atoms(const Index_Vec& goal_atom_idxs);

@@ -1,8 +1,8 @@
 add_library(element_factory
     atom.cpp
     cache.cpp
+    core.cpp
     element_factory.cpp
-    element_factory_impl.cpp
     lisp/parser.cpp
     lisp/tokenizer.cpp
     lisp/ast.cpp

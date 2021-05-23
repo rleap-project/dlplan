@@ -26,7 +26,7 @@ public:
      */
     void initialize() {
         if (m_goal) {
-            evaluate_impl(m_task_info, m_task_info->goal_atom_idxs());
+            evaluate_impl(m_task_info->goal_atom_idxs());
         }
     }
 
