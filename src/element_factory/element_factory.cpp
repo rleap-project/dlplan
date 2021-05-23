@@ -1,5 +1,6 @@
 #include "element_factory.h"
 #include "lisp/parser.h"
+#include "lisp/expression.h"
 
 
 namespace dlp {

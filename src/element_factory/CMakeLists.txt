@@ -5,6 +5,6 @@ add_library(element_factory
     element_factory.cpp
     lisp/parser.cpp
     lisp/tokenizer.cpp
-    lisp/ast.cpp
+    lisp/ast_factory.cpp
     task_info.cpp
 )

@@ -4,8 +4,6 @@
 #include <string>
 #include <unordered_map>
 
-#include "ast.h"
-#include "tokenizer.h"
 #include "types.h"
 
 namespace dlp {

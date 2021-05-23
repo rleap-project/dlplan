@@ -6,6 +6,8 @@
 #include <algorithm>
 
 #include "tokenizer.h"
+#include "ast_factory.h"
+#include "tokenizer.h"
 
 namespace dlp {
 namespace lisp {
