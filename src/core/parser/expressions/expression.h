@@ -56,6 +56,12 @@ public:
         return ss.str();
     }
 
+    // Note: since children are stored as std::vector<Expression>
+    // we do not know what type the children will be
+    // and each concrete type must decide what method to call
+    // in order to parse into the desired type.
+    // As a result we cannot change this into a template.
+
     /**
      * Tries to parse the Expression into a ConceptElement.
      * If unsuccessful print human readable error messages and throw and exception.
