@@ -1,11 +1,12 @@
 #ifndef DLP_SRC_CORE_ELEMENTS_ROLE_H_
 #define DLP_SRC_CORE_ELEMENTS_ROLE_H_
 
-#include "../element.h"
-#include "../types.h"
+#include "element.h"
+
 
 namespace dlp {
 namespace core {
+namespace element {
 
 class RoleElement : public Element<Roles> {
 public:
@@ -16,6 +17,7 @@ public:
     }
 };
 
+}
 }
 }
 

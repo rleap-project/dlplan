@@ -1,10 +1,13 @@
-#ifndef DLP_SRC_CORE_ELEMENT_H_
-#define DLP_SRC_CORE_ELEMENT_H_
+#ifndef DLP_SRC_CORE_ELEMENTS_ELEMENT_H_
+#define DLP_SRC_CORE_ELEMENTS_ELEMENT_H_
 
 #include "types.h"
+#include "../types.h"
+
 
 namespace dlp {
 namespace core {
+namespace element {
 
 template<typename T>
 class Element {
@@ -59,6 +62,7 @@ public:
     }
 };
 
+}
 }
 }
 

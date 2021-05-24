@@ -12,16 +12,6 @@ using namespace std::string_literals;
 namespace dlp {
 namespace core {
 
-class ConceptElement;
-class RoleElement;
-class NumericalElement;
-class BooleanElement;
-
-using ConceptElement_Ptr = std::shared_ptr<ConceptElement>;
-using RoleElement_Ptr = std::shared_ptr<RoleElement>;
-using NumericalElement_Ptr = std::shared_ptr<NumericalElement>;
-using BooleanElement_Ptr = std::shared_ptr<BooleanElement>;
-
 using Concept = int;
 using Concepts = std::vector<Concept>;
 using Concepts_Set = std::unordered_set<Concept>;

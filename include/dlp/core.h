@@ -15,7 +15,7 @@ template<typename T>
 class Element {
 public:
     /**
-     * Evaluates the element of a state given as a vector of atom indices.
+     * Evaluates the element for a state given as a vector of atom indices.
      */
     virtual T evaluate(const Index_Vec& atoms) const = 0;
 
@@ -31,7 +31,7 @@ public:
  */
 class ConceptElement : public Element<Concepts> {
 protected:
-    ConceptElement_Ptr m_pImpl;
+    element::ConceptElement_Ptr m_pImpl;
 
 public:
     ConceptElement(ElementFactory& factory, const std::string& description);
@@ -46,7 +46,7 @@ public:
  */
 class RoleElement : public Element<Roles> {
 protected:
-    RoleElement_Ptr m_pImpl;
+    element::RoleElement_Ptr m_pImpl;
 
 public:
     RoleElement(ElementFactory& factory, const std::string& description);
@@ -61,7 +61,7 @@ public:
  */
 class NumericalElement : public Element<int> {
 protected:
-    NumericalElement_Ptr m_pImpl;
+    element::NumericalElement_Ptr m_pImpl;
 
 public:
     NumericalElement(ElementFactory& factory, const std::string& description);
@@ -76,7 +76,7 @@ public:
  */
 class BooleanElement : public Element<bool> {
 protected:
-    BooleanElement_Ptr m_pImpl;
+    element::BooleanElement_Ptr m_pImpl;
 
 public:
     BooleanElement(ElementFactory& factory, const std::string& description);
@@ -99,25 +99,25 @@ private:
      * Returns a pointer to a ConceptElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    ConceptElement_Ptr make_concept_element(const std::string &description);
+    element::ConceptElement_Ptr make_concept_element(const std::string &description);
 
     /**
      * Returns a pointer to a RoleElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    RoleElement_Ptr make_role_element(const std::string &description);
+    element::RoleElement_Ptr make_role_element(const std::string &description);
 
     /**
      * Returns a pointer to a NumericalElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    NumericalElement_Ptr make_numerical_element(const std::string &description);
+    element::NumericalElement_Ptr make_numerical_element(const std::string &description);
 
     /**
      * Returns a pointer to a BooleanElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    BooleanElement_Ptr make_boolean_element(const std::string &description);
+    element::BooleanElement_Ptr make_boolean_element(const std::string &description);
 
     /**
      * Private methods needed during construction.

@@ -1,5 +1,10 @@
 #include "../../include/dlp/core.h"
 
+#include "elements/concept.h"
+#include "elements/role.h"
+#include "elements/numerical.h"
+#include "elements/boolean.h"
+
 
 namespace dlp {
 namespace core {
@@ -20,19 +25,19 @@ void ElementFactory::set_goal_atoms(const Index_Vec& goal_atom_idxs) {
     m_pImpl->set_goal_atoms(goal_atom_idxs);
 }
 
-ConceptElement_Ptr ElementFactory::make_concept_element(const std::string &description) {
+element::ConceptElement_Ptr ElementFactory::make_concept_element(const std::string &description) {
     return m_pImpl->make_concept_element(description);
 }
 
-RoleElement_Ptr ElementFactory::make_role_element(const std::string &description) {
+element::RoleElement_Ptr ElementFactory::make_role_element(const std::string &description) {
     return m_pImpl->make_role_element(description);
 }
 
-NumericalElement_Ptr ElementFactory::make_numerical_element(const std::string &description) {
+element::NumericalElement_Ptr ElementFactory::make_numerical_element(const std::string &description) {
     return m_pImpl->make_numerical_element(description);
 }
 
-BooleanElement_Ptr ElementFactory::make_boolean_element(const std::string &description) {
+element::BooleanElement_Ptr ElementFactory::make_boolean_element(const std::string &description) {
     return m_pImpl->make_boolean_element(description);
 }
 

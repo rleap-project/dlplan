@@ -4,10 +4,11 @@
 #include "../numerical.h"
 #include "../concept.h"
 #include "../role.h"
-#include "../../types.h"
+
 
 namespace dlp {
 namespace core {
+namespace element {
 
 template<typename T>
 class CountNumericalElement : public NumericalElement {
@@ -28,6 +29,7 @@ public:
     }
 };
 
+}
 }
 }
 

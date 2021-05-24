@@ -22,22 +22,22 @@ void ElementFactoryImpl::set_goal_atoms(const Index_Vec& goal_atom_idxs) {
     m_task_info->set_goal_atoms(goal_atom_idxs);
 }
 
-ConceptElement_Ptr ElementFactoryImpl::make_concept_element(const std::string &description) {
+element::ConceptElement_Ptr ElementFactoryImpl::make_concept_element(const std::string &description) {
     parser::Expression_Ptr expression = parser::Parser().parse(description);
     return expression->make_concept_element(m_task_info, m_cache);
 }
 
-RoleElement_Ptr ElementFactoryImpl::make_role_element(const std::string &description) {
+element::RoleElement_Ptr ElementFactoryImpl::make_role_element(const std::string &description) {
     parser::Expression_Ptr expression = parser::Parser().parse(description);
     return expression->make_role_element(m_task_info, m_cache);
 }
 
-NumericalElement_Ptr ElementFactoryImpl::make_numerical_element(const std::string &description) {
+element::NumericalElement_Ptr ElementFactoryImpl::make_numerical_element(const std::string &description) {
     parser::Expression_Ptr expression = parser::Parser().parse(description);
     return expression->make_numerical_element(m_task_info, m_cache);
 }
 
-BooleanElement_Ptr ElementFactoryImpl::make_boolean_element(const std::string &description) {
+element::BooleanElement_Ptr ElementFactoryImpl::make_boolean_element(const std::string &description) {
     parser::Expression_Ptr expression = parser::Parser().parse(description);
     return expression->make_boolean_element(m_task_info, m_cache);
 }

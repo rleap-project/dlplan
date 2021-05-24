@@ -9,6 +9,7 @@
 #include "task_info.h"
 #include "cache.h"
 #include "types.h"
+#include "elements/types.h"
 
 
 namespace dlp {
@@ -36,25 +37,25 @@ public:
      * Returns a pointer to a ConceptElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    ConceptElement_Ptr make_concept_element(const std::string &description);
+    element::ConceptElement_Ptr make_concept_element(const std::string &description);
 
     /**
      * Returns a pointer to a RoleElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    RoleElement_Ptr make_role_element(const std::string &description);
+    element::RoleElement_Ptr make_role_element(const std::string &description);
 
     /**
      * Returns a pointer to a NumericalElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    NumericalElement_Ptr make_numerical_element(const std::string &description);
+    element::NumericalElement_Ptr make_numerical_element(const std::string &description);
 
     /**
      * Returns a pointer to a BooleanElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    BooleanElement_Ptr make_boolean_element(const std::string &description);
+    element::BooleanElement_Ptr make_boolean_element(const std::string &description);
 };
 
 }

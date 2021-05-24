@@ -12,7 +12,7 @@ namespace parser {
 
 class PrimitiveConceptExpression : public ConceptExpression {
 protected:
-    virtual ConceptElement_Ptr make_concept_element_impl(std::shared_ptr<TaskInfo> task_info, ElementCache &cache) const override {
+    virtual element::ConceptElement_Ptr make_concept_element_impl(std::shared_ptr<TaskInfo> task_info, ElementCache &cache) const override {
         if (m_children.size() != 1) {
             throw std::runtime_error("PrimitiveConceptExpression::make_concept_element - number of children ("s + std::to_string(m_children.size()) + " != 1).");
         }
@@ -27,7 +27,7 @@ protected:
         if (object_idx > predicate_arity) {
             throw std::runtime_error("PrimitiveConceptExpression::make_concept_element - object index does not match predicate arity ("s + std::to_string(object_idx) + " > " + std::to_string(predicate_arity) + ").");
         }
-        return std::make_shared<PrimitiveConceptElement>(task_info, goal, predicate_idx, object_idx);
+        return std::make_shared<element::PrimitiveConceptElement>(task_info, goal, predicate_idx, object_idx);
     }
 
 public:

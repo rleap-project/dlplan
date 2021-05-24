@@ -33,9 +33,6 @@ Expression_Ptr Parser::parse_ast(Tokens &tokens) const {
         }
         // Consume ")".
         tokens.pop_front();
-        // Sort children lexicographically to obtain canonical representation.
-        std::sort(children.begin(), children.end(),
-            [](const Expression_Ptr &l, const Expression_Ptr &r){ return l->name() < r->name(); });
         // Construct an expression that can be parsed into an element if the description is correct.
         return AST_Factory().make_ast(token.second, std::move(children));
     } else if (token.second == ")") {

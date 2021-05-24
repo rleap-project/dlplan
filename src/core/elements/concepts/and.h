@@ -2,10 +2,11 @@
 #define DLP_SRC_CORE_ELEMENTS_CONCEPTS_AND_H_
 
 #include "../concept.h"
-#include "../../types.h"
+
 
 namespace dlp {
 namespace core {
+namespace element {
 
 class AndConceptElement : public ConceptElement {
 protected:
@@ -26,6 +27,7 @@ public:
     }
 };
 
+}
 }
 }
 

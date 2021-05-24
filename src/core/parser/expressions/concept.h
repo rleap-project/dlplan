@@ -12,7 +12,7 @@ protected:
     /**
      * Construct the ConceptElement.
      */
-    virtual ConceptElement_Ptr make_concept_element_impl(std::shared_ptr<TaskInfo> task_info, ElementCache &cache) const = 0;
+    virtual element::ConceptElement_Ptr make_concept_element_impl(std::shared_ptr<TaskInfo> task_info, ElementCache &cache) const = 0;
 
 public:
     ConceptExpression(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
@@ -21,7 +21,7 @@ public:
     /**
      * Construct or retrieve the ConceptElement.
      */
-    virtual ConceptElement_Ptr make_concept_element(std::shared_ptr<TaskInfo> task_info, ElementCache &cache) const {
+    virtual element::ConceptElement_Ptr make_concept_element(std::shared_ptr<TaskInfo> task_info, ElementCache &cache) const {
         std::string key = str();
         if (!cache.concept_element_cache().exists(key)) {
             cache.concept_element_cache().insert(key, make_concept_element_impl(task_info, cache));

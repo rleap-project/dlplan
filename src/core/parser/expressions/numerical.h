@@ -13,7 +13,7 @@ protected:
     /**
      * Construct the NumericalElement.
      */
-    virtual NumericalElement_Ptr make_numerical_element_impl(std::shared_ptr<TaskInfo> task_info, ElementCache &cache) const = 0;
+    virtual element::NumericalElement_Ptr make_numerical_element_impl(std::shared_ptr<TaskInfo> task_info, ElementCache &cache) const = 0;
 
 public:
     NumericalExpression(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
@@ -22,7 +22,7 @@ public:
     /**
      * Construct or retrieve the NumericalElement.
      */
-    virtual NumericalElement_Ptr make_numerical_element(std::shared_ptr<TaskInfo> task_info, ElementCache &cache) const {
+    virtual element::NumericalElement_Ptr make_numerical_element(std::shared_ptr<TaskInfo> task_info, ElementCache &cache) const {
         std::string key = str();
         if (!cache.numerical_element_cache().exists(key)) {
             cache.numerical_element_cache().insert(key, make_numerical_element_impl(task_info, cache));

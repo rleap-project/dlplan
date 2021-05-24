@@ -13,7 +13,7 @@ protected:
     /**
      * Construct the BooleanElement.
      */
-    virtual BooleanElement_Ptr make_boolean_element_impl(std::shared_ptr<TaskInfo> task_info, ElementCache &cache) const = 0;
+    virtual element::BooleanElement_Ptr make_boolean_element_impl(std::shared_ptr<TaskInfo> task_info, ElementCache &cache) const = 0;
 
 public:
     BooleanExpression(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
@@ -22,7 +22,7 @@ public:
     /**
      * Construct or retrieve the BooleanElement.
      */
-    virtual BooleanElement_Ptr make_boolean_element(std::shared_ptr<TaskInfo> task_info, ElementCache &cache) const {
+    virtual element::BooleanElement_Ptr make_boolean_element(std::shared_ptr<TaskInfo> task_info, ElementCache &cache) const {
         std::string key = str();
         if (!cache.boolean_element_cache().exists(key)) {
             cache.boolean_element_cache().insert(key, make_boolean_element_impl(task_info, cache));

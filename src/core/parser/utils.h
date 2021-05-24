@@ -28,6 +28,18 @@ std::string strip_type_identifier(const std::string& name) {
     return name.substr(2);
 }
 
+/**
+ * Sort child expressions lexicographically.
+ * We apply this in commutative expressions
+ * to obtain a canonical representation.
+ */
+std::vector<Expression_Ptr> sort_children_lexicographically(std::vector<Expression_Ptr> &&children) {
+    std::sort(children.begin(), children.end(),
+        [](const Expression_Ptr &l, const Expression_Ptr &r){ return l->name() < r->name(); });
+    return std::move(children);
+}
+
+
 }
 }
 }
