@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_CORE_PARSER_EXPRESSION_H_
-#define DLP_SRC_CORE_PARSER_EXPRESSION_H_
+#ifndef DLP_SRC_CORE_PARSER_EXPRESSIONS_EXPRESSION_H_
+#define DLP_SRC_CORE_PARSER_EXPRESSIONS_EXPRESSION_H_
 
 #include <iostream>
 #include <memory>
@@ -7,9 +7,9 @@
 #include <string>
 #include <vector>
 
-#include "../types.h"
-#include "../task_info.h"
-#include "../cache.h"
+#include "../../elements/types.h"
+#include "../../cache.h"
+#include "../../task_info.h"
 
 
 namespace dlp {

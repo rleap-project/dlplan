@@ -1,7 +1,7 @@
 #ifndef DLP_SRC_CORE_PARSER_EXPRESSIONS_ROLE_H_
 #define DLP_SRC_CORE_PARSER_EXPRESSIONS_ROLE_H_
 
-#include "../expression.h"
+#include "expression.h"
 
 
 namespace dlp {

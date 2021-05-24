@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "expression.h"
+#include "expressions/expression.h"
 #include "types.h"
 
 namespace dlp {
