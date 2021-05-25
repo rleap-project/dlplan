@@ -29,9 +29,7 @@ protected:
 public:
     ElementFactoryImpl();
 
-    void add_atom(const std::string &predicate_name, const Name_Vec &object_names);
-    void set_constant_atoms(const Index_Vec& constant_atom_idxs);
-    void set_goal_atoms(const Index_Vec& goal_atom_idxs);
+    int add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool goal);
 
     /**
      * Returns a pointer to a ConceptElement if the description is correct.

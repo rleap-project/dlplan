@@ -13,36 +13,28 @@ ElementFactory::ElementFactory()
     : m_pImpl(std::make_unique<ElementFactoryImpl>(ElementFactoryImpl())) {
 }
 
-void ElementFactory::add_atom(const std::string &predicate_name, const Name_Vec &object_names) {
-    m_pImpl->add_atom(predicate_name, object_names);
+int ElementFactory::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool goal) {
+
 }
 
-void ElementFactory::set_constant_atoms(const Index_Vec& constant_atom_idxs) {
-    m_pImpl->set_constant_atoms(constant_atom_idxs);
+ConceptElement ElementFactory::make_concept_element(const std::string &description) {
+    return ConceptElement(m_pImpl->make_concept_element(description));
 }
 
-void ElementFactory::set_goal_atoms(const Index_Vec& goal_atom_idxs) {
-    m_pImpl->set_goal_atoms(goal_atom_idxs);
+RoleElement ElementFactory::make_role_element(const std::string &description) {
+    return RoleElement(m_pImpl->make_role_element(description));
 }
 
-element::ConceptElement_Ptr ElementFactory::make_concept_element(const std::string &description) {
-    return m_pImpl->make_concept_element(description);
+NumericalElement ElementFactory::make_numerical_element(const std::string &description) {
+    return NumericalElement(m_pImpl->make_numerical_element(description));
 }
 
-element::RoleElement_Ptr ElementFactory::make_role_element(const std::string &description) {
-    return m_pImpl->make_role_element(description);
+BooleanElement ElementFactory::make_boolean_element(const std::string &description) {
+    return BooleanElement(m_pImpl->make_boolean_element(description));
 }
 
-element::NumericalElement_Ptr ElementFactory::make_numerical_element(const std::string &description) {
-    return m_pImpl->make_numerical_element(description);
-}
-
-element::BooleanElement_Ptr ElementFactory::make_boolean_element(const std::string &description) {
-    return m_pImpl->make_boolean_element(description);
-}
-
-ConceptElement::ConceptElement(ElementFactory& factory, const std::string& description)
-    : Element<Concepts>(), m_pImpl(factory.make_concept_element(description)) {
+ConceptElement::ConceptElement(element::ConceptElement_Ptr pImpl)
+    : Element<Concepts>(), m_pImpl(pImpl) {
 }
 
 Concepts ConceptElement::evaluate(const Index_Vec& atoms) const {
@@ -53,8 +45,8 @@ unsigned ConceptElement::complexity() const {
     return m_pImpl->complexity();
 }
 
-RoleElement::RoleElement(ElementFactory& factory, const std::string& description)
-    : Element<Roles>(), m_pImpl(factory.make_role_element(description)) {
+RoleElement::RoleElement(element::RoleElement_Ptr pImpl)
+    : Element<Roles>(), m_pImpl(pImpl) {
 }
 
 Roles RoleElement::evaluate(const Index_Vec& atoms) const {
@@ -65,8 +57,8 @@ unsigned RoleElement::complexity() const {
     return m_pImpl->complexity();
 }
 
-NumericalElement::NumericalElement(ElementFactory& factory, const std::string& description)
-    : Element<int>(), m_pImpl(factory.make_numerical_element(description)) {
+NumericalElement::NumericalElement(element::NumericalElement_Ptr pImpl)
+    : Element<int>(), m_pImpl(pImpl) {
 }
 
 int NumericalElement::evaluate(const Index_Vec& atoms) const {
@@ -77,8 +69,8 @@ unsigned NumericalElement::complexity() const {
     return m_pImpl->complexity();
 }
 
-BooleanElement::BooleanElement(ElementFactory& factory, const std::string& description)
-    : Element<bool>(), m_pImpl(factory.make_boolean_element(description)) {
+BooleanElement::BooleanElement(element::BooleanElement_Ptr pImpl)
+    : Element<bool>(), m_pImpl(pImpl) {
 }
 
 bool BooleanElement::evaluate(const Index_Vec& atoms) const {

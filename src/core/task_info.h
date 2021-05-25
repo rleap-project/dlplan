@@ -42,9 +42,7 @@ public:
     /**
      * Methods for initializing the TaskInfo successively.
      */
-    void add_atom(const std::string &predicate_name, const Name_Vec &object_names);
-    void set_constant_atoms(const Index_Vec& constant_atom_idxs);
-    void set_goal_atoms(const Index_Vec& goal_atom_idxs);
+    int add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool goal);
 
     bool exists_predicate_name(const std::string& name) const;
     bool predicate_idx(const std::string& name) const;

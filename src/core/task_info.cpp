@@ -3,16 +3,8 @@
 namespace dlp {
 namespace core {
 
-void TaskInfo::add_atom(const std::string &predicate_name, const Name_Vec &object_names) {
+int TaskInfo::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool goal) {
 
-}
-
-void TaskInfo::set_constant_atoms(const Index_Vec& constant_atom_idxs) {
-    m_constant_atom_idxs = constant_atom_idxs;
-}
-
-void TaskInfo::set_goal_atoms(const Index_Vec& goal_atom_idxs) {
-    m_goal_atom_idxs = goal_atom_idxs;
 }
 
 bool TaskInfo::exists_predicate_name(const std::string& name) const {

@@ -8,6 +8,15 @@ namespace dlp {
 namespace core {
 class ElementFactory;
 
+using Concept = int;
+using Concepts = std::vector<Concept>;
+
+using Role = std::pair<Concept, Concept>;
+using Roles = std::vector<Role>;
+
+using Name_Vec = std::vector<std::string>;
+using Index_Vec = std::vector<int>;
+
 /**
  * Abstract base class of any Element.
  */
@@ -34,7 +43,7 @@ protected:
     element::ConceptElement_Ptr m_pImpl;
 
 public:
-    ConceptElement(ElementFactory& factory, const std::string& description);
+    ConceptElement(element::ConceptElement_Ptr pImpl);
 
     virtual Concepts evaluate(const Index_Vec& atoms) const override;
 
@@ -49,7 +58,7 @@ protected:
     element::RoleElement_Ptr m_pImpl;
 
 public:
-    RoleElement(ElementFactory& factory, const std::string& description);
+    RoleElement(element::RoleElement_Ptr pImpl);
 
     virtual Roles evaluate(const Index_Vec& atoms) const override;
 
@@ -64,7 +73,7 @@ protected:
     element::NumericalElement_Ptr m_pImpl;
 
 public:
-    NumericalElement(ElementFactory& factory, const std::string& description);
+    NumericalElement(element::NumericalElement_Ptr pImpl);
 
     virtual int evaluate(const Index_Vec& atoms) const override;
 
@@ -79,7 +88,7 @@ protected:
     element::BooleanElement_Ptr m_pImpl;
 
 public:
-    BooleanElement(ElementFactory& factory, const std::string& description);
+    BooleanElement(element::BooleanElement_Ptr pImpl);
 
     virtual bool evaluate(const Index_Vec& atoms) const override;
 
@@ -94,48 +103,37 @@ class ElementFactory {
 private:
     std::unique_ptr<ElementFactoryImpl> m_pImpl;
 
-private:
-    /**
-     * Returns a pointer to a ConceptElement if the description is correct.
-     * If description is incorrect, throw an error with human readable information.
-     */
-    element::ConceptElement_Ptr make_concept_element(const std::string &description);
-
-    /**
-     * Returns a pointer to a RoleElement if the description is correct.
-     * If description is incorrect, throw an error with human readable information.
-     */
-    element::RoleElement_Ptr make_role_element(const std::string &description);
-
-    /**
-     * Returns a pointer to a NumericalElement if the description is correct.
-     * If description is incorrect, throw an error with human readable information.
-     */
-    element::NumericalElement_Ptr make_numerical_element(const std::string &description);
-
-    /**
-     * Returns a pointer to a BooleanElement if the description is correct.
-     * If description is incorrect, throw an error with human readable information.
-     */
-    element::BooleanElement_Ptr make_boolean_element(const std::string &description);
-
-    /**
-     * Private methods needed during construction.
-     */
-    friend class ConceptElement;
-    friend class RoleElement;
-    friend class NumericalElement;
-    friend class BooleanElement;
-
 public:
     ElementFactory();
 
     /**
      * Methods for initializing task information.
      */
-    void add_atom(const std::string &predicate_name, const Name_Vec &object_names);
-    void set_constant_atoms(const Index_Vec& constant_atom_idxs);
-    void set_goal_atoms(const Index_Vec& goal_atom_idxs);
+    int add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool goal);
+
+    /**
+     * Returns a ConceptElement if the description is correct.
+     * If description is incorrect, throw an error with human readable information.
+     */
+    ConceptElement make_concept_element(const std::string &description);
+
+    /**
+     * Returns a RoleElement if the description is correct.
+     * If description is incorrect, throw an error with human readable information.
+     */
+    RoleElement make_role_element(const std::string &description);
+
+    /**
+     * Returns a NumericalElement if the description is correct.
+     * If description is incorrect, throw an error with human readable information.
+     */
+    NumericalElement make_numerical_element(const std::string &description);
+
+    /**
+     * Returns a BooleanElement if the description is correct.
+     * If description is incorrect, throw an error with human readable information.
+     */
+    BooleanElement make_boolean_element(const std::string &description);
 };
 
 }
