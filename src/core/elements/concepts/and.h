@@ -19,8 +19,8 @@ protected:
     }
 
 public:
-    AndConceptElement(std::shared_ptr<TaskInfo> task_info, bool goal, ConceptElement_Ptr l, ConceptElement_Ptr r)
-    : ConceptElement(task_info, goal), m_l(l), m_r(r) {}
+    AndConceptElement(bool goal, ConceptElement_Ptr l, ConceptElement_Ptr r)
+    : ConceptElement(goal), m_l(l), m_r(r) {}
 
     virtual unsigned complexity() const override {
         return m_l->complexity() + m_r->complexity() + 1;

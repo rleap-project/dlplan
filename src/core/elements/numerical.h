@@ -10,7 +10,7 @@ namespace element {
 
 class NumericalElement : public Element<int> {
 public:
-    NumericalElement(std::shared_ptr<TaskInfo> task_info, bool goal) : Element<int>(task_info, goal) { }
+    NumericalElement(bool goal) : Element<int>(goal) { }
 };
 
 }

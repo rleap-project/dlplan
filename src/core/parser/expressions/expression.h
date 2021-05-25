@@ -9,7 +9,7 @@
 
 #include "../../elements/types.h"
 #include "../../cache.h"
-#include "../../task_info.h"
+#include "../../instance_info.h"
 
 
 namespace dlp {
@@ -66,7 +66,7 @@ public:
      * Tries to parse the Expression into a ConceptElement.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual element::ConceptElement_Ptr make_concept_element(std::shared_ptr<TaskInfo> task_info, ElementCache &cache) const {
+    virtual element::ConceptElement_Ptr make_concept_element(const InstanceInfoImpl& info, ElementCache &cache) const {
         return nullptr;
     }
 
@@ -74,7 +74,7 @@ public:
      * Tries to parse the Expression into a RoleElement.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual element::RoleElement_Ptr make_role_element(std::shared_ptr<TaskInfo> task_info, ElementCache &cache) const {
+    virtual element::RoleElement_Ptr make_role_element(const InstanceInfoImpl& info, ElementCache &cache) const {
         return nullptr;
     }
 
@@ -82,7 +82,7 @@ public:
      * Tries to parse the Expression into a NumericalElement.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual element::NumericalElement_Ptr make_numerical_element(std::shared_ptr<TaskInfo> task_info, ElementCache &cache) const {
+    virtual element::NumericalElement_Ptr make_numerical_element(const InstanceInfoImpl& info, ElementCache &cache) const {
         return nullptr;
     }
 
@@ -90,7 +90,7 @@ public:
      * Tries to parse the Expression into a BooleanElement.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual element::BooleanElement_Ptr make_boolean_element(std::shared_ptr<TaskInfo> task_info, ElementCache &cache) const {
+    virtual element::BooleanElement_Ptr make_boolean_element(const InstanceInfoImpl& info, ElementCache &cache) const {
         return nullptr;
     }
 };

@@ -10,7 +10,7 @@ namespace element {
 
 class BooleanElement : public Element<bool> {
 public:
-    BooleanElement(std::shared_ptr<TaskInfo> task_info, bool goal) : Element<bool>(task_info, goal) { }
+    BooleanElement(bool goal) : Element<bool>(goal) { }
 };
 
 }

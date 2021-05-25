@@ -21,8 +21,7 @@ protected:
     }
 
 public:
-    CountNumericalElement(std::shared_ptr<TaskInfo> task_info, bool goal, T element)
-    : NumericalElement(task_info, goal), m_element(element) {}
+    CountNumericalElement(bool goal, T element) : NumericalElement(goal), m_element(element) {}
 
     virtual unsigned complexity() const override {
         return m_element->complexity() + 1;

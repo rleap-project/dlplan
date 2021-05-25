@@ -3,7 +3,7 @@ add_library(core
     cache.cpp
     core.cpp
     element_factory.cpp
-    task_info.cpp
+    instance_info.cpp
     parser/parser.cpp
     parser/tokenizer.cpp
     parser/ast_factory.cpp

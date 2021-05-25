@@ -6,7 +6,7 @@
 #include <vector>
 #include <unordered_map>
 
-#include "task_info.h"
+#include "instance_info.h"
 #include "cache.h"
 #include "types.h"
 #include "elements/types.h"
@@ -22,38 +22,34 @@ namespace core {
  */
 class ElementFactoryImpl {
 protected:
-    std::shared_ptr<TaskInfo> m_task_info;
-
     ElementCache m_cache;
 
 public:
     ElementFactoryImpl();
 
-    int add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool goal);
-
     /**
      * Returns a pointer to a ConceptElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    element::ConceptElement_Ptr make_concept_element(const std::string &description);
+    element::ConceptElement_Ptr make_concept_element(const InstanceInfoImpl& info, const std::string &description);
 
     /**
      * Returns a pointer to a RoleElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    element::RoleElement_Ptr make_role_element(const std::string &description);
+    element::RoleElement_Ptr make_role_element(const InstanceInfoImpl& info, const std::string &description);
 
     /**
      * Returns a pointer to a NumericalElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    element::NumericalElement_Ptr make_numerical_element(const std::string &description);
+    element::NumericalElement_Ptr make_numerical_element(const InstanceInfoImpl& info, const std::string &description);
 
     /**
      * Returns a pointer to a BooleanElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    element::BooleanElement_Ptr make_boolean_element(const std::string &description);
+    element::BooleanElement_Ptr make_boolean_element(const InstanceInfoImpl& info, const std::string &description);
 };
 
 }

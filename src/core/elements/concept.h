@@ -10,7 +10,7 @@ namespace element {
 
 class ConceptElement : public Element<Concepts> {
 public:
-    ConceptElement(std::shared_ptr<TaskInfo> task_info, bool goal) : Element<Concepts>(task_info, goal) { }
+    ConceptElement(bool goal) : Element<Concepts>(goal) { }
 
     size_t size() const {
         return m_result.size();

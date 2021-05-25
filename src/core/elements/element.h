@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "../types.h"
+#include "../cache.h"
 
 
 namespace dlp {
@@ -12,32 +13,24 @@ namespace element {
 template<typename T>
 class Element {
 protected:
-    std::shared_ptr<TaskInfo> m_task_info;
     bool m_goal;
     T m_result;
     const Index_Vec *m_state_atoms;
+    // TODO(dominik): we might want cache goal evaluations of different instances
 
 protected:
     virtual T evaluate_impl(const Index_Vec& atoms) = 0;
 
 public:
-    Element(std::shared_ptr<TaskInfo> task_info, bool goal)
-    : m_task_info(task_info), m_goal(goal) { }
-
-    /**
-     * Initializes the element if defined to be evaluated in the goal only.
-     */
-    void initialize() {
-        if (m_goal) {
-            evaluate_impl(m_task_info->goal_atom_idxs());
-        }
-    }
+    Element(bool goal) : m_goal(goal) { }
 
     /**
      * Evaluate and cache the last result.
      */
-    virtual T evaluate(const Index_Vec& state_atoms) {
-        if (!m_goal && (m_state_atoms != &state_atoms)) {
+    virtual T evaluate(const InstanceInfoImpl& info, const Index_Vec& state_atoms) {
+        if (m_goal) {
+            m_result = evaluate_impl(info.goal_atom_idxs());
+        } else if (!m_goal && (m_state_atoms != &state_atoms)) {
             m_state_atoms = &state_atoms;
             m_result = evaluate_impl(state_atoms);
         }

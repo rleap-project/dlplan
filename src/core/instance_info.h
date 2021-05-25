@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_CORE_TASK_INFO_H_
-#define DLP_SRC_CORE_TASK_INFO_H_
+#ifndef DLP_SRC_CORE_INSTANCE_INFO_IMPL_H_
+#define DLP_SRC_CORE_INSTANCE_INFO_IMPL_H_
 
 #include <unordered_map>
 #include <string>
@@ -12,7 +12,7 @@
 namespace dlp {
 namespace core {
 
-class TaskInfo {
+class InstanceInfoImpl {
 private:
     /**
      * Mappings between names and indices of predicates and objects.
