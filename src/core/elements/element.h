@@ -50,11 +50,6 @@ public:
     virtual unsigned complexity() const = 0;
 
     /**
-     * The size of the result.
-     */
-    virtual size_t size() const = 0;
-
-    /**
      * Getters.
      */
     virtual bool goal() const {
