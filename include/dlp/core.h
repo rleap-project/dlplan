@@ -18,7 +18,9 @@ using Roles = std::vector<Role>;
 using Name_Vec = std::vector<std::string>;
 using Index_Vec = std::vector<int>;
 
-
+/**
+ * InstanceInfo stores information related to the planning instance.
+ */
 class InstanceInfo {
 protected:
     std::shared_ptr<InstanceInfoImpl> m_pImpl;
@@ -33,9 +35,9 @@ public:
     InstanceInfo();
 
     /**
-     * Methods for initializing instance information.
+     * Adds an atom and internally extends a mapping from names to indices.
      */
-    int add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool goal);
+    int add_atom(const std::string &predicate_name, const Name_Vec &object_names);
 };
 
 /**
@@ -145,25 +147,25 @@ public:
      * Returns a ConceptElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    ConceptElement make_concept_element(const InstanceInfo& info, const std::string &description);
+    ConceptElement parse_concept_element(const InstanceInfo& info, const std::string &description);
 
     /**
      * Returns a RoleElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    RoleElement make_role_element(const InstanceInfo& info, const std::string &description);
+    RoleElement parse_role_element(const InstanceInfo& info, const std::string &description);
 
     /**
      * Returns a NumericalElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    NumericalElement make_numerical_element(const InstanceInfo& info, const std::string &description);
+    NumericalElement parse_numerical_element(const InstanceInfo& info, const std::string &description);
 
     /**
      * Returns a BooleanElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    BooleanElement make_boolean_element(const InstanceInfo& info, const std::string &description);
+    BooleanElement parse_boolean_element(const InstanceInfo& info, const std::string &description);
 };
 
 

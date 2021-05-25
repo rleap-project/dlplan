@@ -13,7 +13,7 @@ InstanceInfo::InstanceInfo()
     : m_pImpl(std::make_shared<InstanceInfoImpl>()) {
 }
 
-int InstanceInfo::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool goal) {
+int InstanceInfo::add_atom(const std::string &predicate_name, const Name_Vec &object_names) {
 
 }
 
@@ -21,20 +21,20 @@ ElementFactory::ElementFactory()
     : m_pImpl(std::make_unique<ElementFactoryImpl>()) {
 }
 
-ConceptElement ElementFactory::make_concept_element(const InstanceInfo& info, const std::string &description) {
-    return ConceptElement(info, m_pImpl->make_concept_element(*info.m_pImpl, description));
+ConceptElement ElementFactory::parse_concept_element(const InstanceInfo& info, const std::string &description) {
+    return ConceptElement(info, m_pImpl->parse_concept_element(*info.m_pImpl, description));
 }
 
-RoleElement ElementFactory::make_role_element(const InstanceInfo& info, const std::string &description) {
-    return RoleElement(info, m_pImpl->make_role_element(*info.m_pImpl, description));
+RoleElement ElementFactory::parse_role_element(const InstanceInfo& info, const std::string &description) {
+    return RoleElement(info, m_pImpl->parse_role_element(*info.m_pImpl, description));
 }
 
-NumericalElement ElementFactory::make_numerical_element(const InstanceInfo& info, const std::string &description) {
-    return NumericalElement(info, m_pImpl->make_numerical_element(*info.m_pImpl, description));
+NumericalElement ElementFactory::parse_numerical_element(const InstanceInfo& info, const std::string &description) {
+    return NumericalElement(info, m_pImpl->parse_numerical_element(*info.m_pImpl, description));
 }
 
-BooleanElement ElementFactory::make_boolean_element(const InstanceInfo& info, const std::string &description) {
-    return BooleanElement(info, m_pImpl->make_boolean_element(*info.m_pImpl, description));
+BooleanElement ElementFactory::parse_boolean_element(const InstanceInfo& info, const std::string &description) {
+    return BooleanElement(info, m_pImpl->parse_boolean_element(*info.m_pImpl, description));
 }
 
 ConceptElement::ConceptElement(const InstanceInfo& info, element::ConceptElement_Ptr pImpl)

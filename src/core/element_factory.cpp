@@ -9,22 +9,22 @@ namespace core {
 ElementFactoryImpl::ElementFactoryImpl() {
 }
 
-element::ConceptElement_Ptr ElementFactoryImpl::make_concept_element(const InstanceInfoImpl& info, const std::string &description) {
+element::ConceptElement_Ptr ElementFactoryImpl::parse_concept_element(const InstanceInfoImpl& info, const std::string &description) {
     parser::Expression_Ptr expression = parser::Parser().parse(description);
     return expression->make_concept_element(info, m_cache);
 }
 
-element::RoleElement_Ptr ElementFactoryImpl::make_role_element(const InstanceInfoImpl& info, const std::string &description) {
+element::RoleElement_Ptr ElementFactoryImpl::parse_role_element(const InstanceInfoImpl& info, const std::string &description) {
     parser::Expression_Ptr expression = parser::Parser().parse(description);
     return expression->make_role_element(info, m_cache);
 }
 
-element::NumericalElement_Ptr ElementFactoryImpl::make_numerical_element(const InstanceInfoImpl& info, const std::string &description) {
+element::NumericalElement_Ptr ElementFactoryImpl::parse_numerical_element(const InstanceInfoImpl& info, const std::string &description) {
     parser::Expression_Ptr expression = parser::Parser().parse(description);
     return expression->make_numerical_element(info, m_cache);
 }
 
-element::BooleanElement_Ptr ElementFactoryImpl::make_boolean_element(const InstanceInfoImpl& info, const std::string &description) {
+element::BooleanElement_Ptr ElementFactoryImpl::parse_boolean_element(const InstanceInfoImpl& info, const std::string &description) {
     parser::Expression_Ptr expression = parser::Parser().parse(description);
     return expression->make_boolean_element(info, m_cache);
 }

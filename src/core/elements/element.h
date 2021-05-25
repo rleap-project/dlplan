@@ -28,11 +28,14 @@ public:
      * Evaluate and cache the last result.
      */
     virtual T evaluate(const InstanceInfoImpl& info, const Index_Vec& state_atoms) {
-        if (m_goal) {
-            m_result = evaluate_impl(info.goal_atom_idxs());
-        } else if (!m_goal && (m_state_atoms != &state_atoms)) {
-            m_state_atoms = &state_atoms;
-            m_result = evaluate_impl(state_atoms);
+        if (m_state_atoms != &state_atoms) {
+            if (m_goal) {
+                m_state_atoms = &info.goal_atom_idxs();
+                m_result = evaluate_impl(info.goal_atom_idxs());
+            } else {
+                m_state_atoms = &state_atoms;
+                m_result = evaluate_impl(state_atoms);
+            }
         }
         return m_result;
     }
