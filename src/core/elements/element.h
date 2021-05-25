@@ -4,6 +4,7 @@
 #include "types.h"
 #include "../types.h"
 #include "../cache.h"
+#include "../../../include/dlp/core.h"
 
 
 namespace dlp {
@@ -15,11 +16,11 @@ class Element {
 protected:
     bool m_goal;
     T m_result;
-    const Index_Vec *m_state_atoms;
+    const State *m_state;
     // TODO(dominik): we might want cache goal evaluations of different instances
 
 protected:
-    virtual T evaluate_impl(const Index_Vec& atoms) = 0;
+    virtual T evaluate_impl(const State& state) = 0;
 
 public:
     Element(bool goal) : m_goal(goal) { }
@@ -27,15 +28,10 @@ public:
     /**
      * Evaluate and cache the last result.
      */
-    virtual T evaluate(const InstanceInfoImpl& info, const Index_Vec& state_atoms) {
-        if (m_state_atoms != &state_atoms) {
-            if (m_goal) {
-                m_state_atoms = &info.goal_atom_idxs();
-                m_result = evaluate_impl(info.goal_atom_idxs());
-            } else {
-                m_state_atoms = &state_atoms;
-                m_result = evaluate_impl(state_atoms);
-            }
+    virtual T evaluate(const InstanceInfoImpl& info, const State& state) {
+        if (m_state != &state) {
+            m_state = &state;
+            m_result = evaluate_impl(state);
         }
         return m_result;
     }

@@ -16,6 +16,6 @@ int main() {
     // Parse text to ConceptElement: returns the ConceptElement that is already cached
     dlp::core::ConceptElement concept = factory.parse_concept_element(info, "c_and(s_on(0),g_on(0))");
     // Evaluate NumericalElement on state.
-    dlp::core::Index_Vec state({1,2,42});
+    dlp::core::State state(info, {1,2,42});
     int value = numerical.evaluate(state);
 };

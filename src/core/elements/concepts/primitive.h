@@ -14,7 +14,7 @@ protected:
     unsigned m_object_idx;
 
 protected:
-    virtual Concepts evaluate_impl(const Index_Vec& atoms) override {
+    virtual Concepts evaluate_impl(const State& state) override {
         // TODO(dominik):
     }
 

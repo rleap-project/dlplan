@@ -16,7 +16,7 @@ protected:
     T m_element;
 
 protected:
-    virtual int evaluate_impl(const Index_Vec& atoms) override {
+    virtual int evaluate_impl(const State& state) override {
         return m_element->size();
     }
 

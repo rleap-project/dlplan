@@ -14,7 +14,7 @@ protected:
     ConceptElement_Ptr m_r;
 
 protected:
-    virtual Concepts evaluate_impl(const Index_Vec& atoms) override {
+    virtual Concepts evaluate_impl(const State& state) override {
         // TODO(dominik):
     }
 
