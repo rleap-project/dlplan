@@ -23,7 +23,7 @@ InstanceInfo::~InstanceInfo() { }
 State InstanceInfo::convert_state(const Index_Vec& atom_idxs) { }
 
 
-Atom::Atom(std::shared_ptr<InstanceInfo> parent, AtomImpl impl) : m_parent(parent), m_pImpl(impl) { }
+Atom::Atom(std::shared_ptr<InstanceInfo> parent, const AtomImpl& impl) : m_parent(parent), m_pImpl(impl) { }
 
 Atom::Atom(const Atom& other) : m_pImpl(*(other.m_pImpl)) { }
 

@@ -6,7 +6,6 @@
 #include <vector>
 
 #include "../../src/core/elements/types.h"
-#include "../../src/core/types.h"
 #include "../../src/utils/pimpl.h"
 
 
@@ -47,14 +46,14 @@ public:
     /**
      * Adds an atom and internally extends a mapping from names to indices.
      */
-    Atom add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static, bool add_goal_version);
+    Atom add_atom(const std::string& predicate_name, const Name_Vec& object_names, bool is_static, bool add_goal_version);
 
     /**
-     * Parses state from textual planning state using the index mappings.
+     * Construct a state from textual information by first applying the index mapping and the calling convert_state.
      */
     State parse_state(/* tba */) const;
     /**
-     * Constructs a state where atoms are extended by the static atoms of the instance.
+     * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
      */
     State convert_state(const Index_Vec& atom_idxs);
 };
@@ -65,7 +64,7 @@ private:
     const std::shared_ptr<InstanceInfo> m_parent;
     pimpl<AtomImpl> m_pImpl;
 
-    Atom(std::shared_ptr<InstanceInfo> parent, AtomImpl impl);
+    Atom(std::shared_ptr<InstanceInfo> parent, const AtomImpl& impl);
 
     friend class InstanceInfo;
 
@@ -130,6 +129,11 @@ public:
      * measured in the size of the abstract syntax tree.
      */
     virtual unsigned complexity() const = 0;
+
+    /**
+     * Getters.
+     */
+    virtual const std::shared_ptr<InstanceInfo>& parent() const { return m_parent; }
 };
 
 
@@ -222,7 +226,7 @@ public:
 
 
 /**
- * The FeatureFactory stores elements and takes care of uniqueness.
+ * The ElementFactory for creation and storage of elements while taking care of maintaining uniqueness.
  */
 class ElementFactory {
 private:

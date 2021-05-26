@@ -3,8 +3,45 @@
 namespace dlp {
 namespace core {
 
-const AtomImpl& InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static, bool add_goal_version) {
+static bool exists(const std::string& name, std::unordered_map<std::string, unsigned>& mapping) {
+    auto f = mapping.find(name);
+    return (f != mapping.end());
+}
 
+static unsigned insert_or_retrieve(const std::string& name, std::unordered_map<std::string, unsigned>& mapping) {
+    auto f = mapping.find(name);
+    if (f == mapping.end()) {
+        mapping.insert(std::make_pair(name, mapping.size()));
+        return mapping.size() - 1;
+    }
+    return f->second;
+}
+
+const AtomImpl& InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static, bool add_goal_version) {
+    if (add_goal_version && is_static) {
+        throw std::runtime_error("InstanceInfoImpl::add_atom - redundant to add goal version of static atom.");
+    }
+    bool predicate_exists = exists(predicate_name, m_predicate_name_to_predicate_idx);
+    if (!predicate_exists) {
+        m_predicate_arities.push_back(object_names.size());
+    }
+    int atom_idx = m_atoms.size();
+    int predicate_idx = insert_or_retrieve(predicate_name, m_predicate_name_to_predicate_idx);
+    Index_Vec object_idxs;
+    for (const std::string& object_name : object_names) {
+        object_idxs.push_back(insert_or_retrieve(object_name, m_object_name_to_object_idx));
+    }
+    if (is_static) {
+        m_static_atom_idxs.push_back(atom_idx);
+    }
+    // add atom at index
+    // m_atoms.insert()
+    // add extra goal version to end
+    if (add_goal_version) {
+        m_atoms.emplace_back(AtomImpl(atom_idx, predicate_name + "_g"s, predicate_idx, object_names, object_idxs, true));
+    }
+    m_atoms.emplace_back(AtomImpl(atom_idx + 1, predicate_name, predicate_idx, object_names, object_idxs, false));
+    return m_atoms.back();
 }
 
 bool InstanceInfoImpl::exists_predicate_name(const std::string& name) const {
@@ -17,14 +54,6 @@ bool InstanceInfoImpl::predicate_idx(const std::string& name) const {
 
 unsigned InstanceInfoImpl::predicate_arity(unsigned predicate_idx) const {
     return m_predicate_arities[predicate_idx];
-}
-
-const Index_Vec& InstanceInfoImpl::goal_atom_idxs() const {
-    return m_goal_atom_idxs;
-}
-
-const std::vector<AtomImpl>& InstanceInfoImpl::atoms() const {
-    return m_atoms;
 }
 
 }

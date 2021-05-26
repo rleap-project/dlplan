@@ -12,6 +12,13 @@
 namespace dlp {
 namespace core {
 
+/**
+ * InstanceInfo stores Atom related information and provides functionality for state transformation.
+ *
+ * TODO(dominik): Since primitive roles and concept depend on a certain type of predicates
+ * it can make sense to sort the atoms by name for improved cache locality.
+ * Can benchmark this first by planning with sorted and unsorted atoms.
+ */
 class InstanceInfoImpl {
 private:
     /**
@@ -26,11 +33,15 @@ private:
      */
     std::vector<unsigned> m_predicate_arities;
     /**
-     * Atoms satisfied in the goal.
+     * Indices of static atoms, i.e., atoms that do not change and remain true forever.
+     */
+    Index_Vec m_static_atom_idxs;
+    /**
+     * Indices of goal atoms.
      */
     Index_Vec m_goal_atom_idxs;
     /**
-     * All atoms
+     * All atoms.
      */
     std::vector<AtomImpl> m_atoms;
 
@@ -43,12 +54,6 @@ public:
     bool exists_predicate_name(const std::string& name) const;
     bool predicate_idx(const std::string& name) const;
     unsigned predicate_arity(unsigned predicate_idx) const;
-
-    /**
-     * Getters.
-     */
-    const Index_Vec& goal_atom_idxs() const;
-    const std::vector<AtomImpl>& atoms() const;
 };
 
 }
