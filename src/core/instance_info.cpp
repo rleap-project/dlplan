@@ -3,7 +3,7 @@
 namespace dlp {
 namespace core {
 
-int InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names) {
+const AtomImpl& InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static, bool add_goal_version) {
 
 }
 
@@ -23,7 +23,7 @@ const Index_Vec& InstanceInfoImpl::goal_atom_idxs() const {
     return m_goal_atom_idxs;
 }
 
-const std::vector<Atom>& InstanceInfoImpl::atoms() const {
+const std::vector<AtomImpl>& InstanceInfoImpl::atoms() const {
     return m_atoms;
 }
 

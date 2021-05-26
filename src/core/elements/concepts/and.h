@@ -19,8 +19,8 @@ protected:
     }
 
 public:
-    AndConceptElement(bool goal, ConceptElement_Ptr l, ConceptElement_Ptr r)
-    : ConceptElement(goal), m_l(l), m_r(r) {}
+    AndConceptElement(ConceptElement_Ptr l, ConceptElement_Ptr r)
+    : m_l(l), m_r(r) {}
 
     virtual unsigned complexity() const override {
         return m_l->complexity() + m_r->complexity() + 1;

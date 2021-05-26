@@ -10,7 +10,7 @@ namespace element {
 
 class NumericalElement : public Element<int> {
 public:
-    NumericalElement(bool goal) : Element<int>(goal) { }
+    NumericalElement() { }
 };
 
 }

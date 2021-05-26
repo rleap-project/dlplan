@@ -19,7 +19,7 @@ protected:
         if (!(l && r)) {
             throw std::runtime_error("AndConceptExpression::make_concept_element - children are not of type ConceptElement.");
         }
-        return std::make_shared<element::AndConceptElement>(l->goal() && r->goal(), l, r);
+        return std::make_shared<element::AndConceptElement>(l, r);
     }
 
 public:

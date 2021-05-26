@@ -21,7 +21,7 @@ protected:
     }
 
 public:
-    CountNumericalElement(bool goal, T element) : NumericalElement(goal), m_element(element) {}
+    CountNumericalElement(T element) : m_element(element) {}
 
     virtual unsigned complexity() const override {
         return m_element->complexity() + 1;

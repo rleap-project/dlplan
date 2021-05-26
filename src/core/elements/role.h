@@ -10,7 +10,7 @@ namespace element {
 
 class RoleElement : public Element<Roles> {
 public:
-    RoleElement(bool goal) : Element<Roles>(goal) { }
+    RoleElement() { }
 
     size_t size() const {
         return m_result.size();

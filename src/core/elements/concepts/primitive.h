@@ -19,8 +19,8 @@ protected:
     }
 
 public:
-    PrimitiveConceptElement(bool goal, unsigned predicate_idx, unsigned object_idx)
-    : ConceptElement(goal), m_predicate_idx(predicate_idx), m_object_idx(object_idx) {}
+    PrimitiveConceptElement(unsigned predicate_idx, unsigned object_idx)
+    : m_predicate_idx(predicate_idx), m_object_idx(object_idx) {}
 
     virtual unsigned complexity() const override {
         return 1;

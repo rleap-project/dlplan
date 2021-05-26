@@ -32,13 +32,13 @@ private:
     /**
      * All atoms
      */
-    std::vector<Atom> m_atoms;
+    std::vector<AtomImpl> m_atoms;
 
 public:
     /**
      * Methods for initializing the TaskInfo successively.
      */
-    int add_atom(const std::string &predicate_name, const Name_Vec &object_names);
+    const AtomImpl& add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static, bool add_goal_version);
 
     bool exists_predicate_name(const std::string& name) const;
     bool predicate_idx(const std::string& name) const;
@@ -48,7 +48,7 @@ public:
      * Getters.
      */
     const Index_Vec& goal_atom_idxs() const;
-    const std::vector<Atom>& atoms() const;
+    const std::vector<AtomImpl>& atoms() const;
 };
 
 }

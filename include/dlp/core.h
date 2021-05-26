@@ -1,14 +1,24 @@
 #ifndef DLP_INCLUDE_DLP_CORE_H_
 #define DLP_INCLUDE_DLP_CORE_H_
 
-#include "../../src/core/element_factory.h"
-#include "../../src/core/instance_info.h"
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "../../src/core/elements/types.h"
+#include "../../src/core/types.h"
+#include "../../src/utils/pimpl.h"
 
 
 namespace dlp {
 namespace core {
+class ElementFactoryImpl;
+class InstanceInfoImpl;
+class AtomImpl;
+class StateImpl;
 class ElementFactory;
 class State;
+class Atom;
 
 using Concept = int;
 using Concepts = std::vector<Concept>;
@@ -24,51 +34,77 @@ using Index_Vec = std::vector<int>;
  * InstanceInfo stores information related to the planning instance.
  */
 class InstanceInfo {
-protected:
-    std::shared_ptr<InstanceInfoImpl> m_pImpl;
+private:
+    pimpl<InstanceInfoImpl> m_pImpl;
+
+    friend class ElementFactory;
 
 public:
     InstanceInfo();
+    InstanceInfo(const InstanceInfo& other);
+    ~InstanceInfo();
 
     /**
      * Adds an atom and internally extends a mapping from names to indices.
      */
-    int add_atom(const std::string &predicate_name, const Name_Vec &object_names);
+    Atom add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static, bool add_goal_version);
 
     /**
-     * Parses state from textual state information using the index mappings.
+     * Parses state from textual planning state using the index mappings.
      */
     State parse_state(/* tba */) const;
-
     /**
-     * Comparison operators.
+     * Constructs a state where atoms are extended by the static atoms of the instance.
      */
-    bool operator==(const InstanceInfo& other);
-    bool operator!=(const InstanceInfo& other);
-
-    /**
-     * Getters.
-     */
-    std::shared_ptr<InstanceInfoImpl> impl() const;
+    State convert_state(const Index_Vec& atom_idxs);
 };
 
-/**
- * State stores information related to a planning state.
- */
-struct State {
+
+class Atom {
+private:
+    const std::shared_ptr<InstanceInfo> m_parent;
+    pimpl<AtomImpl> m_pImpl;
+
+    Atom(std::shared_ptr<InstanceInfo> parent, AtomImpl impl);
+
+    friend class InstanceInfo;
+
 public:
-    const InstanceInfo m_info;
-    const Index_Vec m_atoms;
-
-    State(const InstanceInfo& info, const Index_Vec& atoms);
-    State(const InstanceInfo& info, Index_Vec&& atoms);
+    Atom() = delete;
+    Atom(const Atom& other);
+    ~Atom();
 
     /**
      * Getters.
      */
-    InstanceInfo info() const;
-    const Index_Vec& atoms() const;
+    int atom_idx() const;
 };
+
+
+class State {
+private:
+    const std::shared_ptr<InstanceInfo> m_parent;
+    pimpl<StateImpl> m_pImpl;
+
+    State(std::shared_ptr<InstanceInfo> parent, StateImpl impl);
+
+    friend class InstanceInfo;
+
+public:
+    State() = delete;
+    State(const State& other);
+    ~State();
+
+    /**
+     * Computes string-like representation of the state.
+     */
+    std::string str() const;
+    /**
+     * Getters.
+     */
+    const std::shared_ptr<InstanceInfo>& parent() const;
+};
+
 
 /**
  * Abstract base class of any Element.
@@ -76,19 +112,13 @@ public:
 template<typename T>
 class Element {
 protected:
-    /**
-     * During evaluation we only allow using the instance information
-     * that was used during the construction.
-     * To use a different instance information for the same Element
-     * one has to construct the element by passing the specific instance information
-     * to the construction method in the ElementFactory.
-     * We set this requirement because during the construction process
-     * we assert the existence of respective predicates and their arities.
-     */
-    InstanceInfo m_info;
+    const std::shared_ptr<InstanceInfo> m_parent;
+
+    Element(std::shared_ptr<InstanceInfo> parent) : m_parent(parent) { }
 
 public:
-    Element(const InstanceInfo& info) : m_info(info) { }
+    Element() = delete;
+    virtual ~Element() = default;
 
     /**
      * Evaluates the element for a state given as a vector of atom indices.
@@ -100,67 +130,90 @@ public:
      * measured in the size of the abstract syntax tree.
      */
     virtual unsigned complexity() const = 0;
-
-    /**
-     * Getters.
-     */
-    virtual InstanceInfo info() const { return m_info; }
 };
+
 
 /**
  * ConceptElement evaluates to Concepts.
  */
 class ConceptElement : public Element<Concepts> {
 protected:
-    element::ConceptElement_Ptr m_pImpl;
+    pimpl<element::ConceptElement_Ptr> m_pImpl;
+
+    ConceptElement(std::shared_ptr<InstanceInfo> parent, element::ConceptElement_Ptr pImpl);
+
+    friend class ElementFactory;
 
 public:
-    ConceptElement(const InstanceInfo& info, element::ConceptElement_Ptr pImpl);
+    ConceptElement() = delete;
+    ConceptElement(const ConceptElement& other);
+    virtual ~ConceptElement() = default;
 
     virtual Concepts evaluate(const State& state) const override;
 
     virtual unsigned complexity() const override;
 };
 
+
 /**
  * ConceptElement evaluates to Roles.
  */
 class RoleElement : public Element<Roles> {
 protected:
-    element::RoleElement_Ptr m_pImpl;
+    pimpl<element::RoleElement_Ptr> m_pImpl;
+
+    RoleElement(std::shared_ptr<InstanceInfo> parent, element::RoleElement_Ptr pImpl);
+
+    friend class ElementFactory;
 
 public:
-    RoleElement(const InstanceInfo& info, element::RoleElement_Ptr pImpl);
+    RoleElement() = delete;
+    RoleElement(const RoleElement& other);
+    virtual ~RoleElement() = default;
 
     virtual Roles evaluate(const State& state) const override;
 
     virtual unsigned complexity() const override;
 };
 
+
 /**
  * NumericalElement evaluates to int.
  */
 class NumericalElement : public Element<int> {
 protected:
-    element::NumericalElement_Ptr m_pImpl;
+    pimpl<element::NumericalElement_Ptr> m_pImpl;
+
+    NumericalElement(std::shared_ptr<InstanceInfo> parent, element::NumericalElement_Ptr pImpl);
+
+    friend class ElementFactory;
 
 public:
-    NumericalElement(const InstanceInfo& info, element::NumericalElement_Ptr pImpl);
+    NumericalElement() = delete;
+    NumericalElement(const NumericalElement& other);
+    virtual ~NumericalElement() = default;
 
     virtual int evaluate(const State& state) const override;
 
     virtual unsigned complexity() const override;
 };
 
+
 /**
  * BooleanElement evaluates to bool.
  */
 class BooleanElement : public Element<bool> {
 protected:
-    element::BooleanElement_Ptr m_pImpl;
+    pimpl<element::BooleanElement_Ptr> m_pImpl;
+
+    BooleanElement(std::shared_ptr<InstanceInfo> parent, element::BooleanElement_Ptr pImpl);
+
+    friend class ElementFactory;
 
 public:
-    BooleanElement(const InstanceInfo& info, element::BooleanElement_Ptr pImpl);
+    BooleanElement() = delete;
+    BooleanElement(const BooleanElement& other);
+    virtual ~BooleanElement() = default;
 
     virtual bool evaluate(const State& state) const override;
 
@@ -173,10 +226,12 @@ public:
  */
 class ElementFactory {
 private:
-    std::unique_ptr<ElementFactoryImpl> m_pImpl;
+    pimpl<ElementFactoryImpl> m_pImpl;
 
 public:
     ElementFactory();
+    ElementFactory(const ElementFactory& other) = delete;
+    ~ElementFactory();
 
     /**
      * Returns a ConceptElement if the description is correct.

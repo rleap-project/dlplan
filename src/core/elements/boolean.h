@@ -10,7 +10,7 @@ namespace element {
 
 class BooleanElement : public Element<bool> {
 public:
-    BooleanElement(bool goal) : Element<bool>(goal) { }
+    BooleanElement() { }
 };
 
 }

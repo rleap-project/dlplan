@@ -20,14 +20,6 @@ int try_parse(const std::string& name) {
     return atoi(name.c_str());
 }
 
-bool is_goal_version(const std::string& name) {
-    return (strncmp(name.c_str(), "g_", 2) == 0);
-}
-
-std::string strip_type_identifier(const std::string& name) {
-    return name.substr(2);
-}
-
 /**
  * Sort child expressions lexicographically.
  * We apply this in commutative expressions

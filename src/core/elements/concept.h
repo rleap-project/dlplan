@@ -10,7 +10,7 @@ namespace element {
 
 class ConceptElement : public Element<Concepts> {
 public:
-    ConceptElement(bool goal) : Element<Concepts>(goal) { }
+    ConceptElement() { }
 
     size_t size() const {
         return m_result.size();

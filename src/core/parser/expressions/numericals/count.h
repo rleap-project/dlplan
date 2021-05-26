@@ -16,11 +16,11 @@ protected:
         }
         element::ConceptElement_Ptr concept_element = m_children[0]->make_concept_element(info, cache);
         if (concept_element) {
-            return std::make_shared<element::CountNumericalElement<element::ConceptElement_Ptr>>(concept_element->goal(), concept_element);
+            return std::make_shared<element::CountNumericalElement<element::ConceptElement_Ptr>>(concept_element);
         }
         element::RoleElement_Ptr role_element = m_children[0]->make_role_element(info, cache);
         if (role_element) {
-            return std::make_shared<element::CountNumericalElement<element::RoleElement_Ptr>>(role_element->goal(), role_element);
+            return std::make_shared<element::CountNumericalElement<element::RoleElement_Ptr>>(role_element);
         }
         throw std::runtime_error("CountNumericalExpression::make_numerical_element - unable to construct children elements.");
     }

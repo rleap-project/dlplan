@@ -1,5 +1,6 @@
 add_library(core
     atom.cpp
+    state.cpp
     cache.cpp
     core.cpp
     element_factory.cpp
