@@ -52,11 +52,11 @@ Concepts ConceptElement::evaluate(const State& state) const {
     if (m_parent != state.parent()) {
         throw std::invalid_argument("ConceptElement::evaluate - instance information between state and element do not match.");
     }
-    (*m_pImpl)->evaluate(state);
+    m_pImpl->get()->evaluate(state);
 }
 
 unsigned ConceptElement::complexity() const {
-    return (*m_pImpl)->complexity();
+    return m_pImpl->get()->complexity();
 }
 
 RoleElement::RoleElement(std::shared_ptr<InstanceInfo> parent, element::RoleElement_Ptr pImpl)
@@ -69,11 +69,11 @@ Roles RoleElement::evaluate(const State& state) const {
     if (m_parent != state.parent()) {
         throw std::invalid_argument("RoleElement::evaluate - instance information between state and element do not match.");
     }
-    (*m_pImpl)->evaluate(state);
+    m_pImpl->get()->evaluate(state);
 }
 
 unsigned RoleElement::complexity() const {
-    return (*m_pImpl)->complexity();
+    return m_pImpl->get()->complexity();
 }
 
 NumericalElement::NumericalElement(std::shared_ptr<InstanceInfo> parent, element::NumericalElement_Ptr pImpl)
@@ -86,11 +86,11 @@ int NumericalElement::evaluate(const State& state) const {
     if (m_parent != state.parent()) {
         throw std::invalid_argument("NumericalElement::evaluate - instance information between state and element do not match.");
     }
-    (*m_pImpl)->evaluate(state);
+    m_pImpl->get()->evaluate(state);
 }
 
 unsigned NumericalElement::complexity() const {
-    return (*m_pImpl)->complexity();
+    return m_pImpl->get()->complexity();
 }
 
 BooleanElement::BooleanElement(std::shared_ptr<InstanceInfo> parent, element::BooleanElement_Ptr pImpl)
@@ -103,11 +103,11 @@ bool BooleanElement::evaluate(const State& state) const {
     if (m_parent != state.parent()) {
         throw std::invalid_argument("BooleanElement::evaluate - instance information between state and element do not match.");
     }
-    (*m_pImpl)->evaluate(state);
+    m_pImpl->get()->evaluate(state);
 }
 
 unsigned BooleanElement::complexity() const {
-    return (*m_pImpl)->complexity();
+    return m_pImpl->get()->complexity();
 }
 
 
