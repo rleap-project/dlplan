@@ -23,14 +23,15 @@ protected:
     const std::string m_name;
     // Evaluation result
     T m_result;
-    const StateImpl *m_state;
+    const StateImpl* m_state;
     // TODO(dominik): we might want cache goal evaluations of different instances
 
 protected:
     virtual T evaluate_impl(const StateImpl& state) = 0;
 
 public:
-    Element(std::shared_ptr<InstanceInfoImpl> parent, const std::string& name) : m_parent(parent), m_name(name) { }
+    Element(std::shared_ptr<InstanceInfoImpl> parent, const std::string& name) : m_parent(parent), m_name(name), m_result(T()), m_state(nullptr) { }
+    virtual ~Element() = default;
 
     /**
      * Evaluate and cache the last result.

@@ -19,5 +19,5 @@ target_link_libraries(main dlp)
 #set(CMAKE_CXX_EXTENSIONS OFF)
 # Uncomment for debug build. Alternatively, build with `cmake -DCMAKE_BUILD_TYPE=Debug .`
 #set(CMAKE_BUILD_TYPE Debug)
-#set(CMAKE_CXX_FLAGS "-g -DDEBUG")
+set(CMAKE_CXX_FLAGS "-g -DDEBUG")
 #set(CMAKE_CXX_FLAGS "-O3 -DNDEBUG")  # -Wall -Wextra

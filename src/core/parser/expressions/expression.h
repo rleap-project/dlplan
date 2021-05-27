@@ -29,6 +29,7 @@ public:
         std::vector<std::unique_ptr<Expression>> &&children)
         : m_name(name), m_children(std::move(children)) {
     }
+    // ~Expression() { };
 
     /**
      * Returns true if the expression is a leaf, i.e.,

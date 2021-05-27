@@ -16,7 +16,7 @@
 namespace dlp {
 namespace core {
 
-InstanceInfo::InstanceInfo() : m_pImpl(std::make_shared<InstanceInfoImpl>()) { }
+InstanceInfo::InstanceInfo() : m_pImpl(std::make_shared<InstanceInfoImpl>(InstanceInfoImpl())) { }
 
 InstanceInfo::~InstanceInfo() { }
 
@@ -25,7 +25,7 @@ State InstanceInfo::convert_state(const Index_Vec& atom_idxs) {
 }
 
 Atom InstanceInfo::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
-    return Atom(m_pImpl->get()->add_atom(*m_pImpl, predicate_name, object_names, is_static));
+    return Atom(m_pImpl->get()->add_atom(predicate_name, object_names, is_static));
 }
 
 
@@ -52,11 +52,15 @@ ConceptElement::ConceptElement(const ConceptElement& other)
     : m_pImpl(*(other.m_pImpl)) { }
 
 Concepts ConceptElement::evaluate(const State& state) const {
-    m_pImpl->get()->evaluate(*(state.m_pImpl));
+    return m_pImpl->get()->evaluate(*(state.m_pImpl));
 }
 
 unsigned ConceptElement::complexity() const {
     return m_pImpl->get()->complexity();
+}
+
+std::string ConceptElement::repr() const {
+    return m_pImpl->get()->repr();
 }
 
 RoleElement::RoleElement(element::RoleElement_Ptr pImpl)
@@ -66,12 +70,17 @@ RoleElement::RoleElement(const RoleElement& other)
     : m_pImpl(*(other.m_pImpl)) { }
 
 Roles RoleElement::evaluate(const State& state) const {
-    m_pImpl->get()->evaluate(*(state.m_pImpl));
+    return m_pImpl->get()->evaluate(*(state.m_pImpl));
 }
 
 unsigned RoleElement::complexity() const {
     return m_pImpl->get()->complexity();
 }
+
+std::string RoleElement::repr() const {
+    return m_pImpl->get()->repr();
+}
+
 
 NumericalElement::NumericalElement(element::NumericalElement_Ptr pImpl)
     : m_pImpl(pImpl) { }
@@ -80,12 +89,17 @@ NumericalElement::NumericalElement(const NumericalElement& other)
     : m_pImpl(*(other.m_pImpl)) { }
 
 int NumericalElement::evaluate(const State& state) const {
-    m_pImpl->get()->evaluate(*(state.m_pImpl));
+    return m_pImpl->get()->evaluate(*(state.m_pImpl));
 }
 
 unsigned NumericalElement::complexity() const {
     return m_pImpl->get()->complexity();
 }
+
+std::string NumericalElement::repr() const {
+    return m_pImpl->get()->repr();
+}
+
 
 BooleanElement::BooleanElement(element::BooleanElement_Ptr pImpl)
     : m_pImpl(pImpl) { }
@@ -94,12 +108,17 @@ BooleanElement::BooleanElement(const BooleanElement& other)
     : m_pImpl(*(other.m_pImpl)) { }
 
 bool BooleanElement::evaluate(const State& state) const {
-    m_pImpl->get()->evaluate(*(state.m_pImpl));
+    return m_pImpl->get()->evaluate(*(state.m_pImpl));
 }
 
 unsigned BooleanElement::complexity() const {
     return m_pImpl->get()->complexity();
 }
+
+std::string BooleanElement::repr() const {
+    return m_pImpl->get()->repr();
+}
+
 
 
 ElementFactory::ElementFactory() { }

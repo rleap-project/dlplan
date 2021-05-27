@@ -22,7 +22,7 @@ static unsigned insert_or_retrieve(const std::string& name, std::unordered_map<s
     return f->second;
 }
 
-const AtomImpl& InstanceInfoImpl::add_atom(std::shared_ptr<InstanceInfoImpl> info, const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
+AtomImpl InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
     bool predicate_exists = exists(predicate_name, m_predicate_name_to_predicate_idx);
     if (!predicate_exists) {
         m_predicate_arities.push_back(object_names.size());
@@ -36,7 +36,7 @@ const AtomImpl& InstanceInfoImpl::add_atom(std::shared_ptr<InstanceInfoImpl> inf
     if (is_static) {
         m_static_atom_idxs.push_back(atom_idx);
     }
-    m_atoms.emplace_back(AtomImpl(info, atom_idx, predicate_name, predicate_idx, object_names, object_idxs, is_static));
+    m_atoms.push_back(AtomImpl(atom_idx, predicate_name, predicate_idx, object_names, object_idxs, is_static));
     return m_atoms.back();
 }
 

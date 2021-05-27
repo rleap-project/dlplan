@@ -11,8 +11,7 @@ namespace core {
 class InstanceInfoImpl;
 
 struct AtomImpl {
-    // Non-owning parent pointer
-    const std::shared_ptr<InstanceInfoImpl> m_parent;
+    // cannot have parent pointer to instance here since atom are stored in instance.
     // Data members
     const int m_atom_idx;
     const std::string m_predicate_name;
@@ -22,13 +21,13 @@ struct AtomImpl {
     const bool m_is_static;
 
     AtomImpl(
-        std::shared_ptr<InstanceInfoImpl> parent,
         const int atom_idx,
         const std::string &predicate_name,
         int predicate_idx,
         const Name_Vec &object_names,
         const Index_Vec &object_idxs,
         bool is_static);
+    ~AtomImpl() = default;
 
     int predicate_idx() const;
     int object_idx(int pos) const;

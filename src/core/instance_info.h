@@ -43,10 +43,13 @@ private:
     std::vector<AtomImpl> m_atoms;
 
 public:
+    InstanceInfoImpl() = default;
+    ~InstanceInfoImpl() = default;
+
     /**
      * Methods for initializing the TaskInfo successively.
      */
-    const AtomImpl& add_atom(std::shared_ptr<InstanceInfoImpl> info, const std::string &predicate_name, const Name_Vec &object_names, bool is_static);
+    AtomImpl add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static);
     /**
      * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
      */

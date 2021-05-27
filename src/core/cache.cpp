@@ -3,6 +3,8 @@
 namespace dlp {
 namespace core {
 
+ElementCache::ElementCache() { }
+
 Cache<std::string, element::ConceptElement_Ptr>& ElementCache::concept_element_cache() {
     return m_concept_element_cache;
 }

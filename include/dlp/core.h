@@ -87,6 +87,7 @@ private:
 
 public:
     InstanceInfo();
+    InstanceInfo(const InstanceInfo& other) = delete;
     ~InstanceInfo();
 
     /**
@@ -123,6 +124,11 @@ public:
      * measured in the size of the abstract syntax tree.
      */
     virtual unsigned complexity() const = 0;
+
+    /**
+     * Returns a canonical string representation.
+     */
+    virtual std::string repr() const = 0;
 };
 
 
@@ -145,6 +151,8 @@ public:
     virtual Concepts evaluate(const State& state) const override;
 
     virtual unsigned complexity() const override;
+
+    virtual std::string repr() const override;
 };
 
 
@@ -167,6 +175,8 @@ public:
     virtual Roles evaluate(const State& state) const override;
 
     virtual unsigned complexity() const override;
+
+    virtual std::string repr() const override;
 };
 
 
@@ -189,6 +199,8 @@ public:
     virtual int evaluate(const State& state) const override;
 
     virtual unsigned complexity() const override;
+
+    virtual std::string repr() const override;
 };
 
 
@@ -211,6 +223,8 @@ public:
     virtual bool evaluate(const State& state) const override;
 
     virtual unsigned complexity() const override;
+
+    virtual std::string repr() const override;
 };
 
 
@@ -223,6 +237,7 @@ private:
 
 public:
     ElementFactory();
+    ElementFactory(const ElementFactory& other) = delete;
     ~ElementFactory();
 
     /**

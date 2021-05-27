@@ -2,6 +2,7 @@
 #define DLP_SRC_CORE_CACHE_H_
 
 #include <unordered_map>
+#include <iostream>
 
 #include "boost/functional/hash.hpp"
 
@@ -44,6 +45,8 @@ public:
     Value_T& insert_cache_and_retrieve(const Key_T& key, Value_T&& value) {
         if (!exists(key)) {
             insert(key, std::move(value));
+        } else {
+            std::cout << key << std::endl;
         }
         return get(key);
     }
@@ -64,6 +67,8 @@ private:
     Cache<std::string, element::BooleanElement_Ptr> m_boolean_element_cache;
 
 public:
+    ElementCache();
+
     Cache<std::string, element::ConceptElement_Ptr>& concept_element_cache();
     Cache<std::string, element::RoleElement_Ptr>& role_element_cache();
     Cache<std::string, element::NumericalElement_Ptr>& numerical_element_cache();
