@@ -53,8 +53,12 @@ public:
     StateImpl convert_state(std::shared_ptr<InstanceInfoImpl> info, const Index_Vec& atom_idxs);
 
     bool exists_predicate_name(const std::string& name) const;
-    bool predicate_idx(const std::string& name) const;
+    unsigned predicate_idx(const std::string& name) const;
     unsigned predicate_arity(unsigned predicate_idx) const;
+    /**
+     * Getters
+     */
+    const AtomImpl& atom(unsigned atom_idx) const;
 };
 
 }

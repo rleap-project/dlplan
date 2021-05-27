@@ -15,5 +15,13 @@ AtomImpl::AtomImpl(
       m_predicate_name(predicate_name), m_predicate_idx(predicate_idx),
       m_object_names(object_names), m_object_idxs(object_idxs), m_is_static(is_static) { }
 
+int AtomImpl::predicate_idx() const {
+    return m_predicate_idx;
+}
+
+int AtomImpl::object_idx(int pos) const {
+    return m_object_idxs[pos];
+}
+
 }
 }

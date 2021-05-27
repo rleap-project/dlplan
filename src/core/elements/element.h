@@ -6,6 +6,8 @@
 #include "../cache.h"
 #include "../state.h"
 
+#include <iostream>
+
 
 namespace dlp {
 namespace core {

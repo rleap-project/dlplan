@@ -29,6 +29,9 @@ struct AtomImpl {
         const Name_Vec &object_names,
         const Index_Vec &object_idxs,
         bool is_static);
+
+    int predicate_idx() const;
+    int object_idx(int pos) const;
 };
 
 }

@@ -2,6 +2,7 @@
 #include "state.h"
 
 #include <algorithm>
+#include <iostream>
 
 
 namespace dlp {
@@ -15,7 +16,7 @@ static bool exists(const std::string& name, std::unordered_map<std::string, unsi
 static unsigned insert_or_retrieve(const std::string& name, std::unordered_map<std::string, unsigned>& mapping) {
     auto f = mapping.find(name);
     if (f == mapping.end()) {
-        mapping.insert(std::make_pair(name, mapping.size()));
+        mapping.emplace(std::make_pair(name, mapping.size()));
         return mapping.size() - 1;
     }
     return f->second;
@@ -51,12 +52,16 @@ bool InstanceInfoImpl::exists_predicate_name(const std::string& name) const {
     return m_predicate_name_to_predicate_idx.find(name) != m_predicate_name_to_predicate_idx.end();
 }
 
-bool InstanceInfoImpl::predicate_idx(const std::string& name) const {
+unsigned InstanceInfoImpl::predicate_idx(const std::string& name) const {
     return m_predicate_name_to_predicate_idx.at(name);
 }
 
 unsigned InstanceInfoImpl::predicate_arity(unsigned predicate_idx) const {
     return m_predicate_arities[predicate_idx];
+}
+
+const AtomImpl& InstanceInfoImpl::atom(unsigned atom_idx) const {
+    return m_atoms[atom_idx];
 }
 
 }

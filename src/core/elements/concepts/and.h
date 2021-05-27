@@ -15,7 +15,16 @@ protected:
 
 protected:
     virtual Concepts evaluate_impl(const StateImpl& state) override {
-        // TODO(dominik):
+        Concepts l_vec = m_l->evaluate(state);
+        Concepts r_vec = m_r->evaluate(state);
+        Concepts_Set r_set(r_vec.begin(), r_vec.end());
+        m_result.clear();
+        for (Concept c : l_vec) {
+            if (r_set.find(c) != r_set.end()) {
+                m_result.push_back(c);
+            }
+        }
+        return m_result;
     }
 
 public:

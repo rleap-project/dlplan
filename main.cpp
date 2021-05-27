@@ -22,7 +22,7 @@ int main() {
     // Parse text to NumericalElement
     dlp::core::NumericalElement numerical = factory.parse_numerical_element(instance, "n_count(c_and(on_g(0),on(0)))");
     // Parse text to ConceptElement: returns the ConceptElement that is already cached
-    dlp::core::ConceptElement concept = factory.parse_concept_element(instance, "c_and(on(0),on_g(0))");
+    // dlp::core::ConceptElement concept = factory.parse_concept_element(instance, "c_and(on(0),on_g(0))");
     // Example state: block A on B
     dlp::core::State state = instance.convert_state({0, 3});
     int value = numerical.evaluate(state);
