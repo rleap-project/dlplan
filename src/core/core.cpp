@@ -122,5 +122,17 @@ BooleanElement ElementFactory::parse_boolean_element(const InstanceInfo& info, c
     return BooleanElement(m_pImpl->parse_boolean_element(*info.m_pImpl, description));
 }
 
+NumericalElement ElementFactory::make_count_element(const InstanceInfoImpl& info, const ConceptElement& element) {
+    return NumericalElement(m_pImpl->make_count_element(info, *element.m_pImpl));
+}
+
+NumericalElement ElementFactory::make_count_element(const InstanceInfoImpl& info, const RoleElement& element) {
+    return NumericalElement(m_pImpl->make_count_element(info, *element.m_pImpl));
+}
+
+ConceptElement ElementFactory::make_primitive_concept_element(const InstanceInfoImpl& info, const std::string& name, unsigned pos) {
+    return ConceptElement(m_pImpl->make_primitive_concept_element(info, name, pos));
+}
+
 }
 }

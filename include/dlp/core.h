@@ -262,7 +262,7 @@ public:
     /**
      * Returns a ConceptElement that counts the number of primitive concepts.
      */
-    ConceptElement make_primitive_concept_element(const InstanceInfoImpl& info, const std::string& name);
+    ConceptElement make_primitive_concept_element(const InstanceInfoImpl& info, const std::string& name, unsigned pos);
 };
 
 
