@@ -15,12 +15,12 @@ class InstanceInfoImpl;
  */
 struct StateImpl {
     // Non-owning parent pointer
-    const InstanceInfoImpl* m_parent;
+    std::shared_ptr<InstanceInfoImpl> m_parent;
     // The underlying implementation currently is a vector of atoms.
     const Index_Vec m_atoms;
 
-    StateImpl(const InstanceInfoImpl* parent, const Index_Vec& atoms);
-    StateImpl(const InstanceInfoImpl* parent, Index_Vec&& atoms);
+    StateImpl(std::shared_ptr<InstanceInfoImpl> parent, const Index_Vec& atoms);
+    StateImpl(std::shared_ptr<InstanceInfoImpl> parent, Index_Vec&& atoms);
     ~StateImpl() = default;
 };
 

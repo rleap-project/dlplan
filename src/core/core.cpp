@@ -16,12 +16,16 @@
 namespace dlp {
 namespace core {
 
-InstanceInfo::InstanceInfo() { }
+InstanceInfo::InstanceInfo() : m_pImpl(std::make_shared<InstanceInfoImpl>()) { }
 
 InstanceInfo::~InstanceInfo() { }
 
 State InstanceInfo::convert_state(const Index_Vec& atom_idxs) {
-    return State(m_pImpl->convert_state(atom_idxs));
+    return State(m_pImpl->get()->convert_state(*m_pImpl, atom_idxs));
+}
+
+Atom InstanceInfo::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
+    return Atom(m_pImpl->get()->add_atom(*m_pImpl, predicate_name, object_names, is_static));
 }
 
 
@@ -102,10 +106,6 @@ ElementFactory::ElementFactory() { }
 
 ElementFactory::~ElementFactory() { }
 
-Atom InstanceInfo::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
-    return Atom(m_pImpl->add_atom(predicate_name, object_names, is_static));
-}
-
 ConceptElement ElementFactory::parse_concept_element(const InstanceInfo& info, const std::string &description) {
     return ConceptElement(m_pImpl->parse_concept_element(*info.m_pImpl, description));
 }
@@ -122,16 +122,16 @@ BooleanElement ElementFactory::parse_boolean_element(const InstanceInfo& info, c
     return BooleanElement(m_pImpl->parse_boolean_element(*info.m_pImpl, description));
 }
 
-NumericalElement ElementFactory::make_count_element(const InstanceInfoImpl& info, const ConceptElement& element) {
-    return NumericalElement(m_pImpl->make_count_element(info, *element.m_pImpl));
+NumericalElement ElementFactory::make_count_element(const InstanceInfo& info, const ConceptElement& element) {
+    return NumericalElement(m_pImpl->make_count_element(*info.m_pImpl, *element.m_pImpl));
 }
 
-NumericalElement ElementFactory::make_count_element(const InstanceInfoImpl& info, const RoleElement& element) {
-    return NumericalElement(m_pImpl->make_count_element(info, *element.m_pImpl));
+NumericalElement ElementFactory::make_count_element(const InstanceInfo& info, const RoleElement& element) {
+    return NumericalElement(m_pImpl->make_count_element(*info.m_pImpl, *element.m_pImpl));
 }
 
-ConceptElement ElementFactory::make_primitive_concept_element(const InstanceInfoImpl& info, const std::string& name, unsigned pos) {
-    return ConceptElement(m_pImpl->make_primitive_concept_element(info, name, pos));
+ConceptElement ElementFactory::make_primitive_concept_element(const InstanceInfo& info, const std::string& name, unsigned pos) {
+    return ConceptElement(m_pImpl->make_primitive_concept_element(*info.m_pImpl, name, pos));
 }
 
 }

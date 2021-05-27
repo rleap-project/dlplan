@@ -1,6 +1,8 @@
 #include "instance_info.h"
 #include "state.h"
 
+#include <algorithm>
+
 
 namespace dlp {
 namespace core {
@@ -19,7 +21,7 @@ static unsigned insert_or_retrieve(const std::string& name, std::unordered_map<s
     return f->second;
 }
 
-const AtomImpl& InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
+const AtomImpl& InstanceInfoImpl::add_atom(std::shared_ptr<InstanceInfoImpl> info, const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
     bool predicate_exists = exists(predicate_name, m_predicate_name_to_predicate_idx);
     if (!predicate_exists) {
         m_predicate_arities.push_back(object_names.size());
@@ -33,16 +35,16 @@ const AtomImpl& InstanceInfoImpl::add_atom(const std::string &predicate_name, co
     if (is_static) {
         m_static_atom_idxs.push_back(atom_idx);
     }
-    m_atoms.emplace_back(AtomImpl(this, atom_idx, predicate_name, predicate_idx, object_names, object_idxs, is_static));
+    m_atoms.emplace_back(AtomImpl(info, atom_idx, predicate_name, predicate_idx, object_names, object_idxs, is_static));
     return m_atoms.back();
 }
 
-StateImpl InstanceInfoImpl::convert_state(const Index_Vec& atom_idxs) {
+StateImpl InstanceInfoImpl::convert_state(std::shared_ptr<InstanceInfoImpl> info, const Index_Vec& atom_idxs) {
     Index_Vec atoms;
     atoms.reserve(atom_idxs.size() + m_static_atom_idxs.size());
     atoms.insert(atoms.end(), atom_idxs.begin(), atom_idxs.end());
     atoms.insert(atoms.end(), m_static_atom_idxs.begin(), m_static_atom_idxs.end());
-    return StateImpl(this, std::move(atoms));
+    return StateImpl(info, std::move(atoms));
 }
 
 bool InstanceInfoImpl::exists_predicate_name(const std::string& name) const {

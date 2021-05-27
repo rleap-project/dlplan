@@ -56,10 +56,10 @@ Tokens Tokenizer::tokenize(const std::string &description) const {
             }
         }
     }
-    for (auto &p : tokens) {
-        std::cout << p.first << " " << p.second << std::endl;
-    }
-    std::cout << std::endl;
+    //for (auto &p : tokens) {
+    //    std::cout << p.first << " " << p.second << std::endl;
+    //}
+    //std::cout << std::endl;
     return tokens;
 }
 

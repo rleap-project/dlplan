@@ -23,7 +23,7 @@ Expression_Ptr Parser::parse_ast(Tokens &tokens) const {
     }
     Token token = tokens.front();
     tokens.pop_front();
-    std::cout << token.first << " " << token.second << std::endl;
+    //std::cout << token.first << " " << token.second << std::endl;
     if (tokens.front().second == "(") {
         // Consume "(".
         tokens.pop_front();

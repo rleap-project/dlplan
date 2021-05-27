@@ -12,7 +12,7 @@ class InstanceInfoImpl;
 
 struct AtomImpl {
     // Non-owning parent pointer
-    const InstanceInfoImpl* m_parent;
+    const std::shared_ptr<InstanceInfoImpl> m_parent;
     // Data members
     const int m_atom_idx;
     const std::string m_predicate_name;
@@ -22,7 +22,7 @@ struct AtomImpl {
     const bool m_is_static;
 
     AtomImpl(
-        const InstanceInfoImpl* parent,
+        std::shared_ptr<InstanceInfoImpl> parent,
         const int atom_idx,
         const std::string &predicate_name,
         int predicate_idx,

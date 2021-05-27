@@ -4,7 +4,7 @@ namespace dlp {
 namespace core {
 
 AtomImpl::AtomImpl(
-    const InstanceInfoImpl* parent,
+    std::shared_ptr<InstanceInfoImpl> parent,
     const int atom_idx,
     const std::string &predicate_name,
     int predicate_idx,

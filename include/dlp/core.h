@@ -81,7 +81,7 @@ public:
  */
 class InstanceInfo {
 private:
-    pimpl<InstanceInfoImpl> m_pImpl;
+    pimpl<std::shared_ptr<InstanceInfoImpl>> m_pImpl;
 
     friend class ElementFactory;
 
@@ -252,17 +252,17 @@ public:
     /**
      * Returns a NumericalElement that counts the number of concepts.
      */
-    NumericalElement make_count_element(const InstanceInfoImpl& info, const ConceptElement& element);
+    NumericalElement make_count_element(const InstanceInfo& info, const ConceptElement& element);
 
     /**
      * Returns a NumericalElement that counts the number of roles.
      */
-    NumericalElement make_count_element(const InstanceInfoImpl& info, const RoleElement& element);
+    NumericalElement make_count_element(const InstanceInfo& info, const RoleElement& element);
 
     /**
      * Returns a ConceptElement that counts the number of primitive concepts.
      */
-    ConceptElement make_primitive_concept_element(const InstanceInfoImpl& info, const std::string& name, unsigned pos);
+    ConceptElement make_primitive_concept_element(const InstanceInfo& info, const std::string& name, unsigned pos);
 };
 
 

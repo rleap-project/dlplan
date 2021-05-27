@@ -10,7 +10,7 @@ namespace element {
 
 class ConceptElement : public Element<Concepts> {
 public:
-    ConceptElement(const InstanceInfoImpl& parent, const std::string& name) : Element<Concepts>(parent, name) { }
+    ConceptElement(std::shared_ptr<InstanceInfoImpl> parent, const std::string& name) : Element<Concepts>(parent, name) { }
 
     size_t size() const {
         return m_result.size();

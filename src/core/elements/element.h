@@ -16,7 +16,7 @@ template<typename T>
 class Element {
 protected:
     // Non-owning parent pointer
-    const InstanceInfoImpl* m_parent;
+    std::shared_ptr<InstanceInfoImpl> m_parent;
     // The name.
     const std::string m_name;
     // Evaluation result
@@ -28,7 +28,7 @@ protected:
     virtual T evaluate_impl(const StateImpl& state) = 0;
 
 public:
-    Element(const InstanceInfoImpl& parent, const std::string& name) : m_parent(&parent), m_name(name) { }
+    Element(std::shared_ptr<InstanceInfoImpl> parent, const std::string& name) : m_parent(parent), m_name(name) { }
 
     /**
      * Evaluate and cache the last result.
