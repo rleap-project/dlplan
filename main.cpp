@@ -4,8 +4,9 @@
 int main() {
     // Initialize planning instance
     dlp::core::InstanceInfo instance;
-    instance.add_atom("on", {"A", "B"}, false, true);
-    instance.add_atom("on", {"B", "A"}, false, false);
+    instance.add_atom("on", {"A", "B"}, false);
+    instance.add_atom("on", {"B", "A"}, false);
+    instance.add_atom("on_g", {"B", "A"}, true);
 
     // Initialize factory.
     dlp::core::ElementFactory factory;

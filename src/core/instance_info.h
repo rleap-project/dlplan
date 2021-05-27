@@ -37,10 +37,6 @@ private:
      */
     Index_Vec m_static_atom_idxs;
     /**
-     * Indices of goal atoms.
-     */
-    Index_Vec m_goal_atom_idxs;
-    /**
      * All atoms.
      */
     std::vector<AtomImpl> m_atoms;
@@ -49,7 +45,7 @@ public:
     /**
      * Methods for initializing the TaskInfo successively.
      */
-    const AtomImpl& add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static, bool add_goal_version);
+    const AtomImpl& add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static);
 
     bool exists_predicate_name(const std::string& name) const;
     bool predicate_idx(const std::string& name) const;

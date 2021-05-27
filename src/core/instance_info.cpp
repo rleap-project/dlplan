@@ -17,10 +17,7 @@ static unsigned insert_or_retrieve(const std::string& name, std::unordered_map<s
     return f->second;
 }
 
-const AtomImpl& InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static, bool add_goal_version) {
-    if (add_goal_version && is_static) {
-        throw std::runtime_error("InstanceInfoImpl::add_atom - redundant to add goal version of static atom.");
-    }
+const AtomImpl& InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
     bool predicate_exists = exists(predicate_name, m_predicate_name_to_predicate_idx);
     if (!predicate_exists) {
         m_predicate_arities.push_back(object_names.size());
@@ -34,13 +31,7 @@ const AtomImpl& InstanceInfoImpl::add_atom(const std::string &predicate_name, co
     if (is_static) {
         m_static_atom_idxs.push_back(atom_idx);
     }
-    // add atom at index
-    // m_atoms.insert()
-    // add extra goal version to end
-    if (add_goal_version) {
-        m_atoms.emplace_back(AtomImpl(atom_idx, predicate_name + "_g"s, predicate_idx, object_names, object_idxs, true));
-    }
-    m_atoms.emplace_back(AtomImpl(atom_idx + 1, predicate_name, predicate_idx, object_names, object_idxs, false));
+    m_atoms.emplace_back(AtomImpl(atom_idx, predicate_name, predicate_idx, object_names, object_idxs, is_static));
     return m_atoms.back();
 }
 

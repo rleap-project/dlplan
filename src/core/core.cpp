@@ -115,8 +115,8 @@ ElementFactory::ElementFactory() { }
 
 ElementFactory::~ElementFactory() { }
 
-Atom InstanceInfo::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static, bool add_goal_version) {
-    return Atom(std::make_shared<InstanceInfo>(*this), m_pImpl->add_atom(predicate_name, object_names, is_static, add_goal_version));
+Atom InstanceInfo::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
+    return Atom(std::make_shared<InstanceInfo>(*this), m_pImpl->add_atom(predicate_name, object_names, is_static));
 }
 
 ConceptElement ElementFactory::parse_concept_element(const InstanceInfo& info, const std::string &description) {

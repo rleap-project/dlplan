@@ -46,7 +46,7 @@ public:
     /**
      * Adds an atom and internally extends a mapping from names to indices.
      */
-    Atom add_atom(const std::string& predicate_name, const Name_Vec& object_names, bool is_static, bool add_goal_version);
+    Atom add_atom(const std::string& predicate_name, const Name_Vec& object_names, bool is_static);
 
     /**
      * Construct a state from textual information by first applying the index mapping and the calling convert_state.
