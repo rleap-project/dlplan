@@ -27,5 +27,5 @@ int main() {
     // Example state: block A on B
     dlp::core::State state = instance.convert_state({0, 3});
     int value = numerical.evaluate(state);
-    // std::cout << "value: " << value << std::endl;
+    std::cout << "value: " << value << std::endl;
 };
