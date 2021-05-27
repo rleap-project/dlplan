@@ -16,8 +16,6 @@ class InstanceInfoImpl;
 class AtomImpl;
 class StateImpl;
 class ElementFactory;
-class State;
-class Atom;
 
 using Concept = int;
 using Concepts = std::vector<Concept>;
@@ -27,6 +25,55 @@ using Roles = std::vector<Role>;
 
 using Name_Vec = std::vector<std::string>;
 using Index_Vec = std::vector<int>;
+
+
+/**
+ * Atom contains information regarding mappings between name and indices.
+ */
+class Atom {
+private:
+    pimpl<AtomImpl> m_pImpl;
+
+    Atom(const AtomImpl& impl);
+
+    friend class InstanceInfo;
+
+public:
+    Atom() = delete;
+    Atom(const Atom& other);
+    ~Atom();
+
+    /**
+     * Getters.
+     */
+    int atom_idx() const;
+};
+
+/**
+ * State contains static and dynamic atoms.
+ */
+class State {
+private:
+    pimpl<StateImpl> m_pImpl;
+
+    State(StateImpl impl);
+
+    friend class InstanceInfo;
+    friend class ConceptElement;
+    friend class RoleElement;
+    friend class NumericalElement;
+    friend class BooleanElement;
+
+public:
+    State() = delete;
+    State(const State& other);
+    ~State();
+
+    /**
+     * Computes string-like representation of the state.
+     */
+    std::string str() const;
+};
 
 
 /**
@@ -40,7 +87,6 @@ private:
 
 public:
     InstanceInfo();
-    InstanceInfo(const InstanceInfo& other);
     ~InstanceInfo();
 
     /**
@@ -58,65 +104,13 @@ public:
     State convert_state(const Index_Vec& atom_idxs);
 };
 
-
-class Atom {
-private:
-    const std::shared_ptr<InstanceInfo> m_parent;
-    pimpl<AtomImpl> m_pImpl;
-
-    Atom(std::shared_ptr<InstanceInfo> parent, const AtomImpl& impl);
-
-    friend class InstanceInfo;
-
-public:
-    Atom() = delete;
-    Atom(const Atom& other);
-    ~Atom();
-
-    /**
-     * Getters.
-     */
-    int atom_idx() const;
-};
-
-
-class State {
-private:
-    const std::shared_ptr<InstanceInfo> m_parent;
-    pimpl<StateImpl> m_pImpl;
-
-    State(std::shared_ptr<InstanceInfo> parent, StateImpl impl);
-
-    friend class InstanceInfo;
-
-public:
-    State() = delete;
-    State(const State& other);
-    ~State();
-
-    /**
-     * Computes string-like representation of the state.
-     */
-    std::string str() const;
-    /**
-     * Getters.
-     */
-    const std::shared_ptr<InstanceInfo>& parent() const;
-};
-
-
 /**
  * Abstract base class of any Element.
  */
 template<typename T>
 class Element {
-protected:
-    const std::shared_ptr<InstanceInfo> m_parent;
-
-    Element(std::shared_ptr<InstanceInfo> parent) : m_parent(parent) { }
-
 public:
-    Element() = delete;
+    Element() = default;
     virtual ~Element() = default;
 
     /**
@@ -129,11 +123,6 @@ public:
      * measured in the size of the abstract syntax tree.
      */
     virtual unsigned complexity() const = 0;
-
-    /**
-     * Getters.
-     */
-    virtual const std::shared_ptr<InstanceInfo>& parent() const { return m_parent; }
 };
 
 
@@ -144,7 +133,7 @@ class ConceptElement : public Element<Concepts> {
 protected:
     pimpl<element::ConceptElement_Ptr> m_pImpl;
 
-    ConceptElement(std::shared_ptr<InstanceInfo> parent, element::ConceptElement_Ptr pImpl);
+    ConceptElement(element::ConceptElement_Ptr pImpl);
 
     friend class ElementFactory;
 
@@ -166,7 +155,7 @@ class RoleElement : public Element<Roles> {
 protected:
     pimpl<element::RoleElement_Ptr> m_pImpl;
 
-    RoleElement(std::shared_ptr<InstanceInfo> parent, element::RoleElement_Ptr pImpl);
+    RoleElement(element::RoleElement_Ptr pImpl);
 
     friend class ElementFactory;
 
@@ -188,7 +177,7 @@ class NumericalElement : public Element<int> {
 protected:
     pimpl<element::NumericalElement_Ptr> m_pImpl;
 
-    NumericalElement(std::shared_ptr<InstanceInfo> parent, element::NumericalElement_Ptr pImpl);
+    NumericalElement(element::NumericalElement_Ptr pImpl);
 
     friend class ElementFactory;
 
@@ -210,7 +199,7 @@ class BooleanElement : public Element<bool> {
 protected:
     pimpl<element::BooleanElement_Ptr> m_pImpl;
 
-    BooleanElement(std::shared_ptr<InstanceInfo> parent, element::BooleanElement_Ptr pImpl);
+    BooleanElement(element::BooleanElement_Ptr pImpl);
 
     friend class ElementFactory;
 
@@ -234,7 +223,6 @@ private:
 
 public:
     ElementFactory();
-    ElementFactory(const ElementFactory& other) = delete;
     ~ElementFactory();
 
     /**

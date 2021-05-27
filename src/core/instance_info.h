@@ -11,6 +11,7 @@
 
 namespace dlp {
 namespace core {
+class StateImpl;
 
 /**
  * InstanceInfo stores Atom related information and provides functionality for state transformation.
@@ -46,6 +47,10 @@ public:
      * Methods for initializing the TaskInfo successively.
      */
     const AtomImpl& add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static);
+    /**
+     * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
+     */
+    StateImpl convert_state(const Index_Vec& atom_idxs);
 
     bool exists_predicate_name(const std::string& name) const;
     bool predicate_idx(const std::string& name) const;

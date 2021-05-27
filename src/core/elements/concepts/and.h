@@ -14,13 +14,13 @@ protected:
     ConceptElement_Ptr m_r;
 
 protected:
-    virtual Concepts evaluate_impl(const State& state) override {
+    virtual Concepts evaluate_impl(const StateImpl& state) override {
         // TODO(dominik):
     }
 
 public:
-    AndConceptElement(ConceptElement_Ptr l, ConceptElement_Ptr r)
-    : m_l(l), m_r(r) {}
+    AndConceptElement(const InstanceInfoImpl* parent, ConceptElement_Ptr l, ConceptElement_Ptr r)
+    : ConceptElement(parent), m_l(l), m_r(r) {}
 
     virtual unsigned complexity() const override {
         return m_l->complexity() + m_r->complexity() + 1;

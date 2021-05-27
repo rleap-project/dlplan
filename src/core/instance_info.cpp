@@ -1,4 +1,6 @@
 #include "instance_info.h"
+#include "state.h"
+
 
 namespace dlp {
 namespace core {
@@ -31,8 +33,16 @@ const AtomImpl& InstanceInfoImpl::add_atom(const std::string &predicate_name, co
     if (is_static) {
         m_static_atom_idxs.push_back(atom_idx);
     }
-    m_atoms.emplace_back(AtomImpl(atom_idx, predicate_name, predicate_idx, object_names, object_idxs, is_static));
+    m_atoms.emplace_back(AtomImpl(this, atom_idx, predicate_name, predicate_idx, object_names, object_idxs, is_static));
     return m_atoms.back();
+}
+
+StateImpl InstanceInfoImpl::convert_state(const Index_Vec& atom_idxs) {
+    Index_Vec atoms;
+    atoms.reserve(atom_idxs.size() + m_static_atom_idxs.size());
+    atoms.insert(atoms.end(), atom_idxs.begin(), atom_idxs.end());
+    atoms.insert(atoms.end(), m_static_atom_idxs.begin(), m_static_atom_idxs.end());
+    return StateImpl(this, std::move(atoms));
 }
 
 bool InstanceInfoImpl::exists_predicate_name(const std::string& name) const {

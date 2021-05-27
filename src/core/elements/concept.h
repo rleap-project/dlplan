@@ -10,7 +10,7 @@ namespace element {
 
 class ConceptElement : public Element<Concepts> {
 public:
-    ConceptElement() { }
+    ConceptElement(const InstanceInfoImpl* parent) : Element<Concepts>(parent) { }
 
     size_t size() const {
         return m_result.size();

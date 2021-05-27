@@ -8,8 +8,12 @@
 
 namespace dlp {
 namespace core {
+class InstanceInfoImpl;
 
 struct AtomImpl {
+    // Non-owning parent pointer
+    const InstanceInfoImpl* m_parent;
+    // Data members
     const int m_atom_idx;
     const std::string m_predicate_name;
     const int m_predicate_idx;
@@ -17,7 +21,9 @@ struct AtomImpl {
     const Index_Vec m_object_idxs;
     const bool m_is_static;
 
-    AtomImpl(const int atom_idx,
+    AtomImpl(
+        const InstanceInfoImpl* parent,
+        const int atom_idx,
         const std::string &predicate_name,
         int predicate_idx,
         const Name_Vec &object_names,

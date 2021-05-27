@@ -16,12 +16,12 @@ protected:
     T m_element;
 
 protected:
-    virtual int evaluate_impl(const State& state) override {
+    virtual int evaluate_impl(const StateImpl& state) override {
         return m_element->size();
     }
 
 public:
-    CountNumericalElement(T element) : m_element(element) {}
+    CountNumericalElement(const InstanceInfoImpl* parent, T element) : NumericalElement(parent), m_element(element) {}
 
     virtual unsigned complexity() const override {
         return m_element->complexity() + 1;

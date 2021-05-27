@@ -1,4 +1,7 @@
 // Code by Herb Sutter, taken from https://herbsutter.com/gotw/_101/
+// We follow the rules describes in https://herbsutter.com/gotw/_100/:
+//   1. private and nonvirtual functions should be in the pimpl class.
+//   2. virtuals that need to be visible to derived classes are part of the public interface.
 
 #ifndef DLP_SRC_UTILS_PIMPL_H_
 #define DLP_SRC_UTILS_PIMPL_H_

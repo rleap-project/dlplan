@@ -10,7 +10,7 @@ namespace element {
 
 class NumericalElement : public Element<int> {
 public:
-    NumericalElement() { }
+    NumericalElement(const InstanceInfoImpl* parent) : Element<int>(parent) { }
 };
 
 }
