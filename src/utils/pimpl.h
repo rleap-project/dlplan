@@ -32,9 +32,7 @@ public:
     pimpl( Arg1&& arg1, Arg2&& arg2, Arg3&& arg3 )
         : m( new T( std::forward<Arg1>(arg1), std::forward<Arg2>(arg2), std::forward<Arg3>(arg3) ) ) { }
 
-    // call the copy constructor of the concrete implementation
-    // We need to explicitly declare it for every T that we use
-    // to (1) restrict copying and (2) forward declare in header
+    // A baseline copy constructor.
     // pimpl(const pimpl<T> &other) : m( new T(*(other.m))) { }
 
     ~pimpl() { }

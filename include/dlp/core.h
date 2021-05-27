@@ -248,6 +248,21 @@ public:
      * If description is incorrect, throw an error with human readable information.
      */
     BooleanElement parse_boolean_element(const InstanceInfo& info, const std::string &description);
+
+    /**
+     * Returns a NumericalElement that counts the number of concepts.
+     */
+    NumericalElement make_count_element(const InstanceInfoImpl& info, const ConceptElement& element);
+
+    /**
+     * Returns a NumericalElement that counts the number of roles.
+     */
+    NumericalElement make_count_element(const InstanceInfoImpl& info, const RoleElement& element);
+
+    /**
+     * Returns a ConceptElement that counts the number of primitive concepts.
+     */
+    ConceptElement make_primitive_concept_element(const InstanceInfoImpl& info, const std::string& name);
 };
 
 

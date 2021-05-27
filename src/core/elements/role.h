@@ -10,7 +10,7 @@ namespace element {
 
 class RoleElement : public Element<Roles> {
 public:
-    RoleElement(const InstanceInfoImpl* parent) : Element<Roles>(parent) { }
+    RoleElement(const InstanceInfoImpl& parent, const std::string& name) : Element<Roles>(parent, name) { }
 
     size_t size() const {
         return m_result.size();

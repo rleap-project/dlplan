@@ -19,11 +19,29 @@ protected:
     }
 
 public:
-    AndConceptElement(const InstanceInfoImpl* parent, ConceptElement_Ptr l, ConceptElement_Ptr r)
-    : ConceptElement(parent), m_l(l), m_r(r) {}
+    AndConceptElement(const InstanceInfoImpl& parent, ConceptElement_Ptr l, ConceptElement_Ptr r)
+    : ConceptElement(parent, "c_and") {
+        if (!(l && r)) {
+            throw std::runtime_error("AndConceptExpression::make_concept_element - children are not of type ConceptElement.");
+        }
+        // Element is commutative. Hence sort lexicographically.
+        if (l->name() < r->name()) {
+            m_l = l;
+            m_r = r;
+        } else {
+            m_l = r;
+            m_r = l;
+        }
+    }
 
     virtual unsigned complexity() const override {
         return m_l->complexity() + m_r->complexity() + 1;
+    }
+
+    virtual std::string repr() const override {
+        std::stringstream ss;
+        ss << m_name << "(" << m_l->repr() << "," << m_r->repr() << ")";
+        return ss.str();
     }
 };
 

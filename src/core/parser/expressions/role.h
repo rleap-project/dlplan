@@ -3,6 +3,7 @@
 
 #include "expression.h"
 
+#include "../../elements/role.h"
 
 namespace dlp {
 namespace core {
@@ -13,7 +14,7 @@ protected:
     /**
      * Construct the RoleElement.
      */
-    virtual element::RoleElement_Ptr make_role_element_impl(const InstanceInfoImpl& info, ElementCache &cache) const = 0;
+    virtual element::RoleElement_Ptr parse_role_element_impl(const InstanceInfoImpl& info, ElementCache &cache) const = 0;
 
 public:
     RoleExpression(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
@@ -22,12 +23,9 @@ public:
     /**
      * Construct or retrieve the RoleElement.
      */
-    virtual element::RoleElement_Ptr make_role_element(const InstanceInfoImpl& info, ElementCache &cache) const {
-        std::string key = str();
-        if (!cache.role_element_cache().exists(key)) {
-            cache.role_element_cache().insert(key, make_role_element_impl(info, cache));
-        }
-        return cache.role_element_cache().get(key);
+    virtual element::RoleElement_Ptr parse_role_element(const InstanceInfoImpl& info, ElementCache &cache) const {
+        element::RoleElement_Ptr value = parse_role_element_impl(info, cache);
+        return cache.role_element_cache().insert_cache_and_retrieve(value->repr(), std::move(value));
     }
 };
 

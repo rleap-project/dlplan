@@ -17,6 +17,8 @@ class Element {
 protected:
     // Non-owning parent pointer
     const InstanceInfoImpl* m_parent;
+    // The name.
+    const std::string m_name;
     // Evaluation result
     T m_result;
     const StateImpl *m_state;
@@ -26,7 +28,7 @@ protected:
     virtual T evaluate_impl(const StateImpl& state) = 0;
 
 public:
-    Element(const InstanceInfoImpl* parent) : m_parent(parent) { }
+    Element(const InstanceInfoImpl& parent, const std::string& name) : m_parent(&parent), m_name(name) { }
 
     /**
      * Evaluate and cache the last result.
@@ -46,6 +48,17 @@ public:
      * Returns the complexity of the element.
      */
     virtual unsigned complexity() const = 0;
+
+    /**
+     * Computes a representation that uniquely identifies the element.
+     * TODO(dominik): Use more sophisticated equivalences.
+     */
+    virtual std::string repr() const = 0;
+
+    /**
+     * Getters
+     */
+    virtual const std::string& name() const { return m_name; }
 };
 
 }

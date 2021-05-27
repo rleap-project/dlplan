@@ -50,6 +50,21 @@ public:
      * If description is incorrect, throw an error with human readable information.
      */
     element::BooleanElement_Ptr parse_boolean_element(const InstanceInfoImpl& info, const std::string &description);
+
+    /**
+     * Returns a NumericalElement that counts the number of concepts.
+     */
+    element::NumericalElement_Ptr make_count_element(const InstanceInfoImpl& info, element::ConceptElement_Ptr element);
+
+    /**
+     * Returns a NumericalElement that counts the number of roles.
+     */
+    element::NumericalElement_Ptr make_count_element(const InstanceInfoImpl& info, element::RoleElement_Ptr element);
+
+    /**
+     * Returns a ConceptElement that counts the number of primitive concepts.
+     */
+    element::ConceptElement_Ptr make_primitive_concept_element(const InstanceInfoImpl& info, const std::string& name, unsigned pos);
 };
 
 }

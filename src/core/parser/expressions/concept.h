@@ -3,6 +3,8 @@
 
 #include "expression.h"
 
+#include "../../elements/concept.h"
+
 namespace dlp {
 namespace core {
 namespace parser {
@@ -12,7 +14,7 @@ protected:
     /**
      * Construct the ConceptElement.
      */
-    virtual element::ConceptElement_Ptr make_concept_element_impl(const InstanceInfoImpl& info, ElementCache &cache) const = 0;
+    virtual element::ConceptElement_Ptr parse_concept_element_impl(const InstanceInfoImpl& info, ElementCache &cache) const = 0;
 
 public:
     ConceptExpression(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
@@ -21,12 +23,9 @@ public:
     /**
      * Construct or retrieve the ConceptElement.
      */
-    virtual element::ConceptElement_Ptr make_concept_element(const InstanceInfoImpl& info, ElementCache &cache) const {
-        std::string key = str();
-        if (!cache.concept_element_cache().exists(key)) {
-            cache.concept_element_cache().insert(key, make_concept_element_impl(info, cache));
-        }
-        return cache.concept_element_cache().get(key);
+    virtual element::ConceptElement_Ptr parse_concept_element(const InstanceInfoImpl& info, ElementCache &cache) const {
+        element::ConceptElement_Ptr value = parse_concept_element_impl(info, cache);
+        return cache.concept_element_cache().insert_cache_and_retrieve(value->repr(), std::move(value));
     }
 };
 

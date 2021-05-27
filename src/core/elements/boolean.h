@@ -10,7 +10,7 @@ namespace element {
 
 class BooleanElement : public Element<bool> {
 public:
-    BooleanElement(const InstanceInfoImpl* parent) : Element<bool>(parent) { }
+    BooleanElement(const InstanceInfoImpl& parent, const std::string& name) : Element<bool>(parent, name) { }
 };
 
 }

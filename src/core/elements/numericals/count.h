@@ -21,10 +21,16 @@ protected:
     }
 
 public:
-    CountNumericalElement(const InstanceInfoImpl* parent, T element) : NumericalElement(parent), m_element(element) {}
+    CountNumericalElement(const InstanceInfoImpl& parent, T element) : NumericalElement(parent, "n_count"), m_element(element) { }
 
     virtual unsigned complexity() const override {
         return m_element->complexity() + 1;
+    }
+
+    virtual std::string repr() const override {
+        std::stringstream ss;
+        ss << m_name << "(" << m_element->repr() << ")";
+        return ss.str();
     }
 };
 

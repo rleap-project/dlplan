@@ -26,20 +26,28 @@ public:
     Cache() = default;
     virtual ~Cache() = default;
 
-    bool exists(const Key_T &key) {
+    bool exists(const Key_T& key) {
         if (m_cache.find(key) != m_cache.end()) {
             return true;
         }
         return false;
     }
 
-    Value_T& get(const Key_T &key) {
+    Value_T& get(const Key_T& key) {
         return m_cache.find(key)->second;
     }
 
-    void insert(const Key_T &key, Value_T &&value) {
+    void insert(const Key_T& key, Value_T&& value) {
         m_cache.insert(make_pair(key, std::move(value)));
     }
+
+    Value_T& insert_cache_and_retrieve(const Key_T& key, Value_T&& value) {
+        if (!exists(key)) {
+            insert(key, std::move(value));
+        }
+        return get(key);
+    }
+
 private:
     std::unordered_map<Key_T, Value_T, KeyHash> m_cache;
 };
