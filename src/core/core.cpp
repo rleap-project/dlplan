@@ -35,14 +35,14 @@ Atom InstanceInfo::add_atom(const std::string& atom_name, const std::string &pre
 
 Atom::Atom(const AtomImpl& impl) : m_pImpl(impl) { }
 
-Atom::Atom(const Atom& other) : m_pImpl(*(other.m_pImpl)) { }
+Atom::Atom(const Atom& other) : m_pImpl(*other.m_pImpl) { }
 
 Atom::~Atom() { }
 
 
 State::State(std::shared_ptr<InstanceInfoImpl> parent, StateImpl impl) : m_parent(parent), m_pImpl(impl) { }
 
-State::State(const State& other) : m_parent(other.m_parent), m_pImpl(*(other.m_pImpl)) {}
+State::State(const State& other) : m_parent(other.m_parent), m_pImpl(*other.m_pImpl) {}
 
 State::~State() { }
 
@@ -53,13 +53,13 @@ ConceptElement::ConceptElement(std::shared_ptr<InstanceInfoImpl> parent, element
     : Element<Concepts>(parent), m_pImpl(pImpl) { }
 
 ConceptElement::ConceptElement(const ConceptElement& other)
-    : Element<Concepts>(other.m_parent), m_pImpl(*(other.m_pImpl)) { }
+    : Element<Concepts>(other.m_parent), m_pImpl(*other.m_pImpl) { }
 
 Concepts ConceptElement::evaluate(const State& state) const {
     if (m_parent != state.m_parent) {
         throw std::invalid_argument("ConceptElement::evaluate - instance information between state and element do not match.");
     }
-    return m_pImpl->get()->evaluate(*(state.m_pImpl));
+    return m_pImpl->get()->evaluate(*state.m_pImpl);
 }
 
 unsigned ConceptElement::complexity() const {
@@ -74,13 +74,13 @@ RoleElement::RoleElement(std::shared_ptr<InstanceInfoImpl> parent, element::Role
     : Element<Roles>(parent), m_pImpl(pImpl) { }
 
 RoleElement::RoleElement(const RoleElement& other)
-    : Element<Roles>(other.m_parent), m_pImpl(*(other.m_pImpl)) { }
+    : Element<Roles>(other.m_parent), m_pImpl(*other.m_pImpl) { }
 
 Roles RoleElement::evaluate(const State& state) const {
     if (m_parent != state.m_parent) {
         throw std::invalid_argument("RoleElement::evaluate - instance information between state and element do not match.");
     }
-    return m_pImpl->get()->evaluate(*(state.m_pImpl));
+    return m_pImpl->get()->evaluate(*state.m_pImpl);
 }
 
 unsigned RoleElement::complexity() const {
@@ -96,7 +96,7 @@ NumericalElement::NumericalElement(std::shared_ptr<InstanceInfoImpl> parent, ele
     : Element<int>(parent), m_pImpl(pImpl) { }
 
 NumericalElement::NumericalElement(const NumericalElement& other)
-    : Element<int>(other.m_parent), m_pImpl(*(other.m_pImpl)) { }
+    : Element<int>(other.m_parent), m_pImpl(*other.m_pImpl) { }
 
 int NumericalElement::evaluate(const State& state) const {
     if (m_parent != state.m_parent) {
@@ -118,13 +118,13 @@ BooleanElement::BooleanElement(std::shared_ptr<InstanceInfoImpl> parent, element
     : Element<bool>(parent), m_pImpl(pImpl) { }
 
 BooleanElement::BooleanElement(const BooleanElement& other)
-    : Element<bool>(other.m_parent), m_pImpl(*(other.m_pImpl)) { }
+    : Element<bool>(other.m_parent), m_pImpl(*other.m_pImpl) { }
 
 bool BooleanElement::evaluate(const State& state) const {
     if (m_parent != state.m_parent) {
         throw std::invalid_argument("BooleanElement::evaluate - instance information between state and element do not match.");
     }
-    return m_pImpl->get()->evaluate(*(state.m_pImpl));
+    return m_pImpl->get()->evaluate(*state.m_pImpl);
 }
 
 unsigned BooleanElement::complexity() const {
@@ -134,7 +134,6 @@ unsigned BooleanElement::complexity() const {
 std::string BooleanElement::repr() const {
     return m_pImpl->get()->repr();
 }
-
 
 
 ElementFactory::ElementFactory() { }
