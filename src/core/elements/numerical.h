@@ -10,7 +10,7 @@ namespace element {
 
 class NumericalElement : public Element<int> {
 public:
-    NumericalElement(std::shared_ptr<InstanceInfoImpl> parent, const std::string& name) : Element<int>(parent, name) { }
+    NumericalElement(const InstanceInfoImpl& info, const std::string& name) : Element<int>(info, name) { }
 };
 
 }

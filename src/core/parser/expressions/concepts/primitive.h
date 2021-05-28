@@ -12,7 +12,7 @@ namespace parser {
 
 class PrimitiveConceptExpression : public ConceptExpression {
 protected:
-    virtual element::ConceptElement_Ptr parse_concept_element_impl(std::shared_ptr<InstanceInfoImpl> info, ElementCache &cache) const override {
+    virtual element::ConceptElement_Ptr parse_concept_element_impl(const InstanceInfoImpl& info, ElementCache &cache) const override {
         if (m_children.size() != 1) {
             throw std::runtime_error("PrimitiveConceptExpression::parse_concept_element - number of children ("s + std::to_string(m_children.size()) + " != 1).");
         }

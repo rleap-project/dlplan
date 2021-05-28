@@ -22,7 +22,7 @@ protected:
     }
 
 public:
-    CountNumericalElement(std::shared_ptr<InstanceInfoImpl> parent, T element) : NumericalElement(parent, "n_count"), m_element(element) { }
+    CountNumericalElement(const InstanceInfoImpl& info, T element) : NumericalElement(info, "n_count"), m_element(element) { }
 
     virtual unsigned complexity() const override {
         return m_element->complexity() + 1;

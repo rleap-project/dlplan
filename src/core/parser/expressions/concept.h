@@ -14,7 +14,7 @@ protected:
     /**
      * Construct the ConceptElement.
      */
-    virtual element::ConceptElement_Ptr parse_concept_element_impl(std::shared_ptr<InstanceInfoImpl> info, ElementCache &cache) const = 0;
+    virtual element::ConceptElement_Ptr parse_concept_element_impl(const InstanceInfoImpl& info, ElementCache &cache) const = 0;
 
 public:
     ConceptExpression(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
@@ -23,7 +23,7 @@ public:
     /**
      * Construct or retrieve the ConceptElement.
      */
-    virtual element::ConceptElement_Ptr parse_concept_element(std::shared_ptr<InstanceInfoImpl> info, ElementCache &cache) const {
+    virtual element::ConceptElement_Ptr parse_concept_element(const InstanceInfoImpl& info, ElementCache &cache) const {
         element::ConceptElement_Ptr value = parse_concept_element_impl(info, cache);
         return cache.concept_element_cache().insert_cache_and_retrieve(value->repr(), std::move(value));
     }

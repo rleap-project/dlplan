@@ -14,7 +14,6 @@ class InstanceInfoImpl;
  * State stores information related to a planning state.
  */
 struct StateImpl {
-    // Non-owning parent pointer
     std::shared_ptr<InstanceInfoImpl> m_parent;
     // The underlying implementation currently is a vector of atoms.
     const Index_Vec m_atoms;

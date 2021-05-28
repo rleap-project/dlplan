@@ -31,40 +31,40 @@ public:
      * Returns a pointer to a ConceptElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    element::ConceptElement_Ptr parse_concept_element(std::shared_ptr<InstanceInfoImpl> info, const std::string &description);
+    element::ConceptElement_Ptr parse_concept_element(const InstanceInfoImpl& info, const std::string &description);
 
     /**
      * Returns a pointer to a RoleElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    element::RoleElement_Ptr parse_role_element(std::shared_ptr<InstanceInfoImpl> info, const std::string &description);
+    element::RoleElement_Ptr parse_role_element(const InstanceInfoImpl& info, const std::string &description);
 
     /**
      * Returns a pointer to a NumericalElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    element::NumericalElement_Ptr parse_numerical_element(std::shared_ptr<InstanceInfoImpl> info, const std::string &description);
+    element::NumericalElement_Ptr parse_numerical_element(const InstanceInfoImpl& info, const std::string &description);
 
     /**
      * Returns a pointer to a BooleanElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    element::BooleanElement_Ptr parse_boolean_element(std::shared_ptr<InstanceInfoImpl> info, const std::string &description);
+    element::BooleanElement_Ptr parse_boolean_element(const InstanceInfoImpl& info, const std::string &description);
 
     /**
      * Returns a NumericalElement that counts the number of concepts.
      */
-    element::NumericalElement_Ptr make_count_element(std::shared_ptr<InstanceInfoImpl> info, element::ConceptElement_Ptr element);
+    element::NumericalElement_Ptr make_count_element(const InstanceInfoImpl& info, element::ConceptElement_Ptr element);
 
     /**
      * Returns a NumericalElement that counts the number of roles.
      */
-    element::NumericalElement_Ptr make_count_element(std::shared_ptr<InstanceInfoImpl> info, element::RoleElement_Ptr element);
+    element::NumericalElement_Ptr make_count_element(const InstanceInfoImpl& info, element::RoleElement_Ptr element);
 
     /**
      * Returns a ConceptElement that counts the number of primitive concepts.
      */
-    element::ConceptElement_Ptr make_primitive_concept_element(std::shared_ptr<InstanceInfoImpl> info, const std::string& name, unsigned pos);
+    element::ConceptElement_Ptr make_primitive_concept_element(const InstanceInfoImpl& info, const std::string& name, unsigned pos);
 };
 
 }

@@ -26,13 +26,13 @@ protected:
     }
 
 public:
-    PrimitiveConceptElement(std::shared_ptr<InstanceInfoImpl> parent, const std::string& name, unsigned pos)
-    : ConceptElement(parent, name), m_pos(pos) {
-        if (!parent->exists_predicate_name(name)) {
+    PrimitiveConceptElement(const InstanceInfoImpl& info, const std::string& name, unsigned pos)
+    : ConceptElement(info, name), m_pos(pos) {
+        if (!info.exists_predicate_name(name)) {
             throw std::runtime_error("PrimitiveConceptElement::PrimitiveConceptElement - predicate ("s + m_name + ") is missing in InstanceInfo.");
         }
-        m_predicate_idx = parent->predicate_idx(name);
-        unsigned predicate_arity = parent->predicate_arity(m_predicate_idx);
+        m_predicate_idx = info.predicate_idx(name);
+        unsigned predicate_arity = info.predicate_arity(m_predicate_idx);
         if (pos >= predicate_arity) {
             throw std::runtime_error("PrimitiveConceptElement::PrimitiveConceptElement - object index does not match predicate arity ("s + std::to_string(pos) + " > " + std::to_string(predicate_arity) + ").");
         }

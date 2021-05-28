@@ -9,7 +9,7 @@ namespace parser {
 
 class PrimitiveRoleExpression : public RoleExpression {
 protected:
-    virtual element::RoleElement_Ptr parse_role_element_impl(std::shared_ptr<InstanceInfoImpl> info, ElementCache &cache) const override {
+    virtual element::RoleElement_Ptr parse_role_element_impl(const InstanceInfoImpl& info, ElementCache &cache) const override {
         // TODO(dominik): implement
     }
 

@@ -17,8 +17,6 @@ namespace element {
 template<typename T>
 class Element {
 protected:
-    // Non-owning parent pointer
-    std::shared_ptr<InstanceInfoImpl> m_parent;
     // The name.
     const std::string m_name;
     // Evaluation result
@@ -30,16 +28,13 @@ protected:
     virtual T evaluate_impl(const StateImpl& state) = 0;
 
 public:
-    Element(std::shared_ptr<InstanceInfoImpl> parent, const std::string& name) : m_parent(parent), m_name(name), m_result(T()), m_state(nullptr) { }
+    Element(const InstanceInfoImpl& info, const std::string& name) : m_name(name), m_result(T()), m_state(nullptr) { }
     virtual ~Element() = default;
 
     /**
      * Evaluate and cache the last result.
      */
     virtual T evaluate(const StateImpl& state) {
-        if (m_parent != state.m_parent) {
-            throw std::invalid_argument("RoleElement::evaluate - instance information between state and element do not match.");
-        }
         if (m_state != &state) {
             m_state = &state;
             m_result = evaluate_impl(state);

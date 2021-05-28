@@ -55,8 +55,9 @@ public:
 class State {
 private:
     pimpl<StateImpl> m_pImpl;
+    std::shared_ptr<InstanceInfoImpl> m_parent;
 
-    State(StateImpl impl);
+    State(std::shared_ptr<InstanceInfoImpl> parent, StateImpl impl);
 
     friend class InstanceInfo;
     friend class ConceptElement;
@@ -110,8 +111,11 @@ public:
  */
 template<typename T>
 class Element {
+protected:
+    std::shared_ptr<InstanceInfoImpl> m_parent;
+
 public:
-    Element() = default;
+    Element(std::shared_ptr<InstanceInfoImpl> parent) : m_parent(parent) { }
     virtual ~Element() = default;
 
     /**
@@ -139,7 +143,7 @@ class ConceptElement : public Element<Concepts> {
 protected:
     pimpl<element::ConceptElement_Ptr> m_pImpl;
 
-    ConceptElement(element::ConceptElement_Ptr pImpl);
+    ConceptElement(std::shared_ptr<InstanceInfoImpl> parent, element::ConceptElement_Ptr pImpl);
 
     friend class ElementFactory;
 
@@ -163,7 +167,7 @@ class RoleElement : public Element<Roles> {
 protected:
     pimpl<element::RoleElement_Ptr> m_pImpl;
 
-    RoleElement(element::RoleElement_Ptr pImpl);
+    RoleElement(std::shared_ptr<InstanceInfoImpl> parent, element::RoleElement_Ptr pImpl);
 
     friend class ElementFactory;
 
@@ -187,7 +191,7 @@ class NumericalElement : public Element<int> {
 protected:
     pimpl<element::NumericalElement_Ptr> m_pImpl;
 
-    NumericalElement(element::NumericalElement_Ptr pImpl);
+    NumericalElement(std::shared_ptr<InstanceInfoImpl> parent, element::NumericalElement_Ptr pImpl);
 
     friend class ElementFactory;
 
@@ -211,7 +215,7 @@ class BooleanElement : public Element<bool> {
 protected:
     pimpl<element::BooleanElement_Ptr> m_pImpl;
 
-    BooleanElement(element::BooleanElement_Ptr pImpl);
+    BooleanElement(std::shared_ptr<InstanceInfoImpl> parent, element::BooleanElement_Ptr pImpl);
 
     friend class ElementFactory;
 
