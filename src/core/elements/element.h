@@ -22,7 +22,6 @@ protected:
     // Evaluation result
     T m_result;
     const StateImpl* m_state;
-    // TODO(dominik): we might want cache goal evaluations of different instances
 
 protected:
     virtual T evaluate_impl(const StateImpl& state) = 0;
@@ -34,7 +33,7 @@ public:
     /**
      * Evaluate and cache the last result.
      */
-    virtual T evaluate(const StateImpl& state) {
+    T evaluate(const StateImpl& state) {
         if (m_state != &state) {
             m_state = &state;
             m_result = evaluate_impl(state);
