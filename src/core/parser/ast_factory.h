@@ -15,11 +15,28 @@ namespace parser {
 
 enum EXPRESSION_TYPE {
     // concepts
+    C_ALL,
     C_AND,
+    C_BOT,
+    C_DIFFERENCE,
+    C_NOT,
+    C_ONE_OF,
     C_OR,
+    C_SOME,
+    C_SUBSET,
+    C_TOP,
     // roles
     R_AND,
+    R_COMPOSE,
+    R_DIFFERENCE,
+    R_IDENTITY,
+    R_INVERSE,
+    R_NOT,
     R_OR,
+    R_RESTRICT,
+    R_TOP,
+    R_TRANSITIVE_CLOSURE,
+    R_TRANSITIVE_REFLEXIVE_CLOSURE,
     // numerical
     N_COUNT,
     N_CONCEPT_DISTANCE,

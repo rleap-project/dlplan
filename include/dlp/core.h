@@ -93,16 +93,16 @@ public:
     /**
      * Adds an atom and internally extends a mapping from names to indices.
      */
-    Atom add_atom(const std::string& predicate_name, const Name_Vec& object_names, bool is_static);
+    Atom add_atom(const std::string& atom_name, const std::string& predicate_name, const Name_Vec& object_names, bool is_static);
 
     /**
      * Construct a state from textual information by first applying the index mapping and the calling convert_state.
      */
-    State parse_state(/* tba */) const;
+    State parse_state(const Name_Vec& atom_names) const;
     /**
      * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
      */
-    State convert_state(const Index_Vec& atom_idxs);
+    State convert_state(const Index_Vec& atom_idxs) const;
 };
 
 /**

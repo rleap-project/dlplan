@@ -29,6 +29,7 @@ private:
     std::unordered_map<std::string, unsigned> m_object_name_to_object_idx;
     std::vector<std::string> m_predicate_idx_to_predicate_name;
     std::vector<std::string> m_object_idx_to_to_object_name;
+    std::unordered_map<std::string, unsigned> m_atom_name_to_atom_idx;
     /**
      * Predicate arities
      */
@@ -49,11 +50,16 @@ public:
     /**
      * Methods for initializing the TaskInfo successively.
      */
-    AtomImpl add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static);
+    AtomImpl add_atom(const std::string& atom_name, const std::string &predicate_name, const Name_Vec &object_names, bool is_static);
+
+    /**
+     * Construct a state from textual information by first applying the index mapping and the calling convert_state.
+     */
+    StateImpl parse_state(std::shared_ptr<InstanceInfoImpl> info, const Name_Vec& atom_names) const;
     /**
      * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
      */
-    StateImpl convert_state(std::shared_ptr<InstanceInfoImpl> info, const Index_Vec& atom_idxs);
+    StateImpl convert_state(std::shared_ptr<InstanceInfoImpl> info, const Index_Vec& atom_idxs) const;
 
     bool exists_predicate_name(const std::string& name) const;
     unsigned predicate_idx(const std::string& name) const;

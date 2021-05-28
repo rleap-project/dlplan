@@ -11,8 +11,11 @@ namespace core {
 class InstanceInfoImpl;
 
 struct AtomImpl {
-    // cannot have parent pointer to instance here since atom are stored in instance.
+    // Cannot have parent pointer to instance here since atom are stored in instance.
+    // A parent pointer is not necessary anyways since an Atom only acts as storage
+    // and wont be passed back into the library by the user (as opposed to a State).
     // Data members
+    const std::string m_atom_name;
     const int m_atom_idx;
     const std::string m_predicate_name;
     const int m_predicate_idx;
@@ -21,6 +24,7 @@ struct AtomImpl {
     const bool m_is_static;
 
     AtomImpl(
+        const std::string& atom_name,
         const int atom_idx,
         const std::string &predicate_name,
         int predicate_idx,

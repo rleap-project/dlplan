@@ -20,12 +20,16 @@ InstanceInfo::InstanceInfo() : m_pImpl(std::make_shared<InstanceInfoImpl>(Instan
 
 InstanceInfo::~InstanceInfo() { }
 
-State InstanceInfo::convert_state(const Index_Vec& atom_idxs) {
+State InstanceInfo::parse_state(const Name_Vec& atom_names) const {
+    return State(m_pImpl->get()->parse_state(*m_pImpl, atom_names));
+}
+
+State InstanceInfo::convert_state(const Index_Vec& atom_idxs) const {
     return State(m_pImpl->get()->convert_state(*m_pImpl, atom_idxs));
 }
 
-Atom InstanceInfo::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
-    return Atom(m_pImpl->get()->add_atom(predicate_name, object_names, is_static));
+Atom InstanceInfo::add_atom(const std::string& atom_name, const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
+    return Atom(m_pImpl->get()->add_atom(atom_name, predicate_name, object_names, is_static));
 }
 
 
