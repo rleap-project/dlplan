@@ -18,5 +18,5 @@ make
 The subdirectory examples/ contains all kinds of helpful examples that illustrate different use cases of this library. To run an example from the root of the library use
 
 ```console
-./examples/core/basics
+./examples/core/simple
 ```

@@ -34,7 +34,7 @@ public:
             throw std::runtime_error("AndConceptExpression::make_concept_element - children are not of type ConceptElement.");
         }
         // Element is commutative. Hence sort lexicographically.
-        if (l->name() < r->name()) {
+        if (l->repr() < r->repr()) {
             m_l = l;
             m_r = r;
         } else {

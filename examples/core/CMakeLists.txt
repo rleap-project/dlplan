@@ -1,3 +1,2 @@
-# Link the library against some executable
-add_executable(basics basics.cpp)
-target_link_libraries(basics dlp)
+add_executable(simple simple.cpp)
+target_link_libraries(simple dlp)
