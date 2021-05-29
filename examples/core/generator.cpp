@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <unordered_set>
+#include <numeric>
 
 static bool try_insert_uniquely(const std::string& repr, std::unordered_set<std::string>& cache) {
     if (cache.find(repr) == cache.end()) {
@@ -9,6 +10,24 @@ static bool try_insert_uniquely(const std::string& repr, std::unordered_set<std:
         return true;
     }
     return false;
+}
+
+template<typename T>
+static unsigned num_elements(std::vector<std::vector<T>> elements_by_complexity) {
+    unsigned count = 0;
+    for (const auto& elements : elements_by_complexity) {
+        count += elements.size();
+    }
+    return count;
+}
+
+template<typename T>
+static void print_elements(std::vector<std::vector<T>> elements_by_complexity) {
+    for (const auto& elements : elements_by_complexity) {
+        for (const auto& element : elements) {
+            std::cout << element.complexity() << " " << element.repr() << std::endl;
+        }
+    }
 }
 
 
@@ -31,39 +50,58 @@ int main() {
     // 2. Initialize factory.
     dlp::core::ElementFactory factory;
 
+    // 3. Initialize containers for storage and uniqueness checking.
     // Equivalence checking using repr.
     std::unordered_set<std::string> concept_element_cache;
     std::unordered_set<std::string> role_element_cache;
     std::unordered_set<std::string> numerical_element_cache;
     std::unordered_set<std::string> boolean_element_cache;
     // Constructed elements sorted by complexity for incremental construction.
-    int complexity_bound = 5;
+    int complexity_bound = 6;
     std::vector<std::vector<dlp::core::ConceptElement>> concept_elements_by_complexity(complexity_bound);
     std::vector<std::vector<dlp::core::RoleElement>> role_elements_by_complexity(complexity_bound);
     std::vector<std::vector<dlp::core::NumericalElement>> numerical_elements_by_complexity(complexity_bound);
     std::vector<std::vector<dlp::core::BooleanElement>> boolean_elements_by_complexity(complexity_bound);
 
-    // construct base
+    // 4. Construct base
     std::vector<dlp::core::Predicate> predicates = instance.predicates();
     for (const dlp::core::Predicate& predicate: predicates) {
+        // 4.1. PrimitiveConceptElement
         for (unsigned pos = 0; pos < predicate.arity(); ++pos) {
             dlp::core::ConceptElement concept_element = factory.make_primitive_concept_element(instance, predicate.name(), pos);
-            bool added = try_insert_uniquely(concept_element.repr(), concept_element_cache);
-            if (added) concept_elements_by_complexity[0].emplace_back(concept_element);
+            bool unique = try_insert_uniquely(concept_element.repr(), concept_element_cache);
+            if (unique) concept_elements_by_complexity[0].emplace_back(concept_element);
         }
+        // 4.2. PrimitiveRoleElement
         for (unsigned pos1 = 0; pos1 < predicate.arity(); ++pos1) {
             for (unsigned pos2 = 0; pos2 < predicate.arity(); ++pos2) {
-                // add roles
+                // TODO(dominik): add roles
             }
         }
+        // TODO(dominik): Add other complexity 1 elements, e.g. top, bot,..
     }
-    // inductively build more complex elements
-    for (int iteration = 1; iteration < complexity_bound; ++iteration) {
-
+    // 5. Interatively construct more complex elements
+    for (int iteration = 0; iteration < complexity_bound; ++iteration) {
+        // 5.1. AndConceptElement:
+        for (int i = 0; i <= iteration; ++i) {
+            for (const dlp::core::ConceptElement& c1 : concept_elements_by_complexity[i]) {
+                for (const dlp::core::ConceptElement& c2 : concept_elements_by_complexity[iteration]) {
+                    if (c1.repr() == c2.repr()) continue;
+                    dlp::core::ConceptElement concept_element = factory.make_and_concept_element(instance, c1, c2);
+                    bool unique = try_insert_uniquely(concept_element.repr(), concept_element_cache);
+                    if (unique && concept_element.complexity() < complexity_bound) {
+                        concept_elements_by_complexity[concept_element.complexity()].emplace_back(concept_element);
+                    }
+                }
+            }
+        }
+        // 5.2. OrConceptElement:
+        // 5.3. ...
     }
 
-    std::cout << "Total concept elements: " << concept_element_cache.size() << std::endl;
-    std::cout << "Total role elements: " << role_element_cache.size() << std::endl;
-    std::cout << "Total numerical elements: " << numerical_element_cache.size() << std::endl;
-    std::cout << "Total boolean elements: " << boolean_element_cache.size() << std::endl;
+    std::cout << "Total concept elements: " << num_elements(concept_elements_by_complexity) << std::endl;
+    print_elements(concept_elements_by_complexity);
+    std::cout << "Total role elements: " << num_elements(role_elements_by_complexity) << std::endl;
+    std::cout << "Total numerical elements: " << num_elements(numerical_elements_by_complexity) << std::endl;
+    std::cout << "Total boolean elements: " << num_elements(boolean_elements_by_complexity) << std::endl;
 };

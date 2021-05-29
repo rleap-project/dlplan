@@ -65,6 +65,11 @@ public:
      * Returns a ConceptElement that counts the number of primitive concepts.
      */
     element::ConceptElement_Ptr make_primitive_concept_element(const InstanceInfoImpl& info, const std::string& name, unsigned pos);
+
+    /**
+     * Returns a ConceptElement that counts the number of primitive concepts.
+     */
+    element::ConceptElement_Ptr make_and_concept_element(const InstanceInfoImpl& info, element::ConceptElement_Ptr element1, element::ConceptElement_Ptr element2);
 };
 
 }

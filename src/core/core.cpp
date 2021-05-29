@@ -192,5 +192,9 @@ ConceptElement ElementFactory::make_primitive_concept_element(const InstanceInfo
     return ConceptElement(*info.m_pImpl, m_pImpl->make_primitive_concept_element(**info.m_pImpl, name, pos));
 }
 
+ConceptElement ElementFactory::make_and_concept_element(const InstanceInfo& info, const ConceptElement& element1, const ConceptElement& element2) {
+    return ConceptElement(*info.m_pImpl, m_pImpl->make_and_concept_element(**info.m_pImpl, *element1.m_pImpl, *element2.m_pImpl));
+}
+
 }
 }

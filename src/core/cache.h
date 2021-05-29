@@ -45,8 +45,6 @@ public:
     Value_T& insert_cache_and_retrieve(const Key_T& key, Value_T&& value) {
         if (!exists(key)) {
             insert(key, std::move(value));
-        } else {
-            std::cout << key << std::endl;
         }
         return get(key);
     }

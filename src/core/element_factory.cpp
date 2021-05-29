@@ -47,5 +47,10 @@ element::ConceptElement_Ptr ElementFactoryImpl::make_primitive_concept_element(c
     return m_cache.concept_element_cache().insert_cache_and_retrieve(value->repr(), std::move(value));
 }
 
+element::ConceptElement_Ptr ElementFactoryImpl::make_and_concept_element(const InstanceInfoImpl& info, element::ConceptElement_Ptr element1, element::ConceptElement_Ptr element2) {
+    element::ConceptElement_Ptr value = std::make_shared<element::AndConceptElement>(info, element1, element2);
+    return m_cache.concept_element_cache().insert_cache_and_retrieve(value->repr(), std::move(value));
+}
+
 }
 }
