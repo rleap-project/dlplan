@@ -11,11 +11,5 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Build the library
 add_subdirectory(src)
-add_library(dlp SHARED)
-target_link_libraries(dlp core)
-
-set_target_properties(dlp PROPERTIES VERSION 1)
-set_target_properties(dlp PROPERTIES PUBLIC_HEADER include/dlp/element_factory.h)
-
-# compile the examples
+# Build the examples
 add_subdirectory(examples)
