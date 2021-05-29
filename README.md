@@ -20,3 +20,9 @@ The subdirectory examples/ contains all kinds of helpful examples that illustrat
 ```console
 ./examples/core/simple
 ```
+
+or
+
+```console
+./examples/core/generator
+```
