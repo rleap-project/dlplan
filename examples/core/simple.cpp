@@ -3,6 +3,9 @@
 #include <iostream>
 
 
+/**
+ * The simplest example to illustrate the construction and evaluation of elements.
+ */
 int main() {
     // 1. Initialize planning instance
     dlp::core::InstanceInfo instance;

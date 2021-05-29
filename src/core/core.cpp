@@ -9,6 +9,7 @@
 #include "instance_info.h"
 #include "atom.h"
 #include "state.h"
+#include "predicate.h"
 
 #include <iostream>
 
@@ -30,6 +31,29 @@ State InstanceInfo::convert_state(const Index_Vec& atom_idxs) const {
 
 Atom InstanceInfo::add_atom(const std::string& atom_name, const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
     return Atom(m_pImpl->get()->add_atom(atom_name, predicate_name, object_names, is_static));
+}
+
+std::vector<Predicate> InstanceInfo::predicates() const {
+    std::vector<Predicate> predicates;
+    for (const PredicateImpl& predicate_impl : m_pImpl->get()->predicates()) {
+        predicates.push_back(Predicate(predicate_impl));
+    }
+    return predicates;
+}
+
+
+Predicate::Predicate(const PredicateImpl& impl) : m_pImpl(impl) { }
+
+Predicate::Predicate(const Predicate& other) : m_pImpl(*other.m_pImpl) { }
+
+Predicate::~Predicate() {}
+
+const std::string& Predicate::name() const {
+    return m_pImpl->m_predicate_name;
+}
+
+unsigned Predicate::arity() const {
+    return m_pImpl->m_arity;
 }
 
 

@@ -13,6 +13,7 @@ namespace dlp {
 namespace core {
 class ElementFactoryImpl;
 class InstanceInfoImpl;
+class PredicateImpl;
 class AtomImpl;
 class StateImpl;
 class ElementFactory;
@@ -25,6 +26,29 @@ using Roles = std::vector<Role>;
 
 using Name_Vec = std::vector<std::string>;
 using Index_Vec = std::vector<int>;
+
+/**
+ * Predicate contains information regarding the predicates used to construct the atoms.
+ */
+class Predicate {
+private:
+    pimpl<PredicateImpl> m_pImpl;
+
+    Predicate(const PredicateImpl& impl);
+
+    friend class InstanceInfo;
+
+public:
+    Predicate() = delete;
+    Predicate(const Predicate& other);
+    ~Predicate();
+
+    /**
+     * Getters.
+     */
+    const std::string& name() const;
+    unsigned arity() const;
+};
 
 
 /**
@@ -104,6 +128,10 @@ public:
      * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
      */
     State convert_state(const Index_Vec& atom_idxs) const;
+    /**
+     * Getters.
+     */
+    std::vector<Predicate> predicates() const;
 };
 
 /**

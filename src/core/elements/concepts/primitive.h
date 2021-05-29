@@ -32,7 +32,7 @@ public:
             throw std::runtime_error("PrimitiveConceptElement::PrimitiveConceptElement - predicate ("s + m_name + ") is missing in InstanceInfo.");
         }
         m_predicate_idx = info.predicate_idx(name);
-        unsigned predicate_arity = info.predicate_arity(m_predicate_idx);
+        unsigned predicate_arity = info.predicate(m_predicate_idx).m_arity;
         if (pos >= predicate_arity) {
             throw std::runtime_error("PrimitiveConceptElement::PrimitiveConceptElement - object index does not match predicate arity ("s + std::to_string(pos) + " > " + std::to_string(predicate_arity) + ").");
         }

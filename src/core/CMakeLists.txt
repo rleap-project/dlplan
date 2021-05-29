@@ -5,6 +5,7 @@ add_library(core
     core.cpp
     element_factory.cpp
     instance_info.cpp
+    predicate.cpp
     parser/parser.cpp
     parser/tokenizer.cpp
     parser/ast_factory.cpp

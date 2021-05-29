@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "predicate.h"
 #include "atom.h"
 #include "types.h"
 
@@ -31,10 +32,6 @@ private:
     std::vector<std::string> m_object_idx_to_to_object_name;
     std::unordered_map<std::string, unsigned> m_atom_name_to_atom_idx;
     /**
-     * Predicate arities
-     */
-    std::vector<unsigned> m_predicate_arities;
-    /**
      * Indices of static atoms, i.e., atoms that do not change and remain true forever.
      */
     Index_Vec m_static_atom_idxs;
@@ -42,6 +39,10 @@ private:
      * All atoms.
      */
     std::vector<AtomImpl> m_atoms;
+    /**
+     * All predicates.
+     */
+    std::vector<PredicateImpl> m_predicates;
 
 public:
     InstanceInfoImpl() = default;
@@ -63,11 +64,13 @@ public:
 
     bool exists_predicate_name(const std::string& name) const;
     unsigned predicate_idx(const std::string& name) const;
-    unsigned predicate_arity(unsigned predicate_idx) const;
     /**
      * Getters
      */
     const AtomImpl& atom(unsigned atom_idx) const;
+    const std::vector<AtomImpl>& atoms() const;
+    const PredicateImpl& predicate(unsigned predicate_idx) const;
+    const std::vector<PredicateImpl>& predicates() const;
 };
 
 }
