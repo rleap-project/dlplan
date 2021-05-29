@@ -47,4 +47,5 @@ libdlp.so.1
 
 **/.vscode
 
-examples/core/basics
+examples/core/generator
+examples/core/simple
