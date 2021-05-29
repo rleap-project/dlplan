@@ -13,7 +13,7 @@ static bool try_insert_uniquely(const std::string& repr, std::unordered_set<std:
 }
 
 template<typename T>
-static unsigned num_elements(std::vector<std::vector<T>> elements_by_complexity) {
+static unsigned num_elements(const std::vector<std::vector<T>>& elements_by_complexity) {
     unsigned count = 0;
     for (const auto& elements : elements_by_complexity) {
         count += elements.size();
@@ -22,7 +22,7 @@ static unsigned num_elements(std::vector<std::vector<T>> elements_by_complexity)
 }
 
 template<typename T>
-static void print_elements(std::vector<std::vector<T>> elements_by_complexity) {
+static void print_elements(const std::vector<std::vector<T>>& elements_by_complexity) {
     for (const auto& elements : elements_by_complexity) {
         for (const auto& element : elements) {
             std::cout << element.complexity() << " " << element.repr() << std::endl;
@@ -65,7 +65,7 @@ int main() {
 
     // 4. Construct base
     std::vector<dlp::core::Predicate> predicates = instance.predicates();
-    for (const dlp::core::Predicate& predicate: predicates) {
+    for (const auto& predicate: predicates) {
         // 4.1. PrimitiveConceptElement
         for (unsigned pos = 0; pos < predicate.arity(); ++pos) {
             dlp::core::ConceptElement concept_element = factory.make_primitive_concept_element(instance, predicate.name(), pos);
@@ -84,8 +84,8 @@ int main() {
     for (int iteration = 0; iteration < complexity_bound; ++iteration) {
         // 5.1. AndConceptElement:
         for (int i = 0; i <= iteration; ++i) {
-            for (const dlp::core::ConceptElement& c1 : concept_elements_by_complexity[i]) {
-                for (const dlp::core::ConceptElement& c2 : concept_elements_by_complexity[iteration]) {
+            for (const auto& c1 : concept_elements_by_complexity[i]) {
+                for (const auto& c2 : concept_elements_by_complexity[iteration]) {
                     if (c1.repr() == c2.repr()) continue;
                     dlp::core::ConceptElement concept_element = factory.make_and_concept_element(instance, c1, c2);
                     bool unique = try_insert_uniquely(concept_element.repr(), concept_element_cache);
