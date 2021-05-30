@@ -57,8 +57,9 @@ public:
 class Atom {
 private:
     pimpl<AtomImpl> m_pImpl;
+    std::shared_ptr<InstanceInfoImpl> m_parent;
 
-    Atom(const AtomImpl& impl);
+    Atom(std::shared_ptr<InstanceInfoImpl> parent, AtomImpl&& impl);
 
     friend class InstanceInfo;
 
@@ -71,6 +72,7 @@ public:
      * Getters.
      */
     int atom_idx() const;
+    const std::string& atom_name() const;
 };
 
 /**
@@ -81,7 +83,7 @@ private:
     pimpl<StateImpl> m_pImpl;
     std::shared_ptr<InstanceInfoImpl> m_parent;
 
-    State(std::shared_ptr<InstanceInfoImpl> parent, StateImpl impl);
+    State(std::shared_ptr<InstanceInfoImpl> parent, StateImpl&& impl);
 
     friend class InstanceInfo;
     friend class ConceptElement;

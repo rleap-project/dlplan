@@ -25,6 +25,9 @@ State InstanceInfo::parse_state(const std::vector<Atom>& atoms) const {
     std::vector<AtomImpl> atoms_impl;
     atoms_impl.reserve(atoms.size());
     for (const auto& atom : atoms) {
+        if (atom.m_parent != *m_pImpl) {
+            throw std::runtime_error("InstanceInfo::parse_state - atom ("s + atom.atom_name() + ") does not belong to the instance");
+        }
         atoms_impl.push_back(*atom.m_pImpl);
     }
     return State(*m_pImpl, m_pImpl->get()->parse_state(*m_pImpl, atoms_impl));
@@ -35,7 +38,7 @@ State InstanceInfo::convert_state(const Index_Vec& atom_idxs) const {
 }
 
 Atom InstanceInfo::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
-    return Atom(m_pImpl->get()->add_atom(predicate_name, object_names, is_static));
+    return Atom(*m_pImpl, m_pImpl->get()->add_atom(predicate_name, object_names, is_static));
 }
 
 std::vector<Predicate> InstanceInfo::predicates() const {
@@ -62,14 +65,22 @@ unsigned Predicate::arity() const {
 }
 
 
-Atom::Atom(const AtomImpl& impl) : m_pImpl(impl) { }
+Atom::Atom(std::shared_ptr<InstanceInfoImpl> parent, AtomImpl&& impl) : m_parent(parent), m_pImpl(std::move(impl)) { }
 
-Atom::Atom(const Atom& other) : m_pImpl(*other.m_pImpl) { }
+Atom::Atom(const Atom& other) : m_parent(other.m_parent), m_pImpl(*other.m_pImpl) { }
 
 Atom::~Atom() { }
 
+int Atom::atom_idx() const {
+    return m_pImpl->m_atom_idx;
+}
 
-State::State(std::shared_ptr<InstanceInfoImpl> parent, StateImpl impl) : m_parent(parent), m_pImpl(impl) { }
+const std::string& Atom::atom_name() const {
+    return m_pImpl->m_atom_name;
+}
+
+
+State::State(std::shared_ptr<InstanceInfoImpl> parent, StateImpl&& impl) : m_parent(parent), m_pImpl(std::move(impl)) { }
 
 State::State(const State& other) : m_parent(other.m_parent), m_pImpl(*other.m_pImpl) {}
 
