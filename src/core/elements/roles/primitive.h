@@ -18,12 +18,12 @@ protected:
         const InstanceInfoImpl& info = *state.m_parent;
         // 1. Perform error checking.
         if (!info.exists_predicate_name(m_name)) {
-            throw std::runtime_error("PrimitiveConceptElement::PrimitiveConceptElement - predicate ("s + m_name + ") is missing in InstanceInfo.");
+            throw std::runtime_error("PrimitiveRoleElement::evaluate_impl - predicate ("s + m_name + ") is missing in InstanceInfo.");
         }
         unsigned predicate_idx = info.predicate_idx(m_name);
         unsigned predicate_arity = info.predicate(predicate_idx).m_arity;
         if (m_pos_1 >= predicate_arity || m_pos_2 >= predicate_arity) {
-            throw std::runtime_error("PrimitiveConceptElement::PrimitiveConceptElement - object index does not match predicate arity ("s + std::to_string(m_pos_1) + " or " + std::to_string(m_pos_2)  + " > " + std::to_string(predicate_arity) + ").");
+            throw std::runtime_error("PrimitiveRoleElement::evaluate_impl - object index does not match predicate arity ("s + std::to_string(m_pos_1) + " or " + std::to_string(m_pos_2)  + " > " + std::to_string(predicate_arity) + ").");
         }
         // 2. Compute the result.
         m_result.clear();
