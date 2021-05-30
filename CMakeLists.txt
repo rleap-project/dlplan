@@ -9,6 +9,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 #set(CMAKE_CXX_FLAGS "-g -DDEBUG")
 #set(CMAKE_CXX_FLAGS "-O3 -DNDEBUG")  # -Wall -Wextra
 
+include_directories(include)
+
 # Build the library
 add_subdirectory(src)
 # Build the examples
