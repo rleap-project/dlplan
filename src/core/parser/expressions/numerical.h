@@ -26,7 +26,7 @@ public:
      */
     virtual element::NumericalElement_Ptr parse_numerical_element(ElementCache &cache) const {
         element::NumericalElement_Ptr value = parse_numerical_element_impl(cache);
-        return cache.numerical_element_cache().insert_cache_and_retrieve(value->repr(), std::move(value));
+        return cache.numerical_element_cache().insert(std::make_pair(value->repr(), std::move(value))).first->second;
     }
 };
 

@@ -12,9 +12,8 @@
 namespace dlp {
 namespace core {
 
-/**
- * A simple cache.
- */
+/* A simple cache for more complex keys.
+
 template<typename Key_T, typename Value_T>
 class Cache {
 protected:
@@ -38,20 +37,14 @@ public:
         return m_cache.find(key)->second;
     }
 
-    void insert(const Key_T& key, Value_T&& value) {
-        m_cache.insert(make_pair(key, std::move(value)));
-    }
-
-    Value_T& insert_cache_and_retrieve(const Key_T& key, Value_T&& value) {
-        if (!exists(key)) {
-            insert(key, std::move(value));
-        }
-        return get(key);
+    std::pair<typename std::unordered_map<Key_T, Value_T>::iterator, bool> insert(std::pair<Key_T, Value_T>&& pair) {
+        return m_cache.insert(std::move(pair));
     }
 
 private:
     std::unordered_map<Key_T, Value_T, KeyHash> m_cache;
 };
+*/
 
 
 class ElementCache {
@@ -59,18 +52,18 @@ private:
     /**
      * One cache for each template instantiated element.
      */
-    Cache<std::string, element::ConceptElement_Ptr> m_concept_element_cache;
-    Cache<std::string, element::RoleElement_Ptr> m_role_element_cache;
-    Cache<std::string, element::NumericalElement_Ptr> m_numerical_element_cache;
-    Cache<std::string, element::BooleanElement_Ptr> m_boolean_element_cache;
+    std::unordered_map<std::string, element::ConceptElement_Ptr> m_concept_element_cache;
+    std::unordered_map<std::string, element::RoleElement_Ptr> m_role_element_cache;
+    std::unordered_map<std::string, element::NumericalElement_Ptr> m_numerical_element_cache;
+    std::unordered_map<std::string, element::BooleanElement_Ptr> m_boolean_element_cache;
 
 public:
     ElementCache();
 
-    Cache<std::string, element::ConceptElement_Ptr>& concept_element_cache();
-    Cache<std::string, element::RoleElement_Ptr>& role_element_cache();
-    Cache<std::string, element::NumericalElement_Ptr>& numerical_element_cache();
-    Cache<std::string, element::BooleanElement_Ptr>& boolean_element_cache();
+    std::unordered_map<std::string, element::ConceptElement_Ptr>& concept_element_cache();
+    std::unordered_map<std::string, element::RoleElement_Ptr>& role_element_cache();
+    std::unordered_map<std::string, element::NumericalElement_Ptr>& numerical_element_cache();
+    std::unordered_map<std::string, element::BooleanElement_Ptr>& boolean_element_cache();
 };
 
 

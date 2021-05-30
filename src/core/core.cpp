@@ -204,5 +204,9 @@ ConceptElement ElementFactory::make_and_concept_element(const ConceptElement& el
     return ConceptElement(m_pImpl->make_and_concept_element(*element1.m_pImpl, *element2.m_pImpl));
 }
 
+RoleElement ElementFactory::make_primitive_role_element(const std::string& name, unsigned pos_1, unsigned pos_2) {
+    return RoleElement(m_pImpl->make_primitive_role_element(name, pos_1, pos_2));
+}
+
 }
 }

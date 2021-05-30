@@ -69,6 +69,10 @@ int main() {
         for (unsigned pos1 = 0; pos1 < predicate.arity(); ++pos1) {
             for (unsigned pos2 = 0; pos2 < predicate.arity(); ++pos2) {
                 // TODO(dominik): add roles
+                dlp::core::RoleElement role_element = factory.make_primitive_role_element(predicate.name(), pos1, pos2);
+                bool unique = role_element_cache.insert(role_element.repr()).second;
+                if (unique) role_elements_by_complexity[0].emplace_back(role_element);
+
             }
         }
         // TODO(dominik): Add other complexity 1 elements, e.g. top, bot,..
@@ -95,6 +99,7 @@ int main() {
     std::cout << "Total concept elements: " << num_elements(concept_elements_by_complexity) << std::endl;
     print_elements(concept_elements_by_complexity);
     std::cout << "Total role elements: " << num_elements(role_elements_by_complexity) << std::endl;
+    print_elements(role_elements_by_complexity);
     std::cout << "Total numerical elements: " << num_elements(numerical_elements_by_complexity) << std::endl;
     std::cout << "Total boolean elements: " << num_elements(boolean_elements_by_complexity) << std::endl;
 };
