@@ -10,18 +10,18 @@ namespace parser {
 
 class AndConceptExpression : public ConceptExpression {
 protected:
-    virtual element::ConceptElement_Ptr parse_concept_element_impl(const InstanceInfoImpl& info, ElementCache &cache) const override {
+    virtual element::ConceptElement_Ptr parse_concept_element_impl(ElementCache &cache) const override {
         if (m_children.size() != 2) {
             throw std::runtime_error("AndConceptExpression::parse_concept_element - number of children ("s + std::to_string(m_children.size()) + " != 1).");
         }
         // 1. Parse children
-        element::ConceptElement_Ptr l = m_children[0]->parse_concept_element(info, cache);
-        element::ConceptElement_Ptr r = m_children[1]->parse_concept_element(info, cache);
+        element::ConceptElement_Ptr l = m_children[0]->parse_concept_element(cache);
+        element::ConceptElement_Ptr r = m_children[1]->parse_concept_element(cache);
         if (!(l && r)) {
             throw std::runtime_error("AndConceptExpression::parse_concept_element - children are not of type ConceptElement.");
         }
         // 2. Construct element
-        return std::make_shared<element::AndConceptElement>(info, l, r);
+        return std::make_shared<element::AndConceptElement>(l, r);
     }
 
 public:

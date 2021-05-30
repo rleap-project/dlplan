@@ -22,7 +22,7 @@ protected:
     }
 
 public:
-    CountNumericalElement(const InstanceInfoImpl& info, T element) : NumericalElement(info, "n_count"), m_element(element) { }
+    CountNumericalElement(T element) : NumericalElement("n_count"), m_element(element) { }
 
     virtual unsigned complexity() const override {
         return m_element->complexity() + 1;

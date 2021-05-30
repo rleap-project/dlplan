@@ -51,12 +51,12 @@ public:
     /**
      * Methods for initializing the TaskInfo successively.
      */
-    AtomImpl add_atom(const std::string& atom_name, const std::string &predicate_name, const Name_Vec &object_names, bool is_static);
+    AtomImpl add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static);
 
     /**
      * Construct a state from textual information by first applying the index mapping and the calling convert_state.
      */
-    StateImpl parse_state(std::shared_ptr<InstanceInfoImpl> info, const Name_Vec& atom_names) const;
+    StateImpl parse_state(std::shared_ptr<InstanceInfoImpl> info, const std::vector<AtomImpl>& atoms) const;
     /**
      * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
      */

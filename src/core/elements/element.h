@@ -27,7 +27,7 @@ protected:
     virtual T evaluate_impl(const StateImpl& state) = 0;
 
 public:
-    Element(const InstanceInfoImpl& info, const std::string& name) : m_name(name), m_result(T()), m_state(nullptr) { }
+    Element(const std::string& name) : m_name(name), m_result(T()), m_state(nullptr) { }
     virtual ~Element() = default;
 
     /**

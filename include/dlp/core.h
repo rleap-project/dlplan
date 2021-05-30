@@ -118,12 +118,12 @@ public:
     /**
      * Adds an atom and internally extends a mapping from names to indices.
      */
-    Atom add_atom(const std::string& atom_name, const std::string& predicate_name, const Name_Vec& object_names, bool is_static);
+    Atom add_atom(const std::string& predicate_name, const Name_Vec& object_names, bool is_static);
 
     /**
      * Construct a state from textual information by first applying the index mapping and the calling convert_state.
      */
-    State parse_state(const Name_Vec& atom_names) const;
+    State parse_state(const std::vector<Atom>& atoms) const;
     /**
      * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
      */
@@ -139,11 +139,7 @@ public:
  */
 template<typename T>
 class Element {
-protected:
-    std::shared_ptr<InstanceInfoImpl> m_parent;
-
 public:
-    Element(std::shared_ptr<InstanceInfoImpl> parent) : m_parent(parent) { }
     virtual ~Element() = default;
 
     /**
@@ -171,7 +167,7 @@ class ConceptElement : public Element<Concepts> {
 protected:
     pimpl<element::ConceptElement_Ptr> m_pImpl;
 
-    ConceptElement(std::shared_ptr<InstanceInfoImpl> parent, element::ConceptElement_Ptr pImpl);
+    ConceptElement(element::ConceptElement_Ptr pImpl);
 
     friend class ElementFactory;
 
@@ -195,7 +191,7 @@ class RoleElement : public Element<Roles> {
 protected:
     pimpl<element::RoleElement_Ptr> m_pImpl;
 
-    RoleElement(std::shared_ptr<InstanceInfoImpl> parent, element::RoleElement_Ptr pImpl);
+    RoleElement(element::RoleElement_Ptr pImpl);
 
     friend class ElementFactory;
 
@@ -219,7 +215,7 @@ class NumericalElement : public Element<int> {
 protected:
     pimpl<element::NumericalElement_Ptr> m_pImpl;
 
-    NumericalElement(std::shared_ptr<InstanceInfoImpl> parent, element::NumericalElement_Ptr pImpl);
+    NumericalElement(element::NumericalElement_Ptr pImpl);
 
     friend class ElementFactory;
 
@@ -243,7 +239,7 @@ class BooleanElement : public Element<bool> {
 protected:
     pimpl<element::BooleanElement_Ptr> m_pImpl;
 
-    BooleanElement(std::shared_ptr<InstanceInfoImpl> parent, element::BooleanElement_Ptr pImpl);
+    BooleanElement(element::BooleanElement_Ptr pImpl);
 
     friend class ElementFactory;
 
@@ -276,45 +272,45 @@ public:
      * Returns a ConceptElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    ConceptElement parse_concept_element(const InstanceInfo& info, const std::string &description);
+    ConceptElement parse_concept_element(const std::string &description);
 
     /**
      * Returns a RoleElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    RoleElement parse_role_element(const InstanceInfo& info, const std::string &description);
+    RoleElement parse_role_element(const std::string &description);
 
     /**
      * Returns a NumericalElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    NumericalElement parse_numerical_element(const InstanceInfo& info, const std::string &description);
+    NumericalElement parse_numerical_element(const std::string &description);
 
     /**
      * Returns a BooleanElement if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    BooleanElement parse_boolean_element(const InstanceInfo& info, const std::string &description);
+    BooleanElement parse_boolean_element(const std::string &description);
 
     /**
      * Returns a NumericalElement that counts the number of concepts.
      */
-    NumericalElement make_count_element(const InstanceInfo& info, const ConceptElement& element);
+    NumericalElement make_count_element(const ConceptElement& element);
 
     /**
      * Returns a NumericalElement that counts the number of roles.
      */
-    NumericalElement make_count_element(const InstanceInfo& info, const RoleElement& element);
+    NumericalElement make_count_element(const RoleElement& element);
 
     /**
      * Returns a ConceptElement that counts the number of primitive concepts.
      */
-    ConceptElement make_primitive_concept_element(const InstanceInfo& info, const std::string& name, unsigned pos);
+    ConceptElement make_primitive_concept_element(const std::string& name, unsigned pos);
 
     /**
      * Returns a ConceptElement that counts the number of primitive concepts.
      */
-    ConceptElement make_and_concept_element(const InstanceInfo& info, const ConceptElement& element1, const ConceptElement& element2);
+    ConceptElement make_and_concept_element(const ConceptElement& element1, const ConceptElement& element2);
 };
 
 

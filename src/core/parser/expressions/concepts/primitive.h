@@ -12,14 +12,14 @@ namespace parser {
 
 class PrimitiveConceptExpression : public ConceptExpression {
 protected:
-    virtual element::ConceptElement_Ptr parse_concept_element_impl(const InstanceInfoImpl& info, ElementCache &cache) const override {
+    virtual element::ConceptElement_Ptr parse_concept_element_impl(ElementCache &cache) const override {
         if (m_children.size() != 1) {
             throw std::runtime_error("PrimitiveConceptExpression::parse_concept_element - number of children ("s + std::to_string(m_children.size()) + " != 1).");
         }
         // 1. Parse children
         unsigned object_idx = try_parse(m_children[0]->name());
         // 2. Construct element
-        return std::make_shared<element::PrimitiveConceptElement>(info, m_name, object_idx);
+        return std::make_shared<element::PrimitiveConceptElement>(m_name, object_idx);
     }
 
 public:

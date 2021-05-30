@@ -28,8 +28,8 @@ protected:
     }
 
 public:
-    AndConceptElement(const InstanceInfoImpl& info, ConceptElement_Ptr l, ConceptElement_Ptr r)
-    : ConceptElement(info, "c_and") {
+    AndConceptElement(ConceptElement_Ptr l, ConceptElement_Ptr r)
+    : ConceptElement("c_and") {
         if (!(l && r)) {
             throw std::runtime_error("AndConceptExpression::make_concept_element - children are not of type ConceptElement.");
         }

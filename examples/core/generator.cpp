@@ -4,13 +4,6 @@
 #include <unordered_set>
 #include <numeric>
 
-static bool try_insert_uniquely(const std::string& repr, std::unordered_set<std::string>& cache) {
-    if (cache.find(repr) == cache.end()) {
-        cache.insert(repr);
-        return true;
-    }
-    return false;
-}
 
 template<typename T>
 static unsigned num_elements(const std::vector<std::vector<T>>& elements_by_complexity) {
@@ -38,14 +31,14 @@ int main() {
     // 1. Initialize planning instance
     dlp::core::InstanceInfo instance;
     // Add state atoms
-    dlp::core::Atom a0 = instance.add_atom("on_A_B", "on", {"A", "B"}, false);
-    dlp::core::Atom a1 = instance.add_atom("on_B_A", "on", {"B", "A"}, false);
-    dlp::core::Atom a2 = instance.add_atom("onTable_A", "onTable", {"A"}, false);
-    dlp::core::Atom a3 = instance.add_atom("onTable_B", "onTable", {"B"}, false);
-    dlp::core::Atom a4 = instance.add_atom("holding_A", "holding", {"A"}, false);
-    dlp::core::Atom a5 = instance.add_atom("holding_B", "holding", {"B"}, false);
+    dlp::core::Atom a0 = instance.add_atom("on", {"A", "B"}, false);
+    dlp::core::Atom a1 = instance.add_atom("on", {"B", "A"}, false);
+    dlp::core::Atom a2 = instance.add_atom("onTable", {"A"}, false);
+    dlp::core::Atom a3 = instance.add_atom("onTable", {"B"}, false);
+    dlp::core::Atom a4 = instance.add_atom("holding", {"A"}, false);
+    dlp::core::Atom a5 = instance.add_atom("holding", {"B"}, false);
     // Add goal atoms
-    dlp::core::Atom a6 = instance.add_atom("on_g_A_B", "on_g", {"A", "B"}, true);
+    dlp::core::Atom a6 = instance.add_atom("on_g", {"A", "B"}, true);
 
     // 2. Initialize factory.
     dlp::core::ElementFactory factory;
@@ -68,8 +61,8 @@ int main() {
     for (const auto& predicate: predicates) {
         // 4.1. PrimitiveConceptElement
         for (unsigned pos = 0; pos < predicate.arity(); ++pos) {
-            dlp::core::ConceptElement concept_element = factory.make_primitive_concept_element(instance, predicate.name(), pos);
-            bool unique = try_insert_uniquely(concept_element.repr(), concept_element_cache);
+            dlp::core::ConceptElement concept_element = factory.make_primitive_concept_element(predicate.name(), pos);
+            bool unique = concept_element_cache.insert(concept_element.repr()).second;
             if (unique) concept_elements_by_complexity[0].emplace_back(concept_element);
         }
         // 4.2. PrimitiveRoleElement
@@ -82,21 +75,21 @@ int main() {
     }
     // 5. Interatively construct more complex elements
     for (int iteration = 0; iteration < complexity_bound; ++iteration) {
-        // 5.1. AndConceptElement:
         for (int i = 0; i <= iteration; ++i) {
+            // 5.1. AndConceptElement:
             for (const auto& c1 : concept_elements_by_complexity[i]) {
                 for (const auto& c2 : concept_elements_by_complexity[iteration]) {
                     if (c1.repr() == c2.repr()) continue;
-                    dlp::core::ConceptElement concept_element = factory.make_and_concept_element(instance, c1, c2);
-                    bool unique = try_insert_uniquely(concept_element.repr(), concept_element_cache);
+                    dlp::core::ConceptElement concept_element = factory.make_and_concept_element(c1, c2);
+                    bool unique = concept_element_cache.insert(concept_element.repr()).second;
                     if (unique && concept_element.complexity() < complexity_bound) {
                         concept_elements_by_complexity[concept_element.complexity()].emplace_back(concept_element);
                     }
                 }
             }
+            // 5.2. OrConceptElement:
+            // 5.3. ...
         }
-        // 5.2. OrConceptElement:
-        // 5.3. ...
     }
 
     std::cout << "Total concept elements: " << num_elements(concept_elements_by_complexity) << std::endl;

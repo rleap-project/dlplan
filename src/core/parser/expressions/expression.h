@@ -56,7 +56,7 @@ public:
      * Tries to parse the Expression into a ConceptElement.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual element::ConceptElement_Ptr parse_concept_element(const InstanceInfoImpl& info, ElementCache &cache) const {
+    virtual element::ConceptElement_Ptr parse_concept_element(ElementCache &cache) const {
         return nullptr;
     }
 
@@ -64,7 +64,7 @@ public:
      * Tries to parse the Expression into a RoleElement.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual element::RoleElement_Ptr parse_role_element(const InstanceInfoImpl& info, ElementCache &cache) const {
+    virtual element::RoleElement_Ptr parse_role_element(ElementCache &cache) const {
         return nullptr;
     }
 
@@ -72,7 +72,7 @@ public:
      * Tries to parse the Expression into a NumericalElement.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual element::NumericalElement_Ptr parse_numerical_element(const InstanceInfoImpl& info, ElementCache &cache) const {
+    virtual element::NumericalElement_Ptr parse_numerical_element(ElementCache &cache) const {
         return nullptr;
     }
 
@@ -80,7 +80,7 @@ public:
      * Tries to parse the Expression into a BooleanElement.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual element::BooleanElement_Ptr parse_boolean_element(const InstanceInfoImpl& info, ElementCache &cache) const {
+    virtual element::BooleanElement_Ptr parse_boolean_element(ElementCache &cache) const {
         return nullptr;
     }
 };

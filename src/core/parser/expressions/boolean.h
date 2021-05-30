@@ -15,7 +15,7 @@ protected:
     /**
      * Construct the BooleanElement.
      */
-    virtual element::BooleanElement_Ptr parse_boolean_element_impl(const InstanceInfoImpl& info, ElementCache &cache) const = 0;
+    virtual element::BooleanElement_Ptr parse_boolean_element_impl(ElementCache &cache) const = 0;
 
 public:
     BooleanExpression(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
@@ -24,8 +24,8 @@ public:
     /**
      * Construct or retrieve the BooleanElement.
      */
-    virtual element::BooleanElement_Ptr parse_boolean_element(const InstanceInfoImpl& info, ElementCache &cache) const {
-        element::BooleanElement_Ptr value = parse_boolean_element_impl(info, cache);
+    virtual element::BooleanElement_Ptr parse_boolean_element(ElementCache &cache) const {
+        element::BooleanElement_Ptr value = parse_boolean_element_impl(cache);
         return cache.boolean_element_cache().insert_cache_and_retrieve(value->repr(), std::move(value));
     }
 };
