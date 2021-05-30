@@ -33,7 +33,7 @@ int main() {
     dlp::core::State state = instance.convert_state({0, 3});
     int value = numerical.evaluate(state);
     std::cout << "value: " << value << std::endl;
-    dlp::core::State state2 = instance.parse_state({a0, a3});
+    dlp::core::State state2 = instance.convert_state({a0, a3});
     value = numerical.evaluate(state2);
     std::cout << "value: " << value << std::endl;
 };

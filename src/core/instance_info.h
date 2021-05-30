@@ -56,7 +56,11 @@ public:
     /**
      * Construct a state from textual information by first applying the index mapping and the calling convert_state.
      */
-    StateImpl parse_state(std::shared_ptr<InstanceInfoImpl> info, const std::vector<AtomImpl>& atoms) const;
+    StateImpl parse_state(std::shared_ptr<InstanceInfoImpl> info, const Name_Vec& atom_names) const;
+    /**
+     * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
+     */
+    StateImpl convert_state(std::shared_ptr<InstanceInfoImpl> info, const std::vector<AtomImpl>& atomss) const;
     /**
      * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
      */

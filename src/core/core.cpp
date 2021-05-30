@@ -21,7 +21,11 @@ InstanceInfo::InstanceInfo() : m_pImpl(std::make_shared<InstanceInfoImpl>(Instan
 
 InstanceInfo::~InstanceInfo() { }
 
-State InstanceInfo::parse_state(const std::vector<Atom>& atoms) const {
+State InstanceInfo::parse_state(const Name_Vec& atom_names) const {
+    return State(*m_pImpl, m_pImpl->get()->parse_state(*m_pImpl, atom_names));
+}
+
+State InstanceInfo::convert_state(const std::vector<Atom>& atoms) const {
     std::vector<AtomImpl> atoms_impl;
     atoms_impl.reserve(atoms.size());
     for (const auto& atom : atoms) {
@@ -30,7 +34,7 @@ State InstanceInfo::parse_state(const std::vector<Atom>& atoms) const {
         }
         atoms_impl.push_back(*atom.m_pImpl);
     }
-    return State(*m_pImpl, m_pImpl->get()->parse_state(*m_pImpl, atoms_impl));
+    return State(*m_pImpl, m_pImpl->get()->convert_state(*m_pImpl, atoms_impl));
 }
 
 State InstanceInfo::convert_state(const Index_Vec& atom_idxs) const {

@@ -125,7 +125,11 @@ public:
     /**
      * Construct a state from textual information by first applying the index mapping and the calling convert_state.
      */
-    State parse_state(const std::vector<Atom>& atoms) const;
+    State parse_state(const Name_Vec& atom_names) const;
+    /**
+     * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
+     */
+    State convert_state(const std::vector<Atom>& atoms) const;
     /**
      * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
      */
