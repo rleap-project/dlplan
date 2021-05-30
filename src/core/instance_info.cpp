@@ -58,7 +58,7 @@ AtomImpl InstanceInfoImpl::add_atom(const std::string &predicate_name, const Nam
 StateImpl InstanceInfoImpl::parse_state(std::shared_ptr<InstanceInfoImpl> info, const Name_Vec& atom_names) const {
     Index_Vec atoms;
     atoms.reserve(atom_names.size() + m_static_atom_idxs.size());
-    for (auto& atom_name : atom_names) {
+    for (const auto& atom_name : atom_names) {
         auto p = m_atom_name_to_atom_idx.find(atom_name);
         if (p == m_atom_name_to_atom_idx.end()) {
             throw std::runtime_error("InstanceInfoImpl::parse_state - atom name ("s + atom_name + ") not found in instance.");

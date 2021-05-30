@@ -33,8 +33,9 @@ using Index_Vec = std::vector<int>;
 class Predicate {
 private:
     pimpl<PredicateImpl> m_pImpl;
+    std::shared_ptr<InstanceInfoImpl> m_parent;
 
-    Predicate(const PredicateImpl& impl);
+    Predicate(std::shared_ptr<InstanceInfoImpl> parent, PredicateImpl&& impl);
 
     friend class InstanceInfo;
 

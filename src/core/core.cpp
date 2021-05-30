@@ -47,14 +47,14 @@ Atom InstanceInfo::add_atom(const std::string &predicate_name, const Name_Vec &o
 
 std::vector<Predicate> InstanceInfo::predicates() const {
     std::vector<Predicate> predicates;
-    for (const PredicateImpl& predicate_impl : m_pImpl->get()->predicates()) {
-        predicates.push_back(Predicate(predicate_impl));
+    for (PredicateImpl predicate_impl : m_pImpl->get()->predicates()) {
+        predicates.push_back(Predicate(*m_pImpl, std::move(predicate_impl)));
     }
     return predicates;
 }
 
 
-Predicate::Predicate(const PredicateImpl& impl) : m_pImpl(impl) { }
+Predicate::Predicate(std::shared_ptr<InstanceInfoImpl> parent, PredicateImpl&& impl) : m_parent(parent), m_pImpl(impl) { }
 
 Predicate::Predicate(const Predicate& other) : m_pImpl(*other.m_pImpl) { }
 
