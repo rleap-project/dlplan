@@ -75,6 +75,9 @@ public:
      * Returns a RoleElement that counts the number of primitive roles.
      */
     element::RoleElement_Ptr make_primitive_role_element(const std::string& name, unsigned pos_1, unsigned pos_2);
+
+
+
 };
 
 }

@@ -325,6 +325,10 @@ public:
 
     NumericalElement make_concept_distance_element(const ConceptElement& concept_from, const RoleElement& role, const ConceptElement& concept_to);
     /**
+     * Returns a NumericalElement that counts the number of concepts.
+     */
+    NumericalElement make_count_element(const ConceptElement& concept);
+    /**
      * Returns a NumericalElement that counts the number of roles.
      */
     NumericalElement make_count_element(const RoleElement& role);
