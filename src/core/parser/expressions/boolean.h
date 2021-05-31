@@ -13,19 +13,19 @@ namespace parser {
 class BooleanExpression : public Expression {
 protected:
     /**
-     * Construct the BooleanElement.
+     * Construct the Boolean.
      */
-    virtual element::BooleanElement_Ptr parse_boolean_element_impl(ElementCache &cache) const = 0;
+    virtual element::Boolean_Ptr parse_boolean_element_impl(ElementCache &cache) const = 0;
 
 public:
     BooleanExpression(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Expression(name, std::move(children)) { }
 
     /**
-     * Construct or retrieve the BooleanElement.
+     * Construct or retrieve the Boolean.
      */
-    virtual element::BooleanElement_Ptr parse_boolean_element(ElementCache &cache) const {
-        element::BooleanElement_Ptr value = parse_boolean_element_impl(cache);
+    virtual element::Boolean_Ptr parse_boolean_element(ElementCache &cache) const {
+        element::Boolean_Ptr value = parse_boolean_element_impl(cache);
         return cache.boolean_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
     }
 };

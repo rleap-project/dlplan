@@ -12,19 +12,19 @@ namespace parser {
 class RoleExpression : public Expression {
 protected:
     /**
-     * Construct the RoleElement.
+     * Construct the Role.
      */
-    virtual element::RoleElement_Ptr parse_role_element_impl(ElementCache &cache) const = 0;
+    virtual element::Role_Ptr parse_role_element_impl(ElementCache &cache) const = 0;
 
 public:
     RoleExpression(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Expression(name, std::move(children)) { }
 
     /**
-     * Construct or retrieve the RoleElement.
+     * Construct or retrieve the Role.
      */
-    virtual element::RoleElement_Ptr parse_role_element(ElementCache &cache) const {
-        element::RoleElement_Ptr value = parse_role_element_impl(cache);
+    virtual element::Role_Ptr parse_role_element(ElementCache &cache) const {
+        element::Role_Ptr value = parse_role_element_impl(cache);
         return cache.role_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
     }
 };

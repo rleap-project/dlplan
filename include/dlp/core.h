@@ -18,11 +18,9 @@ class AtomImpl;
 class StateImpl;
 class SyntacticElementFactory;
 
-using Concept = int;
-using Concepts = std::vector<Concept>;
+using ConceptDenotation = std::vector<int>;
 
-using Role = std::pair<Concept, Concept>;
-using Roles = std::vector<Role>;
+using RoleDenotation = std::vector<std::pair<int, int>>;
 
 using Name_Vec = std::vector<std::string>;
 using Index_Vec = std::vector<int>;
@@ -89,10 +87,10 @@ private:
     State(std::shared_ptr<InstanceInfoImpl> parent, StateImpl&& impl);
 
     friend class InstanceInfo;
-    friend class ConceptElement;
-    friend class RoleElement;
-    friend class NumericalElement;
-    friend class BooleanElement;
+    friend class Concept;
+    friend class Role;
+    friend class Numerical;
+    friend class Boolean;
 
 public:
     State() = delete;
@@ -176,22 +174,22 @@ public:
 
 
 /**
- * ConceptElement evaluates to Concepts.
+ * Concept evaluates to ConceptDenotation.
  */
-class ConceptElement : public Element<Concepts> {
+class Concept : public Element<ConceptDenotation> {
 protected:
-    pimpl<element::ConceptElement_Ptr> m_pImpl;
+    pimpl<element::Concept_Ptr> m_pImpl;
 
-    ConceptElement(element::ConceptElement_Ptr pImpl);
+    Concept(element::Concept_Ptr pImpl);
 
     friend class SyntacticElementFactory;
 
 public:
-    ConceptElement() = delete;
-    ConceptElement(const ConceptElement& other);
-    virtual ~ConceptElement() = default;
+    Concept() = delete;
+    Concept(const Concept& other);
+    virtual ~Concept() = default;
 
-    virtual Concepts evaluate(const State& state) const override;
+    virtual ConceptDenotation evaluate(const State& state) const override;
 
     virtual unsigned compute_complexity() const override;
 
@@ -200,22 +198,22 @@ public:
 
 
 /**
- * ConceptElement evaluates to Roles.
+ * Concept evaluates to RoleDenotation.
  */
-class RoleElement : public Element<Roles> {
+class Role : public Element<RoleDenotation> {
 protected:
-    pimpl<element::RoleElement_Ptr> m_pImpl;
+    pimpl<element::Role_Ptr> m_pImpl;
 
-    RoleElement(element::RoleElement_Ptr pImpl);
+    Role(element::Role_Ptr pImpl);
 
     friend class SyntacticElementFactory;
 
 public:
-    RoleElement() = delete;
-    RoleElement(const RoleElement& other);
-    virtual ~RoleElement() = default;
+    Role() = delete;
+    Role(const Role& other);
+    virtual ~Role() = default;
 
-    virtual Roles evaluate(const State& state) const override;
+    virtual RoleDenotation evaluate(const State& state) const override;
 
     virtual unsigned compute_complexity() const override;
 
@@ -224,20 +222,20 @@ public:
 
 
 /**
- * NumericalElement evaluates to int.
+ * Numerical evaluates to int.
  */
-class NumericalElement : public Element<int> {
+class Numerical : public Element<int> {
 protected:
-    pimpl<element::NumericalElement_Ptr> m_pImpl;
+    pimpl<element::Numerical_Ptr> m_pImpl;
 
-    NumericalElement(element::NumericalElement_Ptr pImpl);
+    Numerical(element::Numerical_Ptr pImpl);
 
     friend class SyntacticElementFactory;
 
 public:
-    NumericalElement() = delete;
-    NumericalElement(const NumericalElement& other);
-    virtual ~NumericalElement() = default;
+    Numerical() = delete;
+    Numerical(const Numerical& other);
+    virtual ~Numerical() = default;
 
     virtual int evaluate(const State& state) const override;
 
@@ -248,20 +246,20 @@ public:
 
 
 /**
- * BooleanElement evaluates to bool.
+ * Boolean evaluates to bool.
  */
-class BooleanElement : public Element<bool> {
+class Boolean : public Element<bool> {
 protected:
-    pimpl<element::BooleanElement_Ptr> m_pImpl;
+    pimpl<element::Boolean_Ptr> m_pImpl;
 
-    BooleanElement(element::BooleanElement_Ptr pImpl);
+    Boolean(element::Boolean_Ptr pImpl);
 
     friend class SyntacticElementFactory;
 
 public:
-    BooleanElement() = delete;
-    BooleanElement(const BooleanElement& other);
-    virtual ~BooleanElement() = default;
+    Boolean() = delete;
+    Boolean(const Boolean& other);
+    virtual ~Boolean() = default;
 
     virtual bool evaluate(const State& state) const override;
 
@@ -284,183 +282,183 @@ public:
     ~SyntacticElementFactory();
 
     /**
-     * Returns a ConceptElement if the description is correct.
+     * Returns a Concept if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    ConceptElement parse_concept_element(const std::string &description);
+    Concept parse_concept_element(const std::string &description);
 
     /**
-     * Returns a RoleElement if the description is correct.
+     * Returns a Role if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    RoleElement parse_role_element(const std::string &description);
+    Role parse_role_element(const std::string &description);
 
     /**
-     * Returns a NumericalElement if the description is correct.
+     * Returns a Numerical if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    NumericalElement parse_numerical_element(const std::string &description);
+    Numerical parse_numerical_element(const std::string &description);
 
     /**
-     * Returns a BooleanElement if the description is correct.
+     * Returns a Boolean if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    BooleanElement parse_boolean_element(const std::string &description);
+    Boolean parse_boolean_element(const std::string &description);
 
     /**
-     * Returns a BooleanElement that evaluates to true iff the ConceptElement evaluates to the empty set.
+     * Returns a Boolean that evaluates to true iff the Concept evaluates to the empty set.
      */
-    BooleanElement make_empty_boolean_element(const ConceptElement& concept);
+    Boolean make_empty_boolean_element(const Concept& concept);
 
     /**
-     * Returns a BooleanElement that evaluates to true iff the RoleElement evaluates to the empty set.
+     * Returns a Boolean that evaluates to true iff the Role evaluates to the empty set.
      */
-    BooleanElement make_empty_boolean_element(const RoleElement& role);
+    Boolean make_empty_boolean_element(const Role& role);
 
     /**
-     * Returns a ConceptElement that evaluates to the universal abstraction.
+     * Returns a Concept that evaluates to the universal abstraction.
      */
-    ConceptElement make_all_concept_element(const RoleElement& role, const ConceptElement& concept);
+    Concept make_all_concept_element(const Role& role, const Concept& concept);
 
     /**
-     * Returns a ConceptElement that evaluates to the intersection of the operand evaluations.
+     * Returns a Concept that evaluates to the intersection of the operand evaluations.
      */
-    ConceptElement make_and_concept_element(const ConceptElement& concept_left, const ConceptElement& concept_right);
+    Concept make_and_concept_element(const Concept& concept_left, const Concept& concept_right);
 
     /**
-     * Returns a ConceptElement that evaluates to the empty set.
+     * Returns a Concept that evaluates to the empty set.
      */
-    ConceptElement make_bot_concept_element();
+    Concept make_bot_concept_element();
 
     /**
-     * Returns a ConceptElement that evaluates to the set difference.
+     * Returns a Concept that evaluates to the set difference.
      */
-    ConceptElement make_diff_concept_element(const ConceptElement& concept_left, const ConceptElement& concept_right);
+    Concept make_diff_concept_element(const Concept& concept_left, const Concept& concept_right);
 
     /**
-     * Returns a ConceptElements that evaluates to all elements that are not contained in the evaluation result of the given ConceptElement.
+     * Returns a ConceptElements that evaluates to all elements that are not contained in the evaluation result of the given Concept.
      */
-    ConceptElement make_not_concept_element(const ConceptElement& concept);
+    Concept make_not_concept_element(const Concept& concept);
 
     /**
-     * Returns a ConceptElement that evaluates to the single object with the given index.
+     * Returns a Concept that evaluates to the single object with the given index.
      */
-    ConceptElement make_one_of_concept_element(unsigned object_idx);
+    Concept make_one_of_concept_element(unsigned object_idx);
 
     /**
-     * Returns a ConceptElement that evaluates to the union of the operand evaluations.
+     * Returns a Concept that evaluates to the union of the operand evaluations.
      */
-    ConceptElement make_or_concept_element(const ConceptElement& concept_left, const ConceptElement& concept_right);
+    Concept make_or_concept_element(const Concept& concept_left, const Concept& concept_right);
 
     /**
-     * Returns a ConceptElement that evaluates to the concepts obtained by projecting atoms in a given state to the column at pos.
+     * Returns a Concept that evaluates to the concept obtained by projecting atoms in a given state to the column at pos.
      */
-    ConceptElement make_primitive_concept_element(const std::string& name, unsigned pos);
+    Concept make_primitive_concept_element(const std::string& name, unsigned pos);
 
     /**
-     * Returns a ConceptElement that evaluates the existential abstraction.
+     * Returns a Concept that evaluates the existential abstraction.
      */
-    ConceptElement make_some_concept_element(const RoleElement& role, const ConceptElement& concept);
+    Concept make_some_concept_element(const Role& role, const Concept& concept);
 
     /**
-     * Returns a ConceptElement that evaluates the role value mapping.
+     * Returns a Concept that evaluates the role value mapping.
      */
-    ConceptElement make_subset_concept_element(const RoleElement& role_left, const RoleElement& role_right);
+    Concept make_subset_concept_element(const Role& role_left, const Role& role_right);
 
     /**
-     * Returns a ConceptElement that evaluates to the universe, i.e., the set of all objects.
+     * Returns a Concept that evaluates to the universe, i.e., the set of all objects.
      */
-    ConceptElement make_top_concept_element();
+    Concept make_top_concept_element();
 
     /**
      *
      */
-    NumericalElement make_concept_distance_element(const ConceptElement& concept_from, const RoleElement& role, const ConceptElement& concept_to);
+    Numerical make_concept_distance_element(const Concept& concept_from, const Role& role, const Concept& concept_to);
 
     /**
-     * Returns a NumericalElement that counts the number of concepts.
+     * Returns a Numerical that counts the number of concept.
      */
-    NumericalElement make_count_element(const ConceptElement& concept);
+    Numerical make_count_element(const Concept& concept);
 
     /**
-     * Returns a NumericalElement that counts the number of roles.
+     * Returns a Numerical that counts the number of roles.
      */
-    NumericalElement make_count_element(const RoleElement& role);
-
-    /**
-     *
-     */
-    NumericalElement make_role_distance_element(const RoleElement& role_from, const RoleElement& role, const RoleElement& role_to);
+    Numerical make_count_element(const Role& role);
 
     /**
      *
      */
-    NumericalElement make_sum_concept_distance_element(const ConceptElement& concept_from, const RoleElement& role, const ConceptElement& concept_to);
+    Numerical make_role_distance_element(const Role& role_from, const Role& role, const Role& role_to);
 
     /**
      *
      */
-    NumericalElement make_sum_role_distance_element(const RoleElement& role_from, const RoleElement& role, const RoleElement& role_to);
+    Numerical make_sum_concept_distance_element(const Concept& concept_from, const Role& role, const Concept& concept_to);
 
     /**
-     * Returns a RoleElement that evaluates to the intersection of the operand evaluations.
+     *
      */
-    RoleElement make_and_role_element(const RoleElement& role_left, const RoleElement& role_right);
+    Numerical make_sum_role_distance_element(const Role& role_from, const Role& role, const Role& role_to);
 
     /**
-     * Returns a RoleElement that evaluates to the composition of the operand evaluations.
+     * Returns a Role that evaluates to the intersection of the operand evaluations.
      */
-    RoleElement make_compose_role_element(const RoleElement& role_left, const RoleElement& role_right);
+    Role make_and_role_element(const Role& role_left, const Role& role_right);
 
     /**
-     * Returns a RoleElement that evaluates to the set difference of the operand evaluations.
+     * Returns a Role that evaluates to the composition of the operand evaluations.
      */
-    RoleElement make_diff_role_element(const RoleElement& role_left, const RoleElement& role_right);
+    Role make_compose_role_element(const Role& role_left, const Role& role_right);
 
     /**
-     * Returns a RoleElement that evaluates to the identity mapping of the concepts in the evaluation result.
+     * Returns a Role that evaluates to the set difference of the operand evaluations.
      */
-    RoleElement make_identity_role_element(const ConceptElement& concept);
+    Role make_diff_role_element(const Role& role_left, const Role& role_right);
 
     /**
-     * Returns a RoleElement that evaluates to the inverse roles of the roles in the evaluation result.
+     * Returns a Role that evaluates to the identity mapping of the concept in the evaluation result.
      */
-    RoleElement make_inverse_role_element(const RoleElement& role);
+    Role make_identity_role_element(const Concept& concept);
+
+    /**
+     * Returns a Role that evaluates to the inverse roles of the roles in the evaluation result.
+     */
+    Role make_inverse_role_element(const Role& role);
 
     /**
      * Returns a RoleElements that evaluates to all roles that are not contined in the evaluation result.
      */
-    RoleElement make_not_role_element(const RoleElement& role);
+    Role make_not_role_element(const Role& role);
 
     /**
-     * Returns a RoleElement that evaluates to the set union of the operand evaluations.
+     * Returns a Role that evaluates to the set union of the operand evaluations.
      */
-    RoleElement make_or_role_element(const RoleElement& role_left, const RoleElement& role_right);
+    Role make_or_role_element(const Role& role_left, const Role& role_right);
 
     /**
-     * Returns a RoleElement that evaluates to the roles obtained by projecting atoms in a given state to the columns at pos_1 and pos_2.
+     * Returns a Role that evaluates to the roles obtained by projecting atoms in a given state to the columns at pos_1 and pos_2.
      */
-    RoleElement make_primitive_role_element(const std::string& name, unsigned pos_1, unsigned pos_2);
+    Role make_primitive_role_element(const std::string& name, unsigned pos_1, unsigned pos_2);
 
     /**
-     * Returns a RoleElement that evaluates to the role restriction.
+     * Returns a Role that evaluates to the role restriction.
      */
-    RoleElement make_restrict_role_element(const RoleElement& role, const ConceptElement& concept);
+    Role make_restrict_role_element(const Role& role, const Concept& concept);
 
     /**
-     * Returns a RoleElement that evaluates to the set of all roles.
+     * Returns a Role that evaluates to the set of all roles.
      */
-    RoleElement make_top_role_element();
+    Role make_top_role_element();
 
     /**
-     * Returns a RoleElement that evaluates to the transitive closure over the role.
+     * Returns a Role that evaluates to the transitive closure over the role.
      */
-    RoleElement make_transitive_closure_element(const RoleElement& role);
+    Role make_transitive_closure_element(const Role& role);
 
     /**
-     * Returns a RoleElement that evaluates to the transitive reflexive closure over the role.
+     * Returns a Role that evaluates to the transitive reflexive closure over the role.
      */
-    RoleElement make_transitive_reflexive_closure_element(const RoleElement& role);
+    Role make_transitive_reflexive_closure_element(const Role& role);
 };
 
 

@@ -8,12 +8,12 @@ namespace dlp {
 namespace core {
 namespace element {
 
-class PrimitiveConceptElement : public ConceptElement {
+class PrimitiveConceptElement : public Concept {
 protected:
     unsigned m_pos;
 
 protected:
-    virtual const Concepts& evaluate_impl(const StateImpl& state) override {
+    virtual const ConceptDenotation& evaluate_impl(const StateImpl& state) override {
         const InstanceInfoImpl& info = *state.m_parent;
         // 1. Perform error checking.
         if (!info.exists_predicate_name(m_name)) {
@@ -37,7 +37,7 @@ protected:
 
 public:
     PrimitiveConceptElement(const std::string& name, unsigned pos)
-    : ConceptElement(name), m_pos(pos) {
+    : Concept(name), m_pos(pos) {
     }
 
     virtual unsigned compute_complexity() const override {

@@ -8,9 +8,9 @@ namespace dlp {
 namespace core {
 namespace element {
 
-class ConceptElement : public Element<Concepts> {
+class Concept : public Element<ConceptDenotation> {
 public:
-    ConceptElement(const std::string& name) : Element<Concepts>(name) { }
+    Concept(const std::string& name) : Element<ConceptDenotation>(name) { }
 
     size_t size() const {
         return m_result.size();

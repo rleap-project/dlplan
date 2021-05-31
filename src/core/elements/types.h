@@ -11,15 +11,15 @@ namespace dlp {
 namespace core {
 namespace element {
 
-class ConceptElement;
-class RoleElement;
-class NumericalElement;
-class BooleanElement;
+class Concept;
+class Role;
+class Numerical;
+class Boolean;
 
-using ConceptElement_Ptr = std::shared_ptr<ConceptElement>;
-using RoleElement_Ptr = std::shared_ptr<RoleElement>;
-using NumericalElement_Ptr = std::shared_ptr<NumericalElement>;
-using BooleanElement_Ptr = std::shared_ptr<BooleanElement>;
+using Concept_Ptr = std::shared_ptr<Concept>;
+using Role_Ptr = std::shared_ptr<Role>;
+using Numerical_Ptr = std::shared_ptr<Numerical>;
+using Boolean_Ptr = std::shared_ptr<Boolean>;
 
 }
 }

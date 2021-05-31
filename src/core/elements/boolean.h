@@ -8,9 +8,9 @@ namespace dlp {
 namespace core {
 namespace element {
 
-class BooleanElement : public Element<bool> {
+class Boolean : public Element<bool> {
 public:
-    BooleanElement(const std::string& name) : Element<bool>(name) { }
+    Boolean(const std::string& name) : Element<bool>(name) { }
 };
 
 }

@@ -8,9 +8,9 @@ namespace dlp {
 namespace core {
 namespace element {
 
-class RoleElement : public Element<Roles> {
+class Role : public Element<RoleDenotation> {
 public:
-    RoleElement(const std::string& name) : Element<Roles>(name) { }
+    Role(const std::string& name) : Element<RoleDenotation>(name) { }
 
     size_t size() const {
         return m_result.size();

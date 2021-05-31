@@ -13,19 +13,19 @@ namespace parser {
 class NumericalExpression : public Expression {
 protected:
     /**
-     * Construct the NumericalElement.
+     * Construct the Numerical.
      */
-    virtual element::NumericalElement_Ptr parse_numerical_element_impl(ElementCache &cache) const = 0;
+    virtual element::Numerical_Ptr parse_numerical_element_impl(ElementCache &cache) const = 0;
 
 public:
     NumericalExpression(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Expression(name, std::move(children)) { }
 
     /**
-     * Construct or retrieve the NumericalElement.
+     * Construct or retrieve the Numerical.
      */
-    virtual element::NumericalElement_Ptr parse_numerical_element(ElementCache &cache) const {
-        element::NumericalElement_Ptr value = parse_numerical_element_impl(cache);
+    virtual element::Numerical_Ptr parse_numerical_element(ElementCache &cache) const {
+        element::Numerical_Ptr value = parse_numerical_element_impl(cache);
         return cache.numerical_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
     }
 };

@@ -8,9 +8,9 @@ namespace dlp {
 namespace core {
 namespace element {
 
-class NumericalElement : public Element<int> {
+class Numerical : public Element<int> {
 public:
-    NumericalElement(const std::string& name) : Element<int>(name) { }
+    Numerical(const std::string& name) : Element<int>(name) { }
 };
 
 }

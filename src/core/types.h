@@ -12,13 +12,11 @@ using namespace std::string_literals;
 namespace dlp {
 namespace core {
 
-using Concept = int;
-using Concepts = std::vector<Concept>;
-using Concepts_Set = std::unordered_set<Concept>;
+using ConceptDenotation = std::vector<int>;
+using ConceptDenotation_Set = std::unordered_set<int>;
 
-using Role = std::pair<Concept, Concept>;
-using Roles = std::vector<Role>;
-using Roles_Set = std::unordered_set<Role>;
+using RoleDenotation = std::vector<std::pair<int, int>>;
+using RoleDenotation_Set = std::unordered_set<std::pair<int, int>>;
 
 using Name_Vec = std::vector<std::string>;
 using Index_Vec = std::vector<int>;

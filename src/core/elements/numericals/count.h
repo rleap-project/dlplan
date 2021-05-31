@@ -11,7 +11,7 @@ namespace core {
 namespace element {
 
 template<typename T>
-class CountNumericalElement : public NumericalElement {
+class CountNumericalElement : public Numerical {
 protected:
     T m_element;
 
@@ -22,7 +22,7 @@ protected:
     }
 
 public:
-    CountNumericalElement(T element) : NumericalElement("n_count"), m_element(element) { }
+    CountNumericalElement(T element) : Numerical("n_count"), m_element(element) { }
 
     virtual unsigned compute_complexity() const override {
         return m_element->compute_complexity() + 1;

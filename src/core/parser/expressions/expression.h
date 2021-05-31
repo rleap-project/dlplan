@@ -53,34 +53,34 @@ public:
     // As a result we cannot change this into a template.
 
     /**
-     * Tries to parse the Expression into a ConceptElement.
+     * Tries to parse the Expression into a Concept.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual element::ConceptElement_Ptr parse_concept_element(ElementCache &cache) const {
+    virtual element::Concept_Ptr parse_concept_element(ElementCache &cache) const {
         return nullptr;
     }
 
     /**
-     * Tries to parse the Expression into a RoleElement.
+     * Tries to parse the Expression into a Role.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual element::RoleElement_Ptr parse_role_element(ElementCache &cache) const {
+    virtual element::Role_Ptr parse_role_element(ElementCache &cache) const {
         return nullptr;
     }
 
     /**
-     * Tries to parse the Expression into a NumericalElement.
+     * Tries to parse the Expression into a Numerical.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual element::NumericalElement_Ptr parse_numerical_element(ElementCache &cache) const {
+    virtual element::Numerical_Ptr parse_numerical_element(ElementCache &cache) const {
         return nullptr;
     }
 
     /**
-     * Tries to parse the Expression into a BooleanElement.
+     * Tries to parse the Expression into a Boolean.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual element::BooleanElement_Ptr parse_boolean_element(ElementCache &cache) const {
+    virtual element::Boolean_Ptr parse_boolean_element(ElementCache &cache) const {
         return nullptr;
     }
 };

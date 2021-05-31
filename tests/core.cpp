@@ -17,7 +17,7 @@ TEST(DLPTests, InstanceCreation) {
 
     dlp::core::SyntacticElementFactory factory;
 
-    dlp::core::NumericalElement numerical = factory.parse_numerical_element("n_count(c_and(on_g(0),on(0)))");
+    dlp::core::Numerical numerical = factory.parse_numerical_element("n_count(c_and(on_g(0),on(0)))");
     EXPECT_EQ(numerical.compute_complexity(), 4);
 
     dlp::core::State state = instance.convert_state({a0, a1});

@@ -11,7 +11,7 @@ namespace parser {
 
 class PrimitiveRoleExpression : public RoleExpression {
 protected:
-    virtual element::RoleElement_Ptr parse_role_element_impl(ElementCache &cache) const override {
+    virtual element::Role_Ptr parse_role_element_impl(ElementCache &cache) const override {
         if (m_children.size() != 2) {
             throw std::runtime_error("PrimitiveRoleExpression::parse_role_element_impl - number of children ("s + std::to_string(m_children.size()) + " != 2).");
         }

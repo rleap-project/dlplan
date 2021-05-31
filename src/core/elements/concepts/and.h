@@ -8,18 +8,18 @@ namespace dlp {
 namespace core {
 namespace element {
 
-class AndConceptElement : public ConceptElement {
+class AndConceptElement : public Concept {
 protected:
-    ConceptElement_Ptr m_l;
-    ConceptElement_Ptr m_r;
+    Concept_Ptr m_l;
+    Concept_Ptr m_r;
 
 protected:
-    virtual const Concepts& evaluate_impl(const StateImpl& state) override {
-        const Concepts& l_vec = m_l->evaluate(state);
-        const Concepts& r_vec = m_r->evaluate(state);
-        Concepts_Set r_set(r_vec.begin(), r_vec.end());
+    virtual const ConceptDenotation& evaluate_impl(const StateImpl& state) override {
+        const ConceptDenotation& l_vec = m_l->evaluate(state);
+        const ConceptDenotation& r_vec = m_r->evaluate(state);
+        ConceptDenotation_Set r_set(r_vec.begin(), r_vec.end());
         m_result.clear();
-        for (Concept c : l_vec) {
+        for (int c : l_vec) {
             if (r_set.find(c) != r_set.end()) {
                 m_result.push_back(c);
             }
@@ -28,10 +28,10 @@ protected:
     }
 
 public:
-    AndConceptElement(ConceptElement_Ptr l, ConceptElement_Ptr r)
-    : ConceptElement("c_and") {
+    AndConceptElement(Concept_Ptr l, Concept_Ptr r)
+    : Concept("c_and") {
         if (!(l && r)) {
-            throw std::runtime_error("AndConceptExpression::make_concept_element - children are not of type ConceptElement.");
+            throw std::runtime_error("AndConceptExpression::make_concept_element - children are not of type Concept.");
         }
         // Element is commutative. Hence sort lexicographically.
         if (l->compute_repr() < r->compute_repr()) {

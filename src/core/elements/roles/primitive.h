@@ -8,13 +8,13 @@ namespace dlp {
 namespace core {
 namespace element {
 
-class PrimitiveRoleElement : public RoleElement {
+class PrimitiveRoleElement : public Role {
 protected:
     unsigned m_pos_1;
     unsigned m_pos_2;
 
 protected:
-    virtual const Roles& evaluate_impl(const StateImpl& state) override {
+    virtual const RoleDenotation& evaluate_impl(const StateImpl& state) override {
         const InstanceInfoImpl& info = *state.m_parent;
         // 1. Perform error checking.
         if (!info.exists_predicate_name(m_name)) {
@@ -38,7 +38,7 @@ protected:
 
 public:
     PrimitiveRoleElement(const std::string& name, unsigned pos_1, unsigned pos_2)
-    : RoleElement(name), m_pos_1(pos_1), m_pos_2(pos_2) { }
+    : Role(name), m_pos_1(pos_1), m_pos_2(pos_2) { }
 
     virtual unsigned compute_complexity() const override {
         return 1;

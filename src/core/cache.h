@@ -52,18 +52,18 @@ private:
     /**
      * One cache for each template instantiated element.
      */
-    std::unordered_map<std::string, element::ConceptElement_Ptr> m_concept_element_cache;
-    std::unordered_map<std::string, element::RoleElement_Ptr> m_role_element_cache;
-    std::unordered_map<std::string, element::NumericalElement_Ptr> m_numerical_element_cache;
-    std::unordered_map<std::string, element::BooleanElement_Ptr> m_boolean_element_cache;
+    std::unordered_map<std::string, element::Concept_Ptr> m_concept_element_cache;
+    std::unordered_map<std::string, element::Role_Ptr> m_role_element_cache;
+    std::unordered_map<std::string, element::Numerical_Ptr> m_numerical_element_cache;
+    std::unordered_map<std::string, element::Boolean_Ptr> m_boolean_element_cache;
 
 public:
     ElementCache();
 
-    std::unordered_map<std::string, element::ConceptElement_Ptr>& concept_element_cache();
-    std::unordered_map<std::string, element::RoleElement_Ptr>& role_element_cache();
-    std::unordered_map<std::string, element::NumericalElement_Ptr>& numerical_element_cache();
-    std::unordered_map<std::string, element::BooleanElement_Ptr>& boolean_element_cache();
+    std::unordered_map<std::string, element::Concept_Ptr>& concept_element_cache();
+    std::unordered_map<std::string, element::Role_Ptr>& role_element_cache();
+    std::unordered_map<std::string, element::Numerical_Ptr>& numerical_element_cache();
+    std::unordered_map<std::string, element::Boolean_Ptr>& boolean_element_cache();
 };
 
 

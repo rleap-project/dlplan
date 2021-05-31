@@ -23,11 +23,11 @@ int main() {
     dlp::core::SyntacticElementFactory factory;
 
     // 3. Construct and evaluate elements.
-    // Parse text to NumericalElement
-    dlp::core::NumericalElement numerical = factory.parse_numerical_element("n_count(c_and(on_g(0),on(0)))");
+    // Parse text to Numerical
+    dlp::core::Numerical numerical = factory.parse_numerical_element("n_count(c_and(on_g(0),on(0)))");
     std::cout << "complexity: " << numerical.compute_complexity() << std::endl;
-    // Parse text to ConceptElement: returns the ConceptElement that is already cached
-    dlp::core::ConceptElement concept = factory.parse_concept_element("c_and(on(0),on_g(0))");
+    // Parse text to Concept: returns the Concept that is already cached
+    dlp::core::Concept concept = factory.parse_concept_element("c_and(on(0),on_g(0))");
 
     // 4. Evaluate for example state: block A on B
     dlp::core::State state = instance.convert_state({0, 3});
