@@ -168,44 +168,148 @@ std::string BooleanElement::repr() const {
 }
 
 
-ElementFactory::ElementFactory() { }
+SyntacticElementFactory::SyntacticElementFactory() { }
 
-ElementFactory::~ElementFactory() { }
+SyntacticElementFactory::~SyntacticElementFactory() { }
 
-ConceptElement ElementFactory::parse_concept_element(const std::string &description) {
+ConceptElement SyntacticElementFactory::parse_concept_element(const std::string &description) {
     return ConceptElement(m_pImpl->parse_concept_element(description));
 }
 
-RoleElement ElementFactory::parse_role_element(const std::string &description) {
+RoleElement SyntacticElementFactory::parse_role_element(const std::string &description) {
     return RoleElement(m_pImpl->parse_role_element(description));
 }
 
-NumericalElement ElementFactory::parse_numerical_element(const std::string &description) {
+NumericalElement SyntacticElementFactory::parse_numerical_element(const std::string &description) {
     return NumericalElement(m_pImpl->parse_numerical_element(description));
 }
 
-BooleanElement ElementFactory::parse_boolean_element(const std::string &description) {
+BooleanElement SyntacticElementFactory::parse_boolean_element(const std::string &description) {
     return BooleanElement(m_pImpl->parse_boolean_element(description));
 }
 
-NumericalElement ElementFactory::make_count_element(const ConceptElement& element) {
-    return NumericalElement(m_pImpl->make_count_element(*element.m_pImpl));
+BooleanElement SyntacticElementFactory::make_empty_boolean_element(const ConceptElement& concept) {
+    return BooleanElement(m_pImpl->make_empty_boolean_element(*concept.m_pImpl));
 }
 
-NumericalElement ElementFactory::make_count_element(const RoleElement& element) {
-    return NumericalElement(m_pImpl->make_count_element(*element.m_pImpl));
+BooleanElement SyntacticElementFactory::make_empty_boolean_element(const RoleElement& role) {
+    return BooleanElement(m_pImpl->make_empty_boolean_element(*role.m_pImpl));
 }
 
-ConceptElement ElementFactory::make_primitive_concept_element(const std::string& name, unsigned pos) {
+ConceptElement SyntacticElementFactory::make_all_concept_element(const RoleElement& role, const ConceptElement& concept) {
+    return ConceptElement(m_pImpl->make_all_concept_element(*role.m_pImpl, *concept.m_pImpl));
+}
+
+ConceptElement SyntacticElementFactory::make_and_concept_element(const ConceptElement& concept_left, const ConceptElement& concept_right) {
+    return ConceptElement(m_pImpl->make_and_concept_element(*concept_left.m_pImpl, *concept_right.m_pImpl));
+}
+
+ConceptElement SyntacticElementFactory::make_bot_concept_element() {
+    return ConceptElement(m_pImpl->make_bot_concept_element());
+}
+
+ConceptElement SyntacticElementFactory::make_diff_concept_element(const ConceptElement& concept_left, const ConceptElement& concept_right) {
+    return ConceptElement(m_pImpl->make_diff_concept_element(*concept_left.m_pImpl, *concept_right.m_pImpl));
+}
+
+ConceptElement SyntacticElementFactory::make_not_concept_element(const ConceptElement& concept) {
+    return ConceptElement(m_pImpl->make_not_concept_element(*concept.m_pImpl));
+}
+
+ConceptElement SyntacticElementFactory::make_one_of_concept_element(unsigned object_idx) {
+    return ConceptElement(m_pImpl->make_one_of_concept_element(object_idx));
+}
+
+ConceptElement SyntacticElementFactory::make_or_concept_element(const ConceptElement& concept_left, const ConceptElement& concept_right) {
+    return ConceptElement(m_pImpl->make_or_concept_element(*concept_left.m_pImpl, *concept_right.m_pImpl));
+}
+
+ConceptElement SyntacticElementFactory::make_primitive_concept_element(const std::string& name, unsigned pos) {
     return ConceptElement(m_pImpl->make_primitive_concept_element(name, pos));
 }
 
-ConceptElement ElementFactory::make_and_concept_element(const ConceptElement& element1, const ConceptElement& element2) {
-    return ConceptElement(m_pImpl->make_and_concept_element(*element1.m_pImpl, *element2.m_pImpl));
+ConceptElement SyntacticElementFactory::make_some_concept_element(const RoleElement& role, const ConceptElement& concept) {
+    return ConceptElement(m_pImpl->make_some_concept_element(*role.m_pImpl, *concept.m_pImpl));
 }
 
-RoleElement ElementFactory::make_primitive_role_element(const std::string& name, unsigned pos_1, unsigned pos_2) {
+ConceptElement SyntacticElementFactory::make_subset_concept_element(const RoleElement& role_left, const RoleElement& role_right) {
+    return ConceptElement(m_pImpl->make_subset_concept_element(*role_left.m_pImpl, *role_right.m_pImpl));
+}
+
+ConceptElement SyntacticElementFactory::make_top_concept_element() {
+    return ConceptElement(m_pImpl->make_top_concept_element());
+}
+
+NumericalElement SyntacticElementFactory::make_concept_distance_element(const ConceptElement& concept_from, const RoleElement& role, const ConceptElement& concept_to) {
+    return NumericalElement(m_pImpl->make_concept_distance_element(*concept_from.m_pImpl, *role.m_pImpl, *concept_to.m_pImpl));
+}
+
+NumericalElement SyntacticElementFactory::make_count_element(const ConceptElement& element) {
+    return NumericalElement(m_pImpl->make_count_element(*element.m_pImpl));
+}
+
+NumericalElement SyntacticElementFactory::make_count_element(const RoleElement& element) {
+    return NumericalElement(m_pImpl->make_count_element(*element.m_pImpl));
+}
+
+NumericalElement SyntacticElementFactory::make_role_distance_element(const RoleElement& role_from, const RoleElement& role, const RoleElement& role_to) {
+    return NumericalElement(m_pImpl->make_role_distance_element(*role_from.m_pImpl, *role.m_pImpl, *role_to.m_pImpl));
+}
+
+NumericalElement SyntacticElementFactory::make_sum_concept_distance_element(const ConceptElement& concept_from, const RoleElement& role, const ConceptElement& concept_to) {
+    return NumericalElement(m_pImpl->make_sum_concept_distance_element(*concept_from.m_pImpl, *role.m_pImpl, *concept_to.m_pImpl));
+}
+
+NumericalElement SyntacticElementFactory::make_sum_role_distance_element(const RoleElement& role_from, const RoleElement& role, const RoleElement& role_to) {
+    return NumericalElement(m_pImpl->make_sum_role_distance_element(*role_from.m_pImpl, *role.m_pImpl, *role_to.m_pImpl));
+}
+
+RoleElement SyntacticElementFactory::make_and_role_element(const RoleElement& role_left, const RoleElement& role_right) {
+    return RoleElement(m_pImpl->make_and_role_element(*role_left.m_pImpl, *role_right.m_pImpl));
+}
+
+RoleElement SyntacticElementFactory::make_compose_role_element(const RoleElement& role_left, const RoleElement& role_right) {
+    return RoleElement(m_pImpl->make_compose_role_element(*role_left.m_pImpl, *role_right.m_pImpl));
+}
+
+RoleElement SyntacticElementFactory::make_diff_role_element(const RoleElement& role_left, const RoleElement& role_right) {
+    return RoleElement(m_pImpl->make_diff_role_element(*role_left.m_pImpl, *role_right.m_pImpl));
+}
+
+RoleElement SyntacticElementFactory::make_identity_role_element(const ConceptElement& concept) {
+    return RoleElement(m_pImpl->make_identity_role_element(*concept.m_pImpl));
+}
+
+RoleElement SyntacticElementFactory::make_inverse_role_element(const RoleElement& role) {
+    return RoleElement(m_pImpl->make_inverse_role_element(*role.m_pImpl));
+}
+
+RoleElement SyntacticElementFactory::make_not_role_element(const RoleElement& role) {
+    return RoleElement(m_pImpl->make_not_role_element(*role.m_pImpl));
+}
+
+RoleElement SyntacticElementFactory::make_or_role_element(const RoleElement& role_left, const RoleElement& role_right) {
+    return RoleElement(m_pImpl->make_or_role_element(*role_left.m_pImpl, *role_right.m_pImpl));
+}
+
+RoleElement SyntacticElementFactory::make_primitive_role_element(const std::string& name, unsigned pos_1, unsigned pos_2) {
     return RoleElement(m_pImpl->make_primitive_role_element(name, pos_1, pos_2));
+}
+
+RoleElement SyntacticElementFactory::make_restrict_role_element(const RoleElement& role, const ConceptElement& concept) {
+    return RoleElement(m_pImpl->make_restrict_role_element(*role.m_pImpl, *concept.m_pImpl));
+}
+
+RoleElement SyntacticElementFactory::make_top_role_element() {
+    return RoleElement(m_pImpl->make_top_role_element());
+}
+
+RoleElement SyntacticElementFactory::make_transitive_closure_element(const RoleElement& role) {
+    return RoleElement(m_pImpl->make_transitive_closure_element(*role.m_pImpl));
+}
+
+RoleElement SyntacticElementFactory::make_transitive_reflexive_closure_element(const RoleElement& role) {
+    return RoleElement(m_pImpl->make_transitive_reflexive_closure_element(*role.m_pImpl));
 }
 
 }

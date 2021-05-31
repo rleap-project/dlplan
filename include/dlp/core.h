@@ -11,12 +11,12 @@
 
 namespace dlp {
 namespace core {
-class ElementFactoryImpl;
+class SyntacticElementFactoryImpl;
 class InstanceInfoImpl;
 class PredicateImpl;
 class AtomImpl;
 class StateImpl;
-class ElementFactory;
+class SyntacticElementFactory;
 
 using Concept = int;
 using Concepts = std::vector<Concept>;
@@ -111,7 +111,7 @@ class InstanceInfo {
 private:
     pimpl<std::shared_ptr<InstanceInfoImpl>> m_pImpl;
 
-    friend class ElementFactory;
+    friend class SyntacticElementFactory;
 
 public:
     InstanceInfo();
@@ -176,7 +176,7 @@ protected:
 
     ConceptElement(element::ConceptElement_Ptr pImpl);
 
-    friend class ElementFactory;
+    friend class SyntacticElementFactory;
 
 public:
     ConceptElement() = delete;
@@ -200,7 +200,7 @@ protected:
 
     RoleElement(element::RoleElement_Ptr pImpl);
 
-    friend class ElementFactory;
+    friend class SyntacticElementFactory;
 
 public:
     RoleElement() = delete;
@@ -224,7 +224,7 @@ protected:
 
     NumericalElement(element::NumericalElement_Ptr pImpl);
 
-    friend class ElementFactory;
+    friend class SyntacticElementFactory;
 
 public:
     NumericalElement() = delete;
@@ -248,7 +248,7 @@ protected:
 
     BooleanElement(element::BooleanElement_Ptr pImpl);
 
-    friend class ElementFactory;
+    friend class SyntacticElementFactory;
 
 public:
     BooleanElement() = delete;
@@ -266,14 +266,14 @@ public:
 /**
  * The ElementFactory for creation and storage of elements while taking care of maintaining uniqueness.
  */
-class ElementFactory {
+class SyntacticElementFactory {
 private:
-    pimpl<ElementFactoryImpl> m_pImpl;
+    pimpl<SyntacticElementFactoryImpl> m_pImpl;
 
 public:
-    ElementFactory();
-    ElementFactory(const ElementFactory& other) = delete;
-    ~ElementFactory();
+    SyntacticElementFactory();
+    SyntacticElementFactory(const SyntacticElementFactory& other) = delete;
+    ~SyntacticElementFactory();
 
     /**
      * Returns a ConceptElement if the description is correct.
@@ -299,58 +299,159 @@ public:
      */
     BooleanElement parse_boolean_element(const std::string &description);
 
-
+    /**
+     * Returns a BooleanElement that evaluates to true iff the ConceptElement evaluates to the empty set.
+     */
     BooleanElement make_empty_boolean_element(const ConceptElement& concept);
+
+    /**
+     * Returns a BooleanElement that evaluates to true iff the RoleElement evaluates to the empty set.
+     */
     BooleanElement make_empty_boolean_element(const RoleElement& role);
 
-
-    ConceptElement make_all_concept_element(const RoleElement& role, const ConceptElement& concept);
     /**
-     * Returns a ConceptElement that counts the number of primitive concepts.
+     * Returns a ConceptElement that evaluates to the universal abstraction.
+     */
+    ConceptElement make_all_concept_element(const RoleElement& role, const ConceptElement& concept);
+
+    /**
+     * Returns a ConceptElement that evaluates to the intersection of the operand evaluations.
      */
     ConceptElement make_and_concept_element(const ConceptElement& concept_left, const ConceptElement& concept_right);
-    ConceptElement make_bot_concept_element();
-    ConceptElement make_diff_concept_element(const ConceptElement& concept_left, const ConceptElement& concept_right);
-    ConceptElement make_not_concept_element(const ConceptElement& concept);
-    ConceptElement make_one_of_concept_element(unsigned object_idx);
-    ConceptElement make_or_concept_element(const ConceptElement& concept_left, const ConceptElement& concept_right);
+
     /**
-     * Returns a ConceptElement that counts the number of primitive concepts.
+     * Returns a ConceptElement that evaluates to the empty set.
+     */
+    ConceptElement make_bot_concept_element();
+
+    /**
+     * Returns a ConceptElement that evaluates to the set difference.
+     */
+    ConceptElement make_diff_concept_element(const ConceptElement& concept_left, const ConceptElement& concept_right);
+
+    /**
+     * Returns a ConceptElements that evaluates to all elements that are not contained in the evaluation result of the given ConceptElement.
+     */
+    ConceptElement make_not_concept_element(const ConceptElement& concept);
+
+    /**
+     * Returns a ConceptElement that evaluates to the single object with the given index.
+     */
+    ConceptElement make_one_of_concept_element(unsigned object_idx);
+
+    /**
+     * Returns a ConceptElement that evaluates to the union of the operand evaluations.
+     */
+    ConceptElement make_or_concept_element(const ConceptElement& concept_left, const ConceptElement& concept_right);
+
+    /**
+     * Returns a ConceptElement that evaluates to the concepts obtained by projecting atoms in a given state to the column at pos.
      */
     ConceptElement make_primitive_concept_element(const std::string& name, unsigned pos);
+
+    /**
+     * Returns a ConceptElement that evaluates the existential abstraction.
+     */
     ConceptElement make_some_concept_element(const RoleElement& role, const ConceptElement& concept);
-    ConceptElement make_subset_concept_element(const ConceptElement& concept_left, const ConceptElement& concept_right);
+
+    /**
+     * Returns a ConceptElement that evaluates the role value mapping.
+     */
+    ConceptElement make_subset_concept_element(const RoleElement& role_left, const RoleElement& role_right);
+
+    /**
+     * Returns a ConceptElement that evaluates to the universe, i.e., the set of all objects.
+     */
     ConceptElement make_top_concept_element();
 
-
+    /**
+     *
+     */
     NumericalElement make_concept_distance_element(const ConceptElement& concept_from, const RoleElement& role, const ConceptElement& concept_to);
+
     /**
      * Returns a NumericalElement that counts the number of concepts.
      */
     NumericalElement make_count_element(const ConceptElement& concept);
+
     /**
      * Returns a NumericalElement that counts the number of roles.
      */
     NumericalElement make_count_element(const RoleElement& role);
+
+    /**
+     *
+     */
     NumericalElement make_role_distance_element(const RoleElement& role_from, const RoleElement& role, const RoleElement& role_to);
+
+    /**
+     *
+     */
     NumericalElement make_sum_concept_distance_element(const ConceptElement& concept_from, const RoleElement& role, const ConceptElement& concept_to);
+
+    /**
+     *
+     */
     NumericalElement make_sum_role_distance_element(const RoleElement& role_from, const RoleElement& role, const RoleElement& role_to);
 
-
-    RoleElement make_and_role_element(const RoleElement& role_left, const RoleElement& role_right);
-    RoleElement make_compose_role_element(const RoleElement& role_left, const RoleElement& role_right);
-    RoleElement make_diff_role_element(const RoleElement& role_left, const RoleElement& role_right);
-    RoleElement make_identity_role_element(const ConceptElement& concept);
-    RoleElement make_inverse_role_element(const RoleElement& role);
-    RoleElement make_not_role_element(const RoleElement& role);
-    RoleElement make_or_role_element(const RoleElement& role_left, const RoleElement& role_right);
     /**
-     * Returns a RoleElement that counts the number of primitive roles.
+     * Returns a RoleElement that evaluates to the intersection of the operand evaluations.
+     */
+    RoleElement make_and_role_element(const RoleElement& role_left, const RoleElement& role_right);
+
+    /**
+     * Returns a RoleElement that evaluates to the composition of the operand evaluations.
+     */
+    RoleElement make_compose_role_element(const RoleElement& role_left, const RoleElement& role_right);
+
+    /**
+     * Returns a RoleElement that evaluates to the set difference of the operand evaluations.
+     */
+    RoleElement make_diff_role_element(const RoleElement& role_left, const RoleElement& role_right);
+
+    /**
+     * Returns a RoleElement that evaluates to the identity mapping of the concepts in the evaluation result.
+     */
+    RoleElement make_identity_role_element(const ConceptElement& concept);
+
+    /**
+     * Returns a RoleElement that evaluates to the inverse roles of the roles in the evaluation result.
+     */
+    RoleElement make_inverse_role_element(const RoleElement& role);
+
+    /**
+     * Returns a RoleElements that evaluates to all roles that are not contined in the evaluation result.
+     */
+    RoleElement make_not_role_element(const RoleElement& role);
+
+    /**
+     * Returns a RoleElement that evaluates to the set union of the operand evaluations.
+     */
+    RoleElement make_or_role_element(const RoleElement& role_left, const RoleElement& role_right);
+
+    /**
+     * Returns a RoleElement that evaluates to the roles obtained by projecting atoms in a given state to the columns at pos_1 and pos_2.
      */
     RoleElement make_primitive_role_element(const std::string& name, unsigned pos_1, unsigned pos_2);
+
+    /**
+     * Returns a RoleElement that evaluates to the role restriction.
+     */
     RoleElement make_restrict_role_element(const RoleElement& role, const ConceptElement& concept);
+
+    /**
+     * Returns a RoleElement that evaluates to the set of all roles.
+     */
     RoleElement make_top_role_element();
+
+    /**
+     * Returns a RoleElement that evaluates to the transitive closure over the role.
+     */
     RoleElement make_transitive_closure_element(const RoleElement& role);
+
+    /**
+     * Returns a RoleElement that evaluates to the transitive reflexive closure over the role.
+     */
     RoleElement make_transitive_reflexive_closure_element(const RoleElement& role);
 };
 

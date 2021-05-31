@@ -20,7 +20,7 @@ int main() {
     dlp::core::Atom a6 = instance.add_atom("on_g", {"A", "B"}, true);
 
     // 2. Initialize factory.
-    dlp::core::ElementFactory factory;
+    dlp::core::SyntacticElementFactory factory;
 
     // 3. Construct and evaluate elements.
     // Parse text to NumericalElement

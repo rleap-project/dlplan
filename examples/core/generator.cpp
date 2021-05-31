@@ -41,7 +41,7 @@ int main() {
     dlp::core::Atom a6 = instance.add_atom("on_g", {"A", "B"}, true);
 
     // 2. Initialize factory.
-    dlp::core::ElementFactory factory;
+    dlp::core::SyntacticElementFactory factory;
 
     // 3. Initialize containers for storage and uniqueness checking.
     // Equivalence checking using repr.
