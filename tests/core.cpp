@@ -8,7 +8,7 @@ TEST(DLPTests, InstanceCreation) {
     dlp::core::Atom a0 = instance.add_atom("on", {"A", "B"}, false);
     dlp::core::Atom a1 = instance.add_atom("on", {"B", "A"}, false);
 
-    dlp::core::ElementFactory factory;
+    dlp::core::SyntacticElementFactory factory;
 
     dlp::core::NumericalElement numerical = factory.parse_numerical_element("n_count(c_and(on_g(0),on(0)))");
     EXPECT_EQ(numerical.complexity(), 4);
