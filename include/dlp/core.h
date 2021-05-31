@@ -27,6 +27,7 @@ using Roles = std::vector<Role>;
 using Name_Vec = std::vector<std::string>;
 using Index_Vec = std::vector<int>;
 
+
 /**
  * Predicate contains information regarding the predicates used to construct the atoms.
  */
@@ -76,6 +77,7 @@ public:
     const std::string& atom_name() const;
 };
 
+
 /**
  * State contains static and dynamic atoms.
  */
@@ -119,9 +121,14 @@ public:
     ~InstanceInfo();
 
     /**
-     * Adds an atom and internally extends a mapping from names to indices.
+     * Adds an atom that may have varying evaluation depending on the state.
      */
     Atom add_atom(const std::string& predicate_name, const Name_Vec& object_names, bool is_static);
+
+    /**
+     * Adds an atom that remains true forever.
+     */
+    Atom add_static_atom(const std::string& predicate_name, const Name_Vec& object_names);
 
     /**
      * Construct a state from textual information by first applying the index mapping and the calling convert_state.
@@ -140,6 +147,7 @@ public:
      */
     std::vector<Predicate> predicates() const;
 };
+
 
 /**
  * Abstract base class of any Element.
