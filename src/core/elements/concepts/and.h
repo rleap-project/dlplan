@@ -8,7 +8,7 @@ namespace dlp {
 namespace core {
 namespace element {
 
-class AndConceptElement : public Concept {
+class AndConcept : public Concept {
 protected:
     Concept_Ptr m_l;
     Concept_Ptr m_r;
@@ -28,10 +28,10 @@ protected:
     }
 
 public:
-    AndConceptElement(Concept_Ptr l, Concept_Ptr r)
+    AndConcept(Concept_Ptr l, Concept_Ptr r)
     : Concept("c_and") {
         if (!(l && r)) {
-            throw std::runtime_error("AndConceptExpression::make_concept_element - children are not of type Concept.");
+            throw std::runtime_error("AndConcept::make_concept_element - children are not of type Concept.");
         }
         // Element is commutative. Hence sort lexicographically.
         if (l->compute_repr() < r->compute_repr()) {

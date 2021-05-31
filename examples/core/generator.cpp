@@ -59,13 +59,13 @@ int main() {
     // 4. Construct base
     std::vector<dlp::core::Predicate> predicates = instance.get_predicates();
     for (const auto& predicate: predicates) {
-        // 4.1. PrimitiveConceptElement
+        // 4.1. PrimitiveConcept
         for (unsigned pos = 0; pos < predicate.get_arity(); ++pos) {
             dlp::core::Concept concept_element = factory.make_primitive_concept_element(predicate.get_name(), pos);
             bool unique = concept_element_cache.insert(concept_element.compute_repr()).second;
             if (unique) concept_elements_by_complexity[0].emplace_back(concept_element);
         }
-        // 4.2. PrimitiveRoleElement
+        // 4.2. PrimitiveRole
         for (unsigned pos1 = 0; pos1 < predicate.get_arity(); ++pos1) {
             for (unsigned pos2 = 0; pos2 < predicate.get_arity(); ++pos2) {
                 // TODO(dominik): add roles
@@ -80,7 +80,7 @@ int main() {
     // 5. Interatively construct more complex elements
     for (int iteration = 0; iteration < complexity_bound; ++iteration) {
         for (int i = 0; i <= iteration; ++i) {
-            // 5.1. AndConceptElement:
+            // 5.1. AndConcept:
             for (const auto& c1 : concept_elements_by_complexity[i]) {
                 for (const auto& c2 : concept_elements_by_complexity[iteration]) {
                     if (c1.compute_repr() == c2.compute_repr()) continue;

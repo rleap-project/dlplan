@@ -9,7 +9,7 @@ namespace dlp {
 namespace core {
 namespace parser {
 
-class RoleExpression : public Expression {
+class Role : public Expression {
 protected:
     /**
      * Construct the Role.
@@ -17,7 +17,7 @@ protected:
     virtual element::Role_Ptr parse_role_element_impl(ElementCache &cache) const = 0;
 
 public:
-    RoleExpression(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
+    Role(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Expression(name, std::move(children)) { }
 
     /**

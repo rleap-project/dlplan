@@ -8,25 +8,25 @@ namespace dlp {
 namespace core {
 namespace parser {
 
-class AndConceptExpression : public ConceptExpression {
+class AndConcept : public Concept {
 protected:
     virtual element::Concept_Ptr parse_concept_element_impl(ElementCache &cache) const override {
         if (m_children.size() != 2) {
-            throw std::runtime_error("AndConceptExpression::parse_concept_element - number of children ("s + std::to_string(m_children.size()) + " != 1).");
+            throw std::runtime_error("AndConcept::parse_concept_element - number of children ("s + std::to_string(m_children.size()) + " != 1).");
         }
         // 1. Parse children
         element::Concept_Ptr l = m_children[0]->parse_concept_element(cache);
         element::Concept_Ptr r = m_children[1]->parse_concept_element(cache);
         if (!(l && r)) {
-            throw std::runtime_error("AndConceptExpression::parse_concept_element - children are not of type Concept.");
+            throw std::runtime_error("AndConcept::parse_concept_element - children are not of type Concept.");
         }
         // 2. Construct element
-        return std::make_shared<element::AndConceptElement>(l, r);
+        return std::make_shared<element::AndConcept>(l, r);
     }
 
 public:
-    AndConceptExpression(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
-    : ConceptExpression(name, sort_children_lexicographically(std::move(children))) { }
+    AndConcept(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
+    : Concept(name, sort_children_lexicographically(std::move(children))) { }
 };
 
 }

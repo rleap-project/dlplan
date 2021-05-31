@@ -10,7 +10,7 @@ namespace dlp {
 namespace core {
 namespace parser {
 
-class NumericalExpression : public Expression {
+class Numerical : public Expression {
 protected:
     /**
      * Construct the Numerical.
@@ -18,7 +18,7 @@ protected:
     virtual element::Numerical_Ptr parse_numerical_element_impl(ElementCache &cache) const = 0;
 
 public:
-    NumericalExpression(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
+    Numerical(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Expression(name, std::move(children)) { }
 
     /**

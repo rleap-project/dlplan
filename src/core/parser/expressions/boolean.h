@@ -10,7 +10,7 @@ namespace dlp {
 namespace core {
 namespace parser {
 
-class BooleanExpression : public Expression {
+class Boolean : public Expression {
 protected:
     /**
      * Construct the Boolean.
@@ -18,7 +18,7 @@ protected:
     virtual element::Boolean_Ptr parse_boolean_element_impl(ElementCache &cache) const = 0;
 
 public:
-    BooleanExpression(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
+    Boolean(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Expression(name, std::move(children)) { }
 
     /**

@@ -21,10 +21,10 @@ Expression_Ptr AST_Factory::make_ast(const std::string &name, std::vector<Expres
             return std::make_unique<Expression>(Expression(name, std::move(children)));
         } else if (children.size() == 1) {
             // case 1.2: primitive concept
-            return std::make_unique<PrimitiveConceptExpression>(PrimitiveConceptExpression(name, std::move(children)));
+            return std::make_unique<PrimitiveConcept>(PrimitiveConcept(name, std::move(children)));
         } else if (children.size() == 2) {
             // case 1.3: primitive role
-            return std::make_unique<PrimitiveRoleExpression>(PrimitiveRoleExpression(name, std::move(children)));
+            return std::make_unique<PrimitiveRole>(PrimitiveRole(name, std::move(children)));
         } else {
             throw std::runtime_error("AST_Factory::make_ast - invalid number ("s + std::to_string(children.size()) + ") of children in primitive ("s + name + ")");
         }
@@ -33,10 +33,10 @@ Expression_Ptr AST_Factory::make_ast(const std::string &name, std::vector<Expres
         EXPRESSION_TYPE expression_type = name_to_expression_type(name);
         switch (expression_type) {
             case C_AND: {
-                return std::make_unique<AndConceptExpression>(AndConceptExpression(name, std::move(children)));
+                return std::make_unique<AndConcept>(AndConcept(name, std::move(children)));
             }
             case N_COUNT: {
-                return std::make_unique<CountNumericalExpression>(CountNumericalExpression(name, std::move(children)));
+                return std::make_unique<CountNumerical>(CountNumerical(name, std::move(children)));
             }
         }
     } else {

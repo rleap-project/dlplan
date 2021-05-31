@@ -9,22 +9,22 @@ namespace dlp {
 namespace core {
 namespace parser {
 
-class PrimitiveRoleExpression : public RoleExpression {
+class PrimitiveRole : public Role {
 protected:
     virtual element::Role_Ptr parse_role_element_impl(ElementCache &cache) const override {
         if (m_children.size() != 2) {
-            throw std::runtime_error("PrimitiveRoleExpression::parse_role_element_impl - number of children ("s + std::to_string(m_children.size()) + " != 2).");
+            throw std::runtime_error("PrimitiveRole::parse_role_element_impl - number of children ("s + std::to_string(m_children.size()) + " != 2).");
         }
         // 1. Parse children
         unsigned pos_1 = try_parse(m_children[0]->get_name());
         unsigned pos_2 = try_parse(m_children[0]->get_name());
         // 2. Construct element
-        return std::make_shared<element::PrimitiveRoleElement>(m_name, pos_1, pos_2);
+        return std::make_shared<element::PrimitiveRole>(m_name, pos_1, pos_2);
     }
 
 public:
-    PrimitiveRoleExpression(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
-    : RoleExpression(name, std::move(children)) { }
+    PrimitiveRole(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
+    : Role(name, std::move(children)) { }
 };
 
 }

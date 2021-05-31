@@ -9,7 +9,7 @@ namespace dlp {
 namespace core {
 namespace parser {
 
-class ConceptExpression : public Expression {
+class Concept : public Expression {
 protected:
     /**
      * Construct the Concept.
@@ -17,7 +17,7 @@ protected:
     virtual element::Concept_Ptr parse_concept_element_impl(ElementCache &cache) const = 0;
 
 public:
-    ConceptExpression(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
+    Concept(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Expression(name, std::move(children)) { }
 
     /**

@@ -8,7 +8,7 @@ namespace dlp {
 namespace core {
 namespace element {
 
-class PrimitiveConceptElement : public Concept {
+class PrimitiveConcept : public Concept {
 protected:
     unsigned m_pos;
 
@@ -17,12 +17,12 @@ protected:
         const InstanceInfoImpl& info = *state.m_parent;
         // 1. Perform error checking.
         if (!info.exists_predicate_name(m_name)) {
-            throw std::runtime_error("PrimitiveConceptElement::PrimitiveConceptElement - predicate ("s + m_name + ") is missing in InstanceInfo.");
+            throw std::runtime_error("PrimitiveConcept::PrimitiveConcept - predicate ("s + m_name + ") is missing in InstanceInfo.");
         }
         unsigned predicate_idx = info.get_predicate_idx(m_name);
         unsigned predicate_arity = info.get_predicate(predicate_idx).m_arity;
         if (m_pos >= predicate_arity) {
-            throw std::runtime_error("PrimitiveConceptElement::PrimitiveConceptElement - object index does not match predicate arity ("s + std::to_string(m_pos) + " > " + std::to_string(predicate_arity) + ").");
+            throw std::runtime_error("PrimitiveConcept::PrimitiveConcept - object index does not match predicate arity ("s + std::to_string(m_pos) + " > " + std::to_string(predicate_arity) + ").");
         }
         // 2. Compute the result.
         m_result.clear();
@@ -36,7 +36,7 @@ protected:
     }
 
 public:
-    PrimitiveConceptElement(const std::string& name, unsigned pos)
+    PrimitiveConcept(const std::string& name, unsigned pos)
     : Concept(name), m_pos(pos) {
     }
 
