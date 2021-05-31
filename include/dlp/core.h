@@ -299,30 +299,55 @@ public:
      */
     BooleanElement parse_boolean_element(const std::string &description);
 
-    /**
-     * Returns a NumericalElement that counts the number of concepts.
-     */
-    NumericalElement make_count_element(const ConceptElement& element);
 
-    /**
-     * Returns a NumericalElement that counts the number of roles.
-     */
-    NumericalElement make_count_element(const RoleElement& element);
+    BooleanElement make_empty_boolean_element(const ConceptElement& concept);
+    BooleanElement make_empty_boolean_element(const RoleElement& role);
 
+
+    ConceptElement make_all_concept_element(const RoleElement& role, const ConceptElement& concept);
+    /**
+     * Returns a ConceptElement that counts the number of primitive concepts.
+     */
+    ConceptElement make_and_concept_element(const ConceptElement& concept_left, const ConceptElement& concept_right);
+    ConceptElement make_bot_concept_element();
+    ConceptElement make_diff_concept_element(const ConceptElement& concept_left, const ConceptElement& concept_right);
+    ConceptElement make_not_concept_element(const ConceptElement& concept);
+    ConceptElement make_one_of_concept_element(unsigned object_idx);
+    ConceptElement make_or_concept_element(const ConceptElement& concept_left, const ConceptElement& concept_right);
     /**
      * Returns a ConceptElement that counts the number of primitive concepts.
      */
     ConceptElement make_primitive_concept_element(const std::string& name, unsigned pos);
+    ConceptElement make_some_concept_element(const RoleElement& role, const ConceptElement& concept);
+    ConceptElement make_subset_concept_element(const ConceptElement& concept_left, const ConceptElement& concept_right);
+    ConceptElement make_top_concept_element();
 
+
+    NumericalElement make_concept_distance_element(const ConceptElement& concept_from, const RoleElement& role, const ConceptElement& concept_to);
     /**
-     * Returns a ConceptElement that counts the number of primitive concepts.
+     * Returns a NumericalElement that counts the number of roles.
      */
-    ConceptElement make_and_concept_element(const ConceptElement& element1, const ConceptElement& element2);
+    NumericalElement make_count_element(const RoleElement& role);
+    NumericalElement make_role_distance_element(const RoleElement& role_from, const RoleElement& role, const RoleElement& role_to);
+    NumericalElement make_sum_concept_distance_element(const ConceptElement& concept_from, const RoleElement& role, const ConceptElement& concept_to);
+    NumericalElement make_sum_role_distance_element(const RoleElement& role_from, const RoleElement& role, const RoleElement& role_to);
 
+
+    RoleElement make_and_role_element(const RoleElement& role_left, const RoleElement& role_right);
+    RoleElement make_compose_role_element(const RoleElement& role_left, const RoleElement& role_right);
+    RoleElement make_diff_role_element(const RoleElement& role_left, const RoleElement& role_right);
+    RoleElement make_identity_role_element(const ConceptElement& concept);
+    RoleElement make_inverse_role_element(const RoleElement& role);
+    RoleElement make_not_role_element(const RoleElement& role);
+    RoleElement make_or_role_element(const RoleElement& role_left, const RoleElement& role_right);
     /**
      * Returns a RoleElement that counts the number of primitive roles.
      */
     RoleElement make_primitive_role_element(const std::string& name, unsigned pos_1, unsigned pos_2);
+    RoleElement make_restrict_role_element(const RoleElement& role, const ConceptElement& concept);
+    RoleElement make_top_role_element();
+    RoleElement make_transitive_closure_element(const RoleElement& role);
+    RoleElement make_transitive_reflexive_closure_element(const RoleElement& role);
 };
 
 
