@@ -13,7 +13,7 @@ protected:
     unsigned m_pos;
 
 protected:
-    virtual Concepts evaluate_impl(const StateImpl& state) override {
+    virtual const Concepts& evaluate_impl(const StateImpl& state) override {
         const InstanceInfoImpl& info = *state.m_parent;
         // 1. Perform error checking.
         if (!info.exists_predicate_name(m_name)) {

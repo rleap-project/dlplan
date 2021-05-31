@@ -16,7 +16,7 @@ protected:
     T m_element;
 
 protected:
-    virtual int evaluate_impl(const StateImpl& state) override {
+    virtual const int& evaluate_impl(const StateImpl& state) override {
         m_result = m_element->evaluate(state).size();
         return m_result;
     }

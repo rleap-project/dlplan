@@ -24,7 +24,7 @@ protected:
     const StateImpl* m_state;
 
 protected:
-    virtual T evaluate_impl(const StateImpl& state) = 0;
+    virtual const T& evaluate_impl(const StateImpl& state) = 0;
 
 public:
     Element(const std::string& name) : m_name(name), m_result(T()), m_state(nullptr) { }
@@ -33,7 +33,7 @@ public:
     /**
      * Evaluate and cache the last result.
      */
-    T evaluate(const StateImpl& state) {
+    const T& evaluate(const StateImpl& state) {
         if (m_state != &state) {
             m_state = &state;
             m_result = evaluate_impl(state);
