@@ -18,7 +18,7 @@ Expression_Ptr AST_Factory::make_ast(const std::string &name, std::vector<Expres
         // case 1: all children are leafs
         if (children.size() == 0) {
             // case 1.3: index
-            if (!is_num(name)) {
+            if (!is_number(name)) {
                 throw std::runtime_error("AST_Factory::make_ast - leaves must be integer corresponding to positions in predicates");
             }
             return std::make_unique<Expression>(Expression(name, std::move(children)));

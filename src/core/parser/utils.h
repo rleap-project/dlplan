@@ -13,14 +13,14 @@ namespace dlp {
 namespace core {
 namespace parser {
 
-int try_parse(const std::string& name) {
+int try_parse_number(const std::string& name) {
     if (!std::all_of(name.begin(), name.end(), [](char c){ return isdigit(c); })) {
-        throw std::runtime_error("try_parse - error parsing ("s + name + ") to int.");
+        throw std::runtime_error("try_parse_number - error parsing ("s + name + ") to int.");
     }
     return atoi(name.c_str());
 }
 
-bool is_num(const std::string& name) {
+bool is_number(const std::string& name) {
     return std::all_of(name.begin(), name.end(), [](char c){ return isdigit(c); });
 }
 
