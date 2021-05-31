@@ -20,6 +20,10 @@ int try_parse(const std::string& name) {
     return atoi(name.c_str());
 }
 
+bool is_num(const std::string& name) {
+    return std::all_of(name.begin(), name.end(), [](char c){ return isdigit(c); });
+}
+
 /**
  * Sort child expressions lexicographically.
  * We apply this in commutative expressions
