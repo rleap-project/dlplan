@@ -44,18 +44,13 @@ public:
     /**
      * Returns the complexity of the element.
      */
-    virtual unsigned complexity() const = 0;
+    virtual unsigned compute_complexity() const = 0;
 
     /**
      * Computes a representation that uniquely identifies the element.
      * TODO(dominik): Use more sophisticated equivalences.
      */
-    virtual std::string repr() const = 0;
-
-    /**
-     * Getters
-     */
-    virtual const std::string& name() const { return m_name; }
+    virtual std::string compute_repr() const = 0;
 };
 
 }

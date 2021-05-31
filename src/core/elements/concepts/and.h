@@ -34,7 +34,7 @@ public:
             throw std::runtime_error("AndConceptExpression::make_concept_element - children are not of type ConceptElement.");
         }
         // Element is commutative. Hence sort lexicographically.
-        if (l->repr() < r->repr()) {
+        if (l->compute_repr() < r->compute_repr()) {
             m_l = l;
             m_r = r;
         } else {
@@ -43,13 +43,13 @@ public:
         }
     }
 
-    virtual unsigned complexity() const override {
-        return m_l->complexity() + m_r->complexity() + 1;
+    virtual unsigned compute_complexity() const override {
+        return m_l->compute_complexity() + m_r->compute_complexity() + 1;
     }
 
-    virtual std::string repr() const override {
+    virtual std::string compute_repr() const override {
         std::stringstream ss;
-        ss << m_name << "(" << m_l->repr() << "," << m_r->repr() << ")";
+        ss << m_name << "(" << m_l->compute_repr() << "," << m_r->compute_repr() << ")";
         return ss.str();
     }
 };

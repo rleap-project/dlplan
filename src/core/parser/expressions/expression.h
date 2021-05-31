@@ -42,7 +42,7 @@ public:
     /**
      * Getters.
      */
-    const std::string& name() const {
+    const std::string& get_name() const {
         return m_name;
     }
 

@@ -27,7 +27,7 @@ int try_parse(const std::string& name) {
  */
 std::vector<Expression_Ptr> sort_children_lexicographically(std::vector<Expression_Ptr> &&children) {
     std::sort(children.begin(), children.end(),
-        [](const Expression_Ptr &l, const Expression_Ptr &r){ return l->name() < r->name(); });
+        [](const Expression_Ptr &l, const Expression_Ptr &r){ return l->get_name() < r->get_name(); });
     return std::move(children);
 }
 

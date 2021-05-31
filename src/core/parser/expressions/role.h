@@ -25,7 +25,7 @@ public:
      */
     virtual element::RoleElement_Ptr parse_role_element(ElementCache &cache) const {
         element::RoleElement_Ptr value = parse_role_element_impl(cache);
-        return cache.role_element_cache().insert(std::make_pair(value->repr(), std::move(value))).first->second;
+        return cache.role_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
     }
 };
 

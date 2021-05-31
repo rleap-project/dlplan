@@ -49,9 +49,14 @@ public:
     ~InstanceInfoImpl() = default;
 
     /**
-     * Methods for initializing the TaskInfo successively.
+     * Adds an atom that may have varying evaluation depending on the state.
      */
-    AtomImpl add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static);
+    AtomImpl add_atom(const std::string &predicate_name, const Name_Vec &object_names);
+
+    /**
+     * Adds an atom that remains true forever.
+     */
+    AtomImpl add_static_atom(const std::string& predicate_name, const Name_Vec& object_names);
 
     /**
      * Construct a state from textual information by first applying the index mapping and the calling convert_state.
@@ -67,14 +72,14 @@ public:
     StateImpl convert_state(std::shared_ptr<InstanceInfoImpl> info, const Index_Vec& atom_idxs) const;
 
     bool exists_predicate_name(const std::string& name) const;
-    unsigned predicate_idx(const std::string& name) const;
+    unsigned get_predicate_idx(const std::string& name) const;
     /**
      * Getters
      */
-    const AtomImpl& atom(unsigned atom_idx) const;
-    const std::vector<AtomImpl>& atoms() const;
-    const PredicateImpl& predicate(unsigned predicate_idx) const;
-    const std::vector<PredicateImpl>& predicates() const;
+    const AtomImpl& get_atom(unsigned atom_idx) const;
+    const std::vector<AtomImpl>& get_atoms() const;
+    const PredicateImpl& get_predicate(unsigned predicate_idx) const;
+    const std::vector<PredicateImpl>& get_predicates() const;
 };
 
 }

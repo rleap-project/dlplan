@@ -21,7 +21,7 @@ struct AtomImpl {
     const int m_predicate_idx;
     const Name_Vec m_object_names;
     const Index_Vec m_object_idxs;
-    const bool m_is_static;
+    bool m_is_static;
 
     AtomImpl(
         const std::string& atom_name,
@@ -33,8 +33,8 @@ struct AtomImpl {
         bool is_static);
     ~AtomImpl() = default;
 
-    int predicate_idx() const;
-    int object_idx(int pos) const;
+    int get_predicate_idx() const;
+    int get_object_idx(int pos) const;
 };
 
 }

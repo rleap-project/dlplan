@@ -48,8 +48,8 @@ public:
     /**
      * Getters.
      */
-    const std::string& name() const;
-    unsigned arity() const;
+    const std::string& get_name() const;
+    unsigned get_arity() const;
 };
 
 
@@ -73,8 +73,8 @@ public:
     /**
      * Getters.
      */
-    int atom_idx() const;
-    const std::string& atom_name() const;
+    int get_atom_idx() const;
+    const std::string& get_atom_name() const;
 };
 
 
@@ -123,7 +123,7 @@ public:
     /**
      * Adds an atom that may have varying evaluation depending on the state.
      */
-    Atom add_atom(const std::string& predicate_name, const Name_Vec& object_names, bool is_static);
+    Atom add_atom(const std::string& predicate_name, const Name_Vec& object_names);
 
     /**
      * Adds an atom that remains true forever.
@@ -145,7 +145,7 @@ public:
     /**
      * Getters.
      */
-    std::vector<Predicate> predicates() const;
+    std::vector<Predicate> get_predicates() const;
 };
 
 
@@ -166,12 +166,12 @@ public:
      * Returns the complexity of the element
      * measured in the size of the abstract syntax tree.
      */
-    virtual unsigned complexity() const = 0;
+    virtual unsigned compute_complexity() const = 0;
 
     /**
      * Returns a canonical string representation.
      */
-    virtual std::string repr() const = 0;
+    virtual std::string compute_repr() const = 0;
 };
 
 
@@ -193,9 +193,9 @@ public:
 
     virtual Concepts evaluate(const State& state) const override;
 
-    virtual unsigned complexity() const override;
+    virtual unsigned compute_complexity() const override;
 
-    virtual std::string repr() const override;
+    virtual std::string compute_repr() const override;
 };
 
 
@@ -217,9 +217,9 @@ public:
 
     virtual Roles evaluate(const State& state) const override;
 
-    virtual unsigned complexity() const override;
+    virtual unsigned compute_complexity() const override;
 
-    virtual std::string repr() const override;
+    virtual std::string compute_repr() const override;
 };
 
 
@@ -241,9 +241,9 @@ public:
 
     virtual int evaluate(const State& state) const override;
 
-    virtual unsigned complexity() const override;
+    virtual unsigned compute_complexity() const override;
 
-    virtual std::string repr() const override;
+    virtual std::string compute_repr() const override;
 };
 
 
@@ -265,9 +265,9 @@ public:
 
     virtual bool evaluate(const State& state) const override;
 
-    virtual unsigned complexity() const override;
+    virtual unsigned compute_complexity() const override;
 
-    virtual std::string repr() const override;
+    virtual std::string compute_repr() const override;
 };
 
 

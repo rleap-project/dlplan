@@ -23,7 +23,7 @@ static unsigned insert_or_retrieve(const std::string& name, std::unordered_map<s
     return f->second;
 }
 
-AtomImpl InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
+AtomImpl InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names) {
     bool predicate_exists = exists(predicate_name, m_predicate_name_to_predicate_idx);
     if (!predicate_exists) {
         m_predicates.push_back(PredicateImpl(predicate_name, m_predicates.size(), object_names.size()));
@@ -48,11 +48,15 @@ AtomImpl InstanceInfoImpl::add_atom(const std::string &predicate_name, const Nam
     m_atom_name_to_atom_idx.insert(std::make_pair(atom_name, atom_idx));
     int predicate_idx = insert_or_retrieve(predicate_name, m_predicate_name_to_predicate_idx);
 
-    if (is_static) {
-        m_static_atom_idxs.push_back(atom_idx);
-    }
-    m_atoms.push_back(AtomImpl(atom_name, atom_idx, predicate_name, predicate_idx, object_names, object_idxs, is_static));
+    m_atoms.push_back(AtomImpl(atom_name, atom_idx, predicate_name, predicate_idx, object_names, object_idxs, false));
     return m_atoms.back();
+}
+
+AtomImpl InstanceInfoImpl::add_static_atom(const std::string& predicate_name, const Name_Vec& object_names) {
+    const AtomImpl& atom = add_atom(predicate_name, object_names);
+    m_atoms[atom.m_atom_idx].m_is_static = true;
+    m_static_atom_idxs.push_back(atom.m_atom_idx);
+    return atom;
 }
 
 StateImpl InstanceInfoImpl::parse_state(std::shared_ptr<InstanceInfoImpl> info, const Name_Vec& atom_names) const {
@@ -95,23 +99,23 @@ bool InstanceInfoImpl::exists_predicate_name(const std::string& name) const {
     return m_predicate_name_to_predicate_idx.find(name) != m_predicate_name_to_predicate_idx.end();
 }
 
-unsigned InstanceInfoImpl::predicate_idx(const std::string& name) const {
+unsigned InstanceInfoImpl::get_predicate_idx(const std::string& name) const {
     return m_predicate_name_to_predicate_idx.at(name);
 }
 
-const AtomImpl& InstanceInfoImpl::atom(unsigned atom_idx) const {
+const AtomImpl& InstanceInfoImpl::get_atom(unsigned atom_idx) const {
     return m_atoms[atom_idx];
 }
 
-const std::vector<AtomImpl>& InstanceInfoImpl::atoms() const {
+const std::vector<AtomImpl>& InstanceInfoImpl::get_atoms() const {
     return m_atoms;
 }
 
-const PredicateImpl& InstanceInfoImpl::predicate(unsigned predicate_idx) const {
+const PredicateImpl& InstanceInfoImpl::get_predicate(unsigned predicate_idx) const {
     return m_predicates[predicate_idx];
 }
 
-const std::vector<PredicateImpl>& InstanceInfoImpl::predicates() const {
+const std::vector<PredicateImpl>& InstanceInfoImpl::get_predicates() const {
     return m_predicates;
 }
 

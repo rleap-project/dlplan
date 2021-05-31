@@ -17,7 +17,7 @@ protected:
             throw std::runtime_error("PrimitiveConceptExpression::parse_concept_element - number of children ("s + std::to_string(m_children.size()) + " != 1).");
         }
         // 1. Parse children
-        unsigned pos = try_parse(m_children[0]->name());
+        unsigned pos = try_parse(m_children[0]->get_name());
         // 2. Construct element
         return std::make_shared<element::PrimitiveConceptElement>(m_name, pos);
     }

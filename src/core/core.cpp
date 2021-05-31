@@ -30,7 +30,7 @@ State InstanceInfo::convert_state(const std::vector<Atom>& atoms) const {
     atoms_impl.reserve(atoms.size());
     for (const auto& atom : atoms) {
         if (atom.m_parent != *m_pImpl) {
-            throw std::runtime_error("InstanceInfo::parse_state - atom ("s + atom.atom_name() + ") does not belong to the instance");
+            throw std::runtime_error("InstanceInfo::parse_state - atom ("s + atom.get_atom_name() + ") does not belong to the instance");
         }
         atoms_impl.push_back(*atom.m_pImpl);
     }
@@ -41,13 +41,17 @@ State InstanceInfo::convert_state(const Index_Vec& atom_idxs) const {
     return State(*m_pImpl, m_pImpl->get()->convert_state(*m_pImpl, atom_idxs));
 }
 
-Atom InstanceInfo::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
-    return Atom(*m_pImpl, m_pImpl->get()->add_atom(predicate_name, object_names, is_static));
+Atom InstanceInfo::add_atom(const std::string &predicate_name, const Name_Vec &object_names) {
+    return Atom(*m_pImpl, m_pImpl->get()->add_atom(predicate_name, object_names));
 }
 
-std::vector<Predicate> InstanceInfo::predicates() const {
+Atom InstanceInfo::add_static_atom(const std::string &predicate_name, const Name_Vec &object_names) {
+    return Atom(*m_pImpl, m_pImpl->get()->add_static_atom(predicate_name, object_names));
+}
+
+std::vector<Predicate> InstanceInfo::get_predicates() const {
     std::vector<Predicate> predicates;
-    for (PredicateImpl predicate_impl : m_pImpl->get()->predicates()) {
+    for (PredicateImpl predicate_impl : m_pImpl->get()->get_predicates()) {
         predicates.push_back(Predicate(*m_pImpl, std::move(predicate_impl)));
     }
     return predicates;
@@ -60,11 +64,11 @@ Predicate::Predicate(const Predicate& other) : m_pImpl(*other.m_pImpl) { }
 
 Predicate::~Predicate() {}
 
-const std::string& Predicate::name() const {
+const std::string& Predicate::get_name() const {
     return m_pImpl->m_predicate_name;
 }
 
-unsigned Predicate::arity() const {
+unsigned Predicate::get_arity() const {
     return m_pImpl->m_arity;
 }
 
@@ -75,11 +79,11 @@ Atom::Atom(const Atom& other) : m_parent(other.m_parent), m_pImpl(*other.m_pImpl
 
 Atom::~Atom() { }
 
-int Atom::atom_idx() const {
+int Atom::get_atom_idx() const {
     return m_pImpl->m_atom_idx;
 }
 
-const std::string& Atom::atom_name() const {
+const std::string& Atom::get_atom_name() const {
     return m_pImpl->m_atom_name;
 }
 
@@ -103,12 +107,12 @@ Concepts ConceptElement::evaluate(const State& state) const {
     return m_pImpl->get()->evaluate(*state.m_pImpl);
 }
 
-unsigned ConceptElement::complexity() const {
-    return m_pImpl->get()->complexity();
+unsigned ConceptElement::compute_complexity() const {
+    return m_pImpl->get()->compute_complexity();
 }
 
-std::string ConceptElement::repr() const {
-    return m_pImpl->get()->repr();
+std::string ConceptElement::compute_repr() const {
+    return m_pImpl->get()->compute_repr();
 }
 
 RoleElement::RoleElement(element::RoleElement_Ptr pImpl)
@@ -121,12 +125,12 @@ Roles RoleElement::evaluate(const State& state) const {
     return m_pImpl->get()->evaluate(*state.m_pImpl);
 }
 
-unsigned RoleElement::complexity() const {
-    return m_pImpl->get()->complexity();
+unsigned RoleElement::compute_complexity() const {
+    return m_pImpl->get()->compute_complexity();
 }
 
-std::string RoleElement::repr() const {
-    return m_pImpl->get()->repr();
+std::string RoleElement::compute_repr() const {
+    return m_pImpl->get()->compute_repr();
 }
 
 
@@ -140,12 +144,12 @@ int NumericalElement::evaluate(const State& state) const {
     return m_pImpl->get()->evaluate(*(state.m_pImpl));
 }
 
-unsigned NumericalElement::complexity() const {
-    return m_pImpl->get()->complexity();
+unsigned NumericalElement::compute_complexity() const {
+    return m_pImpl->get()->compute_complexity();
 }
 
-std::string NumericalElement::repr() const {
-    return m_pImpl->get()->repr();
+std::string NumericalElement::compute_repr() const {
+    return m_pImpl->get()->compute_repr();
 }
 
 
@@ -159,12 +163,12 @@ bool BooleanElement::evaluate(const State& state) const {
     return m_pImpl->get()->evaluate(*state.m_pImpl);
 }
 
-unsigned BooleanElement::complexity() const {
-    return m_pImpl->get()->complexity();
+unsigned BooleanElement::compute_complexity() const {
+    return m_pImpl->get()->compute_complexity();
 }
 
-std::string BooleanElement::repr() const {
-    return m_pImpl->get()->repr();
+std::string BooleanElement::compute_repr() const {
+    return m_pImpl->get()->compute_repr();
 }
 
 

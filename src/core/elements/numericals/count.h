@@ -24,13 +24,13 @@ protected:
 public:
     CountNumericalElement(T element) : NumericalElement("n_count"), m_element(element) { }
 
-    virtual unsigned complexity() const override {
-        return m_element->complexity() + 1;
+    virtual unsigned compute_complexity() const override {
+        return m_element->compute_complexity() + 1;
     }
 
-    virtual std::string repr() const override {
+    virtual std::string compute_repr() const override {
         std::stringstream ss;
-        ss << m_name << "(" << m_element->repr() << ")";
+        ss << m_name << "(" << m_element->compute_repr() << ")";
         return ss.str();
     }
 };

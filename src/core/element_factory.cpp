@@ -46,7 +46,7 @@ element::ConceptElement_Ptr SyntacticElementFactoryImpl::make_all_concept_elemen
 
 element::ConceptElement_Ptr SyntacticElementFactoryImpl::make_and_concept_element(element::ConceptElement_Ptr element1, element::ConceptElement_Ptr element2) {
     element::ConceptElement_Ptr value = std::make_shared<element::AndConceptElement>(element1, element2);
-    return m_cache.concept_element_cache().insert(std::make_pair(value->repr(), std::move(value))).first->second;
+    return m_cache.concept_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
 element::ConceptElement_Ptr SyntacticElementFactoryImpl::make_bot_concept_element() {
@@ -71,7 +71,7 @@ element::ConceptElement_Ptr SyntacticElementFactoryImpl::make_or_concept_element
 
 element::ConceptElement_Ptr SyntacticElementFactoryImpl::make_primitive_concept_element(const std::string& name, unsigned pos) {
     element::ConceptElement_Ptr value = std::make_shared<element::PrimitiveConceptElement>(name, pos);
-    return m_cache.concept_element_cache().insert(std::make_pair(value->repr(), std::move(value))).first->second;
+    return m_cache.concept_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
 element::ConceptElement_Ptr SyntacticElementFactoryImpl::make_some_concept_element(element::RoleElement_Ptr role, element::ConceptElement_Ptr concept) {
@@ -92,12 +92,12 @@ element::NumericalElement_Ptr SyntacticElementFactoryImpl::make_concept_distance
 
 element::NumericalElement_Ptr SyntacticElementFactoryImpl::make_count_element(element::ConceptElement_Ptr element) {
     element::NumericalElement_Ptr value = std::make_shared<element::CountNumericalElement<element::ConceptElement_Ptr>>(element);
-    return m_cache.numerical_element_cache().insert(std::make_pair(value->repr(), std::move(value))).first->second;
+    return m_cache.numerical_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
 element::NumericalElement_Ptr SyntacticElementFactoryImpl::make_count_element(element::RoleElement_Ptr element) {
     element::NumericalElement_Ptr value = std::make_shared<element::CountNumericalElement<element::RoleElement_Ptr>>(element);
-    return m_cache.numerical_element_cache().insert(std::make_pair(value->repr(), std::move(value))).first->second;
+    return m_cache.numerical_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
 element::NumericalElement_Ptr SyntacticElementFactoryImpl::make_role_distance_element(element::RoleElement_Ptr role_from, element::RoleElement_Ptr role, element::RoleElement_Ptr role_to) {
@@ -142,7 +142,7 @@ element::RoleElement_Ptr SyntacticElementFactoryImpl::make_or_role_element(eleme
 
 element::RoleElement_Ptr SyntacticElementFactoryImpl::make_primitive_role_element(const std::string& name, unsigned pos_1, unsigned pos_2) {
     element::RoleElement_Ptr value = std::make_shared<element::PrimitiveRoleElement>(name, pos_1, pos_2);
-    return m_cache.role_element_cache().insert(std::make_pair(value->repr(), std::move(value))).first->second;
+    return m_cache.role_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
 element::RoleElement_Ptr SyntacticElementFactoryImpl::make_restrict_role_element(element::RoleElement_Ptr role, element::ConceptElement_Ptr concept) {
