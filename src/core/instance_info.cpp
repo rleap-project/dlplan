@@ -14,15 +14,6 @@ static bool exists(const std::string& name, std::unordered_map<std::string, unsi
     return (f != mapping.end());
 }
 
-static unsigned insert_or_retrieve(const std::string& name, std::unordered_map<std::string, unsigned>& mapping) {
-    auto f = mapping.find(name);
-    if (f == mapping.end()) {
-        mapping.emplace(std::make_pair(name, mapping.size()));
-        return mapping.size() - 1;
-    }
-    return f->second;
-}
-
 InstanceInfoImpl::InstanceInfoImpl(std::shared_ptr<VocabularyInfoImpl> vocabulary_info)
     : m_vocabulary_info(vocabulary_info) {}
 
@@ -33,10 +24,13 @@ AtomImpl InstanceInfoImpl::add_atom(const std::string &predicate_name, const Nam
         throw std::runtime_error("InstanceInfoImpl::add_atom - arity of predicate in vocabulary does not match with atom ("s + std::to_string(m_vocabulary_info->get_predicate(m_vocabulary_info->get_predicate_idx(predicate_name)).m_arity) + " != " + std::to_string(object_names.size()));
     }
     bool predicate_exists = exists(predicate_name, m_predicate_name_to_predicate_idx);
+    unsigned predicate_idx;
     if (!predicate_exists) {
-        unsigned predicate_idx = m_predicates.size();
+        predicate_idx = m_predicates.size();
         m_predicates.push_back(PredicateImpl(predicate_name, predicate_idx, object_names.size()));
         m_predicate_name_to_predicate_idx.insert(std::make_pair(predicate_name, predicate_idx));
+    } else {
+        predicate_idx = m_predicate_name_to_predicate_idx.at(predicate_name);
     }
     int atom_idx = m_atoms.size();
     std::stringstream ss;
@@ -44,7 +38,16 @@ AtomImpl InstanceInfoImpl::add_atom(const std::string &predicate_name, const Nam
     Index_Vec object_idxs;
     for (unsigned i = 0; i < object_names.size(); ++i) {
         const std::string& object_name = object_names[i];
-        object_idxs.push_back(insert_or_retrieve(object_name, m_object_name_to_object_idx));
+        bool object_exists = exists(object_name, m_object_name_to_object_idx);
+        unsigned object_idx;
+        if (!object_exists) {
+            object_idx = m_objects.size();
+            m_objects.push_back(ObjectImpl(object_name, object_idx));
+            m_object_name_to_object_idx.insert(std::make_pair(object_name, object_idx));
+        } else {
+            object_idx = m_object_name_to_object_idx.at(object_name);
+        }
+        object_idxs.push_back(object_idx);
         ss << object_name;
         if (i < object_names.size() - 1) {
             ss << ",";
@@ -56,7 +59,6 @@ AtomImpl InstanceInfoImpl::add_atom(const std::string &predicate_name, const Nam
         throw std::runtime_error("InstanceInfoImpl::add_atom - adding duplicate atom with name ("s + atom_name + ") is not allowed.");
     }
     m_atom_name_to_atom_idx.insert(std::make_pair(atom_name, atom_idx));
-    int predicate_idx = insert_or_retrieve(predicate_name, m_predicate_name_to_predicate_idx);
 
     m_atoms.push_back(AtomImpl(atom_name, atom_idx, predicate_name, predicate_idx, object_names, object_idxs, false));
     return m_atoms.back();
@@ -115,6 +117,10 @@ const std::vector<AtomImpl>& InstanceInfoImpl::get_atoms() const {
 
 unsigned InstanceInfoImpl::get_num_objects() const {
     return m_object_name_to_object_idx.size();
+}
+
+const ObjectImpl& InstanceInfoImpl::get_object(unsigned object_idx) const {
+    return m_objects[object_idx];
 }
 
 }

@@ -7,6 +7,7 @@ add_library(core
     instance_info.cpp
     vocabulary_info.cpp
     predicate.cpp
+    object.cpp
     parser/parser.cpp
     parser/tokenizer.cpp
     parser/ast_factory.cpp

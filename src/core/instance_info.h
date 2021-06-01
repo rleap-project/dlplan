@@ -7,6 +7,7 @@
 
 #include "vocabulary_info.h"
 #include "predicate.h"
+#include "object.h"
 #include "atom.h"
 #include "types.h"
 
@@ -42,6 +43,10 @@ private:
      * All atoms.
      */
     std::vector<AtomImpl> m_atoms;
+    /**
+     * All objects.
+     */
+    std::vector<ObjectImpl> m_objects;
     /**
      * All predicates.
      */
@@ -80,6 +85,8 @@ public:
     const AtomImpl& get_atom(unsigned atom_idx) const;
     const std::vector<AtomImpl>& get_atoms() const;
     unsigned get_num_objects() const;
+    unsigned get_object_idx(const std::string& object_name) const;
+    const ObjectImpl& get_object(unsigned object_idx) const;
 };
 
 }
