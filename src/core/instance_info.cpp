@@ -113,5 +113,9 @@ const std::vector<AtomImpl>& InstanceInfoImpl::get_atoms() const {
     return m_atoms;
 }
 
+unsigned InstanceInfoImpl::get_num_objects() const {
+    return m_object_name_to_object_idx.size();
+}
+
 }
 }

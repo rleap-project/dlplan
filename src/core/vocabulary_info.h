@@ -13,6 +13,40 @@
 namespace dlp {
 namespace core {
 
+enum EXPRESSION_TYPE {
+    // concepts
+    C_ALL,
+    C_AND,
+    C_BOT,
+    C_DIFFERENCE,
+    C_NOT,
+    C_ONE_OF,
+    C_OR,
+    C_SOME,
+    C_SUBSET,
+    C_TOP,
+    // roles
+    R_AND,
+    R_COMPOSE,
+    R_DIFFERENCE,
+    R_IDENTITY,
+    R_INVERSE,
+    R_NOT,
+    R_OR,
+    R_RESTRICT,
+    R_TOP,
+    R_TRANSITIVE_CLOSURE,
+    R_TRANSITIVE_REFLEXIVE_CLOSURE,
+    // numerical
+    N_COUNT,
+    N_CONCEPT_DISTANCE,
+    N_SUM_CONCEPT_DISTANCE,
+    N_ROLE_DISTANCE,
+    N_SUM_ROLE_DISTANCE,
+    // boolean
+    B_EMPTY,
+};
+
 /**
  * VocabularyInfoImpl stores information related to the predicates in the planning domain.
  */
@@ -28,6 +62,11 @@ private:
      */
     std::vector<PredicateImpl> m_predicates;
 
+    /**
+     * Mappings between element names and enum.
+     */
+    static std::unordered_map<std::string, EXPRESSION_TYPE> m_element_name_to_expression_type;
+
 public:
     VocabularyInfoImpl() = default;
     ~VocabularyInfoImpl() = default;
@@ -42,6 +81,9 @@ public:
 
     const PredicateImpl& get_predicate(unsigned predicate_idx) const;
     const std::vector<PredicateImpl>& get_predicates() const;
+
+    static bool exists_element_name(const std::string& name);
+    static EXPRESSION_TYPE element_name_to_expression_type(const std::string &name);
 };
 
 }

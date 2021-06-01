@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "../vocabulary_info.h"
 #include "types.h"
 
 namespace dlp {

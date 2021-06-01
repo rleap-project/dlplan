@@ -79,6 +79,7 @@ public:
      */
     const AtomImpl& get_atom(unsigned atom_idx) const;
     const std::vector<AtomImpl>& get_atoms() const;
+    unsigned get_num_objects() const;
 };
 
 }

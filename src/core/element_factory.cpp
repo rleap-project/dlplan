@@ -2,10 +2,12 @@
 #include "parser/parser.h"
 #include "parser/expressions/expression.h"
 #include "elements/concepts/all.h"
+#include "elements/concepts/bot.h"
 #include "elements/concepts/and.h"
 #include "elements/concepts/or.h"
 #include "elements/concepts/primitive.h"
 #include "elements/concepts/some.h"
+#include "elements/concepts/top.h"
 #include "elements/numericals/count.h"
 #include "elements/roles/primitive.h"
 
@@ -18,22 +20,22 @@ SyntacticElementFactoryImpl::SyntacticElementFactoryImpl(std::shared_ptr<Vocabul
 }
 
 element::Concept_Ptr SyntacticElementFactoryImpl::parse_concept(const std::string &description) {
-    parser::Expression_Ptr expression = parser::Parser().parse(description);
+    parser::Expression_Ptr expression = parser::Parser().parse(*m_vocabulary_info, description);
     return expression->parse_concept(*m_vocabulary_info, m_cache);
 }
 
 element::Role_Ptr SyntacticElementFactoryImpl::parse_role(const std::string &description) {
-    parser::Expression_Ptr expression = parser::Parser().parse(description);
+    parser::Expression_Ptr expression = parser::Parser().parse(*m_vocabulary_info, description);
     return expression->parse_role(*m_vocabulary_info, m_cache);
 }
 
 element::Numerical_Ptr SyntacticElementFactoryImpl::parse_numerical(const std::string &description) {
-    parser::Expression_Ptr expression = parser::Parser().parse(description);
+    parser::Expression_Ptr expression = parser::Parser().parse(*m_vocabulary_info, description);
     return expression->parse_numerical(*m_vocabulary_info, m_cache);
 }
 
 element::Boolean_Ptr SyntacticElementFactoryImpl::parse_boolean(const std::string &description) {
-    parser::Expression_Ptr expression = parser::Parser().parse(description);
+    parser::Expression_Ptr expression = parser::Parser().parse(*m_vocabulary_info, description);
     return expression->parse_boolean(*m_vocabulary_info, m_cache);
 }
 
@@ -49,13 +51,14 @@ element::Concept_Ptr SyntacticElementFactoryImpl::make_all_concept(element::Role
     return m_cache.concept_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
-element::Concept_Ptr SyntacticElementFactoryImpl::make_and_concept(element::Concept_Ptr concept_1, element::Concept_Ptr concept_2) {
-    element::Concept_Ptr value = std::make_shared<element::AndConcept>(*m_vocabulary_info, concept_1, concept_2);
+element::Concept_Ptr SyntacticElementFactoryImpl::make_and_concept(element::Concept_Ptr concept_left, element::Concept_Ptr concept_right) {
+    element::Concept_Ptr value = std::make_shared<element::AndConcept>(*m_vocabulary_info, concept_left, concept_right);
     return m_cache.concept_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
 element::Concept_Ptr SyntacticElementFactoryImpl::make_bot_concept() {
-
+    element::Concept_Ptr value = std::make_shared<element::BotConcept>(*m_vocabulary_info);
+    return m_cache.concept_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
 element::Concept_Ptr SyntacticElementFactoryImpl::make_diff_concept(element::Concept_Ptr concept_left, element::Concept_Ptr concept_right) {
@@ -70,8 +73,8 @@ element::Concept_Ptr SyntacticElementFactoryImpl::make_one_of_concept(unsigned p
 
 }
 
-element::Concept_Ptr SyntacticElementFactoryImpl::make_or_concept(element::Concept_Ptr concept_1, element::Concept_Ptr concept_2) {
-    element::Concept_Ptr value = std::make_shared<element::OrConcept>(*m_vocabulary_info, concept_1, concept_2);
+element::Concept_Ptr SyntacticElementFactoryImpl::make_or_concept(element::Concept_Ptr concept_left, element::Concept_Ptr concept_right) {
+    element::Concept_Ptr value = std::make_shared<element::OrConcept>(*m_vocabulary_info, concept_left, concept_right);
     return m_cache.concept_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
@@ -90,7 +93,8 @@ element::Concept_Ptr SyntacticElementFactoryImpl::make_subset_concept(element::R
 }
 
 element::Concept_Ptr SyntacticElementFactoryImpl::make_top_concept() {
-
+    element::Concept_Ptr value = std::make_shared<element::TopConcept>(*m_vocabulary_info);
+    return m_cache.concept_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
 element::Numerical_Ptr SyntacticElementFactoryImpl::make_concept_distance(element::Concept_Ptr concept_from, element::Role_Ptr role, element::Concept_Ptr concept_to) {

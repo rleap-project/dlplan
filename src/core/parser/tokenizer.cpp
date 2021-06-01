@@ -2,6 +2,8 @@
 
 #include <sstream>
 #include <iostream>
+#include "ast_factory.h"
+
 
 namespace dlp {
 namespace core {
@@ -10,12 +12,13 @@ namespace parser {
 Tokenizer::Tokenizer() {
 }
 
-static void add_token(std::stringstream &ss, bool &is_num, Tokens &tokens) {
-    if (ss.str().empty()) return;
+static void add_token(std::stringstream &ss, bool& is_num, Tokens &tokens) {
+    std::string token = ss.str();
+    if (token.empty()) return;
     if (is_num) {
-        tokens.emplace_back(INTEGER, ss.str());
+        tokens.emplace_back(INTEGER, token);
     } else {
-        tokens.emplace_back(STRING, ss.str());
+        tokens.emplace_back(STRING, token);
     }
     ss.str("");
     ss.clear();
