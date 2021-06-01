@@ -1,5 +1,5 @@
 
-set(BINARY_NAME ${CMAKE_PROJECT_NAME}-tests)
+set(TEST_NAME ${CMAKE_PROJECT_NAME}_tests)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -10,14 +10,11 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-enable_testing()
-
 add_executable(
-    ${BINARY_NAME}
+    ${TEST_NAME}
     core.cpp
 )
-
-target_link_libraries(${BINARY_NAME} core gtest_main)
+target_link_libraries(${TEST_NAME} core gtest_main)
 
 include(GoogleTest)
-gtest_discover_tests(${BINARY_NAME})
+gtest_discover_tests(${TEST_NAME})
