@@ -71,15 +71,11 @@ public:
      */
     StateImpl convert_state(std::shared_ptr<InstanceInfoImpl> info, const Index_Vec& atom_idxs) const;
 
-    bool exists_predicate_name(const std::string& name) const;
-    unsigned get_predicate_idx(const std::string& name) const;
     /**
      * Getters
      */
     const AtomImpl& get_atom(unsigned atom_idx) const;
     const std::vector<AtomImpl>& get_atoms() const;
-    const PredicateImpl& get_predicate(unsigned predicate_idx) const;
-    const std::vector<PredicateImpl>& get_predicates() const;
 };
 
 }

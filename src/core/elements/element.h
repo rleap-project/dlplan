@@ -5,13 +5,14 @@
 #include "../types.h"
 #include "../cache.h"
 #include "../state.h"
+#include "../instance_info.h"
+#include "../vocabulary_info.h"
 
 #include <iostream>
 
 
 namespace dlp {
 namespace core {
-class InstanceInfoImpl;
 namespace element {
 
 template<typename T>
@@ -27,7 +28,7 @@ protected:
     virtual const T& evaluate_impl(const StateImpl& state) = 0;
 
 public:
-    Element(const std::string& name) : m_name(name), m_result(T()), m_state(nullptr) { }
+    Element(const VocabularyInfoImpl& vocabulary, const std::string& name) : m_name(name), m_result(T()), m_state(nullptr) { }
     virtual ~Element() = default;
 
     /**

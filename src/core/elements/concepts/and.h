@@ -28,8 +28,8 @@ protected:
     }
 
 public:
-    AndConcept(Concept_Ptr l, Concept_Ptr r)
-    : Concept("c_and") {
+    AndConcept(const VocabularyInfoImpl& vocabulary, Concept_Ptr l, Concept_Ptr r)
+    : Concept(vocabulary, "c_and") {
         if (!(l && r)) {
             throw std::runtime_error("AndConcept::make_concept_element - children are not of type Concept.");
         }

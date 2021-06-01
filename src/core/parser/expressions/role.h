@@ -14,7 +14,7 @@ protected:
     /**
      * Construct the Role.
      */
-    virtual element::Role_Ptr parse_role_element_impl(ElementCache &cache) const = 0;
+    virtual element::Role_Ptr parse_role_element_impl(const VocabularyInfoImpl& vocabulary, ElementCache &cache) const = 0;
 
 public:
     Role(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
@@ -23,8 +23,8 @@ public:
     /**
      * Construct or retrieve the Role.
      */
-    virtual element::Role_Ptr parse_role_element(ElementCache &cache) const {
-        element::Role_Ptr value = parse_role_element_impl(cache);
+    virtual element::Role_Ptr parse_role_element(const VocabularyInfoImpl& vocabulary, ElementCache &cache) const {
+        element::Role_Ptr value = parse_role_element_impl(vocabulary, cache);
         return cache.role_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
     }
 };

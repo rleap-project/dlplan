@@ -9,7 +9,7 @@
 
 #include "../../elements/types.h"
 #include "../../cache.h"
-#include "../../instance_info.h"
+#include "../../vocabulary_info.h"
 
 
 namespace dlp {
@@ -56,7 +56,7 @@ public:
      * Tries to parse the Expression into a Concept.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual element::Concept_Ptr parse_concept_element(ElementCache &cache) const {
+    virtual element::Concept_Ptr parse_concept_element(const VocabularyInfoImpl& vocabulary, ElementCache &cache) const {
         return nullptr;
     }
 
@@ -64,7 +64,7 @@ public:
      * Tries to parse the Expression into a Role.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual element::Role_Ptr parse_role_element(ElementCache &cache) const {
+    virtual element::Role_Ptr parse_role_element(const VocabularyInfoImpl& vocabulary, ElementCache &cache) const {
         return nullptr;
     }
 
@@ -72,7 +72,7 @@ public:
      * Tries to parse the Expression into a Numerical.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual element::Numerical_Ptr parse_numerical_element(ElementCache &cache) const {
+    virtual element::Numerical_Ptr parse_numerical_element(const VocabularyInfoImpl& vocabulary, ElementCache &cache) const {
         return nullptr;
     }
 
@@ -80,7 +80,7 @@ public:
      * Tries to parse the Expression into a Boolean.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual element::Boolean_Ptr parse_boolean_element(ElementCache &cache) const {
+    virtual element::Boolean_Ptr parse_boolean_element(const VocabularyInfoImpl& vocabulary, ElementCache &cache) const {
         return nullptr;
     }
 };

@@ -6,7 +6,7 @@
 #include <vector>
 #include <unordered_map>
 
-#include "instance_info.h"
+#include "vocabulary_info.h"
 #include "cache.h"
 #include "types.h"
 #include "elements/types.h"
@@ -24,8 +24,10 @@ class SyntacticElementFactoryImpl {
 protected:
     ElementCache m_cache;
 
+    std::shared_ptr<VocabularyInfoImpl> m_vocabulary_info;
+
 public:
-    SyntacticElementFactoryImpl();
+    SyntacticElementFactoryImpl(std::shared_ptr<VocabularyInfoImpl> vocabulary_info);
 
 
     element::Concept_Ptr parse_concept_element(const std::string &description);

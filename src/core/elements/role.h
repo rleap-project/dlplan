@@ -10,7 +10,7 @@ namespace element {
 
 class Role : public Element<RoleDenotation> {
 public:
-    Role(const std::string& name) : Element<RoleDenotation>(name) { }
+    Role(const VocabularyInfoImpl& vocabulary, const std::string& name) : Element<RoleDenotation>(vocabulary, name) { }
 
     size_t size() const {
         return m_result.size();

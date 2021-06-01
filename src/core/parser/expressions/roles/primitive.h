@@ -11,7 +11,7 @@ namespace parser {
 
 class PrimitiveRole : public Role {
 protected:
-    virtual element::Role_Ptr parse_role_element_impl(ElementCache &cache) const override {
+    virtual element::Role_Ptr parse_role_element_impl(const VocabularyInfoImpl& vocabulary, ElementCache &cache) const override {
         if (m_children.size() != 2) {
             throw std::runtime_error("PrimitiveRole::parse_role_element_impl - number of children ("s + std::to_string(m_children.size()) + " != 2).");
         }
@@ -19,7 +19,7 @@ protected:
         unsigned pos_1 = try_parse_number(m_children[0]->get_name());
         unsigned pos_2 = try_parse_number(m_children[0]->get_name());
         // 2. Construct element
-        return std::make_shared<element::PrimitiveRole>(m_name, pos_1, pos_2);
+        return std::make_shared<element::PrimitiveRole>(vocabulary, m_name, pos_1, pos_2);
     }
 
 public:

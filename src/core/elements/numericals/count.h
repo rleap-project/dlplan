@@ -22,7 +22,7 @@ protected:
     }
 
 public:
-    CountNumerical(T element) : Numerical("n_count"), m_element(element) { }
+    CountNumerical(const VocabularyInfoImpl& vocabulary, T element) : Numerical(vocabulary, "n_count"), m_element(element) { }
 
     virtual unsigned compute_complexity() const override {
         return m_element->compute_complexity() + 1;

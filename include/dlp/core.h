@@ -13,6 +13,7 @@ namespace dlp {
 namespace core {
 class SyntacticElementFactoryImpl;
 class InstanceInfoImpl;
+class VocabularyInfoImpl;
 class PredicateImpl;
 class AtomImpl;
 class StateImpl;
@@ -30,13 +31,13 @@ using Index_Vec = std::vector<int>;
  * Predicate contains information regarding the predicates used to construct the atoms.
  */
 class Predicate {
-private:
+public:
     pimpl<PredicateImpl> m_pImpl;
-    std::shared_ptr<InstanceInfoImpl> m_parent;
+    std::shared_ptr<VocabularyInfoImpl> m_parent;
 
-    Predicate(std::shared_ptr<InstanceInfoImpl> parent, PredicateImpl&& impl);
+    Predicate(std::shared_ptr<VocabularyInfoImpl> parent, PredicateImpl&& impl);
 
-    friend class InstanceInfo;
+    friend class VocabularyInfo;
 
 public:
     Predicate() = delete;
@@ -140,10 +141,23 @@ public:
      * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
      */
     State convert_state(const Index_Vec& atom_idxs) const;
-    /**
-     * Getters.
-     */
-    std::vector<Predicate> get_predicates() const;
+};
+
+/**
+ * VocabularyInfoImpl stores information related to the predicates in the planning domain.
+ */
+class VocabularyInfo {
+private:
+    pimpl<std::shared_ptr<VocabularyInfoImpl>> m_pImpl;
+
+    friend class SyntacticElementFactory;
+
+public:
+    VocabularyInfo();
+    VocabularyInfo(const VocabularyInfo& other);
+    ~VocabularyInfo();
+
+    Predicate add_predicate(const std::string &predicate_name, unsigned arity);
 };
 
 
@@ -277,7 +291,7 @@ private:
     pimpl<SyntacticElementFactoryImpl> m_pImpl;
 
 public:
-    SyntacticElementFactory();
+    SyntacticElementFactory(const VocabularyInfo& vocabulary_info);
     SyntacticElementFactory(const SyntacticElementFactory& other) = delete;
     ~SyntacticElementFactory();
 

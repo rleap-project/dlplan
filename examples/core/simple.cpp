@@ -7,6 +7,13 @@
  * The simplest example to illustrate the construction and evaluation of elements.
  */
 int main() {
+    // 0. Initialize the vocabulary
+    dlp::core::VocabularyInfo vocabulary;
+    dlp::core::Predicate p0 = vocabulary.add_predicate("on", 2);
+    dlp::core::Predicate p1 = vocabulary.add_predicate("onTable", 1);
+    dlp::core::Predicate p2 = vocabulary.add_predicate("holding", 1);
+    dlp::core::Predicate p3 = vocabulary.add_predicate("on_g", 2);
+    std::vector<dlp::core::Predicate> predicates({p0, p1, p2, p3});
     // 1. Initialize planning instance
     dlp::core::InstanceInfo instance;
     // Add state atoms
@@ -20,7 +27,7 @@ int main() {
     dlp::core::Atom a6 = instance.add_static_atom("on_g", {"A", "B"});
 
     // 2. Initialize factory.
-    dlp::core::SyntacticElementFactory factory;
+    dlp::core::SyntacticElementFactory factory(vocabulary);
 
     // 3. Construct and evaluate elements.
     // Parse text to Numerical

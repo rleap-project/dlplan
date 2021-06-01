@@ -7,6 +7,7 @@
 
 #include "element_factory.h"
 #include "instance_info.h"
+#include "vocabulary_info.h"
 #include "atom.h"
 #include "state.h"
 #include "predicate.h"
@@ -49,16 +50,19 @@ Atom InstanceInfo::add_static_atom(const std::string &predicate_name, const Name
     return Atom(*m_pImpl, m_pImpl->get()->add_static_atom(predicate_name, object_names));
 }
 
-std::vector<Predicate> InstanceInfo::get_predicates() const {
-    std::vector<Predicate> predicates;
-    for (PredicateImpl predicate_impl : m_pImpl->get()->get_predicates()) {
-        predicates.push_back(Predicate(*m_pImpl, std::move(predicate_impl)));
-    }
-    return predicates;
+
+VocabularyInfo::VocabularyInfo() : m_pImpl(std::make_shared<VocabularyInfoImpl>(VocabularyInfoImpl())) { }
+
+VocabularyInfo::VocabularyInfo(const VocabularyInfo& other) : m_pImpl(*other.m_pImpl) { }
+
+VocabularyInfo::~VocabularyInfo() { }
+
+Predicate VocabularyInfo::add_predicate(const std::string &predicate_name, unsigned arity) {
+    return Predicate(*m_pImpl, m_pImpl->get()->add_predicate(predicate_name, arity));
 }
 
 
-Predicate::Predicate(std::shared_ptr<InstanceInfoImpl> parent, PredicateImpl&& impl) : m_parent(parent), m_pImpl(impl) { }
+Predicate::Predicate(std::shared_ptr<VocabularyInfoImpl> parent, PredicateImpl&& impl) : m_parent(parent), m_pImpl(impl) { }
 
 Predicate::Predicate(const Predicate& other) : m_pImpl(*other.m_pImpl) { }
 
@@ -172,7 +176,8 @@ std::string Boolean::compute_repr() const {
 }
 
 
-SyntacticElementFactory::SyntacticElementFactory() { }
+SyntacticElementFactory::SyntacticElementFactory(const VocabularyInfo& vocabulary_info)
+    : m_pImpl(SyntacticElementFactoryImpl(*vocabulary_info.m_pImpl)) { }
 
 SyntacticElementFactory::~SyntacticElementFactory() { }
 

@@ -26,7 +26,9 @@ static unsigned insert_or_retrieve(const std::string& name, std::unordered_map<s
 AtomImpl InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names) {
     bool predicate_exists = exists(predicate_name, m_predicate_name_to_predicate_idx);
     if (!predicate_exists) {
-        m_predicates.push_back(PredicateImpl(predicate_name, m_predicates.size(), object_names.size()));
+        unsigned predicate_idx = m_predicates.size();
+        m_predicates.push_back(PredicateImpl(predicate_name, predicate_idx, object_names.size()));
+        m_predicate_name_to_predicate_idx.insert(std::make_pair(predicate_name, predicate_idx));
     }
     int atom_idx = m_atoms.size();
     std::stringstream ss;
@@ -95,28 +97,12 @@ StateImpl InstanceInfoImpl::convert_state(std::shared_ptr<InstanceInfoImpl> info
     return StateImpl(info, std::move(atom_indices));
 }
 
-bool InstanceInfoImpl::exists_predicate_name(const std::string& name) const {
-    return m_predicate_name_to_predicate_idx.find(name) != m_predicate_name_to_predicate_idx.end();
-}
-
-unsigned InstanceInfoImpl::get_predicate_idx(const std::string& name) const {
-    return m_predicate_name_to_predicate_idx.at(name);
-}
-
 const AtomImpl& InstanceInfoImpl::get_atom(unsigned atom_idx) const {
     return m_atoms[atom_idx];
 }
 
 const std::vector<AtomImpl>& InstanceInfoImpl::get_atoms() const {
     return m_atoms;
-}
-
-const PredicateImpl& InstanceInfoImpl::get_predicate(unsigned predicate_idx) const {
-    return m_predicates[predicate_idx];
-}
-
-const std::vector<PredicateImpl>& InstanceInfoImpl::get_predicates() const {
-    return m_predicates;
 }
 
 }

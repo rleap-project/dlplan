@@ -10,27 +10,28 @@
 namespace dlp {
 namespace core {
 
-SyntacticElementFactoryImpl::SyntacticElementFactoryImpl() {
+SyntacticElementFactoryImpl::SyntacticElementFactoryImpl(std::shared_ptr<VocabularyInfoImpl> vocabulary_info)
+    : m_vocabulary_info(vocabulary_info) {
 }
 
 element::Concept_Ptr SyntacticElementFactoryImpl::parse_concept_element(const std::string &description) {
     parser::Expression_Ptr expression = parser::Parser().parse(description);
-    return expression->parse_concept_element(m_cache);
+    return expression->parse_concept_element(*m_vocabulary_info, m_cache);
 }
 
 element::Role_Ptr SyntacticElementFactoryImpl::parse_role_element(const std::string &description) {
     parser::Expression_Ptr expression = parser::Parser().parse(description);
-    return expression->parse_role_element(m_cache);
+    return expression->parse_role_element(*m_vocabulary_info, m_cache);
 }
 
 element::Numerical_Ptr SyntacticElementFactoryImpl::parse_numerical_element(const std::string &description) {
     parser::Expression_Ptr expression = parser::Parser().parse(description);
-    return expression->parse_numerical_element(m_cache);
+    return expression->parse_numerical_element(*m_vocabulary_info, m_cache);
 }
 
 element::Boolean_Ptr SyntacticElementFactoryImpl::parse_boolean_element(const std::string &description) {
     parser::Expression_Ptr expression = parser::Parser().parse(description);
-    return expression->parse_boolean_element(m_cache);
+    return expression->parse_boolean_element(*m_vocabulary_info, m_cache);
 }
 
 element::Boolean_Ptr SyntacticElementFactoryImpl::make_empty_boolean_element(element::Concept_Ptr concept) {
@@ -45,7 +46,7 @@ element::Concept_Ptr SyntacticElementFactoryImpl::make_all_concept_element(eleme
 }
 
 element::Concept_Ptr SyntacticElementFactoryImpl::make_and_concept_element(element::Concept_Ptr element1, element::Concept_Ptr element2) {
-    element::Concept_Ptr value = std::make_shared<element::AndConcept>(element1, element2);
+    element::Concept_Ptr value = std::make_shared<element::AndConcept>(*m_vocabulary_info, element1, element2);
     return m_cache.concept_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
@@ -70,7 +71,7 @@ element::Concept_Ptr SyntacticElementFactoryImpl::make_or_concept_element(elemen
 }
 
 element::Concept_Ptr SyntacticElementFactoryImpl::make_primitive_concept_element(const std::string& name, unsigned pos) {
-    element::Concept_Ptr value = std::make_shared<element::PrimitiveConcept>(name, pos);
+    element::Concept_Ptr value = std::make_shared<element::PrimitiveConcept>(*m_vocabulary_info, name, pos);
     return m_cache.concept_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
@@ -91,12 +92,12 @@ element::Numerical_Ptr SyntacticElementFactoryImpl::make_concept_distance_elemen
 }
 
 element::Numerical_Ptr SyntacticElementFactoryImpl::make_count_element(element::Concept_Ptr element) {
-    element::Numerical_Ptr value = std::make_shared<element::CountNumerical<element::Concept_Ptr>>(element);
+    element::Numerical_Ptr value = std::make_shared<element::CountNumerical<element::Concept_Ptr>>(*m_vocabulary_info, element);
     return m_cache.numerical_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
 element::Numerical_Ptr SyntacticElementFactoryImpl::make_count_element(element::Role_Ptr element) {
-    element::Numerical_Ptr value = std::make_shared<element::CountNumerical<element::Role_Ptr>>(element);
+    element::Numerical_Ptr value = std::make_shared<element::CountNumerical<element::Role_Ptr>>(*m_vocabulary_info, element);
     return m_cache.numerical_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
@@ -141,7 +142,7 @@ element::Role_Ptr SyntacticElementFactoryImpl::make_or_role_element(element::Rol
 }
 
 element::Role_Ptr SyntacticElementFactoryImpl::make_primitive_role_element(const std::string& name, unsigned pos_1, unsigned pos_2) {
-    element::Role_Ptr value = std::make_shared<element::PrimitiveRole>(name, pos_1, pos_2);
+    element::Role_Ptr value = std::make_shared<element::PrimitiveRole>(*m_vocabulary_info, name, pos_1, pos_2);
     return m_cache.role_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 

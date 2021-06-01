@@ -10,7 +10,7 @@ namespace element {
 
 class Concept : public Element<ConceptDenotation> {
 public:
-    Concept(const std::string& name) : Element<ConceptDenotation>(name) { }
+    Concept(const VocabularyInfoImpl& vocabulary, const std::string& name) : Element<ConceptDenotation>(vocabulary, name) { }
 
     size_t size() const {
         return m_result.size();

@@ -28,6 +28,14 @@ static void print_elements(const std::vector<std::vector<T>>& elements_by_comple
  * An example that illustrates using the core component in the generator component.
  */
 int main() {
+    // 0. Initialize the vocabulary
+    dlp::core::VocabularyInfo vocabulary;
+    dlp::core::Predicate p0 = vocabulary.add_predicate("on", 2);
+    dlp::core::Predicate p1 = vocabulary.add_predicate("onTable", 1);
+    dlp::core::Predicate p2 = vocabulary.add_predicate("holding", 1);
+    dlp::core::Predicate p3 = vocabulary.add_predicate("on_g", 2);
+    std::vector<dlp::core::Predicate> predicates({p0, p1, p2, p3});
+
     // 1. Initialize planning instance
     dlp::core::InstanceInfo instance;
     // Add state atoms
@@ -41,7 +49,7 @@ int main() {
     dlp::core::Atom a6 = instance.add_static_atom("on_g", {"A", "B"});
 
     // 2. Initialize factory.
-    dlp::core::SyntacticElementFactory factory;
+    dlp::core::SyntacticElementFactory factory(std::move(vocabulary));
 
     // 3. Initialize containers for storage and uniqueness checking.
     // Equivalence checking using repr.
@@ -57,7 +65,6 @@ int main() {
     std::vector<std::vector<dlp::core::Boolean>> boolean_elements_by_complexity(complexity_bound);
 
     // 4. Construct base
-    std::vector<dlp::core::Predicate> predicates = instance.get_predicates();
     for (const auto& predicate: predicates) {
         // 4.1. PrimitiveConcept
         for (unsigned pos = 0; pos < predicate.get_arity(); ++pos) {
