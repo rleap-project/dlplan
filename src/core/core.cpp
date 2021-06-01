@@ -18,7 +18,8 @@
 namespace dlp {
 namespace core {
 
-InstanceInfo::InstanceInfo() : m_pImpl(std::make_shared<InstanceInfoImpl>(InstanceInfoImpl())) { }
+InstanceInfo::InstanceInfo(const VocabularyInfo& vocabulary_info)
+    : m_parent(*vocabulary_info.m_pImpl), m_pImpl(std::make_shared<InstanceInfoImpl>(InstanceInfoImpl(*vocabulary_info.m_pImpl))) { }
 
 InstanceInfo::~InstanceInfo() { }
 
@@ -94,7 +95,7 @@ const std::string& Atom::get_atom_name() const {
 
 State::State(std::shared_ptr<InstanceInfoImpl> parent, StateImpl&& impl) : m_parent(parent), m_pImpl(std::move(impl)) { }
 
-State::State(const State& other) : m_parent(other.m_parent), m_pImpl(*other.m_pImpl) {}
+State::State(const State& other) : m_pImpl(*other.m_pImpl) {}
 
 State::~State() { }
 

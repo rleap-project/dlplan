@@ -106,16 +106,36 @@ public:
 
 
 /**
+ * VocabularyInfoImpl stores information related to the predicates in the planning domain.
+ */
+class VocabularyInfo {
+private:
+    pimpl<std::shared_ptr<VocabularyInfoImpl>> m_pImpl;
+
+    friend class InstanceInfo;
+    friend class SyntacticElementFactory;
+
+public:
+    VocabularyInfo();
+    VocabularyInfo(const VocabularyInfo& other);
+    ~VocabularyInfo();
+
+    Predicate add_predicate(const std::string &predicate_name, unsigned arity);
+};
+
+
+/**
  * InstanceInfo stores information related to the planning instance.
  */
 class InstanceInfo {
 private:
     pimpl<std::shared_ptr<InstanceInfoImpl>> m_pImpl;
+    std::shared_ptr<VocabularyInfoImpl> m_parent;
 
     friend class SyntacticElementFactory;
 
 public:
-    InstanceInfo();
+    InstanceInfo(const VocabularyInfo& vocabulary_info);
     InstanceInfo(const InstanceInfo& other) = delete;
     ~InstanceInfo();
 
@@ -141,23 +161,6 @@ public:
      * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
      */
     State convert_state(const Index_Vec& atom_idxs) const;
-};
-
-/**
- * VocabularyInfoImpl stores information related to the predicates in the planning domain.
- */
-class VocabularyInfo {
-private:
-    pimpl<std::shared_ptr<VocabularyInfoImpl>> m_pImpl;
-
-    friend class SyntacticElementFactory;
-
-public:
-    VocabularyInfo();
-    VocabularyInfo(const VocabularyInfo& other);
-    ~VocabularyInfo();
-
-    Predicate add_predicate(const std::string &predicate_name, unsigned arity);
 };
 
 

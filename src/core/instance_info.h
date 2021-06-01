@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "vocabulary_info.h"
 #include "predicate.h"
 #include "atom.h"
 #include "types.h"
@@ -23,6 +24,8 @@ class StateImpl;
  */
 class InstanceInfoImpl {
 private:
+    std::shared_ptr<VocabularyInfoImpl> m_vocabulary_info;
+
     /**
      * Mappings between names and indices of predicates and objects.
      */
@@ -45,7 +48,7 @@ private:
     std::vector<PredicateImpl> m_predicates;
 
 public:
-    InstanceInfoImpl() = default;
+    InstanceInfoImpl(std::shared_ptr<VocabularyInfoImpl> vocabulary_info);
     ~InstanceInfoImpl() = default;
 
     /**

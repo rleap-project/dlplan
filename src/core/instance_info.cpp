@@ -23,7 +23,15 @@ static unsigned insert_or_retrieve(const std::string& name, std::unordered_map<s
     return f->second;
 }
 
+InstanceInfoImpl::InstanceInfoImpl(std::shared_ptr<VocabularyInfoImpl> vocabulary_info)
+    : m_vocabulary_info(vocabulary_info) {}
+
 AtomImpl InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names) {
+    if (!m_vocabulary_info->exists_predicate_name(predicate_name)) {
+        throw std::runtime_error("InstanceInfoImpl::add_atom - name of predicate missing in vocabulary ("s + predicate_name + ")");
+    } else if (m_vocabulary_info->get_predicate(m_vocabulary_info->get_predicate_idx(predicate_name)).m_arity != object_names.size()) {
+        throw std::runtime_error("InstanceInfoImpl::add_atom - arity of predicate in vocabulary does not match with atom ("s + std::to_string(m_vocabulary_info->get_predicate(m_vocabulary_info->get_predicate_idx(predicate_name)).m_arity) + " != " + std::to_string(object_names.size()));
+    }
     bool predicate_exists = exists(predicate_name, m_predicate_name_to_predicate_idx);
     if (!predicate_exists) {
         unsigned predicate_idx = m_predicates.size();

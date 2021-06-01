@@ -11,7 +11,7 @@ TEST(DLPTests, InstanceCreation) {
     dlp::core::Predicate p2 = vocabulary.add_predicate("holding", 1);
     dlp::core::Predicate p3 = vocabulary.add_predicate("on_g", 2);
     std::vector<dlp::core::Predicate> predicates({p0, p1, p2, p3});
-    dlp::core::InstanceInfo instance;
+    dlp::core::InstanceInfo instance(vocabulary);
     // Add state atoms
     dlp::core::Atom a0 = instance.add_atom("on", {"A", "B"});
     dlp::core::Atom a1 = instance.add_atom("on", {"B", "A"});

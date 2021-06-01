@@ -37,7 +37,7 @@ int main() {
     std::vector<dlp::core::Predicate> predicates({p0, p1, p2, p3});
 
     // 1. Initialize planning instance
-    dlp::core::InstanceInfo instance;
+    dlp::core::InstanceInfo instance(vocabulary);
     // Add state atoms
     dlp::core::Atom a0 = instance.add_atom("on", {"A", "B"});
     dlp::core::Atom a1 = instance.add_atom("on", {"B", "A"});
@@ -49,7 +49,7 @@ int main() {
     dlp::core::Atom a6 = instance.add_static_atom("on_g", {"A", "B"});
 
     // 2. Initialize factory.
-    dlp::core::SyntacticElementFactory factory(std::move(vocabulary));
+    dlp::core::SyntacticElementFactory factory(vocabulary);
 
     // 3. Initialize containers for storage and uniqueness checking.
     // Equivalence checking using repr.
