@@ -14,7 +14,7 @@ enable_testing()
 
 add_executable(
     ${BINARY_NAME}
-    core/core.cpp
+    core.cpp
 )
 
 target_link_libraries(${BINARY_NAME} core gtest_main)
