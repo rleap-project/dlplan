@@ -31,7 +31,7 @@ public:
     AndConcept(const VocabularyInfoImpl& vocabulary, Concept_Ptr concept_1, Concept_Ptr concept_2)
     : Concept(vocabulary, "c_and") {
         if (!(concept_1 && concept_2)) {
-            throw std::runtime_error("AndConcept::make_concept_element - at least one child is a nullptr.");
+            throw std::runtime_error("AndConcept::AndConcept - at least one child is a nullptr.");
         }
         // Element is commutative. Hence sort lexicographically.
         if (concept_1->compute_repr() < concept_2->compute_repr()) {

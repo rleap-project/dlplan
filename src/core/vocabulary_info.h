@@ -18,7 +18,7 @@ enum EXPRESSION_TYPE {
     C_ALL,
     C_AND,
     C_BOT,
-    C_DIFFERENCE,
+    C_DIFF,
     C_NOT,
     C_ONE_OF,
     C_OR,
@@ -28,7 +28,7 @@ enum EXPRESSION_TYPE {
     // roles
     R_AND,
     R_COMPOSE,
-    R_DIFFERENCE,
+    R_DIFF,
     R_IDENTITY,
     R_INVERSE,
     R_NOT,

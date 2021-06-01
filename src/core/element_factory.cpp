@@ -4,6 +4,7 @@
 #include "elements/concepts/all.h"
 #include "elements/concepts/bot.h"
 #include "elements/concepts/and.h"
+#include "elements/concepts/diff.h"
 #include "elements/concepts/or.h"
 #include "elements/concepts/primitive.h"
 #include "elements/concepts/some.h"
@@ -62,7 +63,8 @@ element::Concept_Ptr SyntacticElementFactoryImpl::make_bot_concept() {
 }
 
 element::Concept_Ptr SyntacticElementFactoryImpl::make_diff_concept(element::Concept_Ptr concept_left, element::Concept_Ptr concept_right) {
-
+    element::Concept_Ptr value = std::make_shared<element::DiffConcept>(*m_vocabulary_info, concept_left, concept_right);
+    return m_cache.concept_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
 element::Concept_Ptr SyntacticElementFactoryImpl::make_not_concept(element::Concept_Ptr concept) {
