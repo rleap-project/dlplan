@@ -24,7 +24,7 @@ TEST(DLPTests, InstanceCreation) {
 
     dlp::core::SyntacticElementFactory factory(vocabulary);
 
-    dlp::core::Numerical numerical = factory.parse_numerical_element("n_count(c_and(on_g(0),on(0)))");
+    dlp::core::Numerical numerical = factory.parse_numerical("n_count(c_and(on_g(0),on(0)))");
     EXPECT_EQ(numerical.compute_complexity(), 4);
 
     dlp::core::State state = instance.convert_state({a0, a1});
@@ -36,6 +36,6 @@ TEST(DLPTests, CreateSConcept) {
     dlp::core::Predicate p0 = vocabulary.add_predicate("clear", 2);
     dlp::core::SyntacticElementFactory factory(vocabulary);
 
-    auto numerical = factory.parse_numerical_element("n_count(clear)");
+    auto numerical = factory.parse_numerical("n_count(clear)");
     EXPECT_EQ(numerical.compute_complexity(), 2);
 }

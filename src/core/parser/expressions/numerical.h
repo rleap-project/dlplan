@@ -24,7 +24,7 @@ public:
     /**
      * Construct or retrieve the Numerical.
      */
-    virtual element::Numerical_Ptr parse_numerical_element(const VocabularyInfoImpl& vocabulary, ElementCache &cache) const {
+    virtual element::Numerical_Ptr parse_numerical(const VocabularyInfoImpl& vocabulary, ElementCache &cache) const {
         element::Numerical_Ptr value = parse_numerical_element_impl(vocabulary, cache);
         return cache.numerical_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
     }

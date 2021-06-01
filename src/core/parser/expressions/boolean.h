@@ -24,7 +24,7 @@ public:
     /**
      * Construct or retrieve the Boolean.
      */
-    virtual element::Boolean_Ptr parse_boolean_element(const VocabularyInfoImpl& vocabulary, ElementCache &cache) const {
+    virtual element::Boolean_Ptr parse_boolean(const VocabularyInfoImpl& vocabulary, ElementCache &cache) const {
         element::Boolean_Ptr value = parse_boolean_element_impl(vocabulary, cache);
         return cache.boolean_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
     }

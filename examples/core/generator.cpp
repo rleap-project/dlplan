@@ -68,7 +68,7 @@ int main() {
     for (const auto& predicate: predicates) {
         // 4.1. PrimitiveConcept
         for (unsigned pos = 0; pos < predicate.get_arity(); ++pos) {
-            dlp::core::Concept concept_element = factory.make_primitive_concept_element(predicate.get_name(), pos);
+            dlp::core::Concept concept_element = factory.make_primitive_concept(predicate.get_name(), pos);
             bool unique = concept_element_cache.insert(concept_element.compute_repr()).second;
             if (unique) concept_elements_by_complexity[0].emplace_back(concept_element);
         }
@@ -76,7 +76,7 @@ int main() {
         for (unsigned pos1 = 0; pos1 < predicate.get_arity(); ++pos1) {
             for (unsigned pos2 = 0; pos2 < predicate.get_arity(); ++pos2) {
                 // TODO(dominik): add roles
-                dlp::core::Role role_element = factory.make_primitive_role_element(predicate.get_name(), pos1, pos2);
+                dlp::core::Role role_element = factory.make_primitive_role(predicate.get_name(), pos1, pos2);
                 bool unique = role_element_cache.insert(role_element.compute_repr()).second;
                 if (unique) role_elements_by_complexity[0].emplace_back(role_element);
 
@@ -91,7 +91,7 @@ int main() {
             for (const auto& c1 : concept_elements_by_complexity[i]) {
                 for (const auto& c2 : concept_elements_by_complexity[iteration]) {
                     if (c1.compute_repr() == c2.compute_repr()) continue;
-                    dlp::core::Concept concept_element = factory.make_and_concept_element(c1, c2);
+                    dlp::core::Concept concept_element = factory.make_and_concept(c1, c2);
                     bool unique = concept_element_cache.insert(concept_element.compute_repr()).second;
                     if (unique && concept_element.compute_complexity() < complexity_bound) {
                         concept_elements_by_complexity[concept_element.compute_complexity()].emplace_back(concept_element);
