@@ -37,10 +37,14 @@ int main() {
     dlp::core::Concept concept = factory.parse_concept("c_and(on(0),on_g(0))");
 
     // 4. Evaluate for example state: block A on B
-    dlp::core::State state = instance.convert_state({0, 3});
+    dlp::core::State state = instance.convert_state({a0, a3});
+
     int value = numerical.evaluate(state);
+    std::cout << "repr: " << numerical.compute_repr() << std::endl;
     std::cout << "value: " << value << std::endl;
-    dlp::core::State state2 = instance.convert_state({a0, a3});
-    value = numerical.evaluate(state2);
+
+    dlp::core::Numerical numerical2 = factory.parse_numerical("n_count(c_all(on(0,1),on_g(1)))");
+    value = numerical2.evaluate(state);
+    std::cout << "repr: " << numerical2.compute_repr() << std::endl;
     std::cout << "value: " << value << std::endl;
 };

@@ -1,11 +1,6 @@
 #ifndef DLP_SRC_CORE_PARSER_UTILS_H_
 #define DLP_SRC_CORE_PARSER_UTILS_H_
 
-#include <string>
-#include <string.h>
-#include <algorithm>
-#include <stdexcept>
-
 using namespace std::string_literals;
 
 
@@ -19,6 +14,7 @@ int try_parse_number(const std::string& name) {
     }
     return atoi(name.c_str());
 }
+
 
 bool is_number(const std::string& name) {
     return std::all_of(name.begin(), name.end(), [](char c){ return isdigit(c); });

@@ -3,8 +3,11 @@
 #include <algorithm>
 #include <iostream>
 
-#include "expressions/concepts/primitive.h"
+#include "expressions/concepts/all.h"
 #include "expressions/concepts/and.h"
+#include "expressions/concepts/or.h"
+#include "expressions/concepts/primitive.h"
+#include "expressions/concepts/some.h"
 #include "expressions/roles/primitive.h"
 #include "expressions/numericals/count.h"
 
@@ -35,8 +38,17 @@ Expression_Ptr AST_Factory::make_ast(const std::string &name, std::vector<Expres
         // case 2: all childrens are inner nodes
         EXPRESSION_TYPE expression_type = name_to_expression_type(name);
         switch (expression_type) {
+            case C_ALL: {
+                return std::make_unique<AllConcept>(AllConcept(name, std::move(children)));
+            }
             case C_AND: {
                 return std::make_unique<AndConcept>(AndConcept(name, std::move(children)));
+            }
+            case C_OR: {
+                return std::make_unique<OrConcept>(OrConcept(name, std::move(children)));
+            }
+            case C_SOME: {
+                return std::make_unique<SomeConcept>(SomeConcept(name, std::move(children)));
             }
             case N_COUNT: {
                 return std::make_unique<CountNumerical>(CountNumerical(name, std::move(children)));

@@ -7,7 +7,6 @@
 namespace dlp {
 namespace core {
 namespace parser {
-
 class Expression;
 
 enum TYPE {

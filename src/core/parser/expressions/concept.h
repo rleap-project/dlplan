@@ -14,7 +14,7 @@ protected:
     /**
      * Construct the Concept.
      */
-    virtual element::Concept_Ptr parse_concept_element_impl(const VocabularyInfoImpl& vocabulary, ElementCache &cache) const = 0;
+    virtual element::Concept_Ptr parse_concept_impl(const VocabularyInfoImpl& vocabulary, ElementCache &cache) const = 0;
 
 public:
     Concept(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
@@ -24,7 +24,7 @@ public:
      * Construct or retrieve the Concept.
      */
     virtual element::Concept_Ptr parse_concept(const VocabularyInfoImpl& vocabulary, ElementCache &cache) const {
-        element::Concept_Ptr value = parse_concept_element_impl(vocabulary, cache);
+        element::Concept_Ptr value = parse_concept_impl(vocabulary, cache);
         return cache.concept_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
     }
 };

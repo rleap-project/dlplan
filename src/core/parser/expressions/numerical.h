@@ -15,7 +15,7 @@ protected:
     /**
      * Construct the Numerical.
      */
-    virtual element::Numerical_Ptr parse_numerical_element_impl(const VocabularyInfoImpl& vocabulary, ElementCache &cache) const = 0;
+    virtual element::Numerical_Ptr parse_numerical_impl(const VocabularyInfoImpl& vocabulary, ElementCache &cache) const = 0;
 
 public:
     Numerical(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
@@ -25,7 +25,7 @@ public:
      * Construct or retrieve the Numerical.
      */
     virtual element::Numerical_Ptr parse_numerical(const VocabularyInfoImpl& vocabulary, ElementCache &cache) const {
-        element::Numerical_Ptr value = parse_numerical_element_impl(vocabulary, cache);
+        element::Numerical_Ptr value = parse_numerical_impl(vocabulary, cache);
         return cache.numerical_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
     }
 };

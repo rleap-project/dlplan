@@ -1,9 +1,12 @@
 #include "element_factory.h"
 #include "parser/parser.h"
 #include "parser/expressions/expression.h"
-#include "elements/numericals/count.h"
-#include "elements/concepts/primitive.h"
+#include "elements/concepts/all.h"
 #include "elements/concepts/and.h"
+#include "elements/concepts/or.h"
+#include "elements/concepts/primitive.h"
+#include "elements/concepts/some.h"
+#include "elements/numericals/count.h"
 #include "elements/roles/primitive.h"
 
 
@@ -42,11 +45,12 @@ element::Boolean_Ptr SyntacticElementFactoryImpl::make_empty_boolean(element::Ro
 }
 
 element::Concept_Ptr SyntacticElementFactoryImpl::make_all_concept(element::Role_Ptr role, element::Concept_Ptr concept) {
-
+    element::Concept_Ptr value = std::make_shared<element::AllConcept>(*m_vocabulary_info, role, concept);
+    return m_cache.concept_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
-element::Concept_Ptr SyntacticElementFactoryImpl::make_and_concept(element::Concept_Ptr element1, element::Concept_Ptr element2) {
-    element::Concept_Ptr value = std::make_shared<element::AndConcept>(*m_vocabulary_info, element1, element2);
+element::Concept_Ptr SyntacticElementFactoryImpl::make_and_concept(element::Concept_Ptr concept_1, element::Concept_Ptr concept_2) {
+    element::Concept_Ptr value = std::make_shared<element::AndConcept>(*m_vocabulary_info, concept_1, concept_2);
     return m_cache.concept_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
@@ -66,8 +70,9 @@ element::Concept_Ptr SyntacticElementFactoryImpl::make_one_of_concept(unsigned p
 
 }
 
-element::Concept_Ptr SyntacticElementFactoryImpl::make_or_concept(element::Concept_Ptr concept_left, element::Concept_Ptr concept_right) {
-
+element::Concept_Ptr SyntacticElementFactoryImpl::make_or_concept(element::Concept_Ptr concept_1, element::Concept_Ptr concept_2) {
+    element::Concept_Ptr value = std::make_shared<element::OrConcept>(*m_vocabulary_info, concept_1, concept_2);
+    return m_cache.concept_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
 element::Concept_Ptr SyntacticElementFactoryImpl::make_primitive_concept(const std::string& name, unsigned pos) {
@@ -76,7 +81,8 @@ element::Concept_Ptr SyntacticElementFactoryImpl::make_primitive_concept(const s
 }
 
 element::Concept_Ptr SyntacticElementFactoryImpl::make_some_concept(element::Role_Ptr role, element::Concept_Ptr concept) {
-
+    element::Concept_Ptr value = std::make_shared<element::SomeConcept>(*m_vocabulary_info, role, concept);
+    return m_cache.concept_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
 element::Concept_Ptr SyntacticElementFactoryImpl::make_subset_concept(element::Role_Ptr role_left, element::Role_Ptr role_right) {
