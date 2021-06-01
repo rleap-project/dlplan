@@ -7,6 +7,7 @@
 #include "expressions/concepts/and.h"
 #include "expressions/concepts/bot.h"
 #include "expressions/concepts/diff.h"
+#include "expressions/concepts/not.h"
 #include "expressions/concepts/or.h"
 #include "expressions/concepts/primitive.h"
 #include "expressions/concepts/some.h"
@@ -35,6 +36,9 @@ Expression_Ptr AST_Factory::make_ast(const VocabularyInfoImpl& vocabulary_info, 
             }
             case C_DIFF: {
                 return std::make_unique<DiffConcept>(DiffConcept(name, std::move(children)));
+            }
+            case C_NOT: {
+                return std::make_unique<NotConcept>(NotConcept(name, std::move(children)));
             }
             case C_OR: {
                 return std::make_unique<OrConcept>(OrConcept(name, std::move(children)));

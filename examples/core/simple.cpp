@@ -43,7 +43,7 @@ int main() {
     std::cout << "repr: " << numerical.compute_repr() << std::endl;
     std::cout << "value: " << value << std::endl;
 
-    dlp::core::Numerical numerical2 = factory.parse_numerical("n_count(c_diff(on(0),c_bot))");
+    dlp::core::Numerical numerical2 = factory.parse_numerical("n_count(c_not(c_top))");
     value = numerical2.evaluate(state);
     std::cout << "repr: " << numerical2.compute_repr() << std::endl;
     std::cout << "value: " << value << std::endl;
