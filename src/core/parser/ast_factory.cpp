@@ -14,7 +14,9 @@
 #include "expressions/concepts/some.h"
 #include "expressions/concepts/subset.h"
 #include "expressions/concepts/top.h"
+#include "expressions/numericals/concept_distance.h"
 #include "expressions/numericals/count.h"
+#include "expressions/numericals/role_distance.h"
 #include "expressions/roles/and.h"
 #include "expressions/roles/compose.h"
 #include "expressions/roles/diff.h"
@@ -68,8 +70,14 @@ Expression_Ptr AST_Factory::make_ast(const VocabularyInfoImpl& vocabulary_info, 
             case C_TOP: {
                 return std::make_unique<TopConcept>(TopConcept(name, std::move(children)));
             }
+            case N_CONCEPT_DISTANCE: {
+                return std::make_unique<ConceptDistanceNumerical>(ConceptDistanceNumerical(name, std::move(children)));
+            }
             case N_COUNT: {
                 return std::make_unique<CountNumerical>(CountNumerical(name, std::move(children)));
+            }
+            case N_ROLE_DISTANCE: {
+                return std::make_unique<RoleDistanceNumerical>(RoleDistanceNumerical(name, std::move(children)));
             }
             case R_AND: {
                 return std::make_unique<AndRole>(AndRole(name, std::move(children)));

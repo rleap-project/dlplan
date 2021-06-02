@@ -15,13 +15,13 @@ protected:
             throw std::runtime_error("CountNumerical::parse_numerical_impl - number of children ("s + std::to_string(m_children.size()) + " != 1).");
         }
         // 1. Parse children
-        element::Concept_Ptr concept_element = m_children[0]->parse_concept(vocabulary, cache);
-        if (concept_element) {
-            return std::make_shared<element::CountNumerical<element::Concept_Ptr>>(vocabulary, concept_element);
+        element::Concept_Ptr concept = m_children[0]->parse_concept(vocabulary, cache);
+        if (concept) {
+            return std::make_shared<element::CountNumerical<element::Concept_Ptr>>(vocabulary, concept);
         }
-        element::Role_Ptr role_element = m_children[0]->parse_role(vocabulary, cache);
-        if (role_element) {
-            return std::make_shared<element::CountNumerical<element::Role_Ptr>>(vocabulary, role_element);
+        element::Role_Ptr role = m_children[0]->parse_role(vocabulary, cache);
+        if (role) {
+            return std::make_shared<element::CountNumerical<element::Role_Ptr>>(vocabulary, role);
         }
         // 2. Construct element
         throw std::runtime_error("CountNumerical::parse_numerical_impl - unable to construct children elements.");

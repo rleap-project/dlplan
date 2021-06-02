@@ -13,7 +13,9 @@
 #include "elements/concepts/some.h"
 #include "elements/concepts/subset.h"
 #include "elements/concepts/top.h"
+#include "elements/numericals/concept_distance.h"
 #include "elements/numericals/count.h"
+#include "elements/numericals/role_distance.h"
 #include "elements/roles/and.h"
 #include "elements/roles/compose.h"
 #include "elements/roles/diff.h"
@@ -121,7 +123,8 @@ element::Concept_Ptr SyntacticElementFactoryImpl::make_top_concept() {
 }
 
 element::Numerical_Ptr SyntacticElementFactoryImpl::make_concept_distance(element::Concept_Ptr concept_from, element::Role_Ptr role, element::Concept_Ptr concept_to) {
-
+    element::Numerical_Ptr value = std::make_shared<element::ConceptDistanceNumerical>(*m_vocabulary_info, concept_from, role, concept_to);
+    return m_cache.numerical_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
 element::Numerical_Ptr SyntacticElementFactoryImpl::make_count(element::Concept_Ptr element) {
@@ -135,7 +138,8 @@ element::Numerical_Ptr SyntacticElementFactoryImpl::make_count(element::Role_Ptr
 }
 
 element::Numerical_Ptr SyntacticElementFactoryImpl::make_role_distance(element::Role_Ptr role_from, element::Role_Ptr role, element::Role_Ptr role_to) {
-
+    element::Numerical_Ptr value = std::make_shared<element::RoleDistanceNumerical>(*m_vocabulary_info, role_from, role, role_to);
+    return m_cache.numerical_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
 element::Numerical_Ptr SyntacticElementFactoryImpl::make_sum_concept_distance(element::Concept_Ptr concept_from, element::Role_Ptr role, element::Concept_Ptr concept_to) {
