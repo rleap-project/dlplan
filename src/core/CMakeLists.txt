@@ -11,4 +11,5 @@ add_library(core
     parser/parser.cpp
     parser/tokenizer.cpp
     parser/ast_factory.cpp
+    elements/utils.cpp
 )

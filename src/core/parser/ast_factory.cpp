@@ -24,6 +24,8 @@
 #include "expressions/roles/primitive.h"
 #include "expressions/roles/restrict.h"
 #include "expressions/roles/top.h"
+#include "expressions/roles/transitive_closure.h"
+#include "expressions/roles/transitive_reflexive_closure.h"
 
 
 namespace dlp {
@@ -91,6 +93,12 @@ Expression_Ptr AST_Factory::make_ast(const VocabularyInfoImpl& vocabulary_info, 
             }
             case R_TOP: {
                 return std::make_unique<TopRole>(TopRole(name, std::move(children)));
+            }
+            case R_TRANSITIVE_CLOSURE: {
+                return std::make_unique<TransitiveClosureRole>(TransitiveClosureRole(name, std::move(children)));
+            }
+            case R_TRANSITIVE_REFLEXIVE_CLOSURE: {
+                return std::make_unique<TransitiveReflexiveClosureRole>(TransitiveReflexiveClosureRole(name, std::move(children)));
             }
         }
     }
