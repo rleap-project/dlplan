@@ -16,13 +16,13 @@ protected:
             throw std::runtime_error("ComposeRole::parse_role_impl - number of children ("s + std::to_string(m_children.size()) + " != 2).");
         }
         // 1. Parse children
-        element::Role_Ptr l = m_children[0]->parse_role(vocabulary, cache);
-        element::Role_Ptr r = m_children[1]->parse_role(vocabulary, cache);
-        if (!(l && r)) {
+        element::Role_Ptr role_left = m_children[0]->parse_role(vocabulary, cache);
+        element::Role_Ptr role_right = m_children[1]->parse_role(vocabulary, cache);
+        if (!(role_left && role_right)) {
             throw std::runtime_error("ComposeRole::parse_role_impl - children are not of type Role.");
         }
         // 2. Construct element
-        return std::make_shared<element::ComposeRole>(vocabulary, l, r);
+        return std::make_shared<element::ComposeRole>(vocabulary, role_left, role_right);
     }
 
 public:
