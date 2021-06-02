@@ -11,6 +11,7 @@
 #include "expressions/concepts/or.h"
 #include "expressions/concepts/primitive.h"
 #include "expressions/concepts/some.h"
+#include "expressions/concepts/subset.h"
 #include "expressions/concepts/top.h"
 #include "expressions/roles/primitive.h"
 #include "expressions/numericals/count.h"
@@ -45,6 +46,9 @@ Expression_Ptr AST_Factory::make_ast(const VocabularyInfoImpl& vocabulary_info, 
             }
             case C_SOME: {
                 return std::make_unique<SomeConcept>(SomeConcept(name, std::move(children)));
+            }
+            case C_SUBSET: {
+                return std::make_unique<SubsetConcept>(SubsetConcept(name, std::move(children)));
             }
             case C_TOP: {
                 return std::make_unique<TopConcept>(TopConcept(name, std::move(children)));

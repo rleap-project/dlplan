@@ -22,9 +22,9 @@ namespace core {
  */
 class SyntacticElementFactoryImpl {
 protected:
-    ElementCache m_cache;
-
     const std::shared_ptr<const VocabularyInfoImpl> m_vocabulary_info;
+
+    ElementCache m_cache;
 
 public:
     SyntacticElementFactoryImpl(const VocabularyInfoImpl& vocabulary_info);

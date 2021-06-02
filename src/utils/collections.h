@@ -7,19 +7,9 @@
 namespace dlp {
 namespace utils {
 
-template<class T>
-bool in_bounds(int index, const T &container) {
-    return index >= 0 && static_cast<size_t>(index) < container.size();
-}
-
-template<class T>
-bool in_bounds(long index, const T &container) {
-    return index >= 0 && static_cast<size_t>(index) < container.size();
-}
-
-template<class T>
-bool in_bounds(size_t index, const T &container) {
-    return index < container.size();
+template<typename T, class C>
+bool in_bounds(T index, const C &container) {
+    return index >= 0 && index < container.size();
 }
 
 }
