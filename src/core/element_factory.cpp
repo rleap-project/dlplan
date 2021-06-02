@@ -11,6 +11,7 @@
 #include "elements/concepts/some.h"
 #include "elements/concepts/top.h"
 #include "elements/numericals/count.h"
+#include "elements/roles/and.h"
 #include "elements/roles/primitive.h"
 
 
@@ -128,7 +129,8 @@ element::Numerical_Ptr SyntacticElementFactoryImpl::make_sum_role_distance(eleme
 }
 
 element::Role_Ptr SyntacticElementFactoryImpl::make_and_role(element::Role_Ptr role_left, element::Role_Ptr role_right) {
-
+    element::Role_Ptr value = std::make_shared<element::AndRole>(*m_vocabulary_info, role_left, role_right);
+    return m_cache.role_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
 element::Role_Ptr SyntacticElementFactoryImpl::make_compose_role(element::Role_Ptr role_left, element::Role_Ptr role_right) {

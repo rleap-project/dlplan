@@ -13,8 +13,9 @@
 #include "expressions/concepts/some.h"
 #include "expressions/concepts/subset.h"
 #include "expressions/concepts/top.h"
-#include "expressions/roles/primitive.h"
 #include "expressions/numericals/count.h"
+#include "expressions/roles/and.h"
+#include "expressions/roles/primitive.h"
 
 namespace dlp {
 namespace core {
@@ -55,6 +56,9 @@ Expression_Ptr AST_Factory::make_ast(const VocabularyInfoImpl& vocabulary_info, 
             }
             case N_COUNT: {
                 return std::make_unique<CountNumerical>(CountNumerical(name, std::move(children)));
+            }
+            case R_AND: {
+                return std::make_unique<AndRole>(AndRole(name, std::move(children)));
             }
         }
     }
