@@ -17,12 +17,6 @@ using Distances = std::vector<int>;
 using PairwiseDistances = std::vector<Distances>;
 
 /**
- * Remaps the role denotations from a fragmented index scheme to an index scheme
- * to be able compute a more compact version of an adjacency list.
- */
-extern std::pair<RoleDenotation, std::vector<int>> remap_role_denotation_indices(const RoleDenotation& r_vec, int num_objects);
-
-/**
  * Computes an adjacency list from a given role.
  */
 extern AdjList compute_adjacency_list(const RoleDenotation& r_vec, int num_objects);

@@ -9,26 +9,6 @@ namespace core {
 namespace element {
 namespace utils {
 
-std::pair<RoleDenotation, std::vector<int>> remap_role_denotation_indices(const RoleDenotation& r_vec, int num_objects) {
-    ConceptDenotation_Set c_set;
-    for (const auto& r : r_vec) {
-        c_set.insert(r.first);
-        c_set.insert(r.second);
-    }
-    ConceptDenotation c_vec(c_set.begin(), c_set.end());
-    std::vector<int> encode(num_objects, UNDEFINED);
-    std::vector<int> decode(c_vec.size());
-    for (int i = 0; i < c_vec.size(); ++i) {
-        encode[c_vec[i]] = i;
-        decode[i] = c_vec[i];
-    }
-    RoleDenotation r_vec_new;
-    for (const auto& r : r_vec) {
-        r_vec_new.push_back(std::make_pair(encode[r.first], encode[r.second]));
-    }
-    return std::make_pair(r_vec_new, decode);
-}
-
 AdjList compute_adjacency_list(const RoleDenotation& r_vec, int num_objects) {
     AdjList adjacency_list(num_objects);
     for (const auto& r : r_vec) {

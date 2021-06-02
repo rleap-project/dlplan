@@ -1,0 +1,53 @@
+#ifndef DLP_SRC_CORE_ELEMENTS_NUMERICAL_CONCEPT_DISTANCE_H_
+#define DLP_SRC_CORE_ELEMENTS_NUMERICAL_CONCEPT_DISTANCE_H_
+
+#include "../numerical.h"
+#include "../concept.h"
+#include "../role.h"
+#include "../utils.h"
+
+
+namespace dlp {
+namespace core {
+namespace element {
+
+class ConceptDistanceNumerical : public Concept {
+protected:
+    Concept_Ptr m_concept_from;
+    Role_Ptr m_role;
+    Concept_Ptr m_concept_to;
+
+protected:
+    virtual const ConceptDenotation& evaluate_impl(const StateImpl& state) override {
+        const ConceptDenotation& c1_vec = m_concept_from->evaluate(state);
+        const RoleDenotation& r_vec = m_role->evaluate(state);
+        const ConceptDenotation& c2_vec = m_concept_to->evaluate(state);
+        // TODO(dominik): Compute an indexing scheme that only considers objects that are part of the role
+        // 2. Compute an adjacency list from the newly mapped role denotations.
+        int num_objects = state.get_instance_info()->get_num_objects();
+        utils::AdjList adj_list = utils::compute_adjacency_list(r_vec, num_objects);
+        // 3. Compute pairwise distances using a sequence of bfs calls.
+        utils::PairwiseDistances pairwise_distances = utils::compute_pairwise_distances(adj_list);
+        return m_result;
+    }
+
+public:
+    ConceptDistanceNumerical(const VocabularyInfoImpl& vocabulary, Concept_Ptr concept_from, Role_Ptr role, Concept_Ptr concept_to)
+    : Concept(vocabulary, "n_concept_distance"), m_concept_from(concept_from), m_role(role), m_concept_to(concept_to) { }
+
+    virtual unsigned compute_complexity() const override {
+        return m_concept_from->compute_complexity() + m_role->compute_complexity() + m_concept_to->compute_complexity() + 1;
+    }
+
+    virtual std::string compute_repr() const override {
+        std::stringstream ss;
+        ss << m_name << "(" << m_concept_from->compute_repr() << "," << m_role->compute_repr() << "," << m_concept_to->compute_repr() << ")";
+        return ss.str();
+    }
+};
+
+}
+}
+}
+
+#endif

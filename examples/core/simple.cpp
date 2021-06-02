@@ -44,7 +44,7 @@ int main() {
     std::cout << "repr: " << numerical.compute_repr() << std::endl;
     std::cout << "value: " << value << std::endl;
 
-    dlp::core::Boolean numerical2 = factory.parse_boolean("b_empty(r_not(r_top))");
+    dlp::core::Numerical numerical2 = factory.parse_numerical("n_count(r_transitive_reflexive_closure(on(0,1)))");
     value = numerical2.evaluate(state);
     std::cout << "repr: " << numerical2.compute_repr() << std::endl;
     std::cout << "value: " << value << std::endl;
