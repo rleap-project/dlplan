@@ -19,9 +19,9 @@ protected:
         RoleDenotation l_vec = m_role_left->evaluate(state);
         RoleDenotation r_vec = m_role_right->evaluate(state);
         // sorted by second component
-        std::sort(l_vec.begin(), l_vec.end(), [](const std::pair<int, int>& l, const std::pair<int, int>& r){ return l.second < r.second; });
+        std::sort(l_vec.begin(), l_vec.end(), [](const auto& l, const auto& r){ return l.second < r.second; });
         // sorted by first component
-        std::sort(r_vec.begin(), r_vec.end(), [](const std::pair<int, int>& l, const std::pair<int, int>& r){ return l.first < r.first; });
+        std::sort(r_vec.begin(), r_vec.end(), [](const auto& l, const auto& r){ return l.first < r.first; });
         auto l_it = l_vec.begin();
         auto r_it = r_vec.begin();
         RoleDenotation_Set result_set;

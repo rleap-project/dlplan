@@ -17,6 +17,7 @@
 #include "expressions/roles/and.h"
 #include "expressions/roles/compose.h"
 #include "expressions/roles/diff.h"
+#include "expressions/roles/identity.h"
 #include "expressions/roles/or.h"
 #include "expressions/roles/primitive.h"
 
@@ -68,6 +69,9 @@ Expression_Ptr AST_Factory::make_ast(const VocabularyInfoImpl& vocabulary_info, 
             }
             case R_DIFF: {
                 return std::make_unique<DiffRole>(DiffRole(name, std::move(children)));
+            }
+            case R_IDENTITY: {
+                return std::make_unique<IdentityRole>(IdentityRole(name, std::move(children)));
             }
             case R_OR: {
                 return std::make_unique<OrRole>(OrRole(name, std::move(children)));

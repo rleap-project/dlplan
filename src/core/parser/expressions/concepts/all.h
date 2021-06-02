@@ -18,7 +18,7 @@ protected:
         element::Role_Ptr role = m_children[0]->parse_role(vocabulary, cache);
         element::Concept_Ptr concept = m_children[1]->parse_concept(vocabulary, cache);
         if (!(role && concept)) {
-            throw std::runtime_error("AllConcept::parse_concept_impl - at least one children is a nullptr");
+            throw std::runtime_error("AllConcept::parse_concept_impl - at least one child is a nullptr");
         }
         // 2. Construct element
         return std::make_shared<element::AllConcept>(vocabulary, role, concept);

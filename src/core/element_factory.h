@@ -37,6 +37,7 @@ public:
     element::Boolean_Ptr make_empty_boolean(element::Concept_Ptr concept);
     element::Boolean_Ptr make_empty_boolean(element::Role_Ptr role);
 
+    // TODO(dominik): Do we want to pass Object/Predicate instead of strings?
     element::Concept_Ptr make_all_concept(element::Role_Ptr role, element::Concept_Ptr concept);
     element::Concept_Ptr make_and_concept(element::Concept_Ptr concept_left, element::Concept_Ptr concept_right);
     element::Concept_Ptr make_bot_concept();
