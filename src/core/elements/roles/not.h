@@ -10,7 +10,7 @@ namespace element {
 
 class NotRole : public Role {
 protected:
-    Role_Ptr m_role;
+    const Role_Ptr m_role;
     RoleDenotation_Set m_universe_set;
 
 protected:

@@ -10,8 +10,8 @@ namespace element {
 
 class DiffConcept : public Concept {
 protected:
-    Concept_Ptr m_concept_left;
-    Concept_Ptr m_concept_right;
+    const Concept_Ptr m_concept_left;
+    const Concept_Ptr m_concept_right;
 
 protected:
     virtual const ConceptDenotation& evaluate_impl(const StateImpl& state) override {

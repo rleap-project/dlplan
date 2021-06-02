@@ -11,8 +11,8 @@ namespace element {
 
 class ComposeRole : public Role {
 protected:
-    Role_Ptr m_role_left;
-    Role_Ptr m_role_right;
+    const Role_Ptr m_role_left;
+    const Role_Ptr m_role_right;
 
 protected:
     virtual const RoleDenotation& evaluate_impl(const StateImpl& state) override {

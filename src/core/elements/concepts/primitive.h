@@ -11,7 +11,7 @@ namespace element {
 class PrimitiveConcept : public Concept {
 protected:
     unsigned m_predicate_idx;
-    unsigned m_pos;
+    const unsigned m_pos;
 
 protected:
     virtual const ConceptDenotation& evaluate_impl(const StateImpl& state) override {

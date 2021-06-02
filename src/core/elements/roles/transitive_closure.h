@@ -11,7 +11,7 @@ namespace element {
 
 class TransitiveClosureRole : public Role {
 protected:
-    Role_Ptr m_role;
+    const Role_Ptr m_role;
 
 protected:
     virtual const RoleDenotation& evaluate_impl(const StateImpl& state) override {

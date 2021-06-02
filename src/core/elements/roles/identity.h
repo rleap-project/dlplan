@@ -11,7 +11,7 @@ namespace element {
 
 class IdentityRole : public Role {
 protected:
-    Concept_Ptr m_concept;
+    const Concept_Ptr m_concept;
 
 protected:
     virtual const RoleDenotation& evaluate_impl(const StateImpl& state) override {

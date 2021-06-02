@@ -11,8 +11,8 @@ namespace element {
 
 class SomeConcept : public Concept {
 protected:
-    Role_Ptr m_role;
-    Concept_Ptr m_concept;
+    const Role_Ptr m_role;
+    const Concept_Ptr m_concept;
 
 protected:
     virtual const ConceptDenotation& evaluate_impl(const StateImpl& state) override {

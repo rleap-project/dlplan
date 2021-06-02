@@ -10,7 +10,7 @@ namespace element {
 
 class OneOfConcept : public Concept {
 protected:
-    std::string m_object_name;
+    const std::string m_object_name;
 
 protected:
     virtual const ConceptDenotation& evaluate_impl(const StateImpl& state) override {

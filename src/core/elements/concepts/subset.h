@@ -11,8 +11,8 @@ namespace element {
 
 class SubsetConcept : public Concept {
 protected:
-    Role_Ptr m_role_left;
-    Role_Ptr m_role_right;
+    const Role_Ptr m_role_left;
+    const Role_Ptr m_role_right;
 
     ConceptDenotation_Set m_top;
 

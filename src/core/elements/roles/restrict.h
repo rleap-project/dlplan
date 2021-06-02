@@ -11,8 +11,8 @@ namespace element {
 
 class RestrictRole : public Role {
 protected:
-    Role_Ptr m_role;
-    Concept_Ptr m_concept;
+    const Role_Ptr m_role;
+    const Concept_Ptr m_concept;
 
 protected:
     virtual const RoleDenotation& evaluate_impl(const StateImpl& state) override {

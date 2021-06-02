@@ -10,7 +10,7 @@ namespace element {
 
 class NotConcept : public Concept {
 protected:
-    Concept_Ptr m_concept;
+    const Concept_Ptr m_concept;
     ConceptDenotation_Set m_universe_set;
 
 protected:

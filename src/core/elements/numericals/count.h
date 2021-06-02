@@ -11,7 +11,7 @@ namespace element {
 template<typename T>
 class CountNumerical : public Numerical {
 protected:
-    T m_element;
+    const T m_element;
 
 protected:
     virtual const int& evaluate_impl(const StateImpl& state) override {
