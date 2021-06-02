@@ -125,6 +125,13 @@ unsigned InstanceInfoImpl::get_num_objects() const {
     return m_object_name_to_object_idx.size();
 }
 
+unsigned InstanceInfoImpl::get_object_idx(const std::string& object_name) const {
+    if (m_object_name_to_object_idx.find(object_name) == m_object_name_to_object_idx.end()) {
+        throw std::runtime_error("InstanceInfoImpl::get_object_idx - no object with name ("s + object_name + ").");
+    }
+    return m_object_name_to_object_idx.at(object_name);
+}
+
 const ObjectImpl& InstanceInfoImpl::get_object(unsigned object_idx) const {
     return m_objects[object_idx];
 }

@@ -42,7 +42,7 @@ public:
     element::Concept_Ptr make_bot_concept();
     element::Concept_Ptr make_diff_concept(element::Concept_Ptr concept_left, element::Concept_Ptr concept_right);
     element::Concept_Ptr make_not_concept(element::Concept_Ptr concept);
-    element::Concept_Ptr make_one_of_concept(unsigned pos);
+    element::Concept_Ptr make_one_of_concept(const std::string& object_name);
     element::Concept_Ptr make_or_concept(element::Concept_Ptr concept_left, element::Concept_Ptr concept_right);
     element::Concept_Ptr make_primitive_concept(const std::string& name, unsigned pos);
     element::Concept_Ptr make_some_concept(element::Role_Ptr role, element::Concept_Ptr concept);

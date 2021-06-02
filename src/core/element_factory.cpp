@@ -6,12 +6,15 @@
 #include "elements/concepts/and.h"
 #include "elements/concepts/diff.h"
 #include "elements/concepts/not.h"
+#include "elements/concepts/one_of.h"
 #include "elements/concepts/or.h"
 #include "elements/concepts/primitive.h"
 #include "elements/concepts/some.h"
+#include "elements/concepts/subset.h"
 #include "elements/concepts/top.h"
 #include "elements/numericals/count.h"
 #include "elements/roles/and.h"
+#include "elements/roles/compose.h"
 #include "elements/roles/diff.h"
 #include "elements/roles/or.h"
 #include "elements/roles/primitive.h"
@@ -76,8 +79,9 @@ element::Concept_Ptr SyntacticElementFactoryImpl::make_not_concept(element::Conc
     return m_cache.concept_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
-element::Concept_Ptr SyntacticElementFactoryImpl::make_one_of_concept(unsigned pos) {
-
+element::Concept_Ptr SyntacticElementFactoryImpl::make_one_of_concept(const std::string& object_name) {
+    element::Concept_Ptr value = std::make_shared<element::OneOfConcept>(*m_vocabulary_info, object_name);
+    return m_cache.concept_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
 element::Concept_Ptr SyntacticElementFactoryImpl::make_or_concept(element::Concept_Ptr concept_left, element::Concept_Ptr concept_right) {
@@ -96,7 +100,8 @@ element::Concept_Ptr SyntacticElementFactoryImpl::make_some_concept(element::Rol
 }
 
 element::Concept_Ptr SyntacticElementFactoryImpl::make_subset_concept(element::Role_Ptr role_left, element::Role_Ptr role_right) {
-
+    element::Concept_Ptr value = std::make_shared<element::SubsetConcept>(*m_vocabulary_info, role_left, role_right);
+    return m_cache.concept_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
 element::Concept_Ptr SyntacticElementFactoryImpl::make_top_concept() {
@@ -136,7 +141,8 @@ element::Role_Ptr SyntacticElementFactoryImpl::make_and_role(element::Role_Ptr r
 }
 
 element::Role_Ptr SyntacticElementFactoryImpl::make_compose_role(element::Role_Ptr role_left, element::Role_Ptr role_right) {
-
+    element::Role_Ptr value = std::make_shared<element::ComposeRole>(*m_vocabulary_info, role_left, role_right);
+    return m_cache.role_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
 element::Role_Ptr SyntacticElementFactoryImpl::make_diff_role(element::Role_Ptr role_left, element::Role_Ptr role_right) {

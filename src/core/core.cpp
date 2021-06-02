@@ -240,8 +240,8 @@ Concept SyntacticElementFactory::make_not_concept(const Concept& concept) {
     return Concept(*m_vocabulary_info, m_pImpl->make_not_concept(*concept.m_pImpl));
 }
 
-Concept SyntacticElementFactory::make_one_of_concept(unsigned object_idx) {
-    return Concept(*m_vocabulary_info, m_pImpl->make_one_of_concept(object_idx));
+Concept SyntacticElementFactory::make_one_of_concept(const std::string& object_name) {
+    return Concept(*m_vocabulary_info, m_pImpl->make_one_of_concept(object_name));
 }
 
 Concept SyntacticElementFactory::make_or_concept(const Concept& concept_left, const Concept& concept_right) {

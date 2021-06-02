@@ -367,7 +367,7 @@ public:
     /**
      * Returns a Concept that evaluates to the single object with the given index.
      */
-    Concept make_one_of_concept(unsigned object_idx);
+    Concept make_one_of_concept(const std::string& object_name);
 
     /**
      * Returns a Concept that evaluates to the union of the operand evaluations.
