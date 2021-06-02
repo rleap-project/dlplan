@@ -15,7 +15,7 @@ protected:
 
 protected:
     virtual const ConceptDenotation& evaluate_impl(const StateImpl& state) override {
-        const InstanceInfoImpl& info = *state.m_parent;
+        const InstanceInfoImpl& info = *state.get_instance_info();
         // 2. Compute the result.
         m_result.clear();
         for (unsigned atom_idx : state.m_atoms) {

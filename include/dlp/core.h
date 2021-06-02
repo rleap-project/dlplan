@@ -18,6 +18,7 @@ class PredicateImpl;
 class AtomImpl;
 class StateImpl;
 class SyntacticElementFactory;
+class InstanceInfo;
 
 using ConceptDenotation = std::vector<int>;
 
@@ -33,9 +34,9 @@ using Index_Vec = std::vector<int>;
 class Predicate {
 public:
     pimpl<PredicateImpl> m_pImpl;
-    std::shared_ptr<VocabularyInfoImpl> m_parent;
+    const VocabularyInfoImpl* m_parent;  // non-owning
 
-    Predicate(std::shared_ptr<VocabularyInfoImpl> parent, PredicateImpl&& impl);
+    Predicate(const VocabularyInfoImpl& parent, PredicateImpl&& impl);
 
     friend class VocabularyInfo;
 
@@ -58,9 +59,9 @@ public:
 class Atom {
 private:
     pimpl<AtomImpl> m_pImpl;
-    std::shared_ptr<InstanceInfoImpl> m_parent;
+    const InstanceInfoImpl* m_parent;  // non-owning
 
-    Atom(std::shared_ptr<InstanceInfoImpl> parent, AtomImpl&& impl);
+    Atom(const InstanceInfoImpl& parent, AtomImpl&& impl);
 
     friend class InstanceInfo;
 
@@ -83,9 +84,9 @@ public:
 class State {
 private:
     pimpl<StateImpl> m_pImpl;
-    std::shared_ptr<InstanceInfoImpl> m_parent;
+    const std::shared_ptr<const InstanceInfoImpl> m_instance_info;  // owning
 
-    State(std::shared_ptr<InstanceInfoImpl> parent, StateImpl&& impl);
+    State(const InstanceInfoImpl& instance_info, StateImpl&& impl);
 
     friend class InstanceInfo;
     friend class Concept;
@@ -130,9 +131,9 @@ public:
 class InstanceInfo {
 private:
     pimpl<std::shared_ptr<InstanceInfoImpl>> m_pImpl;
-    std::shared_ptr<VocabularyInfoImpl> m_parent;
+    const std::shared_ptr<const VocabularyInfoImpl> m_vocabulary_info;  // owning
 
-    friend class SyntacticElementFactory;
+    friend class VocabularyInfo;
 
 public:
     InstanceInfo(const VocabularyInfo& vocabulary_info);
@@ -169,7 +170,12 @@ public:
  */
 template<typename T>
 class Element {
+protected:
+    const VocabularyInfoImpl* m_parent;  // non-owning
+
 public:
+    Element(const VocabularyInfoImpl& parent) : m_parent(&parent) { }
+    Element(const Element& other) : m_parent(other.m_parent) { }
     virtual ~Element() = default;
 
     /**
@@ -197,7 +203,7 @@ class Concept : public Element<ConceptDenotation> {
 protected:
     pimpl<element::Concept_Ptr> m_pImpl;
 
-    Concept(element::Concept_Ptr pImpl);
+    Concept(const VocabularyInfoImpl& parent, element::Concept_Ptr pImpl);
 
     friend class SyntacticElementFactory;
 
@@ -221,7 +227,7 @@ class Role : public Element<RoleDenotation> {
 protected:
     pimpl<element::Role_Ptr> m_pImpl;
 
-    Role(element::Role_Ptr pImpl);
+    Role(const VocabularyInfoImpl& parent, element::Role_Ptr pImpl);
 
     friend class SyntacticElementFactory;
 
@@ -245,7 +251,7 @@ class Numerical : public Element<int> {
 protected:
     pimpl<element::Numerical_Ptr> m_pImpl;
 
-    Numerical(element::Numerical_Ptr pImpl);
+    Numerical(const VocabularyInfoImpl& parent, element::Numerical_Ptr pImpl);
 
     friend class SyntacticElementFactory;
 
@@ -269,7 +275,7 @@ class Boolean : public Element<bool> {
 protected:
     pimpl<element::Boolean_Ptr> m_pImpl;
 
-    Boolean(element::Boolean_Ptr pImpl);
+    Boolean(const VocabularyInfoImpl& parent, element::Boolean_Ptr pImpl);
 
     friend class SyntacticElementFactory;
 
@@ -292,6 +298,7 @@ public:
 class SyntacticElementFactory {
 private:
     pimpl<SyntacticElementFactoryImpl> m_pImpl;
+    const std::shared_ptr<const VocabularyInfoImpl> m_vocabulary_info;  // owning
 
 public:
     SyntacticElementFactory(const VocabularyInfo& vocabulary_info);

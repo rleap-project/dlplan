@@ -17,6 +17,7 @@ int main() {
     // 1. Initialize planning instance
     dlp::core::InstanceInfo instance(vocabulary);
     // Add state atoms
+
     dlp::core::Atom a0 = instance.add_atom("on", {"A", "B"});
     dlp::core::Atom a1 = instance.add_atom("on", {"B", "A"});
     dlp::core::Atom a2 = instance.add_atom("onTable", {"A"});

@@ -23,9 +23,9 @@ class StateImpl;
  * it can make sense to sort the atoms by name for improved cache locality.
  * Can benchmark this first by planning with sorted and unsorted atoms.
  */
-class InstanceInfoImpl {
+class InstanceInfoImpl : public std::enable_shared_from_this<InstanceInfoImpl> {
 private:
-    std::shared_ptr<VocabularyInfoImpl> m_vocabulary_info;
+    const std::shared_ptr<const VocabularyInfoImpl> m_vocabulary_info;
 
     /**
      * Mappings between names and indices of predicates and objects.
@@ -47,13 +47,9 @@ private:
      * All objects.
      */
     std::vector<ObjectImpl> m_objects;
-    /**
-     * All predicates.
-     */
-    std::vector<PredicateImpl> m_predicates;
 
 public:
-    InstanceInfoImpl(std::shared_ptr<VocabularyInfoImpl> vocabulary_info);
+    InstanceInfoImpl(const VocabularyInfoImpl& vocabulary_info);
     ~InstanceInfoImpl() = default;
 
     /**
@@ -69,15 +65,15 @@ public:
     /**
      * Construct a state from textual information by first applying the index mapping and the calling convert_state.
      */
-    StateImpl parse_state(std::shared_ptr<InstanceInfoImpl> info, const Name_Vec& atom_names) const;
+    StateImpl parse_state(const Name_Vec& atom_names) const;
     /**
      * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
      */
-    StateImpl convert_state(std::shared_ptr<InstanceInfoImpl> info, const std::vector<AtomImpl>& atomss) const;
+    StateImpl convert_state(const std::vector<AtomImpl>& atomss) const;
     /**
      * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
      */
-    StateImpl convert_state(std::shared_ptr<InstanceInfoImpl> info, const Index_Vec& atom_idxs) const;
+    StateImpl convert_state(const Index_Vec& atom_idxs) const;
 
     /**
      * Getters
@@ -87,6 +83,7 @@ public:
     unsigned get_num_objects() const;
     unsigned get_object_idx(const std::string& object_name) const;
     const ObjectImpl& get_object(unsigned object_idx) const;
+    const std::shared_ptr<const VocabularyInfoImpl> get_vocabulary_info() const;
 };
 
 }

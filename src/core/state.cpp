@@ -1,14 +1,19 @@
 #include "state.h"
+#include "instance_info.h"
 
 
 namespace dlp {
 namespace core {
 
-StateImpl::StateImpl(std::shared_ptr<InstanceInfoImpl> parent, const Index_Vec& atoms)
-    : m_parent(parent), m_atoms(atoms) { }
+StateImpl::StateImpl(const InstanceInfoImpl& instance_info, const Index_Vec& atoms)
+    : m_instance_info(instance_info.shared_from_this()), m_atoms(atoms) { }
 
-StateImpl::StateImpl(std::shared_ptr<InstanceInfoImpl> parent, Index_Vec&& atoms)
-    : m_parent(parent), m_atoms(std::move(atoms)) { }
+StateImpl::StateImpl(const InstanceInfoImpl& instance_info, Index_Vec&& atoms)
+    : m_instance_info(instance_info.shared_from_this()), m_atoms(std::move(atoms)) { }
+
+const std::shared_ptr<const InstanceInfoImpl> StateImpl::get_instance_info() const {
+    return m_instance_info;
+}
 
 }
 }

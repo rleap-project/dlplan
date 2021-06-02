@@ -3,15 +3,17 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "types.h"
+
 
 namespace dlp {
 namespace core {
 class InstanceInfoImpl;
 
 struct AtomImpl {
-    // Cannot have parent pointer to instance here since atom are stored in instance.
+    const InstanceInfoImpl* m_parent;
     // Data members
     const std::string m_atom_name;
     const int m_atom_idx;
@@ -22,6 +24,7 @@ struct AtomImpl {
     bool m_is_static;
 
     AtomImpl(
+        const InstanceInfoImpl& parent,
         const std::string& atom_name,
         const int atom_idx,
         const std::string &predicate_name,

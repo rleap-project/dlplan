@@ -12,7 +12,7 @@ class TopConcept : public Concept {
 protected:
     virtual const ConceptDenotation& evaluate_impl(const StateImpl& state) override {
         if (m_result.empty()) {
-            unsigned num_objects = state.m_parent->get_num_objects();
+            unsigned num_objects = state.get_instance_info()->get_num_objects();
             m_result.reserve(num_objects);
             for (unsigned object_idx = 0; object_idx < num_objects; ++object_idx) {
                 m_result.push_back(object_idx);

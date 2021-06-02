@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "instance_info.h"
 #include "predicate.h"
 #include "atom.h"
 #include "types.h"
@@ -50,7 +51,7 @@ enum EXPRESSION_TYPE {
 /**
  * VocabularyInfoImpl stores information related to the predicates in the planning domain.
  */
-class VocabularyInfoImpl {
+class VocabularyInfoImpl : public std::enable_shared_from_this<VocabularyInfoImpl> {
 private:
     /**
      * Mappings between names and indices of predicates and objects.

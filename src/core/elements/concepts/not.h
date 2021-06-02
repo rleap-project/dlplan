@@ -17,7 +17,7 @@ protected:
     virtual const ConceptDenotation& evaluate_impl(const StateImpl& state) override {
         m_result.clear();
         if (m_universe_set.empty()) {
-            unsigned num_objects = state.m_parent->get_num_objects();
+            unsigned num_objects = state.get_instance_info()->get_num_objects();
             for (unsigned object_idx = 0; object_idx < num_objects; ++object_idx) {
                 m_universe_set.insert(object_idx);
             }

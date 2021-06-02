@@ -14,7 +14,7 @@ PredicateImpl VocabularyInfoImpl::add_predicate(const std::string &predicate_nam
         throw std::runtime_error("VocabularyInfoImpl::add_predicate - predicate with name ("s + predicate_name + ") already exists.");
     }
     unsigned predicate_idx = m_predicates.size();
-    m_predicates.push_back(PredicateImpl(predicate_name, predicate_idx, arity));
+    m_predicates.push_back(PredicateImpl(*this, predicate_name, predicate_idx, arity));
     m_predicate_name_to_predicate_idx.insert(std::make_pair(predicate_name, predicate_idx));
     return m_predicates.back();
 }

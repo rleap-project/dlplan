@@ -17,8 +17,8 @@
 namespace dlp {
 namespace core {
 
-SyntacticElementFactoryImpl::SyntacticElementFactoryImpl(std::shared_ptr<VocabularyInfoImpl> vocabulary_info)
-    : m_vocabulary_info(vocabulary_info) {
+SyntacticElementFactoryImpl::SyntacticElementFactoryImpl(const VocabularyInfoImpl& vocabulary_info)
+    : m_vocabulary_info(vocabulary_info.shared_from_this()) {
 }
 
 element::Concept_Ptr SyntacticElementFactoryImpl::parse_concept(const std::string &description) {

@@ -24,11 +24,10 @@ class SyntacticElementFactoryImpl {
 protected:
     ElementCache m_cache;
 
-    std::shared_ptr<VocabularyInfoImpl> m_vocabulary_info;
+    const std::shared_ptr<const VocabularyInfoImpl> m_vocabulary_info;
 
 public:
-    SyntacticElementFactoryImpl(std::shared_ptr<VocabularyInfoImpl> vocabulary_info);
-
+    SyntacticElementFactoryImpl(const VocabularyInfoImpl& vocabulary_info);
 
     element::Concept_Ptr parse_concept(const std::string &description);
     element::Role_Ptr parse_role(const std::string &description);
