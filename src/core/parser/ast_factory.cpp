@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iostream>
 
+#include "expressions/booleans/empty.h"
 #include "expressions/concepts/all.h"
 #include "expressions/concepts/and.h"
 #include "expressions/concepts/bot.h"
@@ -37,6 +38,9 @@ Expression_Ptr AST_Factory::make_ast(const VocabularyInfoImpl& vocabulary_info, 
     if (vocabulary_info.exists_element_name(name)) {
         EXPRESSION_TYPE expression_type = vocabulary_info.element_name_to_expression_type(name);
         switch (expression_type) {
+            case B_EMPTY: {
+                return std::make_unique<EmptyBoolean>(EmptyBoolean(name, std::move(children)));
+            }
             case C_ALL: {
                 return std::make_unique<AllConcept>(AllConcept(name, std::move(children)));
             }

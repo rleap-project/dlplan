@@ -1,6 +1,7 @@
 #include "element_factory.h"
 #include "parser/parser.h"
 #include "parser/expressions/expression.h"
+#include "elements/booleans/empty.h"
 #include "elements/concepts/all.h"
 #include "elements/concepts/bot.h"
 #include "elements/concepts/and.h"
@@ -55,10 +56,13 @@ element::Boolean_Ptr SyntacticElementFactoryImpl::parse_boolean(const std::strin
 }
 
 element::Boolean_Ptr SyntacticElementFactoryImpl::make_empty_boolean(element::Concept_Ptr concept) {
+    element::Boolean_Ptr value = std::make_shared<element::EmptyBoolean<element::Concept_Ptr>>(*m_vocabulary_info, concept);
+    return m_cache.boolean_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
 element::Boolean_Ptr SyntacticElementFactoryImpl::make_empty_boolean(element::Role_Ptr role) {
-
+    element::Boolean_Ptr value = std::make_shared<element::EmptyBoolean<element::Role_Ptr>>(*m_vocabulary_info, role);
+    return m_cache.boolean_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
 element::Concept_Ptr SyntacticElementFactoryImpl::make_all_concept(element::Role_Ptr role, element::Concept_Ptr concept) {

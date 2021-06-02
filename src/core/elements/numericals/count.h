@@ -2,8 +2,6 @@
 #define DLP_SRC_CORE_ELEMENTS_NUMERICAL_COUNT_H_
 
 #include "../numerical.h"
-#include "../concept.h"
-#include "../role.h"
 
 
 namespace dlp {
