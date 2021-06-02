@@ -22,11 +22,12 @@
 #include "expressions/roles/not.h"
 #include "expressions/roles/or.h"
 #include "expressions/roles/primitive.h"
+#include "expressions/roles/restrict.h"
+
 
 namespace dlp {
 namespace core {
 namespace parser {
-
 
 Expression_Ptr AST_Factory::make_ast(const VocabularyInfoImpl& vocabulary_info, const std::string &name, std::vector<Expression_Ptr> &&children) {
     // case 1: name is in alphabet of elements
@@ -83,6 +84,9 @@ Expression_Ptr AST_Factory::make_ast(const VocabularyInfoImpl& vocabulary_info, 
             }
             case R_OR: {
                 return std::make_unique<OrRole>(OrRole(name, std::move(children)));
+            }
+            case R_RESTRICT: {
+                return std::make_unique<RestrictRole>(RestrictRole(name, std::move(children)));
             }
         }
     }

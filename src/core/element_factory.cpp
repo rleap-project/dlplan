@@ -21,6 +21,7 @@
 #include "elements/roles/not.h"
 #include "elements/roles/or.h"
 #include "elements/roles/primitive.h"
+#include "elements/roles/restrict.h"
 
 
 namespace dlp {
@@ -179,7 +180,8 @@ element::Role_Ptr SyntacticElementFactoryImpl::make_primitive_role(const std::st
 }
 
 element::Role_Ptr SyntacticElementFactoryImpl::make_restrict_role(element::Role_Ptr role, element::Concept_Ptr concept) {
-
+    element::Role_Ptr value = std::make_shared<element::RestrictRole>(*m_vocabulary_info, role, concept);
+    return m_cache.role_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
 element::Role_Ptr SyntacticElementFactoryImpl::make_top_role() {

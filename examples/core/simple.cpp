@@ -44,7 +44,7 @@ int main() {
     std::cout << "repr: " << numerical.compute_repr() << std::endl;
     std::cout << "value: " << value << std::endl;
 
-    dlp::core::Numerical numerical2 = factory.parse_numerical("n_count(r_not(on(0,1)))");
+    dlp::core::Numerical numerical2 = factory.parse_numerical("n_count(r_restrict(on(0,1),on(0))))");
     value = numerical2.evaluate(state);
     std::cout << "repr: " << numerical2.compute_repr() << std::endl;
     std::cout << "value: " << value << std::endl;
