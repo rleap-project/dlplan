@@ -17,6 +17,8 @@
 #include "expressions/numericals/concept_distance.h"
 #include "expressions/numericals/count.h"
 #include "expressions/numericals/role_distance.h"
+#include "expressions/numericals/sum_concept_distance.h"
+#include "expressions/numericals/sum_role_distance.h"
 #include "expressions/roles/and.h"
 #include "expressions/roles/compose.h"
 #include "expressions/roles/diff.h"
@@ -78,6 +80,12 @@ Expression_Ptr AST_Factory::make_ast(const VocabularyInfoImpl& vocabulary_info, 
             }
             case N_ROLE_DISTANCE: {
                 return std::make_unique<RoleDistanceNumerical>(RoleDistanceNumerical(name, std::move(children)));
+            }
+            case N_SUM_CONCEPT_DISTANCE: {
+                return std::make_unique<SumConceptDistanceNumerical>(SumConceptDistanceNumerical(name, std::move(children)));
+            }
+            case N_SUM_ROLE_DISTANCE: {
+                return std::make_unique<SumRoleDistanceNumerical>(SumRoleDistanceNumerical(name, std::move(children)));
             }
             case R_AND: {
                 return std::make_unique<AndRole>(AndRole(name, std::move(children)));

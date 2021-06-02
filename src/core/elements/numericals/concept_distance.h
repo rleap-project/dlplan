@@ -13,9 +13,9 @@ namespace element {
 
 class ConceptDistanceNumerical : public Numerical {
 protected:
-    Concept_Ptr m_concept_from;
-    Role_Ptr m_role;
-    Concept_Ptr m_concept_to;
+    const Concept_Ptr m_concept_from;
+    const Role_Ptr m_role;
+    const Concept_Ptr m_concept_to;
 
 protected:
     virtual const int& evaluate_impl(const StateImpl& state) override {

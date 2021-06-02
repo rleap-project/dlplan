@@ -17,6 +17,11 @@ using Distances = std::vector<int>;
 using PairwiseDistances = std::vector<Distances>;
 
 /**
+ * Path addition evaluations to INF if any term is INF.
+ */
+extern int path_addition(int a, int b);
+
+/**
  * Computes an adjacency list from a given role.
  */
 extern AdjList compute_adjacency_list(const RoleDenotation& r_vec, int num_objects);

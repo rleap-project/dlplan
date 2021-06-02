@@ -13,9 +13,9 @@ namespace element {
 
 class RoleDistanceNumerical : public Numerical {
 protected:
-    Role_Ptr m_role_from;
-    Role_Ptr m_role;
-    Role_Ptr m_role_to;
+    const Role_Ptr m_role_from;
+    const Role_Ptr m_role;
+    const Role_Ptr m_role_to;
 
 protected:
     virtual const int& evaluate_impl(const StateImpl& state) override {
@@ -53,7 +53,11 @@ protected:
 
 public:
     RoleDistanceNumerical(const VocabularyInfoImpl& vocabulary, Role_Ptr role_from, Role_Ptr role, Role_Ptr role_to)
-    : Numerical(vocabulary, "n_role_distance"), m_role_from(role_from), m_role(role), m_role_to(role_to) { }
+    : Numerical(vocabulary, "n_role_distance"), m_role_from(role_from), m_role(role), m_role_to(role_to) {
+        if (!(role_from && role && role_to)) {
+            throw std::runtime_error("ConceptDistanceNumerical::ConceptDistanceNumerical - child is not of type Role, Role, Role.");
+        }
+    }
 
     virtual unsigned compute_complexity() const override {
         return m_role_from->compute_complexity() + m_role->compute_complexity() + m_role_to->compute_complexity() + 1;

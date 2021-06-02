@@ -9,6 +9,18 @@ namespace core {
 namespace element {
 namespace utils {
 
+extern int path_addition(int a, int b) {
+    if (a == INF || b == INF) {
+        return INF;
+    } else {
+        if (a > 0 && b > INF - a) {
+            // handle overflow
+            return INF;
+        }
+        return a + b;
+    }
+}
+
 AdjList compute_adjacency_list(const RoleDenotation& r_vec, int num_objects) {
     AdjList adjacency_list(num_objects);
     for (const auto& r : r_vec) {
