@@ -31,9 +31,7 @@ public:
     }
 
     virtual std::string compute_repr() const override {
-        std::stringstream ss;
-        ss << m_name;
-        return ss.str();
+        return m_name;
     }
 };
 

@@ -22,6 +22,7 @@
 #include "elements/roles/or.h"
 #include "elements/roles/primitive.h"
 #include "elements/roles/restrict.h"
+#include "elements/roles/top.h"
 
 
 namespace dlp {
@@ -185,7 +186,8 @@ element::Role_Ptr SyntacticElementFactoryImpl::make_restrict_role(element::Role_
 }
 
 element::Role_Ptr SyntacticElementFactoryImpl::make_top_role() {
-
+    element::Role_Ptr value = std::make_shared<element::TopRole>(*m_vocabulary_info);
+    return m_cache.role_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
 }
 
 element::Role_Ptr SyntacticElementFactoryImpl::make_transitive_closure(element::Role_Ptr role) {

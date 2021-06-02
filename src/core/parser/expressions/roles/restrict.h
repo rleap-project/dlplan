@@ -28,7 +28,7 @@ protected:
 
 public:
     RestrictRole(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
-    : Role(name, sort_children_lexicographically(std::move(children))) { }
+    : Role(name, std::move(children)) { }
 };
 
 }

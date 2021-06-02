@@ -23,6 +23,7 @@
 #include "expressions/roles/or.h"
 #include "expressions/roles/primitive.h"
 #include "expressions/roles/restrict.h"
+#include "expressions/roles/top.h"
 
 
 namespace dlp {
@@ -87,6 +88,9 @@ Expression_Ptr AST_Factory::make_ast(const VocabularyInfoImpl& vocabulary_info, 
             }
             case R_RESTRICT: {
                 return std::make_unique<RestrictRole>(RestrictRole(name, std::move(children)));
+            }
+            case R_TOP: {
+                return std::make_unique<TopRole>(TopRole(name, std::move(children)));
             }
         }
     }
