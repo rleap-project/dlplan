@@ -37,7 +37,7 @@ AdjList compute_adjacency_list(const RoleDenotation& r_vec, int num_objects) {
     return adjacency_list;
 }
 
-Distances bfs(const AdjList& adj_list, int source) {
+Distances compute_distances_from_state(const AdjList& adj_list, int source) {
     Distances distances(adj_list.size(), INF);
     std::vector<bool> visited(adj_list.size(), false);
     distances[source] = 0;
@@ -64,7 +64,7 @@ Distances bfs(const AdjList& adj_list, int source) {
 PairwiseDistances compute_pairwise_distances(const AdjList& adj_list) {
     PairwiseDistances pairwise_distances;
     for (int source = 0; source < adj_list.size(); ++source) {
-        pairwise_distances.emplace_back(bfs(adj_list, source));
+        pairwise_distances.emplace_back(compute_distances_from_state(adj_list, source));
     }
     return pairwise_distances;
 }
