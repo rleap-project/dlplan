@@ -1,4 +1,5 @@
 #include "vocabulary_info.h"
+#include "../utils/collections.h"
 
 
 namespace dlp {
@@ -24,17 +25,18 @@ bool VocabularyInfoImpl::exists_predicate_name(const std::string& name) const {
 }
 
 unsigned VocabularyInfoImpl::get_predicate_idx(const std::string& name) const {
+    if (!exists_predicate_name(name)) {
+        throw std::runtime_error("VocabularyInfoImpl::get_predicate_idx - no predicate with name ("s + name + ").");
+    }
     return m_predicate_name_to_predicate_idx.at(name);
 }
 
 const PredicateImpl& VocabularyInfoImpl::get_predicate(unsigned predicate_idx) const {
+    if (!utils::in_bounds(predicate_idx, m_predicates)) {
+        throw std::runtime_error("VocabularyInfoImpl::get_predicate - predicate index out of range.");
+    }
     return m_predicates[predicate_idx];
 }
-
-const std::vector<PredicateImpl>& VocabularyInfoImpl::get_predicates() const {
-    return m_predicates;
-}
-
 
 std::unordered_map<std::string, EXPRESSION_TYPE> VocabularyInfoImpl::m_element_name_to_expression_type = {
     {"c_all", C_ALL },

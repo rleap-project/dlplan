@@ -81,7 +81,6 @@ public:
     unsigned get_predicate_idx(const std::string& name) const;
 
     const PredicateImpl& get_predicate(unsigned predicate_idx) const;
-    const std::vector<PredicateImpl>& get_predicates() const;
 
     static bool exists_element_name(const std::string& name);
     static EXPRESSION_TYPE element_name_to_expression_type(const std::string &name);

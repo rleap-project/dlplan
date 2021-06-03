@@ -10,7 +10,7 @@ namespace element {
 
 class PrimitiveConcept : public Concept {
 protected:
-    unsigned m_predicate_idx;
+    const unsigned m_predicate_idx;
     const unsigned m_pos;
 
 protected:
@@ -18,7 +18,7 @@ protected:
         const InstanceInfoImpl& info = *state.get_instance_info();
         // 2. Compute the result.
         m_result.clear();
-        for (unsigned atom_idx : state.m_atoms) {
+        for (unsigned atom_idx : state.get_atom_idxs()) {
             const AtomImpl& atom = info.get_atom(atom_idx);
             if (atom.get_predicate_idx() == m_predicate_idx) {
                 m_result.push_back(atom.get_object_idx(m_pos));
@@ -29,12 +29,7 @@ protected:
 
 public:
     PrimitiveConcept(const VocabularyInfoImpl& vocabulary, const std::string& name, unsigned pos)
-    : Concept(vocabulary, name), m_pos(pos) {
-        // 1. Perform error checking.
-        if (!vocabulary.exists_predicate_name(m_name)) {
-            throw std::runtime_error("PrimitiveConcept::PrimitiveConcept - predicate ("s + m_name + ") is missing in VocabularyInfo.");
-        }
-        m_predicate_idx = vocabulary.get_predicate_idx(m_name);
+    : Concept(vocabulary, name), m_pos(pos), m_predicate_idx(vocabulary.get_predicate_idx(m_name)) {
         unsigned predicate_arity = vocabulary.get_predicate(m_predicate_idx).m_arity;
         if (m_pos >= predicate_arity) {
             throw std::runtime_error("PrimitiveConcept::PrimitiveConcept - object index does not match predicate arity ("s + std::to_string(m_pos) + " > " + std::to_string(predicate_arity) + ").");

@@ -114,6 +114,9 @@ StateImpl InstanceInfoImpl::convert_state(const Index_Vec& atom_idxs) const {
 }
 
 const AtomImpl& InstanceInfoImpl::get_atom(unsigned atom_idx) const {
+    if (!utils::in_bounds(atom_idx, m_atoms)) {
+        throw std::runtime_error("InstanceInfoImpl::get_atom - atom index out of range.");
+    }
     return m_atoms[atom_idx];
 }
 
@@ -133,6 +136,9 @@ unsigned InstanceInfoImpl::get_object_idx(const std::string& object_name) const 
 }
 
 const ObjectImpl& InstanceInfoImpl::get_object(unsigned object_idx) const {
+    if (!utils::in_bounds(object_idx, m_objects)) {
+        throw std::runtime_error("InstanceInfoImpl::get_object - object index out of range.");
+    }
     return m_objects[object_idx];
 }
 

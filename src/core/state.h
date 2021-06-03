@@ -18,16 +18,17 @@ class InstanceInfoImpl;
 struct StateImpl {
     const std::shared_ptr<const InstanceInfoImpl> m_instance_info;
     // The underlying implementation currently is a vector of atoms.
-    const Index_Vec m_atoms;
+    const Index_Vec m_atom_idxs;
 
-    StateImpl(const InstanceInfoImpl& parent, const Index_Vec& atoms);
-    StateImpl(const InstanceInfoImpl& parent, Index_Vec&& atoms);
+    StateImpl(const InstanceInfoImpl& parent, const Index_Vec& atom_idxs);
+    StateImpl(const InstanceInfoImpl& parent, Index_Vec&& atom_idxs);
     ~StateImpl() = default;
 
     /**
      * Getters.
      */
     const std::shared_ptr<const InstanceInfoImpl> get_instance_info() const;
+    const Index_Vec& get_atom_idxs() const;
 };
 
 }

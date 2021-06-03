@@ -11,7 +11,7 @@ namespace element {
 template<typename T>
 class EmptyBoolean : public Boolean {
 protected:
-    T m_element;
+    const T m_element;
 
 protected:
     virtual const bool& evaluate_impl(const StateImpl& state) override {
