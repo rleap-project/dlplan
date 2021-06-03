@@ -19,24 +19,25 @@ namespace parser {
  */
 Expression_Ptr Parser::parse_ast(const VocabularyInfoImpl& vocabulary_info, Tokens &tokens) const {
     if (tokens.empty()) {
-        throw std::runtime_error("Unexpected EOF\n");
+        throw std::runtime_error("Parser::parse_ast - Unexpected EOF\n");
     }
     Token token = tokens.front();
     tokens.pop_front();
     // std::cout << token.first << " " << token.second << std::endl;
-    if (tokens.front().second == "(") {
+    if (!tokens.empty() && tokens.front().second == "(") {
         // Consume "(".
         tokens.pop_front();
         std::vector<Expression_Ptr> children;
-        while (tokens.front().second != ")") {
+        while (!tokens.empty() && tokens.front().second != ")") {
             children.push_back(parse_ast(vocabulary_info, tokens));
         }
         // Consume ")".
+        if (tokens.empty()) throw std::runtime_error("Parser::parse_ast - Expected ')' is missing.");
         tokens.pop_front();
         // Construct an expression that can be parsed into an element if the description is correct.
         return AST_Factory().make_ast(vocabulary_info, token.second, std::move(children));
     } else if (token.second == ")") {
-        throw std::runtime_error("Unexpected ')'");
+        throw std::runtime_error("Parser::parse_ast - Unexpected ')'");
     } else {
         return AST_Factory().make_ast(vocabulary_info, token.second, {});
     }

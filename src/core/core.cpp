@@ -112,7 +112,7 @@ Concept::Concept(const Concept& other)
 
 ConceptDenotation Concept::evaluate(const State& state) const {
     if (state.m_pImpl->get_instance_info()->get_vocabulary_info().get() != m_parent) {
-        throw std::runtime_error("Concept::evaluate - mismatched vocabularies of concept");
+        throw std::runtime_error("Concept::evaluate - mismatched vocabularies of Concept and State.");
     }
     return m_pImpl->get()->evaluate(*state.m_pImpl);
 }
@@ -133,7 +133,7 @@ Role::Role(const Role& other)
 
 RoleDenotation Role::evaluate(const State& state) const {
     if (state.m_pImpl->get_instance_info()->get_vocabulary_info().get() != m_parent) {
-        throw std::runtime_error("Role::evaluate - mismatched vocabularies of concept");
+        throw std::runtime_error("Role::evaluate - mismatched vocabularies of Role and State.");
     }
     return m_pImpl->get()->evaluate(*state.m_pImpl);
 }
@@ -155,7 +155,7 @@ Numerical::Numerical(const Numerical& other)
 
 int Numerical::evaluate(const State& state) const {
     if (state.m_pImpl->get_instance_info()->get_vocabulary_info().get() != m_parent) {
-        throw std::runtime_error("Numerical::evaluate - mismatched vocabularies of concept");
+        throw std::runtime_error("Numerical::evaluate - mismatched vocabularies of Numerical and State.");
     }
     return m_pImpl->get()->evaluate(*(state.m_pImpl));
 }
@@ -177,7 +177,7 @@ Boolean::Boolean(const Boolean& other)
 
 bool Boolean::evaluate(const State& state) const {
     if (state.m_pImpl->get_instance_info()->get_vocabulary_info().get() != m_parent) {
-        throw std::runtime_error("Boolean::evaluate - mismatched vocabularies of concept");
+        throw std::runtime_error("Boolean::evaluate - mismatched vocabularies of Concept and State.");
     }
     return m_pImpl->get()->evaluate(*state.m_pImpl);
 }
@@ -197,19 +197,27 @@ SyntacticElementFactory::SyntacticElementFactory(const VocabularyInfo& vocabular
 SyntacticElementFactory::~SyntacticElementFactory() { }
 
 Concept SyntacticElementFactory::parse_concept(const std::string &description) {
-    return Concept(*m_vocabulary_info, m_pImpl->parse_concept(description));
+    element::Concept_Ptr concept = m_pImpl->parse_concept(description);
+    if (!concept) throw std::runtime_error("SyntacticElementFactory::parse_concept - ("s + description + ") cannot be parsed into a Concept.");
+    return Concept(*m_vocabulary_info, concept);
 }
 
 Role SyntacticElementFactory::parse_role(const std::string &description) {
-    return Role(*m_vocabulary_info, m_pImpl->parse_role(description));
+    element::Role_Ptr role = m_pImpl->parse_role(description);
+    if (!role) throw std::runtime_error("SyntacticElementFactory::parse_role - ("s + description + ") cannot be parsed into a Role.");
+    return Role(*m_vocabulary_info, role);
 }
 
 Numerical SyntacticElementFactory::parse_numerical(const std::string &description) {
-    return Numerical(*m_vocabulary_info, m_pImpl->parse_numerical(description));
+    element::Numerical_Ptr numerical = m_pImpl->parse_numerical(description);
+    if (!numerical) throw std::runtime_error("SyntacticElementFactory::parse_numerical - ("s + description + ") cannot be parsed into a Numerical.");
+    return Numerical(*m_vocabulary_info, numerical);
 }
 
 Boolean SyntacticElementFactory::parse_boolean(const std::string &description) {
-    return Boolean(*m_vocabulary_info, m_pImpl->parse_boolean(description));
+    element::Boolean_Ptr boolean = m_pImpl->parse_boolean(description);
+    if (!boolean) throw std::runtime_error("SyntacticElementFactory::parse_boolean - ("s + description + ") cannot be parsed into a Boolean.");
+    return Boolean(*m_vocabulary_info, boolean);
 }
 
 Boolean SyntacticElementFactory::make_empty_boolean(const Concept& concept) {

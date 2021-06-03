@@ -59,6 +59,7 @@ Tokens Tokenizer::tokenize(const std::string &description) const {
             }
         }
     }
+    add_token(ss, is_num, tokens);
     //for (auto &p : tokens) {
     //    std::cout << p.first << " " << p.second << std::endl;
     //}

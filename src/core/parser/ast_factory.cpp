@@ -129,7 +129,7 @@ Expression_Ptr AST_Factory::make_ast(const VocabularyInfoImpl& vocabulary_info, 
         } else if (children.size() == 1) {
             return std::make_unique<PrimitiveConcept>(PrimitiveConcept(name, std::move(children)));
         } else if (children.size() == 0) {
-            throw std::runtime_error("AST_Factory::make_ast - unspecified projection for predicate ("s + name + "). Is this supposed to be a concept or a role?");
+            throw std::runtime_error("AST_Factory::make_ast - Unspecified projection for predicate ("s + name + "). Is this supposed to be a concept or a role?");
         }
     }
     // case 3: name is an integer indicating projection
@@ -137,7 +137,7 @@ Expression_Ptr AST_Factory::make_ast(const VocabularyInfoImpl& vocabulary_info, 
         return std::make_unique<Expression>(Expression(name, std::move(children)));
     }
     // case 4: wrong syntax
-    throw std::runtime_error("AST_Factory::make_ast - missing implementation for word ("s + name + ").");
+    throw std::runtime_error("AST_Factory::make_ast - No implementation available for ("s + name + ").");
 }
 
 
