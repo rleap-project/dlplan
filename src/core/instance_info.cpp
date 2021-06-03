@@ -31,7 +31,7 @@ AtomImpl InstanceInfoImpl::add_atom(const std::string &predicate_name, const Nam
     unsigned predicate_idx;
     if (!predicate_exists) {
         predicate_idx = m_predicate_name_to_predicate_idx.size();
-        m_predicate_name_to_predicate_idx.insert(std::make_pair(predicate_name, predicate_idx));
+        m_predicate_name_to_predicate_idx.emplace(predicate_name, predicate_idx);
     } else {
         predicate_idx = m_predicate_name_to_predicate_idx.at(predicate_name);
     }
@@ -45,8 +45,8 @@ AtomImpl InstanceInfoImpl::add_atom(const std::string &predicate_name, const Nam
         unsigned object_idx;
         if (!object_exists) {
             object_idx = m_objects.size();
-            m_objects.push_back(ObjectImpl(*this, object_name, object_idx));
-            m_object_name_to_object_idx.insert(std::make_pair(object_name, object_idx));
+            m_objects.emplace_back(*this, object_name, object_idx);
+            m_object_name_to_object_idx.emplace(object_name, object_idx);
         } else {
             object_idx = m_object_name_to_object_idx.at(object_name);
         }
@@ -63,9 +63,9 @@ AtomImpl InstanceInfoImpl::add_atom(const std::string &predicate_name, const Nam
     }
     // atom related
     int atom_idx = m_atoms.size();
-    m_atom_name_to_atom_idx.insert(std::make_pair(atom_name, m_atoms.size()));
+    m_atom_name_to_atom_idx.emplace(atom_name, m_atoms.size());
 
-    m_atoms.push_back(AtomImpl(*this, atom_name, atom_idx, predicate_name, predicate_idx, object_names, object_idxs, false));
+    m_atoms.emplace_back(*this, atom_name, atom_idx, predicate_name, predicate_idx, object_names, object_idxs, false);
     return m_atoms.back();
 }
 

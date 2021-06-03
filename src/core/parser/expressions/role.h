@@ -25,7 +25,7 @@ public:
      */
     virtual element::Role_Ptr parse_role(const VocabularyInfoImpl& vocabulary, ElementCache &cache) const {
         element::Role_Ptr value = parse_role_impl(vocabulary, cache);
-        return cache.role_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
+        return cache.role_element_cache().emplace(value->compute_repr(), std::move(value)).first->second;
     }
 };
 

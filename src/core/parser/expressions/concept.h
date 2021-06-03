@@ -25,7 +25,7 @@ public:
      */
     virtual element::Concept_Ptr parse_concept(const VocabularyInfoImpl& vocabulary, ElementCache &cache) const {
         element::Concept_Ptr value = parse_concept_impl(vocabulary, cache);
-        return cache.concept_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
+        return cache.concept_element_cache().emplace(value->compute_repr(), std::move(value)).first->second;
     }
 };
 

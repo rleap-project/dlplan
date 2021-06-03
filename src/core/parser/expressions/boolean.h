@@ -26,7 +26,7 @@ public:
      */
     virtual element::Boolean_Ptr parse_boolean(const VocabularyInfoImpl& vocabulary, ElementCache &cache) const {
         element::Boolean_Ptr value = parse_boolean_impl(vocabulary, cache);
-        return cache.boolean_element_cache().insert(std::make_pair(value->compute_repr(), std::move(value))).first->second;
+        return cache.boolean_element_cache().emplace(value->compute_repr(), std::move(value)).first->second;
     }
 };
 
