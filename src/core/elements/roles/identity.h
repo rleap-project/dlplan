@@ -17,9 +17,8 @@ protected:
     virtual const RoleDenotation& evaluate_impl(const StateImpl& state) override {
         const ConceptDenotation& c_vec = m_concept->evaluate(state);
         m_result.clear();
-        m_result.reserve(c_vec.size());
         for (int c : c_vec) {
-            m_result.push_back(std::make_pair(c, c));
+            m_result.emplace_back(c, c);
         }
         return m_result;
     }

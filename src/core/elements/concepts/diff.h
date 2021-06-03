@@ -18,10 +18,10 @@ protected:
         const ConceptDenotation& l_vec = m_concept_left->evaluate(state);
         const ConceptDenotation& r_vec = m_concept_right->evaluate(state);
         ConceptDenotation_Set r_set(l_vec.begin(), l_vec.end());
-        m_result.clear();
         for (int c : r_vec) {
             r_set.erase(c);
         }
+        m_result.clear();
         m_result.insert(m_result.begin(), r_set.begin(), r_set.end());
         return m_result;
     }

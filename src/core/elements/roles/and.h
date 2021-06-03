@@ -29,17 +29,11 @@ protected:
 
 public:
     AndRole(const VocabularyInfoImpl& vocabulary, Role_Ptr role_1, Role_Ptr role_2)
-    : Role(vocabulary, "r_and") {
+    : Role(vocabulary, "r_and"),
+      m_role_left(role_1->compute_repr() < role_2->compute_repr() ? role_1 : role_2),
+      m_role_right(role_1->compute_repr() < role_2->compute_repr() ? role_2 : role_1) {
         if (!(role_1 && role_2)) {
             throw std::runtime_error("AndRole::AndRole - at least one child is a nullptr.");
-        }
-        // Element is commutative. Hence sort lexicographically.
-        if (role_1->compute_repr() < role_2->compute_repr()) {
-            m_role_left = role_1;
-            m_role_right = role_2;
-        } else {
-            m_role_left = role_2;
-            m_role_right = role_1;
         }
     }
 

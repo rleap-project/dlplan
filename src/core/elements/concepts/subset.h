@@ -18,7 +18,6 @@ protected:
 
 protected:
     virtual const ConceptDenotation& evaluate_impl(const StateImpl& state) override {
-        m_result.clear();
         /*
         // TODO(dominik): implement improved version by making use of role denotations sorted by their first component.
         RoleDenotation left_vec = m_role_left->evaluate(state);
@@ -66,6 +65,7 @@ protected:
                 }
             }
         }
+        m_result.clear();
         m_result.insert(m_result.begin(), result_set.begin(), result_set.end());
         return m_result;
     }

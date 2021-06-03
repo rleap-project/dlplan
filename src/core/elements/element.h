@@ -51,6 +51,7 @@ public:
     /**
      * Computes a representation that uniquely identifies the element.
      * TODO(dominik): Use more sophisticated equivalences.
+     * TODO(dominik): Cache the result if this becomes a performance bottleneck (which probably won't).
      */
     virtual std::string compute_repr() const = 0;
 };

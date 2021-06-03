@@ -22,7 +22,7 @@ protected:
         for (unsigned atom_idx : state.m_atoms) {
             const AtomImpl& atom = info.get_atom(atom_idx);
             if (atom.get_predicate_idx() == m_predicate_idx) {
-                m_result.push_back(std::make_pair(atom.get_object_idx(m_pos_1), atom.get_object_idx(m_pos_2)));
+                m_result.emplace_back(atom.get_object_idx(m_pos_1), atom.get_object_idx(m_pos_2));
             }
         }
         return m_result;

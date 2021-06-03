@@ -16,7 +16,7 @@ protected:
             m_result.reserve(num_objects * num_objects);
             for (unsigned object_idx_1 = 0; object_idx_1 < num_objects; ++object_idx_1) {
                 for (unsigned object_idx_2 = 0; object_idx_2 < num_objects; ++object_idx_2) {
-                    m_result.push_back(std::make_pair(object_idx_1, object_idx_2));
+                    m_result.emplace_back(object_idx_1, object_idx_2);
                 }
             }
         }

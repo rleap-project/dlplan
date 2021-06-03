@@ -16,7 +16,6 @@ protected:
 
 protected:
     virtual const ConceptDenotation& evaluate_impl(const StateImpl& state) override {
-        m_result.clear();
         const RoleDenotation& r_vec = m_role->evaluate(state);
         const ConceptDenotation& c_vec = m_concept->evaluate(state);
         ConceptDenotation_Set c_set(c_vec.begin(), c_vec.end());
@@ -27,6 +26,7 @@ protected:
                 result_set.insert(r.first);
             }
         }
+        m_result.clear();
         m_result.insert(m_result.begin(), result_set.begin(), result_set.end());
         return m_result;
     }

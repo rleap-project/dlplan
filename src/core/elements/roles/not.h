@@ -19,7 +19,7 @@ protected:
             unsigned num_objects = state.get_instance_info()->get_num_objects();
             for (unsigned object_idx_1 = 0; object_idx_1 < num_objects; ++object_idx_1) {
                 for (unsigned object_idx_2 = 0; object_idx_2 < num_objects; ++object_idx_2) {
-                    m_universe_set.insert(std::make_pair(object_idx_1, object_idx_2));
+                    m_universe_set.emplace(object_idx_1, object_idx_2);
                 }
             }
         }

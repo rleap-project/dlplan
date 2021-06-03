@@ -18,7 +18,7 @@ protected:
         m_result.clear();
         m_result.reserve(r_vec.size());
         for (const auto& r : r_vec) {
-            m_result.push_back(std::make_pair(r.second, r.first));
+            m_result.emplace_back(r.second, r.first);
         }
         return m_result;
     }

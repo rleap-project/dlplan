@@ -26,13 +26,13 @@ protected:
         for (int source = 0; source < adj_list.size(); ++source) {
             for (int target : adj_list[source]) {
                 if (pairwise_distances[source][target] < INF) {
-                    m_result.emplace_back(std::make_pair(source, target));
+                    m_result.emplace_back(source, target);
                 }
             }
         }
         // 5. Add the reflexive part
         for (int object_idx = 0; object_idx < num_objects; ++object_idx) {
-            m_result.emplace_back(std::make_pair(object_idx, object_idx));
+            m_result.emplace_back(object_idx, object_idx);
         }
         return m_result;
     }

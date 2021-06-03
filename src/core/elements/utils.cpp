@@ -56,7 +56,7 @@ Distances compute_distances_from_state(const AdjList& adj_list, int source) {
 PairwiseDistances compute_pairwise_distances(const AdjList& adj_list) {
     PairwiseDistances pairwise_distances;
     for (int source = 0; source < adj_list.size(); ++source) {
-        pairwise_distances.emplace_back(compute_distances_from_state(adj_list, source));
+        pairwise_distances.push_back(compute_distances_from_state(adj_list, source));
     }
     return pairwise_distances;
 }
