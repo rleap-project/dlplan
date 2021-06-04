@@ -1,2 +1,2 @@
 add_subdirectory(core)
-add_subdirectory(generator)
+# add_subdirectory(generator)
