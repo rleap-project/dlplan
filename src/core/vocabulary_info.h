@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 
-#include "instance_info.h"
 #include "predicate.h"
 #include "atom.h"
 #include "types.h"
@@ -13,6 +12,8 @@
 
 namespace dlp {
 namespace core {
+class SyntacticElementFactoryImpl;
+class InstanceInfoImpl;
 
 enum EXPRESSION_TYPE {
     // concepts
@@ -76,6 +77,10 @@ public:
      * Adds an atom that may have varying evaluation depending on the state.
      */
     PredicateImpl add_predicate(const std::string &predicate_name, unsigned arity);
+
+    InstanceInfoImpl make_instance();
+
+    SyntacticElementFactoryImpl make_factory();
 
     bool exists_predicate_name(const std::string& name) const;
     unsigned get_predicate_idx(const std::string& name) const;

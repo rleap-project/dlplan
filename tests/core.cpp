@@ -10,7 +10,7 @@ TEST(DLPTests, SyntacticErrorHandling) {
     VocabularyInfo vocabulary;
     auto clear = vocabulary.add_predicate("on", 2);
 
-    SyntacticElementFactory factory(vocabulary);
+    SyntacticElementFactory factory = vocabulary.make_factory();
 
     ASSERT_THROW(factory.parse_numerical("hello world!"), std::runtime_error);
     ASSERT_THROW(factory.parse_concept("bye world!"), std::runtime_error);
@@ -35,7 +35,7 @@ TEST(DLPTests, InstanceCreation) {
     Predicate p2 = vocabulary.add_predicate("holding", 1);
     Predicate p3 = vocabulary.add_predicate("on_g", 2);
     std::vector<Predicate> predicates({p0, p1, p2, p3});
-    InstanceInfo instance(vocabulary);
+    InstanceInfo instance = vocabulary.make_instance();
     // Add state atoms
     Atom a0 = instance.add_atom("on", {"A", "B"});
     Atom a1 = instance.add_atom("on", {"B", "A"});
@@ -46,7 +46,7 @@ TEST(DLPTests, InstanceCreation) {
     // Add goal atoms
     Atom a6 = instance.add_static_atom("on_g", {"A", "B"});
 
-    SyntacticElementFactory factory(vocabulary);
+    SyntacticElementFactory factory = vocabulary.make_factory();
 
     Numerical numerical = factory.parse_numerical("n_count(c_and(on_g(0),on(0)))");
     EXPECT_EQ(numerical.compute_complexity(), 4);

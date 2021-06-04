@@ -15,7 +15,7 @@ int main() {
     dlp::core::Predicate p3 = vocabulary.add_predicate("on_g", 2);
     std::vector<dlp::core::Predicate> predicates({p0, p1, p2, p3});
     // 1. Initialize planning instance
-    dlp::core::InstanceInfo instance(vocabulary);
+    dlp::core::InstanceInfo instance = vocabulary.make_instance();
     // Add state atoms
 
     dlp::core::Atom a0 = instance.add_atom("on", {"A", "B"});
@@ -28,7 +28,7 @@ int main() {
     dlp::core::Atom a6 = instance.add_static_atom("on_g", {"A", "B"});
 
     // 2. Initialize factory.
-    dlp::core::SyntacticElementFactory factory(vocabulary);
+    dlp::core::SyntacticElementFactory factory = vocabulary.make_factory();;
 
     // 3. Construct and evaluate elements.
     // Parse text to Numerical
@@ -44,7 +44,7 @@ int main() {
     std::cout << "repr: " << numerical.compute_repr() << std::endl;
     std::cout << "value: " << value << std::endl;
     dlp::core::Numerical numerical2 = factory.parse_numerical("n_count(c_bot)");
-    // value = numerical2.evaluate(state);
-    //std::cout << "repr: " << numerical2.compute_repr() << std::endl;
-    //std::cout << "value: " << value << std::endl;
+    value = numerical2.evaluate(state);
+    std::cout << "repr: " << numerical2.compute_repr() << std::endl;
+    std::cout << "value: " << value << std::endl;
 };

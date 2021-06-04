@@ -214,5 +214,9 @@ element::Role_Ptr SyntacticElementFactoryImpl::make_transitive_reflexive_closure
     return m_cache.role_element_cache().emplace(value->compute_repr(), std::move(value)).first->second;
 }
 
+const std::shared_ptr<const VocabularyInfoImpl>& SyntacticElementFactoryImpl::get_vocabulary_info() const {
+    return m_vocabulary_info;
+}
+
 }
 }

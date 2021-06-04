@@ -69,6 +69,11 @@ public:
     element::Role_Ptr make_top_role();
     element::Role_Ptr make_transitive_closure(element::Role_Ptr role);
     element::Role_Ptr make_transitive_reflexive_closure(element::Role_Ptr role);
+
+    /**
+     * Getters.
+     */
+    const std::shared_ptr<const VocabularyInfoImpl>& get_vocabulary_info() const;
 };
 
 }

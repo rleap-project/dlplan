@@ -1,6 +1,9 @@
 #include "vocabulary_info.h"
-#include "../utils/collections.h"
 
+#include "instance_info.h"
+#include "element_factory.h"
+
+#include "../utils/collections.h"
 
 namespace dlp {
 namespace core {
@@ -18,6 +21,14 @@ PredicateImpl VocabularyInfoImpl::add_predicate(const std::string &predicate_nam
     m_predicates.emplace_back(*this, predicate_name, predicate_idx, arity);
     m_predicate_name_to_predicate_idx.emplace(predicate_name, predicate_idx);
     return m_predicates.back();
+}
+
+InstanceInfoImpl VocabularyInfoImpl::make_instance() {
+    return InstanceInfoImpl(*this);
+}
+
+SyntacticElementFactoryImpl VocabularyInfoImpl::make_factory() {
+    return SyntacticElementFactoryImpl(*this);
 }
 
 bool VocabularyInfoImpl::exists_predicate_name(const std::string& name) const {

@@ -34,9 +34,8 @@ using Index_Vec = std::vector<int>;
 class Predicate {
 private:
     pimpl<PredicateImpl> m_pImpl;
-    const VocabularyInfoImpl* m_parent;  // non-owning
 
-    Predicate(const VocabularyInfoImpl& parent, PredicateImpl&& impl);
+    Predicate(PredicateImpl&& impl);
 
     friend class VocabularyInfo;
 
@@ -59,9 +58,8 @@ public:
 class Atom {
 private:
     pimpl<AtomImpl> m_pImpl;
-    const InstanceInfoImpl* m_parent;  // non-owning
 
-    Atom(const InstanceInfoImpl& parent, AtomImpl&& impl);
+    Atom(AtomImpl&& impl);
 
     friend class InstanceInfo;
 
@@ -84,9 +82,8 @@ public:
 class State {
 private:
     pimpl<StateImpl> m_pImpl;
-    const std::shared_ptr<const InstanceInfoImpl> m_instance_info;  // owning
 
-    State(const InstanceInfoImpl& instance_info, StateImpl&& impl);
+    State(StateImpl&& impl);
 
     friend class InstanceInfo;
     friend class Concept;
@@ -113,15 +110,16 @@ class VocabularyInfo {
 private:
     pimpl<std::shared_ptr<VocabularyInfoImpl>> m_pImpl;
 
-    friend class InstanceInfo;
-    friend class SyntacticElementFactory;
-
 public:
     VocabularyInfo();
     VocabularyInfo(const VocabularyInfo& other);
     ~VocabularyInfo();
 
     Predicate add_predicate(const std::string &predicate_name, unsigned arity);
+
+    InstanceInfo make_instance();
+
+    SyntacticElementFactory make_factory();
 };
 
 
@@ -131,13 +129,13 @@ public:
 class InstanceInfo {
 private:
     pimpl<std::shared_ptr<InstanceInfoImpl>> m_pImpl;
-    const std::shared_ptr<const VocabularyInfoImpl> m_vocabulary_info;  // owning
 
+    InstanceInfo(InstanceInfoImpl&& impl);
     friend class VocabularyInfo;
 
 public:
-    InstanceInfo(const VocabularyInfo& vocabulary_info);
-    InstanceInfo(const InstanceInfo& other) = delete;
+    InstanceInfo() = delete;
+    InstanceInfo(const InstanceInfo& other);
     ~InstanceInfo();
 
     /**
@@ -298,11 +296,13 @@ public:
 class SyntacticElementFactory {
 private:
     pimpl<SyntacticElementFactoryImpl> m_pImpl;
-    const std::shared_ptr<const VocabularyInfoImpl> m_vocabulary_info;  // owning
+
+    SyntacticElementFactory(SyntacticElementFactoryImpl&& impl);
+    friend class VocabularyInfo;
 
 public:
-    SyntacticElementFactory(const VocabularyInfo& vocabulary_info);
-    SyntacticElementFactory(const SyntacticElementFactory& other) = delete;
+    SyntacticElementFactory() = delete;
+    SyntacticElementFactory(const SyntacticElementFactory& other);
     ~SyntacticElementFactory();
 
     /**
