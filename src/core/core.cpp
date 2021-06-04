@@ -13,6 +13,7 @@
 #include "predicate.h"
 
 #include <iostream>
+#include <algorithm>
 
 
 namespace dlp {
@@ -30,15 +31,10 @@ State InstanceInfo::parse_state(const Name_Vec& atom_names) const {
 }
 
 State InstanceInfo::convert_state(const std::vector<Atom>& atoms) const {
-    std::vector<AtomImpl> atoms_impl;
-    atoms_impl.reserve(atoms.size());
-    for (const auto& atom : atoms) {
-        if (atom.m_parent != m_pImpl->get()) {
-            throw std::runtime_error("InstanceInfo::convert_state - atom ("s + atom.get_atom_name() + ") does not belong to the same instance.");
-        }
-        atoms_impl.push_back(*atom.m_pImpl);
+    if (!std::all_of(atoms.begin(), atoms.end(), [&](const auto& atom){ return atom.m_parent == m_pImpl->get(); })) {
+        throw std::runtime_error("InstanceInfo::convert_state - atom does not belong to the same instance.");
     }
-    return State(**m_pImpl, m_pImpl->get()->convert_state(atoms_impl));
+    return State(**m_pImpl, m_pImpl->get()->convert_state(atoms));
 }
 
 State InstanceInfo::convert_state(const Index_Vec& atom_idxs) const {

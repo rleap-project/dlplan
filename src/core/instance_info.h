@@ -8,8 +8,9 @@
 #include "vocabulary_info.h"
 #include "predicate.h"
 #include "object.h"
-#include "atom.h"
 #include "types.h"
+
+#include "../../include/dlp/core.h"
 
 
 namespace dlp {
@@ -69,7 +70,7 @@ public:
     /**
      * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
      */
-    StateImpl convert_state(const std::vector<AtomImpl>& atomss) const;
+    StateImpl convert_state(const std::vector<Atom>& atoms) const;
     /**
      * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
      */

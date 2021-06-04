@@ -32,7 +32,7 @@ using Index_Vec = std::vector<int>;
  * Predicate contains information regarding the predicates used to construct the atoms.
  */
 class Predicate {
-public:
+private:
     pimpl<PredicateImpl> m_pImpl;
     const VocabularyInfoImpl* m_parent;  // non-owning
 

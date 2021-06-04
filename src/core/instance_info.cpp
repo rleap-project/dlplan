@@ -90,13 +90,13 @@ StateImpl InstanceInfoImpl::parse_state(const Name_Vec& atom_names) const {
     return StateImpl(*this, std::move(atoms));
 }
 
-StateImpl InstanceInfoImpl::convert_state(const std::vector<AtomImpl>& atoms) const {
+StateImpl InstanceInfoImpl::convert_state(const std::vector<Atom>& atoms) const {
     // Ensure in the parent call that parent pointer of atom and info are identical.
-    assert(std::all_of(atoms.begin(), atoms.end(), [&](const AtomImpl& atom){ return utils::in_bounds(atom.m_atom_idx, m_atoms); }));
+    assert(std::all_of(atoms.begin(), atoms.end(), [&](const Atom& atom){ return utils::in_bounds(atom.get_atom_idx(), m_atoms); }));
     Index_Vec atom_indices;
     atom_indices.reserve(atoms.size() + m_static_atom_idxs.size());
     for (const auto& atom : atoms) {
-        atom_indices.push_back(atom.m_atom_idx);
+        atom_indices.push_back(atom.get_atom_idx());
     }
     atom_indices.insert(atom_indices.end(), m_static_atom_idxs.begin(), m_static_atom_idxs.end());
     return StateImpl(*this, std::move(atom_indices));
