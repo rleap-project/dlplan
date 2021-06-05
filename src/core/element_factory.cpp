@@ -42,6 +42,12 @@ SyntacticElementFactoryImpl::SyntacticElementFactoryImpl(const VocabularyInfoImp
 element::Concept_Ptr SyntacticElementFactoryImpl::parse_concept(const std::string &description) {
     parser::Expression_Ptr expression = parser::Parser().parse(*m_vocabulary_info, description);
     return expression->parse_concept(*m_vocabulary_info, m_cache);
+    /*
+    parser::Expression_Ptr expression = parser::Parser().parse(*m_vocabulary_info, description);
+    element::Concept_Ptr concept = expression->parse_concept(*m_vocabulary_info, m_cache);
+    element::ElementRoot<ConceptDenotation> concept_root(*m_vocabulary_info, std::move(concept));
+    return Concept(std::move(concept_root));
+    */
 }
 
 element::Role_Ptr SyntacticElementFactoryImpl::parse_role(const std::string &description) {
