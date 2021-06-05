@@ -15,6 +15,7 @@ class SyntacticElementFactoryImpl;
 class InstanceInfoImpl;
 class VocabularyInfoImpl;
 class PredicateImpl;
+class ObjectImpl;
 class AtomImpl;
 class StateImpl;
 class SyntacticElementFactory;
@@ -26,7 +27,6 @@ using RoleDenotation = std::vector<std::pair<int, int>>;
 
 using Name_Vec = std::vector<std::string>;
 using Index_Vec = std::vector<int>;
-
 
 /**
  * Predicate contains information regarding the predicates used to construct the atoms.
@@ -50,6 +50,28 @@ public:
     const VocabularyInfoImpl* get_vocabulary_info() const;
     const std::string& get_name() const;
     unsigned get_arity() const;
+};
+
+
+/**
+ * Object contains information regarding an object in an instance.
+ */
+class Object {
+private:
+    pimpl<ObjectImpl> m_pImpl;
+
+    Object(ObjectImpl&& impl);
+
+    friend class InstanceInfo;
+
+public:
+    Object() = delete;
+    Object(const Object& other);
+    ~Object();
+
+    const InstanceInfoImpl* get_instance_info() const;
+    const std::string& get_object_name() const;
+    int get_object_idx() const;
 };
 
 
@@ -172,6 +194,17 @@ public:
      * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
      */
     State convert_state(const Index_Vec& atom_idxs) const;
+
+    /**
+     * Getters.
+     */
+    std::vector<Atom> get_atoms() const;
+    Atom get_atom(unsigned atom_idx) const;
+    std::vector<Object> get_objects() const;
+    Object get_object(unsigned object_idx) const;
+    unsigned get_object_idx(const std::string& object_name) const;
+    unsigned get_num_objects() const;
+    const std::shared_ptr<const VocabularyInfoImpl>& get_vocabulary_info() const;
 };
 
 

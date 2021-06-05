@@ -113,6 +113,10 @@ StateImpl InstanceInfoImpl::convert_state(const Index_Vec& atom_idxs) const {
     return StateImpl(*this, std::move(atom_indices));
 }
 
+const std::vector<AtomImpl>& InstanceInfoImpl::get_atoms() const {
+    return m_atoms;
+}
+
 const AtomImpl& InstanceInfoImpl::get_atom(unsigned atom_idx) const {
     if (!utils::in_bounds(atom_idx, m_atoms)) {
         throw std::runtime_error("InstanceInfoImpl::get_atom - atom index out of range.");
@@ -120,12 +124,15 @@ const AtomImpl& InstanceInfoImpl::get_atom(unsigned atom_idx) const {
     return m_atoms[atom_idx];
 }
 
-const std::vector<AtomImpl>& InstanceInfoImpl::get_atoms() const {
-    return m_atoms;
+const std::vector<ObjectImpl>& InstanceInfoImpl::get_objects() const {
+    return m_objects;
 }
 
-unsigned InstanceInfoImpl::get_num_objects() const {
-    return m_object_name_to_object_idx.size();
+const ObjectImpl& InstanceInfoImpl::get_object(unsigned object_idx) const {
+    if (!utils::in_bounds(object_idx, m_objects)) {
+        throw std::runtime_error("InstanceInfoImpl::get_object - object index out of range.");
+    }
+    return m_objects[object_idx];
 }
 
 unsigned InstanceInfoImpl::get_object_idx(const std::string& object_name) const {
@@ -135,11 +142,8 @@ unsigned InstanceInfoImpl::get_object_idx(const std::string& object_name) const 
     return m_object_name_to_object_idx.at(object_name);
 }
 
-const ObjectImpl& InstanceInfoImpl::get_object(unsigned object_idx) const {
-    if (!utils::in_bounds(object_idx, m_objects)) {
-        throw std::runtime_error("InstanceInfoImpl::get_object - object index out of range.");
-    }
-    return m_objects[object_idx];
+unsigned InstanceInfoImpl::get_num_objects() const {
+    return m_object_name_to_object_idx.size();
 }
 
 const std::shared_ptr<const VocabularyInfoImpl>& InstanceInfoImpl::get_vocabulary_info() const {

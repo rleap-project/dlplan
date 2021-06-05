@@ -10,14 +10,16 @@ namespace core {
 class InstanceInfoImpl;
 
 struct ObjectImpl {
-    const InstanceInfoImpl* m_parent;
+    const InstanceInfoImpl* m_instance_info;
     const std::string m_object_name;
-    const unsigned m_object_idx;
+    const int m_object_idx;
 
-    ObjectImpl(const InstanceInfoImpl& parent, const std::string& object_name, unsigned object_idx);
+    ObjectImpl(const InstanceInfoImpl& instance_info, const std::string& object_name, int object_idx);
     ~ObjectImpl() = default;
 
-    const InstanceInfoImpl* get_parent() const;
+    const InstanceInfoImpl* get_instance_info() const;
+    const std::string& get_object_name() const;
+    int get_object_idx() const;
 };
 
 }

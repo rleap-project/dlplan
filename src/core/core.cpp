@@ -9,6 +9,7 @@
 #include "instance_info.h"
 #include "vocabulary_info.h"
 #include "atom.h"
+#include "object.h"
 #include "state.h"
 #include "predicate.h"
 
@@ -46,6 +47,46 @@ Atom InstanceInfo::add_static_atom(const std::string &predicate_name, const Name
     return Atom(m_pImpl->add_static_atom(predicate_name, object_names));
 }
 
+std::vector<Atom> InstanceInfo::get_atoms() const {
+    std::vector<Atom> atoms;
+    atoms.reserve(m_pImpl->get_atoms().size());
+    for (AtomImpl atom : m_pImpl->get_atoms()) {
+        atoms.push_back(Atom(std::move(atom)));
+    }
+    return atoms;
+}
+
+Atom InstanceInfo::get_atom(unsigned atom_idx) const {
+    AtomImpl atom = m_pImpl->get_atom(atom_idx);
+    return Atom(std::move(atom));
+}
+
+std::vector<Object> InstanceInfo::get_objects() const {
+    std::vector<Object> objects;
+    objects.reserve(m_pImpl->get_objects().size());
+    for (ObjectImpl object : m_pImpl->get_objects()) {
+        objects.push_back(Object(std::move(object)));
+    }
+    return objects;
+}
+
+Object InstanceInfo::get_object(unsigned object_idx) const {
+    ObjectImpl object = m_pImpl->get_object(object_idx);
+    return Object(std::move(object));
+}
+
+unsigned InstanceInfo::get_object_idx(const std::string& object_name) const {
+    return m_pImpl->get_object_idx(object_name);
+}
+
+unsigned InstanceInfo::get_num_objects() const {
+    return m_pImpl->get_num_objects();
+}
+
+const std::shared_ptr<const VocabularyInfoImpl>& InstanceInfo::get_vocabulary_info() const {
+    return m_pImpl->get_vocabulary_info();
+}
+
 
 VocabularyInfo::VocabularyInfo() : m_pImpl(VocabularyInfoImpl()) { }
 
@@ -80,6 +121,25 @@ const std::string& Predicate::get_name() const {
 
 unsigned Predicate::get_arity() const {
     return m_pImpl->get_arity();
+}
+
+
+Object::Object(ObjectImpl&& impl) : m_pImpl(std::move(impl)) {}
+
+Object::Object(const Object& other) : m_pImpl(*other.m_pImpl) { }
+
+Object::~Object() { }
+
+const InstanceInfoImpl* Object::get_instance_info() const {
+    return m_pImpl->get_instance_info();
+}
+
+const std::string& Object::get_object_name() const {
+    return m_pImpl->get_object_name();
+}
+
+int Object::get_object_idx() const {
+    return m_pImpl->get_object_idx();
 }
 
 

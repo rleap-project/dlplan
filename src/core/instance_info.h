@@ -79,11 +79,12 @@ public:
     /**
      * Getters
      */
-    const AtomImpl& get_atom(unsigned atom_idx) const;
     const std::vector<AtomImpl>& get_atoms() const;
-    unsigned get_num_objects() const;
-    unsigned get_object_idx(const std::string& object_name) const;
+    const AtomImpl& get_atom(unsigned atom_idx) const;
+    const std::vector<ObjectImpl>& get_objects() const;
     const ObjectImpl& get_object(unsigned object_idx) const;
+    unsigned get_object_idx(const std::string& object_name) const;
+    unsigned get_num_objects() const;
     const std::shared_ptr<const VocabularyInfoImpl>& get_vocabulary_info() const;
 };
 
