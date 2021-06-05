@@ -25,5 +25,9 @@ int AtomImpl::get_object_idx(int pos) const {
     return m_object_idxs[pos];
 }
 
+const InstanceInfoImpl* AtomImpl::get_parent() const {
+    return m_parent;
+}
+
 }
 }

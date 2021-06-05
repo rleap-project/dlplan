@@ -23,6 +23,8 @@ struct PredicateImpl {
 
     PredicateImpl(const VocabularyInfoImpl& parent, const std::string& predicate_name, unsigned predicate_idx, unsigned arity);
     ~PredicateImpl() = default;
+
+    const VocabularyInfoImpl* get_parent() const;
 };
 
 }

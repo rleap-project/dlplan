@@ -19,52 +19,52 @@
 namespace dlp {
 namespace core {
 
-InstanceInfo::InstanceInfo(InstanceInfoImpl&& impl) : m_pImpl(std::make_shared<InstanceInfoImpl>(std::move(impl))) { }
+InstanceInfo::InstanceInfo(InstanceInfoImpl&& impl) : m_pImpl(std::move(impl)) { }
 
 InstanceInfo::InstanceInfo(const InstanceInfo& other) : m_pImpl(*other.m_pImpl) { }
 
 InstanceInfo::~InstanceInfo() { }
 
 State InstanceInfo::parse_state(const Name_Vec& atom_names) const {
-    return State(m_pImpl->get()->parse_state(atom_names));
+    return State(m_pImpl->parse_state(atom_names));
 }
 
 State InstanceInfo::convert_state(const std::vector<Atom>& atoms) const {
-    //if (!std::all_of(atoms.begin(), atoms.end(), [&](const auto& atom){ return atom == m_pImpl->get(); })) {
-    //    throw std::runtime_error("InstanceInfo::convert_state - atom does not belong to the same instance.");
-    //}
-    return State(m_pImpl->get()->convert_state(atoms));
+    if (!std::all_of(atoms.begin(), atoms.end(), [&](const Atom& atom){ return atom.m_pImpl->get_parent() == &*m_pImpl; })) {
+        throw std::runtime_error("InstanceInfo::convert_state - atom does not belong to the same instance.");
+    }
+    return State(m_pImpl->convert_state(atoms));
 }
 
 State InstanceInfo::convert_state(const Index_Vec& atom_idxs) const {
-    return State(m_pImpl->get()->convert_state(atom_idxs));
+    return State(m_pImpl->convert_state(atom_idxs));
 }
 
 Atom InstanceInfo::add_atom(const std::string &predicate_name, const Name_Vec &object_names) {
-    return Atom(m_pImpl->get()->add_atom(predicate_name, object_names));
+    return Atom(m_pImpl->add_atom(predicate_name, object_names));
 }
 
 Atom InstanceInfo::add_static_atom(const std::string &predicate_name, const Name_Vec &object_names) {
-    return Atom(m_pImpl->get()->add_static_atom(predicate_name, object_names));
+    return Atom(m_pImpl->add_static_atom(predicate_name, object_names));
 }
 
 
-VocabularyInfo::VocabularyInfo() : m_pImpl(std::make_shared<VocabularyInfoImpl>(VocabularyInfoImpl())) { }
+VocabularyInfo::VocabularyInfo() : m_pImpl(VocabularyInfoImpl()) { }
 
 VocabularyInfo::VocabularyInfo(const VocabularyInfo& other) : m_pImpl(*other.m_pImpl) { }
 
 VocabularyInfo::~VocabularyInfo() { }
 
 Predicate VocabularyInfo::add_predicate(const std::string &predicate_name, unsigned arity) {
-    return Predicate(m_pImpl->get()->add_predicate(predicate_name, arity));
+    return Predicate(m_pImpl->add_predicate(predicate_name, arity));
 }
 
 InstanceInfo VocabularyInfo::make_instance() {
-    return InstanceInfo(std::move(m_pImpl->get()->make_instance()));
+    return InstanceInfo(std::move(m_pImpl->make_instance()));
 }
 
 SyntacticElementFactory VocabularyInfo::make_factory() {
-    return SyntacticElementFactoryImpl(std::move(m_pImpl->get()->make_factory()));
+    return SyntacticElementFactoryImpl(std::move(m_pImpl->make_factory()));
 }
 
 
@@ -105,6 +105,14 @@ State::State(const State& other) : m_pImpl(*other.m_pImpl) {}
 State::~State() { }
 
 std::string State::str() const { /* tba */ }
+
+std::shared_ptr<const InstanceInfoImpl> State::get_parent() const {
+    return m_pImpl->get_instance_info();
+}
+
+const Index_Vec& State::get_atom_idxs() const {
+    return m_pImpl->get_atom_idxs();
+}
 
 
 Concept::Concept(const VocabularyInfoImpl& parent, element::Concept_Ptr pImpl)
@@ -160,7 +168,7 @@ int Numerical::evaluate(const State& state) const {
     if (state.m_pImpl->get_instance_info()->get_vocabulary_info().get() != m_parent) {
         throw std::runtime_error("Numerical::evaluate - mismatched vocabularies of Numerical and State.");
     }
-    return m_pImpl->get()->evaluate(*(state.m_pImpl));
+    return m_pImpl->get()->evaluate(*state.m_pImpl);
 }
 
 unsigned Numerical::compute_complexity() const {

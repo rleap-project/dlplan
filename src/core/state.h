@@ -27,7 +27,7 @@ struct StateImpl {
     /**
      * Getters.
      */
-    const std::shared_ptr<const InstanceInfoImpl> get_instance_info() const;
+    const std::shared_ptr<const InstanceInfoImpl>& get_instance_info() const;
     const Index_Vec& get_atom_idxs() const;
 };
 

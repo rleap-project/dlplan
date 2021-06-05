@@ -100,6 +100,11 @@ public:
      * Computes string-like representation of the state.
      */
     std::string str() const;
+    /**
+     * Getters.
+     */
+    std::shared_ptr<const InstanceInfoImpl> get_parent() const;
+    const Index_Vec& get_atom_idxs() const;
 };
 
 
@@ -108,7 +113,7 @@ public:
  */
 class VocabularyInfo {
 private:
-    pimpl<std::shared_ptr<VocabularyInfoImpl>> m_pImpl;
+    spimpl<VocabularyInfoImpl> m_pImpl;
 
 public:
     VocabularyInfo();
@@ -128,7 +133,7 @@ public:
  */
 class InstanceInfo {
 private:
-    pimpl<std::shared_ptr<InstanceInfoImpl>> m_pImpl;
+    spimpl<InstanceInfoImpl> m_pImpl;
 
     InstanceInfo(InstanceInfoImpl&& impl);
     friend class VocabularyInfo;

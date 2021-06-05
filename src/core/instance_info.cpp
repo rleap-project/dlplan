@@ -142,7 +142,7 @@ const ObjectImpl& InstanceInfoImpl::get_object(unsigned object_idx) const {
     return m_objects[object_idx];
 }
 
-const std::shared_ptr<const VocabularyInfoImpl> InstanceInfoImpl::get_vocabulary_info() const {
+const std::shared_ptr<const VocabularyInfoImpl>& InstanceInfoImpl::get_vocabulary_info() const {
     return m_vocabulary_info;
 }
 

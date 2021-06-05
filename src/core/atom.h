@@ -36,6 +36,7 @@ struct AtomImpl {
 
     int get_predicate_idx() const;
     int get_object_idx(int pos) const;
+    const InstanceInfoImpl* get_parent() const;
 };
 
 }

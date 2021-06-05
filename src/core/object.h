@@ -16,6 +16,8 @@ struct ObjectImpl {
 
     ObjectImpl(const InstanceInfoImpl& parent, const std::string& object_name, unsigned object_idx);
     ~ObjectImpl() = default;
+
+    const InstanceInfoImpl* get_parent() const;
 };
 
 }
