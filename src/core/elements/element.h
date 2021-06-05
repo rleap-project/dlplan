@@ -23,10 +23,10 @@ protected:
     const std::string m_name;
     // Evaluation result
     T m_result;
-    const StateImpl* m_state;
+    const State* m_state;
 
 protected:
-    virtual const T& evaluate_impl(const StateImpl& state) = 0;
+    virtual const T& evaluate_impl(const State& state) = 0;
 
 public:
     Element(const VocabularyInfoImpl& vocabulary, const std::string& name) : m_name(name), m_result(T()), m_state(nullptr) { }
@@ -35,7 +35,7 @@ public:
     /**
      * Evaluate and cache the last result.
      */
-    const T& evaluate(const StateImpl& state) {
+    const T& evaluate(const State& state) {
         if (m_state != &state) {
             m_state = &state;
             m_result = evaluate_impl(state);

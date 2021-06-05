@@ -14,7 +14,7 @@ protected:
     const Role_Ptr m_role;
 
 protected:
-    virtual const RoleDenotation& evaluate_impl(const StateImpl& state) override {
+    virtual const RoleDenotation& evaluate_impl(const State& state) override {
         const RoleDenotation& r_vec = m_role->evaluate(state);
         // TODO(dominik): Compute an indexing scheme that only considers objects that are part of the role
         // 2. Compute an adjacency list from the newly mapped role denotations.

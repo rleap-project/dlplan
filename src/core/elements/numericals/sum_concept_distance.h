@@ -18,7 +18,7 @@ protected:
     const Concept_Ptr m_concept_to;
 
 protected:
-    virtual const int& evaluate_impl(const StateImpl& state) override {
+    virtual const int& evaluate_impl(const State& state) override {
         const ConceptDenotation& c_from_vec = m_concept_from->evaluate(state);
         if (c_from_vec.empty()) {
             m_result = 0;

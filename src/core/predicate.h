@@ -15,12 +15,14 @@ class VocabularyInfoImpl;
 /**
  * Predicate contains information regarding the predicates used to construct the atoms.
  */
-struct PredicateImpl {
+class PredicateImpl {
+private:
     const VocabularyInfoImpl* m_vocabulary_info;
     const std::string m_predicate_name;
     const int m_predicate_idx;
     const int m_arity;
 
+public:
     PredicateImpl(const VocabularyInfoImpl& vocabulary_info, const std::string& predicate_name, int predicate_idx, int arity);
     ~PredicateImpl() = default;
 

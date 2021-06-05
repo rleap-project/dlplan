@@ -14,7 +14,7 @@ protected:
     RoleDenotation_Set m_universe_set;
 
 protected:
-    virtual const RoleDenotation& evaluate_impl(const StateImpl& state) override {
+    virtual const RoleDenotation& evaluate_impl(const State& state) override {
         if (m_universe_set.empty()) {
             unsigned num_objects = state.get_instance_info()->get_num_objects();
             for (unsigned object_idx_1 = 0; object_idx_1 < num_objects; ++object_idx_1) {

@@ -14,7 +14,7 @@ protected:
     const Role_Ptr m_role_right;
 
 protected:
-    virtual const RoleDenotation& evaluate_impl(const StateImpl& state) override {
+    virtual const RoleDenotation& evaluate_impl(const State& state) override {
         const RoleDenotation& l_vec = m_role_left->evaluate(state);
         const RoleDenotation& r_vec = m_role_right->evaluate(state);
         RoleDenotation_Set r_set(r_vec.begin(), r_vec.end());

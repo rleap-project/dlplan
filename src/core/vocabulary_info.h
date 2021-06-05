@@ -62,7 +62,7 @@ private:
     /**
      * All predicates.
      */
-    std::vector<PredicateImpl> m_predicates;
+    std::vector<Predicate> m_predicates;
 
     /**
      * Mappings between element names and enum.
@@ -76,16 +76,16 @@ public:
     /**
      * Adds an atom that may have varying evaluation depending on the state.
      */
-    PredicateImpl add_predicate(const std::string &predicate_name, unsigned arity);
+    const Predicate& add_predicate(const std::string &predicate_name, unsigned arity);
 
-    InstanceInfoImpl make_instance();
+    InstanceInfo make_instance();
 
-    SyntacticElementFactoryImpl make_factory();
+    SyntacticElementFactory make_factory();
 
     bool exists_predicate_name(const std::string& name) const;
     unsigned get_predicate_idx(const std::string& name) const;
 
-    const PredicateImpl& get_predicate(unsigned predicate_idx) const;
+    const Predicate& get_predicate(unsigned predicate_idx) const;
 
     static bool exists_element_name(const std::string& name);
     static EXPRESSION_TYPE element_name_to_expression_type(const std::string &name);

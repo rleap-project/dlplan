@@ -17,7 +17,7 @@ protected:
     ConceptDenotation_Set m_top;
 
 protected:
-    virtual const ConceptDenotation& evaluate_impl(const StateImpl& state) override {
+    virtual const ConceptDenotation& evaluate_impl(const State& state) override {
         /*
         // TODO(dominik): implement improved version by making use of role denotations sorted by their first component.
         RoleDenotation left_vec = m_role_left->evaluate(state);

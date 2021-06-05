@@ -29,9 +29,6 @@ State InstanceInfo::parse_state(const Name_Vec& atom_names) const {
 }
 
 State InstanceInfo::convert_state(const std::vector<Atom>& atoms) const {
-    if (!std::all_of(atoms.begin(), atoms.end(), [&](const Atom& atom){ return atom.get_instance_info() == &*m_pImpl; })) {
-        throw std::runtime_error("InstanceInfo::convert_state - atom does not belong to the same instance.");
-    }
     return State(m_pImpl->convert_state(atoms));
 }
 
@@ -39,48 +36,12 @@ State InstanceInfo::convert_state(const Index_Vec& atom_idxs) const {
     return State(m_pImpl->convert_state(atom_idxs));
 }
 
-Atom InstanceInfo::add_atom(const std::string &predicate_name, const Name_Vec &object_names) {
-    return Atom(m_pImpl->add_atom(predicate_name, object_names));
+const Atom& InstanceInfo::add_atom(const std::string &predicate_name, const Name_Vec &object_names) {
+    return m_pImpl->add_atom(predicate_name, object_names);
 }
 
-Atom InstanceInfo::add_static_atom(const std::string &predicate_name, const Name_Vec &object_names) {
-    return Atom(m_pImpl->add_static_atom(predicate_name, object_names));
-}
-
-std::vector<Atom> InstanceInfo::get_atoms() const {
-    std::vector<Atom> atoms;
-    atoms.reserve(m_pImpl->get_atoms().size());
-    for (AtomImpl atom : m_pImpl->get_atoms()) {
-        atoms.push_back(Atom(std::move(atom)));
-    }
-    return atoms;
-}
-
-Atom InstanceInfo::get_atom(unsigned atom_idx) const {
-    AtomImpl atom = m_pImpl->get_atom(atom_idx);
-    return Atom(std::move(atom));
-}
-
-std::vector<Object> InstanceInfo::get_objects() const {
-    std::vector<Object> objects;
-    objects.reserve(m_pImpl->get_objects().size());
-    for (ObjectImpl object : m_pImpl->get_objects()) {
-        objects.push_back(Object(std::move(object)));
-    }
-    return objects;
-}
-
-Object InstanceInfo::get_object(unsigned object_idx) const {
-    ObjectImpl object = m_pImpl->get_object(object_idx);
-    return Object(std::move(object));
-}
-
-unsigned InstanceInfo::get_object_idx(const std::string& object_name) const {
-    return m_pImpl->get_object_idx(object_name);
-}
-
-unsigned InstanceInfo::get_num_objects() const {
-    return m_pImpl->get_num_objects();
+const Atom& InstanceInfo::add_static_atom(const std::string &predicate_name, const Name_Vec &object_names) {
+    return m_pImpl->add_static_atom(predicate_name, object_names);
 }
 
 const std::shared_ptr<const VocabularyInfoImpl>& InstanceInfo::get_vocabulary_info() const {
@@ -92,16 +53,16 @@ VocabularyInfo::VocabularyInfo() : m_pImpl(VocabularyInfoImpl()) { }
 
 VocabularyInfo::~VocabularyInfo() { }
 
-Predicate VocabularyInfo::add_predicate(const std::string &predicate_name, unsigned arity) {
-    return Predicate(m_pImpl->add_predicate(predicate_name, arity));
+const Predicate& VocabularyInfo::add_predicate(const std::string &predicate_name, unsigned arity) {
+    return m_pImpl->add_predicate(predicate_name, arity);
 }
 
 InstanceInfo VocabularyInfo::make_instance() {
-    return InstanceInfo(std::move(m_pImpl->make_instance()));
+    return m_pImpl->make_instance();
 }
 
 SyntacticElementFactory VocabularyInfo::make_factory() {
-    return SyntacticElementFactoryImpl(std::move(m_pImpl->make_factory()));
+    return m_pImpl->make_factory();
 }
 
 
@@ -113,6 +74,10 @@ Predicate::~Predicate() {}
 
 const VocabularyInfoImpl* Predicate::get_vocabulary_info() const {
     return m_pImpl->get_vocabulary_info();
+}
+
+int Predicate::get_predicate_idx() const {
+    return m_pImpl->get_predicate_idx();
 }
 
 const std::string& Predicate::get_name() const {
@@ -154,35 +119,23 @@ const InstanceInfoImpl* Atom::get_instance_info() const {
 }
 
 const std::string& Atom::get_atom_name() const {
-    return m_pImpl->m_atom_name;
+    return m_pImpl->get_atom_name();
 }
 
 int Atom::get_atom_idx() const {
-    return m_pImpl->m_atom_idx;
+    return m_pImpl->get_atom_idx();
 }
 
-const std::string& Atom::get_predicate_name() const {
-    return m_pImpl->get_predicate_name();
+const Predicate& Atom::get_predicate() const {
+    return m_pImpl->get_predicate();
 }
 
-int Atom::get_predicate_idx() const {
-    return m_pImpl->get_predicate_idx();
+const std::vector<Object>& Atom::get_objects() const {
+    return m_pImpl->get_objects();
 }
 
-const Name_Vec& Atom::get_object_names() const {
-    return m_pImpl->get_object_names();
-}
-
-const std::string& Atom::get_object_name(int pos) const {
-    return m_pImpl->get_object_name(pos);
-}
-
-const Index_Vec& Atom::get_object_idxs() const {
-    return m_pImpl->get_object_idxs();
-}
-
-int Atom::get_object_idx(int pos) const {
-    return m_pImpl->get_object_idx(pos);
+const Object& Atom::get_object(int pos) const {
+    return m_pImpl->get_object(pos);
 }
 
 bool Atom::get_is_static() const {
@@ -217,7 +170,7 @@ ConceptDenotation Concept::evaluate(const State& state) const {
     if (state.get_instance_info()->get_vocabulary_info().get() != m_parent) {
         throw std::runtime_error("Concept::evaluate - mismatched vocabularies of Concept and State.");
     }
-    return m_pImpl->get()->evaluate(*state.m_pImpl);
+    return m_pImpl->get()->evaluate(state);
 }
 
 unsigned Concept::compute_complexity() const {
@@ -238,7 +191,7 @@ RoleDenotation Role::evaluate(const State& state) const {
     if (state.get_instance_info()->get_vocabulary_info().get() != m_parent) {
         throw std::runtime_error("Role::evaluate - mismatched vocabularies of Role and State.");
     }
-    return m_pImpl->get()->evaluate(*state.m_pImpl);
+    return m_pImpl->get()->evaluate(state);
 }
 
 unsigned Role::compute_complexity() const {
@@ -260,7 +213,7 @@ int Numerical::evaluate(const State& state) const {
     if (state.get_instance_info()->get_vocabulary_info().get() != m_parent) {
         throw std::runtime_error("Numerical::evaluate - mismatched vocabularies of Numerical and State.");
     }
-    return m_pImpl->get()->evaluate(*state.m_pImpl);
+    return m_pImpl->get()->evaluate(state);
 }
 
 unsigned Numerical::compute_complexity() const {
@@ -282,7 +235,7 @@ bool Boolean::evaluate(const State& state) const {
     if (state.get_instance_info()->get_vocabulary_info().get() != m_parent) {
         throw std::runtime_error("Boolean::evaluate - mismatched vocabularies of Concept and State.");
     }
-    return m_pImpl->get()->evaluate(*state.m_pImpl);
+    return m_pImpl->get()->evaluate(state);
 }
 
 unsigned Boolean::compute_complexity() const {

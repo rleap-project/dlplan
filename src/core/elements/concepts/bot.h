@@ -10,7 +10,7 @@ namespace element {
 
 class BotConcept : public Concept {
 protected:
-    virtual const ConceptDenotation& evaluate_impl(const StateImpl& state) override {
+    virtual const ConceptDenotation& evaluate_impl(const State& state) override {
         return m_result;
     }
 

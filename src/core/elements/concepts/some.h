@@ -15,7 +15,7 @@ protected:
     const Concept_Ptr m_concept;
 
 protected:
-    virtual const ConceptDenotation& evaluate_impl(const StateImpl& state) override {
+    virtual const ConceptDenotation& evaluate_impl(const State& state) override {
         const RoleDenotation& r_vec = m_role->evaluate(state);
         const ConceptDenotation& c_vec = m_concept->evaluate(state);
         ConceptDenotation_Set c_set(c_vec.begin(), c_vec.end());

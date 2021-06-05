@@ -14,14 +14,14 @@ protected:
     const unsigned m_pos;
 
 protected:
-    virtual const ConceptDenotation& evaluate_impl(const StateImpl& state) override {
+    virtual const ConceptDenotation& evaluate_impl(const State& state) override {
         const InstanceInfoImpl& info = *state.get_instance_info();
         // 2. Compute the result.
         m_result.clear();
         for (unsigned atom_idx : state.get_atom_idxs()) {
-            const AtomImpl& atom = info.get_atom(atom_idx);
-            if (atom.get_predicate_idx() == m_predicate_idx) {
-                m_result.push_back(atom.get_object_idx(m_pos));
+            const Atom& atom = info.get_atom(atom_idx);
+            if (atom.get_predicate().get_predicate_idx() == m_predicate_idx) {
+                m_result.push_back(atom.get_object(m_pos).get_object_idx());
             }
         }
         return m_result;
@@ -30,7 +30,7 @@ protected:
 public:
     PrimitiveConcept(const VocabularyInfoImpl& vocabulary, const std::string& name, unsigned pos)
     : Concept(vocabulary, name), m_pos(pos), m_predicate_idx(vocabulary.get_predicate_idx(m_name)) {
-        unsigned predicate_arity = vocabulary.get_predicate(m_predicate_idx).m_arity;
+        unsigned predicate_arity = vocabulary.get_predicate(m_predicate_idx).get_arity();
         if (m_pos >= predicate_arity) {
             throw std::runtime_error("PrimitiveConcept::PrimitiveConcept - object index does not match predicate arity ("s + std::to_string(m_pos) + " > " + std::to_string(predicate_arity) + ").");
         }

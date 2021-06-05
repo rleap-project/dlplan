@@ -35,12 +35,8 @@ class Predicate {
 private:
     pimpl<PredicateImpl> m_pImpl;
 
-    Predicate(PredicateImpl&& impl);
-
-    friend class VocabularyInfo;
-
 public:
-    Predicate() = delete;
+    Predicate(PredicateImpl&& impl);
     Predicate(const Predicate& other);
     ~Predicate();
 
@@ -48,6 +44,7 @@ public:
      * Getters.
      */
     const VocabularyInfoImpl* get_vocabulary_info() const;
+    int get_predicate_idx() const;
     const std::string& get_name() const;
     unsigned get_arity() const;
 };
@@ -60,18 +57,14 @@ class Object {
 private:
     pimpl<ObjectImpl> m_pImpl;
 
-    Object(ObjectImpl&& impl);
-
-    friend class InstanceInfo;
-
 public:
-    Object() = delete;
+    Object(ObjectImpl&& impl);
     Object(const Object& other);
     ~Object();
 
     const InstanceInfoImpl* get_instance_info() const;
-    const std::string& get_object_name() const;
     int get_object_idx() const;
+    const std::string& get_object_name() const;
 };
 
 
@@ -82,12 +75,8 @@ class Atom {
 private:
     pimpl<AtomImpl> m_pImpl;
 
-    Atom(AtomImpl&& impl);
-
-    friend class InstanceInfo;
-
 public:
-    Atom() = delete;
+    Atom(AtomImpl&& impl);
     Atom(const Atom& other);
     ~Atom();
 
@@ -97,12 +86,9 @@ public:
     const InstanceInfoImpl* get_instance_info() const;
     const std::string& get_atom_name() const;
     int get_atom_idx() const;
-    const std::string& get_predicate_name() const;
-    int get_predicate_idx() const;
-    const Name_Vec& get_object_names() const;
-    const std::string& get_object_name(int pos) const;
-    const Index_Vec& get_object_idxs() const;
-    int get_object_idx(int pos) const;
+    const Predicate& get_predicate() const;
+    const std::vector<Object>& get_objects() const;
+    const Object& get_object(int pos) const;
     bool get_is_static() const;
 };
 
@@ -114,16 +100,8 @@ class State {
 private:
     pimpl<StateImpl> m_pImpl;
 
-    State(StateImpl&& impl);
-
-    friend class InstanceInfo;
-    friend class Concept;
-    friend class Role;
-    friend class Numerical;
-    friend class Boolean;
-
 public:
-    State() = delete;
+    State(StateImpl&& impl);
     State(const State& other);
     ~State();
 
@@ -150,7 +128,7 @@ public:
     VocabularyInfo();
     ~VocabularyInfo();
 
-    Predicate add_predicate(const std::string &predicate_name, unsigned arity);
+    const Predicate& add_predicate(const std::string &predicate_name, unsigned arity);
 
     InstanceInfo make_instance();
 
@@ -165,22 +143,20 @@ class InstanceInfo {
 private:
     spimpl<InstanceInfoImpl> m_pImpl;
 
-    InstanceInfo(InstanceInfoImpl&& impl);
-    friend class VocabularyInfo;
-
 public:
+    InstanceInfo(InstanceInfoImpl&& impl);
     InstanceInfo() = delete;
     ~InstanceInfo();
 
     /**
      * Adds an atom that may have varying evaluation depending on the state.
      */
-    Atom add_atom(const std::string& predicate_name, const Name_Vec& object_names);
+    const Atom& add_atom(const std::string& predicate_name, const Name_Vec& object_names);
 
     /**
      * Adds an atom that remains true forever.
      */
-    Atom add_static_atom(const std::string& predicate_name, const Name_Vec& object_names);
+    const Atom& add_static_atom(const std::string& predicate_name, const Name_Vec& object_names);
 
     /**
      * Construct a state from textual information by first applying the index mapping and the calling convert_state.
@@ -198,12 +174,6 @@ public:
     /**
      * Getters.
      */
-    std::vector<Atom> get_atoms() const;
-    Atom get_atom(unsigned atom_idx) const;
-    std::vector<Object> get_objects() const;
-    Object get_object(unsigned object_idx) const;
-    unsigned get_object_idx(const std::string& object_name) const;
-    unsigned get_num_objects() const;
     const std::shared_ptr<const VocabularyInfoImpl>& get_vocabulary_info() const;
 };
 
@@ -342,11 +312,8 @@ class SyntacticElementFactory {
 private:
     pimpl<SyntacticElementFactoryImpl> m_pImpl;
 
-    SyntacticElementFactory(SyntacticElementFactoryImpl&& impl);
-    friend class VocabularyInfo;
-
 public:
-    SyntacticElementFactory() = delete;
+    SyntacticElementFactory(SyntacticElementFactoryImpl&& impl);
     SyntacticElementFactory(const SyntacticElementFactory& other);
     ~SyntacticElementFactory();
 

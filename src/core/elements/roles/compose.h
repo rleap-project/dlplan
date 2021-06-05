@@ -15,7 +15,7 @@ protected:
     const Role_Ptr m_role_right;
 
 protected:
-    virtual const RoleDenotation& evaluate_impl(const StateImpl& state) override {
+    virtual const RoleDenotation& evaluate_impl(const State& state) override {
         RoleDenotation l_vec = m_role_left->evaluate(state);
         RoleDenotation r_vec = m_role_right->evaluate(state);
         // complexity

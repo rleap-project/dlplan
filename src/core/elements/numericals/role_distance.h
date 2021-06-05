@@ -18,7 +18,7 @@ protected:
     const Role_Ptr m_role_to;
 
 protected:
-    virtual const int& evaluate_impl(const StateImpl& state) override {
+    virtual const int& evaluate_impl(const State& state) override {
         const RoleDenotation& r_from_vec = m_role_from->evaluate(state);
         if (r_from_vec.empty()) {
             m_result = 0;

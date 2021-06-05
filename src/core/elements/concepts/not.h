@@ -14,7 +14,7 @@ protected:
     ConceptDenotation_Set m_universe_set;
 
 protected:
-    virtual const ConceptDenotation& evaluate_impl(const StateImpl& state) override {
+    virtual const ConceptDenotation& evaluate_impl(const State& state) override {
         if (m_universe_set.empty()) {
             unsigned num_objects = state.get_instance_info()->get_num_objects();
             for (unsigned object_idx = 0; object_idx < num_objects; ++object_idx) {

@@ -14,7 +14,7 @@ protected:
     const T m_element;
 
 protected:
-    virtual const bool& evaluate_impl(const StateImpl& state) override {
+    virtual const bool& evaluate_impl(const State& state) override {
         m_result = m_element->evaluate(state).empty();
         return m_result;
     }

@@ -43,11 +43,13 @@ private:
     /**
      * All atoms.
      */
-    std::vector<AtomImpl> m_atoms;
+    std::vector<Atom> m_atoms;
     /**
      * All objects.
      */
-    std::vector<ObjectImpl> m_objects;
+    std::vector<Object> m_objects;
+
+    const Atom& add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static);
 
 public:
     InstanceInfoImpl(const VocabularyInfoImpl& vocabulary_info);
@@ -56,33 +58,33 @@ public:
     /**
      * Adds an atom that may have varying evaluation depending on the state.
      */
-    AtomImpl add_atom(const std::string &predicate_name, const Name_Vec &object_names);
+    const Atom& add_atom(const std::string &predicate_name, const Name_Vec &object_names);
 
     /**
      * Adds an atom that remains true forever.
      */
-    AtomImpl add_static_atom(const std::string& predicate_name, const Name_Vec& object_names);
+    const Atom& add_static_atom(const std::string& predicate_name, const Name_Vec& object_names);
 
     /**
      * Construct a state from textual information by first applying the index mapping and the calling convert_state.
      */
-    StateImpl parse_state(const Name_Vec& atom_names) const;
+    State parse_state(const Name_Vec& atom_names) const;
     /**
      * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
      */
-    StateImpl convert_state(const std::vector<Atom>& atoms) const;
+    State convert_state(const std::vector<Atom>& atoms) const;
     /**
      * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
      */
-    StateImpl convert_state(const Index_Vec& atom_idxs) const;
+    State convert_state(const Index_Vec& atom_idxs) const;
 
     /**
      * Getters
      */
-    const std::vector<AtomImpl>& get_atoms() const;
-    const AtomImpl& get_atom(unsigned atom_idx) const;
-    const std::vector<ObjectImpl>& get_objects() const;
-    const ObjectImpl& get_object(unsigned object_idx) const;
+    const std::vector<Atom>& get_atoms() const;
+    const Atom& get_atom(unsigned atom_idx) const;
+    const std::vector<Object>& get_objects() const;
+    const Object& get_object(unsigned object_idx) const;
     unsigned get_object_idx(const std::string& object_name) const;
     unsigned get_num_objects() const;
     const std::shared_ptr<const VocabularyInfoImpl>& get_vocabulary_info() const;

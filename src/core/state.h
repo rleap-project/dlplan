@@ -15,11 +15,13 @@ class InstanceInfoImpl;
 /**
  * State stores information related to a planning state.
  */
-struct StateImpl {
+class StateImpl {
+private:
     const std::shared_ptr<const InstanceInfoImpl> m_instance_info;
     // The underlying implementation currently is a vector of atoms.
     const Index_Vec m_atom_idxs;
 
+public:
     StateImpl(const InstanceInfoImpl& parent, const Index_Vec& atom_idxs);
     StateImpl(const InstanceInfoImpl& parent, Index_Vec&& atom_idxs);
     ~StateImpl() = default;

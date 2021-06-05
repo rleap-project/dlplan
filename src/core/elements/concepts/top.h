@@ -10,7 +10,7 @@ namespace element {
 
 class TopConcept : public Concept {
 protected:
-    virtual const ConceptDenotation& evaluate_impl(const StateImpl& state) override {
+    virtual const ConceptDenotation& evaluate_impl(const State& state) override {
         if (m_result.empty()) {
             unsigned num_objects = state.get_instance_info()->get_num_objects();
             m_result.reserve(num_objects);

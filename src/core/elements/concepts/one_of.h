@@ -13,7 +13,7 @@ protected:
     const std::string m_object_name;
 
 protected:
-    virtual const ConceptDenotation& evaluate_impl(const StateImpl& state) override {
+    virtual const ConceptDenotation& evaluate_impl(const State& state) override {
         unsigned object_idx = state.get_instance_info()->get_object_idx(m_object_name);
         m_result = { static_cast<int>(object_idx) };
         return m_result;

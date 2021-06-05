@@ -9,11 +9,13 @@ namespace dlp {
 namespace core {
 class InstanceInfoImpl;
 
-struct ObjectImpl {
+class ObjectImpl {
+private:
     const InstanceInfoImpl* m_instance_info;
     const std::string m_object_name;
     const int m_object_idx;
 
+public:
     ObjectImpl(const InstanceInfoImpl& instance_info, const std::string& object_name, int object_idx);
     ~ObjectImpl() = default;
 
