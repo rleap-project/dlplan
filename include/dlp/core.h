@@ -47,6 +47,7 @@ public:
     /**
      * Getters.
      */
+    const VocabularyInfoImpl* get_vocabulary_info() const;
     const std::string& get_name() const;
     unsigned get_arity() const;
 };
@@ -71,6 +72,7 @@ public:
     /**
      * Getters.
      */
+    const InstanceInfoImpl* get_instance_info() const;
     int get_atom_idx() const;
     const std::string& get_atom_name() const;
 };
@@ -103,7 +105,7 @@ public:
     /**
      * Getters.
      */
-    std::shared_ptr<const InstanceInfoImpl> get_parent() const;
+    std::shared_ptr<const InstanceInfoImpl> get_instance_info() const;
     const Index_Vec& get_atom_idxs() const;
 };
 
@@ -117,7 +119,6 @@ private:
 
 public:
     VocabularyInfo();
-    VocabularyInfo(const VocabularyInfo& other);
     ~VocabularyInfo();
 
     Predicate add_predicate(const std::string &predicate_name, unsigned arity);
@@ -140,7 +141,6 @@ private:
 
 public:
     InstanceInfo() = delete;
-    InstanceInfo(const InstanceInfo& other);
     ~InstanceInfo();
 
     /**

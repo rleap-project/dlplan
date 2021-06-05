@@ -13,7 +13,7 @@ namespace core {
 class InstanceInfoImpl;
 
 struct AtomImpl {
-    const InstanceInfoImpl* m_parent;
+    const InstanceInfoImpl* m_instance_info;
     // Data members
     const std::string m_atom_name;
     const int m_atom_idx;
@@ -24,7 +24,7 @@ struct AtomImpl {
     bool m_is_static;
 
     AtomImpl(
-        const InstanceInfoImpl& parent,
+        const InstanceInfoImpl& instance_info,
         const std::string& atom_name,
         const int atom_idx,
         const std::string &predicate_name,
@@ -36,7 +36,7 @@ struct AtomImpl {
 
     int get_predicate_idx() const;
     int get_object_idx(int pos) const;
-    const InstanceInfoImpl* get_parent() const;
+    const InstanceInfoImpl* get_instance_info() const;
 };
 
 }

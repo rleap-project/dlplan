@@ -5,7 +5,7 @@ namespace dlp {
 namespace core {
 
 AtomImpl::AtomImpl(
-    const InstanceInfoImpl& parent,
+    const InstanceInfoImpl& instance_info,
     const std::string& atom_name,
     const int atom_idx,
     const std::string &predicate_name,
@@ -13,7 +13,7 @@ AtomImpl::AtomImpl(
     const Name_Vec &object_names,
     const Index_Vec &object_idxs,
     bool is_static)
-    : m_parent(&parent), m_atom_name(atom_name), m_atom_idx(atom_idx),
+    : m_instance_info(&instance_info), m_atom_name(atom_name), m_atom_idx(atom_idx),
       m_predicate_name(predicate_name), m_predicate_idx(predicate_idx),
       m_object_names(object_names), m_object_idxs(object_idxs), m_is_static(is_static) { }
 
@@ -25,8 +25,8 @@ int AtomImpl::get_object_idx(int pos) const {
     return m_object_idxs[pos];
 }
 
-const InstanceInfoImpl* AtomImpl::get_parent() const {
-    return m_parent;
+const InstanceInfoImpl* AtomImpl::get_instance_info() const {
+    return m_instance_info;
 }
 
 }

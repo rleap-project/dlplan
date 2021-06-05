@@ -16,15 +16,18 @@ class VocabularyInfoImpl;
  * Predicate contains information regarding the predicates used to construct the atoms.
  */
 struct PredicateImpl {
-    const VocabularyInfoImpl* m_parent;
+    const VocabularyInfoImpl* m_vocabulary_info;
     const std::string m_predicate_name;
-    const unsigned m_predicate_idx;
-    const unsigned m_arity;
+    const int m_predicate_idx;
+    const int m_arity;
 
-    PredicateImpl(const VocabularyInfoImpl& parent, const std::string& predicate_name, unsigned predicate_idx, unsigned arity);
+    PredicateImpl(const VocabularyInfoImpl& vocabulary_info, const std::string& predicate_name, int predicate_idx, int arity);
     ~PredicateImpl() = default;
 
-    const VocabularyInfoImpl* get_parent() const;
+    const VocabularyInfoImpl* get_vocabulary_info() const;
+    const std::string& get_predicate_name() const;
+    int get_predicate_idx() const;
+    int get_arity() const;
 };
 
 }
