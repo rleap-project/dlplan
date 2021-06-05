@@ -93,12 +93,40 @@ const InstanceInfoImpl* Atom::get_instance_info() const {
     return m_pImpl->get_instance_info();
 }
 
+const std::string& Atom::get_atom_name() const {
+    return m_pImpl->m_atom_name;
+}
+
 int Atom::get_atom_idx() const {
     return m_pImpl->m_atom_idx;
 }
 
-const std::string& Atom::get_atom_name() const {
-    return m_pImpl->m_atom_name;
+const std::string& Atom::get_predicate_name() const {
+    return m_pImpl->get_predicate_name();
+}
+
+int Atom::get_predicate_idx() const {
+    return m_pImpl->get_predicate_idx();
+}
+
+const Name_Vec& Atom::get_object_names() const {
+    return m_pImpl->get_object_names();
+}
+
+const std::string& Atom::get_object_name(int pos) const {
+    return m_pImpl->get_object_name(pos);
+}
+
+const Index_Vec& Atom::get_object_idxs() const {
+    return m_pImpl->get_object_idxs();
+}
+
+int Atom::get_object_idx(int pos) const {
+    return m_pImpl->get_object_idx(pos);
+}
+
+bool Atom::get_is_static() const {
+    return m_pImpl->get_is_static();
 }
 
 
