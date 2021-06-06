@@ -7,7 +7,6 @@
 
 namespace dlp {
 namespace generator {
-class FeatureImpl;
 class NumericalImpl;
 class BooleanImpl;
 class FeatureCollectionImpl;
@@ -31,7 +30,7 @@ public:
     virtual ~Feature() = default;
 
     virtual const std::string& get_repr() const = 0;
-    virtual const std::vector<T>& get_evaluation() const = 0;
+    virtual const std::vector<T>& get_state_evaluations() const = 0;
 };
 
 
@@ -39,13 +38,16 @@ public:
  * Numerical stores information related to a core::Numerical.
  */
 class Numerical : Feature<int> {
+private:
+    pimpl<NumericalImpl> m_pImpl;
+
 public:
     Numerical(NumericalImpl&& impl);
     Numerical(const Numerical& other);
-    ~Numerical();
+    virtual ~Numerical();
 
     virtual const std::string& get_repr() const override;
-    virtual const std::vector<int>& get_evaluation() const override;
+    virtual const std::vector<int>& get_state_evaluations() const override;
 };
 
 
@@ -53,13 +55,16 @@ public:
  * Boolean stores information related to a core::Boolean.
  */
 class Boolean : Feature<bool> {
+private:
+    pimpl<BooleanImpl> m_pImpl;
+
 public:
     Boolean(BooleanImpl&& impl);
     Boolean(const Boolean& other);
-    ~Boolean();
+    virtual ~Boolean();
 
     virtual const std::string& get_repr() const override;
-    virtual const std::vector<bool>& get_evaluation() const override;
+    virtual const std::vector<bool>& get_state_evaluations() const override;
 };
 
 

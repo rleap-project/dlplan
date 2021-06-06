@@ -1,4 +1,5 @@
 #include "element_factory.h"
+#include "vocabulary_info.h"
 #include "parser/parser.h"
 #include "parser/expressions/expression.h"
 #include "elements/booleans/empty.h"
@@ -297,8 +298,8 @@ Role SyntacticElementFactoryImpl::make_transitive_reflexive_closure(const Role& 
     return Role(std::move(RoleImpl(*m_vocabulary_info, std::move(result_ptr))));
 }
 
-const std::shared_ptr<const VocabularyInfoImpl>& SyntacticElementFactoryImpl::get_vocabulary_info() const {
-    return m_vocabulary_info;
+const VocabularyInfoImpl* SyntacticElementFactoryImpl::get_vocabulary_info() const {
+    return m_vocabulary_info.get();
 }
 
 }

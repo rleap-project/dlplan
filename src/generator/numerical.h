@@ -8,7 +8,6 @@
 
 
 namespace dlp {
-namespace core {
 namespace generator {
 
 class NumericalImpl : public FeatureImpl<int> {
@@ -18,7 +17,6 @@ public:
     ~NumericalImpl() = default;
 };
 
-}
 }
 }
 

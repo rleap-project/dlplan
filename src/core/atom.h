@@ -3,10 +3,8 @@
 
 #include <string>
 #include <vector>
-#include <memory>
 
 #include "../../include/dlp/core.h"
-#include "types.h"
 
 
 namespace dlp {

@@ -3,6 +3,8 @@
 #include <deque>
 #include <iostream>
 
+#include "../types.h"
+
 
 namespace dlp {
 namespace core {

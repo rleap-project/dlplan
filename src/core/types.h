@@ -1,12 +1,6 @@
 #ifndef DLP_SRC_CORE_TYPES_H_
 #define DLP_SRC_CORE_TYPES_H_
 
-#include <unordered_set>
-#include <utility>
-#include <memory>
-#include <vector>
-#include <limits>
-
 // #include "boost/functional/hash.hpp"
 
 

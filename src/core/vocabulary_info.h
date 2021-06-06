@@ -5,9 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "predicate.h"
-#include "atom.h"
-#include "types.h"
+#include "../../include/dlp/core.h"
 
 
 namespace dlp {

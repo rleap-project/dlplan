@@ -2,14 +2,13 @@
 #define DLP_SRC_CORE_PARSER_PARSER_H_
 
 #include <string>
-#include <unordered_map>
 
-#include "../vocabulary_info.h"
 #include "types.h"
 
 
 namespace dlp {
 namespace core {
+class VocabularyInfoImpl;
 namespace parser {
 
 class Parser {

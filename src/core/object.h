@@ -2,7 +2,6 @@
 #define DLP_SRC_CORE_OBJECT_H_
 
 #include <string>
-#include <memory>
 
 
 namespace dlp {

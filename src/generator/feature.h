@@ -6,7 +6,6 @@
 
 
 namespace dlp {
-namespace core {
 namespace generator {
 
 /**
@@ -27,9 +26,16 @@ public:
     FeatureImpl(const std::string& repr, std::vector<T>&& state_evaluations)
         : m_repr(repr), m_state_evaluations(std::move(state_evaluations)) { }
     ~FeatureImpl() = default;
+
+    virtual const std::string& get_repr() const {
+        return m_repr;
+    }
+
+    virtual const std::vector<T>& get_state_evaluations() const {
+        return m_state_evaluations;
+    }
 };
 
-}
 }
 }
 

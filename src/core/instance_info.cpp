@@ -5,6 +5,9 @@
 #include <sstream>
 #include <cassert>
 
+#include "vocabulary_info.h"
+#include "object.h"
+#include "atom.h"
 #include "state.h"
 #include "../utils/collections.h"
 

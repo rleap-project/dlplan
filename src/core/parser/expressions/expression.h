@@ -1,15 +1,11 @@
 #ifndef DLP_SRC_CORE_PARSER_EXPRESSIONS_EXPRESSION_H_
 #define DLP_SRC_CORE_PARSER_EXPRESSIONS_EXPRESSION_H_
 
-#include <iostream>
-#include <memory>
 #include <sstream>
 #include <string>
 #include <vector>
 
-#include "../../elements/types.h"
 #include "../../cache.h"
-#include "../../vocabulary_info.h"
 
 
 namespace dlp {

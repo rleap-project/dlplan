@@ -1,12 +1,7 @@
 #ifndef DLP_SRC_CORE_ELEMENTS_UTILS_H_
 #define DLP_SRC_CORE_ELEMENTS_UTILS_H_
 
-#include <vector>
-#include <utility>
-
 #include "types.h"
-
-#include "../types.h"
 
 
 namespace dlp {

@@ -4,6 +4,7 @@
 #include "../role.h"
 #include "../utils.h"
 
+
 namespace dlp {
 namespace core {
 namespace element {

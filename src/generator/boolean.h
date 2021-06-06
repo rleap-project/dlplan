@@ -8,7 +8,6 @@
 
 
 namespace dlp {
-namespace core {
 namespace generator {
 
 class BooleanImpl : public FeatureImpl<bool> {
@@ -18,7 +17,6 @@ public:
     ~BooleanImpl() = default;
 };
 
-}
 }
 }
 

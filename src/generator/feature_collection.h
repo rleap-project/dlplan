@@ -3,18 +3,26 @@
 
 #include <vector>
 
-#include "numerical.h"
-#include "boolean.h"
+#include "../../include/dlp/generator.h"
+
 
 namespace dlp {
 namespace generator {
 
 class FeatureCollectionImpl {
 private:
-public:
-    FeatureCollectionImpl();
-    ~FeatureCollectionImpl();
+    NumericalFeatures m_numerical_features;
+    BooleanFeatures m_boolean_features;
 
+public:
+    FeatureCollectionImpl() = default;
+    ~FeatureCollectionImpl() = default;
+
+    void add_numerical_feature(Numerical&& numerical_feature);
+    void add_boolean_feature(Boolean&& boolean_feature);
+
+    const NumericalFeatures& get_numerical_features() const;
+    const BooleanFeatures& get_boolean_features() const;
 };
 
 }

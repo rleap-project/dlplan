@@ -5,9 +5,6 @@
 #include <string>
 #include <vector>
 
-#include "vocabulary_info.h"
-#include "predicate.h"
-#include "object.h"
 #include "types.h"
 
 #include "../../include/dlp/core.h"
@@ -16,6 +13,7 @@
 namespace dlp {
 namespace core {
 class StateImpl;
+class VocabularyInfoImpl;
 
 /**
  * InstanceInfo stores Atom related information and provides functionality for state transformation.

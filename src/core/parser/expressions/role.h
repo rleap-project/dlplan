@@ -5,6 +5,7 @@
 
 #include "../../elements/role.h"
 
+
 namespace dlp {
 namespace core {
 namespace parser {

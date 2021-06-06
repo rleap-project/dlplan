@@ -3,17 +3,16 @@
 
 #include <memory>
 #include <string>
-#include <vector>
-#include <unordered_map>
 
-#include "vocabulary_info.h"
 #include "cache.h"
 #include "types.h"
-#include "elements/types.h"
+
+#include "../../include/dlp/core.h"
 
 
 namespace dlp {
 namespace core {
+class VocabularyInfoImpl;
 
 /**
  * ElementFactory provides functionality for constructing
@@ -72,7 +71,7 @@ public:
     /**
      * Getters.
      */
-    const std::shared_ptr<const VocabularyInfoImpl>& get_vocabulary_info() const;
+    const VocabularyInfoImpl* get_vocabulary_info() const;
 };
 
 }

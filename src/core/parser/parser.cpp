@@ -5,6 +5,7 @@
 #include <iostream>
 #include <algorithm>
 
+#include "expressions/expression.h"
 #include "tokenizer.h"
 #include "ast_factory.h"
 #include "tokenizer.h"
