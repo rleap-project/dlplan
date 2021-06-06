@@ -29,46 +29,45 @@ protected:
 public:
     SyntacticElementFactoryImpl(const VocabularyInfoImpl& vocabulary_info);
 
-    element::Concept_Ptr parse_concept(const std::string &description);
-    element::Role_Ptr parse_role(const std::string &description);
-    element::Numerical_Ptr parse_numerical(const std::string &description);
-    element::Boolean_Ptr parse_boolean(const std::string &description);
+    Concept parse_concept(const std::string &description);
+    Role parse_role(const std::string &description);
+    Numerical parse_numerical(const std::string &description);
+    Boolean parse_boolean(const std::string &description);
 
-    element::Boolean_Ptr make_empty_boolean(element::Concept_Ptr concept);
-    element::Boolean_Ptr make_empty_boolean(element::Role_Ptr role);
-
+    Boolean make_empty_boolean(const Concept& concept);
+    Boolean make_empty_boolean(const Role& role);
     // TODO(dominik): Do we want to pass Object/Predicate instead of strings?
-    element::Concept_Ptr make_all_concept(element::Role_Ptr role, element::Concept_Ptr concept);
-    element::Concept_Ptr make_and_concept(element::Concept_Ptr concept_left, element::Concept_Ptr concept_right);
-    element::Concept_Ptr make_bot_concept();
-    element::Concept_Ptr make_diff_concept(element::Concept_Ptr concept_left, element::Concept_Ptr concept_right);
-    element::Concept_Ptr make_not_concept(element::Concept_Ptr concept);
-    element::Concept_Ptr make_one_of_concept(const std::string& object_name);
-    element::Concept_Ptr make_or_concept(element::Concept_Ptr concept_left, element::Concept_Ptr concept_right);
-    element::Concept_Ptr make_primitive_concept(const std::string& name, unsigned pos);
-    element::Concept_Ptr make_some_concept(element::Role_Ptr role, element::Concept_Ptr concept);
-    element::Concept_Ptr make_subset_concept(element::Role_Ptr role_left, element::Role_Ptr role_right);
-    element::Concept_Ptr make_top_concept();
+    Concept make_all_concept(const Role& role, const Concept& concept);
+    Concept make_and_concept(const Concept& concept_left, const Concept& concept_right);
+    Concept make_bot_concept();
+    Concept make_diff_concept(const Concept& concept_left, const Concept& concept_right);
+    Concept make_not_concept(const Concept& concept);
+    Concept make_one_of_concept(const std::string& object_name);
+    Concept make_or_concept(const Concept& concept_left, const Concept& concept_right);
+    Concept make_primitive_concept(const std::string& name, unsigned pos);
+    Concept make_some_concept(const Role& role, const Concept& concept);
+    Concept make_subset_concept(const Role& role_left, const Role& role_right);
+    Concept make_top_concept();
 
-    element::Numerical_Ptr make_concept_distance(element::Concept_Ptr concept_from, element::Role_Ptr role, element::Concept_Ptr concept_to);
-    element::Numerical_Ptr make_count(element::Concept_Ptr concept);
-    element::Numerical_Ptr make_count(element::Role_Ptr role);
-    element::Numerical_Ptr make_role_distance(element::Role_Ptr role_from, element::Role_Ptr role, element::Role_Ptr role_to);
-    element::Numerical_Ptr make_sum_concept_distance(element::Concept_Ptr concept_from, element::Role_Ptr role, element::Concept_Ptr concept_to);
-    element::Numerical_Ptr make_sum_role_distance(element::Role_Ptr role_from, element::Role_Ptr role, element::Role_Ptr role_to);
+    Numerical make_concept_distance(const Concept& concept_from, const Role& role, const Concept& concept_to);
+    Numerical make_count(const Concept& concept);
+    Numerical make_count(const Role& role);
+    Numerical make_role_distance(const Role& role_from, const Role& role, const Role& role_to);
+    Numerical make_sum_concept_distance(const Concept& concept_from, const Role& role, const Concept& concept_to);
+    Numerical make_sum_role_distance(const Role& role_from, const Role& role, const Role& role_to);
 
-    element::Role_Ptr make_and_role(element::Role_Ptr role_left, element::Role_Ptr role_right);
-    element::Role_Ptr make_compose_role(element::Role_Ptr role_left, element::Role_Ptr role_right);
-    element::Role_Ptr make_diff_role(element::Role_Ptr role_left, element::Role_Ptr role_right);
-    element::Role_Ptr make_identity_role(element::Concept_Ptr concept);
-    element::Role_Ptr make_inverse_role(element::Role_Ptr role);
-    element::Role_Ptr make_not_role(element::Role_Ptr role);
-    element::Role_Ptr make_or_role(element::Role_Ptr role_left, element::Role_Ptr role_right);
-    element::Role_Ptr make_primitive_role(const std::string& name, unsigned pos_1, unsigned pos_2);
-    element::Role_Ptr make_restrict_role(element::Role_Ptr role, element::Concept_Ptr concept);
-    element::Role_Ptr make_top_role();
-    element::Role_Ptr make_transitive_closure(element::Role_Ptr role);
-    element::Role_Ptr make_transitive_reflexive_closure(element::Role_Ptr role);
+    Role make_and_role(const Role& role_left, const Role& role_right);
+    Role make_compose_role(const Role& role_left, const Role& role_right);
+    Role make_diff_role(const Role& role_left, const Role& role_right);
+    Role make_identity_role(const Concept& concept);
+    Role make_inverse_role(const Role& role);
+    Role make_not_role(const Role& role);
+    Role make_or_role(const Role& role_left, const Role& role_right);
+    Role make_primitive_role(const std::string& name, unsigned pos_1, unsigned pos_2);
+    Role make_restrict_role(const Role& role, const Concept& concept);
+    Role make_top_role();
+    Role make_transitive_closure(const Role& role);
+    Role make_transitive_reflexive_closure(const Role& role);
 
     /**
      * Getters.

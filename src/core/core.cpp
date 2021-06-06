@@ -12,6 +12,10 @@
 #include "object.h"
 #include "state.h"
 #include "predicate.h"
+#include "concept.h"
+#include "role.h"
+#include "numerical.h"
+#include "boolean.h"
 
 #include <iostream>
 #include <algorithm>
@@ -160,90 +164,82 @@ const Index_Vec& State::get_atom_idxs() const {
 }
 
 
-Concept::Concept(const VocabularyInfoImpl& parent, element::Concept_Ptr pImpl)
-    : Element<ConceptDenotation>(parent), m_pImpl(pImpl) { }
+Concept::Concept(ConceptImpl&& impl) : m_pImpl(std::move(impl)) { }
 
 Concept::Concept(const Concept& other)
     : Element<ConceptDenotation>(other), m_pImpl(*other.m_pImpl) { }
 
-ConceptDenotation Concept::evaluate(const State& state) const {
-    if (state.get_instance_info()->get_vocabulary_info().get() != m_parent) {
-        throw std::runtime_error("Concept::evaluate - mismatched vocabularies of Concept and State.");
-    }
-    return m_pImpl->get()->evaluate(state);
+Concept::~Concept() { }
+
+ConceptDenotation Concept::evaluate(const State& state) {
+    return m_pImpl->evaluate(state);
 }
 
 unsigned Concept::compute_complexity() const {
-    return m_pImpl->get()->compute_complexity();
+    return m_pImpl->compute_complexity();
 }
 
 std::string Concept::compute_repr() const {
-    return m_pImpl->get()->compute_repr();
+    return m_pImpl->compute_repr();
 }
 
-Role::Role(const VocabularyInfoImpl& parent, element::Role_Ptr pImpl)
-    : Element<RoleDenotation>(parent), m_pImpl(pImpl) { }
+Role::Role(RoleImpl&& impl) : m_pImpl(std::move(impl)) { }
 
 Role::Role(const Role& other)
-    : Element<RoleDenotation>(other), m_pImpl(*other.m_pImpl) { }
+    : m_pImpl(*other.m_pImpl) { }
 
-RoleDenotation Role::evaluate(const State& state) const {
-    if (state.get_instance_info()->get_vocabulary_info().get() != m_parent) {
-        throw std::runtime_error("Role::evaluate - mismatched vocabularies of Role and State.");
-    }
-    return m_pImpl->get()->evaluate(state);
+Role::~Role() { }
+
+RoleDenotation Role::evaluate(const State& state) {
+    return m_pImpl->evaluate(state);
 }
 
 unsigned Role::compute_complexity() const {
-    return m_pImpl->get()->compute_complexity();
+    return m_pImpl->compute_complexity();
 }
 
 std::string Role::compute_repr() const {
-    return m_pImpl->get()->compute_repr();
+    return m_pImpl->compute_repr();
 }
 
 
-Numerical::Numerical(const VocabularyInfoImpl& parent, element::Numerical_Ptr pImpl)
-    : Element<int>(parent), m_pImpl(pImpl) { }
+Numerical::Numerical(NumericalImpl&& impl) : m_pImpl(std::move(impl)) { }
 
 Numerical::Numerical(const Numerical& other)
-    : Element<int>(other), m_pImpl(*other.m_pImpl) { }
+    : m_pImpl(*other.m_pImpl) { }
 
-int Numerical::evaluate(const State& state) const {
-    if (state.get_instance_info()->get_vocabulary_info().get() != m_parent) {
-        throw std::runtime_error("Numerical::evaluate - mismatched vocabularies of Numerical and State.");
-    }
-    return m_pImpl->get()->evaluate(state);
+Numerical::~Numerical() { }
+
+int Numerical::evaluate(const State& state) {
+    return m_pImpl->evaluate(state);
 }
 
 unsigned Numerical::compute_complexity() const {
-    return m_pImpl->get()->compute_complexity();
+    return m_pImpl->compute_complexity();
 }
 
 std::string Numerical::compute_repr() const {
-    return m_pImpl->get()->compute_repr();
+    return m_pImpl->compute_repr();
 }
 
 
-Boolean::Boolean(const VocabularyInfoImpl& parent, element::Boolean_Ptr pImpl)
-    : Element<bool>(parent), m_pImpl(pImpl) { }
+Boolean::Boolean(BooleanImpl&& impl) : m_pImpl(std::move(impl)) { }
 
 Boolean::Boolean(const Boolean& other)
-    : Element<bool>(other), m_pImpl(*other.m_pImpl) { }
+    : m_pImpl(*other.m_pImpl) { }
 
-bool Boolean::evaluate(const State& state) const {
-    if (state.get_instance_info()->get_vocabulary_info().get() != m_parent) {
-        throw std::runtime_error("Boolean::evaluate - mismatched vocabularies of Concept and State.");
-    }
-    return m_pImpl->get()->evaluate(state);
+Boolean::~Boolean() { }
+
+bool Boolean::evaluate(const State& state) {
+    return m_pImpl->evaluate(state);
 }
 
 unsigned Boolean::compute_complexity() const {
-    return m_pImpl->get()->compute_complexity();
+    return m_pImpl->compute_complexity();
 }
 
 std::string Boolean::compute_repr() const {
-    return m_pImpl->get()->compute_repr();
+    return m_pImpl->compute_repr();
 }
 
 
@@ -254,151 +250,144 @@ SyntacticElementFactory::SyntacticElementFactory(const SyntacticElementFactory& 
 SyntacticElementFactory::~SyntacticElementFactory() { }
 
 Concept SyntacticElementFactory::parse_concept(const std::string &description) {
-    element::Concept_Ptr concept = m_pImpl->parse_concept(description);
-    if (!concept) throw std::runtime_error("SyntacticElementFactory::parse_concept - ("s + description + ") cannot be parsed into a Concept.");
-    return Concept(*m_pImpl->get_vocabulary_info().get(), concept);
+    return m_pImpl->parse_concept(description);
 }
 
 Role SyntacticElementFactory::parse_role(const std::string &description) {
-    element::Role_Ptr role = m_pImpl->parse_role(description);
-    if (!role) throw std::runtime_error("SyntacticElementFactory::parse_role - ("s + description + ") cannot be parsed into a Role.");
-    return Role(*m_pImpl->get_vocabulary_info().get(), role);
+    return m_pImpl->parse_role(description);
 }
 
 Numerical SyntacticElementFactory::parse_numerical(const std::string &description) {
-    element::Numerical_Ptr numerical = m_pImpl->parse_numerical(description);
-    if (!numerical) throw std::runtime_error("SyntacticElementFactory::parse_numerical - ("s + description + ") cannot be parsed into a Numerical.");
-    return Numerical(*m_pImpl->get_vocabulary_info().get(), numerical);
+    return m_pImpl->parse_numerical(description);
 }
 
 Boolean SyntacticElementFactory::parse_boolean(const std::string &description) {
-    element::Boolean_Ptr boolean = m_pImpl->parse_boolean(description);
-    if (!boolean) throw std::runtime_error("SyntacticElementFactory::parse_boolean - ("s + description + ") cannot be parsed into a Boolean.");
-    return Boolean(*m_pImpl->get_vocabulary_info(), boolean);
+    return m_pImpl->parse_boolean(description);
 }
 
+
 Boolean SyntacticElementFactory::make_empty_boolean(const Concept& concept) {
-    return Boolean(*m_pImpl->get_vocabulary_info(), m_pImpl->make_empty_boolean(*concept.m_pImpl));
+    return m_pImpl->make_empty_boolean(concept);
 }
 
 Boolean SyntacticElementFactory::make_empty_boolean(const Role& role) {
-    return Boolean(*m_pImpl->get_vocabulary_info(), m_pImpl->make_empty_boolean(*role.m_pImpl));
+    return m_pImpl->make_empty_boolean(role);
 }
 
 Concept SyntacticElementFactory::make_all_concept(const Role& role, const Concept& concept) {
-    return Concept(*m_pImpl->get_vocabulary_info(), m_pImpl->make_all_concept(*role.m_pImpl, *concept.m_pImpl));
+    return m_pImpl->make_all_concept(role, concept);
 }
 
 Concept SyntacticElementFactory::make_and_concept(const Concept& concept_left, const Concept& concept_right) {
-    return Concept(*m_pImpl->get_vocabulary_info(), m_pImpl->make_and_concept(*concept_left.m_pImpl, *concept_right.m_pImpl));
+    return m_pImpl->make_and_concept(concept_left, concept_right);
 }
 
 Concept SyntacticElementFactory::make_bot_concept() {
-    return Concept(*m_pImpl->get_vocabulary_info(), m_pImpl->make_bot_concept());
+    return m_pImpl->make_bot_concept();
 }
 
 Concept SyntacticElementFactory::make_diff_concept(const Concept& concept_left, const Concept& concept_right) {
-    return Concept(*m_pImpl->get_vocabulary_info(), m_pImpl->make_diff_concept(*concept_left.m_pImpl, *concept_right.m_pImpl));
+    return m_pImpl->make_diff_concept(concept_left, concept_right);
 }
 
 Concept SyntacticElementFactory::make_not_concept(const Concept& concept) {
-    return Concept(*m_pImpl->get_vocabulary_info(), m_pImpl->make_not_concept(*concept.m_pImpl));
+    return m_pImpl->make_not_concept(concept);
 }
 
 Concept SyntacticElementFactory::make_one_of_concept(const std::string& object_name) {
-    return Concept(*m_pImpl->get_vocabulary_info(), m_pImpl->make_one_of_concept(object_name));
+    return m_pImpl->make_one_of_concept(object_name);
 }
 
 Concept SyntacticElementFactory::make_or_concept(const Concept& concept_left, const Concept& concept_right) {
-    return Concept(*m_pImpl->get_vocabulary_info(), m_pImpl->make_or_concept(*concept_left.m_pImpl, *concept_right.m_pImpl));
+    return m_pImpl->make_or_concept(concept_left, concept_right);
 }
 
 Concept SyntacticElementFactory::make_primitive_concept(const std::string& name, unsigned pos) {
-    return Concept(*m_pImpl->get_vocabulary_info(), m_pImpl->make_primitive_concept(name, pos));
+    return m_pImpl->make_primitive_concept(name, pos);
 }
 
 Concept SyntacticElementFactory::make_some_concept(const Role& role, const Concept& concept) {
-    return Concept(*m_pImpl->get_vocabulary_info(), m_pImpl->make_some_concept(*role.m_pImpl, *concept.m_pImpl));
+    return m_pImpl->make_some_concept(role, concept);
 }
 
 Concept SyntacticElementFactory::make_subset_concept(const Role& role_left, const Role& role_right) {
-    return Concept(*m_pImpl->get_vocabulary_info(), m_pImpl->make_subset_concept(*role_left.m_pImpl, *role_right.m_pImpl));
+    return m_pImpl->make_subset_concept(role_left, role_right);
 }
 
 Concept SyntacticElementFactory::make_top_concept() {
-    return Concept(*m_pImpl->get_vocabulary_info(), m_pImpl->make_top_concept());
+    return m_pImpl->make_top_concept();
 }
 
 Numerical SyntacticElementFactory::make_concept_distance(const Concept& concept_from, const Role& role, const Concept& concept_to) {
-    return Numerical(*m_pImpl->get_vocabulary_info(), m_pImpl->make_concept_distance(*concept_from.m_pImpl, *role.m_pImpl, *concept_to.m_pImpl));
+    return m_pImpl->make_concept_distance(concept_from, role, concept_to);
 }
 
-Numerical SyntacticElementFactory::make_count(const Concept& element) {
-    return Numerical(*m_pImpl->get_vocabulary_info(), m_pImpl->make_count(*element.m_pImpl));
+Numerical SyntacticElementFactory::make_count(const Concept& concept) {
+    return m_pImpl->make_count(concept);
 }
 
-Numerical SyntacticElementFactory::make_count(const Role& element) {
-    return Numerical(*m_pImpl->get_vocabulary_info(), m_pImpl->make_count(*element.m_pImpl));
+Numerical SyntacticElementFactory::make_count(const Role& role) {
+    return m_pImpl->make_count(role);
 }
 
 Numerical SyntacticElementFactory::make_role_distance(const Role& role_from, const Role& role, const Role& role_to) {
-    return Numerical(*m_pImpl->get_vocabulary_info(), m_pImpl->make_role_distance(*role_from.m_pImpl, *role.m_pImpl, *role_to.m_pImpl));
+    return m_pImpl->make_role_distance(role_from, role, role_to);
 }
 
 Numerical SyntacticElementFactory::make_sum_concept_distance(const Concept& concept_from, const Role& role, const Concept& concept_to) {
-    return Numerical(*m_pImpl->get_vocabulary_info(), m_pImpl->make_sum_concept_distance(*concept_from.m_pImpl, *role.m_pImpl, *concept_to.m_pImpl));
+    return m_pImpl->make_sum_concept_distance(concept_from, role, concept_to);
 }
 
 Numerical SyntacticElementFactory::make_sum_role_distance(const Role& role_from, const Role& role, const Role& role_to) {
-    return Numerical(*m_pImpl->get_vocabulary_info(), m_pImpl->make_sum_role_distance(*role_from.m_pImpl, *role.m_pImpl, *role_to.m_pImpl));
+    return m_pImpl->make_sum_role_distance(role_from, role, role_to);
 }
 
 Role SyntacticElementFactory::make_and_role(const Role& role_left, const Role& role_right) {
-    return Role(*m_pImpl->get_vocabulary_info(), m_pImpl->make_and_role(*role_left.m_pImpl, *role_right.m_pImpl));
+    return m_pImpl->make_and_role(role_left, role_right);
 }
 
 Role SyntacticElementFactory::make_compose_role(const Role& role_left, const Role& role_right) {
-    return Role(*m_pImpl->get_vocabulary_info(), m_pImpl->make_compose_role(*role_left.m_pImpl, *role_right.m_pImpl));
+    return m_pImpl->make_compose_role(role_left, role_right);
 }
 
 Role SyntacticElementFactory::make_diff_role(const Role& role_left, const Role& role_right) {
-    return Role(*m_pImpl->get_vocabulary_info(), m_pImpl->make_diff_role(*role_left.m_pImpl, *role_right.m_pImpl));
+    return m_pImpl->make_diff_role(role_left, role_right);
 }
 
 Role SyntacticElementFactory::make_identity_role(const Concept& concept) {
-    return Role(*m_pImpl->get_vocabulary_info(), m_pImpl->make_identity_role(*concept.m_pImpl));
+    return m_pImpl->make_identity_role(concept);
 }
 
 Role SyntacticElementFactory::make_inverse_role(const Role& role) {
-    return Role(*m_pImpl->get_vocabulary_info(), m_pImpl->make_inverse_role(*role.m_pImpl));
+    return m_pImpl->make_inverse_role(role);
 }
 
 Role SyntacticElementFactory::make_not_role(const Role& role) {
-    return Role(*m_pImpl->get_vocabulary_info(), m_pImpl->make_not_role(*role.m_pImpl));
+    return m_pImpl->make_not_role(role);
 }
 
 Role SyntacticElementFactory::make_or_role(const Role& role_left, const Role& role_right) {
-    return Role(*m_pImpl->get_vocabulary_info(), m_pImpl->make_or_role(*role_left.m_pImpl, *role_right.m_pImpl));
+    return m_pImpl->make_or_role(role_left, role_right);
 }
 
 Role SyntacticElementFactory::make_primitive_role(const std::string& name, unsigned pos_1, unsigned pos_2) {
-    return Role(*m_pImpl->get_vocabulary_info(), m_pImpl->make_primitive_role(name, pos_1, pos_2));
+    return m_pImpl->make_primitive_role(name, pos_1, pos_2);
 }
 
 Role SyntacticElementFactory::make_restrict_role(const Role& role, const Concept& concept) {
-    return Role(*m_pImpl->get_vocabulary_info(), m_pImpl->make_restrict_role(*role.m_pImpl, *concept.m_pImpl));
+    return m_pImpl->make_restrict_role(role, concept);
 }
 
 Role SyntacticElementFactory::make_top_role() {
-    return Role(*m_pImpl->get_vocabulary_info(), m_pImpl->make_top_role());
+    return m_pImpl->make_top_role();
 }
 
 Role SyntacticElementFactory::make_transitive_closure(const Role& role) {
-    return Role(*m_pImpl->get_vocabulary_info(), m_pImpl->make_transitive_closure(*role.m_pImpl));
+    return m_pImpl->make_transitive_closure(role);
 }
 
 Role SyntacticElementFactory::make_transitive_reflexive_closure(const Role& role) {
-    return Role(*m_pImpl->get_vocabulary_info(), m_pImpl->make_transitive_reflexive_closure(*role.m_pImpl));
+    return m_pImpl->make_transitive_reflexive_closure(role);
 }
 
 }

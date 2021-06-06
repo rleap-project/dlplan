@@ -18,6 +18,10 @@ class PredicateImpl;
 class ObjectImpl;
 class AtomImpl;
 class StateImpl;
+class ConceptImpl;
+class RoleImpl;
+class NumericalImpl;
+class BooleanImpl;
 class SyntacticElementFactory;
 class InstanceInfo;
 
@@ -183,18 +187,14 @@ public:
  */
 template<typename T>
 class Element {
-protected:
-    const VocabularyInfoImpl* m_parent;  // non-owning
-
 public:
-    Element(const VocabularyInfoImpl& parent) : m_parent(&parent) { }
-    Element(const Element& other) : m_parent(other.m_parent) { }
+    Element() = default;
     virtual ~Element() = default;
 
     /**
      * Evaluates the element for a state given as a vector of atom indices.
      */
-    virtual T evaluate(const State& state) const = 0;
+    virtual T evaluate(const State& state) = 0;
 
     /**
      * Returns the complexity of the element
@@ -214,18 +214,14 @@ public:
  */
 class Concept : public Element<ConceptDenotation> {
 protected:
-    pimpl<element::Concept_Ptr> m_pImpl;
-
-    Concept(const VocabularyInfoImpl& parent, element::Concept_Ptr pImpl);
-
-    friend class SyntacticElementFactory;
+    pimpl<ConceptImpl> m_pImpl;
 
 public:
-    Concept() = delete;
+    Concept(ConceptImpl&& impl);
     Concept(const Concept& other);
-    virtual ~Concept() = default;
+    virtual ~Concept();
 
-    virtual ConceptDenotation evaluate(const State& state) const override;
+    virtual ConceptDenotation evaluate(const State& state) override;
 
     virtual unsigned compute_complexity() const override;
 
@@ -238,18 +234,14 @@ public:
  */
 class Role : public Element<RoleDenotation> {
 protected:
-    pimpl<element::Role_Ptr> m_pImpl;
-
-    Role(const VocabularyInfoImpl& parent, element::Role_Ptr pImpl);
-
-    friend class SyntacticElementFactory;
+    pimpl<RoleImpl> m_pImpl;
 
 public:
-    Role() = delete;
+    Role(RoleImpl&& impl);
     Role(const Role& other);
-    virtual ~Role() = default;
+    virtual ~Role();
 
-    virtual RoleDenotation evaluate(const State& state) const override;
+    virtual RoleDenotation evaluate(const State& state) override;
 
     virtual unsigned compute_complexity() const override;
 
@@ -262,18 +254,14 @@ public:
  */
 class Numerical : public Element<int> {
 protected:
-    pimpl<element::Numerical_Ptr> m_pImpl;
-
-    Numerical(const VocabularyInfoImpl& parent, element::Numerical_Ptr pImpl);
-
-    friend class SyntacticElementFactory;
+    pimpl<NumericalImpl> m_pImpl;
 
 public:
-    Numerical() = delete;
+    Numerical(NumericalImpl&& impl);
     Numerical(const Numerical& other);
-    virtual ~Numerical() = default;
+    virtual ~Numerical();
 
-    virtual int evaluate(const State& state) const override;
+    virtual int evaluate(const State& state) override;
 
     virtual unsigned compute_complexity() const override;
 
@@ -286,18 +274,14 @@ public:
  */
 class Boolean : public Element<bool> {
 protected:
-    pimpl<element::Boolean_Ptr> m_pImpl;
-
-    Boolean(const VocabularyInfoImpl& parent, element::Boolean_Ptr pImpl);
-
-    friend class SyntacticElementFactory;
+    pimpl<BooleanImpl> m_pImpl;
 
 public:
-    Boolean() = delete;
+    Boolean(BooleanImpl&& impl);
     Boolean(const Boolean& other);
-    virtual ~Boolean() = default;
+    virtual ~Boolean();
 
-    virtual bool evaluate(const State& state) const override;
+    virtual bool evaluate(const State& state) override;
 
     virtual unsigned compute_complexity() const override;
 
