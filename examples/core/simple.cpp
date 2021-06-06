@@ -13,7 +13,6 @@ int main() {
     dlp::core::Predicate p1 = vocabulary.add_predicate("onTable", 1);
     dlp::core::Predicate p2 = vocabulary.add_predicate("holding", 1);
     dlp::core::Predicate p3 = vocabulary.add_predicate("on_g", 2);
-    std::vector<dlp::core::Predicate> predicates({p0, p1, p2, p3});
     // 1. Initialize planning instance
     dlp::core::InstanceInfo instance = vocabulary.make_instance();
     // Add state atoms

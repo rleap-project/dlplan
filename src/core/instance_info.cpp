@@ -152,8 +152,8 @@ unsigned InstanceInfoImpl::get_num_objects() const {
     return m_object_name_to_object_idx.size();
 }
 
-const std::shared_ptr<const VocabularyInfoImpl>& InstanceInfoImpl::get_vocabulary_info() const {
-    return m_vocabulary_info;
+const VocabularyInfoImpl* InstanceInfoImpl::get_vocabulary_info() const {
+    return m_vocabulary_info.get();
 }
 
 }

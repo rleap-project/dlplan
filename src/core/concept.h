@@ -10,10 +10,10 @@ namespace core {
 /**
  * The ElementRoot stores information from which the underlying Element was constructed.
  */
-class ConceptImpl : public ElementImpl<element::ConceptDenotation> {
+class ConceptImpl : public ElementImpl<ConceptDenotation> {
 public:
-    ConceptImpl(const VocabularyInfoImpl& vocabulary_info, std::shared_ptr<element::Element<element::ConceptDenotation>>&& element)
-    : ElementImpl<element::ConceptDenotation>(vocabulary_info, std::move(element)) {
+    ConceptImpl(const VocabularyInfoImpl& vocabulary_info, std::shared_ptr<element::Element<ConceptDenotation>>&& element)
+    : ElementImpl<ConceptDenotation>(vocabulary_info, std::move(element)) {
         if (!m_element) {
             throw std::runtime_error("ConceptImpl::ConceptImpl - tried to construct ConceptImpl from nullptr");
         }

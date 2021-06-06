@@ -7,48 +7,113 @@
 
 namespace dlp {
 namespace generator {
+class FeatureImpl;
+class NumericalImpl;
+class BooleanImpl;
+class FeatureCollectionImpl;
+class FeatureCollectionWriterImpl;
 class FeatureGeneratorImpl;
-class StateSpaceInfoImpl;
+class Numerical;
+class Boolean;
+
+using States = std::vector<core::State>;
+
+using NumericalFeatures = std::vector<Numerical>;
+using BooleanFeatures = std::vector<Boolean>;
 
 /**
- * Extends the functionality by allowing to add states.
+ * Abstract base class of a Feature.
  */
-class StateSpaceInfo {
-private:
-    pimpl<StateSpaceInfoImpl> m_pImpl;
-
+template<typename T>
+class Feature {
 public:
-    StateSpaceInfo();
-    StateSpaceInfo(const StateSpaceInfo& other) = delete;
-    ~StateSpaceInfo();
+    Feature() = default;
+    virtual ~Feature() = default;
 
-    /**
-     * Adds a state to the instance and returns its index.
-     */
-    int add_state(const core::State& state);
+    virtual const std::string& get_repr() const = 0;
+    virtual const std::vector<T>& get_evaluation() const = 0;
 };
 
+
 /**
- * Exhaustively generates features up to certain complexity.
+ * Numerical stores information related to a core::Numerical.
+ */
+class Numerical : Feature<int> {
+public:
+    Numerical(NumericalImpl&& impl);
+    Numerical(const Numerical& other);
+    ~Numerical();
+
+    virtual const std::string& get_repr() const override;
+    virtual const std::vector<int>& get_evaluation() const override;
+};
+
+
+/**
+ * Boolean stores information related to a core::Boolean.
+ */
+class Boolean : Feature<bool> {
+public:
+    Boolean(BooleanImpl&& impl);
+    Boolean(const Boolean& other);
+    ~Boolean();
+
+    virtual const std::string& get_repr() const override;
+    virtual const std::vector<bool>& get_evaluation() const override;
+};
+
+
+/**
+ * FeatureCollection stores different types of Features.
+ */
+class FeatureCollection {
+private:
+    pimpl<FeatureCollectionImpl> m_pImpl;
+
+public:
+    FeatureCollection(FeatureCollectionImpl&& impl);
+    FeatureCollection(const FeatureCollection& other);
+    ~FeatureCollection();
+
+    const NumericalFeatures& get_numerical_features() const;
+    const BooleanFeatures& get_boolean_features() const;
+};
+
+
+/**
+ * FeatureCollectionWriter for writing FeatureCollection to file.
+ */
+class FeatureCollectionWriter {
+private:
+    pimpl<FeatureCollectionWriterImpl> m_pImpl;
+public:
+    FeatureCollectionWriter();
+    ~FeatureCollectionWriter();
+
+    /**
+     * Writes all information related to the features in a single file.
+     */
+    void write(const FeatureCollection& features, const std::string& filename) const;
+};
+
+
+/**
+ * FeatureGenerator exhaustively generates features up to the complexity bound or until the time limit was reached.
  */
 class FeatureGenerator {
 private:
     pimpl<FeatureGeneratorImpl> m_pImpl;
 
 public:
-    FeatureGenerator();
+    FeatureGenerator(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit);
     ~FeatureGenerator();
 
     /**
-     * Exhaustively generates features.
+     * Exhaustively generates features with pairwise disjoint feature evaluations on the states.
      */
-    void generate(core::SyntacticElementFactory& factory, const std::vector<StateSpaceInfo>& instances, int complexity, int time_limit);
-
-    /**
-     * Dumps information of generated features to file.
-     */
-    void dump_to_file(const std::string& filename);
+    FeatureCollection generate(const States& states) const;
 };
+
 
 }
 }

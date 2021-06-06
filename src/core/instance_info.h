@@ -87,7 +87,7 @@ public:
     const Object& get_object(unsigned object_idx) const;
     unsigned get_object_idx(const std::string& object_name) const;
     unsigned get_num_objects() const;
-    const std::shared_ptr<const VocabularyInfoImpl>& get_vocabulary_info() const;
+    const VocabularyInfoImpl* get_vocabulary_info() const;
 };
 
 }

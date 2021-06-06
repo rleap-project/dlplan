@@ -1,30 +1,21 @@
 #include "../../include/dlp/generator.h"
-#include "state_space_info.h"
+
 #include "feature_generator.h"
 
 
 namespace dlp {
 namespace generator {
 
-StateSpaceInfo::StateSpaceInfo() { }
 
-StateSpaceInfo::~StateSpaceInfo() { }
-
-int StateSpaceInfo::add_state(const core::State& state) {
-    return m_pImpl->add_state(state);
-}
-
-FeatureGenerator::FeatureGenerator() { }
+FeatureGenerator::FeatureGenerator(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit)
+    : m_pImpl(FeatureGeneratorImpl(factory, complexity, time_limit)) { }
 
 FeatureGenerator::~FeatureGenerator() { }
 
-void FeatureGenerator::generate(core::SyntacticElementFactory& factory, const std::vector<StateSpaceInfo>& instances, int complexity, int time_limit) {
-
+FeatureCollection FeatureGenerator::generate(const States& states) const {
+    return m_pImpl->generate(states);
 }
 
-void FeatureGenerator::dump_to_file(const std::string& filename) {
-
-}
 
 }
 }

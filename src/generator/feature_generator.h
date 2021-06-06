@@ -1,25 +1,46 @@
-#ifndef DLP_SRC_CORE_FEATURE_GENERATOR_IMPL_H_
-#define DLP_SRC_CORE_FEATURE_GENERATOR_IMPL_H_
+#ifndef DLP_SRC_GENERATOR_FEATURE_GENERATOR_IMPL_H_
+#define DLP_SRC_GENERATOR_FEATURE_GENERATOR_IMPL_H_
+
+#include <unordered_map>
+
+#include "types.h"
+#include "../../include/dlp/core.h"
+
 
 namespace dlp {
 namespace core {
-    class SyntacticElementFactory;
+    class Concept;
+    class Role;
+    class Numerical;
+    class Boolean;
 }
 namespace generator {
+class FeatureCollection;
 
 class FeatureGeneratorImpl {
 private:
+    const std::shared_ptr<core::SyntacticElementFactory> m_factory;
+    const int m_complexity;
+    const int m_time_limit;
+
+private:
+    /**
+     * Generates all Elements with complexity 1.
+     */
+    void generate_base(const States& states);
+
+    /**
+     * Inductively generate Elements of higher complexity.
+     */
+    void generate_inductively(const States& states);
 
 public:
-    /**
-     * Exhaustively generates features.
-     */
-    //void generate(core::SyntacticElementFactory& factory, const std::vector<StateSpaceInfo>& instances, int complexity, int time_limit);
+    FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit);
 
     /**
-     * Dumps information of generated features to file.
+     * Exhaustively generates features with pairwise disjoint feature evaluations on the states.
      */
-    //void dump_to_file(const std::string& filename);
+    FeatureCollection generate(const States& states) const;
 };
 
 }

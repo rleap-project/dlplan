@@ -48,7 +48,7 @@ const Atom& InstanceInfo::add_static_atom(const std::string &predicate_name, con
     return m_pImpl->add_static_atom(predicate_name, object_names);
 }
 
-const std::shared_ptr<const VocabularyInfoImpl>& InstanceInfo::get_vocabulary_info() const {
+const VocabularyInfoImpl* InstanceInfo::get_vocabulary_info() const {
     return m_pImpl->get_vocabulary_info();
 }
 
@@ -155,7 +155,7 @@ State::~State() { }
 
 std::string State::str() const { /* tba */ }
 
-std::shared_ptr<const InstanceInfoImpl> State::get_instance_info() const {
+const InstanceInfoImpl* State::get_instance_info() const {
     return m_pImpl->get_instance_info();
 }
 
