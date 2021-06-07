@@ -80,6 +80,9 @@ public:
     FeatureCollection(const FeatureCollection& other);
     ~FeatureCollection();
 
+    void add_numerical_feature(Numerical&& numerical_feature);
+    void add_boolean_feature(Boolean&& boolean_feature);
+
     const NumericalFeatures& get_numerical_features() const;
     const BooleanFeatures& get_boolean_features() const;
 };

@@ -27,7 +27,7 @@ int main() {
     dlp::core::Atom a6 = instance.add_static_atom("on_g", {"A", "B"});
 
     // 2. Initialize factory.
-    dlp::core::SyntacticElementFactory factory = vocabulary.make_factory();;
+    dlp::core::SyntacticElementFactory factory = vocabulary.make_factory();
 
     // 3. Construct and evaluate elements.
     // Parse text to Numerical

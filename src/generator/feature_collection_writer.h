@@ -8,13 +8,15 @@
 
 namespace dlp {
 namespace generator {
+class FeatureCollection;
 
 class FeatureCollectionWriterImpl {
 private:
 public:
-    FeatureCollectionWriterImpl();
-    ~FeatureCollectionWriterImpl();
+    FeatureCollectionWriterImpl() = default;
+    ~FeatureCollectionWriterImpl() = default;
 
+    void write(const FeatureCollection& features, const std::string& filename) const;
 };
 
 }

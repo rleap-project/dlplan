@@ -2,9 +2,9 @@
 #define DLP_SRC_GENERATOR_FEATURE_GENERATOR_IMPL_H_
 
 #include <unordered_map>
+#include <memory>
 
 #include "types.h"
-#include "../../include/dlp/core.h"
 
 
 namespace dlp {
@@ -13,6 +13,7 @@ namespace core {
     class Role;
     class Numerical;
     class Boolean;
+    class SyntacticElementFactory;
 }
 namespace generator {
 class FeatureCollection;
@@ -27,12 +28,12 @@ private:
     /**
      * Generates all Elements with complexity 1.
      */
-    void generate_base(const States& states);
+    void generate_base(const States& states) const;
 
     /**
      * Inductively generate Elements of higher complexity.
      */
-    void generate_inductively(const States& states);
+    void generate_inductively(const States& states) const;
 
 public:
     FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit);

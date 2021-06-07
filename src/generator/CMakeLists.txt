@@ -1,4 +1,6 @@
 add_library(generator
-    generator.cpp
+    feature_collection_writer.cpp
+    feature_collection.cpp
     feature_generator.cpp
+    generator.cpp
 )
