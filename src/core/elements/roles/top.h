@@ -24,7 +24,7 @@ protected:
     }
 
 public:
-    TopRole(const VocabularyInfoImpl& vocabulary)
+    TopRole(const VocabularyInfo& vocabulary)
     : Role(vocabulary, "r_top"){
     }
 

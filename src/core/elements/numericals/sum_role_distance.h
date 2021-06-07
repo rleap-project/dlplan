@@ -54,7 +54,7 @@ protected:
     }
 
 public:
-    SumRoleDistanceNumerical(const VocabularyInfoImpl& vocabulary, Role_Ptr role_from, Role_Ptr role, Role_Ptr role_to)
+    SumRoleDistanceNumerical(const VocabularyInfo& vocabulary, Role_Ptr role_from, Role_Ptr role, Role_Ptr role_to)
     : Numerical(vocabulary, "n_sum_role_distance"), m_role_from(role_from), m_role(role), m_role_to(role_to) {
         if (!(role_from && role && role_to)) {
             throw std::runtime_error("SumRoleDistanceNumerical::SumRoleDistanceNumerical - child is not of type Role, Role, Role.");

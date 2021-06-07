@@ -27,7 +27,7 @@ protected:
     }
 
 public:
-    DiffRole(const VocabularyInfoImpl& vocabulary, Role_Ptr role_left, Role_Ptr role_right)
+    DiffRole(const VocabularyInfo& vocabulary, Role_Ptr role_left, Role_Ptr role_right)
     : Role(vocabulary, "r_diff"), m_role_left(role_left), m_role_right(role_right)  {
         if (!(role_left && role_right)) {
             throw std::runtime_error("DiffRole::DiffRole - at least one child is a nullptr.");

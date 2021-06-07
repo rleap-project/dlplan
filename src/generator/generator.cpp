@@ -38,7 +38,7 @@ const std::vector<bool>& Boolean::get_state_evaluations() const {
     m_pImpl->get_state_evaluations();
 }
 
-FeatureCollection::FeatureCollection(FeatureCollectionImpl&& impl) : m_pImpl(std::move(impl)) { }
+FeatureCollection::FeatureCollection() : m_pImpl() { }
 
 FeatureCollection::FeatureCollection(const FeatureCollection& other) : m_pImpl(*other.m_pImpl) { }
 

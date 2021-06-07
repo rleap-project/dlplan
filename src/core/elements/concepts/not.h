@@ -32,7 +32,7 @@ protected:
     }
 
 public:
-    NotConcept(const VocabularyInfoImpl& vocabulary, Concept_Ptr concept)
+    NotConcept(const VocabularyInfo& vocabulary, Concept_Ptr concept)
     : Concept(vocabulary, "c_not"), m_concept(concept) {
         if (!concept) {
             throw std::runtime_error("NotConcept::NotConcept - child is a nullptr");

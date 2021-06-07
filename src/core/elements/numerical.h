@@ -10,7 +10,7 @@ namespace element {
 
 class Numerical : public Element<int> {
 public:
-    Numerical(const VocabularyInfoImpl& vocabulary, const std::string& name) : Element<int>(vocabulary, name) { }
+    Numerical(const VocabularyInfo& vocabulary, const std::string& name) : Element<int>(vocabulary, name) { }
 };
 
 }

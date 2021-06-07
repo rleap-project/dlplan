@@ -50,7 +50,7 @@ enum EXPRESSION_TYPE {
 /**
  * VocabularyInfoImpl stores information related to the predicates in the planning domain.
  */
-class VocabularyInfoImpl : public std::enable_shared_from_this<VocabularyInfoImpl> {
+class VocabularyInfoImpl {
 private:
     /**
      * Mappings between names and indices of predicates and objects.
@@ -74,11 +74,7 @@ public:
     /**
      * Adds an atom that may have varying evaluation depending on the state.
      */
-    const Predicate& add_predicate(const std::string &predicate_name, unsigned arity);
-
-    InstanceInfo make_instance();
-
-    SyntacticElementFactory make_factory();
+    const Predicate& add_predicate(const VocabularyInfo& parent, const std::string &predicate_name, unsigned arity);
 
     bool exists_predicate_name(const std::string& name) const;
     unsigned get_predicate_idx(const std::string& name) const;

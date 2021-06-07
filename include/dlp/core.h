@@ -24,6 +24,7 @@ class NumericalImpl;
 class BooleanImpl;
 class SyntacticElementFactory;
 class InstanceInfo;
+class VocabularyInfo;
 
 using ConceptDenotation = std::vector<int>;
 
@@ -40,14 +41,14 @@ private:
     pimpl<PredicateImpl> m_pImpl;
 
 public:
-    Predicate(PredicateImpl&& impl);
+    Predicate(const VocabularyInfo& vocabulary_info, const std::string& predicate_name, int predicate_idx, int arity);
     Predicate(const Predicate& other);
     ~Predicate();
 
     /**
      * Getters.
      */
-    const VocabularyInfoImpl* get_vocabulary_info() const;
+    const VocabularyInfo* get_vocabulary_info() const;
     int get_predicate_idx() const;
     const std::string& get_name() const;
     unsigned get_arity() const;
@@ -62,11 +63,11 @@ private:
     pimpl<ObjectImpl> m_pImpl;
 
 public:
-    Object(ObjectImpl&& impl);
+    Object(const InstanceInfo& instance_info, const std::string& object_name, int object_idx);
     Object(const Object& other);
     ~Object();
 
-    const InstanceInfoImpl* get_instance_info() const;
+    const InstanceInfo* get_instance_info() const;
     int get_object_idx() const;
     const std::string& get_object_name() const;
 };
@@ -80,14 +81,19 @@ private:
     pimpl<AtomImpl> m_pImpl;
 
 public:
-    Atom(AtomImpl&& impl);
+    Atom(const InstanceInfo& instance_info,
+        const std::string& atom_name,
+        int atom_idx,
+        const Predicate& predicate,
+        const std::vector<Object> &objects,
+        bool is_static);
     Atom(const Atom& other);
     ~Atom();
 
     /**
      * Getters.
      */
-    const InstanceInfoImpl* get_instance_info() const;
+    const InstanceInfo* get_instance_info() const;
     const std::string& get_atom_name() const;
     int get_atom_idx() const;
     const Predicate& get_predicate() const;
@@ -105,7 +111,9 @@ private:
     pimpl<StateImpl> m_pImpl;
 
 public:
-    State(StateImpl&& impl);
+    State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms);
+    State(std::shared_ptr<const InstanceInfo> instance_info, const Name_Vec& atom_names);
+    State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_indices);
     State(const State& other);
     ~State();
 
@@ -116,7 +124,7 @@ public:
     /**
      * Getters.
      */
-    const InstanceInfoImpl* get_instance_info() const;
+    const InstanceInfo* get_instance_info() const;
     const Index_Vec& get_atom_idxs() const;
 };
 
@@ -126,7 +134,7 @@ public:
  */
 class VocabularyInfo {
 private:
-    spimpl<VocabularyInfoImpl> m_pImpl;
+    pimpl<VocabularyInfoImpl> m_pImpl;
 
 public:
     VocabularyInfo();
@@ -134,9 +142,10 @@ public:
 
     const Predicate& add_predicate(const std::string &predicate_name, unsigned arity);
 
-    InstanceInfo make_instance();
+    bool exists_predicate_name(const std::string& name) const;
+    unsigned get_predicate_idx(const std::string& name) const;
 
-    SyntacticElementFactory make_factory();
+    const Predicate& get_predicate(unsigned predicate_idx) const;
 };
 
 
@@ -145,10 +154,10 @@ public:
  */
 class InstanceInfo {
 private:
-    spimpl<InstanceInfoImpl> m_pImpl;
+    pimpl<InstanceInfoImpl> m_pImpl;
 
 public:
-    InstanceInfo(InstanceInfoImpl&& impl);
+    InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info);
     InstanceInfo() = delete;
     ~InstanceInfo();
 
@@ -163,22 +172,17 @@ public:
     const Atom& add_static_atom(const std::string& predicate_name, const Name_Vec& object_names);
 
     /**
-     * Construct a state from textual information by first applying the index mapping and the calling convert_state.
-     */
-    State parse_state(const Name_Vec& atom_names) const;
-    /**
-     * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
-     */
-    State convert_state(const std::vector<Atom>& atoms) const;
-    /**
-     * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
-     */
-    State convert_state(const Index_Vec& atom_idxs) const;
-
-    /**
      * Getters.
      */
-    const VocabularyInfoImpl* get_vocabulary_info() const;
+    const std::vector<Atom>& get_atoms() const;
+    const Atom& get_atom(unsigned atom_idx) const;
+    unsigned get_atom_idx(const std::string& name) const;
+    const std::vector<Object>& get_objects() const;
+    const Object& get_object(unsigned object_idx) const;
+    unsigned get_object_idx(const std::string& object_name) const;
+    unsigned get_num_objects() const;
+    const VocabularyInfo* get_vocabulary_info() const;
+    const Index_Vec& get_static_atom_idxs() const;
 };
 
 
@@ -217,7 +221,7 @@ protected:
     pimpl<ConceptImpl> m_pImpl;
 
 public:
-    Concept(ConceptImpl&& impl);
+    Concept(const VocabularyInfo& vocabulary_info, element::Concept_Ptr&& concept);
     Concept(const Concept& other);
     virtual ~Concept();
 
@@ -237,7 +241,7 @@ protected:
     pimpl<RoleImpl> m_pImpl;
 
 public:
-    Role(RoleImpl&& impl);
+    Role(const VocabularyInfo& vocabulary_info, element::Role_Ptr&& role);
     Role(const Role& other);
     virtual ~Role();
 
@@ -257,7 +261,7 @@ protected:
     pimpl<NumericalImpl> m_pImpl;
 
 public:
-    Numerical(NumericalImpl&& impl);
+    Numerical(const VocabularyInfo& vocabulary_info, element::Numerical_Ptr&& numerical);
     Numerical(const Numerical& other);
     virtual ~Numerical();
 
@@ -277,7 +281,7 @@ protected:
     pimpl<BooleanImpl> m_pImpl;
 
 public:
-    Boolean(BooleanImpl&& impl);
+    Boolean(const VocabularyInfo& vocabulary_info, element::Boolean_Ptr&& boolean);
     Boolean(const Boolean& other);
     virtual ~Boolean();
 
@@ -297,7 +301,7 @@ private:
     pimpl<SyntacticElementFactoryImpl> m_pImpl;
 
 public:
-    SyntacticElementFactory(SyntacticElementFactoryImpl&& impl);
+    SyntacticElementFactory(std::shared_ptr<const VocabularyInfo> vocabulary_info);
     SyntacticElementFactory(const SyntacticElementFactory& other);
     ~SyntacticElementFactory();
 

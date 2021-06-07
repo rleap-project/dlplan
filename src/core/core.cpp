@@ -24,32 +24,52 @@
 namespace dlp {
 namespace core {
 
-InstanceInfo::InstanceInfo(InstanceInfoImpl&& impl) : m_pImpl(std::move(impl)) { }
+InstanceInfo::InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info) : m_pImpl(InstanceInfoImpl(vocabulary_info)) { }
 
 InstanceInfo::~InstanceInfo() { }
 
-State InstanceInfo::parse_state(const Name_Vec& atom_names) const {
-    return State(m_pImpl->parse_state(atom_names));
-}
-
-State InstanceInfo::convert_state(const std::vector<Atom>& atoms) const {
-    return State(m_pImpl->convert_state(atoms));
-}
-
-State InstanceInfo::convert_state(const Index_Vec& atom_idxs) const {
-    return State(m_pImpl->convert_state(atom_idxs));
-}
-
 const Atom& InstanceInfo::add_atom(const std::string &predicate_name, const Name_Vec &object_names) {
-    return m_pImpl->add_atom(predicate_name, object_names);
+    return m_pImpl->add_atom(*this, predicate_name, object_names);
 }
 
 const Atom& InstanceInfo::add_static_atom(const std::string &predicate_name, const Name_Vec &object_names) {
-    return m_pImpl->add_static_atom(predicate_name, object_names);
+    return m_pImpl->add_static_atom(*this, predicate_name, object_names);
 }
 
-const VocabularyInfoImpl* InstanceInfo::get_vocabulary_info() const {
+const std::vector<Atom>& InstanceInfo::get_atoms() const {
+    return m_pImpl->get_atoms();
+}
+
+const Atom& InstanceInfo::get_atom(unsigned atom_idx) const {
+    return m_pImpl->get_atom(atom_idx);
+}
+
+unsigned InstanceInfo::get_atom_idx(const std::string& name) const {
+    return m_pImpl->get_atom_idx(name);
+}
+
+const std::vector<Object>& InstanceInfo::get_objects() const {
+    return m_pImpl->get_objects();
+}
+
+const Object& InstanceInfo::get_object(unsigned object_idx) const {
+    return m_pImpl->get_object(object_idx);
+}
+
+unsigned InstanceInfo::get_object_idx(const std::string& object_name) const {
+    return m_pImpl->get_object_idx(object_name);
+}
+
+unsigned InstanceInfo::get_num_objects() const {
+    return m_pImpl->get_num_objects();
+}
+
+const VocabularyInfo* InstanceInfo::get_vocabulary_info() const {
     return m_pImpl->get_vocabulary_info();
+}
+
+const Index_Vec& InstanceInfo::get_static_atom_idxs() const {
+    return m_pImpl->get_static_atom_idxs();
 }
 
 
@@ -58,25 +78,30 @@ VocabularyInfo::VocabularyInfo() : m_pImpl(VocabularyInfoImpl()) { }
 VocabularyInfo::~VocabularyInfo() { }
 
 const Predicate& VocabularyInfo::add_predicate(const std::string &predicate_name, unsigned arity) {
-    return m_pImpl->add_predicate(predicate_name, arity);
+    return m_pImpl->add_predicate(*this, predicate_name, arity);
 }
 
-InstanceInfo VocabularyInfo::make_instance() {
-    return m_pImpl->make_instance();
+bool VocabularyInfo::exists_predicate_name(const std::string& name) const {
+    return m_pImpl->exists_predicate_name(name);
 }
 
-SyntacticElementFactory VocabularyInfo::make_factory() {
-    return m_pImpl->make_factory();
+unsigned VocabularyInfo::get_predicate_idx(const std::string& name) const {
+    return m_pImpl->get_predicate_idx(name);
+}
+
+const Predicate& VocabularyInfo::get_predicate(unsigned predicate_idx) const {
+    return m_pImpl->get_predicate(predicate_idx);
 }
 
 
-Predicate::Predicate(PredicateImpl&& impl) : m_pImpl(impl) { }
+Predicate::Predicate(const VocabularyInfo& vocabulary_info, const std::string& predicate_name, int predicate_idx, int arity)
+    : m_pImpl(PredicateImpl(vocabulary_info, predicate_name, predicate_idx, arity)) { }
 
 Predicate::Predicate(const Predicate& other) : m_pImpl(*other.m_pImpl) { }
 
 Predicate::~Predicate() {}
 
-const VocabularyInfoImpl* Predicate::get_vocabulary_info() const {
+const VocabularyInfo* Predicate::get_vocabulary_info() const {
     return m_pImpl->get_vocabulary_info();
 }
 
@@ -93,13 +118,14 @@ unsigned Predicate::get_arity() const {
 }
 
 
-Object::Object(ObjectImpl&& impl) : m_pImpl(std::move(impl)) {}
+Object::Object(const InstanceInfo& instance_info, const std::string& object_name, int object_idx)
+    : m_pImpl(ObjectImpl(instance_info, object_name, object_idx)) {}
 
 Object::Object(const Object& other) : m_pImpl(*other.m_pImpl) { }
 
 Object::~Object() { }
 
-const InstanceInfoImpl* Object::get_instance_info() const {
+const InstanceInfo* Object::get_instance_info() const {
     return m_pImpl->get_instance_info();
 }
 
@@ -112,13 +138,18 @@ int Object::get_object_idx() const {
 }
 
 
-Atom::Atom(AtomImpl&& impl) : m_pImpl(std::move(impl)) { }
+Atom::Atom(const InstanceInfo& instance_info,
+    const std::string& atom_name,
+    int atom_idx,
+    const Predicate& predicate,
+    const std::vector<Object> &objects,
+    bool is_static) : m_pImpl(AtomImpl(instance_info, atom_name, atom_idx, predicate, objects, is_static)) { }
 
 Atom::Atom(const Atom& other) : m_pImpl(*other.m_pImpl) { }
 
 Atom::~Atom() { }
 
-const InstanceInfoImpl* Atom::get_instance_info() const {
+const InstanceInfo* Atom::get_instance_info() const {
     return m_pImpl->get_instance_info();
 }
 
@@ -147,7 +178,8 @@ bool Atom::get_is_static() const {
 }
 
 
-State::State(StateImpl&& impl) : m_pImpl(std::move(impl)) { }
+
+State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms) : m_pImpl(instance_info, atoms) { }
 
 State::State(const State& other) : m_pImpl(*other.m_pImpl) {}
 
@@ -155,7 +187,7 @@ State::~State() { }
 
 std::string State::str() const { /* tba */ }
 
-const InstanceInfoImpl* State::get_instance_info() const {
+const InstanceInfo* State::get_instance_info() const {
     return m_pImpl->get_instance_info();
 }
 
@@ -164,7 +196,7 @@ const Index_Vec& State::get_atom_idxs() const {
 }
 
 
-Concept::Concept(ConceptImpl&& impl) : m_pImpl(std::move(impl)) { }
+Concept::Concept(const VocabularyInfo& vocabulary_info, element::Concept_Ptr&& concept) : m_pImpl(ConceptImpl(vocabulary_info, std::move(concept))) { }
 
 Concept::Concept(const Concept& other)
     : Element<ConceptDenotation>(other), m_pImpl(*other.m_pImpl) { }
@@ -183,7 +215,7 @@ std::string Concept::compute_repr() const {
     return m_pImpl->compute_repr();
 }
 
-Role::Role(RoleImpl&& impl) : m_pImpl(std::move(impl)) { }
+Role::Role(const VocabularyInfo& vocabulary_info, element::Role_Ptr&& role) : m_pImpl(RoleImpl(vocabulary_info, std::move(role))) { }
 
 Role::Role(const Role& other)
     : m_pImpl(*other.m_pImpl) { }
@@ -203,7 +235,7 @@ std::string Role::compute_repr() const {
 }
 
 
-Numerical::Numerical(NumericalImpl&& impl) : m_pImpl(std::move(impl)) { }
+Numerical::Numerical(const VocabularyInfo& vocabulary_info, element::Numerical_Ptr&& numerical) : m_pImpl(NumericalImpl(vocabulary_info, std::move(numerical))) { }
 
 Numerical::Numerical(const Numerical& other)
     : m_pImpl(*other.m_pImpl) { }
@@ -223,7 +255,7 @@ std::string Numerical::compute_repr() const {
 }
 
 
-Boolean::Boolean(BooleanImpl&& impl) : m_pImpl(std::move(impl)) { }
+Boolean::Boolean(const VocabularyInfo& vocabulary_info, element::Boolean_Ptr&& boolean) : m_pImpl(BooleanImpl(vocabulary_info, std::move(boolean))) { }
 
 Boolean::Boolean(const Boolean& other)
     : m_pImpl(*other.m_pImpl) { }
@@ -243,7 +275,7 @@ std::string Boolean::compute_repr() const {
 }
 
 
-SyntacticElementFactory::SyntacticElementFactory(SyntacticElementFactoryImpl&& impl) : m_pImpl(std::move(impl)) { }
+SyntacticElementFactory::SyntacticElementFactory(std::shared_ptr<const VocabularyInfo> vocabulary_info) : m_pImpl(SyntacticElementFactoryImpl(vocabulary_info)) { }
 
 SyntacticElementFactory::SyntacticElementFactory(const SyntacticElementFactory& other) : m_pImpl(*other.m_pImpl) { }
 

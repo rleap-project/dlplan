@@ -15,7 +15,7 @@ protected:
 
 protected:
     virtual const ConceptDenotation& evaluate_impl(const State& state) override {
-        const InstanceInfoImpl& info = *state.get_instance_info();
+        const InstanceInfo& info = *state.get_instance_info();
         // 2. Compute the result.
         m_result.clear();
         for (unsigned atom_idx : state.get_atom_idxs()) {
@@ -28,7 +28,7 @@ protected:
     }
 
 public:
-    PrimitiveConcept(const VocabularyInfoImpl& vocabulary, const std::string& name, unsigned pos)
+    PrimitiveConcept(const VocabularyInfo& vocabulary, const std::string& name, unsigned pos)
     : Concept(vocabulary, name), m_pos(pos), m_predicate_idx(vocabulary.get_predicate_idx(m_name)) {
         unsigned predicate_arity = vocabulary.get_predicate(m_predicate_idx).get_arity();
         if (m_pos >= predicate_arity) {

@@ -47,7 +47,7 @@ protected:
     }
 
 public:
-    ConceptDistanceNumerical(const VocabularyInfoImpl& vocabulary, Concept_Ptr concept_from, Role_Ptr role, Concept_Ptr concept_to)
+    ConceptDistanceNumerical(const VocabularyInfo& vocabulary, Concept_Ptr concept_from, Role_Ptr role, Concept_Ptr concept_to)
     : Numerical(vocabulary, "n_concept_distance"), m_concept_from(concept_from), m_role(role), m_concept_to(concept_to) {
         if (!(concept_from && role && concept_to)) {
             throw std::runtime_error("ConceptDistanceNumerical::ConceptDistanceNumerical - child is not of type Concept, Role, Concept.");

@@ -9,7 +9,7 @@ namespace dlp {
 namespace core {
 
 AtomImpl::AtomImpl(
-    const InstanceInfoImpl& instance_info,
+    const InstanceInfo& instance_info,
     const std::string& atom_name,
     const int atom_idx,
     const Predicate& predicate,
@@ -18,7 +18,7 @@ AtomImpl::AtomImpl(
     : m_instance_info(&instance_info), m_atom_name(atom_name), m_atom_idx(atom_idx),
       m_predicate(predicate), m_objects(objects), m_is_static(is_static) { }
 
-const InstanceInfoImpl* AtomImpl::get_instance_info() const {
+const InstanceInfo* AtomImpl::get_instance_info() const {
     return m_instance_info;
 }
 

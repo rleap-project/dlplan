@@ -28,7 +28,7 @@ protected:
     }
 
 public:
-    AndRole(const VocabularyInfoImpl& vocabulary, Role_Ptr role_1, Role_Ptr role_2)
+    AndRole(const VocabularyInfo& vocabulary, Role_Ptr role_1, Role_Ptr role_2)
     : Role(vocabulary, "r_and"),
       m_role_left(role_1->compute_repr() < role_2->compute_repr() ? role_1 : role_2),
       m_role_right(role_1->compute_repr() < role_2->compute_repr() ? role_2 : role_1) {

@@ -14,22 +14,14 @@ static bool exists(const std::string& name, std::unordered_map<std::string, unsi
     return (f != mapping.end());
 }
 
-const Predicate& VocabularyInfoImpl::add_predicate(const std::string &predicate_name, unsigned arity) {
+const Predicate& VocabularyInfoImpl::add_predicate(const VocabularyInfo& parent, const std::string &predicate_name, unsigned arity) {
     if (m_predicate_name_to_predicate_idx.find(predicate_name) != m_predicate_name_to_predicate_idx.end()) {
         throw std::runtime_error("VocabularyInfoImpl::add_predicate - predicate with name ("s + predicate_name + ") already exists.");
     }
     unsigned predicate_idx = m_predicates.size();
-    m_predicates.push_back(Predicate(std::move(PredicateImpl(*this, predicate_name, predicate_idx, arity))));
+    m_predicates.push_back(Predicate(parent, predicate_name, predicate_idx, arity));
     m_predicate_name_to_predicate_idx.emplace(predicate_name, predicate_idx);
     return m_predicates.back();
-}
-
-InstanceInfo VocabularyInfoImpl::make_instance() {
-    return InstanceInfo(std::move(InstanceInfoImpl(*this)));
-}
-
-SyntacticElementFactory VocabularyInfoImpl::make_factory() {
-    return SyntacticElementFactory(std::move(SyntacticElementFactoryImpl(*this)));
 }
 
 bool VocabularyInfoImpl::exists_predicate_name(const std::string& name) const {

@@ -29,16 +29,15 @@ static void print_elements(const std::vector<std::vector<T>>& elements_by_comple
  */
 int main() {
     // 0. Initialize the vocabulary
-    dlp::core::VocabularyInfo vocabulary;
-    dlp::core::Predicate p0 = vocabulary.add_predicate("on", 2);
-    dlp::core::Predicate p1 = vocabulary.add_predicate("onTable", 1);
-    dlp::core::Predicate p2 = vocabulary.add_predicate("holding", 1);
-    dlp::core::Predicate p3 = vocabulary.add_predicate("on_g", 2);
-    std::vector<dlp::core::Predicate> predicates({p0, p1, p2, p3});
-
+    std::shared_ptr<dlp::core::VocabularyInfo> vocabulary = std::make_shared<dlp::core::VocabularyInfo>();
+    dlp::core::Predicate p0 = vocabulary->add_predicate("on", 2);
+    dlp::core::Predicate p1 = vocabulary->add_predicate("onTable", 1);
+    dlp::core::Predicate p2 = vocabulary->add_predicate("holding", 1);
+    dlp::core::Predicate p3 = vocabulary->add_predicate("on_g", 2);
     // 1. Initialize planning instance
-    dlp::core::InstanceInfo instance = vocabulary.make_instance();
+    dlp::core::InstanceInfo instance(vocabulary);
     // Add state atoms
+
     dlp::core::Atom a0 = instance.add_atom("on", {"A", "B"});
     dlp::core::Atom a1 = instance.add_atom("on", {"B", "A"});
     dlp::core::Atom a2 = instance.add_atom("onTable", {"A"});
@@ -49,7 +48,7 @@ int main() {
     dlp::core::Atom a6 = instance.add_static_atom("on_g", {"A", "B"});
 
     // 2. Initialize factory.
-    dlp::core::SyntacticElementFactory factory = vocabulary.make_factory();
+    dlp::core::SyntacticElementFactory factory(vocabulary);
 
     // 3. Initialize containers for storage and uniqueness checking.
     // Equivalence checking using repr.
@@ -65,6 +64,7 @@ int main() {
     std::vector<std::vector<dlp::core::Boolean>> boolean_elements_by_complexity(complexity_bound);
 
     // 4. Construct base
+    std::vector<dlp::core::Predicate> predicates({p0, p1, p2, p3});
     for (const auto& predicate: predicates) {
         // 4.1. PrimitiveConcept
         for (unsigned pos = 0; pos < predicate.get_arity(); ++pos) {

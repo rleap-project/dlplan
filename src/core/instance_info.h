@@ -22,9 +22,9 @@ class VocabularyInfoImpl;
  * it can make sense to sort the atoms by name for improved cache locality.
  * Can benchmark this first by planning with sorted and unsorted atoms.
  */
-class InstanceInfoImpl : public std::enable_shared_from_this<InstanceInfoImpl> {
+class InstanceInfoImpl {
 private:
-    const std::shared_ptr<const VocabularyInfoImpl> m_vocabulary_info;
+    const std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
 
     /**
      * Mappings between names and indices of predicates and objects.
@@ -47,45 +47,34 @@ private:
      */
     std::vector<Object> m_objects;
 
-    const Atom& add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static);
+    const Atom& add_atom(const InstanceInfo& parent, const std::string &predicate_name, const Name_Vec &object_names, bool is_static);
 
 public:
-    InstanceInfoImpl(const VocabularyInfoImpl& vocabulary_info);
+    InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info);
     ~InstanceInfoImpl() = default;
 
     /**
      * Adds an atom that may have varying evaluation depending on the state.
      */
-    const Atom& add_atom(const std::string &predicate_name, const Name_Vec &object_names);
+    const Atom& add_atom(const InstanceInfo& parent, const std::string &predicate_name, const Name_Vec &object_names);
 
     /**
      * Adds an atom that remains true forever.
      */
-    const Atom& add_static_atom(const std::string& predicate_name, const Name_Vec& object_names);
-
-    /**
-     * Construct a state from textual information by first applying the index mapping and the calling convert_state.
-     */
-    State parse_state(const Name_Vec& atom_names) const;
-    /**
-     * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
-     */
-    State convert_state(const std::vector<Atom>& atoms) const;
-    /**
-     * Constructs a state from atom indices by extending with the static and goal atoms of the instance.
-     */
-    State convert_state(const Index_Vec& atom_idxs) const;
+    const Atom& add_static_atom(const InstanceInfo& parent, const std::string& predicate_name, const Name_Vec& object_names);
 
     /**
      * Getters
      */
     const std::vector<Atom>& get_atoms() const;
     const Atom& get_atom(unsigned atom_idx) const;
+    unsigned get_atom_idx(const std::string& name) const;
     const std::vector<Object>& get_objects() const;
     const Object& get_object(unsigned object_idx) const;
     unsigned get_object_idx(const std::string& object_name) const;
     unsigned get_num_objects() const;
-    const VocabularyInfoImpl* get_vocabulary_info() const;
+    const VocabularyInfo* get_vocabulary_info() const;
+    const Index_Vec& get_static_atom_idxs() const;
 };
 
 }

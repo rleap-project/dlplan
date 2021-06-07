@@ -39,7 +39,7 @@ protected:
     }
 
 public:
-    TransitiveReflexiveClosureRole(const VocabularyInfoImpl& vocabulary, Role_Ptr role)
+    TransitiveReflexiveClosureRole(const VocabularyInfo& vocabulary, Role_Ptr role)
     : Role(vocabulary, "r_transitive_reflexive_closure"), m_role(role) {
         if (!role) {
             throw std::runtime_error("TransitiveReflexiveClosureRole::TransitiveReflexiveClosureRole - child is a nullptr.");

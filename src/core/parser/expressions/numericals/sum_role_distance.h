@@ -10,7 +10,7 @@ namespace parser {
 
 class SumRoleDistanceNumerical : public Numerical {
 protected:
-    virtual element::Numerical_Ptr parse_numerical_impl(const VocabularyInfoImpl& vocabulary, ElementCache &cache) const override {
+    virtual element::Numerical_Ptr parse_numerical_impl(const VocabularyInfo& vocabulary, ElementCache &cache) const override {
         if (m_children.size() != 3) {
             throw std::runtime_error("SumRoleDistanceNumerical::parse_numerical_impl - number of children ("s + std::to_string(m_children.size()) + " != 3).");
         }

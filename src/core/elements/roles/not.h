@@ -34,7 +34,7 @@ protected:
     }
 
 public:
-    NotRole(const VocabularyInfoImpl& vocabulary, Role_Ptr role)
+    NotRole(const VocabularyInfo& vocabulary, Role_Ptr role)
     : Role(vocabulary, "r_not"), m_role(role) {
         if (!role) {
             throw std::runtime_error("NotRole::NotRole - child is a nullptr.");

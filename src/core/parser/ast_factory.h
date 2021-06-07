@@ -8,7 +8,7 @@
 
 namespace dlp {
 namespace core {
-class VocabularyInfoImpl;
+class VocabularyInfo;
 namespace parser {
 
 
@@ -17,7 +17,7 @@ namespace parser {
  */
 class AST_Factory {
 public:
-    Expression_Ptr make_ast(const VocabularyInfoImpl& vocabulary_info, const std::string &name, std::vector<Expression_Ptr> &&children);
+    Expression_Ptr make_ast(const VocabularyInfo& vocabulary_info, const std::string &name, std::vector<Expression_Ptr> &&children);
 };
 
 }

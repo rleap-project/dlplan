@@ -20,7 +20,7 @@ protected:
     }
 
 public:
-    OneOfConcept(const VocabularyInfoImpl& vocabulary, const std::string& object_name)
+    OneOfConcept(const VocabularyInfo& vocabulary, const std::string& object_name)
     : Concept(vocabulary, "c_one_of"), m_object_name(object_name) {
     }
 

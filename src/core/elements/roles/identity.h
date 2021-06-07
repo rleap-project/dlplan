@@ -24,7 +24,7 @@ protected:
     }
 
 public:
-    IdentityRole(const VocabularyInfoImpl& vocabulary, Concept_Ptr concept)
+    IdentityRole(const VocabularyInfo& vocabulary, Concept_Ptr concept)
     : Role(vocabulary, "r_identity"), m_concept(concept) {
         if (!concept) {
             throw std::runtime_error("IdentityRole::IdentityRole - child is a nullptr.");

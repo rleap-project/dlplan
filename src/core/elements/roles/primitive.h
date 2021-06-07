@@ -16,7 +16,7 @@ protected:
 
 protected:
     virtual const RoleDenotation& evaluate_impl(const State& state) override {
-        const InstanceInfoImpl& info = *state.get_instance_info();
+        const InstanceInfo& info = *state.get_instance_info();
         // 2. Compute the result.
         m_result.clear();
         for (unsigned atom_idx : state.get_atom_idxs()) {
@@ -29,7 +29,7 @@ protected:
     }
 
 public:
-    PrimitiveRole(const VocabularyInfoImpl& vocabulary, const std::string& name, unsigned pos_1, unsigned pos_2)
+    PrimitiveRole(const VocabularyInfo& vocabulary, const std::string& name, unsigned pos_1, unsigned pos_2)
     : Role(vocabulary, name), m_predicate_idx(vocabulary.get_predicate_idx(name)), m_pos_1(pos_1), m_pos_2(pos_2) {
         unsigned predicate_arity = vocabulary.get_predicate(m_predicate_idx).get_arity();
         if (m_pos_1 >= predicate_arity || m_pos_2 >= predicate_arity) {

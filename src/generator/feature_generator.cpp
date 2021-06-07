@@ -42,8 +42,12 @@ FeatureCollection FeatureGeneratorImpl::generate(const States& states) const {
     std::unordered_set<std::vector<bool>> boolean_feature_cache;
     std::unordered_set<std::vector<int>, HashVector> numerical_feature_cache;
 
+    FeatureCollection feature_collection;
+
     generate_base(states);
     generate_inductively(states);
+
+    return feature_collection;
 }
 
 

@@ -20,10 +20,10 @@ static bool exists(const std::string& name, std::unordered_map<std::string, unsi
     return (f != mapping.end());
 }
 
-InstanceInfoImpl::InstanceInfoImpl(const VocabularyInfoImpl& vocabulary_info)
-    : m_vocabulary_info(vocabulary_info.shared_from_this()) {}
+InstanceInfoImpl::InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info)
+    : m_vocabulary_info(vocabulary_info) {}
 
-const Atom& InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
+const Atom& InstanceInfoImpl::add_atom(const InstanceInfo& parent, const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
     if (!m_vocabulary_info->exists_predicate_name(predicate_name)) {
         throw std::runtime_error("InstanceInfoImpl::add_atom - name of predicate missing in vocabulary ("s + predicate_name + ")");
     } else if (m_vocabulary_info->get_predicate(m_vocabulary_info->get_predicate_idx(predicate_name)).get_arity() != object_names.size()) {
@@ -31,7 +31,7 @@ const Atom& InstanceInfoImpl::add_atom(const std::string &predicate_name, const 
     }
     // predicate related
     bool predicate_exists = exists(predicate_name, m_predicate_name_to_predicate_idx);
-    unsigned predicate_idx;
+    int predicate_idx;
     if (!predicate_exists) {
         predicate_idx = m_predicate_name_to_predicate_idx.size();
         m_predicate_name_to_predicate_idx.emplace(predicate_name, predicate_idx);
@@ -45,15 +45,15 @@ const Atom& InstanceInfoImpl::add_atom(const std::string &predicate_name, const 
     for (unsigned i = 0; i < object_names.size(); ++i) {
         const std::string& object_name = object_names[i];
         bool object_exists = exists(object_name, m_object_name_to_object_idx);
-        unsigned object_idx;
+        int object_idx;
         if (!object_exists) {
             object_idx = m_objects.size();
-            m_objects.push_back(Object(std::move(ObjectImpl(*this, object_name, object_idx))));
+            m_objects.push_back(Object(parent, object_name, object_idx));
             m_object_name_to_object_idx.emplace(object_name, object_idx);
         } else {
             object_idx = m_object_name_to_object_idx.at(object_name);
         }
-        objects.push_back(Object(std::move(ObjectImpl(*this, object_name, object_idx))));
+        objects.push_back(Object(parent, object_name, object_idx));
         ss << object_name;
         if (i < object_names.size() - 1) {
             ss << ",";
@@ -72,54 +72,16 @@ const Atom& InstanceInfoImpl::add_atom(const std::string &predicate_name, const 
     }
 
     const Predicate& predicate = m_vocabulary_info->get_predicate(predicate_idx);
-    m_atoms.push_back(Atom(std::move(AtomImpl(*this, atom_name, atom_idx, predicate, objects, is_static))));
+    m_atoms.push_back(Atom(parent, atom_name, atom_idx, predicate, objects, is_static));
     return m_atoms.back();
 }
 
-const Atom& InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names) {
-    return add_atom(predicate_name, object_names, false);
+const Atom& InstanceInfoImpl::add_atom(const InstanceInfo& parent, const std::string &predicate_name, const Name_Vec &object_names) {
+    return add_atom(parent, predicate_name, object_names, false);
 }
 
-const Atom& InstanceInfoImpl::add_static_atom(const std::string& predicate_name, const Name_Vec& object_names) {
-    return add_atom(predicate_name, object_names, true);
-}
-
-State InstanceInfoImpl::parse_state(const Name_Vec& atom_names) const {
-    Index_Vec atoms;
-    atoms.reserve(atom_names.size() + m_static_atom_idxs.size());
-    for (const auto& atom_name : atom_names) {
-        auto p = m_atom_name_to_atom_idx.find(atom_name);
-        if (p == m_atom_name_to_atom_idx.end()) {
-            throw std::runtime_error("InstanceInfoImpl::parse_state - atom name ("s + atom_name + ") not found in instance.");
-        }
-        atoms.push_back(p->second);
-    }
-    atoms.insert(atoms.end(), m_static_atom_idxs.begin(), m_static_atom_idxs.end());
-    return State(std::move(StateImpl(*this, std::move(atoms))));
-}
-
-State InstanceInfoImpl::convert_state(const std::vector<Atom>& atoms) const {
-    if (!std::all_of(atoms.begin(), atoms.end(), [&](const Atom& atom){ return atom.get_instance_info() == this; })) {
-        throw std::runtime_error("InstanceInfo::convert_state - atom does not belong to the same instance.");
-    }
-    Index_Vec atom_indices;
-    atom_indices.reserve(atoms.size() + m_static_atom_idxs.size());
-    for (const auto& atom : atoms) {
-        atom_indices.push_back(atom.get_atom_idx());
-    }
-    atom_indices.insert(atom_indices.end(), m_static_atom_idxs.begin(), m_static_atom_idxs.end());
-    return State(std::move(StateImpl(*this, std::move(atom_indices))));
-}
-
-State InstanceInfoImpl::convert_state(const Index_Vec& atom_idxs) const {
-    if (!std::all_of(atom_idxs.begin(), atom_idxs.end(), [&](int atom_idx){ return utils::in_bounds(atom_idx, m_atoms); })) {
-        throw std::runtime_error("InstanceInfoImpl::convert_state - atom index out of range.");
-    }
-    Index_Vec atom_indices;
-    atom_indices.reserve(atom_idxs.size() + m_static_atom_idxs.size());
-    atom_indices.insert(atom_indices.end(), atom_idxs.begin(), atom_idxs.end());
-    atom_indices.insert(atom_indices.end(), m_static_atom_idxs.begin(), m_static_atom_idxs.end());
-    return State(std::move(StateImpl(*this, std::move(atom_indices))));
+const Atom& InstanceInfoImpl::add_static_atom(const InstanceInfo& parent, const std::string& predicate_name, const Name_Vec& object_names) {
+    return add_atom(parent, predicate_name, object_names, true);
 }
 
 const std::vector<Atom>& InstanceInfoImpl::get_atoms() const {
@@ -131,6 +93,13 @@ const Atom& InstanceInfoImpl::get_atom(unsigned atom_idx) const {
         throw std::runtime_error("InstanceInfoImpl::get_atom - atom index out of range.");
     }
     return m_atoms[atom_idx];
+}
+
+unsigned InstanceInfoImpl::get_atom_idx(const std::string& name) const {
+    if (m_atom_name_to_atom_idx.find(name) == m_atom_name_to_atom_idx.end()) {
+        throw std::runtime_error("InstanceInfoImpl::get_atom_idx - no atom with name ("s + name + ").");
+    }
+    return m_atom_name_to_atom_idx.at(name);
 }
 
 const std::vector<Object>& InstanceInfoImpl::get_objects() const {
@@ -155,8 +124,12 @@ unsigned InstanceInfoImpl::get_num_objects() const {
     return m_object_name_to_object_idx.size();
 }
 
-const VocabularyInfoImpl* InstanceInfoImpl::get_vocabulary_info() const {
+const VocabularyInfo* InstanceInfoImpl::get_vocabulary_info() const {
     return m_vocabulary_info.get();
+}
+
+const Index_Vec& InstanceInfoImpl::get_static_atom_idxs() const {
+    return m_static_atom_idxs;
 }
 
 }

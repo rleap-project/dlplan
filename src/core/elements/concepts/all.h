@@ -39,7 +39,7 @@ protected:
     }
 
 public:
-    AllConcept(const VocabularyInfoImpl& vocabulary, Role_Ptr role, Concept_Ptr concept)
+    AllConcept(const VocabularyInfo& vocabulary, Role_Ptr role, Concept_Ptr concept)
     : Concept(vocabulary, "c_all"), m_role(role), m_concept(concept) {
         if (!(role && concept)) {
             throw std::runtime_error("AllConcept::AllConcept - at least one child is a nullptr");

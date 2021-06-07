@@ -12,7 +12,7 @@ namespace core {
  */
 class RoleImpl : public ElementImpl<RoleDenotation> {
 public:
-    RoleImpl(const VocabularyInfoImpl& vocabulary_info, std::shared_ptr<element::Element<RoleDenotation>>&& element)
+    RoleImpl(const VocabularyInfo& vocabulary_info, std::shared_ptr<element::Element<RoleDenotation>>&& element)
     : ElementImpl<RoleDenotation>(vocabulary_info, std::move(element)) {
         if (!m_element) {
             throw std::runtime_error("RoleImpl::RoleImpl - tried to construct ConceptImpl from nullptr");

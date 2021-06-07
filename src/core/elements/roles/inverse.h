@@ -24,7 +24,7 @@ protected:
     }
 
 public:
-    InverseRole(const VocabularyInfoImpl& vocabulary, Role_Ptr role)
+    InverseRole(const VocabularyInfo& vocabulary, Role_Ptr role)
     : Role(vocabulary, "r_inverse"), m_role(role) {
         if (!role) {
             throw std::runtime_error("InverseRole::InverseRole - child is a nullptr.");

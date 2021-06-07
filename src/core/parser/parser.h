@@ -8,7 +8,7 @@
 
 namespace dlp {
 namespace core {
-class VocabularyInfoImpl;
+class VocabularyInfo;
 namespace parser {
 
 class Parser {
@@ -16,7 +16,7 @@ private:
     /**
      * Parses tokens into an abstract syntax tree.
      */
-    Expression_Ptr parse_ast(const VocabularyInfoImpl& vocabulary_info, Tokens &tokens) const;
+    Expression_Ptr parse_ast(const VocabularyInfo& vocabulary_info, Tokens &tokens) const;
 
 public:
     Parser();
@@ -24,7 +24,7 @@ public:
     /**
      * Parses a textual description into an abstract syntax tree.
      */
-    Expression_Ptr parse(const VocabularyInfoImpl& vocabulary_info, const std::string &description) const;
+    Expression_Ptr parse(const VocabularyInfo& vocabulary_info, const std::string &description) const;
 };
 
 }

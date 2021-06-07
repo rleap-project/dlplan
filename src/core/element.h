@@ -13,11 +13,11 @@ namespace core {
 template<typename T>
 class ElementImpl {
 protected:
-    const VocabularyInfoImpl* m_vocabulary_info;
+    const VocabularyInfo* m_vocabulary_info;
     std::shared_ptr<element::Element<T>> m_element;
 
 public:
-    ElementImpl(const VocabularyInfoImpl& vocabulary_info, std::shared_ptr<element::Element<T>>&& element)
+    ElementImpl(const VocabularyInfo& vocabulary_info, std::shared_ptr<element::Element<T>>&& element)
     : m_vocabulary_info(&vocabulary_info), m_element(std::move(element)) { }
     virtual ~ElementImpl() = default;
 

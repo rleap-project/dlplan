@@ -10,6 +10,7 @@
 #include "ast_factory.h"
 #include "tokenizer.h"
 
+
 namespace dlp {
 namespace core {
 namespace parser {
@@ -18,7 +19,7 @@ namespace parser {
  * Parses the canonical AST from the given tokens.
  * Tokens in children are sorted lexicographically.
  */
-Expression_Ptr Parser::parse_ast(const VocabularyInfoImpl& vocabulary_info, Tokens &tokens) const {
+Expression_Ptr Parser::parse_ast(const VocabularyInfo& vocabulary_info, Tokens &tokens) const {
     if (tokens.empty()) {
         throw std::runtime_error("Parser::parse_ast - Unexpected EOF\n");
     }
@@ -48,7 +49,7 @@ Parser::Parser() {
 }
 
 Expression_Ptr Parser::parse(
-    const VocabularyInfoImpl& vocabulary_info,
+    const VocabularyInfo& vocabulary_info,
     const std::string &description) const {
     Tokens tokens = Tokenizer().tokenize(description);
     return parse_ast(vocabulary_info, tokens);

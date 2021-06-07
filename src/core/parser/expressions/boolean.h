@@ -15,7 +15,7 @@ protected:
     /**
      * Construct the Boolean.
      */
-    virtual element::Boolean_Ptr parse_boolean_impl(const VocabularyInfoImpl& vocabulary, ElementCache &cache) const = 0;
+    virtual element::Boolean_Ptr parse_boolean_impl(const VocabularyInfo& vocabulary, ElementCache &cache) const = 0;
 
 public:
     Boolean(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
@@ -24,7 +24,7 @@ public:
     /**
      * Construct or retrieve the Boolean.
      */
-    virtual element::Boolean_Ptr parse_boolean(const VocabularyInfoImpl& vocabulary, ElementCache &cache) const {
+    virtual element::Boolean_Ptr parse_boolean(const VocabularyInfo& vocabulary, ElementCache &cache) const {
         element::Boolean_Ptr value = parse_boolean_impl(vocabulary, cache);
         return cache.boolean_element_cache().emplace(value->compute_repr(), std::move(value)).first->second;
     }

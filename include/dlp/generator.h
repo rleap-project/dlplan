@@ -76,7 +76,7 @@ private:
     pimpl<FeatureCollectionImpl> m_pImpl;
 
 public:
-    FeatureCollection(FeatureCollectionImpl&& impl);
+    FeatureCollection();
     FeatureCollection(const FeatureCollection& other);
     ~FeatureCollection();
 

@@ -15,7 +15,7 @@ protected:
     }
 
 public:
-    BotConcept(const VocabularyInfoImpl& vocabulary)
+    BotConcept(const VocabularyInfo& vocabulary)
     : Concept(vocabulary, "c_bot") {
     }
 

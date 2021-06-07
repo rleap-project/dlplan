@@ -22,7 +22,7 @@ protected:
     }
 
 public:
-    TopConcept(const VocabularyInfoImpl& vocabulary)
+    TopConcept(const VocabularyInfo& vocabulary)
     : Concept(vocabulary, "c_top") {
     }
 

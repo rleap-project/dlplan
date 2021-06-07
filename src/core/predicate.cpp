@@ -4,10 +4,10 @@
 namespace dlp {
 namespace core {
 
-PredicateImpl::PredicateImpl(const VocabularyInfoImpl& vocabulary_info, const std::string& predicate_name, int predicate_idx, int arity)
+PredicateImpl::PredicateImpl(const VocabularyInfo& vocabulary_info, const std::string& predicate_name, int predicate_idx, int arity)
     : m_vocabulary_info(&vocabulary_info), m_predicate_name(predicate_name), m_predicate_idx(predicate_idx), m_arity(arity) { }
 
-const VocabularyInfoImpl* PredicateImpl::get_vocabulary_info() const {
+const VocabularyInfo* PredicateImpl::get_vocabulary_info() const {
     return m_vocabulary_info;
 }
 

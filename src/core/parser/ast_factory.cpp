@@ -37,10 +37,10 @@ namespace dlp {
 namespace core {
 namespace parser {
 
-Expression_Ptr AST_Factory::make_ast(const VocabularyInfoImpl& vocabulary_info, const std::string &name, std::vector<Expression_Ptr> &&children) {
+Expression_Ptr AST_Factory::make_ast(const VocabularyInfo& vocabulary_info, const std::string &name, std::vector<Expression_Ptr> &&children) {
     // case 1: name is in alphabet of elements
-    if (vocabulary_info.exists_element_name(name)) {
-        EXPRESSION_TYPE expression_type = vocabulary_info.element_name_to_expression_type(name);
+    if (VocabularyInfoImpl::exists_element_name(name)) {
+        EXPRESSION_TYPE expression_type = VocabularyInfoImpl::element_name_to_expression_type(name);
         switch (expression_type) {
             case B_EMPTY: {
                 return std::make_unique<EmptyBoolean>(EmptyBoolean(name, std::move(children)));

@@ -21,12 +21,12 @@ class VocabularyInfoImpl;
  */
 class SyntacticElementFactoryImpl {
 protected:
-    const std::shared_ptr<const VocabularyInfoImpl> m_vocabulary_info;
+    const std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
 
     ElementCache m_cache;
 
 public:
-    SyntacticElementFactoryImpl(const VocabularyInfoImpl& vocabulary_info);
+    SyntacticElementFactoryImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info);
 
     Concept parse_concept(const std::string &description);
     Role parse_role(const std::string &description);
@@ -71,7 +71,7 @@ public:
     /**
      * Getters.
      */
-    const VocabularyInfoImpl* get_vocabulary_info() const;
+    const VocabularyInfo* get_vocabulary_info() const;
 };
 
 }

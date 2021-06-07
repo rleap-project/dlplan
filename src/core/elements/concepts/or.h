@@ -25,7 +25,7 @@ protected:
     }
 
 public:
-    OrConcept(const VocabularyInfoImpl& vocabulary, Concept_Ptr concept_1, Concept_Ptr concept_2)
+    OrConcept(const VocabularyInfo& vocabulary, Concept_Ptr concept_1, Concept_Ptr concept_2)
     : Concept(vocabulary, "c_or"),
       m_concept_left(concept_1->compute_repr() < concept_2->compute_repr() ? concept_1 : concept_2),
       m_concept_right(concept_1->compute_repr() < concept_2->compute_repr() ? concept_2 : concept_1) {
