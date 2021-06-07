@@ -41,8 +41,10 @@ class Predicate {
 private:
     pimpl<PredicateImpl> m_pImpl;
 
-public:
     Predicate(const VocabularyInfo& vocabulary_info, const std::string& predicate_name, int predicate_idx, int arity);
+    friend class VocabularyInfoImpl;
+
+public:
     Predicate(const Predicate& other);
     ~Predicate();
 
@@ -63,8 +65,10 @@ class Object {
 private:
     pimpl<ObjectImpl> m_pImpl;
 
-public:
     Object(const InstanceInfo& instance_info, const std::string& object_name, int object_idx);
+    friend class InstanceInfoImpl;
+
+public:
     Object(const Object& other);
     ~Object();
 
@@ -81,13 +85,15 @@ class Atom {
 private:
     pimpl<AtomImpl> m_pImpl;
 
-public:
     Atom(const InstanceInfo& instance_info,
         const std::string& atom_name,
         int atom_idx,
         const Predicate& predicate,
         const std::vector<Object> &objects,
         bool is_static);
+    friend class InstanceInfoImpl;
+
+public:
     Atom(const Atom& other);
     ~Atom();
 
@@ -192,8 +198,10 @@ public:
  */
 template<typename T>
 class Element {
-public:
+protected:
     Element() = default;
+
+public:
     virtual ~Element() = default;
 
     /**
@@ -221,8 +229,10 @@ class Concept : public Element<ConceptDenotation> {
 protected:
     pimpl<ConceptImpl> m_pImpl;
 
-public:
     Concept(const VocabularyInfo& vocabulary_info, element::Concept_Ptr&& concept);
+    friend class SyntacticElementFactoryImpl;
+
+public:
     Concept(const Concept& other);
     virtual ~Concept();
 
@@ -241,8 +251,10 @@ class Role : public Element<RoleDenotation> {
 protected:
     pimpl<RoleImpl> m_pImpl;
 
-public:
     Role(const VocabularyInfo& vocabulary_info, element::Role_Ptr&& role);
+    friend class SyntacticElementFactoryImpl;
+
+public:
     Role(const Role& other);
     virtual ~Role();
 
@@ -261,8 +273,10 @@ class Numerical : public Element<int> {
 protected:
     pimpl<NumericalImpl> m_pImpl;
 
-public:
     Numerical(const VocabularyInfo& vocabulary_info, element::Numerical_Ptr&& numerical);
+    friend class SyntacticElementFactoryImpl;
+
+public:
     Numerical(const Numerical& other);
     virtual ~Numerical();
 
@@ -281,8 +295,10 @@ class Boolean : public Element<bool> {
 protected:
     pimpl<BooleanImpl> m_pImpl;
 
-public:
     Boolean(const VocabularyInfo& vocabulary_info, element::Boolean_Ptr&& boolean);
+    friend class SyntacticElementFactoryImpl;
+
+public:
     Boolean(const Boolean& other);
     virtual ~Boolean();
 
