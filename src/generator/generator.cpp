@@ -75,7 +75,7 @@ FeatureGenerator::FeatureGenerator(std::shared_ptr<core::SyntacticElementFactory
 
 FeatureGenerator::~FeatureGenerator() { }
 
-FeatureCollection FeatureGenerator::generate(const States& states) const {
+FeatureCollection FeatureGenerator::generate(const States& states) {
     return m_pImpl->generate(states);
 }
 

@@ -85,6 +85,10 @@ bool VocabularyInfo::exists_predicate_name(const std::string& name) const {
     return m_pImpl->exists_predicate_name(name);
 }
 
+const std::vector<Predicate>& VocabularyInfo::get_predicates() const {
+    return m_pImpl->get_predicates();
+}
+
 unsigned VocabularyInfo::get_predicate_idx(const std::string& name) const {
     return m_pImpl->get_predicate_idx(name);
 }
@@ -280,6 +284,10 @@ SyntacticElementFactory::SyntacticElementFactory(std::shared_ptr<const Vocabular
 SyntacticElementFactory::SyntacticElementFactory(const SyntacticElementFactory& other) : m_pImpl(*other.m_pImpl) { }
 
 SyntacticElementFactory::~SyntacticElementFactory() { }
+
+const VocabularyInfo* SyntacticElementFactory::get_vocabulary_info() const {
+    return m_pImpl->get_vocabulary_info();
+}
 
 Concept SyntacticElementFactory::parse_concept(const std::string &description) {
     return m_pImpl->parse_concept(description);

@@ -28,6 +28,10 @@ bool VocabularyInfoImpl::exists_predicate_name(const std::string& name) const {
     return m_predicate_name_to_predicate_idx.find(name) != m_predicate_name_to_predicate_idx.end();
 }
 
+const std::vector<Predicate>& VocabularyInfoImpl::get_predicates() const {
+    return m_predicates;
+}
+
 unsigned VocabularyInfoImpl::get_predicate_idx(const std::string& name) const {
     if (!exists_predicate_name(name)) {
         throw std::runtime_error("VocabularyInfoImpl::get_predicate_idx - no predicate with name ("s + name + ").");

@@ -33,6 +33,7 @@ using RoleDenotation = std::vector<std::pair<int, int>>;
 using Name_Vec = std::vector<std::string>;
 using Index_Vec = std::vector<int>;
 
+
 /**
  * Predicate contains information regarding the predicates used to construct the atoms.
  */
@@ -143,8 +144,8 @@ public:
     const Predicate& add_predicate(const std::string &predicate_name, unsigned arity);
 
     bool exists_predicate_name(const std::string& name) const;
+    const std::vector<Predicate>& get_predicates() const;
     unsigned get_predicate_idx(const std::string& name) const;
-
     const Predicate& get_predicate(unsigned predicate_idx) const;
 };
 
@@ -304,6 +305,8 @@ public:
     SyntacticElementFactory(std::shared_ptr<const VocabularyInfo> vocabulary_info);
     SyntacticElementFactory(const SyntacticElementFactory& other);
     ~SyntacticElementFactory();
+
+    const VocabularyInfo* get_vocabulary_info() const;
 
     /**
      * Returns a Concept if the description is correct.

@@ -76,10 +76,14 @@ public:
      */
     const Predicate& add_predicate(const VocabularyInfo& parent, const std::string &predicate_name, unsigned arity);
 
+    /**
+     * Getters
+     */
     bool exists_predicate_name(const std::string& name) const;
+    const std::vector<Predicate>& get_predicates() const;
     unsigned get_predicate_idx(const std::string& name) const;
-
     const Predicate& get_predicate(unsigned predicate_idx) const;
+    const VocabularyInfo* get_vocabulary_info() const;
 
     static bool exists_element_name(const std::string& name);
     static EXPRESSION_TYPE element_name_to_expression_type(const std::string &name);

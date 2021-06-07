@@ -119,7 +119,7 @@ public:
     /**
      * Exhaustively generates features with pairwise disjoint feature evaluations on the states.
      */
-    FeatureCollection generate(const States& states) const;
+    FeatureCollection generate(const States& states);
 };
 
 
