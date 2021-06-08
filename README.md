@@ -9,7 +9,9 @@ For now just the simplest way to get things running.
 
 ```console
 cd dl-state-features-for-planning
-cmake .
+mkdir build
+cd build
+cmake ..
 make
 ```
 
@@ -24,5 +26,5 @@ The subdirectory examples/ contains all kinds of helpful examples that illustrat
 or
 
 ```console
-./examples/core/generator
+./examples/generator/generate_exhaustively
 ```
