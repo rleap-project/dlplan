@@ -25,7 +25,7 @@ namespace std {
             }
             return seed;
         }
-};
+    };
 
     template<> struct hash<std::vector<dlp::core::ConceptDenotation>>
     {
@@ -96,7 +96,18 @@ private:
     std::unordered_set<std::vector<core::ConceptDenotation>> m_concept_denotation_cache;
     std::unordered_set<std::vector<core::RoleDenotation>> m_role_denotation_cache;
 
+    /**
+     * Collect some statistics
+     */
+    int m_cache_hits;
+    int m_cache_misses;
+
 private:
+    void add_concept(const States& states, core::Concept&& concept);
+    void add_role(const States& states, core::Role&& role);
+    void add_numerical(const States& states, core::Numerical&& numerical);
+    void add_boolean(const States& states, core::Boolean&& boolean);
+
     /**
      * Generates all Elements with complexity 1.
      */
@@ -104,9 +115,9 @@ private:
 
     void generate_primitive_concepts(const States& states);
     void generate_primitive_roles(const States& states);
-    void generate_top_role();
-    void generate_bot_concept();
-    void generate_top_concept();
+    void generate_top_role(const States& states);
+    void generate_bot_concept(const States& states);
+    void generate_top_concept(const States& states);
 
     /**
      * Inductively generate Elements of higher complexity.
@@ -114,20 +125,20 @@ private:
     void generate_inductively(const States& states);
 
     void generate_empty_boolean(const States& states, int iteration);
-    void generator_all_concept(const States& states, int iteration);
-    void generator_and_concept(const States& states, int iteration);
-    void generator_diff_concept(const States& states, int iteration);
-    void generator_not_concept(const States& states, int iteration);
-    void generator_one_of_concept(const States& states, int iteration);
-    void generator_or_concept(const States& states, int iteration);
-    void generator_some_concept(const States& states, int iteration);
-    void generator_subset_concept(const States& states, int iteration);
+    void generate_all_concept(const States& states, int iteration);
+    void generate_and_concept(const States& states, int iteration);
+    void generate_diff_concept(const States& states, int iteration);
+    void generate_not_concept(const States& states, int iteration);
+    void generate_one_of_concept(const States& states, int iteration);
+    void generate_or_concept(const States& states, int iteration);
+    void generate_some_concept(const States& states, int iteration);
+    void generate_subset_concept(const States& states, int iteration);
 
-    void generator_concept_distance_numerical(const States& states, int iteration);
-    void generator_count_numerical(const States& states, int iteration);
-    void generator_role_distance_numerical(const States& states, int iteration);
-    void generator_sum_concept_distance_numerical(const States& states, int iteration);
-    void generator_sum_role_distance_numerical(const States& states, int iteration);
+    void generate_concept_distance_numerical(const States& states, int iteration);
+    void generate_count_numerical(const States& states, int iteration);
+    void generate_role_distance_numerical(const States& states, int iteration);
+    void generate_sum_concept_distance_numerical(const States& states, int iteration);
+    void generate_sum_role_distance_numerical(const States& states, int iteration);
 
     void generate_and_role(const States& states, int iteration);
     void generate_compose_role(const States& states, int iteration);
@@ -147,6 +158,11 @@ public:
      * Exhaustively generates features with pairwise disjoint feature evaluations on the states.
      */
     FeatureCollection generate(const States& states);
+
+    /**
+     * Print statistics
+     */
+    void print_statistics() const;
 };
 
 }
