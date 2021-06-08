@@ -23,8 +23,8 @@ protected:
     const std::vector<T> m_state_evaluations;
 
 public:
-    FeatureImpl(const std::string& repr, std::vector<T>&& state_evaluations)
-        : m_repr(repr), m_state_evaluations(std::move(state_evaluations)) { }
+    FeatureImpl(const std::string& repr, const std::vector<T>& state_evaluations)
+        : m_repr(repr), m_state_evaluations(state_evaluations) { }
     ~FeatureImpl() = default;
 
     virtual const std::string& get_repr() const {

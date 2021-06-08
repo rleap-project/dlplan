@@ -12,8 +12,8 @@ namespace generator {
 
 class NumericalImpl : public FeatureImpl<int> {
 public:
-    NumericalImpl(const std::string& repr, std::vector<int>&& state_evaluations)
-        : FeatureImpl<int>(repr, std::move(state_evaluations)) { }
+    NumericalImpl(const std::string& repr, const std::vector<int>& state_evaluations)
+        : FeatureImpl<int>(repr, state_evaluations) { }
     ~NumericalImpl() = default;
 };
 

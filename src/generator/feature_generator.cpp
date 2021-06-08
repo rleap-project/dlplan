@@ -3,6 +3,9 @@
 #include <iostream>
 
 #include "../../include/dlp/generator.h"
+#include "../utils/logging.h"
+#include "boolean.h"
+#include "numerical.h"
 
 
 namespace dlp {
@@ -53,7 +56,7 @@ FeatureGeneratorImpl::FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElemen
 FeatureCollection FeatureGeneratorImpl::generate(const States& states) {
     FeatureCollection feature_collection;
     generate_base(states);
-    generate_inductively(states);
+    generate_inductively(states, feature_collection);
     print_statistics();
     return feature_collection;
 }
@@ -67,9 +70,9 @@ void FeatureGeneratorImpl::generate_base(const States& states) {
     generate_top_role(states);
 }
 
-void FeatureGeneratorImpl::generate_inductively(const States& states) {
+void FeatureGeneratorImpl::generate_inductively(const States& states, FeatureCollection& feature_collection) {
     for (int iteration = 1; iteration <= m_complexity; ++iteration) {
-        generate_empty_boolean(states, iteration);
+        generate_empty_boolean(states, iteration, feature_collection);
         generate_all_concept(states, iteration);
         generate_and_concept(states, iteration);
         generate_or_concept(states, iteration);
@@ -98,22 +101,28 @@ void FeatureGeneratorImpl::add_role(const States& states, core::Role&& role) {
     }
 }
 
-void FeatureGeneratorImpl::add_numerical(const States& states, core::Numerical&& numerical) {
-    bool syntactically_unique = m_numerical_element_cache.insert(numerical.compute_repr()).second;
-    bool empirically_unique = m_numerical_denotation_cache.insert(evaluate<int>(numerical, states)).second;
+void FeatureGeneratorImpl::add_numerical(const States& states, core::Numerical&& numerical, FeatureCollection& feature_collection) {
+    std::string repr = numerical.compute_repr();
+    bool syntactically_unique = m_numerical_element_cache.insert(repr).second;
+    std::vector<int> denotation = evaluate<int>(numerical, states);
+    bool empirically_unique = m_numerical_denotation_cache.insert(denotation).second;
     if (syntactically_unique && empirically_unique) {
         m_numerical_elements_by_complexity[numerical.compute_complexity()].emplace_back(numerical);
+        feature_collection.add_numerical_feature(Numerical(repr, denotation));
         ++m_cache_misses;
     } else {
         ++m_cache_hits;
     }
 }
 
-void FeatureGeneratorImpl::add_boolean(const States& states, core::Boolean&& boolean) {
-    bool syntactically_unique = m_boolean_element_cache.insert(boolean.compute_repr()).second;
-    bool empirically_unique = m_boolean_denotation_cache.insert(evaluate<bool>(boolean, states)).second;
+void FeatureGeneratorImpl::add_boolean(const States& states, core::Boolean&& boolean, FeatureCollection& feature_collection) {
+    std::string repr = boolean.compute_repr();
+    bool syntactically_unique = m_boolean_element_cache.insert(repr).second;
+    std::vector<bool> denotation = evaluate<bool>(boolean, states);
+    bool empirically_unique = m_boolean_denotation_cache.insert(denotation).second;
     if (syntactically_unique && empirically_unique) {
         m_boolean_elements_by_complexity[boolean.compute_complexity()].emplace_back(boolean);
+        feature_collection.add_boolean_feature(Boolean(repr, denotation));
         ++m_cache_misses;
     } else {
         ++m_cache_hits;
@@ -153,12 +162,12 @@ void FeatureGeneratorImpl::generate_top_concept(const States& states) {
 }
 
 
-void FeatureGeneratorImpl::generate_empty_boolean(const States& states, int iteration) {
+void FeatureGeneratorImpl::generate_empty_boolean(const States& states, int iteration, FeatureCollection& feature_collection) {
     for (const auto& concept : m_concept_elements_by_complexity[iteration]) {
-        add_boolean(states, m_factory->make_empty_boolean(concept));
+        add_boolean(states, m_factory->make_empty_boolean(concept), feature_collection);
     }
     for (const auto& role : m_role_elements_by_complexity[iteration]) {
-        add_boolean(states, m_factory->make_empty_boolean(role));
+        add_boolean(states, m_factory->make_empty_boolean(role), feature_collection);
     }
 }
 
@@ -209,7 +218,6 @@ void FeatureGeneratorImpl::print_statistics() const {
               << "Total numerical elements: " << num_elements(m_numerical_elements_by_complexity) << std::endl
               << "Total boolean elements: " << num_elements(m_boolean_elements_by_complexity) << std::endl
               << "=================================================================" << std::endl;
-
     print_elements(m_concept_elements_by_complexity);
     print_elements(m_role_elements_by_complexity);
 }

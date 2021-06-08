@@ -103,10 +103,15 @@ private:
     int m_cache_misses;
 
 private:
+    /**
+     * Adds the respective element if it is syntactically and empirically unique.
+     * Additionally, adds information related to them in the FeatureCollection.
+     * Those features are the final result of the feature generation.
+     */
     void add_concept(const States& states, core::Concept&& concept);
     void add_role(const States& states, core::Role&& role);
-    void add_numerical(const States& states, core::Numerical&& numerical);
-    void add_boolean(const States& states, core::Boolean&& boolean);
+    void add_numerical(const States& states, core::Numerical&& numerical, FeatureCollection& feature_collection);
+    void add_boolean(const States& states, core::Boolean&& boolean, FeatureCollection& feature_collection);
 
     /**
      * Generates all Elements with complexity 1.
@@ -122,9 +127,9 @@ private:
     /**
      * Inductively generate Elements of higher complexity.
      */
-    void generate_inductively(const States& states);
+    void generate_inductively(const States& states, FeatureCollection& feature_collection);
 
-    void generate_empty_boolean(const States& states, int iteration);
+    void generate_empty_boolean(const States& states, int iteration, FeatureCollection& feature_collection);
     void generate_all_concept(const States& states, int iteration);
     void generate_and_concept(const States& states, int iteration);
     void generate_diff_concept(const States& states, int iteration);
@@ -135,7 +140,7 @@ private:
     void generate_subset_concept(const States& states, int iteration);
 
     void generate_concept_distance_numerical(const States& states, int iteration);
-    void generate_count_numerical(const States& states, int iteration);
+    void generate_count_numerical(const States& states, int iteration, FeatureCollection& feature_collection);
     void generate_role_distance_numerical(const States& states, int iteration);
     void generate_sum_concept_distance_numerical(const States& states, int iteration);
     void generate_sum_role_distance_numerical(const States& states, int iteration);
