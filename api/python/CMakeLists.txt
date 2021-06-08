@@ -15,6 +15,7 @@ find_package(pybind11 CONFIG REQUIRED)
 
 pybind11_add_module(_dlplan MODULE src/main.cpp)
 target_link_libraries(_dlplan PRIVATE pybind11::module core)
+target_compile_definitions(_dlplan PUBLIC DLPLAN_VERSION_INFO="${DLPLAN_VERSION_INFO}")
 
 # This would copy the generated dynamic library into a given path, but
 # at the moment this logic is performed by the setup script
