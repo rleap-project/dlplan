@@ -7,7 +7,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [windows-latest, macos-latest, ubuntu-latest]
+        platform:
+#         Would be good to work on windows support at some point, but we're not there yet
+#          - windows-latest
+          - macos-latest
+          - ubuntu-latest
         python-version: ["3.6", "3.8", "3.9"]
 
     runs-on: ${{ matrix.platform }}
