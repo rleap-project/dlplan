@@ -189,7 +189,7 @@ State::State(const State& other) : m_pImpl(*other.m_pImpl) {}
 
 State::~State() { }
 
-std::string State::str() const { /* tba */ }
+std::string State::str() const { return m_pImpl->str(); }
 
 const InstanceInfo* State::get_instance_info() const {
     return m_pImpl->get_instance_info();

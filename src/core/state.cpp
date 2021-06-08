@@ -60,5 +60,17 @@ const Index_Vec& StateImpl::get_atom_idxs() const {
     return m_atom_idxs;
 }
 
+std::string StateImpl::str() const {
+    std::string res("{");
+    for (unsigned i=0, n=m_atom_idxs.size(); i<n; ++i) {
+        const auto& atom = m_instance_info->get_atom(m_atom_idxs[i]);
+        res += atom.get_atom_name();
+        if (i < n-1) res += ", ";
+    }
+    res += "}";
+    return res;
+}
+
+
 }
 }

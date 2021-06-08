@@ -33,6 +33,9 @@ public:
      */
     const InstanceInfo* get_instance_info() const;
     const Index_Vec& get_atom_idxs() const;
+
+    std::string str() const;
+
 };
 
 }
