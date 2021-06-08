@@ -9,6 +9,50 @@
 
 #include "types.h"
 
+namespace std {
+    /**
+     * For combining hash value we use the boost::hash_combine one-liner.
+     * https://stackoverflow.com/questions/20511347/a-good-hash-function-for-a-vector
+     *
+     * We provide custom specialization of std::hash that are injected in the namespace std.
+     * https://en.cppreference.com/w/cpp/utility/hash
+     */
+    template<> struct hash<std::vector<int>> {
+        std::size_t operator()(const std::vector<int>& denotation) const noexcept {
+            std::size_t seed = denotation.size();
+            for(const auto & i : denotation) {
+                seed ^= i + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            }
+            return seed;
+        }
+};
+
+    template<> struct hash<std::vector<dlp::core::ConceptDenotation>>
+    {
+        std::size_t operator()(const std::vector<dlp::core::ConceptDenotation>& denotation) const noexcept {
+            std::size_t seed = denotation.size();
+            for (const auto& v : denotation) {
+                for(const auto& i : v) {
+                    seed ^= i + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+                }
+            }
+            return seed;
+        }
+    };
+
+    template<> struct hash<std::vector<dlp::core::RoleDenotation>> {
+        std::size_t operator()(const std::vector<dlp::core::RoleDenotation>& denotation) const noexcept {
+            std::size_t seed = denotation.size();
+            for (const auto& v : denotation) {
+                for(const auto& i : v) {
+                    seed ^= i.first + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+                    seed ^= i.second + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+                }
+            }
+            return seed;
+        }
+    };
+}
 
 namespace dlp {
 namespace core {
@@ -21,41 +65,6 @@ namespace core {
 namespace generator {
 class FeatureCollection;
 
-/**
- * https://stackoverflow.com/questions/20511347/a-good-hash-function-for-a-vector
- */
-struct HashNumericalDenotation {
-    std::size_t operator()(std::vector<int> const& numerical_denotation) const {
-        std::size_t seed = numerical_denotation.size();
-        for(const auto & i : numerical_denotation) {
-            seed ^= i + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-        }
-        return seed;
-    }
-};
-struct HashConceptDenotation {
-    std::size_t operator()(std::vector<std::vector<int>> const& concept_denotation) const {
-        std::size_t seed = concept_denotation.size();
-        for (const auto& v : concept_denotation) {
-            for(const auto& i : v) {
-                seed ^= i + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-            }
-        }
-        return seed;
-    }
-};
-struct HashRoleDenotation {
-    std::size_t operator()(std::vector<std::vector<std::pair<int,int>>> const& role_denotation) const {
-        std::size_t seed = role_denotation.size();
-        for (const auto& v : role_denotation) {
-            for(const auto& i : v) {
-                seed ^= i.first + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-                seed ^= i.second + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-            }
-        }
-        return seed;
-    }
-};
 
 class FeatureGeneratorImpl {
 private:
@@ -83,9 +92,9 @@ private:
      * For checking sample state equivalence.
      */
     std::unordered_set<std::vector<bool>> m_boolean_denotation_cache;
-    std::unordered_set<std::vector<int>, HashNumericalDenotation> m_numerical_denotation_cache;
-    std::unordered_set<std::vector<core::ConceptDenotation>, HashConceptDenotation> m_concept_denotation_cache;
-    std::unordered_set<std::vector<core::RoleDenotation>, HashRoleDenotation> m_role_denotation_cache;
+    std::unordered_set<std::vector<int>> m_numerical_denotation_cache;
+    std::unordered_set<std::vector<core::ConceptDenotation>> m_concept_denotation_cache;
+    std::unordered_set<std::vector<core::RoleDenotation>> m_role_denotation_cache;
 
 private:
     /**
