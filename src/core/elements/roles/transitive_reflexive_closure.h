@@ -23,18 +23,20 @@ protected:
         // 3. Compute pairwise distances using a sequence of bfs calls.
         utils::PairwiseDistances pairwise_distances = utils::compute_pairwise_distances(adj_list);
         // 4. Extract the transitive closure from the pairwise distances.
-        m_result.clear();
+        RoleDenotation_Set result_set;
         for (int source = 0; source < adj_list.size(); ++source) {
             for (int target : adj_list[source]) {
                 if (pairwise_distances[source][target] < INF) {
-                    m_result.emplace_back(source, target);
+                    result_set.emplace(source, target);
                 }
             }
         }
         // 5. Add the reflexive part
         for (int object_idx = 0; object_idx < num_objects; ++object_idx) {
-            m_result.emplace_back(object_idx, object_idx);
+            result_set.emplace(object_idx, object_idx);
         }
+        m_result.clear();
+        m_result.insert(m_result.begin(), result_set.begin(), result_set.end());
         return m_result;
     }
 

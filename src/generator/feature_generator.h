@@ -164,10 +164,13 @@ public:
      */
     FeatureCollection generate(const States& states);
 
+    /**
+     * Print some brief overview.
+     */
     void print_brief_statistics() const;
 
     /**
-     * Print statistics
+     * Print complete statistics.
      */
     void print_overall_statistics() const;
 };

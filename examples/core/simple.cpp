@@ -39,11 +39,21 @@ int main() {
     // 4. Evaluate for example state: block A on B
     dlp::core::State state(instance, {a0, a3});
 
-    int value = numerical.evaluate(state);
     std::cout << "repr: " << numerical.compute_repr() << std::endl;
+    int value = numerical.evaluate(state);
     std::cout << "value: " << value << std::endl;
-    dlp::core::Numerical numerical2 = factory.parse_numerical("n_count(c_bot)");
-    value = numerical2.evaluate(state);
+    dlp::core::Numerical numerical2 = factory.parse_numerical("n_count(r_transitive_reflexive_closure(r_transitive_reflexive_closure(r_top)))");
     std::cout << "repr: " << numerical2.compute_repr() << std::endl;
+    value = numerical2.evaluate(state);
+    std::cout << "value: " << value << std::endl;
+
+    dlp::core::Numerical numerical3 = factory.parse_numerical("n_count(r_transitive_reflexive_closure(r_top))");
+    std::cout << "repr: " << numerical3.compute_repr() << std::endl;
+    value = numerical3.evaluate(state);
+    std::cout << "value: " << value << std::endl;
+
+    dlp::core::Numerical numerical4 = factory.parse_numerical("n_count(r_top)");
+    std::cout << "repr: " << numerical4.compute_repr() << std::endl;
+    value = numerical4.evaluate(state);
     std::cout << "value: " << value << std::endl;
 };
