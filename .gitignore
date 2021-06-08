@@ -43,6 +43,10 @@
 **/CMakeScripts
 **/compile_commands.json
 
+# Python module
+build
+*.egg-info
+
 libdlp.so.1
 
 **/.vscode
