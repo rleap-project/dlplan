@@ -1,4 +1,5 @@
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>  // Necessary for automatic conversion of e.g. std::vectors
 
 #define STRINGIFY(x) #x
 #define MACRO_STRINGIFY(x) STRINGIFY(x)
@@ -22,6 +23,17 @@ PYBIND11_MODULE(_dlplan, m) {
         .def(py::init<>())
         .def("add_predicate", &VocabularyInfo::add_predicate)
         .def("exists_predicate_name", &VocabularyInfo::exists_predicate_name)
+    ;
+
+    py::class_<Atom>(m, "Atom")
+        .def("index", &Atom::get_atom_idx)
+        .def("predicate", &Atom::get_predicate)
+    ;
+
+    py::class_<State>(m, "State")
+        .def(py::init<std::shared_ptr<const InstanceInfo>, const std::vector<Atom>&>())
+//        .def("__repr__", &State::str)
+        .def("__repr__", [](const State& o){return o.str();});
     ;
 
 //    declare_element_class<int>(m, "Int");
@@ -83,7 +95,7 @@ PYBIND11_MODULE(_dlplan, m) {
         .def("make_transitive_reflexive_closure", &SyntacticElementFactory::make_transitive_reflexive_closure)
     ;
 
-    py::class_<InstanceInfo>(m, "InstanceInfo")
+    py::class_<InstanceInfo, std::shared_ptr<InstanceInfo>>(m, "InstanceInfo")
         .def(py::init<std::shared_ptr<VocabularyInfo>>())
         .def("add_atom", &InstanceInfo::add_atom)
         .def("add_static_atom", &InstanceInfo::add_static_atom)
