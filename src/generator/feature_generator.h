@@ -136,14 +136,14 @@ private:
     void generate_not_concept(const States& states, int iteration);
     void generate_one_of_concept(const States& states, int iteration);
     void generate_or_concept(const States& states, int iteration);
-    void generate_some_concept(const States& states, int iteration);
+    void generate_some_concept(const States& states, int iteration);  // TODO(dominik): should we add this?
     void generate_subset_concept(const States& states, int iteration);
 
-    void generate_concept_distance_numerical(const States& states, int iteration);
+    void generate_concept_distance_numerical(const States& states, int iteration, FeatureCollection& feature_collection);
     void generate_count_numerical(const States& states, int iteration, FeatureCollection& feature_collection);
-    void generate_role_distance_numerical(const States& states, int iteration);
-    void generate_sum_concept_distance_numerical(const States& states, int iteration);
-    void generate_sum_role_distance_numerical(const States& states, int iteration);
+    void generate_role_distance_numerical(const States& states, int iteration, FeatureCollection& feature_collection);
+    void generate_sum_concept_distance_numerical(const States& states, int iteration, FeatureCollection& feature_collection);
+    void generate_sum_role_distance_numerical(const States& states, int iteration, FeatureCollection& feature_collection);
 
     void generate_and_role(const States& states, int iteration);
     void generate_compose_role(const States& states, int iteration);

@@ -1,6 +1,8 @@
 #include "feature_generator.h"
 
+#include <algorithm>
 #include <iostream>
+#include <cassert>
 
 #include "../../include/dlp/generator.h"
 #include "../utils/logging.h"
@@ -79,7 +81,26 @@ void FeatureGeneratorImpl::generate_inductively(const States& states, FeatureCol
         generate_empty_boolean(states, iteration, feature_collection);
         generate_all_concept(states, iteration);
         generate_and_concept(states, iteration);
+        generate_diff_concept(states, iteration);
+        generate_not_concept(states, iteration);
         generate_or_concept(states, iteration);
+        generate_some_concept(states, iteration);
+        generate_subset_concept(states, iteration);
+        //generate_concept_distance_numerical(states, iteration, feature_collection);
+        generate_count_numerical(states, iteration, feature_collection);
+        //generate_role_distance_numerical(states, iteration, feature_collection);
+        //generate_sum_concept_distance_numerical(states, iteration, feature_collection);
+        //generate_sum_role_distance_numerical(states, iteration, feature_collection);
+        generate_and_role(states, iteration);
+        generate_compose_role(states, iteration);
+        generate_diff_role(states, iteration);
+        generate_identity_role(states, iteration);
+        generate_inverse_role(states, iteration);
+        generate_not_role(states, iteration);
+        generate_or_role(states, iteration);
+        generate_restrict_role(states, iteration);
+        generate_transitive_closure_role(states, iteration);
+        generate_transitive_reflexive_closure_role(states, iteration);
 
         utils::g_log << "Iteration " << iteration << ":" << std::endl;
         print_brief_statistics();
@@ -180,44 +201,300 @@ void FeatureGeneratorImpl::generate_empty_boolean(const States& states, int iter
 }
 
 void FeatureGeneratorImpl::generate_all_concept(const States& states, int iteration) {
-    for (int i = 1; i < m_complexity - iteration; ++i) {
-        for (const auto& role : m_role_elements_by_complexity[iteration]) {
-            for (const auto& concept : m_concept_elements_by_complexity[i]) {
-                add_concept(states, m_factory->make_all_concept(role, concept));
+    for (int i = 1; i < iteration; ++i) {
+        int j = iteration - i;
+        assert(i + j == iteration);
+        int indices[2] = {i, j};
+        std::sort(indices, indices+2);
+        do {
+            for (const auto& role : m_role_elements_by_complexity[indices[0]]) {
+                for (const auto& concept : m_concept_elements_by_complexity[indices[1]]) {
+                    add_concept(states, m_factory->make_all_concept(role, concept));
+                }
             }
-        }
-        // exchanged iteration bounds.
-        for (const auto& role : m_role_elements_by_complexity[i]) {
-            for (const auto& concept : m_concept_elements_by_complexity[iteration]) {
-                add_concept(states, m_factory->make_all_concept(role, concept));
-            }
-        }
+        } while (std::next_permutation(indices, indices+2));
     }
 }
 
 void FeatureGeneratorImpl::generate_and_concept(const States& states, int iteration) {
-    for (int i = 1; i < m_complexity - iteration; ++i) {
-        for (const auto& concept_left : m_concept_elements_by_complexity[iteration]) {
-            for (const auto& concept_right : m_concept_elements_by_complexity[i]) {
+    for (int i = 1; i < iteration; ++i) {
+        int j = iteration - i;
+        assert(i + j == iteration);
+        for (const auto& concept_left : m_concept_elements_by_complexity[i]) {
+            for (const auto& concept_right : m_concept_elements_by_complexity[j]) {
                 add_concept(states, m_factory->make_and_concept(concept_left, concept_right));
             }
         }
     }
 }
 
+void FeatureGeneratorImpl::generate_diff_concept(const States& states, int iteration) {
+    for (int i = 1; i < iteration; ++i) {
+        int j = iteration - i;
+        assert(i + j == iteration);
+        int indices[2] = {i, j};
+        std::sort(indices, indices+2);
+        do {
+            for (const auto& concept_left : m_concept_elements_by_complexity[indices[0]]) {
+                for (const auto& concept_right : m_concept_elements_by_complexity[indices[1]]) {
+                    add_concept(states, m_factory->make_diff_concept(concept_left, concept_right));
+                }
+            }
+        } while (std::next_permutation(indices, indices+2));
+    }
+}
+
+void FeatureGeneratorImpl::generate_not_concept(const States& states, int iteration) {
+    for (const auto& concept : m_concept_elements_by_complexity[iteration]) {
+        add_concept(states, m_factory->make_not_concept(concept));
+    }
+}
+
+void FeatureGeneratorImpl::generate_one_of_concept(const States& states, int iteration) {
+    throw std::runtime_error("FeatureGeneratorImpl::generate_one_of_concept - not implemented");
+}
+
+
 void FeatureGeneratorImpl::generate_or_concept(const States& states, int iteration) {
-    for (int i = 1; i < m_complexity - iteration; ++i) {
-        for (const auto& concept_left : m_concept_elements_by_complexity[iteration]) {
-            for (const auto& concept_right : m_concept_elements_by_complexity[i]) {
+    for (int i = 1; i < iteration; ++i) {
+        int j = iteration - i;
+        assert(i + j == iteration);
+        for (const auto& concept_left : m_concept_elements_by_complexity[i]) {
+            for (const auto& concept_right : m_concept_elements_by_complexity[j]) {
                 add_concept(states, m_factory->make_or_concept(concept_left, concept_right));
             }
         }
     }
 }
 
+void FeatureGeneratorImpl::generate_some_concept(const States& states, int iteration) {
+    for (int i = 1; i < iteration; ++i) {
+        int j = iteration - i;
+        assert(i + j == iteration);
+        int indices[2] = {i, j};
+        std::sort(indices, indices+2);
+        do {
+            for (const auto& role : m_role_elements_by_complexity[indices[0]]) {
+                for (const auto& concept : m_concept_elements_by_complexity[indices[1]]) {
+                    add_concept(states, m_factory->make_some_concept(role, concept));
+                }
+            }
+        } while (std::next_permutation(indices, indices+2));
+    }
+}
+
+void FeatureGeneratorImpl::generate_subset_concept(const States& states, int iteration) {
+    for (int i = 1; i < iteration; ++i) {
+        int j = iteration - i;
+        assert(i + j == iteration);
+        int indices[2] = {i, j};
+        std::sort(indices, indices+2);
+        do {
+            for (const auto& role_left : m_role_elements_by_complexity[indices[0]]) {
+                for (const auto& role_right : m_role_elements_by_complexity[indices[1]]) {
+                    add_concept(states, m_factory->make_subset_concept(role_left, role_right));
+                }
+            }
+        } while (std::next_permutation(indices, indices+2));
+    }
+}
+
+void FeatureGeneratorImpl::generate_concept_distance_numerical(const States& states, int iteration, FeatureCollection& feature_collection) {
+    for (int i = 0; i < iteration; ++i) {
+        for (int j = 0; j < iteration - i; ++j) {
+            int k = iteration - i - j;
+            assert(i + j + k == iteration);
+            int indices[3] = {i, j, k};
+            std::sort(indices, indices+3);
+            do {
+                for (const auto& concept_left : m_concept_elements_by_complexity[indices[0]]) {
+                    for (const auto& role : m_role_elements_by_complexity[indices[1]]) {
+                        for (const auto& concept_right : m_concept_elements_by_complexity[indices[2]]) {
+                            add_numerical(states, m_factory->make_concept_distance(concept_left, role, concept_right), feature_collection);
+                        }
+                    }
+                }
+            } while (std::next_permutation(indices, indices+3));
+        }
+    }
+}
+
+void FeatureGeneratorImpl::generate_count_numerical(const States& states, int iteration, FeatureCollection& feature_collection) {
+    for (const auto& concept : m_concept_elements_by_complexity[iteration]) {
+        add_numerical(states, m_factory->make_count(concept), feature_collection);
+    }
+    for (const auto& role : m_role_elements_by_complexity[iteration]) {
+        add_numerical(states, m_factory->make_count(role), feature_collection);
+    }
+}
+
+void FeatureGeneratorImpl::generate_role_distance_numerical(const States& states, int iteration, FeatureCollection& feature_collection) {
+    for (int i = 0; i < iteration; ++i) {
+        for (int j = 0; j < iteration - i; ++j) {
+            int k = iteration - i - j;
+            assert(i + j + k == iteration);
+            int indices[3] = {i, j, k};
+            std::sort(indices, indices+3);
+            do {
+                for (const auto& role_left : m_role_elements_by_complexity[indices[0]]) {
+                    for (const auto& role : m_role_elements_by_complexity[indices[1]]) {
+                        for (const auto& role_right : m_role_elements_by_complexity[indices[2]]) {
+                            add_numerical(states, m_factory->make_role_distance(role_left, role, role_right), feature_collection);
+                        }
+                    }
+                }
+            } while (std::next_permutation(indices, indices+3));
+        }
+    }
+}
+
+void FeatureGeneratorImpl::generate_sum_concept_distance_numerical(const States& states, int iteration, FeatureCollection& feature_collection) {
+    for (int i = 0; i < iteration; ++i) {
+        for (int j = 0; j < iteration - i; ++j) {
+            int k = iteration - i - j;
+            assert(i + j + k == iteration);
+            int indices[3] = {i, j, k};
+            std::sort(indices, indices+3);
+            do {
+                for (const auto& concept_left : m_concept_elements_by_complexity[indices[0]]) {
+                    for (const auto& role : m_role_elements_by_complexity[indices[1]]) {
+                        for (const auto& concept_right : m_concept_elements_by_complexity[indices[2]]) {
+                            add_numerical(states, m_factory->make_sum_concept_distance(concept_left, role, concept_right), feature_collection);
+                        }
+                    }
+                }
+            } while (std::next_permutation(indices, indices+3));
+        }
+    }
+}
+
+void FeatureGeneratorImpl::generate_sum_role_distance_numerical(const States& states, int iteration, FeatureCollection& feature_collection) {
+    for (int i = 0; i < iteration; ++i) {
+        for (int j = 0; j < iteration - i; ++j) {
+            int k = iteration - i - j;
+            assert(i + j + k == iteration);
+            int indices[3] = {i, j, k};
+            std::sort(indices, indices+3);
+            do {
+                for (const auto& role_left : m_role_elements_by_complexity[indices[0]]) {
+                    for (const auto& role : m_role_elements_by_complexity[indices[1]]) {
+                        for (const auto& role_right : m_role_elements_by_complexity[indices[2]]) {
+                            add_numerical(states, m_factory->make_sum_role_distance(role_left, role, role_right), feature_collection);
+                        }
+                    }
+                }
+            } while (std::next_permutation(indices, indices+3));
+        }
+    }
+}
+
+void FeatureGeneratorImpl::generate_and_role(const States& states, int iteration) {
+    for (int i = 1; i < iteration; ++i) {
+        int j = iteration - i;
+        assert(i + j == iteration);
+        for (const auto& role_left : m_role_elements_by_complexity[i]) {
+            for (const auto& role_right : m_role_elements_by_complexity[j]) {
+                add_role(states, m_factory->make_and_role(role_left, role_right));
+            }
+        }
+    }
+}
+
+void FeatureGeneratorImpl::generate_compose_role(const States& states, int iteration) {
+    for (int i = 1; i < iteration; ++i) {
+        int j = iteration - i;
+        assert(i + j == iteration);
+        int indices[2] = {i, j};
+        std::sort(indices, indices+2);
+        do {
+            for (const auto& role_left : m_role_elements_by_complexity[indices[0]]) {
+                for (const auto& role_right : m_role_elements_by_complexity[indices[1]]) {
+                    add_role(states, m_factory->make_compose_role(role_left, role_right));
+                }
+            }
+        } while (std::next_permutation(indices, indices+2));
+    }
+}
+
+void FeatureGeneratorImpl::generate_diff_role(const States& states, int iteration) {
+    for (int i = 1; i < iteration; ++i) {
+        int j = iteration - i;
+        assert(i + j == iteration);
+        int indices[2] = {i, j};
+        std::sort(indices, indices+2);
+        do {
+            for (const auto& role_left : m_role_elements_by_complexity[indices[0]]) {
+                for (const auto& role_right : m_role_elements_by_complexity[indices[1]]) {
+                    add_role(states, m_factory->make_diff_role(role_left, role_right));
+                }
+            }
+        } while (std::next_permutation(indices, indices+2));
+    }
+}
+
+void FeatureGeneratorImpl::generate_identity_role(const States& states, int iteration) {
+    for (const auto& concept : m_concept_elements_by_complexity[iteration]) {
+        add_role(states, m_factory->make_identity_role(concept));
+    }
+}
+
+void FeatureGeneratorImpl::generate_inverse_role(const States& states, int iteration) {
+    for (const auto& role : m_role_elements_by_complexity[iteration]) {
+        add_role(states, m_factory->make_inverse_role(role));
+    }
+}
+
+void FeatureGeneratorImpl::generate_not_role(const States& states, int iteration) {
+    for (const auto& role : m_role_elements_by_complexity[iteration]) {
+        add_role(states, m_factory->make_not_role(role));
+    }
+}
+
+void FeatureGeneratorImpl::generate_or_role(const States& states, int iteration) {
+    for (int i = 1; i < iteration; ++i) {
+        int j = iteration - i;
+        assert(i + j == iteration);
+        int indices[2] = {i, j};
+        do {
+            for (const auto& role_left : m_role_elements_by_complexity[indices[0]]) {
+                for (const auto& role_right : m_role_elements_by_complexity[indices[1]]) {
+                    add_role(states, m_factory->make_or_role(role_left, role_right));
+                }
+            }
+        } while (std::next_permutation(indices, indices+2));
+    }
+}
+
+void FeatureGeneratorImpl::generate_restrict_role(const States& states, int iteration) {
+    for (int i = 1; i < iteration; ++i) {
+        int j = iteration - i;
+        assert(i + j == iteration);
+        int indices[2] = {i, j};
+        do {
+            for (const auto& role : m_role_elements_by_complexity[indices[0]]) {
+                for (const auto& concept : m_concept_elements_by_complexity[indices[1]]) {
+                    add_role(states, m_factory->make_restrict_role(role, concept));
+                }
+            }
+        } while (std::next_permutation(indices, indices+2));
+    }
+}
+
+void FeatureGeneratorImpl::generate_transitive_closure_role(const States& states, int iteration) {
+    for (const auto& role : m_role_elements_by_complexity[iteration]) {
+        add_role(states, m_factory->make_transitive_closure(role));
+    }
+}
+
+void FeatureGeneratorImpl::generate_transitive_reflexive_closure_role(const States& states, int iteration) {
+    for (const auto& role : m_role_elements_by_complexity[iteration]) {
+        add_role(states, m_factory->make_transitive_reflexive_closure(role));
+    }
+}
+
 void FeatureGeneratorImpl::print_brief_statistics() const {
-    std::cout << "Total cache hits: " << m_cache_hits << std::endl
-              << "Total cache misses: " << m_cache_misses << std::endl
+    std::cout << "Total generated features: " << m_cache_hits + m_cache_misses << std::endl
+              << "Total novel features: " << m_cache_misses << std::endl
               << "Total concept elements: " << num_elements(m_concept_elements_by_complexity) << std::endl
               << "Total role elements: " << num_elements(m_role_elements_by_complexity) << std::endl
               << "Total numerical elements: " << num_elements(m_numerical_elements_by_complexity) << std::endl
@@ -225,13 +502,13 @@ void FeatureGeneratorImpl::print_brief_statistics() const {
 }
 
 void FeatureGeneratorImpl::print_overall_statistics() const {
-    std::cout << "Generated concepts:" << std::endl;
+    std::cout << "Generated concepts (complexity representation):" << std::endl;
     print_elements(m_concept_elements_by_complexity);
-    std::cout << "Generated roles:" << std::endl;
+    std::cout << "Generated roles (complexity representation):" << std::endl;
     print_elements(m_role_elements_by_complexity);
-    std::cout << "Generated numericals:" << std::endl;
+    std::cout << "Generated numericals (complexity representation):" << std::endl;
     print_elements(m_numerical_elements_by_complexity);
-    std::cout << "Generated booleans:" << std::endl;
+    std::cout << "Generated booleans (complexity representation):" << std::endl;
     print_elements(m_boolean_elements_by_complexity);
 }
 
