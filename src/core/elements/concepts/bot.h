@@ -10,7 +10,7 @@ namespace element {
 
 class BotConcept : public Concept {
 protected:
-    virtual const ConceptDenotation& evaluate_impl(const State& state) override {
+    virtual const ConceptDenotation& evaluate_impl(const State&) override {
         return m_result;
     }
 
@@ -19,7 +19,7 @@ public:
     : Concept(vocabulary, "c_bot") {
     }
 
-    virtual unsigned compute_complexity() const override {
+    virtual int compute_complexity() const override {
         return 1;
     }
 

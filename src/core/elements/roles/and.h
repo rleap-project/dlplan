@@ -37,7 +37,7 @@ public:
         }
     }
 
-    virtual unsigned compute_complexity() const override {
+    virtual int compute_complexity() const override {
         return m_role_left->compute_complexity() + m_role_right->compute_complexity() + 1;
     }
 

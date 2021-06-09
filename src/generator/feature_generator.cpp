@@ -14,8 +14,8 @@ namespace dlp {
 namespace generator {
 
 template<typename T>
-static unsigned num_elements(const std::vector<std::vector<T>>& elements_by_complexity) {
-    unsigned count = 0;
+static int num_elements(const std::vector<std::vector<T>>& elements_by_complexity) {
+    int count = 0;
     for (const auto& elements : elements_by_complexity) {
         count += elements.size();
     }
@@ -163,7 +163,7 @@ void FeatureGeneratorImpl::add_boolean(const States& states, core::Boolean&& boo
 void FeatureGeneratorImpl::generate_primitive_concepts(const States& states) {
     const std::vector<core::Predicate>& predicates = m_factory->get_vocabulary_info()->get_predicates();
     for (const auto& predicate : predicates) {
-        for (unsigned pos = 0; pos < predicate.get_arity(); ++pos) {
+        for (int pos = 0; pos < predicate.get_arity(); ++pos) {
             add_concept(states, m_factory->make_primitive_concept(predicate.get_name(), pos));
         }
     }
@@ -172,8 +172,8 @@ void FeatureGeneratorImpl::generate_primitive_concepts(const States& states) {
 void FeatureGeneratorImpl::generate_primitive_roles(const States& states) {
     const std::vector<core::Predicate>& predicates = m_factory->get_vocabulary_info()->get_predicates();
     for (const auto& predicate : predicates) {
-        for (unsigned pos1 = 0; pos1 < predicate.get_arity(); ++pos1) {
-            for (unsigned pos2 = 0; pos2 < predicate.get_arity(); ++pos2) {
+        for (int pos1 = 0; pos1 < predicate.get_arity(); ++pos1) {
+            for (int pos2 = 0; pos2 < predicate.get_arity(); ++pos2) {
                 add_role(states, m_factory->make_primitive_role(predicate.get_name(), pos1, pos2));
             }
         }
@@ -252,7 +252,7 @@ void FeatureGeneratorImpl::generate_not_concept(const States& states, int iterat
     }
 }
 
-void FeatureGeneratorImpl::generate_one_of_concept(const States& states, int iteration) {
+void FeatureGeneratorImpl::generate_one_of_concept(const States&, int) {
     throw std::runtime_error("FeatureGeneratorImpl::generate_one_of_concept - not implemented");
 }
 

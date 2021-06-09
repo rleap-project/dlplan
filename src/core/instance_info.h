@@ -67,12 +67,12 @@ public:
      * Getters
      */
     const std::vector<Atom>& get_atoms() const;
-    const Atom& get_atom(unsigned atom_idx) const;
-    unsigned get_atom_idx(const std::string& name) const;
+    const Atom& get_atom(int atom_idx) const;
+    int get_atom_idx(const std::string& name) const;
     const std::vector<Object>& get_objects() const;
-    const Object& get_object(unsigned object_idx) const;
-    unsigned get_object_idx(const std::string& object_name) const;
-    unsigned get_num_objects() const;
+    const Object& get_object(int object_idx) const;
+    int get_object_idx(const std::string& object_name) const;
+    int get_num_objects() const;
     const VocabularyInfo* get_vocabulary_info() const;
     const Index_Vec& get_static_atom_idxs() const;
 };

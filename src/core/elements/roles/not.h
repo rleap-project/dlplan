@@ -16,9 +16,9 @@ protected:
 protected:
     virtual const RoleDenotation& evaluate_impl(const State& state) override {
         if (m_universe_set.empty()) {
-            unsigned num_objects = state.get_instance_info()->get_num_objects();
-            for (unsigned object_idx_1 = 0; object_idx_1 < num_objects; ++object_idx_1) {
-                for (unsigned object_idx_2 = 0; object_idx_2 < num_objects; ++object_idx_2) {
+            int num_objects = state.get_instance_info()->get_num_objects();
+            for (int object_idx_1 = 0; object_idx_1 < num_objects; ++object_idx_1) {
+                for (int object_idx_2 = 0; object_idx_2 < num_objects; ++object_idx_2) {
                     m_universe_set.emplace(object_idx_1, object_idx_2);
                 }
             }
@@ -41,7 +41,7 @@ public:
         }
     }
 
-    virtual unsigned compute_complexity() const override {
+    virtual int compute_complexity() const override {
         return m_role->compute_complexity() + 1;
     }
 

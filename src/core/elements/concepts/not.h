@@ -16,8 +16,8 @@ protected:
 protected:
     virtual const ConceptDenotation& evaluate_impl(const State& state) override {
         if (m_universe_set.empty()) {
-            unsigned num_objects = state.get_instance_info()->get_num_objects();
-            for (unsigned object_idx = 0; object_idx < num_objects; ++object_idx) {
+            int num_objects = state.get_instance_info()->get_num_objects();
+            for (int object_idx = 0; object_idx < num_objects; ++object_idx) {
                 m_universe_set.insert(object_idx);
             }
         }
@@ -39,7 +39,7 @@ public:
         }
     }
 
-    virtual unsigned compute_complexity() const override {
+    virtual int compute_complexity() const override {
         return m_concept->compute_complexity() + 1;
     }
 

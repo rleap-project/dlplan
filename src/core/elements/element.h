@@ -44,7 +44,7 @@ public:
     /**
      * Returns the complexity of the element.
      */
-    virtual unsigned compute_complexity() const = 0;
+    virtual int compute_complexity() const = 0;
 
     /**
      * Computes a representation that uniquely identifies the element.

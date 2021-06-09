@@ -22,7 +22,7 @@ protected:
 public:
     EmptyBoolean(const VocabularyInfo& vocabulary, T element) : Boolean(vocabulary, "b_empty"), m_element(element) { }
 
-    virtual unsigned compute_complexity() const override {
+    virtual int compute_complexity() const override {
         return m_element->compute_complexity() + 1;
     }
 

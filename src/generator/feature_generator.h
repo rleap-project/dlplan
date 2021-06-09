@@ -99,8 +99,8 @@ private:
     /**
      * Collect some statistics
      */
-    int m_cache_hits;
     int m_cache_misses;
+    int m_cache_hits;
 
 private:
     /**

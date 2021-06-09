@@ -74,15 +74,15 @@ public:
     /**
      * Adds an atom that may have varying evaluation depending on the state.
      */
-    const Predicate& add_predicate(const VocabularyInfo& parent, const std::string &predicate_name, unsigned arity);
+    const Predicate& add_predicate(const VocabularyInfo& parent, const std::string &predicate_name, int arity);
 
     /**
      * Getters
      */
     bool exists_predicate_name(const std::string& name) const;
     const std::vector<Predicate>& get_predicates() const;
-    unsigned get_predicate_idx(const std::string& name) const;
-    const Predicate& get_predicate(unsigned predicate_idx) const;
+    int get_predicate_idx(const std::string& name) const;
+    const Predicate& get_predicate(int predicate_idx) const;
     const VocabularyInfo* get_vocabulary_info() const;
 
     static bool exists_element_name(const std::string& name);

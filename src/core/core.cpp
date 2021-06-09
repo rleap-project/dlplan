@@ -40,11 +40,11 @@ const std::vector<Atom>& InstanceInfo::get_atoms() const {
     return m_pImpl->get_atoms();
 }
 
-const Atom& InstanceInfo::get_atom(unsigned atom_idx) const {
+const Atom& InstanceInfo::get_atom(int atom_idx) const {
     return m_pImpl->get_atom(atom_idx);
 }
 
-unsigned InstanceInfo::get_atom_idx(const std::string& name) const {
+int InstanceInfo::get_atom_idx(const std::string& name) const {
     return m_pImpl->get_atom_idx(name);
 }
 
@@ -52,15 +52,15 @@ const std::vector<Object>& InstanceInfo::get_objects() const {
     return m_pImpl->get_objects();
 }
 
-const Object& InstanceInfo::get_object(unsigned object_idx) const {
+const Object& InstanceInfo::get_object(int object_idx) const {
     return m_pImpl->get_object(object_idx);
 }
 
-unsigned InstanceInfo::get_object_idx(const std::string& object_name) const {
+int InstanceInfo::get_object_idx(const std::string& object_name) const {
     return m_pImpl->get_object_idx(object_name);
 }
 
-unsigned InstanceInfo::get_num_objects() const {
+int InstanceInfo::get_num_objects() const {
     return m_pImpl->get_num_objects();
 }
 
@@ -77,7 +77,7 @@ VocabularyInfo::VocabularyInfo() : m_pImpl(VocabularyInfoImpl()) { }
 
 VocabularyInfo::~VocabularyInfo() { }
 
-const Predicate& VocabularyInfo::add_predicate(const std::string &predicate_name, unsigned arity) {
+const Predicate& VocabularyInfo::add_predicate(const std::string &predicate_name, int arity) {
     return m_pImpl->add_predicate(*this, predicate_name, arity);
 }
 
@@ -89,11 +89,11 @@ const std::vector<Predicate>& VocabularyInfo::get_predicates() const {
     return m_pImpl->get_predicates();
 }
 
-unsigned VocabularyInfo::get_predicate_idx(const std::string& name) const {
+int VocabularyInfo::get_predicate_idx(const std::string& name) const {
     return m_pImpl->get_predicate_idx(name);
 }
 
-const Predicate& VocabularyInfo::get_predicate(unsigned predicate_idx) const {
+const Predicate& VocabularyInfo::get_predicate(int predicate_idx) const {
     return m_pImpl->get_predicate(predicate_idx);
 }
 
@@ -117,7 +117,7 @@ const std::string& Predicate::get_name() const {
     return m_pImpl->get_predicate_name();
 }
 
-unsigned Predicate::get_arity() const {
+int Predicate::get_arity() const {
     return m_pImpl->get_arity();
 }
 
@@ -211,7 +211,7 @@ ConceptDenotation Concept::evaluate(const State& state) {
     return m_pImpl->evaluate(state);
 }
 
-unsigned Concept::compute_complexity() const {
+int Concept::compute_complexity() const {
     return m_pImpl->compute_complexity();
 }
 
@@ -230,7 +230,7 @@ RoleDenotation Role::evaluate(const State& state) {
     return m_pImpl->evaluate(state);
 }
 
-unsigned Role::compute_complexity() const {
+int Role::compute_complexity() const {
     return m_pImpl->compute_complexity();
 }
 
@@ -250,7 +250,7 @@ int Numerical::evaluate(const State& state) {
     return m_pImpl->evaluate(state);
 }
 
-unsigned Numerical::compute_complexity() const {
+int Numerical::compute_complexity() const {
     return m_pImpl->compute_complexity();
 }
 
@@ -270,7 +270,7 @@ bool Boolean::evaluate(const State& state) {
     return m_pImpl->evaluate(state);
 }
 
-unsigned Boolean::compute_complexity() const {
+int Boolean::compute_complexity() const {
     return m_pImpl->compute_complexity();
 }
 
@@ -342,7 +342,7 @@ Concept SyntacticElementFactory::make_or_concept(const Concept& concept_left, co
     return m_pImpl->make_or_concept(concept_left, concept_right);
 }
 
-Concept SyntacticElementFactory::make_primitive_concept(const std::string& name, unsigned pos) {
+Concept SyntacticElementFactory::make_primitive_concept(const std::string& name, int pos) {
     return m_pImpl->make_primitive_concept(name, pos);
 }
 
@@ -410,7 +410,7 @@ Role SyntacticElementFactory::make_or_role(const Role& role_left, const Role& ro
     return m_pImpl->make_or_role(role_left, role_right);
 }
 
-Role SyntacticElementFactory::make_primitive_role(const std::string& name, unsigned pos_1, unsigned pos_2) {
+Role SyntacticElementFactory::make_primitive_role(const std::string& name, int pos_1, int pos_2) {
     return m_pImpl->make_primitive_role(name, pos_1, pos_2);
 }
 

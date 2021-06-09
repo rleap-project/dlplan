@@ -54,7 +54,7 @@ public:
     const VocabularyInfo* get_vocabulary_info() const;
     int get_predicate_idx() const;
     const std::string& get_name() const;
-    unsigned get_arity() const;
+    int get_arity() const;
 };
 
 
@@ -147,12 +147,12 @@ public:
     VocabularyInfo();
     ~VocabularyInfo();
 
-    const Predicate& add_predicate(const std::string &predicate_name, unsigned arity);
+    const Predicate& add_predicate(const std::string &predicate_name, int arity);
 
     bool exists_predicate_name(const std::string& name) const;
     const std::vector<Predicate>& get_predicates() const;
-    unsigned get_predicate_idx(const std::string& name) const;
-    const Predicate& get_predicate(unsigned predicate_idx) const;
+    int get_predicate_idx(const std::string& name) const;
+    const Predicate& get_predicate(int predicate_idx) const;
 };
 
 
@@ -182,12 +182,12 @@ public:
      * Getters.
      */
     const std::vector<Atom>& get_atoms() const;
-    const Atom& get_atom(unsigned atom_idx) const;
-    unsigned get_atom_idx(const std::string& name) const;
+    const Atom& get_atom(int atom_idx) const;
+    int get_atom_idx(const std::string& name) const;
     const std::vector<Object>& get_objects() const;
-    const Object& get_object(unsigned object_idx) const;
-    unsigned get_object_idx(const std::string& object_name) const;
-    unsigned get_num_objects() const;
+    const Object& get_object(int object_idx) const;
+    int get_object_idx(const std::string& object_name) const;
+    int get_num_objects() const;
     const VocabularyInfo* get_vocabulary_info() const;
     const Index_Vec& get_static_atom_idxs() const;
 };
@@ -213,7 +213,7 @@ public:
      * Returns the complexity of the element
      * measured in the size of the abstract syntax tree.
      */
-    virtual unsigned compute_complexity() const = 0;
+    virtual int compute_complexity() const = 0;
 
     /**
      * Returns a canonical string representation.
@@ -238,7 +238,7 @@ public:
 
     virtual ConceptDenotation evaluate(const State& state) override;
 
-    virtual unsigned compute_complexity() const override;
+    virtual int compute_complexity() const override;
 
     virtual std::string compute_repr() const override;
 };
@@ -260,7 +260,7 @@ public:
 
     virtual RoleDenotation evaluate(const State& state) override;
 
-    virtual unsigned compute_complexity() const override;
+    virtual int compute_complexity() const override;
 
     virtual std::string compute_repr() const override;
 };
@@ -282,7 +282,7 @@ public:
 
     virtual int evaluate(const State& state) override;
 
-    virtual unsigned compute_complexity() const override;
+    virtual int compute_complexity() const override;
 
     virtual std::string compute_repr() const override;
 };
@@ -304,7 +304,7 @@ public:
 
     virtual bool evaluate(const State& state) override;
 
-    virtual unsigned compute_complexity() const override;
+    virtual int compute_complexity() const override;
 
     virtual std::string compute_repr() const override;
 };
@@ -396,7 +396,7 @@ public:
     /**
      * Returns a Concept that evaluates to the concept obtained by projecting atoms in a given state to the column at pos.
      */
-    Concept make_primitive_concept(const std::string& name, unsigned pos);
+    Concept make_primitive_concept(const std::string& name, int pos);
 
     /**
      * Returns a Concept that evaluates the existential abstraction.
@@ -481,7 +481,7 @@ public:
     /**
      * Returns a Role that evaluates to the roles obtained by projecting atoms in a given state to the columns at pos_1 and pos_2.
      */
-    Role make_primitive_role(const std::string& name, unsigned pos_1, unsigned pos_2);
+    Role make_primitive_role(const std::string& name, int pos_1, int pos_2);
 
     /**
      * Returns a Role that evaluates to the role restriction.

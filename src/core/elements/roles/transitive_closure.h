@@ -24,7 +24,7 @@ protected:
         utils::PairwiseDistances pairwise_distances = utils::compute_pairwise_distances(adj_list);
         // 4. Extract the transitive closure from the pairwise distances.
         m_result.clear();
-        for (int source = 0; source < adj_list.size(); ++source) {
+        for (int source = 0; source < static_cast<int>(adj_list.size()); ++source) {
             for (int target : adj_list[source]) {
                 if (pairwise_distances[source][target] < INF) {
                     m_result.emplace_back(source, target);
@@ -42,7 +42,7 @@ public:
         }
     }
 
-    virtual unsigned compute_complexity() const override {
+    virtual int compute_complexity() const override {
         return m_role->compute_complexity() + 1;
     }
 

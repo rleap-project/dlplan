@@ -16,11 +16,11 @@ Numerical::Numerical(const Numerical& other) : m_pImpl(*other.m_pImpl) { }
 Numerical::~Numerical() { }
 
 const std::string& Numerical::get_repr() const {
-    m_pImpl->get_repr();
+    return m_pImpl->get_repr();
 }
 
 const std::vector<int>& Numerical::get_state_evaluations() const {
-    m_pImpl->get_state_evaluations();
+    return m_pImpl->get_state_evaluations();
 }
 
 
@@ -31,11 +31,11 @@ Boolean::Boolean(const Boolean& other) : m_pImpl(*other.m_pImpl) { }
 Boolean::~Boolean() { }
 
 const std::string& Boolean::get_repr() const {
-    m_pImpl->get_repr();
+    return m_pImpl->get_repr();
 }
 
 const std::vector<bool>& Boolean::get_state_evaluations() const {
-    m_pImpl->get_state_evaluations();
+    return m_pImpl->get_state_evaluations();
 }
 
 FeatureCollection::FeatureCollection() : m_pImpl() { }

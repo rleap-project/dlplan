@@ -12,10 +12,10 @@ class TopRole : public Role {
 protected:
     virtual const RoleDenotation& evaluate_impl(const State& state) override {
         if (m_result.empty()) {
-            unsigned num_objects = state.get_instance_info()->get_num_objects();
+            int num_objects = state.get_instance_info()->get_num_objects();
             m_result.reserve(num_objects * num_objects);
-            for (unsigned object_idx_1 = 0; object_idx_1 < num_objects; ++object_idx_1) {
-                for (unsigned object_idx_2 = 0; object_idx_2 < num_objects; ++object_idx_2) {
+            for (int object_idx_1 = 0; object_idx_1 < num_objects; ++object_idx_1) {
+                for (int object_idx_2 = 0; object_idx_2 < num_objects; ++object_idx_2) {
                     m_result.emplace_back(object_idx_1, object_idx_2);
                 }
             }
@@ -28,7 +28,7 @@ public:
     : Role(vocabulary, "r_top"){
     }
 
-    virtual unsigned compute_complexity() const override {
+    virtual int compute_complexity() const override {
         return 1;
     }
 

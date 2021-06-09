@@ -29,7 +29,7 @@ Tokens Tokenizer::tokenize(const std::string &description) const {
     Tokens tokens;
     std::stringstream ss;
     bool is_num = true;
-    for (unsigned i = 0; i < description.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(description.size()); ++i) {
         char c = tolower(description.at(i));
         if (isdigit(c)) {
             ss << c;

@@ -14,8 +14,8 @@ protected:
 
 protected:
     virtual const ConceptDenotation& evaluate_impl(const State& state) override {
-        unsigned object_idx = state.get_instance_info()->get_object_idx(m_object_name);
-        m_result = { static_cast<int>(object_idx) };
+        int object_idx = state.get_instance_info()->get_object_idx(m_object_name);
+        m_result = { object_idx };
         return m_result;
     }
 
@@ -24,7 +24,7 @@ public:
     : Concept(vocabulary, "c_one_of"), m_object_name(object_name) {
     }
 
-    virtual unsigned compute_complexity() const override {
+    virtual int compute_complexity() const override {
         return 1;
     }
 

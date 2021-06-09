@@ -9,16 +9,11 @@
 namespace dlp {
 namespace core {
 
-static bool exists(const std::string& name, std::unordered_map<std::string, unsigned>& mapping) {
-    auto f = mapping.find(name);
-    return (f != mapping.end());
-}
-
-const Predicate& VocabularyInfoImpl::add_predicate(const VocabularyInfo& parent, const std::string &predicate_name, unsigned arity) {
+const Predicate& VocabularyInfoImpl::add_predicate(const VocabularyInfo& parent, const std::string &predicate_name, int arity) {
     if (m_predicate_name_to_predicate_idx.find(predicate_name) != m_predicate_name_to_predicate_idx.end()) {
         throw std::runtime_error("VocabularyInfoImpl::add_predicate - predicate with name ("s + predicate_name + ") already exists.");
     }
-    unsigned predicate_idx = m_predicates.size();
+    int predicate_idx = m_predicates.size();
     m_predicates.push_back(Predicate(parent, predicate_name, predicate_idx, arity));
     m_predicate_name_to_predicate_idx.emplace(predicate_name, predicate_idx);
     return m_predicates.back();
@@ -32,14 +27,14 @@ const std::vector<Predicate>& VocabularyInfoImpl::get_predicates() const {
     return m_predicates;
 }
 
-unsigned VocabularyInfoImpl::get_predicate_idx(const std::string& name) const {
+int VocabularyInfoImpl::get_predicate_idx(const std::string& name) const {
     if (!exists_predicate_name(name)) {
         throw std::runtime_error("VocabularyInfoImpl::get_predicate_idx - no predicate with name ("s + name + ").");
     }
     return m_predicate_name_to_predicate_idx.at(name);
 }
 
-const Predicate& VocabularyInfoImpl::get_predicate(unsigned predicate_idx) const {
+const Predicate& VocabularyInfoImpl::get_predicate(int predicate_idx) const {
     if (!utils::in_bounds(predicate_idx, m_predicates)) {
         throw std::runtime_error("VocabularyInfoImpl::get_predicate - predicate index out of range.");
     }

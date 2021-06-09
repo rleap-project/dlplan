@@ -31,7 +31,7 @@ public:
         return m_element->evaluate(state);
     }
 
-    unsigned compute_complexity() const {
+    int compute_complexity() const {
         return m_element->compute_complexity();
     }
 

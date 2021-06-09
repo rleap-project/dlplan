@@ -11,7 +11,7 @@ namespace core {
 AtomImpl::AtomImpl(
     const InstanceInfo& instance_info,
     const std::string& atom_name,
-    const int atom_idx,
+    int atom_idx,
     const Predicate& predicate,
     const std::vector<Object> &objects,
     bool is_static)

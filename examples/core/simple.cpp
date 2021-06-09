@@ -56,4 +56,4 @@ int main() {
     std::cout << "repr: " << numerical4.compute_repr() << std::endl;
     value = numerical4.evaluate(state);
     std::cout << "value: " << value << std::endl;
-};
+}
