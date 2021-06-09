@@ -3,28 +3,27 @@
 
 Welcome to the "description logics state features for planning" library.
 
-## Installation
+## Building the Library
 
-For now just the simplest way to get things running.
-
+Run the following from the project root to build the library.
+By default, the library compiles in `Debug` mode.
 ```console
-cd dl-state-features-for-planning
-mkdir build
-cd build
-cmake ..
-make
+cmake -S . -B build
+cmake --build build -j4
+```
+
+To build the library in `Release` mode, run
+```console
+cmake -DCMAKE_BUILD_TYPE=Release -S . -B build
+cmake --build build -j4
 ```
 
 ## Running the Examples
 
-The subdirectory examples/ contains all kinds of helpful examples that illustrate different use cases of this library. To run an example from the root of the library use
+The subdirectory `examples/` contains a number of helpful examples that illustrate different use cases of this library.
+You can run these examples e.g. with:
 
 ```console
-./examples/core/simple
-```
-
-or
-
-```console
-./examples/generator/generate_exhaustively
+./build/examples/core/simple
+./build/examples/generator/generate_exhaustively
 ```

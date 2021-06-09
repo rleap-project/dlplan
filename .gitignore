@@ -33,6 +33,7 @@
 
 # cmake
 **/cmake-build-*
+build
 **/CMakeCache.txt
 **/cmake_install.cmake
 **/install_manifest.txt
@@ -46,6 +47,3 @@
 libdlp.so.1
 
 **/.vscode
-
-examples/core/generator
-examples/core/simple
