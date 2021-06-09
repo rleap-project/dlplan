@@ -29,7 +29,7 @@ struct RoleDenotationHash {
     std::size_t operator()(const std::pair<int, int> &r) const {
         // return boost::hash_value(r);
         // return std::hash<int>()(r.first) ^ std::hash<int>()(r.second);
-        return r.first << (sizeof(size_t) / 2) + r.second;
+        return r.first << ((sizeof(size_t) / 2) + r.second);
     }
 };
 using RoleDenotation_Set = std::unordered_set<std::pair<int, int>, RoleDenotationHash>;

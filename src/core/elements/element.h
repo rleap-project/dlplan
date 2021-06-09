@@ -27,7 +27,7 @@ protected:
     virtual const T& evaluate_impl(const State& state) = 0;
 
 public:
-    Element(const VocabularyInfo& vocabulary, const std::string& name) : m_name(name), m_result(T()), m_state(nullptr) { }
+    Element(const VocabularyInfo&, const std::string& name) : m_name(name), m_result(T()), m_state(nullptr) { }
     virtual ~Element() = default;
 
     /**
