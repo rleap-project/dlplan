@@ -9,7 +9,7 @@
 namespace dlp {
 namespace generator {
 
-Numerical::Numerical(NumericalImpl&& impl) : m_pImpl(std::move(impl)) { }
+Numerical::Numerical(const std::string& repr, std::vector<int>& denotation) : m_pImpl(repr, denotation) { }
 
 Numerical::Numerical(const Numerical& other) : m_pImpl(*other.m_pImpl) { }
 
@@ -24,7 +24,7 @@ const std::vector<int>& Numerical::get_state_evaluations() const {
 }
 
 
-Boolean::Boolean(BooleanImpl&& impl) : m_pImpl(std::move(impl)) { }
+Boolean::Boolean(const std::string& repr, std::vector<bool>& denotation) : m_pImpl(repr, denotation) { }
 
 Boolean::Boolean(const Boolean& other) : m_pImpl(*other.m_pImpl) { }
 

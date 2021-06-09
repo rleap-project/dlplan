@@ -12,4 +12,7 @@ add_library(core
     parser/tokenizer.cpp
     parser/ast_factory.cpp
     elements/utils.cpp
+    ../utils/logging.cpp
+    ../utils/system.cpp
+    ../utils/timer.cpp
 )

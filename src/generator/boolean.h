@@ -12,8 +12,8 @@ namespace generator {
 
 class BooleanImpl : public FeatureImpl<bool> {
 public:
-    BooleanImpl(const std::string& repr, std::vector<bool>&& state_evaluations)
-        : FeatureImpl<bool>(repr, std::move(state_evaluations)) { }
+    BooleanImpl(const std::string& repr, const std::vector<bool>& state_evaluations)
+        : FeatureImpl<bool>(repr, state_evaluations) { }
     ~BooleanImpl() = default;
 };
 

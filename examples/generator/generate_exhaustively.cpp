@@ -1,6 +1,7 @@
 #include "../../include/dlp/generator.h"
 
 #include <memory>
+#include <iostream>
 
 int main() {
     std::shared_ptr<dlp::core::VocabularyInfo> vocabulary = std::make_shared<dlp::core::VocabularyInfo>();

@@ -42,7 +42,7 @@ private:
     pimpl<NumericalImpl> m_pImpl;
 
 public:
-    Numerical(NumericalImpl&& impl);
+    Numerical(const std::string& repr, std::vector<int>& denotation);
     Numerical(const Numerical& other);
     virtual ~Numerical();
 
@@ -59,7 +59,7 @@ private:
     pimpl<BooleanImpl> m_pImpl;
 
 public:
-    Boolean(BooleanImpl&& impl);
+    Boolean(const std::string& repr, std::vector<bool>& denotation);
     Boolean(const Boolean& other);
     virtual ~Boolean();
 
