@@ -72,6 +72,8 @@ void FeatureGeneratorImpl::generate_base(const States& states) {
     generate_top_concept(states);
     generate_primitive_roles(states);
     generate_top_role(states);
+    utils::g_log << "Complexity " << 1 << ":" << std::endl;
+        print_brief_statistics();
     utils::g_log << "Finished generating base features." << std::endl;
 }
 
@@ -86,9 +88,9 @@ void FeatureGeneratorImpl::generate_inductively(const States& states, FeatureCol
         generate_or_concept(states, iteration);
         generate_some_concept(states, iteration);
         generate_subset_concept(states, iteration);
-        //generate_concept_distance_numerical(states, iteration, feature_collection);
+        generate_concept_distance_numerical(states, iteration, feature_collection);
         generate_count_numerical(states, iteration, feature_collection);
-        //generate_role_distance_numerical(states, iteration, feature_collection);
+        generate_role_distance_numerical(states, iteration, feature_collection);
         //generate_sum_concept_distance_numerical(states, iteration, feature_collection);
         //generate_sum_role_distance_numerical(states, iteration, feature_collection);
         generate_and_role(states, iteration);
@@ -102,7 +104,7 @@ void FeatureGeneratorImpl::generate_inductively(const States& states, FeatureCol
         generate_transitive_closure_role(states, iteration);
         generate_transitive_reflexive_closure_role(states, iteration);
 
-        utils::g_log << "Iteration " << iteration << ":" << std::endl;
+        utils::g_log << "Complexity " << iteration+1 << ":" << std::endl;
         print_brief_statistics();
     }
     utils::g_log << "Finished generating composite features." << std::endl;

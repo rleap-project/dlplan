@@ -35,7 +35,7 @@ protected:
                 // The second component of pair in l_vec and first component of pair in r_vec comply for composition.
                 auto r_it_2 = r_it;
                 // Iterate all in r_vec that comply with the current one in l_vec.
-                while (l_it->second == r_it_2->first) {
+                while (r_it_2 != r_vec.end() && l_it->second == r_it_2->first) {
                     result_set.emplace(l_it->first, r_it_2->second);
                     ++r_it_2;
                 }

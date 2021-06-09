@@ -25,7 +25,7 @@ int main() {
     dlp::core::State s2(instance, {a2, a3});
     dlp::generator::States states({s0, s1, s2});
 
-    dlp::generator::FeatureGenerator generator(factory, 4, 180);
+    dlp::generator::FeatureGenerator generator(factory, 5, 180);
     dlp::generator::FeatureCollection features = generator.generate(states);
     dlp::generator::FeatureCollectionWriter().write(features, "test.txt");
 }
