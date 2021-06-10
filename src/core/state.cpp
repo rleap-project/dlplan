@@ -16,7 +16,7 @@ static Index_Vec convert_atoms(const InstanceInfo& instance_info, const std::vec
     Index_Vec atom_indices;
     atom_indices.reserve(atoms.size() + instance_info.get_static_atom_idxs().size());
     for (const auto& atom : atoms) {
-        atom_indices.push_back(atom.get_atom_idx());
+        atom_indices.push_back(atom.get_index());
     }
     atom_indices.insert(atom_indices.end(), instance_info.get_static_atom_idxs().begin(), instance_info.get_static_atom_idxs().end());
     return atom_indices;
@@ -64,7 +64,7 @@ std::string StateImpl::str() const {
     std::string res("{");
     for (int i=0, n=m_atom_idxs.size(); i<n; ++i) {
         const auto& atom = m_instance_info->get_atom(m_atom_idxs[i]);
-        res += atom.get_atom_name();
+        res += atom.get_name();
         if (i < n-1) res += ", ";
     }
     res += "}";

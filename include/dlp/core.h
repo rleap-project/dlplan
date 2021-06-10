@@ -101,8 +101,8 @@ public:
      * Getters.
      */
     const InstanceInfo* get_instance_info() const;
-    const std::string& get_atom_name() const;
-    int get_atom_idx() const;
+    const std::string& get_name() const;
+    int get_index() const;
     const Predicate& get_predicate() const;
     const std::vector<Object>& get_objects() const;
     const Object& get_object(int pos) const;

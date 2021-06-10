@@ -14,8 +14,8 @@ class AtomImpl {
 private:
     const InstanceInfo* m_instance_info;
     // Data members
-    const std::string m_atom_name;
-    const int m_atom_idx;
+    const std::string m_name;
+    const int m_index;
     const Predicate m_predicate;
     const std::vector<Object> m_objects;
     const bool m_is_static;
@@ -23,16 +23,16 @@ private:
 public:
     AtomImpl(
         const InstanceInfo& instance_info,
-        const std::string& atom_name,
-        int atom_idx,
+        const std::string& name,
+        int index,
         const Predicate& predicate,
         const std::vector<Object> &objects,
         bool is_static);
     ~AtomImpl() = default;
 
     const InstanceInfo* get_instance_info() const;
-    const std::string& get_atom_name() const;
-    int get_atom_idx() const;
+    const std::string& get_name() const;
+    int get_index() const;
     const Predicate& get_predicate() const;
     const std::vector<Object>& get_objects() const;
     const Object& get_object(int pos) const;

@@ -29,8 +29,8 @@ void init_core(py::module_ &m) {
     ;
 
     py::class_<core::Atom>(m, "Atom")
-        .def("get_atom_name", &core::Atom::get_atom_name)
-        .def("get_atom_idx", &core::Atom::get_atom_idx)
+        .def("get_name", &core::Atom::get_name)
+        .def("get_index", &core::Atom::get_index)
         .def("get_predicate", &core::Atom::get_predicate)
         .def("get_objects", &core::Atom::get_objects)
         .def("get_object", &core::Atom::get_object)

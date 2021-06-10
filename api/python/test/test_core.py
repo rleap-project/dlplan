@@ -37,16 +37,16 @@ def test_instance():
 
     atoms = instance.get_atoms()
     a0 = atoms[0]
-    assert a0.get_atom_name() == "on(a,b)"
-    assert a0.get_atom_idx() == 0
+    assert a0.get_name() == "on(a,b)"
+    assert a0.get_index() == 0
     assert a0.get_predicate().get_name() == "on"
     a1 = atoms[1]
-    assert a1.get_atom_name() == "on(b,a)"
-    assert a1.get_atom_idx() == 1
+    assert a1.get_name() == "on(b,a)"
+    assert a1.get_index() == 1
     assert a1.get_predicate().get_name() == "on"
     a2 = atoms[2]
-    assert a2.get_atom_name() == "ontable(a)"
-    assert a2.get_atom_idx() == 2
+    assert a2.get_name() == "ontable(a)"
+    assert a2.get_index() == 2
     assert a2.get_predicate().get_name() == "ontable"
     #...
 

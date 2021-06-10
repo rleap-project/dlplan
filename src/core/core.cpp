@@ -157,12 +157,12 @@ const InstanceInfo* Atom::get_instance_info() const {
     return m_pImpl->get_instance_info();
 }
 
-const std::string& Atom::get_atom_name() const {
-    return m_pImpl->get_atom_name();
+const std::string& Atom::get_name() const {
+    return m_pImpl->get_name();
 }
 
-int Atom::get_atom_idx() const {
-    return m_pImpl->get_atom_idx();
+int Atom::get_index() const {
+    return m_pImpl->get_index();
 }
 
 const Predicate& Atom::get_predicate() const {
