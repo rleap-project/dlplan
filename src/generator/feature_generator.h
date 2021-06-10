@@ -82,21 +82,12 @@ private:
     std::vector<std::vector<dlp::core::Boolean>> m_boolean_elements_by_complexity;
 
     /**
-     * For checking syntactic equivalence.
-     */
-    std::unordered_set<std::string> m_concept_element_cache;
-    std::unordered_set<std::string> m_role_element_cache;
-    std::unordered_set<std::string> m_numerical_element_cache;
-    std::unordered_set<std::string> m_boolean_element_cache;
-
-    /**
      * For checking sample state equivalence.
      */
     std::unordered_set<std::vector<bool>> m_boolean_denotation_cache;
     std::unordered_set<std::vector<int>> m_numerical_denotation_cache;
     std::unordered_set<std::vector<core::ConceptDenotation>> m_concept_denotation_cache;
     std::unordered_set<std::vector<core::RoleDenotation>> m_role_denotation_cache;
-
 
     /**
      * Collect some statistics

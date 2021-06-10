@@ -60,7 +60,7 @@ FeatureCollection FeatureGeneratorImpl::generate(const States& states) {
     generate_base(states);
     generate_inductively(states, feature_collection);
     utils::g_log << "Overall results: " << std::endl;
-    print_overall_statistics();
+    // print_overall_statistics();
     return feature_collection;
 }
 
@@ -70,7 +70,7 @@ void FeatureGeneratorImpl::generate_base(const States& states) {
     generate_primitive_concepts(states);
     generate_bot_concept(states);
     generate_top_concept(states);
-    // generate_primitive_roles(states);
+    generate_primitive_roles(states);
     generate_top_role(states);
     utils::g_log << "Complexity " << 1 << ":" << std::endl;
     print_brief_statistics();
@@ -91,8 +91,8 @@ void FeatureGeneratorImpl::generate_inductively(const States& states, FeatureCol
         generate_concept_distance_numerical(states, iteration, feature_collection);
         generate_count_numerical(states, iteration, feature_collection);
         generate_role_distance_numerical(states, iteration, feature_collection);
-        //generate_sum_concept_distance_numerical(states, iteration, feature_collection);
-        //generate_sum_role_distance_numerical(states, iteration, feature_collection);
+        generate_sum_concept_distance_numerical(states, iteration, feature_collection);
+        generate_sum_role_distance_numerical(states, iteration, feature_collection);
         generate_and_role(states, iteration);
         generate_compose_role(states, iteration);
         generate_diff_role(states, iteration);
@@ -111,9 +111,8 @@ void FeatureGeneratorImpl::generate_inductively(const States& states, FeatureCol
 }
 
 void FeatureGeneratorImpl::add_concept(const States& states, core::Concept&& concept) {
-    bool syntactically_unique = m_concept_element_cache.insert(concept.compute_repr()).second;
-    bool empirically_unique = m_concept_denotation_cache.insert(evaluate<core::ConceptDenotation>(concept, states)).second;
-    if (syntactically_unique && empirically_unique) {
+    bool unique = m_concept_denotation_cache.insert(evaluate<core::ConceptDenotation>(concept, states)).second;
+    if (unique) {
         m_concept_elements_by_complexity[concept.compute_complexity()].emplace_back(concept);
         ++m_cache_misses;
     } else {
@@ -122,9 +121,8 @@ void FeatureGeneratorImpl::add_concept(const States& states, core::Concept&& con
 }
 
 void FeatureGeneratorImpl::add_role(const States& states, core::Role&& role) {
-    bool syntactically_unique = m_role_element_cache.insert(role.compute_repr()).second;
-    bool empirically_unique = m_role_denotation_cache.insert(evaluate<core::RoleDenotation>(role, states)).second;
-    if (syntactically_unique && empirically_unique) {
+    bool unique = m_role_denotation_cache.insert(evaluate<core::RoleDenotation>(role, states)).second;
+    if (unique) {
         m_role_elements_by_complexity[role.compute_complexity()].emplace_back(role);
         ++m_cache_misses;
     } else {
@@ -134,10 +132,9 @@ void FeatureGeneratorImpl::add_role(const States& states, core::Role&& role) {
 
 void FeatureGeneratorImpl::add_numerical(const States& states, core::Numerical&& numerical, FeatureCollection& feature_collection) {
     std::string repr = numerical.compute_repr();
-    bool syntactically_unique = m_numerical_element_cache.insert(repr).second;
     std::vector<int> denotation = evaluate<int>(numerical, states);
-    bool empirically_unique = m_numerical_denotation_cache.insert(denotation).second;
-    if (syntactically_unique && empirically_unique) {
+    bool unique = m_numerical_denotation_cache.insert(denotation).second;
+    if (unique) {
         m_numerical_elements_by_complexity[numerical.compute_complexity()].emplace_back(numerical);
         feature_collection.add_numerical_feature(Numerical(repr, denotation));
         ++m_cache_misses;
@@ -148,10 +145,9 @@ void FeatureGeneratorImpl::add_numerical(const States& states, core::Numerical&&
 
 void FeatureGeneratorImpl::add_boolean(const States& states, core::Boolean&& boolean, FeatureCollection& feature_collection) {
     std::string repr = boolean.compute_repr();
-    bool syntactically_unique = m_boolean_element_cache.insert(repr).second;
     std::vector<bool> denotation = evaluate<bool>(boolean, states);
-    bool empirically_unique = m_boolean_denotation_cache.insert(denotation).second;
-    if (syntactically_unique && empirically_unique) {
+    bool unique = m_boolean_denotation_cache.insert(denotation).second;
+    if (unique) {
         m_boolean_elements_by_complexity[boolean.compute_complexity()].emplace_back(boolean);
         feature_collection.add_boolean_feature(Boolean(repr, denotation));
         ++m_cache_misses;
@@ -206,6 +202,7 @@ void FeatureGeneratorImpl::generate_all_concept(const States& states, int iterat
     for (int i = 1; i < iteration; ++i) {
         int j = iteration - i;
         assert(i + j == iteration);
+        assert(i >= 1 && j >= 1);
         int indices[2] = {i, j};
         std::sort(indices, indices+2);
         do {
@@ -222,6 +219,7 @@ void FeatureGeneratorImpl::generate_and_concept(const States& states, int iterat
     for (int i = 1; i < iteration; ++i) {
         int j = iteration - i;
         assert(i + j == iteration);
+        assert(i >= 1 && j >= 1);
         for (const auto& concept_left : m_concept_elements_by_complexity[i]) {
             for (const auto& concept_right : m_concept_elements_by_complexity[j]) {
                 add_concept(states, m_factory->make_and_concept(concept_left, concept_right));
@@ -234,6 +232,7 @@ void FeatureGeneratorImpl::generate_diff_concept(const States& states, int itera
     for (int i = 1; i < iteration; ++i) {
         int j = iteration - i;
         assert(i + j == iteration);
+        assert(i >= 1 && j >= 1);
         int indices[2] = {i, j};
         std::sort(indices, indices+2);
         do {
@@ -261,6 +260,7 @@ void FeatureGeneratorImpl::generate_or_concept(const States& states, int iterati
     for (int i = 1; i < iteration; ++i) {
         int j = iteration - i;
         assert(i + j == iteration);
+        assert(i >= 1 && j >= 1);
         for (const auto& concept_left : m_concept_elements_by_complexity[i]) {
             for (const auto& concept_right : m_concept_elements_by_complexity[j]) {
                 add_concept(states, m_factory->make_or_concept(concept_left, concept_right));
@@ -273,6 +273,7 @@ void FeatureGeneratorImpl::generate_some_concept(const States& states, int itera
     for (int i = 1; i < iteration; ++i) {
         int j = iteration - i;
         assert(i + j == iteration);
+        assert(i >= 1 && j >= 1);
         int indices[2] = {i, j};
         std::sort(indices, indices+2);
         do {
@@ -289,6 +290,7 @@ void FeatureGeneratorImpl::generate_subset_concept(const States& states, int ite
     for (int i = 1; i < iteration; ++i) {
         int j = iteration - i;
         assert(i + j == iteration);
+        assert(i >= 1 && j >= 1);
         int indices[2] = {i, j};
         std::sort(indices, indices+2);
         do {
@@ -302,10 +304,11 @@ void FeatureGeneratorImpl::generate_subset_concept(const States& states, int ite
 }
 
 void FeatureGeneratorImpl::generate_concept_distance_numerical(const States& states, int iteration, FeatureCollection& feature_collection) {
-    for (int i = 0; i < iteration; ++i) {
-        for (int j = 0; j < iteration - i; ++j) {
+    for (int i = 1; i < iteration; ++i) {
+        for (int j = 1; j < iteration - i; ++j) {
             int k = iteration - i - j;
             assert(i + j + k == iteration);
+            assert(i >= 1 && j >= 1 && k >= 1);
             int indices[3] = {i, j, k};
             std::sort(indices, indices+3);
             do {
@@ -331,10 +334,11 @@ void FeatureGeneratorImpl::generate_count_numerical(const States& states, int it
 }
 
 void FeatureGeneratorImpl::generate_role_distance_numerical(const States& states, int iteration, FeatureCollection& feature_collection) {
-    for (int i = 0; i < iteration; ++i) {
-        for (int j = 0; j < iteration - i; ++j) {
+    for (int i = 1; i < iteration; ++i) {
+        for (int j = 1; j < iteration - i; ++j) {
             int k = iteration - i - j;
             assert(i + j + k == iteration);
+            assert(i >= 1 && j >= 1 && k >= 1);
             int indices[3] = {i, j, k};
             std::sort(indices, indices+3);
             do {
@@ -351,10 +355,11 @@ void FeatureGeneratorImpl::generate_role_distance_numerical(const States& states
 }
 
 void FeatureGeneratorImpl::generate_sum_concept_distance_numerical(const States& states, int iteration, FeatureCollection& feature_collection) {
-    for (int i = 0; i < iteration; ++i) {
-        for (int j = 0; j < iteration - i; ++j) {
+    for (int i = 1; i < iteration; ++i) {
+        for (int j = 1; j < iteration - i; ++j) {
             int k = iteration - i - j;
             assert(i + j + k == iteration);
+            assert(i >= 1 && j >= 1 && k >= 1);
             int indices[3] = {i, j, k};
             std::sort(indices, indices+3);
             do {
@@ -371,10 +376,11 @@ void FeatureGeneratorImpl::generate_sum_concept_distance_numerical(const States&
 }
 
 void FeatureGeneratorImpl::generate_sum_role_distance_numerical(const States& states, int iteration, FeatureCollection& feature_collection) {
-    for (int i = 0; i < iteration; ++i) {
-        for (int j = 0; j < iteration - i; ++j) {
+    for (int i = 1; i < iteration; ++i) {
+        for (int j = 1; j < iteration - i; ++j) {
             int k = iteration - i - j;
             assert(i + j + k == iteration);
+            assert(i >= 1 && j >= 1 && k >= 1);
             int indices[3] = {i, j, k};
             std::sort(indices, indices+3);
             do {
@@ -394,6 +400,7 @@ void FeatureGeneratorImpl::generate_and_role(const States& states, int iteration
     for (int i = 1; i < iteration; ++i) {
         int j = iteration - i;
         assert(i + j == iteration);
+        assert(i >= 1 && j >= 1);
         for (const auto& role_left : m_role_elements_by_complexity[i]) {
             for (const auto& role_right : m_role_elements_by_complexity[j]) {
                 add_role(states, m_factory->make_and_role(role_left, role_right));
@@ -406,6 +413,7 @@ void FeatureGeneratorImpl::generate_compose_role(const States& states, int itera
     for (int i = 1; i < iteration; ++i) {
         int j = iteration - i;
         assert(i + j == iteration);
+        assert(i >= 1 && j >= 1);
         int indices[2] = {i, j};
         std::sort(indices, indices+2);
         do {
@@ -422,6 +430,7 @@ void FeatureGeneratorImpl::generate_diff_role(const States& states, int iteratio
     for (int i = 1; i < iteration; ++i) {
         int j = iteration - i;
         assert(i + j == iteration);
+        assert(i >= 1 && j >= 1);
         int indices[2] = {i, j};
         std::sort(indices, indices+2);
         do {
