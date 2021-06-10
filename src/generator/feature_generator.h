@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <memory>
+#include <bitset>
 
 #include "../../include/dlp/core.h"
 
@@ -95,6 +96,7 @@ private:
     std::unordered_set<std::vector<int>> m_numerical_denotation_cache;
     std::unordered_set<std::vector<core::ConceptDenotation>> m_concept_denotation_cache;
     std::unordered_set<std::vector<core::RoleDenotation>> m_role_denotation_cache;
+
 
     /**
      * Collect some statistics

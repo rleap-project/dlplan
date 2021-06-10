@@ -89,23 +89,6 @@ public:
 
 
 /**
- * FeatureCollectionWriter for writing FeatureCollection to file.
- */
-class FeatureCollectionWriter {
-private:
-    pimpl<FeatureCollectionWriterImpl> m_pImpl;
-public:
-    FeatureCollectionWriter();
-    ~FeatureCollectionWriter();
-
-    /**
-     * Writes all information related to the features in a single file.
-     */
-    void write(const FeatureCollection& features, const std::string& filename) const;
-};
-
-
-/**
  * FeatureGenerator exhaustively generates features up to the complexity bound or until the time limit was reached.
  */
 class FeatureGenerator {

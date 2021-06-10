@@ -13,8 +13,8 @@ list(APPEND CMAKE_PREFIX_PATH "${_tmp_dir}")
 # Now we can find pybind11
 find_package(pybind11 CONFIG REQUIRED)
 
-pybind11_add_module(_dlplan MODULE src/main.cpp)
-target_link_libraries(_dlplan PRIVATE pybind11::module core)
+pybind11_add_module(_dlplan MODULE src/main.cpp src/core.cpp src/generator.cpp)
+target_link_libraries(_dlplan PRIVATE pybind11::module core generator)
 target_compile_definitions(_dlplan PUBLIC DLPLAN_VERSION_INFO="${DLPLAN_VERSION_INFO}")
 
 # This would copy the generated dynamic library into a given path, but

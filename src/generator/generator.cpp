@@ -1,6 +1,5 @@
 #include "../../include/dlp/generator.h"
 
-#include "feature_collection_writer.h"
 #include "feature_collection.h"
 #include "feature_generator.h"
 #include "numerical.h"
@@ -58,15 +57,6 @@ const NumericalFeatures& FeatureCollection::get_numerical_features() const {
 
 const BooleanFeatures& FeatureCollection::get_boolean_features() const {
     return m_pImpl->get_boolean_features();
-}
-
-
-FeatureCollectionWriter::FeatureCollectionWriter() { }
-
-FeatureCollectionWriter::~FeatureCollectionWriter() { }
-
-void FeatureCollectionWriter::write(const FeatureCollection& features, const std::string& filename) const {
-    m_pImpl->write(features, filename);
 }
 
 
