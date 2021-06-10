@@ -133,12 +133,12 @@ const InstanceInfo* Object::get_instance_info() const {
     return m_pImpl->get_instance_info();
 }
 
-const std::string& Object::get_object_name() const {
-    return m_pImpl->get_object_name();
+const std::string& Object::get_name() const {
+    return m_pImpl->get_name();
 }
 
-int Object::get_object_idx() const {
-    return m_pImpl->get_object_idx();
+int Object::get_index() const {
+    return m_pImpl->get_index();
 }
 
 

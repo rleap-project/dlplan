@@ -73,8 +73,8 @@ public:
     ~Object();
 
     const InstanceInfo* get_instance_info() const;
-    int get_object_idx() const;
-    const std::string& get_object_name() const;
+    int get_index() const;
+    const std::string& get_name() const;
 };
 
 

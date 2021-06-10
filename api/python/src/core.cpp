@@ -12,8 +12,8 @@ using namespace dlp;
 
 void init_core(py::module_ &m) {
     py::class_<core::Object>(m, "Object")
-        .def("get_object_idx", &core::Object::get_object_idx)
-        .def("get_object_name", &core::Object::get_object_name)
+        .def("get_index", &core::Object::get_index)
+        .def("get_name", &core::Object::get_name)
     ;
 
     py::class_<core::Predicate>(m, "Predicate")
