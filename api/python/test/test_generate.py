@@ -33,10 +33,32 @@ def test_generate_exhaustively():
     generator = FeatureGenerator(factory, 2, 180)
 
     a0, a1, a2, a3, a4, a5, a6, a7, a8 = instance.get_atoms()
-    s0 = State(instance, [a0, a3])
-    s1 = State(instance, [a1, a2])
-    s2 = State(instance, [a2, a3])
+    s0 = State(instance, [a0, a3])  # a on b
+    s1 = State(instance, [a1, a2])  # b on a
+    s2 = State(instance, [a2, a3])  # both on table
     states = [s0, s1, s2]
     collection = generator.generate(states)
     assert len(collection.get_boolean_features()) == 3
     assert len(collection.get_numerical_features()) == 6
+
+    b0, b1, b2 = collection.get_boolean_features()
+    assert b0.get_repr() == "b_empty(on(0))"
+    assert b0.get_state_evaluations() == [False, False, True]
+    assert b1.get_repr() == "b_empty(on_g(0))"
+    assert b1.get_state_evaluations() == [False, False, False]
+    assert b2.get_repr() == "b_empty(holding(0))"
+    assert b2.get_state_evaluations() == [True, True, True]
+
+    n0, n1, n2, n3, n4, n5 = collection.get_numerical_features()
+    assert n0.get_repr() == "n_count(on(0))"
+    assert n0.get_state_evaluations() == [1, 1, 0]
+    assert n1.get_repr() == "n_count(on_g(0))"
+    assert n1.get_state_evaluations() == [1, 1, 1]
+    assert n2.get_repr() == "n_count(ontable(0))"
+    assert n2.get_state_evaluations() == [1, 1, 2]
+    assert n3.get_repr() == "n_count(holding(0))"
+    assert n3.get_state_evaluations() == [0, 0, 0]
+    assert n4.get_repr() == "n_count(c_top)"
+    assert n4.get_state_evaluations() == [2, 2, 2]
+    assert n5.get_repr() == "n_count(r_top)"
+    assert n5.get_state_evaluations() == [4, 4, 4]

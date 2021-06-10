@@ -90,8 +90,8 @@ def test_factory():
     instance = generate_bw_instance(vocabulary)
     factory = SyntacticElementFactory(vocabulary)
 
-    atoms = instance.get_atoms()
-    state = State(instance, [atoms[0], atoms[3], atoms[6]])
+    a0, a1, a2, a3, a4, a5, a6, a7, a8 = instance.get_atoms()
+    state = State(instance, [a0, a3, a6])
     assert str(state) == "{on(a,b), ontable(b), clear(a), on_g(a,b)}"
 
     numerical = factory.parse_numerical("n_count(c_and(on_g(0),on(0)))")

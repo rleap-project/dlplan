@@ -134,7 +134,6 @@ void init_core(py::module_ &m) {
         .def("make_not_role", &core::SyntacticElementFactory::make_not_role)
         .def("make_or_role", &core::SyntacticElementFactory::make_or_role)
         .def("make_primitive_role", &core::SyntacticElementFactory::make_primitive_role)
-
         .def("make_restrict_role", &core::SyntacticElementFactory::make_restrict_role)
         .def("make_top_role", &core::SyntacticElementFactory::make_top_role)
         .def("make_transitive_closure", &core::SyntacticElementFactory::make_transitive_closure)
