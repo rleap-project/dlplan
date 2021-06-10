@@ -20,7 +20,7 @@ protected:
         m_result.clear();
         for (int atom_idx : state.get_atom_idxs()) {
             const Atom& atom = info.get_atom(atom_idx);
-            if (atom.get_predicate().get_predicate_idx() == m_predicate_idx) {
+            if (atom.get_predicate().get_index() == m_predicate_idx) {
                 m_result.push_back(atom.get_object(m_pos).get_index());
             }
         }

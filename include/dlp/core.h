@@ -52,7 +52,7 @@ public:
      * Getters.
      */
     const VocabularyInfo* get_vocabulary_info() const;
-    int get_predicate_idx() const;
+    int get_index() const;
     const std::string& get_name() const;
     int get_arity() const;
 };

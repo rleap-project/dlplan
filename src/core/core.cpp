@@ -109,12 +109,12 @@ const VocabularyInfo* Predicate::get_vocabulary_info() const {
     return m_pImpl->get_vocabulary_info();
 }
 
-int Predicate::get_predicate_idx() const {
-    return m_pImpl->get_predicate_idx();
+int Predicate::get_index() const {
+    return m_pImpl->get_index();
 }
 
 const std::string& Predicate::get_name() const {
-    return m_pImpl->get_predicate_name();
+    return m_pImpl->get_name();
 }
 
 int Predicate::get_arity() const {

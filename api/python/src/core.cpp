@@ -19,7 +19,7 @@ void init_core(py::module_ &m) {
     py::class_<core::Predicate>(m, "Predicate")
         .def("get_name", &core::Predicate::get_name)
         .def("get_arity", &core::Predicate::get_arity)
-        .def("get_predicate_idx", &core::Predicate::get_predicate_idx)
+        .def("get_index", &core::Predicate::get_index)
     ;
 
     py::class_<core::VocabularyInfo, std::shared_ptr<core::VocabularyInfo>>(m, "VocabularyInfo")
@@ -39,8 +39,7 @@ void init_core(py::module_ &m) {
 
     py::class_<core::State>(m, "State")
         .def(py::init<std::shared_ptr<const core::InstanceInfo>, const std::vector<core::Atom>&>())
-//        .def("__repr__", &State::str)
-        .def("__repr__", [](const core::State& o){return o.str();})
+        .def("__repr__", &core::State::str)
         .def("get_atom_idxs", &core::State::get_atom_idxs)
     ;
 
@@ -114,10 +113,5 @@ void init_core(py::module_ &m) {
         .def("add_atom", &core::InstanceInfo::add_atom)
         .def("add_static_atom", &core::InstanceInfo::add_static_atom)
         .def("get_atoms", &core::InstanceInfo::get_atoms)
-//        .def("parse_state", &InstanceInfo::parse_state)
-        // TODO Will need to disambiguate:
-//        .def("convert_state", py::overload_cast<const std::vector<Atom> &>(&InstanceInfo::convert_state))
-//        .def("convert_state", py::overload_cast<const std::vector<int> &>(&InstanceInfo::convert_state))
-//        .def("convert_state", &InstanceInfo::convert_state)
     ;
 }

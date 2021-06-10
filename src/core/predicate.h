@@ -16,7 +16,7 @@ class PredicateImpl {
 private:
     const VocabularyInfo* m_vocabulary_info;
     const std::string m_predicate_name;
-    const int m_predicate_idx;
+    const int m_index;
     const int m_arity;
 
 public:
@@ -24,8 +24,8 @@ public:
     ~PredicateImpl() = default;
 
     const VocabularyInfo* get_vocabulary_info() const;
-    const std::string& get_predicate_name() const;
-    int get_predicate_idx() const;
+    const std::string& get_name() const;
+    int get_index() const;
     int get_arity() const;
 };
 
