@@ -117,8 +117,8 @@ int InstanceInfoImpl::get_num_objects() const {
     return m_object_name_to_object_idx.size();
 }
 
-const VocabularyInfo* InstanceInfoImpl::get_vocabulary_info() const {
-    return m_vocabulary_info.get();
+std::shared_ptr<const VocabularyInfo> InstanceInfoImpl::get_vocabulary_info() const {
+    return m_vocabulary_info;
 }
 
 const Index_Vec& InstanceInfoImpl::get_static_atom_idxs() const {

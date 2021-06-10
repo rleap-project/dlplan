@@ -131,7 +131,7 @@ public:
     /**
      * Getters.
      */
-    const InstanceInfo* get_instance_info() const;
+    std::shared_ptr<const InstanceInfo> get_instance_info() const;
     const Index_Vec& get_atom_idxs() const;
 };
 
@@ -188,7 +188,7 @@ public:
     const Object& get_object(int object_idx) const;
     int get_object_idx(const std::string& object_name) const;
     int get_num_objects() const;
-    const VocabularyInfo* get_vocabulary_info() const;
+    std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
     const Index_Vec& get_static_atom_idxs() const;
 };
 

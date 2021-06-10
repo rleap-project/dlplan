@@ -64,7 +64,7 @@ int InstanceInfo::get_num_objects() const {
     return m_pImpl->get_num_objects();
 }
 
-const VocabularyInfo* InstanceInfo::get_vocabulary_info() const {
+std::shared_ptr<const VocabularyInfo> InstanceInfo::get_vocabulary_info() const {
     return m_pImpl->get_vocabulary_info();
 }
 
@@ -191,7 +191,7 @@ State::~State() { }
 
 std::string State::str() const { return m_pImpl->str(); }
 
-const InstanceInfo* State::get_instance_info() const {
+std::shared_ptr<const InstanceInfo> State::get_instance_info() const {
     return m_pImpl->get_instance_info();
 }
 

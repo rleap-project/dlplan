@@ -25,7 +25,7 @@ public:
      * Evaluate and cache the last result.
      */
     const T& evaluate(const State& state) {
-        if (state.get_instance_info()->get_vocabulary_info() != m_vocabulary_info) {
+        if (state.get_instance_info()->get_vocabulary_info().get() != m_vocabulary_info) {
             throw std::runtime_error("ElementImpl::evaluate - mismatched vocabularies of Element and State.");
         }
         return m_element->evaluate(state);

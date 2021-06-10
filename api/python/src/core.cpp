@@ -22,12 +22,6 @@ void init_core(py::module_ &m) {
         .def("get_index", &core::Predicate::get_index)
     ;
 
-    py::class_<core::VocabularyInfo, std::shared_ptr<core::VocabularyInfo>>(m, "VocabularyInfo")
-        .def(py::init<>())
-        .def("add_predicate", &core::VocabularyInfo::add_predicate)
-        .def("exists_predicate_name", &core::VocabularyInfo::exists_predicate_name)
-    ;
-
     py::class_<core::Atom>(m, "Atom")
         .def("get_name", &core::Atom::get_name)
         .def("get_index", &core::Atom::get_index)
@@ -43,25 +37,52 @@ void init_core(py::module_ &m) {
         .def("get_atom_idxs", &core::State::get_atom_idxs)
     ;
 
+    py::class_<core::VocabularyInfo, std::shared_ptr<core::VocabularyInfo>>(m, "VocabularyInfo")
+        .def(py::init<>())
+        .def("add_predicate", &core::VocabularyInfo::add_predicate)
+        .def("exists_predicate_name", &core::VocabularyInfo::exists_predicate_name)
+        .def("get_predicates", &core::VocabularyInfo::get_predicates)
+        .def("get_predicate_idx", &core::VocabularyInfo::get_predicate_idx)
+        .def("get_predicate", &core::VocabularyInfo::get_predicate)
+    ;
+
+    py::class_<core::InstanceInfo, std::shared_ptr<core::InstanceInfo>>(m, "InstanceInfo")
+        .def(py::init<std::shared_ptr<core::VocabularyInfo>>())
+        .def("add_atom", &core::InstanceInfo::add_atom)
+        .def("add_static_atom", &core::InstanceInfo::add_static_atom)
+        .def("get_atoms", &core::InstanceInfo::get_atoms)
+        .def("get_atom", &core::InstanceInfo::get_atom)
+        .def("get_atom_idx", &core::InstanceInfo::get_atom_idx)
+        .def("get_objects", &core::InstanceInfo::get_objects)
+        .def("get_object", &core::InstanceInfo::get_object)
+        .def("get_object_idx", &core::InstanceInfo::get_object_idx)
+        .def("get_num_objects", &core::InstanceInfo::get_num_objects)
+        .def("get_static_atom_idxs", &core::InstanceInfo::get_static_atom_idxs)
+    ;
+
     py::class_<core::Concept>(m, "ConceptElement")
+        .def("__repr__", &core::Concept::compute_repr)
         .def("evaluate", &core::Concept::evaluate)
         .def("compute_complexity", &core::Concept::compute_complexity)
         .def("compute_repr", &core::Concept::compute_repr)
     ;
 
     py::class_<core::Role>(m, "RoleElement")
+        .def("__repr__", &core::Role::compute_repr)
         .def("evaluate", &core::Role::evaluate)
         .def("compute_complexity", &core::Role::compute_complexity)
         .def("compute_repr", &core::Role::compute_repr)
     ;
 
     py::class_<core::Numerical>(m, "NumericalElement")
+        .def("__repr__", &core::Numerical::compute_repr)
         .def("evaluate", &core::Numerical::evaluate)
         .def("compute_complexity", &core::Numerical::compute_complexity)
         .def("compute_repr", &core::Numerical::compute_repr)
     ;
 
     py::class_<core::Boolean>(m, "BooleanElement")
+        .def("__repr__", &core::Boolean::compute_repr)
         .def("evaluate", &core::Boolean::evaluate)
         .def("compute_complexity", &core::Boolean::compute_complexity)
         .def("compute_repr", &core::Boolean::compute_repr)
@@ -77,6 +98,7 @@ void init_core(py::module_ &m) {
 
         .def("make_empty_boolean", py::overload_cast<const core::Concept&>(&core::SyntacticElementFactory::make_empty_boolean))
         .def("make_empty_boolean", py::overload_cast<const core::Role&>(&core::SyntacticElementFactory::make_empty_boolean))
+
         .def("make_all_concept", &core::SyntacticElementFactory::make_all_concept)
         .def("make_and_concept", &core::SyntacticElementFactory::make_and_concept)
         .def("make_bot_concept", &core::SyntacticElementFactory::make_bot_concept)
@@ -88,11 +110,14 @@ void init_core(py::module_ &m) {
         .def("make_some_concept", &core::SyntacticElementFactory::make_some_concept)
         .def("make_subset_concept", &core::SyntacticElementFactory::make_subset_concept)
         .def("make_top_concept", &core::SyntacticElementFactory::make_top_concept)
-        .def("make_concept_distance", &core::SyntacticElementFactory::make_concept_distance)
 
+        .def("make_concept_distance", &core::SyntacticElementFactory::make_concept_distance)
+        .def("make_count", py::overload_cast<const core::Concept&>(&core::SyntacticElementFactory::make_count))
+        .def("make_count", py::overload_cast<const core::Role&>(&core::SyntacticElementFactory::make_count))
         .def("make_role_distance", &core::SyntacticElementFactory::make_role_distance)
         .def("make_sum_concept_distance", &core::SyntacticElementFactory::make_sum_concept_distance)
         .def("make_sum_role_distance", &core::SyntacticElementFactory::make_sum_role_distance)
+
         .def("make_and_role", &core::SyntacticElementFactory::make_and_role)
         .def("make_compose_role", &core::SyntacticElementFactory::make_compose_role)
         .def("make_diff_role", &core::SyntacticElementFactory::make_diff_role)
@@ -106,12 +131,5 @@ void init_core(py::module_ &m) {
         .def("make_top_role", &core::SyntacticElementFactory::make_top_role)
         .def("make_transitive_closure", &core::SyntacticElementFactory::make_transitive_closure)
         .def("make_transitive_reflexive_closure", &core::SyntacticElementFactory::make_transitive_reflexive_closure)
-    ;
-
-    py::class_<core::InstanceInfo, std::shared_ptr<core::InstanceInfo>>(m, "InstanceInfo")
-        .def(py::init<std::shared_ptr<core::VocabularyInfo>>())
-        .def("add_atom", &core::InstanceInfo::add_atom)
-        .def("add_static_atom", &core::InstanceInfo::add_static_atom)
-        .def("get_atoms", &core::InstanceInfo::get_atoms)
     ;
 }

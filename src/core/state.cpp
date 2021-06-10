@@ -52,8 +52,8 @@ StateImpl::StateImpl(std::shared_ptr<const InstanceInfo> instance_info, const In
 StateImpl::StateImpl(std::shared_ptr<const InstanceInfo> instance_info, const Name_Vec& atom_names)
     : m_instance_info(instance_info), m_atom_idxs(convert_atoms(*instance_info, atom_names)) { }
 
-const InstanceInfo* StateImpl::get_instance_info() const {
-    return m_instance_info.get();
+std::shared_ptr<const InstanceInfo> StateImpl::get_instance_info() const {
+    return m_instance_info;
 }
 
 const Index_Vec& StateImpl::get_atom_idxs() const {
