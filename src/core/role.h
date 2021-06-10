@@ -28,10 +28,6 @@ public:
         }
         m_result = m_element->evaluate(state);
         std::sort(m_result.begin(), m_result.end());
-        for (const auto& r : m_result) {
-            std::cout << "<" << r.first << "," << r.second << "> ";
-        }
-        std::cout << std::endl;
         return m_result;
     }
 };
