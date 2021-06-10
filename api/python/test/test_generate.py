@@ -31,11 +31,11 @@ def test_generate_exhaustively():
     instance = generate_bw_instance(vocabulary)
     factory = SyntacticElementFactory(vocabulary)
     generator = FeatureGenerator(factory, 2, 180)
-    atoms = instance.get_atoms()
-    assert len(atoms) == 9
-    s0 = State(instance, [atoms[0], atoms[3]])
-    s1 = State(instance, [atoms[1], atoms[2]])
-    s2 = State(instance, [atoms[2], atoms[3]])
+
+    a0, a1, a2, a3, a4, a5, a6, a7, a8 = instance.get_atoms()
+    s0 = State(instance, [a0, a3])
+    s1 = State(instance, [a1, a2])
+    s2 = State(instance, [a2, a3])
     states = [s0, s1, s2]
     collection = generator.generate(states)
     assert len(collection.get_boolean_features()) == 3

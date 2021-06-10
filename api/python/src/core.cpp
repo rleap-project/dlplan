@@ -12,17 +12,23 @@ using namespace dlp;
 
 void init_core(py::module_ &m) {
     py::class_<core::Object>(m, "Object")
+        .def("__eq__", &core::Object::operator==)
+        .def("__neq__", &core::Object::operator!=)
         .def("get_index", &core::Object::get_index)
         .def("get_name", &core::Object::get_name)
     ;
 
     py::class_<core::Predicate>(m, "Predicate")
+        .def("__eq__", &core::Predicate::operator==)
+        .def("__neq__", &core::Predicate::operator!=)
         .def("get_name", &core::Predicate::get_name)
         .def("get_arity", &core::Predicate::get_arity)
         .def("get_index", &core::Predicate::get_index)
     ;
 
     py::class_<core::Atom>(m, "Atom")
+        .def("__eq__", &core::Atom::operator==)
+        .def("__neq__", &core::Atom::operator!=)
         .def("get_name", &core::Atom::get_name)
         .def("get_index", &core::Atom::get_index)
         .def("get_predicate", &core::Atom::get_predicate)
@@ -33,6 +39,8 @@ void init_core(py::module_ &m) {
 
     py::class_<core::State>(m, "State")
         .def(py::init<std::shared_ptr<const core::InstanceInfo>, const std::vector<core::Atom>&>())
+        .def("__eq__", &core::State::operator==)
+        .def("__neq__", &core::State::operator!=)
         .def("__repr__", &core::State::str)
         .def("get_atom_idxs", &core::State::get_atom_idxs)
     ;

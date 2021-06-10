@@ -48,6 +48,9 @@ public:
     Predicate(const Predicate& other);
     ~Predicate();
 
+    bool operator==(const Predicate& other);
+    bool operator!=(const Predicate& other);
+
     /**
      * Getters.
      */
@@ -71,6 +74,9 @@ private:
 public:
     Object(const Object& other);
     ~Object();
+
+    bool operator==(const Object& other);
+    bool operator!=(const Object& other);
 
     const InstanceInfo* get_instance_info() const;
     int get_index() const;
@@ -96,6 +102,9 @@ private:
 public:
     Atom(const Atom& other);
     ~Atom();
+
+    bool operator==(const Atom& other);
+    bool operator!=(const Atom& other);
 
     /**
      * Getters.
@@ -123,6 +132,9 @@ public:
     State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_indices);
     State(const State& other);
     ~State();
+
+    bool operator==(const State& other);
+    bool operator!=(const State& other);
 
     /**
      * Computes string-like representation of the state.

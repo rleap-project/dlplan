@@ -105,6 +105,14 @@ Predicate::Predicate(const Predicate& other) : m_pImpl(*other.m_pImpl) { }
 
 Predicate::~Predicate() {}
 
+bool Predicate::operator==(const Predicate& other)  {
+    return (get_index() == other.get_index()) && (get_vocabulary_info() == other.get_vocabulary_info());
+}
+
+bool Predicate::operator!=(const Predicate& other) {
+    return !(*this == other);
+}
+
 const VocabularyInfo* Predicate::get_vocabulary_info() const {
     return m_pImpl->get_vocabulary_info();
 }
@@ -129,6 +137,14 @@ Object::Object(const Object& other) : m_pImpl(*other.m_pImpl) { }
 
 Object::~Object() { }
 
+bool Object::operator==(const Object& other) {
+    return (get_index() == other.get_index()) && (get_instance_info() == other.get_instance_info());
+}
+
+bool Object::operator!=(const Object& other) {
+    return !(*this == other);
+}
+
 const InstanceInfo* Object::get_instance_info() const {
     return m_pImpl->get_instance_info();
 }
@@ -152,6 +168,14 @@ Atom::Atom(const InstanceInfo& instance_info,
 Atom::Atom(const Atom& other) : m_pImpl(*other.m_pImpl) { }
 
 Atom::~Atom() { }
+
+bool Atom::operator==(const Atom& other) {
+    return (get_index() == other.get_index()) && (get_instance_info() == other.get_instance_info());
+}
+
+bool Atom::operator!=(const Atom& other) {
+    return !(*this == other);
+}
 
 const InstanceInfo* Atom::get_instance_info() const {
     return m_pImpl->get_instance_info();
@@ -188,6 +212,14 @@ State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vecto
 State::State(const State& other) : m_pImpl(*other.m_pImpl) {}
 
 State::~State() { }
+
+bool State::operator==(const State& other) {
+    return (get_atom_idxs() == other.get_atom_idxs()) && (get_instance_info() == other.get_instance_info());
+}
+
+bool State::operator!=(const State& other) {
+    return !(*this == other);
+}
 
 std::string State::str() const { return m_pImpl->str(); }
 
