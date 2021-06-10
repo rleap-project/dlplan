@@ -15,10 +15,17 @@ public:
     NumericalImpl(const VocabularyInfo& vocabulary_info, std::shared_ptr<element::Element<int>>&& element)
     : ElementImpl<int>(vocabulary_info, std::move(element)) {
         if (!m_element) {
-            throw std::runtime_error("NumericalImpl::NumericalImpl - tried to construct ConceptImpl from nullptr");
+            throw std::runtime_error("NumericalImpl::NumericalImpl - tried to construct Numerical from nullptr");
         }
     }
     virtual ~NumericalImpl() = default;
+
+    virtual const int& evaluate(const State& state) override {
+        if (state.get_instance_info()->get_vocabulary_info().get() != m_vocabulary_info) {
+            throw std::runtime_error("NumericalImpl::evaluate - mismatched vocabularies of Numerical and State.");
+        }
+        return m_element->evaluate(state);
+    }
 };
 
 }
