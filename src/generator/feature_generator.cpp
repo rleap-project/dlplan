@@ -8,6 +8,7 @@
 #include "../utils/logging.h"
 #include "boolean.h"
 #include "numerical.h"
+#include "element_hash_table_lossless.h"
 
 
 namespace dlp {
@@ -32,19 +33,6 @@ static void print_elements(const std::vector<std::vector<T>>& elements_by_comple
     }
 }
 
-/**
- * Evaluates an element on a collection of states.
- */
-template<typename T>
-static std::vector<T> evaluate(core::Element<T>& element, const States& states) {
-    std::vector<T> result;
-    result.reserve(states.size());
-    for (const auto& state : states) {
-        result.push_back(element.evaluate(state));
-    }
-    return result;
-}
-
 
 FeatureGeneratorImpl::FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit)
     : m_factory(factory), m_complexity(complexity), m_time_limit(time_limit),
@@ -52,6 +40,10 @@ FeatureGeneratorImpl::FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElemen
       m_role_elements_by_complexity(complexity+1),
       m_numerical_elements_by_complexity(complexity+1),
       m_boolean_elements_by_complexity(complexity+1),
+      m_concept_hash_table(std::make_unique<ElementHashTableLossLess<core::ConceptDenotation>>()),
+      m_role_hash_table(std::make_unique<ElementHashTableLossLess<core::RoleDenotation>>()),
+      m_numerical_hash_table(std::make_unique<ElementHashTableLossLess<int>>()),
+      m_boolean_hash_table(std::make_unique<ElementHashTableLossLess<bool>>()),
       m_cache_misses(0),
       m_cache_hits(0) { }
 
@@ -111,7 +103,7 @@ void FeatureGeneratorImpl::generate_inductively(const States& states, FeatureCol
 }
 
 void FeatureGeneratorImpl::add_concept(const States& states, core::Concept&& concept) {
-    bool unique = m_concept_denotation_cache.insert(evaluate<core::ConceptDenotation>(concept, states)).second;
+    bool unique = m_concept_hash_table->insert(concept, states);
     if (unique) {
         m_concept_elements_by_complexity[concept.compute_complexity()].emplace_back(concept);
         ++m_cache_misses;
@@ -121,7 +113,7 @@ void FeatureGeneratorImpl::add_concept(const States& states, core::Concept&& con
 }
 
 void FeatureGeneratorImpl::add_role(const States& states, core::Role&& role) {
-    bool unique = m_role_denotation_cache.insert(evaluate<core::RoleDenotation>(role, states)).second;
+    bool unique = m_role_hash_table->insert(role, states);
     if (unique) {
         m_role_elements_by_complexity[role.compute_complexity()].emplace_back(role);
         ++m_cache_misses;
@@ -133,7 +125,7 @@ void FeatureGeneratorImpl::add_role(const States& states, core::Role&& role) {
 void FeatureGeneratorImpl::add_numerical(const States& states, core::Numerical&& numerical, FeatureCollection& feature_collection) {
     std::string repr = numerical.compute_repr();
     std::vector<int> denotation = evaluate<int>(numerical, states);
-    bool unique = m_numerical_denotation_cache.insert(denotation).second;
+    bool unique = m_numerical_hash_table->insert(numerical, states);
     if (unique) {
         m_numerical_elements_by_complexity[numerical.compute_complexity()].emplace_back(numerical);
         feature_collection.add_numerical_feature(Numerical(repr, denotation));
@@ -146,7 +138,7 @@ void FeatureGeneratorImpl::add_numerical(const States& states, core::Numerical&&
 void FeatureGeneratorImpl::add_boolean(const States& states, core::Boolean&& boolean, FeatureCollection& feature_collection) {
     std::string repr = boolean.compute_repr();
     std::vector<bool> denotation = evaluate<bool>(boolean, states);
-    bool unique = m_boolean_denotation_cache.insert(denotation).second;
+    bool unique = m_boolean_hash_table->insert(boolean, states);
     if (unique) {
         m_boolean_elements_by_complexity[boolean.compute_complexity()].emplace_back(boolean);
         feature_collection.add_boolean_feature(Boolean(repr, denotation));
