@@ -11,7 +11,7 @@ namespace py = pybind11;
 using namespace dlp;
 
 void init_generator(py::module_ &m) {
-    py::class_<generator::FeatureGenerator>(m, "FeatureGenerator")
+    py::class_<generator::FeatureGenerator, std::shared_ptr<generator::FeatureGenerator>>(m, "FeatureGenerator")
         .def(py::init<std::shared_ptr<core::SyntacticElementFactory>, int, int>())
         .def("generate", &generator::FeatureGenerator::generate)
     ;

@@ -11,10 +11,15 @@ namespace py = pybind11;
 using namespace dlp;
 
 void init_core(py::module_ &m) {
+    py::class_<core::Object>(m, "Object")
+        .def("get_object_idx", &core::Object::get_object_idx)
+        .def("get_object_name", &core::Object::get_object_name)
+    ;
+
     py::class_<core::Predicate>(m, "Predicate")
-        .def("name", &core::Predicate::get_name)
-        .def("arity", &core::Predicate::get_arity)
-        .def("index", &core::Predicate::get_predicate_idx)
+        .def("get_name", &core::Predicate::get_name)
+        .def("get_arity", &core::Predicate::get_arity)
+        .def("get_predicate_idx", &core::Predicate::get_predicate_idx)
     ;
 
     py::class_<core::VocabularyInfo, std::shared_ptr<core::VocabularyInfo>>(m, "VocabularyInfo")
@@ -24,14 +29,19 @@ void init_core(py::module_ &m) {
     ;
 
     py::class_<core::Atom>(m, "Atom")
-        .def("index", &core::Atom::get_atom_idx)
-        .def("predicate", &core::Atom::get_predicate)
+        .def("get_atom_name", &core::Atom::get_atom_name)
+        .def("get_atom_idx", &core::Atom::get_atom_idx)
+        .def("get_predicate", &core::Atom::get_predicate)
+        .def("get_objects", &core::Atom::get_objects)
+        .def("get_object", &core::Atom::get_object)
+        .def("get_is_static", &core::Atom::get_is_static)
     ;
 
     py::class_<core::State>(m, "State")
         .def(py::init<std::shared_ptr<const core::InstanceInfo>, const std::vector<core::Atom>&>())
 //        .def("__repr__", &State::str)
-        .def("__repr__", [](const core::State& o){return o.str();});
+        .def("__repr__", [](const core::State& o){return o.str();})
+        .def("get_atom_idxs", &core::State::get_atom_idxs)
     ;
 
     py::class_<core::Concept>(m, "ConceptElement")

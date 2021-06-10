@@ -37,6 +37,7 @@ public:
     const std::vector<Object>& get_objects() const;
     const Object& get_object(int pos) const;
     bool get_is_static() const;
+    std::string str() const;
 };
 
 }

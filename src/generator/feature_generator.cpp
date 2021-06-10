@@ -70,10 +70,10 @@ void FeatureGeneratorImpl::generate_base(const States& states) {
     generate_primitive_concepts(states);
     generate_bot_concept(states);
     generate_top_concept(states);
-    generate_primitive_roles(states);
+    // generate_primitive_roles(states);
     generate_top_role(states);
     utils::g_log << "Complexity " << 1 << ":" << std::endl;
-        print_brief_statistics();
+    print_brief_statistics();
     utils::g_log << "Finished generating base features." << std::endl;
 }
 

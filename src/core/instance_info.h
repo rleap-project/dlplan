@@ -29,9 +29,7 @@ private:
     /**
      * Mappings between names and indices of predicates and objects.
      */
-    std::unordered_map<std::string, unsigned> m_predicate_name_to_predicate_idx;
     std::unordered_map<std::string, unsigned> m_object_name_to_object_idx;
-    std::vector<std::string> m_predicate_idx_to_predicate_name;
     std::vector<std::string> m_object_idx_to_to_object_name;
     std::unordered_map<std::string, unsigned> m_atom_name_to_atom_idx;
     /**

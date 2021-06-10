@@ -12,26 +12,55 @@ def generate_bw_vocabulary():
     return vocabulary
 
 
-def test_simple():
-    vocabulary = VocabularyInfo()
-    vocabulary.add_predicate("on", 2)
-    assert vocabulary.exists_predicate_name("on")
-
-
-def test_instances():
-    vocabulary = generate_bw_vocabulary()
-
-    factory = SyntacticElementFactory(vocabulary)
-    num = factory.parse_numerical("n_count(c_and(on_g(0),on(0)))")
-    assert num.compute_complexity() == 4
-
+def generate_bw_instance(vocabulary):
     instance = InstanceInfo(vocabulary)
+    instance.add_atom("on", ["a", "b"])
+    instance.add_atom("on", ["b", "a"])
+    instance.add_atom("ontable", ["a"])
+    instance.add_atom("ontable", ["b"])
+    instance.add_atom("holding", ["a"])
+    instance.add_atom("holding", ["b"])
+    instance.add_atom("clear", ["a"])
+    instance.add_atom("clear", ["b"])
+    instance.add_static_atom("on_g", ["a", "b"])
+    return instance
 
-    a0 = instance.add_atom("on", ["a", "b"])
-    a1 = instance.add_atom("on", ["b", "a"])
-    a2 = instance.add_atom("on_g", ["a", "b"])
 
-    state = State(instance, [a0, a1, a2])
-    num.evaluate(state)
-    assert str(state) == "{on(a,b), on(b,a), on_g(a,b)}"
-    assert num.evaluate(state) == 1
+def test_vocabulary():
+    vocabulary = generate_bw_vocabulary()
+    #...
+
+
+def test_instance():
+    vocabulary = generate_bw_vocabulary()
+    instance = generate_bw_instance(vocabulary)
+
+    atoms = instance.get_atoms()
+    a0 = atoms[0]
+    assert a0.get_atom_name() == "on(a,b)"
+    assert a0.get_atom_idx() == 0
+    assert a0.get_predicate().get_name() == "on"
+    a1 = atoms[1]
+    assert a1.get_atom_name() == "on(b,a)"
+    assert a1.get_atom_idx() == 1
+    assert a1.get_predicate().get_name() == "on"
+    a2 = atoms[2]
+    assert a2.get_atom_name() == "ontable(a)"
+    assert a2.get_atom_idx() == 2
+    assert a2.get_predicate().get_name() == "ontable"
+    #...
+
+
+def test_factory():
+    vocabulary = generate_bw_vocabulary()
+    instance = generate_bw_instance(vocabulary)
+    factory = SyntacticElementFactory(vocabulary)
+
+    numerical = factory.parse_numerical("n_count(c_and(on_g(0),on(0)))")
+    atoms = instance.get_atoms()
+    state = State(instance, [atoms[0], atoms[3], atoms[6]])
+    numerical.evaluate(state)
+    assert str(state) == "{on(a,b), ontable(b), clear(a), on_g(a,b)}"
+    assert numerical.compute_complexity() == 4
+    assert numerical.evaluate(state) == 1
+    #...

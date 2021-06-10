@@ -30,14 +30,8 @@ const Atom& InstanceInfoImpl::add_atom(const InstanceInfo& parent, const std::st
         throw std::runtime_error("InstanceInfoImpl::add_atom - arity of predicate in vocabulary does not match with atom ("s + std::to_string(m_vocabulary_info->get_predicate(m_vocabulary_info->get_predicate_idx(predicate_name)).get_arity()) + " != " + std::to_string(object_names.size()));
     }
     // predicate related
-    bool predicate_exists = exists(predicate_name, m_predicate_name_to_predicate_idx);
-    int predicate_idx;
-    if (!predicate_exists) {
-        predicate_idx = m_predicate_name_to_predicate_idx.size();
-        m_predicate_name_to_predicate_idx.emplace(predicate_name, predicate_idx);
-    } else {
-        predicate_idx = m_predicate_name_to_predicate_idx.at(predicate_name);
-    }
+    int predicate_idx = m_vocabulary_info->get_predicate_idx(predicate_name);
+    const Predicate& predicate = m_vocabulary_info->get_predicate(predicate_idx);
     // object related
     std::stringstream ss;
     ss << predicate_name << "(";
@@ -71,7 +65,6 @@ const Atom& InstanceInfoImpl::add_atom(const InstanceInfo& parent, const std::st
         m_static_atom_idxs.push_back(atom_idx);
     }
 
-    const Predicate& predicate = m_vocabulary_info->get_predicate(predicate_idx);
     m_atoms.push_back(Atom(parent, atom_name, atom_idx, predicate, objects, is_static));
     return m_atoms.back();
 }

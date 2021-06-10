@@ -1,9 +1,11 @@
 #include "atom.h"
 
+#include <sstream>
 #include <cassert>
 
 #include "../utils/collections.h"
 
+using namespace std::string_literals;
 
 namespace dlp {
 namespace core {
@@ -40,12 +42,26 @@ const std::vector<Object>& AtomImpl::get_objects() const {
 
 const Object& AtomImpl::get_object(int pos) const {
     assert(utils::in_bounds(pos, m_objects));
+    if (!utils::in_bounds(pos, m_objects)) {
+        throw std::runtime_error("Out of bounds (" + str() + ")");
+    }
     return m_objects[pos];
 }
 
-
 bool AtomImpl::get_is_static() const {
     return m_is_static;
+}
+
+std::string AtomImpl::str() const {
+    std::stringstream ss;
+    ss << "<"
+       << m_atom_name << ","
+       << m_atom_idx << ","
+       << m_predicate.get_name() << ","
+       << m_predicate.get_arity() << ","
+       << m_objects.size() << ","
+       << ">";
+    return ss.str();
 }
 
 }
