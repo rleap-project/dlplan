@@ -11,10 +11,6 @@ namespace core {
 class VocabularyInfo;
 namespace parser {
 
-
-/**
- *
- */
 class AST_Factory {
 public:
     Expression_Ptr make_ast(const VocabularyInfo& vocabulary_info, const std::string &name, std::vector<Expression_Ptr> &&children);

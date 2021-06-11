@@ -4,49 +4,32 @@
 #include <unordered_map>
 #include <iostream>
 
-//#include "boost/functional/hash.hpp"
-
 #include "elements/types.h"
 
 
 namespace dlp {
 namespace core {
 
-/* A simple cache for more complex keys.
+/*
+Andrès:
 
-template<typename Key_T, typename Value_T>
-class Cache {
-protected:
-    struct KeyHash {
-        std::size_t operator()(const Key_T &key) const {
-            return boost::hash_value(key);
-        }
-    };
-public:
-    Cache() = default;
-    virtual ~Cache() = default;
+Hey! Just some basic info on normal forms for description logic.
+It seems that DL people often normalise KBs using negation normal forms (NNFs) or Tseitin’s transformations.
+The latter requires only a linear increase in the size of the formulas but only preserves equisatisfiability,
+so I don't think it'll do for this application.
+NNFs are equivalence-preserving and the transformation of a concept into NNF can also be done in linear time.
+You just push negation inwards, make use of de Morgan’s laws and the duality between existential and universal restrictions,
+and between at-most and at-least number restrictions (<r.C, > n r.C). Basically, you follow the translation on the top of p.6 here:
 
-    bool exists(const Key_T& key) {
-        if (m_cache.find(key) != m_cache.end()) {
-            return true;
-        }
-        return false;
-    }
+https://arxiv.org/pdf/1202.0914.pdf
 
-    Value_T& get(const Key_T& key) {
-        return m_cache.find(key)->second;
-    }
-
-    std::pair<typename std::unordered_map<Key_T, Value_T>::iterator, bool> insert(std::pair<Key_T, Value_T>&& pair) {
-        return m_cache.insert(std::move(pair));
-    }
-
-private:
-    std::unordered_map<Key_T, Value_T, KeyHash> m_cache;
-};
+What's not so nice is that NNFs are not canonical,
+so you can't detect if a concept C would be a duplicate by simply transforming it into NNF
+and checking if C already occurs in the set of previously generated concepts.
+If you insist on using canonical forms to check for duplicates,
+then the NNFs can be transformed into CNF or DNF using distributivity.
+But as you may know, this can be impractical, as the transformation may cause an exponential blowup in the size of the formulas.
 */
-
-
 class ElementCache {
 private:
     /**

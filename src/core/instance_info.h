@@ -15,17 +15,9 @@ namespace core {
 class StateImpl;
 class VocabularyInfoImpl;
 
-/**
- * InstanceInfo stores Atom related information and provides functionality for state transformation.
- *
- * TODO(dominik): Since primitive roles and concept depend on a certain type of predicates
- * it can make sense to sort the atoms by name for improved cache locality.
- * Can benchmark this first by planning with sorted and unsorted atoms.
- */
 class InstanceInfoImpl {
 private:
     const std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
-
     /**
      * Mappings between names and indices of predicates and objects.
      */
@@ -38,6 +30,7 @@ private:
     Index_Vec m_static_atom_idxs;
     /**
      * All atoms.
+     * TODO(dominik): sorted atoms by predicate can lead to more efficient evaluation of primitive role and concept.
      */
     std::vector<Atom> m_atoms;
     /**

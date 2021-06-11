@@ -13,9 +13,6 @@ namespace core {
 class InstanceInfo;
 class Atom;
 
-/**
- * State stores information related to a planning state.
- */
 class StateImpl {
 private:
     const std::shared_ptr<const InstanceInfo> m_instance_info;

@@ -47,9 +47,6 @@ enum EXPRESSION_TYPE {
     B_EMPTY,
 };
 
-/**
- * VocabularyInfoImpl stores information related to the predicates in the planning domain.
- */
 class VocabularyInfoImpl {
 private:
     /**

@@ -14,11 +14,6 @@ namespace dlp {
 namespace core {
 class VocabularyInfoImpl;
 
-/**
- * ElementFactory provides functionality for constructing
- * nested composites of description logics elements
- * that can be evaluated on state of planning instances.
- */
 class SyntacticElementFactoryImpl {
 protected:
     const std::shared_ptr<const VocabularyInfo> m_vocabulary_info;

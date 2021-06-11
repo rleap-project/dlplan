@@ -9,9 +9,6 @@
 namespace dlp {
 namespace core {
 
-/**
- * The ElementRoot stores information from which the underlying Element was constructed.
- */
 class ConceptImpl : public ElementImpl<ConceptDenotation> {
 public:
     ConceptImpl(const VocabularyInfo& vocabulary_info, std::shared_ptr<element::Element<ConceptDenotation>>&& element)

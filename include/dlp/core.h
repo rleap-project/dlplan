@@ -35,7 +35,7 @@ using Index_Vec = std::vector<int>;
 
 
 /**
- * Predicate contains information regarding the predicates used to construct the atoms.
+ * A Predicate belongs to a specific vocabulary of a planning domain.
  */
 class Predicate {
 private:
@@ -62,7 +62,7 @@ public:
 
 
 /**
- * Object contains information regarding an object in an instance.
+ * An Object belongs to a specific instance.
  */
 class Object {
 private:
@@ -85,7 +85,7 @@ public:
 
 
 /**
- * Atom contains information regarding mappings between name and indices.
+ * An Atom belongs to a specific instance.
  */
 class Atom {
 private:
@@ -120,7 +120,7 @@ public:
 
 
 /**
- * State contains static and dynamic atoms.
+ * A State contains consists of atoms including all static atoms.
  */
 class State {
 private:
@@ -149,7 +149,7 @@ public:
 
 
 /**
- * VocabularyInfoImpl stores information related to the predicates in the planning domain.
+ * VocabularyInfo stores information related to the planning domain.
  */
 class VocabularyInfo {
 private:
@@ -323,7 +323,7 @@ public:
 
 
 /**
- * The ElementFactory for creation and storage of elements while taking care of maintaining uniqueness.
+ * The SyntacticElementFactory for creation of syntactically unique elements.
  */
 class SyntacticElementFactory {
 private:
@@ -360,159 +360,40 @@ public:
      */
     Boolean parse_boolean(const std::string &description);
 
-    /**
-     * Returns a Boolean that evaluates to true iff the Concept evaluates to the empty set.
-     */
-    Boolean make_empty_boolean(const Concept& concept);
 
-    /**
-     * Returns a Boolean that evaluates to true iff the Role evaluates to the empty set.
-     */
+    Boolean make_empty_boolean(const Concept& concept);
     Boolean make_empty_boolean(const Role& role);
 
-    /**
-     * Returns a Concept that evaluates to the universal abstraction.
-     */
     Concept make_all_concept(const Role& role, const Concept& concept);
-
-    /**
-     * Returns a Concept that evaluates to the intersection of the operand evaluations.
-     */
     Concept make_and_concept(const Concept& concept_left, const Concept& concept_right);
-
-    /**
-     * Returns a Concept that evaluates to the empty set.
-     */
     Concept make_bot_concept();
-
-    /**
-     * Returns a Concept that evaluates to the set difference.
-     */
     Concept make_diff_concept(const Concept& concept_left, const Concept& concept_right);
-
-    /**
-     * Returns a ConceptElements that evaluates to all elements that are not contained in the evaluation result of the given Concept.
-     */
     Concept make_not_concept(const Concept& concept);
-
-    /**
-     * Returns a Concept that evaluates to the single object with the given index.
-     */
     Concept make_one_of_concept(const std::string& object_name);
-
-    /**
-     * Returns a Concept that evaluates to the union of the operand evaluations.
-     */
     Concept make_or_concept(const Concept& concept_left, const Concept& concept_right);
-
-    /**
-     * Returns a Concept that evaluates to the concept obtained by projecting atoms in a given state to the column at pos.
-     */
     Concept make_primitive_concept(const std::string& name, int pos);
-
-    /**
-     * Returns a Concept that evaluates the existential abstraction.
-     */
     Concept make_some_concept(const Role& role, const Concept& concept);
-
-    /**
-     * Returns a Concept that evaluates the role value mapping.
-     */
     Concept make_subset_concept(const Role& role_left, const Role& role_right);
-
-    /**
-     * Returns a Concept that evaluates to the universe, i.e., the set of all objects.
-     */
     Concept make_top_concept();
 
-    /**
-     *
-     */
     Numerical make_concept_distance(const Concept& concept_from, const Role& role, const Concept& concept_to);
-
-    /**
-     * Returns a Numerical that counts the number of concept.
-     */
     Numerical make_count(const Concept& concept);
-
-    /**
-     * Returns a Numerical that counts the number of roles.
-     */
     Numerical make_count(const Role& role);
-
-    /**
-     *
-     */
     Numerical make_role_distance(const Role& role_from, const Role& role, const Role& role_to);
-
-    /**
-     *
-     */
     Numerical make_sum_concept_distance(const Concept& concept_from, const Role& role, const Concept& concept_to);
-
-    /**
-     *
-     */
     Numerical make_sum_role_distance(const Role& role_from, const Role& role, const Role& role_to);
 
-    /**
-     * Returns a Role that evaluates to the intersection of the operand evaluations.
-     */
     Role make_and_role(const Role& role_left, const Role& role_right);
-
-    /**
-     * Returns a Role that evaluates to the composition of the operand evaluations.
-     */
     Role make_compose_role(const Role& role_left, const Role& role_right);
-
-    /**
-     * Returns a Role that evaluates to the set difference of the operand evaluations.
-     */
     Role make_diff_role(const Role& role_left, const Role& role_right);
-
-    /**
-     * Returns a Role that evaluates to the identity mapping of the concept in the evaluation result.
-     */
     Role make_identity_role(const Concept& concept);
-
-    /**
-     * Returns a Role that evaluates to the inverse roles of the roles in the evaluation result.
-     */
     Role make_inverse_role(const Role& role);
-
-    /**
-     * Returns a RoleElements that evaluates to all roles that are not contined in the evaluation result.
-     */
     Role make_not_role(const Role& role);
-
-    /**
-     * Returns a Role that evaluates to the set union of the operand evaluations.
-     */
     Role make_or_role(const Role& role_left, const Role& role_right);
-
-    /**
-     * Returns a Role that evaluates to the roles obtained by projecting atoms in a given state to the columns at pos_1 and pos_2.
-     */
     Role make_primitive_role(const std::string& name, int pos_1, int pos_2);
-
-    /**
-     * Returns a Role that evaluates to the role restriction.
-     */
     Role make_restrict_role(const Role& role, const Concept& concept);
-
-    /**
-     * Returns a Role that evaluates to the set of all roles.
-     */
     Role make_top_role();
-
-    /**
-     * Returns a Role that evaluates to the transitive closure over the role.
-     */
     Role make_transitive_closure(const Role& role);
-
-    /**
-     * Returns a Role that evaluates to the transitive reflexive closure over the role.
-     */
     Role make_transitive_reflexive_closure(const Role& role);
 };
 

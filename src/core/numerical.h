@@ -7,9 +7,6 @@
 namespace dlp {
 namespace core {
 
-/**
- * The ElementRoot stores information from which the underlying Element was constructed.
- */
 class NumericalImpl : public ElementImpl<int> {
 public:
     NumericalImpl(const VocabularyInfo& vocabulary_info, std::shared_ptr<element::Element<int>>&& element)

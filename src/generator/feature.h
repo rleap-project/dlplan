@@ -12,9 +12,6 @@ namespace generator {
  * A Features consists of
  *   (1) the string-like representation of the compositional structure, and
  *   (2) the state evaluations.
- *
- * In the future, we might want to add some string-like first order logic representation
- * that was used during syntactic equivalence checking.
  */
 template<typename T>
 class FeatureImpl {

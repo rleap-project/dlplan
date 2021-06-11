@@ -7,9 +7,6 @@
 namespace dlp {
 namespace core {
 
-/**
- * The ElementRoot stores information from which the underlying Element was constructed.
- */
 class BooleanImpl : public ElementImpl<bool> {
 public:
     BooleanImpl(const VocabularyInfo& vocabulary_info, std::shared_ptr<element::Element<bool>>&& element)

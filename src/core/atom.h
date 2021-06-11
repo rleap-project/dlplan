@@ -9,11 +9,11 @@
 
 namespace dlp {
 namespace core {
+class Object;
 
 class AtomImpl {
 private:
     const InstanceInfo* m_instance_info;
-    // Data members
     const std::string m_name;
     const int m_index;
     const Predicate m_predicate;

@@ -9,9 +9,6 @@ namespace dlp {
 namespace core {
 class VocabularyInfo;
 
-/**
- * Predicate contains information regarding the predicates used to construct the atoms.
- */
 class PredicateImpl {
 private:
     const VocabularyInfo* m_vocabulary_info;

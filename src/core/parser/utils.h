@@ -1,6 +1,14 @@
 #ifndef DLP_SRC_CORE_PARSER_UTILS_H_
 #define DLP_SRC_CORE_PARSER_UTILS_H_
 
+#include <algorithm>
+#include <vector>
+#include <string>
+#include <stdexcept>
+
+#include "types.h"
+#include "expressions/expression.h"
+
 using namespace std::string_literals;
 
 
