@@ -3,8 +3,8 @@
 
 namespace dlp::core {
 
-ObjectImpl::ObjectImpl(const InstanceInfo& instance_info, const std::string& object_name, int object_idx)
-    : m_instance_info(&instance_info), m_name(object_name), m_index(object_idx) { }
+ObjectImpl::ObjectImpl(const InstanceInfo& instance_info, const std::string& name, int index)
+    : m_instance_info(&instance_info), m_name(name), m_index(index) { }
 
 const InstanceInfo* ObjectImpl::get_instance_info() const {
     return m_instance_info;

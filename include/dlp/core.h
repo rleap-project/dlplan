@@ -88,7 +88,7 @@ class Object {
 private:
     pimpl<ObjectImpl> m_pImpl;
 
-    Object(const InstanceInfo& instance_info, const std::string& object_name, int object_idx);
+    Object(const InstanceInfo& instance_info, const std::string& name, int index);
     friend class InstanceInfoImpl;
 
 public:
@@ -112,8 +112,8 @@ private:
     pimpl<AtomImpl> m_pImpl;
 
     Atom(const InstanceInfo& instance_info,
-        const std::string& atom_name,
-        int atom_idx,
+        const std::string& name,
+        int index,
         const Predicate& predicate,
         const std::vector<Object> &objects,
         bool is_static);
@@ -179,16 +179,16 @@ public:
     VocabularyInfo();
     ~VocabularyInfo();
 
-    const Predicate& add_predicate(const std::string &predicate_name, int arity);
+    const Predicate& add_predicate(const std::string &name, int arity);
 
-    const Object& add_constant(const std::string& object_name);
+    const Object& add_constant(const std::string& name);
 
     bool exists_predicate_name(const std::string& name) const;
     const std::vector<Predicate>& get_predicates() const;
     int get_predicate_idx(const std::string& name) const;
-    const Predicate& get_predicate(int predicate_idx) const;
+    const Predicate& get_predicate(int index) const;
     int get_constant_idx(const std::string& name) const;
-    const Constant& get_constant(int constant_idx) const;
+    const Constant& get_constant(int index) const;
     const std::vector<Constant>& get_constants() const;
 };
 
@@ -208,22 +208,22 @@ public:
     /**
      * Adds an atom that may have varying evaluation depending on the state.
      */
-    const Atom& add_atom(const std::string& predicate_name, const Name_Vec& object_names);
+    const Atom& add_atom(const std::string& name, const Name_Vec& object_names);
 
     /**
      * Adds an atom that remains true forever.
      */
-    const Atom& add_static_atom(const std::string& predicate_name, const Name_Vec& object_names);
+    const Atom& add_static_atom(const std::string& name, const Name_Vec& object_names);
 
     /**
      * Getters.
      */
     const std::vector<Atom>& get_atoms() const;
-    const Atom& get_atom(int atom_idx) const;
+    const Atom& get_atom(int index) const;
     int get_atom_idx(const std::string& name) const;
     const std::vector<Object>& get_objects() const;
-    const Object& get_object(int object_idx) const;
-    int get_object_idx(const std::string& object_name) const;
+    const Object& get_object(int index) const;
+    int get_object_idx(const std::string& name) const;
     int get_num_objects() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
     const Index_Vec& get_static_atom_idxs() const;
@@ -396,7 +396,7 @@ public:
     Concept make_not_concept(const Concept& concept);
     Concept make_one_of_concept(const Constant& constant);
     Concept make_or_concept(const Concept& concept_left, const Concept& concept_right);
-    Concept make_primitive_concept(const std::string& name, int pos);
+    Concept make_primitive_concept(const std::string& name, int pos);  // TODO(dominik): change string to Predicate
     Concept make_some_concept(const Role& role, const Concept& concept);
     Concept make_subset_concept(const Role& role_left, const Role& role_right);
     Concept make_top_concept();
@@ -415,7 +415,7 @@ public:
     Role make_inverse_role(const Role& role);
     Role make_not_role(const Role& role);
     Role make_or_role(const Role& role_left, const Role& role_right);
-    Role make_primitive_role(const std::string& name, int pos_1, int pos_2);
+    Role make_primitive_role(const std::string& name, int pos_1, int pos_2);  // TODO(dominik): change string to Predicate
     Role make_restrict_role(const Role& role, const Concept& concept);
     Role make_top_role();
     Role make_transitive_closure(const Role& role);

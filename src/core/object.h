@@ -14,7 +14,7 @@ private:
     const int m_index;
 
 public:
-    ObjectImpl(const InstanceInfo& instance_info, const std::string& object_name, int object_idx);
+    ObjectImpl(const InstanceInfo& instance_info, const std::string& name, int index);
     ~ObjectImpl() = default;
 
     const InstanceInfo* get_instance_info() const;

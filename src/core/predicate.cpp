@@ -3,15 +3,15 @@
 
 namespace dlp::core {
 
-PredicateImpl::PredicateImpl(const VocabularyInfo& vocabulary_info, const std::string& predicate_name, int predicate_idx, int arity)
-    : m_vocabulary_info(&vocabulary_info), m_predicate_name(predicate_name), m_index(predicate_idx), m_arity(arity) { }
+PredicateImpl::PredicateImpl(const VocabularyInfo& vocabulary_info, const std::string& name, int index, int arity)
+    : m_vocabulary_info(&vocabulary_info), m_name(name), m_index(index), m_arity(arity) { }
 
 const VocabularyInfo* PredicateImpl::get_vocabulary_info() const {
     return m_vocabulary_info;
 }
 
 const std::string& PredicateImpl::get_name() const {
-    return m_predicate_name;
+    return m_name;
 }
 
 int PredicateImpl::get_index() const {
