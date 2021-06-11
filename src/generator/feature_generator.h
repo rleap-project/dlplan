@@ -7,6 +7,7 @@
 #include <bitset>
 
 #include "../../include/dlp/core.h"
+#include "../utils/countdown_timer.h"
 
 #include "element_hash_table.h"
 #include "types.h"
@@ -73,6 +74,7 @@ private:
     void generate_top_role(const States& states);
     void generate_bot_concept(const States& states);
     void generate_top_concept(const States& states);
+    void generate_one_of_concept(const States& states);
 
     /**
      * Inductively generate Elements of higher complexity.
@@ -84,7 +86,6 @@ private:
     void generate_and_concept(const States& states, int iteration);
     void generate_diff_concept(const States& states, int iteration);
     void generate_not_concept(const States& states, int iteration);
-    void generate_one_of_concept(const States& states, int iteration);
     void generate_or_concept(const States& states, int iteration);
     void generate_some_concept(const States& states, int iteration);  // TODO(dominik): should we add this?
     void generate_subset_concept(const States& states, int iteration);
