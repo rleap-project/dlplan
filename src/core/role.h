@@ -6,8 +6,7 @@
 #include "element.h"
 
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 
 class RoleImpl : public ElementImpl<RoleDenotation> {
 public:
@@ -17,9 +16,9 @@ public:
             throw std::runtime_error("RoleImpl::RoleImpl - tried to construct Role from nullptr");
         }
     }
-    virtual ~RoleImpl() = default;
+    ~RoleImpl() override = default;
 
-    virtual const RoleDenotation& evaluate(const State& state) override {
+    const RoleDenotation& evaluate(const State& state) override {
         if (state.get_instance_info()->get_vocabulary_info().get() != m_vocabulary_info) {
             throw std::runtime_error("RoleImpl::evaluate - mismatched vocabularies of Role and State.");
         }
@@ -29,7 +28,6 @@ public:
     }
 };
 
-}
 }
 
 #endif

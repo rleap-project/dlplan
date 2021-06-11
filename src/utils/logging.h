@@ -14,8 +14,7 @@
 #include <vector>
 
 
-namespace dlp {
-namespace utils {
+namespace dlp::utils {
 /*
   Simple logger that prepends time and peak memory info to messages.
   Logs are written to stdout.
@@ -52,7 +51,6 @@ public:
 
 extern Log g_log;
 
-}
 }
 
 #endif

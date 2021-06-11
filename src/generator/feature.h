@@ -5,8 +5,7 @@
 #include <vector>
 
 
-namespace dlp {
-namespace generator {
+namespace dlp::generator {
 
 /**
  * A Features consists of
@@ -33,7 +32,6 @@ public:
     }
 };
 
-}
 }
 
 #endif

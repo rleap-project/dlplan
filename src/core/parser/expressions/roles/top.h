@@ -5,13 +5,11 @@
 #include "../../../elements/roles/top.h"
 
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class TopRole : public Role {
 protected:
-    virtual element::Role_Ptr parse_role_impl(const VocabularyInfo& vocabulary, ElementCache &) const override {
+    element::Role_Ptr parse_role_impl(const VocabularyInfo& vocabulary, ElementCache &) const override {
         if (m_children.size() != 0) {
             throw std::runtime_error("RestrictRole::parse_role_impl - number of children ("s + std::to_string(m_children.size()) + " != 0).");
         }
@@ -24,8 +22,6 @@ public:
     : Role(name, std::move(children)) { }
 };
 
-}
-}
 }
 
 #endif

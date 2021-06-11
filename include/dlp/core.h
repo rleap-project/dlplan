@@ -9,8 +9,7 @@
 #include "../../src/utils/pimpl.h"
 
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 class SyntacticElementFactoryImpl;
 class InstanceInfoImpl;
 class VocabularyInfoImpl;
@@ -246,13 +245,13 @@ protected:
 
 public:
     Concept(const Concept& other);
-    virtual ~Concept();
+    ~Concept() override;
 
-    virtual ConceptDenotation evaluate(const State& state) override;
+    ConceptDenotation evaluate(const State& state) override;
 
-    virtual int compute_complexity() const override;
+    int compute_complexity() const override;
 
-    virtual std::string compute_repr() const override;
+    std::string compute_repr() const override;
 };
 
 
@@ -268,13 +267,13 @@ protected:
 
 public:
     Role(const Role& other);
-    virtual ~Role();
+    ~Role() override;
 
-    virtual RoleDenotation evaluate(const State& state) override;
+    RoleDenotation evaluate(const State& state) override;
 
-    virtual int compute_complexity() const override;
+    int compute_complexity() const override;
 
-    virtual std::string compute_repr() const override;
+    std::string compute_repr() const override;
 };
 
 
@@ -290,13 +289,13 @@ protected:
 
 public:
     Numerical(const Numerical& other);
-    virtual ~Numerical();
+    ~Numerical() override;
 
-    virtual int evaluate(const State& state) override;
+    int evaluate(const State& state) override;
 
-    virtual int compute_complexity() const override;
+    int compute_complexity() const override;
 
-    virtual std::string compute_repr() const override;
+    std::string compute_repr() const override;
 };
 
 
@@ -312,13 +311,13 @@ protected:
 
 public:
     Boolean(const Boolean& other);
-    virtual ~Boolean();
+    ~Boolean() override;
 
-    virtual bool evaluate(const State& state) override;
+    bool evaluate(const State& state) override;
 
-    virtual int compute_complexity() const override;
+    int compute_complexity() const override;
 
-    virtual std::string compute_repr() const override;
+    std::string compute_repr() const override;
 };
 
 
@@ -398,7 +397,6 @@ public:
 };
 
 
-}
 }
 
 #endif

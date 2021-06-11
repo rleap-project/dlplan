@@ -21,8 +21,7 @@
 #include <algorithm>
 
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 
 InstanceInfo::InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info) : m_pImpl(InstanceInfoImpl(vocabulary_info)) { }
 
@@ -462,5 +461,4 @@ Role SyntacticElementFactory::make_transitive_reflexive_closure(const Role& role
     return m_pImpl->make_transitive_reflexive_closure(role);
 }
 
-}
 }

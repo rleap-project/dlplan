@@ -4,9 +4,7 @@
 #include "../concept.h"
 
 
-namespace dlp {
-namespace core {
-namespace element {
+namespace dlp::core::element {
 
 class NotConcept : public Concept {
 protected:
@@ -14,7 +12,7 @@ protected:
     ConceptDenotation_Set m_universe_set;
 
 protected:
-    virtual const ConceptDenotation& evaluate_impl(const State& state) override {
+    const ConceptDenotation& evaluate_impl(const State& state) override {
         if (m_universe_set.empty()) {
             int num_objects = state.get_instance_info()->get_num_objects();
             for (int object_idx = 0; object_idx < num_objects; ++object_idx) {
@@ -39,19 +37,17 @@ public:
         }
     }
 
-    virtual int compute_complexity() const override {
+    int compute_complexity() const override {
         return m_concept->compute_complexity() + 1;
     }
 
-    virtual std::string compute_repr() const override {
+    std::string compute_repr() const override {
         std::stringstream ss;
         ss << m_name << "(" << m_concept->compute_repr() << ")";
         return ss.str();
     }
 };
 
-}
-}
 }
 
 #endif

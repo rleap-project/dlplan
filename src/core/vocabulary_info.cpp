@@ -6,8 +6,7 @@
 
 #include "../utils/collections.h"
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 
 const Predicate& VocabularyInfoImpl::add_predicate(const VocabularyInfo& parent, const std::string &predicate_name, int arity) {
     if (m_predicate_name_to_predicate_idx.find(predicate_name) != m_predicate_name_to_predicate_idx.end()) {
@@ -84,5 +83,4 @@ EXPRESSION_TYPE VocabularyInfoImpl::element_name_to_expression_type(const std::s
 }
 
 
-}
 }

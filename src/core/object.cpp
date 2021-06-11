@@ -1,8 +1,7 @@
 #include "object.h"
 
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 
 ObjectImpl::ObjectImpl(const InstanceInfo& instance_info, const std::string& object_name, int object_idx)
     : m_instance_info(&instance_info), m_name(object_name), m_index(object_idx) { }
@@ -20,5 +19,4 @@ int ObjectImpl::get_index() const {
 }
 
 
-}
 }

@@ -1,7 +1,6 @@
 #include "cache.h"
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 
 ElementCache::ElementCache() { }
 
@@ -21,5 +20,4 @@ std::unordered_map<std::string, element::Boolean_Ptr>& ElementCache::boolean_ele
     return m_boolean_element_cache;
 }
 
-}
 }

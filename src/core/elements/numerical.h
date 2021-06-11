@@ -4,17 +4,13 @@
 #include "element.h"
 
 
-namespace dlp {
-namespace core {
-namespace element {
+namespace dlp::core::element {
 
 class Numerical : public Element<int> {
 public:
     Numerical(const VocabularyInfo& vocabulary, const std::string& name) : Element<int>(vocabulary, name) { }
 };
 
-}
-}
 }
 
 #endif

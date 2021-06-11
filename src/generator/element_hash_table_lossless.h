@@ -77,7 +77,7 @@ public:
     ElementHashTableLossLess() : ElementHashTable<D>() { }
     virtual ~ElementHashTableLossLess() { }
 
-    virtual bool insert(core::Element<D>& element, const States& states) override {
+    bool insert(core::Element<D>& element, const States& states) override {
         const std::vector<D>& denotation = evaluate(element, states);
         return m_denotation_cache.insert(denotation).second;
     }

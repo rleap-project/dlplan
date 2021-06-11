@@ -5,13 +5,11 @@
 #include "../../utils.h"
 #include "../../../elements/roles/primitive.h"
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class PrimitiveRole : public Role {
 protected:
-    virtual element::Role_Ptr parse_role_impl(const VocabularyInfo& vocabulary, ElementCache &) const override {
+    element::Role_Ptr parse_role_impl(const VocabularyInfo& vocabulary, ElementCache &) const override {
         if (m_children.size() != 2) {
             throw std::runtime_error("PrimitiveRole::parse_role_impl - number of children ("s + std::to_string(m_children.size()) + " != 2).");
         }
@@ -27,8 +25,6 @@ public:
     : Role(name, std::move(children)) { }
 };
 
-}
-}
 }
 
 #endif

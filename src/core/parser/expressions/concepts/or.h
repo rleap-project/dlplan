@@ -6,13 +6,11 @@
 #include "../../utils.h"
 
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class OrConcept : public Concept {
 protected:
-    virtual element::Concept_Ptr parse_concept_impl(const VocabularyInfo& vocabulary, ElementCache &cache) const override {
+    element::Concept_Ptr parse_concept_impl(const VocabularyInfo& vocabulary, ElementCache &cache) const override {
         if (m_children.size() != 2) {
             throw std::runtime_error("OrConcept::parse_concept_impl - number of children ("s + std::to_string(m_children.size()) + " != 2).");
         }
@@ -31,8 +29,6 @@ public:
     : Concept(name, sort_children_lexicographically(std::move(children))) { }
 };
 
-}
-}
 }
 
 #endif

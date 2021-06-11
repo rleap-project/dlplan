@@ -4,9 +4,7 @@
 #include "../role.h"
 
 
-namespace dlp {
-namespace core {
-namespace element {
+namespace dlp::core::element {
 
 class DiffRole : public Role {
 protected:
@@ -14,7 +12,7 @@ protected:
     const Role_Ptr m_role_right;
 
 protected:
-    virtual const RoleDenotation& evaluate_impl(const State& state) override {
+    const RoleDenotation& evaluate_impl(const State& state) override {
         const RoleDenotation& l_vec = m_role_left->evaluate(state);
         const RoleDenotation& r_vec = m_role_right->evaluate(state);
         RoleDenotation_Set r_set(l_vec.begin(), l_vec.end());
@@ -34,19 +32,17 @@ public:
         }
     }
 
-    virtual int compute_complexity() const override {
+    int compute_complexity() const override {
         return m_role_left->compute_complexity() + m_role_right->compute_complexity() + 1;
     }
 
-    virtual std::string compute_repr() const override {
+    std::string compute_repr() const override {
         std::stringstream ss;
         ss << m_name << "(" << m_role_left->compute_repr() << "," << m_role_right->compute_repr() << ")";
         return ss.str();
     }
 };
 
-}
-}
 }
 
 #endif

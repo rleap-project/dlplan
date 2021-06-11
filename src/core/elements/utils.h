@@ -4,10 +4,7 @@
 #include "types.h"
 
 
-namespace dlp {
-namespace core {
-namespace element {
-namespace utils {
+namespace dlp::core::element::utils {
 
 using AdjList = std::vector<std::vector<int>>;
 using Distances = std::vector<int>;
@@ -33,9 +30,6 @@ extern Distances compute_distances_from_state(const AdjList& adj_list, int sourc
  */
 extern PairwiseDistances compute_pairwise_distances(const AdjList& adj_list);
 
-}
-}
-}
 }
 
 #endif

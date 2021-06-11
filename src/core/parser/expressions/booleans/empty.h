@@ -4,13 +4,11 @@
 #include "../boolean.h"
 #include "../../../elements/booleans/empty.h"
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class EmptyBoolean : public Boolean {
 protected:
-    virtual element::Boolean_Ptr parse_boolean_impl(const VocabularyInfo& vocabulary, ElementCache &cache) const override {
+    element::Boolean_Ptr parse_boolean_impl(const VocabularyInfo& vocabulary, ElementCache &cache) const override {
         if (m_children.size() != 1) {
             throw std::runtime_error("EmptyBoolean::parse_boolean_impl - number of children ("s + std::to_string(m_children.size()) + " != 1).");
         }
@@ -32,8 +30,6 @@ public:
     : Boolean(name, std::move(children)) { }
 };
 
-}
-}
 }
 
 #endif

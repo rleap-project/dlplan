@@ -4,13 +4,11 @@
 #include "../numerical.h"
 #include "../../../elements/numericals/concept_distance.h"
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class ConceptDistanceNumerical : public Numerical {
 protected:
-    virtual element::Numerical_Ptr parse_numerical_impl(const VocabularyInfo& vocabulary, ElementCache &cache) const override {
+    element::Numerical_Ptr parse_numerical_impl(const VocabularyInfo& vocabulary, ElementCache &cache) const override {
         if (m_children.size() != 3) {
             throw std::runtime_error("ConceptDistanceNumerical::parse_numerical_impl - number of children ("s + std::to_string(m_children.size()) + " != 3).");
         }
@@ -29,8 +27,6 @@ public:
     : Numerical(name, std::move(children)) { }
 };
 
-}
-}
 }
 
 #endif

@@ -11,9 +11,7 @@
 #include "tokenizer.h"
 
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 /**
  * Parses the canonical AST from the given tokens.
@@ -55,6 +53,4 @@ Expression_Ptr Parser::parse(
     return parse_ast(vocabulary_info, tokens);
 }
 
-}
-}
 }

@@ -7,8 +7,7 @@
 #include "feature.h"
 
 
-namespace dlp {
-namespace generator {
+namespace dlp::generator {
 
 class NumericalImpl : public FeatureImpl<int> {
 public:
@@ -17,7 +16,6 @@ public:
     ~NumericalImpl() = default;
 };
 
-}
 }
 
 #endif

@@ -5,8 +5,7 @@
 #include <vector>
 
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 class VocabularyInfo;
 
 class PredicateImpl {
@@ -26,7 +25,6 @@ public:
     int get_arity() const;
 };
 
-}
 }
 
 #endif

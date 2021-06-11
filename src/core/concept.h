@@ -6,8 +6,7 @@
 #include "element.h"
 
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 
 class ConceptImpl : public ElementImpl<ConceptDenotation> {
 public:
@@ -17,9 +16,9 @@ public:
             throw std::runtime_error("ConceptImpl::ConceptImpl - tried to construct Concept from nullptr");
         }
     }
-    virtual ~ConceptImpl() = default;
+    ~ConceptImpl() override = default;
 
-    virtual const ConceptDenotation& evaluate(const State& state) override {
+    const ConceptDenotation& evaluate(const State& state) override {
         if (state.get_instance_info()->get_vocabulary_info().get() != m_vocabulary_info) {
             throw std::runtime_error("ConceptImpl::evaluate - mismatched vocabularies of Concept and State.");
         }
@@ -29,7 +28,6 @@ public:
     }
 };
 
-}
 }
 
 #endif

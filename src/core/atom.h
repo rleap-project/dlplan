@@ -7,8 +7,7 @@
 #include "../../include/dlp/core.h"
 
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 class Object;
 
 class AtomImpl {
@@ -40,7 +39,6 @@ public:
     std::string str() const;
 };
 
-}
 }
 
 #endif

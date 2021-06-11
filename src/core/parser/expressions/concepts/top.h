@@ -4,13 +4,11 @@
 #include "../concept.h"
 #include "../../../elements/concepts/top.h"
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class TopConcept : public Concept {
 protected:
-    virtual element::Concept_Ptr parse_concept_impl(const VocabularyInfo& vocabulary, ElementCache &) const override {
+    element::Concept_Ptr parse_concept_impl(const VocabularyInfo& vocabulary, ElementCache &) const override {
         if (m_children.size() != 0) {
             throw std::runtime_error("TopConcept::parse_concept_impl - number of children ("s + std::to_string(m_children.size()) + " != 0).");
         }
@@ -23,8 +21,6 @@ public:
     : Concept(name, std::move(children)) { }
 };
 
-}
-}
 }
 
 #endif

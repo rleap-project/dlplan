@@ -4,13 +4,11 @@
 #include "../role.h"
 #include "../../../elements/roles/not.h"
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class NotRole : public Role {
 protected:
-    virtual element::Role_Ptr parse_role_impl(const VocabularyInfo& vocabulary, ElementCache &cache) const override {
+    element::Role_Ptr parse_role_impl(const VocabularyInfo& vocabulary, ElementCache &cache) const override {
         if (m_children.size() != 1) {
             throw std::runtime_error("NotRole::parse_role_impl - number of children ("s + std::to_string(m_children.size()) + " != 1).");
         }
@@ -28,8 +26,6 @@ public:
     : Role(name, std::move(children)) { }
 };
 
-}
-}
 }
 
 #endif

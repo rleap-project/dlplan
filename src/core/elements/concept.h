@@ -4,9 +4,7 @@
 #include "element.h"
 
 
-namespace dlp {
-namespace core {
-namespace element {
+namespace dlp::core::element {
 
 class Concept : public Element<ConceptDenotation> {
 public:
@@ -17,8 +15,6 @@ public:
     }
 };
 
-}
-}
 }
 
 #endif

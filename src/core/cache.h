@@ -7,8 +7,7 @@
 #include "elements/types.h"
 
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 
 /*
 Andrès:
@@ -50,7 +49,6 @@ public:
 };
 
 
-}
 }
 
 #endif

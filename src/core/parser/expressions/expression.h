@@ -8,9 +8,7 @@
 #include "../../cache.h"
 
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 /**
  * An Expression represents a node in an abstract syntax tree.
@@ -80,8 +78,6 @@ public:
     }
 };
 
-}
-}
 }
 
 #endif

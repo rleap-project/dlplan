@@ -7,8 +7,7 @@
 
 using namespace std;
 
-namespace dlp {
-namespace utils {
+namespace dlp::utils {
 ostream &operator<<(ostream &os, const Duration &time) {
     os << static_cast<double>(time) << "s";
     return os;
@@ -74,5 +73,4 @@ ostream &operator<<(ostream &os, const Timer &timer) {
 }
 
 Timer g_timer;
-}
 }

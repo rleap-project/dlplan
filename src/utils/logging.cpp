@@ -6,10 +6,8 @@
 
 using namespace std;
 
-namespace dlp {
-namespace utils {
+namespace dlp::utils {
 
 Log g_log;
 
-}
 }

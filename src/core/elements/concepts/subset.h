@@ -5,9 +5,7 @@
 #include "../role.h"
 
 
-namespace dlp {
-namespace core {
-namespace element {
+namespace dlp::core::element {
 
 class SubsetConcept : public Concept {
 protected:
@@ -17,7 +15,7 @@ protected:
     ConceptDenotation_Set m_top;
 
 protected:
-    virtual const ConceptDenotation& evaluate_impl(const State& state) override {
+    const ConceptDenotation& evaluate_impl(const State& state) override {
         /*
         // TODO(dominik): implement improved version by making use of role denotations sorted by their first component.
         RoleDenotation left_vec = m_role_left->evaluate(state);
@@ -78,19 +76,17 @@ public:
         }
     }
 
-    virtual int compute_complexity() const override {
+    int compute_complexity() const override {
         return m_role_left->compute_complexity() + m_role_right->compute_complexity() + 1;
     }
 
-    virtual std::string compute_repr() const override {
+    std::string compute_repr() const override {
         std::stringstream ss;
         ss << m_name << "(" << m_role_left->compute_repr() << "," << m_role_right->compute_repr() << ")";
         return ss.str();
     }
 };
 
-}
-}
 }
 
 #endif

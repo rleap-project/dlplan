@@ -6,8 +6,7 @@
 #include "../../include/dlp/generator.h"
 
 
-namespace dlp {
-namespace generator {
+namespace dlp::generator {
 
 class FeatureCollectionImpl {
 private:
@@ -25,7 +24,6 @@ public:
     const BooleanFeatures& get_boolean_features() const;
 };
 
-}
 }
 
 #endif

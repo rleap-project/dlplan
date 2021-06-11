@@ -5,13 +5,11 @@
 #include "../../../elements/concepts/one_of.h"
 #include "../../utils.h"
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class OneOfConcept : public Concept {
 protected:
-    virtual element::Concept_Ptr parse_concept_impl(const VocabularyInfo& vocabulary, ElementCache &) const override {
+    element::Concept_Ptr parse_concept_impl(const VocabularyInfo& vocabulary, ElementCache &) const override {
         if (m_children.size() != 1) {
             throw std::runtime_error("OneOfConcept::parse_concept_impl - number of children ("s + std::to_string(m_children.size()) + " != 1).");
         }
@@ -24,8 +22,6 @@ public:
     : Concept(name, std::move(children)) { }
 };
 
-}
-}
 }
 
 #endif

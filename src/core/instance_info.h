@@ -10,8 +10,7 @@
 #include "../../include/dlp/core.h"
 
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 class StateImpl;
 class VocabularyInfoImpl;
 
@@ -68,7 +67,6 @@ public:
     const Index_Vec& get_static_atom_idxs() const;
 };
 
-}
 }
 
 #endif

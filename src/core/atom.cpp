@@ -7,8 +7,7 @@
 
 using namespace std::string_literals;
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 
 AtomImpl::AtomImpl(
     const InstanceInfo& instance_info,
@@ -64,5 +63,4 @@ std::string AtomImpl::str() const {
     return ss.str();
 }
 
-}
 }

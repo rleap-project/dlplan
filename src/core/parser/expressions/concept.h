@@ -5,9 +5,7 @@
 
 #include "../../elements/concept.h"
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class Concept : public Expression {
 protected:
@@ -29,8 +27,6 @@ public:
     }
 };
 
-}
-}
 }
 
 #endif

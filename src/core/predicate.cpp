@@ -1,8 +1,7 @@
 #include "predicate.h"
 
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 
 PredicateImpl::PredicateImpl(const VocabularyInfo& vocabulary_info, const std::string& predicate_name, int predicate_idx, int arity)
     : m_vocabulary_info(&vocabulary_info), m_predicate_name(predicate_name), m_index(predicate_idx), m_arity(arity) { }
@@ -23,5 +22,4 @@ int PredicateImpl::get_arity() const {
     return m_arity;
 }
 
-}
 }

@@ -4,13 +4,11 @@
 #include "../concept.h"
 
 
-namespace dlp {
-namespace core {
-namespace element {
+namespace dlp::core::element {
 
 class BotConcept : public Concept {
 protected:
-    virtual const ConceptDenotation& evaluate_impl(const State&) override {
+    const ConceptDenotation& evaluate_impl(const State&) override {
         return m_result;
     }
 
@@ -19,17 +17,15 @@ public:
     : Concept(vocabulary, "c_bot") {
     }
 
-    virtual int compute_complexity() const override {
+    int compute_complexity() const override {
         return 1;
     }
 
-    virtual std::string compute_repr() const override {
+    std::string compute_repr() const override {
         return m_name;
     }
 };
 
-}
-}
 }
 
 #endif

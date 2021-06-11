@@ -37,8 +37,7 @@
 #include "boolean.h"
 
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 
 SyntacticElementFactoryImpl::SyntacticElementFactoryImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info)
     : m_vocabulary_info(vocabulary_info) {
@@ -302,5 +301,4 @@ const VocabularyInfo* SyntacticElementFactoryImpl::get_vocabulary_info() const {
     return m_vocabulary_info.get();
 }
 
-}
 }

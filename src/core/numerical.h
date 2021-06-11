@@ -4,8 +4,7 @@
 #include "element.h"
 
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 
 class NumericalImpl : public ElementImpl<int> {
 public:
@@ -15,9 +14,9 @@ public:
             throw std::runtime_error("NumericalImpl::NumericalImpl - tried to construct Numerical from nullptr");
         }
     }
-    virtual ~NumericalImpl() = default;
+    ~NumericalImpl() override = default;
 
-    virtual const int& evaluate(const State& state) override {
+    const int& evaluate(const State& state) override {
         if (state.get_instance_info()->get_vocabulary_info().get() != m_vocabulary_info) {
             throw std::runtime_error("NumericalImpl::evaluate - mismatched vocabularies of Numerical and State.");
         }
@@ -25,7 +24,6 @@ public:
     }
 };
 
-}
 }
 
 #endif

@@ -5,9 +5,7 @@
 #include "ast_factory.h"
 
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 Tokenizer::Tokenizer() {
 }
@@ -67,6 +65,4 @@ Tokens Tokenizer::tokenize(const std::string &description) const {
     return tokens;
 }
 
-}
-}
 }

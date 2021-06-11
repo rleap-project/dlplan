@@ -5,12 +5,10 @@
  * Taken from fast-downward.org
  */
 
-namespace dlp {
-namespace utils {
+namespace dlp::utils {
 
 int get_peak_memory_in_kb();
 
-}
 }
 
 

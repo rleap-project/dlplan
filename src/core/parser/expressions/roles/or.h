@@ -6,13 +6,11 @@
 #include "../../utils.h"
 
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class OrRole : public Role {
 protected:
-    virtual element::Role_Ptr parse_role_impl(const VocabularyInfo& vocabulary, ElementCache &cache) const override {
+    element::Role_Ptr parse_role_impl(const VocabularyInfo& vocabulary, ElementCache &cache) const override {
         if (m_children.size() != 2) {
             throw std::runtime_error("OrRole::parse_role_impl - number of children ("s + std::to_string(m_children.size()) + " != 2).");
         }
@@ -31,8 +29,6 @@ public:
     : Role(name, sort_children_lexicographically(std::move(children))) { }
 };
 
-}
-}
 }
 
 #endif

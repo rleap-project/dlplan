@@ -10,8 +10,7 @@
 #include <ostream>
 
 
-namespace dlp {
-namespace utils {
+namespace dlp::utils {
 
 class Duration {
     double seconds;
@@ -43,7 +42,6 @@ std::ostream &operator<<(std::ostream &os, const Timer &timer);
 
 extern Timer g_timer;
 
-}
 }
 
 #endif

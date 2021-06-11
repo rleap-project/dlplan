@@ -7,9 +7,7 @@
 #include <vector>
 
 
-namespace dlp {
-namespace core {
-namespace element {
+namespace dlp::core::element {
 
 class Concept;
 class Role;
@@ -34,8 +32,6 @@ struct RoleDenotationHash {
 };
 using RoleDenotation_Set = std::unordered_set<std::pair<int, int>, RoleDenotationHash>;
 
-}
-}
 }
 
 #endif

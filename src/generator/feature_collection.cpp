@@ -1,8 +1,7 @@
 #include "feature_collection.h"
 
 
-namespace dlp {
-namespace generator {
+namespace dlp::generator {
 
 void FeatureCollectionImpl::add_numerical_feature(Numerical&& numerical_feature) {
     m_numerical_features.push_back(std::move(numerical_feature));
@@ -20,5 +19,4 @@ const BooleanFeatures& FeatureCollectionImpl::get_boolean_features() const {
     return m_boolean_features;
 }
 
-}
 }
