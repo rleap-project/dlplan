@@ -118,8 +118,8 @@ Concept SyntacticElementFactoryImpl::make_not_concept(const Concept& concept) {
     return Concept(*m_vocabulary_info, std::move(result_ptr));
 }
 
-Concept SyntacticElementFactoryImpl::make_one_of_concept(const std::string& object_name) {
-    element::Concept_Ptr result_ptr = std::make_shared<element::OneOfConcept>(*m_vocabulary_info, object_name);
+Concept SyntacticElementFactoryImpl::make_one_of_concept(const Constant& constant) {
+    element::Concept_Ptr result_ptr = std::make_shared<element::OneOfConcept>(*m_vocabulary_info, constant);
     result_ptr = m_cache.concept_element_cache().emplace(result_ptr->compute_repr(), result_ptr).first->second;
     return Concept(*m_vocabulary_info, std::move(result_ptr));
 }

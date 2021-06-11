@@ -35,7 +35,7 @@ public:
     Concept make_bot_concept();
     Concept make_diff_concept(const Concept& concept_left, const Concept& concept_right);
     Concept make_not_concept(const Concept& concept);
-    Concept make_one_of_concept(const std::string& object_name);
+    Concept make_one_of_concept(const Constant& constant);
     Concept make_or_concept(const Concept& concept_left, const Concept& concept_right);
     Concept make_primitive_concept(const std::string& name, int pos);
     Concept make_some_concept(const Role& role, const Concept& concept);

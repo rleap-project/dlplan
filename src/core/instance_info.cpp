@@ -19,8 +19,14 @@ static bool exists(const std::string& name, std::unordered_map<std::string, unsi
     return (f != mapping.end());
 }
 
-InstanceInfoImpl::InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info)
-    : m_vocabulary_info(vocabulary_info) {}
+InstanceInfoImpl::InstanceInfoImpl(const InstanceInfo& parent, std::shared_ptr<const VocabularyInfo> vocabulary_info)
+    : m_vocabulary_info(vocabulary_info) {
+    // add an object for each constant in the vocabulary
+    for (const auto& constant : vocabulary_info->get_constants()) {
+        m_objects.push_back(Object(parent, constant.get_name(), constant.get_index()));
+        m_object_name_to_object_idx.emplace(constant.get_name(), constant.get_index());
+    }
+}
 
 const Atom& InstanceInfoImpl::add_atom(const InstanceInfo& parent, const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
     if (!m_vocabulary_info->exists_predicate_name(predicate_name)) {

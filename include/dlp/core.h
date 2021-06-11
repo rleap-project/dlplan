@@ -14,6 +14,7 @@ class SyntacticElementFactoryImpl;
 class InstanceInfoImpl;
 class VocabularyInfoImpl;
 class PredicateImpl;
+class ConstantImpl;
 class ObjectImpl;
 class AtomImpl;
 class StateImpl;
@@ -33,6 +34,26 @@ using Name_Vec = std::vector<std::string>;
 using Index_Vec = std::vector<int>;
 
 
+class Constant {
+private:
+    pimpl<ConstantImpl> m_pImpl;
+
+    Constant(const VocabularyInfo& vocabulary_info, const std::string& name, int index);
+    friend class VocabularyInfoImpl;
+
+public:
+    Constant(const Constant& other);
+    ~Constant();
+
+    bool operator==(const Constant& other);
+    bool operator!=(const Constant& other);
+
+    const VocabularyInfo* get_vocabulary_info() const;
+    int get_index() const;
+    const std::string& get_name() const;
+};
+
+
 /**
  * A Predicate belongs to a specific vocabulary of a planning domain.
  */
@@ -40,7 +61,7 @@ class Predicate {
 private:
     pimpl<PredicateImpl> m_pImpl;
 
-    Predicate(const VocabularyInfo& vocabulary_info, const std::string& predicate_name, int predicate_idx, int arity);
+    Predicate(const VocabularyInfo& vocabulary_info, const std::string& name, int index, int arity);
     friend class VocabularyInfoImpl;
 
 public:
@@ -160,10 +181,15 @@ public:
 
     const Predicate& add_predicate(const std::string &predicate_name, int arity);
 
+    const Object& add_constant(const std::string& object_name);
+
     bool exists_predicate_name(const std::string& name) const;
     const std::vector<Predicate>& get_predicates() const;
     int get_predicate_idx(const std::string& name) const;
     const Predicate& get_predicate(int predicate_idx) const;
+    int get_constant_idx(const std::string& name) const;
+    const Constant& get_constant(int constant_idx) const;
+    const std::vector<Constant>& get_constants() const;
 };
 
 
@@ -368,7 +394,7 @@ public:
     Concept make_bot_concept();
     Concept make_diff_concept(const Concept& concept_left, const Concept& concept_right);
     Concept make_not_concept(const Concept& concept);
-    Concept make_one_of_concept(const std::string& object_name);
+    Concept make_one_of_concept(const Constant& constant);
     Concept make_or_concept(const Concept& concept_left, const Concept& concept_right);
     Concept make_primitive_concept(const std::string& name, int pos);
     Concept make_some_concept(const Role& role, const Concept& concept);

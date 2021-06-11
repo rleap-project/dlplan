@@ -18,6 +18,15 @@ const Predicate& VocabularyInfoImpl::add_predicate(const VocabularyInfo& parent,
     return m_predicates.back();
 }
 
+const Constant& VocabularyInfoImpl::add_constant(const VocabularyInfo& parent, const std::string& constant_name) {
+    if (m_constant_name_to_constant_idx.find(constant_name) != m_constant_name_to_constant_idx.end()) {
+        throw std::runtime_error("VocabularyInfoImpl::add_constant - constant with name ("s + constant_name + ") already exists.");
+    }
+    int object_idx = m_constants.size();
+    m_constants.push_back(Constant(parent, constant_name, object_idx));
+    return m_constants.back();
+}
+
 bool VocabularyInfoImpl::exists_predicate_name(const std::string& name) const {
     return m_predicate_name_to_predicate_idx.find(name) != m_predicate_name_to_predicate_idx.end();
 }
@@ -38,6 +47,24 @@ const Predicate& VocabularyInfoImpl::get_predicate(int predicate_idx) const {
         throw std::runtime_error("VocabularyInfoImpl::get_predicate - predicate index out of range.");
     }
     return m_predicates[predicate_idx];
+}
+
+int VocabularyInfoImpl::get_constant_idx(const std::string& name) const {
+    if (m_constant_name_to_constant_idx.find(name) == m_constant_name_to_constant_idx.end()) {
+        throw std::runtime_error("VocabularyInfoImpl::get_constant_idx - no constant with name ("s + name + ").");
+    }
+    return m_constant_name_to_constant_idx.at(name);
+}
+
+const Constant& VocabularyInfoImpl::get_constant(int constant_idx) const {
+    if (!utils::in_bounds(constant_idx, m_constants)) {
+        throw std::runtime_error("VocabularyInfoImpl::get_constant - constant index out of range.");
+    }
+    return m_constants[constant_idx];
+}
+
+const std::vector<Constant>& VocabularyInfoImpl::get_constants() const {
+    return m_constants;
 }
 
 std::unordered_map<std::string, EXPRESSION_TYPE> VocabularyInfoImpl::m_element_name_to_expression_type = {

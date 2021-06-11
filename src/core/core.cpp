@@ -8,6 +8,7 @@
 #include "element_factory.h"
 #include "instance_info.h"
 #include "vocabulary_info.h"
+#include "constant.h"
 #include "atom.h"
 #include "object.h"
 #include "state.h"
@@ -23,7 +24,7 @@
 
 namespace dlp::core {
 
-InstanceInfo::InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info) : m_pImpl(InstanceInfoImpl(vocabulary_info)) { }
+InstanceInfo::InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info) : m_pImpl(InstanceInfoImpl(*this, vocabulary_info)) { }
 
 InstanceInfo::~InstanceInfo() = default;
 
@@ -94,6 +95,46 @@ int VocabularyInfo::get_predicate_idx(const std::string& name) const {
 
 const Predicate& VocabularyInfo::get_predicate(int predicate_idx) const {
     return m_pImpl->get_predicate(predicate_idx);
+}
+
+int VocabularyInfo::get_constant_idx(const std::string& name) const {
+    return m_pImpl->get_constant_idx(name);
+}
+
+const Constant& VocabularyInfo::get_constant(int constant_idx) const {
+    return m_pImpl->get_constant(constant_idx);
+}
+
+const std::vector<Constant>& VocabularyInfo::get_constants() const {
+    return m_pImpl->get_constants();
+}
+
+
+Constant::Constant(const VocabularyInfo& vocabulary_info, const std::string& name, int index)
+    : m_pImpl(ConstantImpl(vocabulary_info, name, index)) { }
+
+Constant::Constant(const Constant& other) : m_pImpl(*other.m_pImpl) { }
+
+Constant::~Constant() { }
+
+bool Constant::operator==(const Constant& other) {
+    return (get_index() == other.get_index() && (get_vocabulary_info() == other.get_vocabulary_info()));
+}
+
+bool Constant::operator!=(const Constant& other) {
+    return !(*this == other);
+}
+
+const VocabularyInfo* Constant::get_vocabulary_info() const {
+    return m_pImpl->get_vocabulary_info();
+}
+
+int Constant::get_index() const {
+    return m_pImpl->get_index();
+}
+
+const std::string& Constant::get_name() const {
+    return m_pImpl->get_name();
 }
 
 
@@ -365,8 +406,8 @@ Concept SyntacticElementFactory::make_not_concept(const Concept& concept) {
     return m_pImpl->make_not_concept(concept);
 }
 
-Concept SyntacticElementFactory::make_one_of_concept(const std::string& object_name) {
-    return m_pImpl->make_one_of_concept(object_name);
+Concept SyntacticElementFactory::make_one_of_concept(const Constant& constant) {
+    return m_pImpl->make_one_of_concept(constant);
 }
 
 Concept SyntacticElementFactory::make_or_concept(const Concept& concept_left, const Concept& concept_right) {

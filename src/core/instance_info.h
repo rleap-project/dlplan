@@ -17,12 +17,7 @@ class VocabularyInfoImpl;
 class InstanceInfoImpl {
 private:
     const std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
-    /**
-     * Mappings between names and indices of predicates and objects.
-     */
-    std::unordered_map<std::string, unsigned> m_object_name_to_object_idx;
-    std::vector<std::string> m_object_idx_to_to_object_name;
-    std::unordered_map<std::string, unsigned> m_atom_name_to_atom_idx;
+
     /**
      * Indices of static atoms, i.e., atoms that do not change and remain true forever.
      */
@@ -31,16 +26,18 @@ private:
      * All atoms.
      * TODO(dominik): sorted atoms by predicate can lead to more efficient evaluation of primitive role and concept.
      */
+    std::unordered_map<std::string, unsigned> m_atom_name_to_atom_idx;
     std::vector<Atom> m_atoms;
     /**
      * All objects.
      */
+    std::unordered_map<std::string, unsigned> m_object_name_to_object_idx;
     std::vector<Object> m_objects;
 
     const Atom& add_atom(const InstanceInfo& parent, const std::string &predicate_name, const Name_Vec &object_names, bool is_static);
 
 public:
-    InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info);
+    InstanceInfoImpl(const InstanceInfo& parent, std::shared_ptr<const VocabularyInfo> vocabulary_info);
     ~InstanceInfoImpl() = default;
 
     /**

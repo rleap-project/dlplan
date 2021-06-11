@@ -14,7 +14,7 @@ protected:
             throw std::runtime_error("OneOfConcept::parse_concept_impl - number of children ("s + std::to_string(m_children.size()) + " != 1).");
         }
         // 2. Construct element
-        return std::make_shared<element::OneOfConcept>(vocabulary, m_children[0]->get_name());
+        return std::make_shared<element::OneOfConcept>(vocabulary, vocabulary.get_constant(vocabulary.get_constant_idx(m_children[0]->get_name())));
     }
 
 public:

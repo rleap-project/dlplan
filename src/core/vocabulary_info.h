@@ -49,14 +49,15 @@ enum EXPRESSION_TYPE {
 class VocabularyInfoImpl {
 private:
     /**
-     * Mappings between names and indices of predicates and objects.
-     */
-    std::unordered_map<std::string, unsigned> m_predicate_name_to_predicate_idx;
-    std::vector<std::string> m_predicate_idx_to_predicate_name;
-    /**
      * All predicates.
      */
+    std::unordered_map<std::string, unsigned> m_predicate_name_to_predicate_idx;
     std::vector<Predicate> m_predicates;
+    /**
+     * All constants.
+     */
+    std::unordered_map<std::string, unsigned> m_constant_name_to_constant_idx;
+    std::vector<Constant> m_constants;
 
     /**
      * Mappings between element names and enum.
@@ -67,10 +68,9 @@ public:
     VocabularyInfoImpl() = default;
     ~VocabularyInfoImpl() = default;
 
-    /**
-     * Adds an atom that may have varying evaluation depending on the state.
-     */
-    const Predicate& add_predicate(const VocabularyInfo& parent, const std::string &predicate_name, int arity);
+    const Predicate& add_predicate(const VocabularyInfo& parent, const std::string &name, int arity);
+
+    const Constant& add_constant(const VocabularyInfo& parent, const std::string& object_name);
 
     /**
      * Getters
@@ -78,8 +78,10 @@ public:
     bool exists_predicate_name(const std::string& name) const;
     const std::vector<Predicate>& get_predicates() const;
     int get_predicate_idx(const std::string& name) const;
-    const Predicate& get_predicate(int predicate_idx) const;
-    const VocabularyInfo* get_vocabulary_info() const;
+    const Predicate& get_predicate(int index) const;
+    int get_constant_idx(const std::string& name) const;
+    const Constant& get_constant(int constant_idx) const;
+    const std::vector<Constant>& get_constants() const;
 
     static bool exists_element_name(const std::string& name);
     static EXPRESSION_TYPE element_name_to_expression_type(const std::string &name);

@@ -63,6 +63,7 @@ void FeatureGeneratorImpl::generate_base(const States& states) {
     generate_top_concept(states);
     generate_primitive_roles(states);
     generate_top_role(states);
+    generate_one_of_concept(states);
     utils::g_log << "Complexity " << 1 << ":" << std::endl;
     print_brief_statistics();
     utils::g_log << "Finished generating base features." << std::endl;
@@ -182,9 +183,10 @@ void FeatureGeneratorImpl::generate_top_concept(const States& states) {
 }
 
 void FeatureGeneratorImpl::generate_one_of_concept(const States& states) {
-    throw std::runtime_error("FeatureGeneratorImpl::generate_one_of_concept - not implemented");
+    for (const auto& constant : m_factory->get_vocabulary_info()->get_constants()) {
+        add_concept(states, m_factory->make_one_of_concept(constant));
+    }
 }
-
 
 
 void FeatureGeneratorImpl::generate_empty_boolean(const States& states, int iteration, FeatureCollection& feature_collection) {
