@@ -70,7 +70,9 @@ void FeatureGeneratorImpl::generate_base(const States& states) {
 
 void FeatureGeneratorImpl::generate_inductively(const States& states, FeatureCollection& feature_collection) {
     utils::g_log << "Started generating composite features." << std::endl;
+    utils::CountdownTimer timer(m_time_limit);
     for (int iteration = 1; iteration < m_complexity; ++iteration) {  // every composition adds at least one complexity
+        if (timer.is_expired()) break;
         generate_empty_boolean(states, iteration, feature_collection);
         generate_all_concept(states, iteration);
         generate_and_concept(states, iteration);
@@ -179,6 +181,11 @@ void FeatureGeneratorImpl::generate_top_concept(const States& states) {
     add_concept(states, m_factory->make_top_concept());
 }
 
+void FeatureGeneratorImpl::generate_one_of_concept(const States& states) {
+    throw std::runtime_error("FeatureGeneratorImpl::generate_one_of_concept - not implemented");
+}
+
+
 
 void FeatureGeneratorImpl::generate_empty_boolean(const States& states, int iteration, FeatureCollection& feature_collection) {
     for (const auto& concept : m_concept_elements_by_complexity[iteration]) {
@@ -241,11 +248,6 @@ void FeatureGeneratorImpl::generate_not_concept(const States& states, int iterat
         add_concept(states, m_factory->make_not_concept(concept));
     }
 }
-
-void FeatureGeneratorImpl::generate_one_of_concept(const States&, int) {
-    throw std::runtime_error("FeatureGeneratorImpl::generate_one_of_concept - not implemented");
-}
-
 
 void FeatureGeneratorImpl::generate_or_concept(const States& states, int iteration) {
     for (int i = 1; i < iteration; ++i) {
