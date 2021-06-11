@@ -8,8 +8,7 @@
 #include "types.h"
 
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 class InstanceInfo;
 class Atom;
 
@@ -35,7 +34,6 @@ public:
 
 };
 
-}
 }
 
 #endif

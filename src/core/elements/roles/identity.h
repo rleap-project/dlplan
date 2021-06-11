@@ -5,9 +5,7 @@
 #include "../concept.h"
 
 
-namespace dlp {
-namespace core {
-namespace element {
+namespace dlp::core::element {
 
 class IdentityRole : public Role {
 protected:
@@ -42,8 +40,6 @@ public:
     }
 };
 
-}
-}
 }
 
 #endif

@@ -12,9 +12,7 @@
 using namespace std::string_literals;
 
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 int try_parse_number(const std::string& name) {
     if (!std::all_of(name.begin(), name.end(), [](char c){ return isdigit(c); })) {
@@ -40,8 +38,6 @@ std::vector<Expression_Ptr> sort_children_lexicographically(std::vector<Expressi
 }
 
 
-}
-}
 }
 
 #endif

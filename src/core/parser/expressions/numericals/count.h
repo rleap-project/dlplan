@@ -4,9 +4,7 @@
 #include "../numerical.h"
 #include "../../../elements/numericals/count.h"
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class CountNumerical : public Numerical {
 protected:
@@ -32,8 +30,6 @@ public:
     : Numerical(name, std::move(children)) { }
 };
 
-}
-}
 }
 
 #endif

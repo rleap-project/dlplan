@@ -6,8 +6,7 @@
 #include "element.h"
 
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 
 class ConceptImpl : public ElementImpl<ConceptDenotation> {
 public:
@@ -29,7 +28,6 @@ public:
     }
 };
 
-}
 }
 
 #endif

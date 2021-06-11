@@ -6,9 +6,7 @@
 #include "../../elements/boolean.h"
 
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class Boolean : public Expression {
 protected:
@@ -30,8 +28,6 @@ public:
     }
 };
 
-}
-}
 }
 
 #endif

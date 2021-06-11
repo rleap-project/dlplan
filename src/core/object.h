@@ -4,8 +4,7 @@
 #include <string>
 
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 class InstanceInfo;
 
 class ObjectImpl {
@@ -23,7 +22,6 @@ public:
     int get_index() const;
 };
 
-}
 }
 
 #endif

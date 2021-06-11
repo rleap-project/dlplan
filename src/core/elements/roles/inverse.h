@@ -4,9 +4,7 @@
 #include "../role.h"
 
 
-namespace dlp {
-namespace core {
-namespace element {
+namespace dlp::core::element {
 
 class InverseRole : public Role {
 protected:
@@ -42,8 +40,6 @@ public:
     }
 };
 
-}
-}
 }
 
 #endif

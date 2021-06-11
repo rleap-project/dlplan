@@ -4,9 +4,7 @@
 #include "../numerical.h"
 
 
-namespace dlp {
-namespace core {
-namespace element {
+namespace dlp::core::element {
 
 template<typename T>
 class CountNumerical : public Numerical {
@@ -33,8 +31,6 @@ public:
     }
 };
 
-}
-}
 }
 
 #endif

@@ -6,9 +6,7 @@
 #include "types.h"
 
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 
 class Tokenizer {
@@ -19,8 +17,6 @@ public:
 };
 
 
-}
-}
 }
 
 #endif

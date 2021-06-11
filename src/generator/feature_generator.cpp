@@ -11,8 +11,7 @@
 #include "element_hash_table_lossless.h"
 
 
-namespace dlp {
-namespace generator {
+namespace dlp::generator {
 
 template<typename T>
 static int num_elements(const std::vector<std::vector<T>>& elements_by_complexity) {
@@ -515,5 +514,4 @@ void FeatureGeneratorImpl::print_overall_statistics() const {
     print_elements(m_boolean_elements_by_complexity);
 }
 
-}
 }

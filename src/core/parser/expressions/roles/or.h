@@ -6,9 +6,7 @@
 #include "../../utils.h"
 
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class OrRole : public Role {
 protected:
@@ -31,8 +29,6 @@ public:
     : Role(name, sort_children_lexicographically(std::move(children))) { }
 };
 
-}
-}
 }
 
 #endif

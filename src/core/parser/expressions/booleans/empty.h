@@ -4,9 +4,7 @@
 #include "../boolean.h"
 #include "../../../elements/booleans/empty.h"
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class EmptyBoolean : public Boolean {
 protected:
@@ -32,8 +30,6 @@ public:
     : Boolean(name, std::move(children)) { }
 };
 
-}
-}
 }
 
 #endif

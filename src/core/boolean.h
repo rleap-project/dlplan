@@ -4,8 +4,7 @@
 #include "element.h"
 
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 
 class BooleanImpl : public ElementImpl<bool> {
 public:
@@ -25,7 +24,6 @@ public:
     }
 };
 
-}
 }
 
 #endif

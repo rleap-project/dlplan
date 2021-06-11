@@ -5,9 +5,7 @@
 #include "../role.h"
 
 
-namespace dlp {
-namespace core {
-namespace element {
+namespace dlp::core::element {
 
 class SubsetConcept : public Concept {
 protected:
@@ -89,8 +87,6 @@ public:
     }
 };
 
-}
-}
 }
 
 #endif

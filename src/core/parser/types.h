@@ -5,9 +5,7 @@
 #include <memory>
 
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 class Expression;
 
 enum TYPE {
@@ -22,8 +20,6 @@ using Token = std::pair<TYPE, std::string>;
 using Tokens = std::deque<Token>;
 using Expression_Ptr = std::unique_ptr<Expression>;
 
-}
-}
 }
 
 

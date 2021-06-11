@@ -6,9 +6,7 @@
 #include "../../../elements/concepts/primitive.h"
 
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class PrimitiveConcept : public Concept {
 protected:
@@ -27,8 +25,6 @@ public:
     : Concept(name, std::move(children)) { }
 };
 
-}
-}
 }
 
 #endif

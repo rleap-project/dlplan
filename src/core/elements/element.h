@@ -10,9 +10,7 @@
 #include <iostream>
 
 
-namespace dlp {
-namespace core {
-namespace element {
+namespace dlp::core::element {
 
 template<typename T>
 class Element {
@@ -54,8 +52,6 @@ public:
     virtual std::string compute_repr() const = 0;
 };
 
-}
-}
 }
 
 #endif

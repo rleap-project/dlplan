@@ -4,8 +4,7 @@
 #include "elements/element.h"
 
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 
 /**
  * The ElementRoot stores information from which the underlying Element was constructed.
@@ -36,7 +35,6 @@ public:
     }
 };
 
-}
 }
 
 #endif

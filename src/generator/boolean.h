@@ -7,8 +7,7 @@
 #include "feature.h"
 
 
-namespace dlp {
-namespace generator {
+namespace dlp::generator {
 
 class BooleanImpl : public FeatureImpl<bool> {
 public:
@@ -17,7 +16,6 @@ public:
     ~BooleanImpl() = default;
 };
 
-}
 }
 
 #endif

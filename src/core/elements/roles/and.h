@@ -4,9 +4,7 @@
 #include "../role.h"
 
 
-namespace dlp {
-namespace core {
-namespace element {
+namespace dlp::core::element {
 
 class AndRole : public Role {
 protected:
@@ -48,8 +46,6 @@ public:
     }
 };
 
-}
-}
 }
 
 #endif

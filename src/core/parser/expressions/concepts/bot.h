@@ -4,9 +4,7 @@
 #include "../concept.h"
 #include "../../../elements/concepts/bot.h"
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class BotConcept : public Concept {
 protected:
@@ -23,8 +21,6 @@ public:
     : Concept(name, std::move(children)) { }
 };
 
-}
-}
 }
 
 #endif

@@ -5,9 +5,7 @@
 #include "../../../elements/numericals/sum_concept_distance.h"
 
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class SumConceptDistanceNumerical : public Numerical {
 protected:
@@ -30,8 +28,6 @@ public:
     : Numerical(name, std::move(children)) { }
 };
 
-}
-}
 }
 
 #endif

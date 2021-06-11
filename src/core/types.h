@@ -6,8 +6,7 @@
 
 using namespace std::string_literals;
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 
 using Name_Vec = std::vector<std::string>;
 using Index_Vec = std::vector<int>;
@@ -15,7 +14,6 @@ using Index_Vec = std::vector<int>;
 const int UNDEFINED = -1;
 const int INF = std::numeric_limits<int>::max();
 
-}
 }
 
 #endif

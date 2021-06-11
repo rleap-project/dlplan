@@ -4,17 +4,13 @@
 #include "element.h"
 
 
-namespace dlp {
-namespace core {
-namespace element {
+namespace dlp::core::element {
 
 class Boolean : public Element<bool> {
 public:
     Boolean(const VocabularyInfo& vocabulary, const std::string& name) : Element<bool>(vocabulary, name) { }
 };
 
-}
-}
 }
 
 #endif

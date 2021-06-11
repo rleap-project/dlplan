@@ -7,9 +7,7 @@
 #include "../utils.h"
 
 
-namespace dlp {
-namespace core {
-namespace element {
+namespace dlp::core::element {
 
 class ConceptDistanceNumerical : public Numerical {
 protected:
@@ -65,8 +63,6 @@ public:
     }
 };
 
-}
-}
 }
 
 #endif

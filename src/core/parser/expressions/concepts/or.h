@@ -6,9 +6,7 @@
 #include "../../utils.h"
 
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class OrConcept : public Concept {
 protected:
@@ -31,8 +29,6 @@ public:
     : Concept(name, sort_children_lexicographically(std::move(children))) { }
 };
 
-}
-}
 }
 
 #endif

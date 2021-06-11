@@ -5,9 +5,7 @@
 #include "../../utils.h"
 #include "../../../elements/roles/primitive.h"
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class PrimitiveRole : public Role {
 protected:
@@ -27,8 +25,6 @@ public:
     : Role(name, std::move(children)) { }
 };
 
-}
-}
 }
 
 #endif

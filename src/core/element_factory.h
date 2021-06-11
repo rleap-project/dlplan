@@ -10,8 +10,7 @@
 #include "../../include/dlp/core.h"
 
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 class VocabularyInfoImpl;
 
 class SyntacticElementFactoryImpl {
@@ -69,7 +68,6 @@ public:
     const VocabularyInfo* get_vocabulary_info() const;
 };
 
-}
 }
 
 #endif

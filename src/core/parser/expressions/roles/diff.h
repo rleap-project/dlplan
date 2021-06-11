@@ -5,9 +5,7 @@
 #include "../../../elements/roles/diff.h"
 #include "../../utils.h"
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class DiffRole : public Role {
 protected:
@@ -30,8 +28,6 @@ public:
     : Role(name, std::move(children)) { }
 };
 
-}
-}
 }
 
 #endif

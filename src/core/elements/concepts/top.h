@@ -4,9 +4,7 @@
 #include "../concept.h"
 
 
-namespace dlp {
-namespace core {
-namespace element {
+namespace dlp::core::element {
 
 class TopConcept : public Concept {
 protected:
@@ -35,8 +33,6 @@ public:
     }
 };
 
-}
-}
 }
 
 #endif

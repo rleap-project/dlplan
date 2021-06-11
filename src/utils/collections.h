@@ -8,8 +8,7 @@
 #include <vector>
 
 
-namespace dlp {
-namespace utils {
+namespace dlp::utils {
 
 template<class T>
 bool in_bounds(int index, const T &container) {
@@ -26,7 +25,6 @@ bool in_bounds(size_t index, const T &container) {
     return index < container.size();
 }
 
-}
 }
 
 #endif

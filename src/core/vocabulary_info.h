@@ -8,8 +8,7 @@
 #include "../../include/dlp/core.h"
 
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 class SyntacticElementFactoryImpl;
 class InstanceInfoImpl;
 
@@ -86,7 +85,6 @@ public:
     static EXPRESSION_TYPE element_name_to_expression_type(const std::string &name);
 };
 
-}
 }
 
 #endif

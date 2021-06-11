@@ -5,8 +5,7 @@
 #include "numerical.h"
 #include "boolean.h"
 
-namespace dlp {
-namespace generator {
+namespace dlp::generator {
 
 Numerical::Numerical(const std::string& repr, std::vector<int>& denotation) : m_pImpl(repr, denotation) { }
 
@@ -70,5 +69,4 @@ FeatureCollection FeatureGenerator::generate(const States& states) {
 }
 
 
-}
 }

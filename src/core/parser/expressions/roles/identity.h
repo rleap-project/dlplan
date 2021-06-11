@@ -6,9 +6,7 @@
 #include "../../../elements/roles/identity.h"
 
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class IdentityRole : public Role {
 protected:
@@ -30,8 +28,6 @@ public:
     : Role(name, std::move(children)) { }
 };
 
-}
-}
 }
 
 #endif

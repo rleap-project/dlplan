@@ -4,9 +4,7 @@
 #include "../role.h"
 #include "../../../elements/roles/transitive_reflexive_closure.h"
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class TransitiveReflexiveClosureRole : public Role {
 protected:
@@ -28,8 +26,6 @@ public:
     : Role(name, std::move(children)) { }
 };
 
-}
-}
 }
 
 #endif

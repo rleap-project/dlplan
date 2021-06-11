@@ -5,9 +5,7 @@
 #include "../utils.h"
 
 
-namespace dlp {
-namespace core {
-namespace element {
+namespace dlp::core::element {
 
 class TransitiveReflexiveClosureRole : public Role {
 protected:
@@ -59,8 +57,6 @@ public:
     }
 };
 
-}
-}
 }
 
 #endif

@@ -12,8 +12,7 @@
 #include "../utils/collections.h"
 
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 
 static bool exists(const std::string& name, std::unordered_map<std::string, unsigned>& mapping) {
     auto f = mapping.find(name);
@@ -125,5 +124,4 @@ const Index_Vec& InstanceInfoImpl::get_static_atom_idxs() const {
     return m_static_atom_idxs;
 }
 
-}
 }

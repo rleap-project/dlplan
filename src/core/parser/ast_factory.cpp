@@ -34,9 +34,7 @@
 #include "expressions/roles/transitive_reflexive_closure.h"
 
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 Expression_Ptr AST_Factory::make_ast(const VocabularyInfo& vocabulary_info, const std::string &name, std::vector<Expression_Ptr> &&children) {
     // case 1: name is in alphabet of elements
@@ -145,6 +143,4 @@ Expression_Ptr AST_Factory::make_ast(const VocabularyInfo& vocabulary_info, cons
 }
 
 
-}
-}
 }

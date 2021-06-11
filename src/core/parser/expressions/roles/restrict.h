@@ -6,9 +6,7 @@
 #include "../../../elements/roles/restrict.h"
 #include "../../utils.h"
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class RestrictRole : public Role {
 protected:
@@ -31,8 +29,6 @@ public:
     : Role(name, std::move(children)) { }
 };
 
-}
-}
 }
 
 #endif

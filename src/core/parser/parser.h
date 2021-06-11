@@ -6,8 +6,7 @@
 #include "types.h"
 
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 class VocabularyInfo;
 namespace parser {
 
@@ -27,7 +26,6 @@ public:
     Expression_Ptr parse(const VocabularyInfo& vocabulary_info, const std::string &description) const;
 };
 
-}
 }
 }
 

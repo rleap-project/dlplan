@@ -5,9 +5,7 @@
 #include "../../../elements/concepts/one_of.h"
 #include "../../utils.h"
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class OneOfConcept : public Concept {
 protected:
@@ -24,8 +22,6 @@ public:
     : Concept(name, std::move(children)) { }
 };
 
-}
-}
 }
 
 #endif

@@ -4,9 +4,7 @@
 #include "../boolean.h"
 
 
-namespace dlp {
-namespace core {
-namespace element {
+namespace dlp::core::element {
 
 template<typename T>
 class EmptyBoolean : public Boolean {
@@ -33,8 +31,6 @@ public:
     }
 };
 
-}
-}
 }
 
 #endif

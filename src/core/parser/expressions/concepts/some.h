@@ -4,9 +4,7 @@
 #include "../concept.h"
 #include "../../../elements/concepts/some.h"
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class SomeConcept : public Concept {
 protected:
@@ -29,8 +27,6 @@ public:
     : Concept(name, std::move(children)) { }
 };
 
-}
-}
 }
 
 #endif

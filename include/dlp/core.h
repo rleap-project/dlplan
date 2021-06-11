@@ -9,8 +9,7 @@
 #include "../../src/utils/pimpl.h"
 
 
-namespace dlp {
-namespace core {
+namespace dlp::core {
 class SyntacticElementFactoryImpl;
 class InstanceInfoImpl;
 class VocabularyInfoImpl;
@@ -398,7 +397,6 @@ public:
 };
 
 
-}
 }
 
 #endif

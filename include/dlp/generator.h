@@ -5,8 +5,7 @@
 #include "../../src/utils/pimpl.h"
 
 
-namespace dlp {
-namespace generator {
+namespace dlp::generator {
 class NumericalImpl;
 class BooleanImpl;
 class FeatureCollectionImpl;
@@ -106,7 +105,6 @@ public:
 };
 
 
-}
 }
 
 #endif

@@ -4,9 +4,7 @@
 #include "../numerical.h"
 #include "../../../elements/numericals/concept_distance.h"
 
-namespace dlp {
-namespace core {
-namespace parser {
+namespace dlp::core::parser {
 
 class ConceptDistanceNumerical : public Numerical {
 protected:
@@ -29,8 +27,6 @@ public:
     : Numerical(name, std::move(children)) { }
 };
 
-}
-}
 }
 
 #endif
