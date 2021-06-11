@@ -15,7 +15,7 @@ protected:
     const int m_pos_2;
 
 protected:
-    virtual const RoleDenotation& evaluate_impl(const State& state) override {
+    const RoleDenotation& evaluate_impl(const State& state) override {
         const InstanceInfo& info = *state.get_instance_info();
         RoleDenotation_Set result_set;
         for (int atom_idx : state.get_atom_idxs()) {
@@ -38,11 +38,11 @@ public:
         }
     }
 
-    virtual int compute_complexity() const override {
+    int compute_complexity() const override {
         return 1;
     }
 
-    virtual std::string compute_repr() const override {
+    std::string compute_repr() const override {
         std::stringstream ss;
         ss << m_name << "(" << std::to_string(m_pos_1) << "," << std::to_string(m_pos_2) << ")";
         return ss.str();

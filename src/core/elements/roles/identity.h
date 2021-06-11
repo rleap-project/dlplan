@@ -14,7 +14,7 @@ protected:
     const Concept_Ptr m_concept;
 
 protected:
-    virtual const RoleDenotation& evaluate_impl(const State& state) override {
+    const RoleDenotation& evaluate_impl(const State& state) override {
         const ConceptDenotation& c_vec = m_concept->evaluate(state);
         m_result.clear();
         for (int c : c_vec) {
@@ -31,11 +31,11 @@ public:
         }
     }
 
-    virtual int compute_complexity() const override {
+    int compute_complexity() const override {
         return m_concept->compute_complexity() + 1;
     }
 
-    virtual std::string compute_repr() const override {
+    std::string compute_repr() const override {
         std::stringstream ss;
         ss << m_name << "(" << m_concept->compute_repr() << ")";
         return ss.str();

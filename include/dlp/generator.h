@@ -44,10 +44,10 @@ private:
 public:
     Numerical(const std::string& repr, std::vector<int>& denotation);
     Numerical(const Numerical& other);
-    virtual ~Numerical();
+    ~Numerical() override;
 
-    virtual const std::string& get_repr() const override;
-    virtual const std::vector<int>& get_state_evaluations() const override;
+    const std::string& get_repr() const override;
+    const std::vector<int>& get_state_evaluations() const override;
 };
 
 
@@ -61,10 +61,10 @@ private:
 public:
     Boolean(const std::string& repr, std::vector<bool>& denotation);
     Boolean(const Boolean& other);
-    virtual ~Boolean();
+    ~Boolean() override;
 
-    virtual const std::string& get_repr() const override;
-    virtual const std::vector<bool>& get_state_evaluations() const override;
+    const std::string& get_repr() const override;
+    const std::vector<bool>& get_state_evaluations() const override;
 };
 
 

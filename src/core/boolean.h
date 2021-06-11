@@ -15,9 +15,9 @@ public:
             throw std::runtime_error("BooleanImpl::BooleanImpl - tried to construct Boolean from nullptr");
         }
     }
-    virtual ~BooleanImpl() = default;
+    ~BooleanImpl() override = default;
 
-    virtual const bool& evaluate(const State& state) override {
+    const bool& evaluate(const State& state) override {
         if (state.get_instance_info()->get_vocabulary_info().get() != m_vocabulary_info) {
             throw std::runtime_error("BooleanImpl::evaluate - mismatched vocabularies of Boolean and State.");
         }

@@ -14,7 +14,7 @@ protected:
     RoleDenotation_Set m_universe_set;
 
 protected:
-    virtual const RoleDenotation& evaluate_impl(const State& state) override {
+    const RoleDenotation& evaluate_impl(const State& state) override {
         if (m_universe_set.empty()) {
             int num_objects = state.get_instance_info()->get_num_objects();
             for (int object_idx_1 = 0; object_idx_1 < num_objects; ++object_idx_1) {
@@ -41,11 +41,11 @@ public:
         }
     }
 
-    virtual int compute_complexity() const override {
+    int compute_complexity() const override {
         return m_role->compute_complexity() + 1;
     }
 
-    virtual std::string compute_repr() const override {
+    std::string compute_repr() const override {
         std::stringstream ss;
         ss << m_name << "(" << m_role->compute_repr() << ")";
         return ss.str();

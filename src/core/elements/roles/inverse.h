@@ -13,7 +13,7 @@ protected:
     const Role_Ptr m_role;
 
 protected:
-    virtual const RoleDenotation& evaluate_impl(const State& state) override {
+    const RoleDenotation& evaluate_impl(const State& state) override {
         const RoleDenotation& r_vec = m_role->evaluate(state);
         m_result.clear();
         m_result.reserve(r_vec.size());
@@ -31,11 +31,11 @@ public:
         }
     }
 
-    virtual int compute_complexity() const override {
+    int compute_complexity() const override {
         return m_role->compute_complexity() + 1;
     }
 
-    virtual std::string compute_repr() const override {
+    std::string compute_repr() const override {
         std::stringstream ss;
         ss << m_name << "(" << m_role->compute_repr() << ")";
         return ss.str();

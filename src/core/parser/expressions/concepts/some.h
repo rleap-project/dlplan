@@ -10,7 +10,7 @@ namespace parser {
 
 class SomeConcept : public Concept {
 protected:
-    virtual element::Concept_Ptr parse_concept_impl(const VocabularyInfo& vocabulary, ElementCache &cache) const override {
+    element::Concept_Ptr parse_concept_impl(const VocabularyInfo& vocabulary, ElementCache &cache) const override {
         if (m_children.size() != 2) {
             throw std::runtime_error("SomeConcept::parse_concept_impl - number of children ("s + std::to_string(m_children.size()) + " != 2).");
         }

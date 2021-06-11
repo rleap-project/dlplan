@@ -10,7 +10,7 @@ namespace element {
 
 class TopConcept : public Concept {
 protected:
-    virtual const ConceptDenotation& evaluate_impl(const State& state) override {
+    const ConceptDenotation& evaluate_impl(const State& state) override {
         if (m_result.empty()) {
             int num_objects = state.get_instance_info()->get_num_objects();
             m_result.reserve(num_objects);
@@ -26,11 +26,11 @@ public:
     : Concept(vocabulary, "c_top") {
     }
 
-    virtual int compute_complexity() const override {
+    int compute_complexity() const override {
         return 1;
     }
 
-    virtual std::string compute_repr() const override {
+    std::string compute_repr() const override {
         return m_name;
     }
 };

@@ -13,7 +13,7 @@ protected:
     const std::string m_object_name;
 
 protected:
-    virtual const ConceptDenotation& evaluate_impl(const State& state) override {
+    const ConceptDenotation& evaluate_impl(const State& state) override {
         int object_idx = state.get_instance_info()->get_object_idx(m_object_name);
         m_result = { object_idx };
         return m_result;
@@ -24,11 +24,11 @@ public:
     : Concept(vocabulary, "c_one_of"), m_object_name(object_name) {
     }
 
-    virtual int compute_complexity() const override {
+    int compute_complexity() const override {
         return 1;
     }
 
-    virtual std::string compute_repr() const override {
+    std::string compute_repr() const override {
         std::stringstream ss;
         ss << m_name << "(" << m_object_name << ")";
         return ss.str();

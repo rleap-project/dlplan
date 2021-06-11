@@ -14,7 +14,7 @@ protected:
     const Concept_Ptr m_concept_right;
 
 protected:
-    virtual const ConceptDenotation& evaluate_impl(const State& state) override {
+    const ConceptDenotation& evaluate_impl(const State& state) override {
         const ConceptDenotation& l_vec = m_concept_left->evaluate(state);
         const ConceptDenotation& r_vec = m_concept_right->evaluate(state);
         ConceptDenotation_Set r_set(r_vec.begin(), r_vec.end());
@@ -37,11 +37,11 @@ public:
         }
     }
 
-    virtual int compute_complexity() const override {
+    int compute_complexity() const override {
         return m_concept_left->compute_complexity() + m_concept_right->compute_complexity() + 1;
     }
 
-    virtual std::string compute_repr() const override {
+    std::string compute_repr() const override {
         std::stringstream ss;
         ss << m_name << "(" << m_concept_left->compute_repr() << "," << m_concept_right->compute_repr() << ")";
         return ss.str();
