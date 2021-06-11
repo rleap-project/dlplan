@@ -132,8 +132,8 @@ Concept SyntacticElementFactoryImpl::make_or_concept(const Concept& concept_left
     return Concept(*m_vocabulary_info, std::move(result_ptr));
 }
 
-Concept SyntacticElementFactoryImpl::make_primitive_concept(const std::string& name, int pos) {
-    element::Concept_Ptr result_ptr = std::make_shared<element::PrimitiveConcept>(*m_vocabulary_info, name, pos);
+Concept SyntacticElementFactoryImpl::make_primitive_concept(const Predicate& predicate, int pos) {
+    element::Concept_Ptr result_ptr = std::make_shared<element::PrimitiveConcept>(*m_vocabulary_info, predicate, pos);
     result_ptr = m_cache.concept_element_cache().emplace(result_ptr->compute_repr(), result_ptr).first->second;
     return Concept(*m_vocabulary_info, std::move(result_ptr));
 }
@@ -263,8 +263,8 @@ Role SyntacticElementFactoryImpl::make_or_role(const Role& role_left, const Role
     return Role(*m_vocabulary_info, std::move(result_ptr));
 }
 
-Role SyntacticElementFactoryImpl::make_primitive_role(const std::string& name, int pos_1, int pos_2) {
-    element::Role_Ptr result_ptr = std::make_shared<element::PrimitiveRole>(*m_vocabulary_info, name, pos_1, pos_2);
+Role SyntacticElementFactoryImpl::make_primitive_role(const Predicate& predicate, int pos_1, int pos_2) {
+    element::Role_Ptr result_ptr = std::make_shared<element::PrimitiveRole>(*m_vocabulary_info, predicate, pos_1, pos_2);
     result_ptr = m_cache.role_element_cache().emplace(result_ptr->compute_repr(), result_ptr).first->second;
     return Role(*m_vocabulary_info, std::move(result_ptr));
 }

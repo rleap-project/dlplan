@@ -17,7 +17,7 @@ protected:
         // 1. Parse children
         int pos = try_parse_number(m_children[0]->get_name());
         // 2. Construct element
-        return std::make_shared<element::PrimitiveConcept>(vocabulary, m_name, pos);
+        return std::make_shared<element::PrimitiveConcept>(vocabulary, vocabulary.get_predicate(vocabulary.get_predicate_idx(m_name)), pos);
     }
 
 public:

@@ -414,8 +414,8 @@ Concept SyntacticElementFactory::make_or_concept(const Concept& concept_left, co
     return m_pImpl->make_or_concept(concept_left, concept_right);
 }
 
-Concept SyntacticElementFactory::make_primitive_concept(const std::string& name, int pos) {
-    return m_pImpl->make_primitive_concept(name, pos);
+Concept SyntacticElementFactory::make_primitive_concept(const Predicate& predicate, int pos) {
+    return m_pImpl->make_primitive_concept(predicate, pos);
 }
 
 Concept SyntacticElementFactory::make_some_concept(const Role& role, const Concept& concept) {
@@ -482,8 +482,8 @@ Role SyntacticElementFactory::make_or_role(const Role& role_left, const Role& ro
     return m_pImpl->make_or_role(role_left, role_right);
 }
 
-Role SyntacticElementFactory::make_primitive_role(const std::string& name, int pos_1, int pos_2) {
-    return m_pImpl->make_primitive_role(name, pos_1, pos_2);
+Role SyntacticElementFactory::make_primitive_role(const Predicate& predicate, int pos_1, int pos_2) {
+    return m_pImpl->make_primitive_role(predicate, pos_1, pos_2);
 }
 
 Role SyntacticElementFactory::make_restrict_role(const Role& role, const Concept& concept) {

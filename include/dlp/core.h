@@ -396,7 +396,7 @@ public:
     Concept make_not_concept(const Concept& concept);
     Concept make_one_of_concept(const Constant& constant);
     Concept make_or_concept(const Concept& concept_left, const Concept& concept_right);
-    Concept make_primitive_concept(const std::string& name, int pos);  // TODO(dominik): change string to Predicate
+    Concept make_primitive_concept(const Predicate& predicate, int pos);
     Concept make_some_concept(const Role& role, const Concept& concept);
     Concept make_subset_concept(const Role& role_left, const Role& role_right);
     Concept make_top_concept();
@@ -415,7 +415,7 @@ public:
     Role make_inverse_role(const Role& role);
     Role make_not_role(const Role& role);
     Role make_or_role(const Role& role_left, const Role& role_right);
-    Role make_primitive_role(const std::string& name, int pos_1, int pos_2);  // TODO(dominik): change string to Predicate
+    Role make_primitive_role(const Predicate& predicate, int pos_1, int pos_2);
     Role make_restrict_role(const Role& role, const Concept& concept);
     Role make_top_role();
     Role make_transitive_closure(const Role& role);
