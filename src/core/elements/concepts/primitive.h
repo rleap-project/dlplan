@@ -1,8 +1,9 @@
 #ifndef DLP_SRC_CORE_ELEMENTS_CONCEPTS_PRIMITIVE_H_
 #define DLP_SRC_CORE_ELEMENTS_CONCEPTS_PRIMITIVE_H_
 
-#include "../concept.h"
+#include <algorithm>
 
+#include "../concept.h"
 
 namespace dlp {
 namespace core {
@@ -16,14 +17,15 @@ protected:
 protected:
     virtual const ConceptDenotation& evaluate_impl(const State& state) override {
         const InstanceInfo& info = *state.get_instance_info();
-        // 2. Compute the result.
-        m_result.clear();
+        ConceptDenotation_Set result_set;
         for (int atom_idx : state.get_atom_idxs()) {
             const Atom& atom = info.get_atom(atom_idx);
             if (atom.get_predicate().get_index() == m_predicate_idx) {
-                m_result.push_back(atom.get_object(m_pos).get_index());
+                result_set.insert(atom.get_object(m_pos).get_index());
             }
         }
+        m_result.clear();
+        m_result.insert(m_result.end(), result_set.begin(), result_set.end());
         return m_result;
     }
 

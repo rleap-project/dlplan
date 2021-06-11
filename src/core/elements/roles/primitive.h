@@ -17,14 +17,15 @@ protected:
 protected:
     virtual const RoleDenotation& evaluate_impl(const State& state) override {
         const InstanceInfo& info = *state.get_instance_info();
-        // 2. Compute the result.
-        m_result.clear();
+        RoleDenotation_Set result_set;
         for (int atom_idx : state.get_atom_idxs()) {
             const Atom& atom = info.get_atom(atom_idx);
             if (atom.get_predicate().get_index() == m_predicate_idx) {
-                m_result.emplace_back(atom.get_object(m_pos_1).get_index(), atom.get_object(m_pos_2).get_index());
+                result_set.emplace(atom.get_object(m_pos_1).get_index(), atom.get_object(m_pos_2).get_index());
             }
         }
+        m_result.clear();
+        m_result.insert(m_result.end(), result_set.begin(), result_set.end());
         return m_result;
     }
 
