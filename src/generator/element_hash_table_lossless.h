@@ -75,7 +75,7 @@ private:
 
 public:
     ElementHashTableLossLess() : ElementHashTable<D>() { }
-    virtual ~ElementHashTableLossLess() { }
+    virtual ~ElementHashTableLossLess() = default;
 
     bool insert(core::Element<D>& element, const States& states) override {
         const std::vector<D>& denotation = evaluate(element, states);

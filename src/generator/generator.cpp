@@ -11,7 +11,7 @@ Numerical::Numerical(const std::string& repr, std::vector<int>& denotation) : m_
 
 Numerical::Numerical(const Numerical& other) : m_pImpl(*other.m_pImpl) { }
 
-Numerical::~Numerical() { }
+Numerical::~Numerical() = default;
 
 const std::string& Numerical::get_repr() const {
     return m_pImpl->get_repr();
@@ -26,7 +26,7 @@ Boolean::Boolean(const std::string& repr, std::vector<bool>& denotation) : m_pIm
 
 Boolean::Boolean(const Boolean& other) : m_pImpl(*other.m_pImpl) { }
 
-Boolean::~Boolean() { }
+Boolean::~Boolean() = default;
 
 const std::string& Boolean::get_repr() const {
     return m_pImpl->get_repr();
@@ -40,7 +40,7 @@ FeatureCollection::FeatureCollection() : m_pImpl() { }
 
 FeatureCollection::FeatureCollection(const FeatureCollection& other) : m_pImpl(*other.m_pImpl) { }
 
-FeatureCollection::~FeatureCollection() { }
+FeatureCollection::~FeatureCollection() = default;
 
 void FeatureCollection::add_numerical_feature(Numerical&& numerical_feature) {
     return m_pImpl->add_numerical_feature(std::move(numerical_feature));
@@ -62,7 +62,7 @@ const BooleanFeatures& FeatureCollection::get_boolean_features() const {
 FeatureGenerator::FeatureGenerator(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit)
     : m_pImpl(FeatureGeneratorImpl(factory, complexity, time_limit)) { }
 
-FeatureGenerator::~FeatureGenerator() { }
+FeatureGenerator::~FeatureGenerator() = default;
 
 FeatureCollection FeatureGenerator::generate(const States& states) {
     return m_pImpl->generate(states);

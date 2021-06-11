@@ -7,8 +7,7 @@
 
 namespace dlp::core::parser {
 
-Tokenizer::Tokenizer() {
-}
+Tokenizer::Tokenizer() = default;
 
 static void add_token(std::stringstream &ss, bool& is_num, Tokens &tokens) {
     std::string token = ss.str();

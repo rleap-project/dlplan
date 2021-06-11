@@ -38,7 +38,7 @@ public:
     // A baseline copy constructor.
     // pimpl(const pimpl<T> &other) : m( new T(*(other.m))) { }
 
-    ~pimpl() { }
+    ~pimpl() = default;
 
     T* operator->() { return m.get(); }
 
@@ -76,7 +76,7 @@ public:
     // A baseline copy constructor.
     // pimpl(const pimpl<T> &other) : m( new T(*(other.m))) { }
 
-    ~spimpl() { }
+    ~spimpl() = default;
 
     T* operator->() { return m.get(); }
 

@@ -2,7 +2,7 @@
 
 namespace dlp::core {
 
-ElementCache::ElementCache() { }
+ElementCache::ElementCache() = default;
 
 std::unordered_map<std::string, element::Concept_Ptr>& ElementCache::concept_element_cache() {
     return m_concept_element_cache;

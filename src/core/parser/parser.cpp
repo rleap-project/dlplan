@@ -43,8 +43,7 @@ Expression_Ptr Parser::parse_ast(const VocabularyInfo& vocabulary_info, Tokens &
     }
 }
 
-Parser::Parser() {
-}
+Parser::Parser() = default;
 
 Expression_Ptr Parser::parse(
     const VocabularyInfo& vocabulary_info,

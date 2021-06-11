@@ -25,7 +25,7 @@ namespace dlp::core {
 
 InstanceInfo::InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info) : m_pImpl(InstanceInfoImpl(vocabulary_info)) { }
 
-InstanceInfo::~InstanceInfo() { }
+InstanceInfo::~InstanceInfo() = default;
 
 const Atom& InstanceInfo::add_atom(const std::string &predicate_name, const Name_Vec &object_names) {
     return m_pImpl->add_atom(*this, predicate_name, object_names);
@@ -74,7 +74,7 @@ const Index_Vec& InstanceInfo::get_static_atom_idxs() const {
 
 VocabularyInfo::VocabularyInfo() : m_pImpl(VocabularyInfoImpl()) { }
 
-VocabularyInfo::~VocabularyInfo() { }
+VocabularyInfo::~VocabularyInfo() = default;
 
 const Predicate& VocabularyInfo::add_predicate(const std::string &predicate_name, int arity) {
     return m_pImpl->add_predicate(*this, predicate_name, arity);
@@ -102,7 +102,7 @@ Predicate::Predicate(const VocabularyInfo& vocabulary_info, const std::string& p
 
 Predicate::Predicate(const Predicate& other) : m_pImpl(*other.m_pImpl) { }
 
-Predicate::~Predicate() {}
+Predicate::~Predicate() = default;
 
 bool Predicate::operator==(const Predicate& other)  {
     return (get_index() == other.get_index()) && (get_vocabulary_info() == other.get_vocabulary_info());
@@ -134,7 +134,7 @@ Object::Object(const InstanceInfo& instance_info, const std::string& object_name
 
 Object::Object(const Object& other) : m_pImpl(*other.m_pImpl) { }
 
-Object::~Object() { }
+Object::~Object() = default;
 
 bool Object::operator==(const Object& other) {
     return (get_index() == other.get_index()) && (get_instance_info() == other.get_instance_info());
@@ -166,7 +166,7 @@ Atom::Atom(const InstanceInfo& instance_info,
 
 Atom::Atom(const Atom& other) : m_pImpl(*other.m_pImpl) { }
 
-Atom::~Atom() { }
+Atom::~Atom() = default;
 
 bool Atom::operator==(const Atom& other) {
     return (get_index() == other.get_index()) && (get_instance_info() == other.get_instance_info());
@@ -210,7 +210,7 @@ State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vecto
 
 State::State(const State& other) : m_pImpl(*other.m_pImpl) {}
 
-State::~State() { }
+State::~State() = default;
 
 bool State::operator==(const State& other) {
     return (get_atom_idxs() == other.get_atom_idxs()) && (get_instance_info() == other.get_instance_info());
@@ -236,7 +236,7 @@ Concept::Concept(const VocabularyInfo& vocabulary_info, element::Concept_Ptr&& c
 Concept::Concept(const Concept& other)
     : Element<ConceptDenotation>(other), m_pImpl(*other.m_pImpl) { }
 
-Concept::~Concept() { }
+Concept::~Concept() = default;
 
 ConceptDenotation Concept::evaluate(const State& state) {
     return m_pImpl->evaluate(state);
@@ -255,7 +255,7 @@ Role::Role(const VocabularyInfo& vocabulary_info, element::Role_Ptr&& role) : m_
 Role::Role(const Role& other)
     : m_pImpl(*other.m_pImpl) { }
 
-Role::~Role() { }
+Role::~Role() = default;
 
 RoleDenotation Role::evaluate(const State& state) {
     return m_pImpl->evaluate(state);
@@ -275,7 +275,7 @@ Numerical::Numerical(const VocabularyInfo& vocabulary_info, element::Numerical_P
 Numerical::Numerical(const Numerical& other)
     : m_pImpl(*other.m_pImpl) { }
 
-Numerical::~Numerical() { }
+Numerical::~Numerical() = default;
 
 int Numerical::evaluate(const State& state) {
     return m_pImpl->evaluate(state);
@@ -295,7 +295,7 @@ Boolean::Boolean(const VocabularyInfo& vocabulary_info, element::Boolean_Ptr&& b
 Boolean::Boolean(const Boolean& other)
     : m_pImpl(*other.m_pImpl) { }
 
-Boolean::~Boolean() { }
+Boolean::~Boolean() = default;
 
 bool Boolean::evaluate(const State& state) {
     return m_pImpl->evaluate(state);
@@ -314,7 +314,7 @@ SyntacticElementFactory::SyntacticElementFactory(std::shared_ptr<const Vocabular
 
 SyntacticElementFactory::SyntacticElementFactory(const SyntacticElementFactory& other) : m_pImpl(*other.m_pImpl) { }
 
-SyntacticElementFactory::~SyntacticElementFactory() { }
+SyntacticElementFactory::~SyntacticElementFactory() = default;
 
 const VocabularyInfo* SyntacticElementFactory::get_vocabulary_info() const {
     return m_pImpl->get_vocabulary_info();
