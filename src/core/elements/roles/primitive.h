@@ -8,7 +8,7 @@ namespace dlp::core::element {
 
 class PrimitiveRole : public Role {
 protected:
-    const Predicate& m_predicate;
+    const Predicate m_predicate;
     const int m_pos_1;
     const int m_pos_2;
 
