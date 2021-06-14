@@ -4,7 +4,7 @@
 #define STRINGIFY(x) #x
 #define MACRO_STRINGIFY(x) STRINGIFY(x)
 
-#include <dlp/generator.h>
+#include <dlplan/generator.h>
 
 namespace py = pybind11;
 
