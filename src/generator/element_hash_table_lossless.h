@@ -8,6 +8,12 @@
 
 #include "../../include/dlplan/core.h"
 
+template <class T>
+inline void hash_combine(std::size_t& seed, const T& v)
+{
+    std::hash<T> hasher;
+    seed ^= hasher(v) + 0x9e3779b9 + (seed<<6) + (seed>>2);
+}
 
 namespace std {
     /**
@@ -20,21 +26,29 @@ namespace std {
     template<> struct hash<std::vector<int>> {
         std::size_t operator()(const std::vector<int>& denotation) const noexcept {
             std::size_t seed = denotation.size();
-            for(const auto & i : denotation) {
-                seed ^= i + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            for (const auto& i : denotation) {
+                hash_combine(seed, i);
             }
             return seed;
         }
     };
 
-    template<> struct hash<std::vector<dlplan::core::ConceptDenotation>>
-    {
+    template<> struct hash<std::vector<std::pair<int, int>>> {
+        std::size_t operator()(const std::vector<std::pair<int, int>>& denotation) const noexcept {
+            std::size_t seed = denotation.size();
+            for (const auto & i : denotation) {
+                hash_combine(seed, i.first);
+                hash_combine(seed, i.second);
+            }
+            return seed;
+        }
+    };
+
+    template<> struct hash<std::vector<dlplan::core::ConceptDenotation>> {
         std::size_t operator()(const std::vector<dlplan::core::ConceptDenotation>& denotation) const noexcept {
             std::size_t seed = denotation.size();
             for (const auto& v : denotation) {
-                for(const auto& i : v) {
-                    seed ^= i + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-                }
+                hash_combine(seed, v);
             }
             return seed;
         }
@@ -44,10 +58,7 @@ namespace std {
         std::size_t operator()(const std::vector<dlplan::core::RoleDenotation>& denotation) const noexcept {
             std::size_t seed = denotation.size();
             for (const auto& v : denotation) {
-                for(const auto& i : v) {
-                    seed ^= i.first + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-                    seed ^= i.second + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-                }
+                hash_combine(seed, v);
             }
             return seed;
         }
@@ -67,7 +78,6 @@ namespace generator {
  * In this version, we do not compress the denotations.
  * TODO(dominik): Compress the denotations.
  */
-
 template<typename D>
 class ElementHashTableLossLess : public ElementHashTable<D> {
 private:
