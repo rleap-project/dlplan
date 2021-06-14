@@ -9,8 +9,8 @@
 #include "../../include/dlplan/core.h"
 #include "../utils/countdown_timer.h"
 
-#include "element_hash_table.h"
 #include "types.h"
+#include "hash_tables/hash_table.h"
 
 
 namespace dlplan {
@@ -42,16 +42,12 @@ private:
     /**
      * For uniqueness checking
      */
-    std::unique_ptr<ElementHashTable<core::ConceptDenotation>> m_concept_hash_table;
-    std::unique_ptr<ElementHashTable<core::RoleDenotation>> m_role_hash_table;
-    std::unique_ptr<ElementHashTable<int>> m_numerical_hash_table;
-    std::unique_ptr<ElementHashTable<bool>> m_boolean_hash_table;
+    std::unique_ptr<HashTable> m_hash_table;
 
     /**
-     * Collect some statistics
+     * Terminate generation if timer expired.
      */
-    int m_cache_misses;
-    int m_cache_hits;
+    utils::CountdownTimer m_timer;
 
 private:
     /**

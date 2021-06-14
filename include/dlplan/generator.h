@@ -41,7 +41,7 @@ private:
     pimpl<NumericalImpl> m_pImpl;
 
 public:
-    Numerical(const std::string& repr, std::vector<int>& denotation);
+    Numerical(const std::string& repr, const std::vector<int>& denotation);
     Numerical(const Numerical& other);
     ~Numerical() override;
 
@@ -58,7 +58,7 @@ private:
     pimpl<BooleanImpl> m_pImpl;
 
 public:
-    Boolean(const std::string& repr, std::vector<bool>& denotation);
+    Boolean(const std::string& repr, const std::vector<bool>& denotation);
     Boolean(const Boolean& other);
     ~Boolean() override;
 
