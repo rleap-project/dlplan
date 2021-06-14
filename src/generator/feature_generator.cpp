@@ -9,6 +9,7 @@
 #include "boolean.h"
 #include "numerical.h"
 #include "hash_tables/hash_table_lossless.h"
+#include "hash_tables/hash_table_sha-256.h"
 
 
 namespace dlplan::generator {

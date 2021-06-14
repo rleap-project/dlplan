@@ -6,12 +6,6 @@
 #include "../types.h"
 
 
-namespace dlplan::core {
-    class Concept;
-    class Role;
-    class Numerical;
-    class Boolean;
-}
 namespace dlplan::generator {
 
 /**

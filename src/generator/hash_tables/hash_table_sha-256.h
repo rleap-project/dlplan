@@ -1,8 +1,9 @@
-#ifndef DLPLAN_SRC_GENERATOR_HASH_TABLES_HASH_TABLE_LOSSLESS_H_
-#define DLPLAN_SRC_GENERATOR_HASH_TABLES_HASH_TABLE_LOSSLESS_H_
+#ifndef DLPLAN_SRC_GENERATOR_HASH_TABLE_SHA_2_H_
+#define DLPLAN_SRC_GENERATOR_HASH_TABLE_SHA_2_H_
 
 #include <unordered_set>
 #include <vector>
+#include <array>
 
 #include "hash_table.h"
 #include "utils.h"
@@ -16,11 +17,11 @@ namespace std {
      * We provide custom specialization of std::hash that are injected in the namespace std.
      * https://en.cppreference.com/w/cpp/utility/hash
      */
-    template<> struct hash<std::vector<int>> {
-        std::size_t operator()(const std::vector<int>& denotation) const noexcept {
-            std::size_t seed = denotation.size();
-            for (const auto& i : denotation) {
-                dlplan::generator::hash_combine(seed, i);
+    template<> struct hash<std::array<uint8_t, 32>> {
+        std::size_t operator()(const std::array<uint8_t, 32>& h) const noexcept {
+            std::size_t seed = 32;
+            for (int i = 0; i < 32; ++i) {
+                dlplan::generator::hash_combine(seed, h[i]);
             }
             return seed;
         }
@@ -30,16 +31,12 @@ namespace std {
 
 namespace dlplan::generator {
 
-/**
- * In this version, we do not compress the denotations.
- * TODO(dominik): Compress the denotations.
- */
-class HashTableLossLess : public HashTable {
+class HashTableSha2 : public HashTable {
 private:
     // TODO(dominik): Should combine the caches?
-    std::unordered_set<std::vector<int>> m_concept_denotation_cache;
-    std::unordered_set<std::vector<int>> m_role_denotation_cache;
-    std::unordered_set<std::vector<int>> m_numerical_denotation_cache;
+    std::unordered_set<std::array<uint8_t, 32>> m_concept_denotation_cache;
+    std::unordered_set<std::array<uint8_t, 32>> m_role_denotation_cache;
+    std::unordered_set<std::array<uint8_t, 32>> m_numerical_denotation_cache;
     std::unordered_set<std::vector<bool>> m_boolean_denotation_cache;
 
 protected:
@@ -50,9 +47,6 @@ protected:
     bool insert_numerical_impl(const std::vector<int>& denotation) override;
 
     bool insert_boolean_impl(const std::vector<bool>& denotation) override;
-
-public:
-    ~HashTableLossLess() = default;
 };
 
 }

@@ -3,6 +3,8 @@ add_library(generator
     feature_generator.cpp
     generator.cpp
     ../utils/countdown_timer.cpp
+    ../utils/sha-256.c
     hash_tables/hash_table.cpp
     hash_tables/hash_table_lossless.cpp
+    hash_tables/hash_table_sha-256.cpp
 )
