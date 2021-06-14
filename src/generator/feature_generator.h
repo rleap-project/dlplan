@@ -83,7 +83,7 @@ private:
     void generate_diff_concept(const States& states, int iteration);
     void generate_not_concept(const States& states, int iteration);
     void generate_or_concept(const States& states, int iteration);
-    void generate_some_concept(const States& states, int iteration);  // TODO(dominik): should we add this?
+    void generate_some_concept(const States& states, int iteration);
     void generate_subset_concept(const States& states, int iteration);
 
     void generate_concept_distance_numerical(const States& states, int iteration, FeatureCollection& feature_collection);

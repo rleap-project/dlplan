@@ -28,6 +28,6 @@ int main() {
     dlplan::core::State s2(instance, {a2, a3});
     dlplan::generator::States states({s0, s1, s2});
 
-    dlplan::generator::FeatureGenerator generator(factory, 10, 10);
+    dlplan::generator::FeatureGenerator generator(factory, 10, 180);
     dlplan::generator::FeatureCollection features = generator.generate(states);
 }
