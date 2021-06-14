@@ -31,7 +31,7 @@ namespace std {
 
 namespace dlplan::generator {
 
-class HashTableSha2 : public HashTable {
+class HashTableSha256 : public HashTable {
 private:
     // TODO(dominik): Should combine the caches?
     std::unordered_set<std::array<uint8_t, 32>> m_concept_denotation_cache;

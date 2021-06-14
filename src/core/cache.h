@@ -46,6 +46,11 @@ public:
     std::unordered_map<std::string, element::Role_Ptr>& role_element_cache();
     std::unordered_map<std::string, element::Numerical_Ptr>& numerical_element_cache();
     std::unordered_map<std::string, element::Boolean_Ptr>& boolean_element_cache();
+
+    void on_destroy(const core::Concept& concept);
+    void on_destroy(const core::Role& role);
+    void on_destroy(const core::Numerical& numerical);
+    void on_destroy(const core::Boolean& boolean);
 };
 
 

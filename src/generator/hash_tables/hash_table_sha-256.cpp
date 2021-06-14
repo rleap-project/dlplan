@@ -15,19 +15,19 @@ static std::array<uint8_t, 32> compute_hash(const std::vector<int>& denotation) 
     return a;
 }
 
-bool HashTableSha2::insert_concept_impl(const std::vector<int>& denotation) {
+bool HashTableSha256::insert_concept_impl(const std::vector<int>& denotation) {
     return m_concept_denotation_cache.insert(compute_hash(denotation)).second;
 }
 
-bool HashTableSha2::insert_role_impl(const std::vector<int>& denotation) {
+bool HashTableSha256::insert_role_impl(const std::vector<int>& denotation) {
     return m_role_denotation_cache.insert(compute_hash(denotation)).second;
 }
 
-bool HashTableSha2::insert_numerical_impl(const std::vector<int>& denotation) {
+bool HashTableSha256::insert_numerical_impl(const std::vector<int>& denotation) {
     return m_numerical_denotation_cache.insert(compute_hash(denotation)).second;
 }
 
-bool HashTableSha2::insert_boolean_impl(const std::vector<bool>& denotation) {
+bool HashTableSha256::insert_boolean_impl(const std::vector<bool>& denotation) {
     return m_boolean_denotation_cache.insert(denotation).second;
 }
 
