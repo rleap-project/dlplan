@@ -7,7 +7,7 @@
 
 #include "types.h"
 
-#include "../../include/dlp/core.h"
+#include "dlplan/core.h"
 
 
 namespace dlplan::core {

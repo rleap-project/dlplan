@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "../../include/dlp/core.h"
+#include "../../include/dlplan/core.h"
 
 
 namespace dlplan {

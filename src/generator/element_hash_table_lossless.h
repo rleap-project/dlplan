@@ -6,7 +6,7 @@
 
 #include "element_hash_table.h"
 
-#include "../../include/dlp/core.h"
+#include "../../include/dlplan/core.h"
 
 
 namespace std {

@@ -6,7 +6,7 @@
 #include <memory>
 #include <bitset>
 
-#include "../../include/dlp/core.h"
+#include "../../include/dlplan/core.h"
 #include "../utils/countdown_timer.h"
 
 #include "element_hash_table.h"

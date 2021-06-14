@@ -1,4 +1,4 @@
-#include "dlp/core.h"
+#include "dlplan/core.h"
 
 #include "elements/concept.h"
 #include "elements/role.h"

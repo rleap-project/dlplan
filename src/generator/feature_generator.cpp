@@ -4,7 +4,7 @@
 #include <iostream>
 #include <cassert>
 
-#include "../../include/dlp/generator.h"
+#include "../../include/dlplan/generator.h"
 #include "../utils/logging.h"
 #include "boolean.h"
 #include "numerical.h"

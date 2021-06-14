@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "../../include/dlp/core.h"
+#include "../../include/dlplan/core.h"
 
 
 namespace dlplan::core {

@@ -1,7 +1,7 @@
 
 #include <gtest/gtest.h>
 
-#include <dlp/core.h>
+#include <dlplan/core.h>
 
 using namespace dlplan::core;
 

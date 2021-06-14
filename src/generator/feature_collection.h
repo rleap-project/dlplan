@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "../../include/dlp/generator.h"
+#include "../../include/dlplan/generator.h"
 
 
 namespace dlplan::generator {

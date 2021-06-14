@@ -7,7 +7,7 @@
 #include "cache.h"
 #include "types.h"
 
-#include "../../include/dlp/core.h"
+#include "../../include/dlplan/core.h"
 
 
 namespace dlplan::core {

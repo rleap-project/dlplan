@@ -1,4 +1,4 @@
-#include "../../include/dlp/generator.h"
+#include "../../include/dlplan/generator.h"
 
 #include <memory>
 #include <iostream>
