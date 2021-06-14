@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_CORE_VOCABULARY_INFO_IMPL_H_
-#define DLP_SRC_CORE_VOCABULARY_INFO_IMPL_H_
+#ifndef DLPLAN_SRC_CORE_VOCABULARY_INFO_IMPL_H_
+#define DLPLAN_SRC_CORE_VOCABULARY_INFO_IMPL_H_
 
 #include <unordered_map>
 #include <string>
@@ -8,7 +8,7 @@
 #include "../../include/dlp/core.h"
 
 
-namespace dlp::core {
+namespace dlplan::core {
 class SyntacticElementFactoryImpl;
 class InstanceInfoImpl;
 

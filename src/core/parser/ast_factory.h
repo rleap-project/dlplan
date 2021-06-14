@@ -1,12 +1,12 @@
-#ifndef DLP_SRC_CORE_PARSER_AST_FACTORY_H_
-#define DLP_SRC_CORE_PARSER_AST_FACTORY_H_
+#ifndef DLPLAN_SRC_CORE_PARSER_AST_FACTORY_H_
+#define DLPLAN_SRC_CORE_PARSER_AST_FACTORY_H_
 
 #include <vector>
 
 #include "types.h"
 
 
-namespace dlp::core {
+namespace dlplan::core {
 class VocabularyInfo;
 namespace parser {
 

@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_GENERATOR_ELEMENT_HASH_TABLE_LOSSLESS_H_
-#define DLP_SRC_GENERATOR_ELEMENT_HASH_TABLE_LOSSLESS_H_
+#ifndef DLPLAN_SRC_GENERATOR_ELEMENT_HASH_TABLE_LOSSLESS_H_
+#define DLPLAN_SRC_GENERATOR_ELEMENT_HASH_TABLE_LOSSLESS_H_
 
 #include <unordered_set>
 #include <vector>
@@ -27,9 +27,9 @@ namespace std {
         }
     };
 
-    template<> struct hash<std::vector<dlp::core::ConceptDenotation>>
+    template<> struct hash<std::vector<dlplan::core::ConceptDenotation>>
     {
-        std::size_t operator()(const std::vector<dlp::core::ConceptDenotation>& denotation) const noexcept {
+        std::size_t operator()(const std::vector<dlplan::core::ConceptDenotation>& denotation) const noexcept {
             std::size_t seed = denotation.size();
             for (const auto& v : denotation) {
                 for(const auto& i : v) {
@@ -40,8 +40,8 @@ namespace std {
         }
     };
 
-    template<> struct hash<std::vector<dlp::core::RoleDenotation>> {
-        std::size_t operator()(const std::vector<dlp::core::RoleDenotation>& denotation) const noexcept {
+    template<> struct hash<std::vector<dlplan::core::RoleDenotation>> {
+        std::size_t operator()(const std::vector<dlplan::core::RoleDenotation>& denotation) const noexcept {
             std::size_t seed = denotation.size();
             for (const auto& v : denotation) {
                 for(const auto& i : v) {
@@ -54,7 +54,7 @@ namespace std {
     };
 }
 
-namespace dlp {
+namespace dlplan {
 namespace core {
     class Concept;
     class Role;

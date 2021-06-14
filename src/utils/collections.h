@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_UTILS_COLLECTIONS_H_
-#define DLP_SRC_UTILS_COLLECTIONS_H_
+#ifndef DLPLAN_SRC_UTILS_COLLECTIONS_H_
+#define DLPLAN_SRC_UTILS_COLLECTIONS_H_
 
 /**
  * Taken from fast-downward.org
@@ -8,7 +8,7 @@
 #include <vector>
 
 
-namespace dlp::utils {
+namespace dlplan::utils {
 
 template<class T>
 bool in_bounds(int index, const T &container) {

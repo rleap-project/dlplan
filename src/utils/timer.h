@@ -1,5 +1,5 @@
-#ifndef SRC_UTILS_TIMER_H
-#define SRC_UTILS_TIMER_H
+#ifndef DLPLAN_SRC_UTILS_TIMER_H
+#define DLPLAN_SRC_UTILS_TIMER_H
 
 /**
  * Taken from fast-downward.org
@@ -10,7 +10,7 @@
 #include <ostream>
 
 
-namespace dlp::utils {
+namespace dlplan::utils {
 
 class Duration {
     double seconds;

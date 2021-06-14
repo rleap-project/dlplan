@@ -1,5 +1,5 @@
-#ifndef SRC_UTILS_LOGGING_H
-#define SRC_UTILS_LOGGING_H
+#ifndef DLPLAN_SRC_UTILS_LOGGING_H
+#define DLPLAN_SRC_UTILS_LOGGING_H
 
 /**
  * Taken from fast-downward.org
@@ -14,7 +14,7 @@
 #include <vector>
 
 
-namespace dlp::utils {
+namespace dlplan::utils {
 /*
   Simple logger that prepends time and peak memory info to messages.
   Logs are written to stdout.

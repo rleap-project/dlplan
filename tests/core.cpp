@@ -3,7 +3,7 @@
 
 #include <dlp/core.h>
 
-using namespace dlp::core;
+using namespace dlplan::core;
 
 
 TEST(DLPTests, SyntacticErrorHandling) {

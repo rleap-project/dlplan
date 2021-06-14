@@ -6,7 +6,7 @@
 #include <ios>
 
 
-namespace dlp::utils {
+namespace dlplan::utils {
 
 int get_peak_memory_in_kb() {
     // On error, produces a warning on cerr and returns -1.

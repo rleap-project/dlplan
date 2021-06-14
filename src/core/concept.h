@@ -1,12 +1,12 @@
-#ifndef DLP_SRC_CORE_CONCEPT_H_
-#define DLP_SRC_CORE_CONCEPT_H_
+#ifndef DLPLAN_SRC_CORE_CONCEPT_H_
+#define DLPLAN_SRC_CORE_CONCEPT_H_
 
 #include <algorithm>
 
 #include "element.h"
 
 
-namespace dlp::core {
+namespace dlplan::core {
 
 class ConceptImpl : public ElementImpl<ConceptDenotation> {
 public:

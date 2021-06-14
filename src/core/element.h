@@ -1,10 +1,10 @@
-#ifndef DLP_SRC_CORE_ELEMENT_H_
-#define DLP_SRC_CORE_ELEMENT_H_
+#ifndef DLPLAN_SRC_CORE_ELEMENT_H_
+#define DLPLAN_SRC_CORE_ELEMENT_H_
 
 #include "elements/element.h"
 
 
-namespace dlp::core {
+namespace dlplan::core {
 
 /**
  * The ElementRoot stores information from which the underlying Element was constructed.

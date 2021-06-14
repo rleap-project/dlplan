@@ -1,10 +1,10 @@
-#ifndef DLP_SRC_CORE_PARSER_EXPRESSIONS_NUMERICAL_COUNT_H_
-#define DLP_SRC_CORE_PARSER_EXPRESSIONS_NUMERICAL_COUNT_H_
+#ifndef DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_NUMERICAL_COUNT_H_
+#define DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_NUMERICAL_COUNT_H_
 
 #include "../numerical.h"
 #include "../../../elements/numericals/count.h"
 
-namespace dlp::core::parser {
+namespace dlplan::core::parser {
 
 class CountNumerical : public Numerical {
 protected:

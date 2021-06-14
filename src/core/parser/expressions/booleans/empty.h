@@ -1,10 +1,10 @@
-#ifndef DLP_SRC_CORE_PARSER_EXPRESSIONS_BOOLEAN_EMPTY_H_
-#define DLP_SRC_CORE_PARSER_EXPRESSIONS_BOOLEAN_EMPTY_H_
+#ifndef DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_BOOLEAN_EMPTY_H_
+#define DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_BOOLEAN_EMPTY_H_
 
 #include "../boolean.h"
 #include "../../../elements/booleans/empty.h"
 
-namespace dlp::core::parser {
+namespace dlplan::core::parser {
 
 class EmptyBoolean : public Boolean {
 protected:

@@ -1,11 +1,11 @@
-#ifndef DLP_SRC_CORE_PARSER_EXPRESSIONS_ROLES_AND_H_
-#define DLP_SRC_CORE_PARSER_EXPRESSIONS_ROLES_AND_H_
+#ifndef DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_ROLES_AND_H_
+#define DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_ROLES_AND_H_
 
 #include "../role.h"
 #include "../../../elements/roles/and.h"
 #include "../../utils.h"
 
-namespace dlp::core::parser {
+namespace dlplan::core::parser {
 
 class AndRole : public Role {
 protected:

@@ -1,5 +1,5 @@
-#ifndef SRC_UTILS_COUNTDOWN_TIMER_H
-#define SRC_UTILS_COUNTDOWN_TIMER_H
+#ifndef DLPLAN_SRC_UTILS_COUNTDOWN_TIMER_H
+#define DLPLAN_SRC_UTILS_COUNTDOWN_TIMER_H
 
 /**
  * Taken from fast-downward.org
@@ -7,7 +7,7 @@
 
 #include "timer.h"
 
-namespace dlp {
+namespace dlplan {
 namespace utils {
 
 class CountdownTimer {

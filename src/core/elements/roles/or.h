@@ -1,10 +1,10 @@
-#ifndef DLP_SRC_CORE_ELEMENTS_ROLES_OR_H_
-#define DLP_SRC_CORE_ELEMENTS_ROLES_OR_H_
+#ifndef DLPLAN_SRC_CORE_ELEMENTS_ROLES_OR_H_
+#define DLPLAN_SRC_CORE_ELEMENTS_ROLES_OR_H_
 
 #include "../role.h"
 
 
-namespace dlp::core::element {
+namespace dlplan::core::element {
 
 class OrRole : public Role {
 protected:

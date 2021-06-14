@@ -1,11 +1,11 @@
-#ifndef DLP_SRC_CORE_PARSER_TYPES_H_
-#define DLP_SRC_CORE_PARSER_TYPES_H_
+#ifndef DLPLAN_SRC_CORE_PARSER_TYPES_H_
+#define DLPLAN_SRC_CORE_PARSER_TYPES_H_
 
 #include <deque>
 #include <memory>
 
 
-namespace dlp::core::parser {
+namespace dlplan::core::parser {
 class Expression;
 
 enum TYPE {

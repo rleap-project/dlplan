@@ -1,12 +1,12 @@
-#ifndef DLP_SRC_CORE_PARSER_EXPRESSIONS_ROLES_RESTRICT_H_
-#define DLP_SRC_CORE_PARSER_EXPRESSIONS_ROLES_RESTRICT_H_
+#ifndef DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_ROLES_RESTRICT_H_
+#define DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_ROLES_RESTRICT_H_
 
 #include "../role.h"
 #include "../concept.h"
 #include "../../../elements/roles/restrict.h"
 #include "../../utils.h"
 
-namespace dlp::core::parser {
+namespace dlplan::core::parser {
 
 class RestrictRole : public Role {
 protected:

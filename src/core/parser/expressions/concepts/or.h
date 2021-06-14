@@ -1,12 +1,12 @@
-#ifndef DLP_SRC_CORE_PARSER_EXPRESSIONS_CONCEPTS_OR_H_
-#define DLP_SRC_CORE_PARSER_EXPRESSIONS_CONCEPTS_OR_H_
+#ifndef DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_CONCEPTS_OR_H_
+#define DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_CONCEPTS_OR_H_
 
 #include "../concept.h"
 #include "../../../elements/concepts/or.h"
 #include "../../utils.h"
 
 
-namespace dlp::core::parser {
+namespace dlplan::core::parser {
 
 class OrConcept : public Concept {
 protected:

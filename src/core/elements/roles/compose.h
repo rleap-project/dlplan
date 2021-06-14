@@ -1,11 +1,11 @@
-#ifndef DLP_SRC_CORE_ELEMENTS_ROLES_COMPOSE_H_
-#define DLP_SRC_CORE_ELEMENTS_ROLES_COMPOSE_H_
+#ifndef DLPLAN_SRC_CORE_ELEMENTS_ROLES_COMPOSE_H_
+#define DLPLAN_SRC_CORE_ELEMENTS_ROLES_COMPOSE_H_
 
 #include "../role.h"
 #include <algorithm>
 
 
-namespace dlp::core::element {
+namespace dlplan::core::element {
 
 class ComposeRole : public Role {
 protected:

@@ -11,7 +11,7 @@
 #include "tokenizer.h"
 
 
-namespace dlp::core::parser {
+namespace dlplan::core::parser {
 
 /**
  * Parses the canonical AST from the given tokens.

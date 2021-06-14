@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_GENERATOR_FEATURE_GENERATOR_IMPL_H_
-#define DLP_SRC_GENERATOR_FEATURE_GENERATOR_IMPL_H_
+#ifndef DLPLAN_SRC_GENERATOR_FEATURE_GENERATOR_IMPL_H_
+#define DLPLAN_SRC_GENERATOR_FEATURE_GENERATOR_IMPL_H_
 
 #include <unordered_map>
 #include <unordered_set>
@@ -13,7 +13,7 @@
 #include "types.h"
 
 
-namespace dlp {
+namespace dlplan {
 namespace core {
     class Concept;
     class Role;
@@ -34,10 +34,10 @@ private:
     /**
      * Generated features sorted by their complexity.
      */
-    std::vector<std::vector<dlp::core::Concept>> m_concept_elements_by_complexity;
-    std::vector<std::vector<dlp::core::Role>> m_role_elements_by_complexity;
-    std::vector<std::vector<dlp::core::Numerical>> m_numerical_elements_by_complexity;
-    std::vector<std::vector<dlp::core::Boolean>> m_boolean_elements_by_complexity;
+    std::vector<std::vector<dlplan::core::Concept>> m_concept_elements_by_complexity;
+    std::vector<std::vector<dlplan::core::Role>> m_role_elements_by_complexity;
+    std::vector<std::vector<dlplan::core::Numerical>> m_numerical_elements_by_complexity;
+    std::vector<std::vector<dlplan::core::Boolean>> m_boolean_elements_by_complexity;
 
     /**
      * For uniqueness checking

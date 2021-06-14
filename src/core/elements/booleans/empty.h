@@ -1,10 +1,10 @@
-#ifndef DLP_SRC_CORE_ELEMENTS_BOOLEAN_EMPTY_H_
-#define DLP_SRC_CORE_ELEMENTS_BOOLEAN_EMPTY_H_
+#ifndef DLPLAN_SRC_CORE_ELEMENTS_BOOLEAN_EMPTY_H_
+#define DLPLAN_SRC_CORE_ELEMENTS_BOOLEAN_EMPTY_H_
 
 #include "../boolean.h"
 
 
-namespace dlp::core::element {
+namespace dlplan::core::element {
 
 template<typename T>
 class EmptyBoolean : public Boolean {

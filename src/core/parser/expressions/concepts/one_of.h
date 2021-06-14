@@ -1,11 +1,11 @@
-#ifndef DLP_SRC_CORE_PARSER_EXPRESSIONS_CONCEPTS_ONE_OF_H_
-#define DLP_SRC_CORE_PARSER_EXPRESSIONS_CONCEPTS_ONE_OF_H_
+#ifndef DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_CONCEPTS_ONE_OF_H_
+#define DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_CONCEPTS_ONE_OF_H_
 
 #include "../concept.h"
 #include "../../../elements/concepts/one_of.h"
 #include "../../utils.h"
 
-namespace dlp::core::parser {
+namespace dlplan::core::parser {
 
 class OneOfConcept : public Concept {
 protected:

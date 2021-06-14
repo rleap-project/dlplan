@@ -1,10 +1,10 @@
-#ifndef DLP_SRC_GENERATOR_ELEMENT_HASH_TABLE_H_
-#define DLP_SRC_GENERATOR_ELEMENT_HASH_TABLE_H_
+#ifndef DLPLAN_SRC_GENERATOR_ELEMENT_HASH_TABLE_H_
+#define DLPLAN_SRC_GENERATOR_ELEMENT_HASH_TABLE_H_
 
 #include "types.h"
 
 
-namespace dlp {
+namespace dlplan {
 namespace core {
     class Concept;
     class Role;

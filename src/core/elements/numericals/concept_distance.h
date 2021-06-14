@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_CORE_ELEMENTS_NUMERICAL_CONCEPT_DISTANCE_H_
-#define DLP_SRC_CORE_ELEMENTS_NUMERICAL_CONCEPT_DISTANCE_H_
+#ifndef DLPLAN_SRC_CORE_ELEMENTS_NUMERICAL_CONCEPT_DISTANCE_H_
+#define DLPLAN_SRC_CORE_ELEMENTS_NUMERICAL_CONCEPT_DISTANCE_H_
 
 #include "../numerical.h"
 #include "../concept.h"
@@ -7,7 +7,7 @@
 #include "../utils.h"
 
 
-namespace dlp::core::element {
+namespace dlplan::core::element {
 
 class ConceptDistanceNumerical : public Numerical {
 protected:

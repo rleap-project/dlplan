@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_CORE_ELEMENTS_TYPES_H_
-#define DLP_SRC_CORE_ELEMENTS_TYPES_H_
+#ifndef DLPLAN_SRC_CORE_ELEMENTS_TYPES_H_
+#define DLPLAN_SRC_CORE_ELEMENTS_TYPES_H_
 
 #include <unordered_set>
 #include <utility>
@@ -7,7 +7,7 @@
 #include <vector>
 
 
-namespace dlp::core::element {
+namespace dlplan::core::element {
 
 class Concept;
 class Role;

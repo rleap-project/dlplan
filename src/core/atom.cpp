@@ -7,7 +7,7 @@
 
 using namespace std::string_literals;
 
-namespace dlp::core {
+namespace dlplan::core {
 
 AtomImpl::AtomImpl(
     const InstanceInfo& instance_info,

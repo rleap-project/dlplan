@@ -1,7 +1,7 @@
 #include "predicate.h"
 
 
-namespace dlp::core {
+namespace dlplan::core {
 
 PredicateImpl::PredicateImpl(const VocabularyInfo& vocabulary_info, const std::string& name, int index, int arity)
     : m_vocabulary_info(&vocabulary_info), m_name(name), m_index(index), m_arity(arity) { }

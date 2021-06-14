@@ -1,12 +1,12 @@
-#ifndef DLP_SRC_GENERATOR_FEATURE_COLLECTION_H_
-#define DLP_SRC_GENERATOR_FEATURE_COLLECTION_H_
+#ifndef DLPLAN_SRC_GENERATOR_FEATURE_COLLECTION_H_
+#define DLPLAN_SRC_GENERATOR_FEATURE_COLLECTION_H_
 
 #include <vector>
 
 #include "../../include/dlp/generator.h"
 
 
-namespace dlp::generator {
+namespace dlplan::generator {
 
 class FeatureCollectionImpl {
 private:

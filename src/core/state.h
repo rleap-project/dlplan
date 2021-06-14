@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_CORE_STATE_H_
-#define DLP_SRC_CORE_STATE_H_
+#ifndef DLPLAN_SRC_CORE_STATE_H_
+#define DLPLAN_SRC_CORE_STATE_H_
 
 #include <string>
 #include <vector>
@@ -8,7 +8,7 @@
 #include "types.h"
 
 
-namespace dlp::core {
+namespace dlplan::core {
 class InstanceInfo;
 class Atom;
 

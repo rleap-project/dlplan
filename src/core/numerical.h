@@ -1,10 +1,10 @@
-#ifndef DLP_SRC_CORE_NUMERICAL_H_
-#define DLP_SRC_CORE_NUMERICAL_H_
+#ifndef DLPLAN_SRC_CORE_NUMERICAL_H_
+#define DLPLAN_SRC_CORE_NUMERICAL_H_
 
 #include "element.h"
 
 
-namespace dlp::core {
+namespace dlplan::core {
 
 class NumericalImpl : public ElementImpl<int> {
 public:

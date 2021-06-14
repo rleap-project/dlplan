@@ -1,7 +1,7 @@
 #include "feature_collection.h"
 
 
-namespace dlp::generator {
+namespace dlplan::generator {
 
 void FeatureCollectionImpl::add_numerical_feature(Numerical&& numerical_feature) {
     m_numerical_features.push_back(std::move(numerical_feature));

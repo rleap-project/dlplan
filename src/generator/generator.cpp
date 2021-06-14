@@ -5,7 +5,7 @@
 #include "numerical.h"
 #include "boolean.h"
 
-namespace dlp::generator {
+namespace dlplan::generator {
 
 Numerical::Numerical(const std::string& repr, std::vector<int>& denotation) : m_pImpl(repr, denotation) { }
 

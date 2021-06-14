@@ -1,7 +1,7 @@
 #include "object.h"
 
 
-namespace dlp::core {
+namespace dlplan::core {
 
 ObjectImpl::ObjectImpl(const InstanceInfo& instance_info, const std::string& name, int index)
     : m_instance_info(&instance_info), m_name(name), m_index(index) { }

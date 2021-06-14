@@ -1,11 +1,11 @@
-#ifndef DLP_SRC_GENERATOR_FEATURE_H_
-#define DLP_SRC_GENERATOR_FEATURE_H_
+#ifndef DLPLAN_SRC_GENERATOR_FEATURE_H_
+#define DLPLAN_SRC_GENERATOR_FEATURE_H_
 
 #include <string>
 #include <vector>
 
 
-namespace dlp::generator {
+namespace dlplan::generator {
 
 /**
  * A Features consists of

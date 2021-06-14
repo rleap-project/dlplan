@@ -1,12 +1,12 @@
-#ifndef DLP_SRC_CORE_CONSTANT_H_
-#define DLP_SRC_CORE_CONSTANT_H_
+#ifndef DLPLAN_SRC_CORE_CONSTANT_H_
+#define DLPLAN_SRC_CORE_CONSTANT_H_
 
 #include <string>
 
 #include "../../include/dlp/core.h"
 
 
-namespace dlp {
+namespace dlplan {
 namespace core {
 
 class ConstantImpl {

@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_GENERATOR_NUMERICAL_H_
-#define DLP_SRC_GENERATOR_NUMERICAL_H_
+#ifndef DLPLAN_SRC_GENERATOR_NUMERICAL_H_
+#define DLPLAN_SRC_GENERATOR_NUMERICAL_H_
 
 #include <string>
 #include <vector>
@@ -7,7 +7,7 @@
 #include "feature.h"
 
 
-namespace dlp::generator {
+namespace dlplan::generator {
 
 class NumericalImpl : public FeatureImpl<int> {
 public:

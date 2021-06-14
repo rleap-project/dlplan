@@ -6,7 +6,7 @@
 #include "../types.h"
 
 
-namespace dlp::core::element::utils {
+namespace dlplan::core::element::utils {
 
 extern int path_addition(int a, int b) {
     if (a == INF || b == INF) {

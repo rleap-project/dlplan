@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_GENERATOR_BOOLEAN_H_
-#define DLP_SRC_GENERATOR_BOOLEAN_H_
+#ifndef DLPLAN_SRC_GENERATOR_BOOLEAN_H_
+#define DLPLAN_SRC_GENERATOR_BOOLEAN_H_
 
 #include <string>
 #include <vector>
@@ -7,7 +7,7 @@
 #include "feature.h"
 
 
-namespace dlp::generator {
+namespace dlplan::generator {
 
 class BooleanImpl : public FeatureImpl<bool> {
 public:

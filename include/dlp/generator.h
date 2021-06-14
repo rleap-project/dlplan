@@ -1,11 +1,11 @@
-#ifndef DLP_INCLUDE_DLP_ELEMENT_GENERATOR_H_
-#define DLP_INCLUDE_DLP_ELEMENT_GENERATOR_H_
+#ifndef DLPLAN_INCLUDE_DLP_ELEMENT_GENERATOR_H_
+#define DLPLAN_INCLUDE_DLP_ELEMENT_GENERATOR_H_
 
 #include "core.h"
 #include "../../src/utils/pimpl.h"
 
 
-namespace dlp::generator {
+namespace dlplan::generator {
 class NumericalImpl;
 class BooleanImpl;
 class FeatureCollectionImpl;

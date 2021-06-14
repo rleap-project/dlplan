@@ -1,10 +1,10 @@
-#ifndef DLP_SRC_CORE_BOOLEAN_H_
-#define DLP_SRC_CORE_BOOLEAN_H_
+#ifndef DLPLAN_SRC_CORE_BOOLEAN_H_
+#define DLPLAN_SRC_CORE_BOOLEAN_H_
 
 #include "element.h"
 
 
-namespace dlp::core {
+namespace dlplan::core {
 
 class BooleanImpl : public ElementImpl<bool> {
 public:

@@ -1,10 +1,10 @@
-#ifndef DLP_SRC_CORE_PARSER_EXPRESSIONS_CONCEPTS_ALL_H_
-#define DLP_SRC_CORE_PARSER_EXPRESSIONS_CONCEPTS_ALL_H_
+#ifndef DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_CONCEPTS_ALL_H_
+#define DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_CONCEPTS_ALL_H_
 
 #include "../concept.h"
 #include "../../../elements/concepts/all.h"
 
-namespace dlp::core::parser {
+namespace dlplan::core::parser {
 
 class AllConcept : public Concept {
 protected:

@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_GENERATOR_TYPES_H_
-#define DLP_SRC_GENERATOR_TYPES_H_
+#ifndef DLPLAN_SRC_GENERATOR_TYPES_H_
+#define DLPLAN_SRC_GENERATOR_TYPES_H_
 
 #include <string>
 #include <vector>
@@ -8,7 +8,7 @@
 
 using namespace std::string_literals;
 
-namespace dlp {
+namespace dlplan {
 namespace core {
     class State;
 }

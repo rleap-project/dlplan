@@ -1,12 +1,12 @@
-#ifndef DLP_SRC_CORE_PARSER_EXPRESSIONS_NUMERICAL_H_
-#define DLP_SRC_CORE_PARSER_EXPRESSIONS_NUMERICAL_H_
+#ifndef DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_NUMERICAL_H_
+#define DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_NUMERICAL_H_
 
 #include "expression.h"
 
 #include "../../elements/numerical.h"
 
 
-namespace dlp::core::parser {
+namespace dlplan::core::parser {
 
 class Numerical : public Expression {
 protected:

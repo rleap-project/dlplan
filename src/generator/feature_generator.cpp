@@ -11,7 +11,7 @@
 #include "element_hash_table_lossless.h"
 
 
-namespace dlp::generator {
+namespace dlplan::generator {
 
 template<typename T>
 static int num_elements(const std::vector<std::vector<T>>& elements_by_complexity) {

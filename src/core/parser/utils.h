@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_CORE_PARSER_UTILS_H_
-#define DLP_SRC_CORE_PARSER_UTILS_H_
+#ifndef DLPLAN_SRC_CORE_PARSER_UTILS_H_
+#define DLPLAN_SRC_CORE_PARSER_UTILS_H_
 
 #include <algorithm>
 #include <vector>
@@ -12,7 +12,7 @@
 using namespace std::string_literals;
 
 
-namespace dlp::core::parser {
+namespace dlplan::core::parser {
 
 int try_parse_number(const std::string& name) {
     if (!std::all_of(name.begin(), name.end(), [](char c){ return isdigit(c); })) {

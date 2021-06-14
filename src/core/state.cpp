@@ -6,7 +6,7 @@
 #include "../utils/collections.h"
 
 
-namespace dlp::core {
+namespace dlplan::core {
 
 static Index_Vec convert_atoms(const InstanceInfo& instance_info, const std::vector<Atom>& atoms) {
     if (!std::all_of(atoms.begin(), atoms.end(), [&](const Atom& atom){ return atom.get_instance_info() == &instance_info; })) {

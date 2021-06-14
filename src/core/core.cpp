@@ -22,7 +22,7 @@
 #include <algorithm>
 
 
-namespace dlp::core {
+namespace dlplan::core {
 
 InstanceInfo::InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info) : m_pImpl(InstanceInfoImpl(*this, vocabulary_info)) { }
 

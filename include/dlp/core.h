@@ -1,5 +1,5 @@
-#ifndef DLP_INCLUDE_DLP_CORE_H_
-#define DLP_INCLUDE_DLP_CORE_H_
+#ifndef DLPLAN_INCLUDE_DLP_CORE_H_
+#define DLPLAN_INCLUDE_DLP_CORE_H_
 
 #include <memory>
 #include <string>
@@ -9,7 +9,7 @@
 #include "../../src/utils/pimpl.h"
 
 
-namespace dlp::core {
+namespace dlplan::core {
 class SyntacticElementFactoryImpl;
 class InstanceInfoImpl;
 class VocabularyInfoImpl;

@@ -1,10 +1,10 @@
-#ifndef DLP_SRC_CORE_ELEMENTS_ROLES_NOT_H_
-#define DLP_SRC_CORE_ELEMENTS_ROLES_NOT_H_
+#ifndef DLPLAN_SRC_CORE_ELEMENTS_ROLES_NOT_H_
+#define DLPLAN_SRC_CORE_ELEMENTS_ROLES_NOT_H_
 
 #include "../role.h"
 
 
-namespace dlp::core::element {
+namespace dlplan::core::element {
 
 class NotRole : public Role {
 protected:

@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_CORE_ELEMENTS_ELEMENT_H_
-#define DLP_SRC_CORE_ELEMENTS_ELEMENT_H_
+#ifndef DLPLAN_SRC_CORE_ELEMENTS_ELEMENT_H_
+#define DLPLAN_SRC_CORE_ELEMENTS_ELEMENT_H_
 
 #include "types.h"
 #include "../state.h"
@@ -10,7 +10,7 @@
 #include <iostream>
 
 
-namespace dlp::core::element {
+namespace dlplan::core::element {
 
 template<typename T>
 class Element {

@@ -5,7 +5,7 @@
 #include "ast_factory.h"
 
 
-namespace dlp::core::parser {
+namespace dlplan::core::parser {
 
 Tokenizer::Tokenizer() = default;
 

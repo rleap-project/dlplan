@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_CORE_PARSER_EXPRESSIONS_EXPRESSION_H_
-#define DLP_SRC_CORE_PARSER_EXPRESSIONS_EXPRESSION_H_
+#ifndef DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_EXPRESSION_H_
+#define DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_EXPRESSION_H_
 
 #include <sstream>
 #include <string>
@@ -8,7 +8,7 @@
 #include "../../cache.h"
 
 
-namespace dlp::core::parser {
+namespace dlplan::core::parser {
 
 /**
  * An Expression represents a node in an abstract syntax tree.

@@ -7,7 +7,7 @@
 
 using namespace std;
 
-namespace dlp::utils {
+namespace dlplan::utils {
 ostream &operator<<(ostream &os, const Duration &time) {
     os << static_cast<double>(time) << "s";
     return os;

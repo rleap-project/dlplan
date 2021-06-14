@@ -1,10 +1,10 @@
-#ifndef DLP_SRC_CORE_OBJECT_H_
-#define DLP_SRC_CORE_OBJECT_H_
+#ifndef DLPLAN_SRC_CORE_OBJECT_H_
+#define DLPLAN_SRC_CORE_OBJECT_H_
 
 #include <string>
 
 
-namespace dlp::core {
+namespace dlplan::core {
 class InstanceInfo;
 
 class ObjectImpl {

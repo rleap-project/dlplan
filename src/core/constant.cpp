@@ -1,7 +1,7 @@
 #include "constant.h"
 
 
-namespace dlp {
+namespace dlplan {
 namespace core {
 
 ConstantImpl::ConstantImpl(const VocabularyInfo& vocabulary_info, const std::string name, int index)

@@ -1,11 +1,11 @@
-#ifndef DLP_SRC_CORE_ELEMENTS_CONCEPTS_PRIMITIVE_H_
-#define DLP_SRC_CORE_ELEMENTS_CONCEPTS_PRIMITIVE_H_
+#ifndef DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_PRIMITIVE_H_
+#define DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_PRIMITIVE_H_
 
 #include <algorithm>
 
 #include "../concept.h"
 
-namespace dlp::core::element {
+namespace dlplan::core::element {
 
 class PrimitiveConcept : public Concept {
 protected:

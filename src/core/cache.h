@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_CORE_CACHE_H_
-#define DLP_SRC_CORE_CACHE_H_
+#ifndef DLPLAN_SRC_CORE_CACHE_H_
+#define DLPLAN_SRC_CORE_CACHE_H_
 
 #include <unordered_map>
 #include <iostream>
@@ -7,7 +7,7 @@
 #include "elements/types.h"
 
 
-namespace dlp::core {
+namespace dlplan::core {
 
 /*
 Andrès:

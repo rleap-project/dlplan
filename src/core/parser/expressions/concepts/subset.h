@@ -1,10 +1,10 @@
-#ifndef DLP_SRC_CORE_PARSER_EXPRESSIONS_CONCEPTS_SUBSET_H_
-#define DLP_SRC_CORE_PARSER_EXPRESSIONS_CONCEPTS_SUBSET_H_
+#ifndef DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_CONCEPTS_SUBSET_H_
+#define DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_CONCEPTS_SUBSET_H_
 
 #include "../concept.h"
 #include "../../../elements/concepts/subset.h"
 
-namespace dlp::core::parser {
+namespace dlplan::core::parser {
 
 class SubsetConcept : public Concept {
 protected:

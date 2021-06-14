@@ -1,11 +1,11 @@
-#ifndef DLP_SRC_CORE_ELEMENTS_ROLES_TRANSITIVE_CLOSURE_H_
-#define DLP_SRC_CORE_ELEMENTS_ROLES_TRANSITIVE_CLOSURE_H_
+#ifndef DLPLAN_SRC_CORE_ELEMENTS_ROLES_TRANSITIVE_CLOSURE_H_
+#define DLPLAN_SRC_CORE_ELEMENTS_ROLES_TRANSITIVE_CLOSURE_H_
 
 #include "../role.h"
 #include "../utils.h"
 
 
-namespace dlp::core::element {
+namespace dlplan::core::element {
 
 class TransitiveClosureRole : public Role {
 protected:

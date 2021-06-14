@@ -1,10 +1,10 @@
-#ifndef DLP_SRC_CORE_ELEMENTS_UTILS_H_
-#define DLP_SRC_CORE_ELEMENTS_UTILS_H_
+#ifndef DLPLAN_SRC_CORE_ELEMENTS_UTILS_H_
+#define DLPLAN_SRC_CORE_ELEMENTS_UTILS_H_
 
 #include "types.h"
 
 
-namespace dlp::core::element::utils {
+namespace dlplan::core::element::utils {
 
 using AdjList = std::vector<std::vector<int>>;
 using Distances = std::vector<int>;

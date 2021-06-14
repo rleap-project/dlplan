@@ -3,13 +3,13 @@
 //   1. private and nonvirtual functions should be in the pimpl class.
 //   2. virtuals that need to be visible to derived classes are part of the public interface.
 
-#ifndef DLP_SRC_UTILS_PIMPL_H_
-#define DLP_SRC_UTILS_PIMPL_H_
+#ifndef DLPLAN_SRC_UTILS_PIMPL_H_
+#define DLPLAN_SRC_UTILS_PIMPL_H_
 
 #include <memory>
 
 
-namespace dlp {
+namespace dlplan {
 
 /**
  * Unique_ptr version without automatically generated copy constructor and copy assignment.

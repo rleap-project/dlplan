@@ -12,7 +12,7 @@
 #include "../utils/collections.h"
 
 
-namespace dlp::core {
+namespace dlplan::core {
 
 static bool exists(const std::string& name, std::unordered_map<std::string, unsigned>& mapping) {
     auto f = mapping.find(name);

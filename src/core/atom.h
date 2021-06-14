@@ -1,5 +1,5 @@
-#ifndef DLP_SRC_CORE_ATOM_H_
-#define DLP_SRC_CORE_ATOM_H_
+#ifndef DLPLAN_SRC_CORE_ATOM_H_
+#define DLPLAN_SRC_CORE_ATOM_H_
 
 #include <string>
 #include <vector>
@@ -7,7 +7,7 @@
 #include "../../include/dlp/core.h"
 
 
-namespace dlp::core {
+namespace dlplan::core {
 class Object;
 
 class AtomImpl {

@@ -1,6 +1,6 @@
 #include "cache.h"
 
-namespace dlp::core {
+namespace dlplan::core {
 
 ElementCache::ElementCache() = default;
 

@@ -1,11 +1,11 @@
-#ifndef DLP_SRC_CORE_PARSER_EXPRESSIONS_ROLES_COMPOSE_H_
-#define DLP_SRC_CORE_PARSER_EXPRESSIONS_ROLES_COMPOSE_H_
+#ifndef DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_ROLES_COMPOSE_H_
+#define DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_ROLES_COMPOSE_H_
 
 #include "../role.h"
 #include "../../../elements/roles/compose.h"
 #include "../../utils.h"
 
-namespace dlp::core::parser {
+namespace dlplan::core::parser {
 
 class ComposeRole : public Role {
 protected:

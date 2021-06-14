@@ -1,11 +1,11 @@
-#ifndef DLP_SRC_CORE_PARSER_EXPRESSIONS_ROLES_DIFF_H_
-#define DLP_SRC_CORE_PARSER_EXPRESSIONS_ROLES_DIFF_H_
+#ifndef DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_ROLES_DIFF_H_
+#define DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_ROLES_DIFF_H_
 
 #include "../role.h"
 #include "../../../elements/roles/diff.h"
 #include "../../utils.h"
 
-namespace dlp::core::parser {
+namespace dlplan::core::parser {
 
 class DiffRole : public Role {
 protected:

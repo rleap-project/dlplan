@@ -1,11 +1,11 @@
-#ifndef DLP_SRC_CORE_PARSER_EXPRESSIONS_CONCEPT_H_
-#define DLP_SRC_CORE_PARSER_EXPRESSIONS_CONCEPT_H_
+#ifndef DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_CONCEPT_H_
+#define DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_CONCEPT_H_
 
 #include "expression.h"
 
 #include "../../elements/concept.h"
 
-namespace dlp::core::parser {
+namespace dlplan::core::parser {
 
 class Concept : public Expression {
 protected:

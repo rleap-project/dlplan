@@ -8,7 +8,7 @@
 
 namespace py = pybind11;
 
-using namespace dlp;
+using namespace dlplan;
 
 void init_core(py::module_ &m) {
     py::class_<core::Object>(m, "Object")

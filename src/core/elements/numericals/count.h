@@ -1,10 +1,10 @@
-#ifndef DLP_SRC_CORE_ELEMENTS_NUMERICAL_COUNT_H_
-#define DLP_SRC_CORE_ELEMENTS_NUMERICAL_COUNT_H_
+#ifndef DLPLAN_SRC_CORE_ELEMENTS_NUMERICAL_COUNT_H_
+#define DLPLAN_SRC_CORE_ELEMENTS_NUMERICAL_COUNT_H_
 
 #include "../numerical.h"
 
 
-namespace dlp::core::element {
+namespace dlplan::core::element {
 
 template<typename T>
 class CountNumerical : public Numerical {
