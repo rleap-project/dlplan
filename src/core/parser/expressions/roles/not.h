@@ -8,7 +8,7 @@ namespace dlplan::core::parser {
 
 class NotRole : public Role {
 protected:
-    element::Role_Ptr parse_role_impl(const VocabularyInfo& vocabulary, ElementCache &cache) const override {
+    std::unique_ptr<element::Role> parse_role_impl(const VocabularyInfo& vocabulary, Caches &cache) const override {
         if (m_children.size() != 1) {
             throw std::runtime_error("NotRole::parse_role_impl - number of children ("s + std::to_string(m_children.size()) + " != 1).");
         }
@@ -18,7 +18,7 @@ protected:
             throw std::runtime_error("NotRole::parse_role_impl - child is not of type Role.");
         }
         // 2. Construct element
-        return std::make_shared<element::NotRole>(vocabulary, role);
+        return std::make_unique<element::NotRole>(vocabulary, role);
     }
 
 public:

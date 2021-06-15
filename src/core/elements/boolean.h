@@ -9,6 +9,7 @@ namespace dlplan::core::element {
 class Boolean : public Element<bool> {
 public:
     Boolean(const VocabularyInfo& vocabulary, const std::string& name) : Element<bool>(vocabulary, name) { }
+    ~Boolean() override = default;
 };
 
 }

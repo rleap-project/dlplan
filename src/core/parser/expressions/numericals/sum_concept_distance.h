@@ -9,7 +9,7 @@ namespace dlplan::core::parser {
 
 class SumConceptDistanceNumerical : public Numerical {
 protected:
-    element::Numerical_Ptr parse_numerical_impl(const VocabularyInfo& vocabulary, ElementCache &cache) const override {
+    std::unique_ptr<element::Numerical> parse_numerical_impl(const VocabularyInfo& vocabulary, Caches &cache) const override {
         if (m_children.size() != 3) {
             throw std::runtime_error("SumConceptDistanceNumerical::parse_numerical_impl - number of children ("s + std::to_string(m_children.size()) + " != 3).");
         }
@@ -20,7 +20,7 @@ protected:
         if (!(concept_from && role && concept_to)) {
             throw std::runtime_error("SumConceptDistanceNumerical::parse_numerical_impl - child is not of type Concept, Role, Concept.");
         }
-        return std::make_shared<element::SumConceptDistanceNumerical>(element::SumConceptDistanceNumerical(vocabulary, concept_from, role, concept_to));
+        return std::make_unique<element::SumConceptDistanceNumerical>(element::SumConceptDistanceNumerical(vocabulary, concept_from, role, concept_to));
     }
 
 public:

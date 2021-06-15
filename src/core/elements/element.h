@@ -9,8 +9,8 @@
 
 #include <iostream>
 
-
 namespace dlplan::core::element {
+
 
 template<typename T>
 class Element {

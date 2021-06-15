@@ -9,12 +9,12 @@ namespace dlplan::core::parser {
 
 class TopRole : public Role {
 protected:
-    element::Role_Ptr parse_role_impl(const VocabularyInfo& vocabulary, ElementCache &) const override {
+    std::unique_ptr<element::Role> parse_role_impl(const VocabularyInfo& vocabulary, Caches &) const override {
         if (m_children.size() != 0) {
             throw std::runtime_error("RestrictRole::parse_role_impl - number of children ("s + std::to_string(m_children.size()) + " != 0).");
         }
         // 2. Construct element
-        return std::make_shared<element::TopRole>(vocabulary);
+        return std::make_unique<element::TopRole>(vocabulary);
     }
 
 public:

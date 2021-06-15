@@ -8,7 +8,7 @@ namespace dlplan::core::parser {
 
 class SumRoleDistanceNumerical : public Numerical {
 protected:
-    element::Numerical_Ptr parse_numerical_impl(const VocabularyInfo& vocabulary, ElementCache &cache) const override {
+    std::unique_ptr<element::Numerical> parse_numerical_impl(const VocabularyInfo& vocabulary, Caches &cache) const override {
         if (m_children.size() != 3) {
             throw std::runtime_error("SumRoleDistanceNumerical::parse_numerical_impl - number of children ("s + std::to_string(m_children.size()) + " != 3).");
         }
@@ -19,7 +19,7 @@ protected:
         if (!(role_from && role && role_to)) {
             throw std::runtime_error("SumRoleDistanceNumerical::parse_numerical_impl - child is not of type Role, Role, Role.");
         }
-        return std::make_shared<element::SumRoleDistanceNumerical>(element::SumRoleDistanceNumerical(vocabulary, role_from, role, role_to));
+        return std::make_unique<element::SumRoleDistanceNumerical>(element::SumRoleDistanceNumerical(vocabulary, role_from, role, role_to));
     }
 
 public:

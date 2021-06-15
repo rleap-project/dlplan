@@ -2,9 +2,8 @@
 #define DLPLAN_SRC_CORE_CACHE_H_
 
 #include <unordered_map>
+#include <memory>
 #include <iostream>
-
-#include "elements/types.h"
 
 
 namespace dlplan::core {
@@ -29,30 +28,53 @@ If you insist on using canonical forms to check for duplicates,
 then the NNFs can be transformed into CNF or DNF using distributivity.
 But as you may know, this can be impractical, as the transformation may cause an exponential blowup in the size of the formulas.
 */
-class ElementCache {
+
+/**
+ * A simple cache.
+ */
+template<typename KEY, typename VALUE>
+class Cache {
+private:
+    std::unordered_map<KEY, std::weak_ptr<VALUE>> m_cache;
+
 private:
     /**
-     * One cache for each template instantiated element.
+     * Erases all pairs that are expired.
      */
-    std::unordered_map<std::string, element::Concept_Ptr> m_concept_element_cache;
-    std::unordered_map<std::string, element::Role_Ptr> m_role_element_cache;
-    std::unordered_map<std::string, element::Numerical_Ptr> m_numerical_element_cache;
-    std::unordered_map<std::string, element::Boolean_Ptr> m_boolean_element_cache;
+    void erase_expired() {
+        auto it = m_cache.begin();
+        while (it != m_cache.end()) {
+            if (it->second.expired()) {
+                it = m_cache.erase(it);
+            } else {
+                ++it;
+            }
+        }
+    }
 
 public:
-    ElementCache();
+    /**
+     * Retrieves a certain element.
+     */
+    std::shared_ptr<VALUE> at(const std::string& key) const {
+        return std::shared_ptr<VALUE>(m_cache.at(key));
+    }
 
-    std::unordered_map<std::string, element::Concept_Ptr>& concept_element_cache();
-    std::unordered_map<std::string, element::Role_Ptr>& role_element_cache();
-    std::unordered_map<std::string, element::Numerical_Ptr>& numerical_element_cache();
-    std::unordered_map<std::string, element::Boolean_Ptr>& boolean_element_cache();
-
-    //void on_destroy(const core::Concept& concept);
-    //void on_destroy(const core::Role& role);
-    //void on_destroy(const core::Numerical& numerical);
-    //void on_destroy(const core::Boolean& boolean);
+    /**
+     * Inserts a new element and returns a shared reference.
+     */
+    std::shared_ptr<VALUE> insert(std::unique_ptr<VALUE>&& element) {
+        std::string key = element->compute_repr();
+        std::shared_ptr<VALUE> value(std::move(element));
+        // TODO(dominik): Looping over the whole cache before every insertion should be avoided.
+        erase_expired();
+        if (m_cache.emplace(key, value).first->second.expired()) {
+            m_cache.at(key) = value;
+        }
+        // std::cout << m_cache.size() << std::endl;
+        return value;
+    }
 };
-
 
 }
 

@@ -8,12 +8,12 @@ namespace dlplan::core::parser {
 
 class BotConcept : public Concept {
 protected:
-    element::Concept_Ptr parse_concept_impl(const VocabularyInfo& vocabulary, ElementCache &) const override {
+    std::unique_ptr<element::Concept> parse_concept_impl(const VocabularyInfo& vocabulary, Caches &) const override {
         if (m_children.size() != 0) {
             throw std::runtime_error("BotConcept::parse_concept_impl - number of children ("s + std::to_string(m_children.size()) + " != 0).");
         }
         // 2. Construct element
-        return std::make_shared<element::BotConcept>(vocabulary);
+        return std::make_unique<element::BotConcept>(vocabulary);
     }
 
 public:

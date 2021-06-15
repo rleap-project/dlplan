@@ -13,11 +13,23 @@
 namespace dlplan::core {
 class VocabularyInfoImpl;
 
+
+struct Caches {
+    /**
+     * One cache for each template instantiated element.
+     */
+    Cache<std::string, element::Concept> m_concept_cache;
+    Cache<std::string, element::Role> m_role_cache;
+    Cache<std::string, element::Numerical> m_numerical_cache;
+    Cache<std::string, element::Boolean> m_boolean_cache;
+};
+
+
 class SyntacticElementFactoryImpl {
 protected:
     const std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
 
-    ElementCache m_cache;
+    Caches m_caches;
 
 public:
     SyntacticElementFactoryImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info);

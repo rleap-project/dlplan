@@ -10,7 +10,7 @@ namespace dlplan::core::parser {
 
 class InverseRole : public Role {
 protected:
-    element::Role_Ptr parse_role_impl(const VocabularyInfo& vocabulary, ElementCache &cache) const override {
+    std::unique_ptr<element::Role> parse_role_impl(const VocabularyInfo& vocabulary, Caches &cache) const override {
         if (m_children.size() != 1) {
             throw std::runtime_error("InverseRole::parse_role_impl - number of children ("s + std::to_string(m_children.size()) + " != 1).");
         }
@@ -20,7 +20,7 @@ protected:
             throw std::runtime_error("InverseRole::parse_role_impl - child is not of type role");
         }
         // 2. Construct element
-        return std::make_shared<element::InverseRole>(vocabulary, role);
+        return std::make_unique<element::InverseRole>(vocabulary, role);
     }
 
 public:

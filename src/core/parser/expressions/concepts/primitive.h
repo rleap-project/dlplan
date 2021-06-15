@@ -10,14 +10,14 @@ namespace dlplan::core::parser {
 
 class PrimitiveConcept : public Concept {
 protected:
-    element::Concept_Ptr parse_concept_impl(const VocabularyInfo& vocabulary, ElementCache &) const override {
+    std::unique_ptr<element::Concept> parse_concept_impl(const VocabularyInfo& vocabulary, Caches &) const override {
         if (m_children.size() != 1) {
             throw std::runtime_error("PrimitiveConcept::parse_concept_impl - number of children ("s + std::to_string(m_children.size()) + " != 1).");
         }
         // 1. Parse children
         int pos = try_parse_number(m_children[0]->get_name());
         // 2. Construct element
-        return std::make_shared<element::PrimitiveConcept>(vocabulary, vocabulary.get_predicate(vocabulary.get_predicate_idx(m_name)), pos);
+        return std::make_unique<element::PrimitiveConcept>(vocabulary, vocabulary.get_predicate(vocabulary.get_predicate_idx(m_name)), pos);
     }
 
 public:

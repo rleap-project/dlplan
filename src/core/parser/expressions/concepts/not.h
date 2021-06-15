@@ -8,7 +8,7 @@ namespace dlplan::core::parser {
 
 class NotConcept : public Concept {
 protected:
-    element::Concept_Ptr parse_concept_impl(const VocabularyInfo& vocabulary, ElementCache &cache) const override {
+    std::unique_ptr<element::Concept> parse_concept_impl(const VocabularyInfo& vocabulary, Caches &cache) const override {
         if (m_children.size() != 1) {
             throw std::runtime_error("NotConcept::parse_concept_impl - number of children ("s + std::to_string(m_children.size()) + " != 1).");
         }
@@ -18,7 +18,7 @@ protected:
             throw std::runtime_error("NotConcept::parse_concept_impl - children are not of type Concept.");
         }
         // 2. Construct element
-        return std::make_shared<element::NotConcept>(vocabulary, l);
+        return std::make_unique<element::NotConcept>(vocabulary, l);
     }
 
 public:

@@ -9,7 +9,7 @@ namespace dlplan::core::parser {
 
 class ComposeRole : public Role {
 protected:
-    element::Role_Ptr parse_role_impl(const VocabularyInfo& vocabulary, ElementCache &cache) const override {
+    std::unique_ptr<element::Role> parse_role_impl(const VocabularyInfo& vocabulary, Caches &cache) const override {
         if (m_children.size() != 2) {
             throw std::runtime_error("ComposeRole::parse_role_impl - number of children ("s + std::to_string(m_children.size()) + " != 2).");
         }
@@ -20,7 +20,7 @@ protected:
             throw std::runtime_error("ComposeRole::parse_role_impl - children are not of type Role.");
         }
         // 2. Construct element
-        return std::make_shared<element::ComposeRole>(vocabulary, role_left, role_right);
+        return std::make_unique<element::ComposeRole>(vocabulary, role_left, role_right);
     }
 
 public:
