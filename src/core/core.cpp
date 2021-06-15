@@ -272,10 +272,10 @@ const Index_Vec& State::get_atom_idxs() const {
 }
 
 
-Concept::Concept(const VocabularyInfo& vocabulary_info, element::Concept_Ptr&& concept) : m_pImpl(ConceptImpl(vocabulary_info, std::move(concept))) { }
+Concept::Concept(const VocabularyInfo& vocabulary_info, element::Concept_Ptr concept) : m_pImpl(ConceptImpl(vocabulary_info, concept)) { }
 
 Concept::Concept(const Concept& other)
-    : Element<ConceptDenotation>(other), m_pImpl(*other.m_pImpl) { }
+    : m_pImpl(ConceptImpl(*other.m_pImpl)) { }
 
 Concept::~Concept() = default;
 
@@ -291,10 +291,11 @@ std::string Concept::compute_repr() const {
     return m_pImpl->compute_repr();
 }
 
-Role::Role(const VocabularyInfo& vocabulary_info, element::Role_Ptr&& role) : m_pImpl(RoleImpl(vocabulary_info, std::move(role))) { }
+Role::Role(const VocabularyInfo& vocabulary_info, element::Role_Ptr&& role)
+    : m_pImpl(RoleImpl(vocabulary_info, std::move(role))) { }
 
 Role::Role(const Role& other)
-    : m_pImpl(*other.m_pImpl) { }
+    : m_pImpl(RoleImpl(*other.m_pImpl)) { }
 
 Role::~Role() = default;
 
@@ -311,10 +312,11 @@ std::string Role::compute_repr() const {
 }
 
 
-Numerical::Numerical(const VocabularyInfo& vocabulary_info, element::Numerical_Ptr&& numerical) : m_pImpl(NumericalImpl(vocabulary_info, std::move(numerical))) { }
+Numerical::Numerical(const VocabularyInfo& vocabulary_info, element::Numerical_Ptr&& numerical)
+    : m_pImpl(NumericalImpl(vocabulary_info, std::move(numerical))) { }
 
 Numerical::Numerical(const Numerical& other)
-    : m_pImpl(*other.m_pImpl) { }
+    : m_pImpl(NumericalImpl(*other.m_pImpl)) { }
 
 Numerical::~Numerical() = default;
 
@@ -331,10 +333,11 @@ std::string Numerical::compute_repr() const {
 }
 
 
-Boolean::Boolean(const VocabularyInfo& vocabulary_info, element::Boolean_Ptr&& boolean) : m_pImpl(BooleanImpl(vocabulary_info, std::move(boolean))) { }
+Boolean::Boolean(const VocabularyInfo& vocabulary_info, element::Boolean_Ptr&& boolean)
+    : m_pImpl(BooleanImpl(vocabulary_info, std::move(boolean))) { }
 
 Boolean::Boolean(const Boolean& other)
-    : m_pImpl(*other.m_pImpl) { }
+    : m_pImpl(BooleanImpl(*other.m_pImpl)) { }
 
 Boolean::~Boolean() = default;
 

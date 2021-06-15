@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <memory>
 #include <iostream>
+#include <cassert>
 
 
 namespace dlplan::core {
@@ -31,33 +32,19 @@ But as you may know, this can be impractical, as the transformation may cause an
 
 /**
  * A simple cache.
+ * Idea taken from Herb Sutter: https://channel9.msdn.com/Events/GoingNative/2013/My-Favorite-Cpp-10-Liner
  */
 template<typename KEY, typename VALUE>
 class Cache {
 private:
     std::unordered_map<KEY, std::weak_ptr<VALUE>> m_cache;
 
-private:
-    /**
-     * Erases all pairs that are expired.
-     */
-    void erase_expired() {
-        auto it = m_cache.begin();
-        while (it != m_cache.end()) {
-            if (it->second.expired()) {
-                it = m_cache.erase(it);
-            } else {
-                ++it;
-            }
-        }
-    }
-
 public:
     /**
      * Retrieves a certain element.
      */
-    std::shared_ptr<VALUE> at(const std::string& key) const {
-        return std::shared_ptr<VALUE>(m_cache.at(key));
+    std::shared_ptr<VALUE> at(const std::string& key) {
+        return m_cache[key].lock();
     }
 
     /**
@@ -65,16 +52,28 @@ public:
      */
     std::shared_ptr<VALUE> insert(std::unique_ptr<VALUE>&& element) {
         std::string key = element->compute_repr();
-        std::shared_ptr<VALUE> value(std::move(element));
-        // TODO(dominik): Looping over the whole cache before every insertion should be avoided.
-        erase_expired();
-        if (m_cache.emplace(key, value).first->second.expired()) {
-            m_cache.at(key) = value;
+        auto sp = m_cache[key].lock();
+        if (!sp) {
+            m_cache[key] = sp = std::shared_ptr<VALUE>(element.get(),
+                [this](VALUE* x)
+                {
+                    this->destroy(x->compute_repr());
+                    delete x;
+                }
+            );
+            element.release();
         }
-        // std::cout << m_cache.size() << std::endl;
-        return value;
+        return sp;
+    }
+
+    /**
+     * Removes the entry for the given key.
+     */
+    void destroy(const std::string& key) {
+        m_cache.erase(key);
     }
 };
+
 
 }
 

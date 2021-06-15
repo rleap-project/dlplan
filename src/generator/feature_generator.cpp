@@ -161,6 +161,7 @@ void FeatureGeneratorImpl::add_concept(const States& states, core::Concept&& con
     if (m_hash_table->insert_concept(denotation)) {
         m_concept_elements_by_complexity[concept.compute_complexity()].emplace_back(concept);
     }
+    // Here destructor of core::Concept is called
 }
 
 void FeatureGeneratorImpl::add_role(const States& states, core::Role&& role) {
