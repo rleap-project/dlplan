@@ -45,7 +45,7 @@ public:
     /**
      * Retrieves a certain element.
      */
-    std::shared_ptr<VALUE> at(const std::string& key) {
+    std::shared_ptr<VALUE> at(const KEY& key) {
         return m_cache[key].lock();
     }
 
@@ -53,7 +53,7 @@ public:
      * Inserts a new element and returns a shared reference.
      */
     std::shared_ptr<VALUE> insert(std::unique_ptr<VALUE>&& element) {
-        std::string key = element->compute_repr();
+        KEY key = element->compute_repr();
         auto sp = m_cache[key].lock();
         if (!sp) {
             m_cache[key] = sp = std::shared_ptr<VALUE>(element.get(),
@@ -71,7 +71,7 @@ public:
     /**
      * Removes the entry for the given key.
      */
-    void destroy(const std::string& key) {
+    void destroy(const KEY& key) {
         m_cache.erase(key);
     }
 };
