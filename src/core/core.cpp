@@ -272,7 +272,8 @@ const Index_Vec& State::get_atom_idxs() const {
 }
 
 
-Concept::Concept(const VocabularyInfo& vocabulary_info, element::Concept_Ptr concept) : m_pImpl(ConceptImpl(vocabulary_info, concept)) { }
+Concept::Concept(const VocabularyInfo& vocabulary_info, element::Concept_Ptr&& concept)
+    : m_pImpl(ConceptImpl(vocabulary_info, std::move(concept))) { }
 
 Concept::Concept(const Concept& other)
     : m_pImpl(ConceptImpl(*other.m_pImpl)) { }

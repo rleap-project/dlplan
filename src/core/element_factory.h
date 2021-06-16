@@ -14,17 +14,6 @@ namespace dlplan::core {
 class VocabularyInfoImpl;
 
 
-struct Caches {
-    /**
-     * One cache for each template instantiated element.
-     */
-    Cache<std::string, element::Concept> m_concept_cache;
-    Cache<std::string, element::Role> m_role_cache;
-    Cache<std::string, element::Numerical> m_numerical_cache;
-    Cache<std::string, element::Boolean> m_boolean_cache;
-};
-
-
 class SyntacticElementFactoryImpl {
 protected:
     const std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
@@ -41,7 +30,7 @@ public:
 
     Boolean make_empty_boolean(const Concept& concept);
     Boolean make_empty_boolean(const Role& role);
-    // TODO(dominik): Do we want to pass Object/Predicate instead of strings?
+
     Concept make_all_concept(const Role& role, const Concept& concept);
     Concept make_and_concept(const Concept& concept_left, const Concept& concept_right);
     Concept make_bot_concept();

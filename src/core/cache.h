@@ -6,11 +6,13 @@
 #include <iostream>
 #include <cassert>
 
+#include "../../include/dlplan/core.h"
+
 
 namespace dlplan::core {
 
 /*
-Andrès:
+Andrés:
 
 Hey! Just some basic info on normal forms for description logic.
 It seems that DL people often normalise KBs using negation normal forms (NNFs) or Tseitin’s transformations.
@@ -35,7 +37,7 @@ But as you may know, this can be impractical, as the transformation may cause an
  * Idea taken from Herb Sutter: https://channel9.msdn.com/Events/GoingNative/2013/My-Favorite-Cpp-10-Liner
  */
 template<typename KEY, typename VALUE>
-class Cache {
+class Cache : public std::enable_shared_from_this<Cache<KEY, VALUE>> {
 private:
     std::unordered_map<KEY, std::weak_ptr<VALUE>> m_cache;
 
@@ -55,9 +57,9 @@ public:
         auto sp = m_cache[key].lock();
         if (!sp) {
             m_cache[key] = sp = std::shared_ptr<VALUE>(element.get(),
-                [this](VALUE* x)
+                [parent=this->shared_from_this()](VALUE* x)
                 {
-                    this->destroy(x->compute_repr());
+                    parent->destroy(x->compute_repr());
                     delete x;
                 }
             );
@@ -72,6 +74,24 @@ public:
     void destroy(const std::string& key) {
         m_cache.erase(key);
     }
+};
+
+/**
+ * One cache for each template instantiated element.
+ */
+struct Caches {
+    std::shared_ptr<Cache<std::string, element::Concept>> m_concept_cache;
+    std::shared_ptr<Cache<std::string, element::Role>> m_role_cache;
+    std::shared_ptr<Cache<std::string, element::Numerical>> m_numerical_cache;
+    std::shared_ptr<Cache<std::string, element::Boolean>> m_boolean_cache;
+
+    Caches()
+        : m_concept_cache(std::make_shared<Cache<std::string, element::Concept>>()),
+          m_role_cache(std::make_shared<Cache<std::string, element::Role>>()),
+          m_numerical_cache(std::make_shared<Cache<std::string, element::Numerical>>()),
+          m_boolean_cache(std::make_shared<Cache<std::string, element::Boolean>>()) {
+          }
+
 };
 
 

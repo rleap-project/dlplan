@@ -23,10 +23,12 @@ int main() {
     std::shared_ptr<dlplan::core::SyntacticElementFactory> factory = std::make_shared<dlplan::core::SyntacticElementFactory>(vocabulary);
 
     // Generate a bunch of states
-    dlplan::core::State s0(instance, {a0, a3});
-    dlplan::core::State s1(instance, {a1, a2});
-    dlplan::core::State s2(instance, {a2, a3});
-    dlplan::generator::States states({s0, s1, s2});
+    dlplan::core::State s0(instance, {a0, a3, a6});
+    dlplan::core::State s1(instance, {a1, a2, a7});
+    dlplan::core::State s2(instance, {a2, a3, a6, a7});
+    dlplan::core::State s3(instance, {a3, a4, a7});
+    dlplan::core::State s4(instance, {a2, a5, a6});
+    dlplan::generator::States states({s0, s1, s2, s3, s4});
 
     dlplan::generator::FeatureGenerator generator(factory, 10, 180);
     dlplan::generator::FeatureCollection features = generator.generate(states);

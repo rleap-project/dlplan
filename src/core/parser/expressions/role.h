@@ -23,7 +23,7 @@ public:
      * Construct or retrieve the Role.
      */
     virtual element::Role_Ptr parse_role(const VocabularyInfo& vocabulary, Caches &caches) const {
-        return caches.m_role_cache.insert(parse_role_impl(vocabulary, caches));
+        return caches.m_role_cache->insert(parse_role_impl(vocabulary, caches));
     }
 };
 

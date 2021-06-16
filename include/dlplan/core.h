@@ -266,7 +266,7 @@ class Concept : public Element<ConceptDenotation> {
 protected:
     pimpl<ConceptImpl> m_pImpl;
 
-    Concept(const VocabularyInfo& vocabulary_info, element::Concept_Ptr concept);
+    Concept(const VocabularyInfo& vocabulary_info, element::Concept_Ptr&& concept);
     friend class SyntacticElementFactoryImpl;
 
 public:

@@ -90,6 +90,7 @@ def test_factory():
     instance = generate_bw_instance(vocabulary)
     factory = SyntacticElementFactory(vocabulary)
 
+    p0, p1, p2, p3, p4 = vocabulary.get_predicates()
     a0, a1, a2, a3, a4, a5, a6, a7, a8 = instance.get_atoms()
     state = State(instance, [a0, a3, a6])
     assert str(state) == "{on(a,b), ontable(b), clear(a), on_g(a,b)}"
@@ -99,4 +100,5 @@ def test_factory():
     assert numerical.evaluate(state) == 1
 
     boolean = factory.parse_boolean("b_empty(c_and(on_g(0),on(0)))")
+    assert boolean.compute_complexity() == 4
     assert boolean.evaluate(state) == 0

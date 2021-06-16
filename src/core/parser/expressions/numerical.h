@@ -23,7 +23,7 @@ public:
      * Construct or retrieve the Numerical.
      */
     virtual element::Numerical_Ptr parse_numerical(const VocabularyInfo& vocabulary, Caches &caches) const {
-        return caches.m_numerical_cache.insert(parse_numerical_impl(vocabulary, caches));
+        return caches.m_numerical_cache->insert(parse_numerical_impl(vocabulary, caches));
     }
 };
 

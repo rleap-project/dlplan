@@ -68,28 +68,28 @@ void init_core(py::module_ &m) {
         .def("get_static_atom_idxs", &core::InstanceInfo::get_static_atom_idxs)
     ;
 
-    py::class_<core::Concept>(m, "ConceptElement")
+    py::class_<core::Concept>(m, "Concept")
         .def("__repr__", &core::Concept::compute_repr)
         .def("evaluate", &core::Concept::evaluate)
         .def("compute_complexity", &core::Concept::compute_complexity)
         .def("compute_repr", &core::Concept::compute_repr)
     ;
 
-    py::class_<core::Role>(m, "RoleElement")
+    py::class_<core::Role>(m, "Role")
         .def("__repr__", &core::Role::compute_repr)
         .def("evaluate", &core::Role::evaluate)
         .def("compute_complexity", &core::Role::compute_complexity)
         .def("compute_repr", &core::Role::compute_repr)
     ;
 
-    py::class_<core::Numerical>(m, "NumericalElement")
+    py::class_<core::Numerical>(m, "Numerical")
         .def("__repr__", &core::Numerical::compute_repr)
         .def("evaluate", &core::Numerical::evaluate)
         .def("compute_complexity", &core::Numerical::compute_complexity)
         .def("compute_repr", &core::Numerical::compute_repr)
     ;
 
-    py::class_<core::Boolean>(m, "BooleanElement")
+    py::class_<core::Boolean>(m, "Boolean")
         .def("__repr__", &core::Boolean::compute_repr)
         .def("evaluate", &core::Boolean::evaluate)
         .def("compute_complexity", &core::Boolean::compute_complexity)
