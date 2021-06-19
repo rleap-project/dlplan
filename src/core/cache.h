@@ -5,6 +5,7 @@
 #include <memory>
 #include <iostream>
 #include <cassert>
+#include <mutex>
 
 #include "../../include/dlplan/core.h"
 
@@ -33,13 +34,15 @@ But as you may know, this can be impractical, as the transformation may cause an
 */
 
 /**
- * A simple cache.
+ * A thread-safe reference-counted object cache.
  * Idea taken from Herb Sutter: https://channel9.msdn.com/Events/GoingNative/2013/My-Favorite-Cpp-10-Liner
+ * Other sources: (1) https://stackoverflow.com/questions/49782011/herb-sutters-10-liner-with-cleanup
  */
 template<typename KEY, typename VALUE>
 class Cache : public std::enable_shared_from_this<Cache<KEY, VALUE>> {
 private:
     std::unordered_map<KEY, std::weak_ptr<VALUE>> m_cache;
+    std::mutex m_mutex;
 
 public:
     /**
@@ -54,25 +57,26 @@ public:
      */
     std::shared_ptr<VALUE> insert(std::unique_ptr<VALUE>&& element) {
         KEY key = element->compute_repr();
-        auto sp = m_cache[key].lock();
+        std::lock_guard<std::mutex> hold(m_mutex);
+        auto& cached = m_cache[key];
+        auto sp = cached.lock();
         if (!sp) {
-            m_cache[key] = sp = std::shared_ptr<VALUE>(element.get(),
-                [parent=this->shared_from_this()](VALUE* x)
+            VALUE* ptr = element.get();
+            cached = sp = std::shared_ptr<VALUE>(
+                ptr,
+                [parent=this->shared_from_this(), original=std::move(element)](VALUE* x)
                 {
-                    parent->destroy(x->compute_repr());
-                    delete x;
+                    // Note that if the deleter is called during the insert operation
+                    // we obtain a deadlock if the mutex was already held by the same process.
+                    std::lock_guard<std::mutex> hold(parent->m_mutex);
+                    parent->m_cache.erase(x->compute_repr());
+                    // Note that the deleter of the unique_ptr takes care for destruction of the object
+                    // s.t. we do not have to pass the ownership to the shared_ptr and call release() manually.
+                    // This way we are absolutely sure that there cannot be a double free.
                 }
             );
-            element.release();
         }
         return sp;
-    }
-
-    /**
-     * Removes the entry for the given key.
-     */
-    void destroy(const KEY& key) {
-        m_cache.erase(key);
     }
 };
 
