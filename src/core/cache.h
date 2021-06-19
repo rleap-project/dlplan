@@ -49,7 +49,7 @@ public:
      * Retrieves a certain element.
      */
     std::shared_ptr<VALUE> at(const KEY& key) {
-        return m_cache[key].lock();
+        return m_cache.at(key).lock();
     }
 
     /**
