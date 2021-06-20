@@ -42,7 +42,7 @@ template<typename KEY, typename VALUE>
 class Cache : public std::enable_shared_from_this<Cache<KEY, VALUE>> {
 private:
     std::unordered_map<KEY, std::weak_ptr<VALUE>> m_cache;
-    std::mutex m_mutex;
+    // std::mutex m_mutex;
 
 public:
     /**
@@ -57,7 +57,7 @@ public:
      */
     std::shared_ptr<VALUE> insert(std::unique_ptr<VALUE>&& element) {
         KEY key = element->compute_repr();
-        std::lock_guard<std::mutex> hold(m_mutex);
+        // std::lock_guard<std::mutex> hold(m_mutex);
         auto& cached = m_cache[key];
         auto sp = cached.lock();
         if (!sp) {
@@ -66,7 +66,7 @@ public:
                 [parent=this->shared_from_this(), original_deleter=element.get_deleter()](VALUE* x)
                 {
                     // Note that if the deleter is called during the insert operation we obtain a deadlock.
-                    std::lock_guard<std::mutex> hold(parent->m_mutex);
+                    // std::lock_guard<std::mutex> hold(parent->m_mutex);
                     parent->m_cache.erase(x->compute_repr());
                     original_deleter(x);
                 }
