@@ -65,8 +65,7 @@ public:
                 element.get(),
                 [parent=this->shared_from_this(), original_deleter=element.get_deleter()](VALUE* x)
                 {
-                    // Note that if the deleter is called during the insert operation
-                    // we obtain a deadlock if the mutex was already held by the same process.
+                    // Note that if the deleter is called during the insert operation we obtain a deadlock.
                     std::lock_guard<std::mutex> hold(parent->m_mutex);
                     parent->m_cache.erase(x->compute_repr());
                     original_deleter(x);
