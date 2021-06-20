@@ -61,20 +61,18 @@ public:
         auto& cached = m_cache[key];
         auto sp = cached.lock();
         if (!sp) {
-            VALUE* ptr = element.get();
             cached = sp = std::shared_ptr<VALUE>(
-                ptr,
-                [parent=this->shared_from_this(), original=std::move(element)](VALUE* x)
+                element.get(),
+                [parent=this->shared_from_this(), original_deleter=element.get_deleter()](VALUE* x)
                 {
                     // Note that if the deleter is called during the insert operation
                     // we obtain a deadlock if the mutex was already held by the same process.
                     std::lock_guard<std::mutex> hold(parent->m_mutex);
                     parent->m_cache.erase(x->compute_repr());
-                    // Note that the deleter of the unique_ptr takes care for destruction of the object
-                    // s.t. we do not have to pass the ownership to the shared_ptr and call release() manually.
-                    // This way we are absolutely sure that there cannot be a double free.
+                    original_deleter(x);
                 }
             );
+            element.release();
         }
         return sp;
     }
