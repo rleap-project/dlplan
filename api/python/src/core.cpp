@@ -48,6 +48,7 @@ void init_core(py::module_ &m) {
     py::class_<core::VocabularyInfo, std::shared_ptr<core::VocabularyInfo>>(m, "VocabularyInfo")
         .def(py::init<>())
         .def("add_predicate", &core::VocabularyInfo::add_predicate)
+        .def("add_constant", &core::VocabularyInfo::add_constant)
         .def("exists_predicate_name", &core::VocabularyInfo::exists_predicate_name)
         .def("get_predicates", &core::VocabularyInfo::get_predicates)
         .def("get_predicate_idx", &core::VocabularyInfo::get_predicate_idx)

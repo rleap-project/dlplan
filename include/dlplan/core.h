@@ -181,7 +181,7 @@ public:
 
     const Predicate& add_predicate(const std::string &name, int arity);
 
-    const Object& add_constant(const std::string& name);
+    const Constant& add_constant(const std::string& name);
 
     bool exists_predicate_name(const std::string& name) const;
     const std::vector<Predicate>& get_predicates() const;

@@ -81,6 +81,10 @@ const Predicate& VocabularyInfo::add_predicate(const std::string &name, int arit
     return m_pImpl->add_predicate(*this, name, arity);
 }
 
+const Constant& VocabularyInfo::add_constant(const std::string& name) {
+    return m_pImpl->add_constant(*this, name);
+}
+
 bool VocabularyInfo::exists_predicate_name(const std::string& name) const {
     return m_pImpl->exists_predicate_name(name);
 }
