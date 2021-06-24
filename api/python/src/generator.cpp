@@ -19,15 +19,43 @@ void init_generator(py::module_ &m) {
     py::class_<generator::Numerical>(m, "NumericalFeature")
         .def("get_repr", &generator::Numerical::get_repr)
         .def("get_state_evaluations", &generator::Numerical::get_state_evaluations)
+        .def(py::pickle(
+            [](const generator::Numerical& n) {
+                return py::make_tuple(n.get_repr(), n.get_state_evaluations());
+            },
+            [](py::tuple t) {
+                return generator::Numerical(t[0].cast<std::string>(), t[1].cast<std::vector<int>>());
+            }
+        ))
     ;
 
     py::class_<generator::Boolean>(m, "BooleanFeature")
         .def("get_repr", &generator::Boolean::get_repr)
         .def("get_state_evaluations", &generator::Boolean::get_state_evaluations)
+        .def(py::pickle(
+            [](const generator::Boolean& b) {
+                return py::make_tuple(b.get_repr(), b.get_state_evaluations());
+            },
+            [](py::tuple t) {
+                return generator::Boolean(t[0].cast<std::string>(), t[1].cast<std::vector<bool>>());
+            }
+        ))
     ;
 
     py::class_<generator::FeatureCollection>(m, "FeatureCollection")
         .def("get_boolean_features", &generator::FeatureCollection::get_boolean_features)
         .def("get_numerical_features", &generator::FeatureCollection::get_numerical_features)
+        .def(py::pickle(
+            [](const generator::FeatureCollection& c){
+                return py::make_tuple(c.get_boolean_features(), c.get_numerical_features());
+            },
+            [](py::tuple t) {
+                generator::FeatureCollection c;
+                for (generator::Boolean b : t[0].cast<std::vector<generator::Boolean>>()) {
+                    c.add_boolean_feature(std::move(b));
+                }
+                return c;
+            }
+        ))
     ;
 }
