@@ -41,7 +41,7 @@ protected:
             for (int target : c_to_vec) {
                 min_distance = std::min<int>(min_distance, pairwise_distances[source][target]);
             }
-            m_result += utils::path_addition(m_result, min_distance);
+            m_result = utils::path_addition(m_result, min_distance);
         }
         return m_result;
     }
