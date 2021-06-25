@@ -54,6 +54,9 @@ void init_generator(py::module_ &m) {
                 for (generator::Boolean b : t[0].cast<std::vector<generator::Boolean>>()) {
                     c.add_boolean_feature(std::move(b));
                 }
+                for (generator::Numerical n : t[1].cast<std::vector<generator::Numerical>>()) {
+                    c.add_numerical_feature(std::move(n));
+                }
                 return c;
             }
         ))
