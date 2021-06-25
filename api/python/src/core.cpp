@@ -11,6 +11,13 @@ namespace py = pybind11;
 using namespace dlplan;
 
 void init_core(py::module_ &m) {
+    py::class_<core::Constant>(m, "Constant")
+        .def("__eq__", &core::Constant::operator==)
+        .def("__neq__", &core::Constant::operator!=)
+        .def("get_index", &core::Constant::get_index)
+        .def("get_name", &core::Constant::get_name)
+    ;
+
     py::class_<core::Object>(m, "Object")
         .def("__eq__", &core::Object::operator==)
         .def("__neq__", &core::Object::operator!=)
