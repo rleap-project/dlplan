@@ -11,6 +11,7 @@
 #include "expressions/concepts/not.h"
 #include "expressions/concepts/one_of.h"
 #include "expressions/concepts/or.h"
+#include "expressions/concepts/projection.h"
 #include "expressions/concepts/primitive.h"
 #include "expressions/concepts/some.h"
 #include "expressions/concepts/subset.h"
@@ -64,6 +65,9 @@ Expression_Ptr AST_Factory::make_ast(const VocabularyInfo& vocabulary_info, cons
             }
             case C_OR: {
                 return std::make_unique<OrConcept>(OrConcept(name, std::move(children)));
+            }
+            case C_PROJECTION: {
+                return std::make_unique<ProjectionConcept>(ProjectionConcept(name, std::move(children)));
             }
             case C_SOME: {
                 return std::make_unique<SomeConcept>(SomeConcept(name, std::move(children)));

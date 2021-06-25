@@ -422,6 +422,10 @@ Concept SyntacticElementFactory::make_or_concept(const Concept& concept_left, co
     return m_pImpl->make_or_concept(concept_left, concept_right);
 }
 
+Concept SyntacticElementFactory::make_projection_concept(const Role& role, int pos) {
+    return m_pImpl->make_projection_concept(role, pos);
+}
+
 Concept SyntacticElementFactory::make_primitive_concept(const Predicate& predicate, int pos) {
     return m_pImpl->make_primitive_concept(predicate, pos);
 }

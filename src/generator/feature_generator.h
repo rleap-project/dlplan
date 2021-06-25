@@ -83,6 +83,7 @@ private:
     void generate_diff_concept(const States& states, int iteration);
     void generate_not_concept(const States& states, int iteration);
     void generate_or_concept(const States& states, int iteration);
+    void generate_projection_concept(const States& states, int iteration);
     void generate_some_concept(const States& states, int iteration);
     void generate_subset_concept(const States& states, int iteration);
 

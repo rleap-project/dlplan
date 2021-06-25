@@ -10,6 +10,7 @@
 #include "elements/concepts/not.h"
 #include "elements/concepts/one_of.h"
 #include "elements/concepts/or.h"
+#include "elements/concepts/projection.h"
 #include "elements/concepts/primitive.h"
 #include "elements/concepts/some.h"
 #include "elements/concepts/subset.h"
@@ -122,6 +123,13 @@ Concept SyntacticElementFactoryImpl::make_or_concept(const Concept& concept_left
     std::unique_ptr<element::Concept> result_ptr = std::make_unique<element::OrConcept>(*m_vocabulary_info, concept_left_ptr, concept_right_ptr);
     return Concept(*m_vocabulary_info, m_caches.m_concept_cache->insert(std::move(result_ptr)));
 }
+
+Concept SyntacticElementFactoryImpl::make_projection_concept(const Role& role, int pos) {
+    element::Role_Ptr role_ptr = m_caches.m_role_cache->at(role.compute_repr());
+    std::unique_ptr<element::Concept> result_ptr = std::make_unique<element::ProjectionConcept>(*m_vocabulary_info, role_ptr, pos);
+    return Concept(*m_vocabulary_info, m_caches.m_concept_cache->insert(std::move(result_ptr)));
+}
+
 
 Concept SyntacticElementFactoryImpl::make_primitive_concept(const Predicate& predicate, int pos) {
     std::unique_ptr<element::Concept> result_ptr = std::make_unique<element::PrimitiveConcept>(*m_vocabulary_info, predicate, pos);

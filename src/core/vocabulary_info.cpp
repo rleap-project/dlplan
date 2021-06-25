@@ -75,6 +75,7 @@ std::unordered_map<std::string, EXPRESSION_TYPE> VocabularyInfoImpl::m_element_n
     {"c_not", C_NOT },
     {"c_one_of", C_ONE_OF },
     {"c_or", C_OR },
+    {"c_projection", C_PROJECTION},
     {"c_some", C_SOME },
     {"c_subset", C_SUBSET},
     {"c_top", C_TOP },

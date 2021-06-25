@@ -1,7 +1,7 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_PRIMITIVE_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_PRIMITIVE_H_
 
-#include <algorithm>
+#include <sstream>
 
 #include "../concept.h"
 

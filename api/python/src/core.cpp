@@ -122,6 +122,7 @@ void init_core(py::module_ &m) {
         .def("make_not_concept", &core::SyntacticElementFactory::make_not_concept)
         .def("make_one_of_concept", &core::SyntacticElementFactory::make_one_of_concept)
         .def("make_or_concept", &core::SyntacticElementFactory::make_or_concept)
+        .def("make_projection_concept", &core::SyntacticElementFactory::make_projection_concept)
         .def("make_primitive_concept", &core::SyntacticElementFactory::make_primitive_concept)
         .def("make_some_concept", &core::SyntacticElementFactory::make_some_concept)
         .def("make_subset_concept", &core::SyntacticElementFactory::make_subset_concept)

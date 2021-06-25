@@ -132,6 +132,7 @@ void FeatureGeneratorImpl::generate_inductively(const States& states, FeatureCol
         generate_diff_concept(states, iteration);
         generate_not_concept(states, iteration);
         generate_or_concept(states, iteration);
+        generate_projection_concept(states, iteration);
         generate_some_concept(states, iteration);
         generate_subset_concept(states, iteration);
         generate_concept_distance_numerical(states, iteration, feature_collection);
@@ -282,6 +283,16 @@ void FeatureGeneratorImpl::generate_or_concept(const States& states, int iterati
         for (const auto& concept_left : m_concept_elements_by_complexity[i]) {
             for (const auto& concept_right : m_concept_elements_by_complexity[j]) {
                 if (!m_timer.is_expired()) add_concept(states, m_factory->make_or_concept(concept_left, concept_right));
+            }
+        }
+    }
+}
+
+void FeatureGeneratorImpl::generate_projection_concept(const States& states, int iteration) {
+    for (const auto& role : m_role_elements_by_complexity[iteration]) {
+        if (!m_timer.is_expired()) {
+            for (int pos = 0; pos < 2; ++pos) {
+                add_concept(states, m_factory->make_projection_concept(role, pos));
             }
         }
     }

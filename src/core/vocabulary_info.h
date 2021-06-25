@@ -21,6 +21,7 @@ enum EXPRESSION_TYPE {
     C_NOT,
     C_ONE_OF,
     C_OR,
+    C_PROJECTION,
     C_SOME,
     C_SUBSET,
     C_TOP,
