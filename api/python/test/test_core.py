@@ -102,3 +102,7 @@ def test_factory():
     boolean = factory.parse_boolean("b_empty(c_and(on_g(0),on(0)))")
     assert boolean.compute_complexity() == 4
     assert boolean.evaluate(state) == 0
+
+    numerical = factory.parse_numerical("n_count(c_projection(on_g(0,1), 1))")
+    assert numerical.compute_complexity() == 3
+    assert numerical.evaluate(state) == 1
