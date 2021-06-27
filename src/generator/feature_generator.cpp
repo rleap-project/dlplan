@@ -96,7 +96,7 @@ FeatureGeneratorImpl::FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElemen
       m_role_elements_by_complexity(complexity+1),
       m_numerical_elements_by_complexity(complexity+1),
       m_boolean_elements_by_complexity(complexity+1),
-      m_hash_table(std::make_unique<HashTableLossLess>()),
+      m_hash_table(std::make_unique<HashTableSha256>()),
       m_timer(time_limit) { }
 
 FeatureCollection FeatureGeneratorImpl::generate(const States& states) {
