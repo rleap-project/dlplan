@@ -16,7 +16,7 @@ private:
     const int m_index;
 
 public:
-    ConstantImpl(const VocabularyInfo& vocabulary_info, const std::string name, int index);
+    ConstantImpl(const VocabularyInfo* vocabulary_info, const std::string name, int index);
     ~ConstantImpl() = default;
 
     const VocabularyInfo* get_vocabulary_info() const;

@@ -38,10 +38,8 @@ class Constant {
 private:
     pimpl<ConstantImpl> m_pImpl;
 
-    Constant(const VocabularyInfo& vocabulary_info, const std::string& name, int index);
-    friend class VocabularyInfoImpl;
-
 public:
+    Constant(const VocabularyInfo* vocabulary_info, const std::string& name, int index);
     Constant(const Constant& other);
     ~Constant();
 
@@ -61,10 +59,8 @@ class Predicate {
 private:
     pimpl<PredicateImpl> m_pImpl;
 
-    Predicate(const VocabularyInfo& vocabulary_info, const std::string& name, int index, int arity);
-    friend class VocabularyInfoImpl;
-
 public:
+    Predicate(const VocabularyInfo* vocabulary_info, const std::string& name, int index, int arity);
     Predicate(const Predicate& other);
     ~Predicate();
 
@@ -88,10 +84,8 @@ class Object {
 private:
     pimpl<ObjectImpl> m_pImpl;
 
-    Object(const InstanceInfo& instance_info, const std::string& name, int index);
-    friend class InstanceInfoImpl;
-
 public:
+    Object(const InstanceInfo* instance_info, const std::string& name, int index);
     Object(const Object& other);
     ~Object();
 
@@ -111,15 +105,13 @@ class Atom {
 private:
     pimpl<AtomImpl> m_pImpl;
 
-    Atom(const InstanceInfo& instance_info,
+public:
+    Atom(const InstanceInfo* instance_info,
         const std::string& name,
         int index,
         const Predicate& predicate,
         const std::vector<Object> &objects,
         bool is_static);
-    friend class InstanceInfoImpl;
-
-public:
     Atom(const Atom& other);
     ~Atom();
 
@@ -177,6 +169,7 @@ private:
 
 public:
     VocabularyInfo();
+    VocabularyInfo(const VocabularyInfo& other);
     ~VocabularyInfo();
 
     const Predicate& add_predicate(const std::string &name, int arity);

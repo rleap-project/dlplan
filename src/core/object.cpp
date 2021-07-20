@@ -3,8 +3,8 @@
 
 namespace dlplan::core {
 
-ObjectImpl::ObjectImpl(const InstanceInfo& instance_info, const std::string& name, int index)
-    : m_instance_info(&instance_info), m_name(name), m_index(index) { }
+ObjectImpl::ObjectImpl(const InstanceInfo* instance_info, const std::string& name, int index)
+    : m_instance_info(instance_info), m_name(name), m_index(index) { }
 
 const InstanceInfo* ObjectImpl::get_instance_info() const {
     return m_instance_info;

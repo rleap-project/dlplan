@@ -75,6 +75,8 @@ const Index_Vec& InstanceInfo::get_static_atom_idxs() const {
 
 VocabularyInfo::VocabularyInfo() : m_pImpl(VocabularyInfoImpl()) { }
 
+VocabularyInfo::VocabularyInfo(const VocabularyInfo& other) : m_pImpl(*other.m_pImpl) { }
+
 VocabularyInfo::~VocabularyInfo() = default;
 
 const Predicate& VocabularyInfo::add_predicate(const std::string &name, int arity) {
@@ -114,7 +116,7 @@ const std::vector<Constant>& VocabularyInfo::get_constants() const {
 }
 
 
-Constant::Constant(const VocabularyInfo& vocabulary_info, const std::string& name, int index)
+Constant::Constant(const VocabularyInfo* vocabulary_info, const std::string& name, int index)
     : m_pImpl(ConstantImpl(vocabulary_info, name, index)) { }
 
 Constant::Constant(const Constant& other) : m_pImpl(*other.m_pImpl) { }
@@ -142,7 +144,7 @@ const std::string& Constant::get_name() const {
 }
 
 
-Predicate::Predicate(const VocabularyInfo& vocabulary_info, const std::string& name, int index, int arity)
+Predicate::Predicate(const VocabularyInfo* vocabulary_info, const std::string& name, int index, int arity)
     : m_pImpl(PredicateImpl(vocabulary_info, name, index, arity)) { }
 
 Predicate::Predicate(const Predicate& other) : m_pImpl(*other.m_pImpl) { }
@@ -174,7 +176,7 @@ int Predicate::get_arity() const {
 }
 
 
-Object::Object(const InstanceInfo& instance_info, const std::string& name, int index)
+Object::Object(const InstanceInfo* instance_info, const std::string& name, int index)
     : m_pImpl(ObjectImpl(instance_info, name, index)) {}
 
 Object::Object(const Object& other) : m_pImpl(*other.m_pImpl) { }
@@ -202,7 +204,7 @@ int Object::get_index() const {
 }
 
 
-Atom::Atom(const InstanceInfo& instance_info,
+Atom::Atom(const InstanceInfo* instance_info,
     const std::string& name,
     int index,
     const Predicate& predicate,

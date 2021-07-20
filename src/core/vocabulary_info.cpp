@@ -13,7 +13,7 @@ const Predicate& VocabularyInfoImpl::add_predicate(const VocabularyInfo& parent,
         throw std::runtime_error("VocabularyInfoImpl::add_predicate - predicate with name ("s + predicate_name + ") already exists.");
     }
     int predicate_idx = m_predicates.size();
-    m_predicates.push_back(Predicate(parent, predicate_name, predicate_idx, arity));
+    m_predicates.push_back(Predicate(&parent, predicate_name, predicate_idx, arity));
     m_predicate_name_to_predicate_idx.emplace(predicate_name, predicate_idx);
     return m_predicates.back();
 }
@@ -23,7 +23,7 @@ const Constant& VocabularyInfoImpl::add_constant(const VocabularyInfo& parent, c
         throw std::runtime_error("VocabularyInfoImpl::add_constant - constant with name ("s + constant_name + ") already exists.");
     }
     int object_idx = m_constants.size();
-    m_constants.push_back(Constant(parent, constant_name, object_idx));
+    m_constants.push_back(Constant(&parent, constant_name, object_idx));
     return m_constants.back();
 }
 

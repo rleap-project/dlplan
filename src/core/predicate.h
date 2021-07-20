@@ -16,7 +16,7 @@ private:
     const int m_arity;
 
 public:
-    PredicateImpl(const VocabularyInfo& vocabulary_info, const std::string& name, int index, int arity);
+    PredicateImpl(const VocabularyInfo* vocabulary_info, const std::string& name, int index, int arity);
     ~PredicateImpl() = default;
 
     const VocabularyInfo* get_vocabulary_info() const;

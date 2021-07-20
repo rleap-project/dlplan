@@ -21,7 +21,7 @@ private:
 
 public:
     AtomImpl(
-        const InstanceInfo& instance_info,
+        const InstanceInfo* instance_info,
         const std::string& name,
         int index,
         const Predicate& predicate,

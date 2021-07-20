@@ -23,7 +23,7 @@ InstanceInfoImpl::InstanceInfoImpl(const InstanceInfo& parent, std::shared_ptr<c
     : m_vocabulary_info(vocabulary_info) {
     // add an object for each constant in the vocabulary
     for (const auto& constant : vocabulary_info->get_constants()) {
-        m_objects.push_back(Object(parent, constant.get_name(), constant.get_index()));
+        m_objects.push_back(Object(&parent, constant.get_name(), constant.get_index()));
         m_object_name_to_object_idx.emplace(constant.get_name(), constant.get_index());
     }
 }
@@ -47,12 +47,12 @@ const Atom& InstanceInfoImpl::add_atom(const InstanceInfo& parent, const std::st
         int object_idx;
         if (!object_exists) {
             object_idx = m_objects.size();
-            m_objects.push_back(Object(parent, object_name, object_idx));
+            m_objects.push_back(Object(&parent, object_name, object_idx));
             m_object_name_to_object_idx.emplace(object_name, object_idx);
         } else {
             object_idx = m_object_name_to_object_idx.at(object_name);
         }
-        objects.push_back(Object(parent, object_name, object_idx));
+        objects.push_back(Object(&parent, object_name, object_idx));
         ss << object_name;
         if (i < static_cast<int>(object_names.size()) - 1) {
             ss << ",";
@@ -70,7 +70,7 @@ const Atom& InstanceInfoImpl::add_atom(const InstanceInfo& parent, const std::st
         m_static_atom_idxs.push_back(atom_idx);
     }
 
-    m_atoms.push_back(Atom(parent, atom_name, atom_idx, predicate, objects, is_static));
+    m_atoms.push_back(Atom(&parent, atom_name, atom_idx, predicate, objects, is_static));
     return m_atoms.back();
 }
 
