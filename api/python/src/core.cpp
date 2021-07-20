@@ -83,6 +83,15 @@ void init_core(py::module_ &m) {
         .def("__neq__", &core::State::operator!=)
         .def("__repr__", &core::State::str)
         .def("get_atom_idxs", &core::State::get_atom_idxs)
+        .def("get_instance_info", &core::State::get_instance_info)
+        .def(py::pickle(
+            [](const core::State& s) {
+                return py::make_tuple(s.get_instance_info(), s.get_atom_idxs());
+            },
+            [](py::tuple t) {
+                return core::State(t[0].cast<std::shared_ptr<const core::InstanceInfo>>(), t[1].cast<core::Index_Vec>());
+            }
+        ))
     ;
 
     py::class_<core::VocabularyInfo, std::shared_ptr<core::VocabularyInfo>>(m, "VocabularyInfo")
@@ -197,5 +206,14 @@ void init_core(py::module_ &m) {
         .def("make_top_role", &core::SyntacticElementFactory::make_top_role)
         .def("make_transitive_closure", &core::SyntacticElementFactory::make_transitive_closure)
         .def("make_transitive_reflexive_closure", &core::SyntacticElementFactory::make_transitive_reflexive_closure)
+
+        .def(py::pickle(
+            [](const core::SyntacticElementFactory& s) {
+                return py::make_tuple(s.get_vocabulary_info());
+            },
+            [](py::tuple t) {
+                return core::SyntacticElementFactory(t[0].cast<std::shared_ptr<const core::VocabularyInfo>>());
+            }
+        ))
     ;
 }
