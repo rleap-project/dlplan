@@ -18,6 +18,11 @@ cmake -DCMAKE_BUILD_TYPE=Release -S . -B build
 cmake --build build -j4
 ```
 
+To install the library, run
+```console
+cmake --install build
+```
+
 ### Building Python Bindings
 At the moment we recommend building and installing the Python bindings directly into a virtual environment.
 You can do that by issuing `pip install .` from the project root, or `pip install -e .`
