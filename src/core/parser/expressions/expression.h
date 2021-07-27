@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "../../element_factory.h"
+#include "../../elements/types.h"
 
 
 namespace dlplan::core::parser {

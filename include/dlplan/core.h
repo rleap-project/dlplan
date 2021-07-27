@@ -5,8 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/core/elements/types.h"
-#include "../../src/utils/pimpl.h"
+#include "pimpl.h"
 
 
 namespace dlplan::core {
@@ -25,6 +24,12 @@ class BooleanImpl;
 class SyntacticElementFactory;
 class InstanceInfo;
 class VocabularyInfo;
+namespace element {
+    class Concept;
+    class Role;
+    class Numerical;
+    class Boolean;
+}
 
 using ConceptDenotation = std::vector<int>;
 
@@ -259,7 +264,7 @@ class Concept : public Element<ConceptDenotation> {
 protected:
     pimpl<ConceptImpl> m_pImpl;
 
-    Concept(const VocabularyInfo& vocabulary_info, element::Concept_Ptr&& concept);
+    Concept(const VocabularyInfo& vocabulary_info, std::shared_ptr<element::Concept>&& concept);
     friend class SyntacticElementFactoryImpl;
 
 public:
@@ -281,7 +286,7 @@ class Role : public Element<RoleDenotation> {
 protected:
     pimpl<RoleImpl> m_pImpl;
 
-    Role(const VocabularyInfo& vocabulary_info, element::Role_Ptr&& role);
+    Role(const VocabularyInfo& vocabulary_info, std::shared_ptr<element::Role>&& role);
     friend class SyntacticElementFactoryImpl;
 
 public:
@@ -303,7 +308,7 @@ class Numerical : public Element<int> {
 protected:
     pimpl<NumericalImpl> m_pImpl;
 
-    Numerical(const VocabularyInfo& vocabulary_info, element::Numerical_Ptr&& numerical);
+    Numerical(const VocabularyInfo& vocabulary_info, std::shared_ptr<element::Numerical>&& numerical);
     friend class SyntacticElementFactoryImpl;
 
 public:
@@ -325,7 +330,7 @@ class Boolean : public Element<bool> {
 protected:
     pimpl<BooleanImpl> m_pImpl;
 
-    Boolean(const VocabularyInfo& vocabulary_info, element::Boolean_Ptr&& boolean);
+    Boolean(const VocabularyInfo& vocabulary_info, std::shared_ptr<element::Boolean>&& boolean);
     friend class SyntacticElementFactoryImpl;
 
 public:

@@ -16,3 +16,4 @@ add_library(core
     ../utils/system.cpp
     ../utils/timer.cpp
 )
+set_target_properties(core PROPERTIES PUBLIC_HEADER "include/dlplan/core.h;include/dlplan/pimpl.h")

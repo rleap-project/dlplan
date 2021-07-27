@@ -34,3 +34,8 @@ if(DLPLAN_PYTHON)
   set_property(TARGET generator PROPERTY POSITION_INDEPENDENT_CODE ON)
   add_subdirectory(api/python)
 endif()
+
+INSTALL(TARGETS core generator DESTINATION ${CMAKE_INSTALL_PREFIX}/dlplan/lib
+        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/dlplan/lib
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/dlplan/include
+)

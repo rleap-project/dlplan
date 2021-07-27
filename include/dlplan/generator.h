@@ -2,7 +2,7 @@
 #define DLPLAN_INCLUDE_DLP_ELEMENT_GENERATOR_H_
 
 #include "core.h"
-#include "../../src/utils/pimpl.h"
+#include "pimpl.h"
 
 
 namespace dlplan::generator {
