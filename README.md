@@ -8,7 +8,7 @@ Welcome to the "description logics state features for planning" library.
 Run the following from the project root to build the library.
 By default, the library compiles in `Debug` mode.
 ```console
-cmake -S . -B build
+cmake -DCMAKE_INSTALL_PREFIX=/usr/local/ -S . -B build
 cmake --build build -j4
 ```
 
