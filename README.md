@@ -14,7 +14,7 @@ cmake --build build -j4
 
 To build the library in `Release` mode, run
 ```console
-cmake -DCMAKE_BUILD_TYPE=Release -S . -B build
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local/ -S . -B build
 cmake --build build -j4
 ```
 
@@ -23,7 +23,8 @@ To install the library, run
 cmake --install build
 ```
 
-Don't forget to add the corresponding prefix + /dlplan/lib to LD_LIBRARY_PATH before linking to your CPP program
+Don't forget to add the corresponding prefix + /dlplan/lib to LD_LIBRARY_PATH before linking to your CPP program.
+In this case we add /usr/local/dlplan/lib
 
 ### Building Python Bindings
 At the moment we recommend building and installing the Python bindings directly into a virtual environment.
