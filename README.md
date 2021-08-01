@@ -23,8 +23,7 @@ To install the library, run
 cmake --install build
 ```
 
-Don't forget to add the corresponding `prefix + /include/dlplan` to the environment variable `CPLUS_INCLUDE_PATH` before compiling your CPP program.
-Don't forget to add the corresponding `prefix + /lib/dlplan` to the environment variable `LD_LIBRARY_PATH` before linking to your CPP program.
+Don't forget to update environment variable `CPLUS_INCLUDE_PATH` and `LD_LIBRARY_PATH` if necessary.
 
 ### Building Python Bindings
 At the moment we recommend building and installing the Python bindings directly into a virtual environment.
