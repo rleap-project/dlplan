@@ -11,14 +11,13 @@ class EmptyBoolean : public Boolean {
 protected:
     const T m_element;
 
-protected:
-    const bool& evaluate_impl(const State& state) override {
+public:
+    EmptyBoolean(const VocabularyInfo& vocabulary, T element) : Boolean(vocabulary, "b_empty"), m_element(element) { }
+
+    const bool& evaluate(const State& state) override {
         m_result = m_element->evaluate(state).empty();
         return m_result;
     }
-
-public:
-    EmptyBoolean(const VocabularyInfo& vocabulary, T element) : Boolean(vocabulary, "b_empty"), m_element(element) { }
 
     int compute_complexity() const override {
         return m_element->compute_complexity() + 1;

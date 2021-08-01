@@ -17,14 +17,6 @@ void init_core(py::module_ &m) {
         .def("__neq__", &core::Constant::operator!=)
         .def("get_index", &core::Constant::get_index)
         .def("get_name", &core::Constant::get_name)
-        .def(py::pickle(
-            [](const core::Constant& c) {
-                return py::make_tuple(c.get_vocabulary_info(), c.get_name(), c.get_index());
-            },
-            [](py::tuple t) {
-                return core::Constant(t[0].cast<core::VocabularyInfo*>(), t[1].cast<std::string>(), t[2].cast<int>());
-            }
-        ))
     ;
 
     py::class_<core::Object>(m, "Object")
@@ -32,14 +24,6 @@ void init_core(py::module_ &m) {
         .def("__neq__", &core::Object::operator!=)
         .def("get_index", &core::Object::get_index)
         .def("get_name", &core::Object::get_name)
-        .def(py::pickle(
-            [](const core::Object& o) {
-                return py::make_tuple(o.get_instance_info(), o.get_name(), o.get_index());
-            },
-            [](py::tuple t) {
-                return core::Object(t[0].cast<core::InstanceInfo*>(), t[1].cast<std::string>(), t[2].cast<int>());
-            }
-        ))
     ;
 
     py::class_<core::Predicate>(m, "Predicate")
@@ -48,14 +32,6 @@ void init_core(py::module_ &m) {
         .def("get_name", &core::Predicate::get_name)
         .def("get_arity", &core::Predicate::get_arity)
         .def("get_index", &core::Predicate::get_index)
-        .def(py::pickle(
-            [](const core::Predicate& p) {
-                return py::make_tuple(p.get_vocabulary_info(), p.get_name(), p.get_index(), p.get_arity());
-            },
-            [](py::tuple t) {
-                return core::Predicate(t[0].cast<core::VocabularyInfo*>(), t[1].cast<std::string>(), t[2].cast<int>(), t[3].cast<int>());
-            }
-        ))
     ;
 
     py::class_<core::Atom>(m, "Atom")
@@ -67,14 +43,6 @@ void init_core(py::module_ &m) {
         .def("get_objects", &core::Atom::get_objects)
         .def("get_object", &core::Atom::get_object)
         .def("get_is_static", &core::Atom::get_is_static)
-        .def(py::pickle(
-            [](const core::Atom& p) {
-                return py::make_tuple(p.get_instance_info(), p.get_name(), p.get_index(), p.get_predicate(), p.get_objects(), p.get_is_static());
-            },
-            [](py::tuple t) {
-                return core::Atom(t[0].cast<core::InstanceInfo*>(), t[1].cast<std::string>(), t[2].cast<int>(), t[3].cast<core::Predicate>(), t[4].cast<std::vector<core::Object>>(), t[5].cast<bool>());
-            }
-        ))
     ;
 
     py::class_<core::State>(m, "State")
@@ -84,14 +52,6 @@ void init_core(py::module_ &m) {
         .def("__repr__", &core::State::str)
         .def("get_atom_idxs", &core::State::get_atom_idxs)
         .def("get_instance_info", &core::State::get_instance_info)
-        .def(py::pickle(
-            [](const core::State& s) {
-                return py::make_tuple(s.get_instance_info(), s.get_atom_idxs());
-            },
-            [](py::tuple t) {
-                return core::State(t[0].cast<std::shared_ptr<const core::InstanceInfo>>(), t[1].cast<core::Index_Vec>());
-            }
-        ))
     ;
 
     py::class_<core::VocabularyInfo, std::shared_ptr<core::VocabularyInfo>>(m, "VocabularyInfo")
@@ -102,23 +62,6 @@ void init_core(py::module_ &m) {
         .def("get_predicates", &core::VocabularyInfo::get_predicates)
         .def("get_predicate_idx", &core::VocabularyInfo::get_predicate_idx)
         .def("get_predicate", &core::VocabularyInfo::get_predicate)
-        .def(py::pickle(
-            [](const core::VocabularyInfo& v) {
-                return py::make_tuple(v.get_predicates(), v.get_constants());
-            },
-            [](py::tuple t) {
-                core::VocabularyInfo v;
-                std::vector<core::Predicate> predicates = t[0].cast<std::vector<core::Predicate>>();
-                for (const auto& predicate : predicates) {
-                    v.add_predicate(predicate.get_name(), predicate.get_arity());
-                }
-                std::vector<core::Constant> constants = t[1].cast<std::vector<core::Constant>>();
-                for (const auto& constant : constants) {
-                    v.add_constant(constant.get_name());
-                }
-                return v;
-            }
-        ))
     ;
 
     py::class_<core::InstanceInfo, std::shared_ptr<core::InstanceInfo>>(m, "InstanceInfo")
@@ -206,14 +149,5 @@ void init_core(py::module_ &m) {
         .def("make_top_role", &core::SyntacticElementFactory::make_top_role)
         .def("make_transitive_closure", &core::SyntacticElementFactory::make_transitive_closure)
         .def("make_transitive_reflexive_closure", &core::SyntacticElementFactory::make_transitive_reflexive_closure)
-
-        .def(py::pickle(
-            [](const core::SyntacticElementFactory& s) {
-                return py::make_tuple(s.get_vocabulary_info());
-            },
-            [](py::tuple t) {
-                return core::SyntacticElementFactory(t[0].cast<std::shared_ptr<const core::VocabularyInfo>>());
-            }
-        ))
     ;
 }

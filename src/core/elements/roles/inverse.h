@@ -10,8 +10,15 @@ class InverseRole : public Role {
 protected:
     const Role_Ptr m_role;
 
-protected:
-    const RoleDenotation& evaluate_impl(const State& state) override {
+public:
+    InverseRole(const VocabularyInfo& vocabulary, Role_Ptr role)
+    : Role(vocabulary, "r_inverse"), m_role(role) {
+        if (!role) {
+            throw std::runtime_error("InverseRole::InverseRole - child is a nullptr.");
+        }
+    }
+
+    const RoleDenotation& evaluate(const State& state) override {
         const RoleDenotation& r_vec = m_role->evaluate(state);
         m_result.clear();
         m_result.reserve(r_vec.size());
@@ -19,14 +26,6 @@ protected:
             m_result.emplace_back(r.second, r.first);
         }
         return m_result;
-    }
-
-public:
-    InverseRole(const VocabularyInfo& vocabulary, Role_Ptr role)
-    : Role(vocabulary, "r_inverse"), m_role(role) {
-        if (!role) {
-            throw std::runtime_error("InverseRole::InverseRole - child is a nullptr.");
-        }
     }
 
     int compute_complexity() const override {

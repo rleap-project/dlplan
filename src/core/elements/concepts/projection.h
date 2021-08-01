@@ -14,8 +14,18 @@ protected:
     const Role_Ptr m_role;
     const int m_pos;
 
-protected:
-    const ConceptDenotation& evaluate_impl(const State& state) override {
+public:
+    ProjectionConcept(const VocabularyInfo& vocabulary, const Role_Ptr& role, int pos)
+    : Concept(vocabulary, "c_projection"), m_role(role), m_pos(pos) {
+        if (pos < 0 || pos > 1) {
+            throw std::runtime_error("ProjectionConcept::ProjectionConcept - projection index out of range, should be 0 or 1 ("s + std::to_string(pos) + ")");
+        }
+        if (!role) {
+            throw std::runtime_error("ProjectionConcept::ProjectionConcept - child is a nullptr.");
+        }
+    }
+
+    const ConceptDenotation& evaluate(const State& state) override {
         const RoleDenotation& role_result = m_role->evaluate(state);
         ConceptDenotation_Set result_set;
         for (const auto& r : role_result) {
@@ -28,17 +38,6 @@ protected:
         m_result.clear();
         m_result.insert(m_result.end(), result_set.begin(), result_set.end());
         return m_result;
-    }
-
-public:
-    ProjectionConcept(const VocabularyInfo& vocabulary, const Role_Ptr& role, int pos)
-    : Concept(vocabulary, "c_projection"), m_role(role), m_pos(pos) {
-        if (pos < 0 || pos > 1) {
-            throw std::runtime_error("ProjectionConcept::ProjectionConcept - projection index out of range, should be 0 or 1 ("s + std::to_string(pos) + ")");
-        }
-        if (!role) {
-            throw std::runtime_error("ProjectionConcept::ProjectionConcept - child is a nullptr.");
-        }
     }
 
     int compute_complexity() const override {

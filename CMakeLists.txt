@@ -30,12 +30,11 @@ add_subdirectory(tests)
 
 if(DLPLAN_PYTHON)
   # For the dynamic library to be compatible with Python we need the -fPIC flags
-  set_property(TARGET core PROPERTY POSITION_INDEPENDENT_CODE ON)
-  set_property(TARGET generator PROPERTY POSITION_INDEPENDENT_CODE ON)
+  set_property(TARGET dlplancore PROPERTY POSITION_INDEPENDENT_CODE ON)
+  set_property(TARGET dlplangenerator PROPERTY POSITION_INDEPENDENT_CODE ON)
   add_subdirectory(api/python)
 endif()
 
-INSTALL(TARGETS core generator DESTINATION ${CMAKE_INSTALL_PREFIX}/dlplan/lib
-        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/dlplan/lib
-        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/dlplan/include
+INSTALL(TARGETS dlplancore dlplangenerator DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/dlplan
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/include/dlplan
 )

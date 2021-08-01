@@ -12,8 +12,15 @@ protected:
     const Role_Ptr m_role_left;
     const Role_Ptr m_role_right;
 
-protected:
-    const RoleDenotation& evaluate_impl(const State& state) override {
+public:
+    ComposeRole(const VocabularyInfo& vocabulary, Role_Ptr role_left, Role_Ptr role_right)
+    : Role(vocabulary, "r_compose"), m_role_left(role_left), m_role_right(role_right)  {
+        if (!(role_left && role_right)) {
+            throw std::runtime_error("ComposeRole::ComposeRole - at least one child is a nullptr.");
+        }
+    }
+
+    const RoleDenotation& evaluate(const State& state) override {
         RoleDenotation l_vec = m_role_left->evaluate(state);
         RoleDenotation r_vec = m_role_right->evaluate(state);
         // complexity
@@ -44,14 +51,6 @@ protected:
         m_result.clear();
         m_result.insert(m_result.begin(), result_set.begin(), result_set.end());
         return m_result;
-    }
-
-public:
-    ComposeRole(const VocabularyInfo& vocabulary, Role_Ptr role_left, Role_Ptr role_right)
-    : Role(vocabulary, "r_compose"), m_role_left(role_left), m_role_right(role_right)  {
-        if (!(role_left && role_right)) {
-            throw std::runtime_error("ComposeRole::ComposeRole - at least one child is a nullptr.");
-        }
     }
 
     int compute_complexity() const override {

@@ -11,17 +11,6 @@ protected:
     const Role_Ptr m_role_left;
     const Role_Ptr m_role_right;
 
-protected:
-    const RoleDenotation& evaluate_impl(const State& state) override {
-        const RoleDenotation& l_vec = m_role_left->evaluate(state);
-        const RoleDenotation& r_vec = m_role_right->evaluate(state);
-        RoleDenotation_Set r_set(l_vec.begin(), l_vec.end());
-        r_set.insert(r_vec.begin(), r_vec.end());
-        m_result.clear();
-        m_result.insert(m_result.begin(), r_set.begin(), r_set.end());
-        return m_result;
-    }
-
 public:
     OrRole(const VocabularyInfo& vocabulary, Role_Ptr role_1, Role_Ptr role_2)
     : Role(vocabulary, "r_or"),
@@ -30,6 +19,16 @@ public:
         if (!(role_1 && role_2)) {
             throw std::runtime_error("OrRole::OrRole - at least one child is a nullptr.");
         }
+    }
+
+    const RoleDenotation& evaluate(const State& state) override {
+        const RoleDenotation& l_vec = m_role_left->evaluate(state);
+        const RoleDenotation& r_vec = m_role_right->evaluate(state);
+        RoleDenotation_Set r_set(l_vec.begin(), l_vec.end());
+        r_set.insert(r_vec.begin(), r_vec.end());
+        m_result.clear();
+        m_result.insert(m_result.begin(), r_set.begin(), r_set.end());
+        return m_result;
     }
 
     int compute_complexity() const override {

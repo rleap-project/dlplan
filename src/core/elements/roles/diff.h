@@ -11,8 +11,15 @@ protected:
     const Role_Ptr m_role_left;
     const Role_Ptr m_role_right;
 
-protected:
-    const RoleDenotation& evaluate_impl(const State& state) override {
+public:
+    DiffRole(const VocabularyInfo& vocabulary, Role_Ptr role_left, Role_Ptr role_right)
+    : Role(vocabulary, "r_diff"), m_role_left(role_left), m_role_right(role_right)  {
+        if (!(role_left && role_right)) {
+            throw std::runtime_error("DiffRole::DiffRole - at least one child is a nullptr.");
+        }
+    }
+
+    const RoleDenotation& evaluate(const State& state) override {
         const RoleDenotation& l_vec = m_role_left->evaluate(state);
         const RoleDenotation& r_vec = m_role_right->evaluate(state);
         RoleDenotation_Set r_set(l_vec.begin(), l_vec.end());
@@ -22,14 +29,6 @@ protected:
         m_result.clear();
         m_result.insert(m_result.begin(), r_set.begin(), r_set.end());
         return m_result;
-    }
-
-public:
-    DiffRole(const VocabularyInfo& vocabulary, Role_Ptr role_left, Role_Ptr role_right)
-    : Role(vocabulary, "r_diff"), m_role_left(role_left), m_role_right(role_right)  {
-        if (!(role_left && role_right)) {
-            throw std::runtime_error("DiffRole::DiffRole - at least one child is a nullptr.");
-        }
     }
 
     int compute_complexity() const override {

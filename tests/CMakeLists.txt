@@ -14,7 +14,7 @@ add_executable(
     ${TEST_NAME}
     core.cpp
 )
-target_link_libraries(${TEST_NAME} core gtest_main)
+target_link_libraries(${TEST_NAME} dlplancore gtest_main)
 
 include(GoogleTest)
 gtest_discover_tests(${TEST_NAME})

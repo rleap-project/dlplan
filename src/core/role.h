@@ -18,7 +18,7 @@ public:
     }
     ~RoleImpl() override = default;
 
-    const RoleDenotation& evaluate(const State& state) override {
+    const RoleDenotation& evaluate(const State& state) const override {
         if (state.get_instance_info()->get_vocabulary_info().get() != m_vocabulary_info) {
             throw std::runtime_error("RoleImpl::evaluate - mismatched vocabularies of Role and State.");
         }

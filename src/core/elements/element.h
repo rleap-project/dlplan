@@ -20,25 +20,15 @@ protected:
     const std::string m_name;
     // Evaluation result
     T m_result;
-    const State* m_state;
-
-protected:
-    virtual const T& evaluate_impl(const State& state) = 0;
 
 public:
-    Element(const VocabularyInfo&, const std::string& name) : m_name(name), m_result(T()), m_state(nullptr) { }
+    Element(const VocabularyInfo&, const std::string& name) : m_name(name), m_result(T()) { }
     virtual ~Element() = default;
 
     /**
      * Evaluate and cache the last result.
      */
-    const T& evaluate(const State& state) {
-        if (m_state != &state) {
-            m_state = &state;
-            m_result = evaluate_impl(state);
-        }
-        return m_result;
-    }
+    virtual const T& evaluate(const State& state) = 0;
 
     /**
      * Returns the complexity of the element.

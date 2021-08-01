@@ -7,8 +7,12 @@
 namespace dlplan::core::element {
 
 class TopConcept : public Concept {
-protected:
-    const ConceptDenotation& evaluate_impl(const State& state) override {
+public:
+    TopConcept(const VocabularyInfo& vocabulary)
+    : Concept(vocabulary, "c_top") {
+    }
+
+    const ConceptDenotation& evaluate(const State& state) override {
         if (m_result.empty()) {
             int num_objects = state.get_instance_info()->get_num_objects();
             m_result.reserve(num_objects);
@@ -17,11 +21,6 @@ protected:
             }
         }
         return m_result;
-    }
-
-public:
-    TopConcept(const VocabularyInfo& vocabulary)
-    : Concept(vocabulary, "c_top") {
     }
 
     int compute_complexity() const override {

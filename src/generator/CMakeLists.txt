@@ -1,4 +1,4 @@
-add_library(generator
+add_library(dlplangenerator SHARED
     feature_collection.cpp
     feature_generator.cpp
     generator.cpp
@@ -8,4 +8,4 @@ add_library(generator
     hash_tables/hash_table_lossless.cpp
     hash_tables/hash_table_sha-256.cpp
 )
-set_target_properties(generator PROPERTIES PUBLIC_HEADER "include/dlplan/generator.h;include/dlplan/pimpl.h")
+set_target_properties(dlplangenerator PROPERTIES PUBLIC_HEADER "include/dlplan/generator.h;include/dlplan/pimpl.h")

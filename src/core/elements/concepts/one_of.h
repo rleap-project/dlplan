@@ -10,18 +10,17 @@ class OneOfConcept : public Concept {
 protected:
     const Constant m_constant;
 
-protected:
-    const ConceptDenotation& evaluate_impl(const State& state) override {
-        if (state.get_instance_info()->get_object(m_constant.get_index()).get_name() != m_constant.get_name()) {
-            throw std::runtime_error("OneOfConcept::evaluate_impl - constant does not agree with object of instance.");
-        }
-        return m_result;
-    }
-
 public:
     OneOfConcept(const VocabularyInfo& vocabulary, const Constant& constant)
     : Concept(vocabulary, "c_one_of"), m_constant(constant) {
         m_result = { constant.get_index() };
+    }
+
+    const ConceptDenotation& evaluate(const State& state) override {
+        if (state.get_instance_info()->get_object(m_constant.get_index()).get_name() != m_constant.get_name()) {
+            throw std::runtime_error("OneOfConcept::evaluate - constant does not agree with object of instance.");
+        }
+        return m_result;
     }
 
     int compute_complexity() const override {

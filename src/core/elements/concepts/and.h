@@ -11,8 +11,17 @@ protected:
     const Concept_Ptr m_concept_left;
     const Concept_Ptr m_concept_right;
 
-protected:
-    const ConceptDenotation& evaluate_impl(const State& state) override {
+public:
+    AndConcept(const VocabularyInfo& vocabulary, Concept_Ptr concept_1, Concept_Ptr concept_2)
+    : Concept(vocabulary, "c_and"),
+      m_concept_left(concept_1->compute_repr() < concept_2->compute_repr() ? concept_1 : concept_2),
+      m_concept_right(concept_1->compute_repr() < concept_2->compute_repr() ? concept_2 : concept_1) {
+        if (!(concept_1 && concept_2)) {
+            throw std::runtime_error("AndConcept::AndConcept - at least one child is a nullptr.");
+        }
+    }
+
+    const ConceptDenotation& evaluate(const State& state) override {
         const ConceptDenotation& l_vec = m_concept_left->evaluate(state);
         const ConceptDenotation& r_vec = m_concept_right->evaluate(state);
         ConceptDenotation_Set r_set(r_vec.begin(), r_vec.end());
@@ -23,16 +32,6 @@ protected:
             }
         }
         return m_result;
-    }
-
-public:
-    AndConcept(const VocabularyInfo& vocabulary, Concept_Ptr concept_1, Concept_Ptr concept_2)
-    : Concept(vocabulary, "c_and"),
-      m_concept_left(concept_1->compute_repr() < concept_2->compute_repr() ? concept_1 : concept_2),
-      m_concept_right(concept_1->compute_repr() < concept_2->compute_repr() ? concept_2 : concept_1) {
-        if (!(concept_1 && concept_2)) {
-            throw std::runtime_error("AndConcept::AndConcept - at least one child is a nullptr.");
-        }
     }
 
     int compute_complexity() const override {

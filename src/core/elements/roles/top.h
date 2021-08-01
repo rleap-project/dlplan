@@ -7,8 +7,12 @@
 namespace dlplan::core::element {
 
 class TopRole : public Role {
-protected:
-    const RoleDenotation& evaluate_impl(const State& state) override {
+public:
+    TopRole(const VocabularyInfo& vocabulary)
+    : Role(vocabulary, "r_top"){
+    }
+
+    const RoleDenotation& evaluate(const State& state) override {
         if (m_result.empty()) {
             int num_objects = state.get_instance_info()->get_num_objects();
             m_result.reserve(num_objects * num_objects);
@@ -19,11 +23,6 @@ protected:
             }
         }
         return m_result;
-    }
-
-public:
-    TopRole(const VocabularyInfo& vocabulary)
-    : Role(vocabulary, "r_top"){
     }
 
     int compute_complexity() const override {

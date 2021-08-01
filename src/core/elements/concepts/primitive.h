@@ -12,8 +12,18 @@ protected:
     const Predicate m_predicate;
     const int m_pos;
 
-protected:
-    const ConceptDenotation& evaluate_impl(const State& state) override {
+public:
+    PrimitiveConcept(const VocabularyInfo& vocabulary, const Predicate& predicate, int pos)
+    : Concept(vocabulary, predicate.get_name()), m_predicate(predicate), m_pos(pos) {
+        if (m_pos >= predicate.get_arity()) {
+            throw std::runtime_error("PrimitiveConcept::PrimitiveConcept - object index does not match predicate arity ("s + std::to_string(m_pos) + " > " + std::to_string(predicate.get_arity()) + ").");
+        }
+        if (predicate.get_vocabulary_info() != &vocabulary) {
+            throw std::runtime_error("PrimitiveConcept::PrimitiveConcept - predicate does not come from same vocabulary.");
+        }
+    }
+
+    const ConceptDenotation& evaluate(const State& state) override {
         const InstanceInfo& info = *state.get_instance_info();
         ConceptDenotation_Set result_set;
         for (int atom_idx : state.get_atom_idxs()) {
@@ -25,17 +35,6 @@ protected:
         m_result.clear();
         m_result.insert(m_result.end(), result_set.begin(), result_set.end());
         return m_result;
-    }
-
-public:
-    PrimitiveConcept(const VocabularyInfo& vocabulary, const Predicate& predicate, int pos)
-    : Concept(vocabulary, predicate.get_name()), m_predicate(predicate), m_pos(pos) {
-        if (m_pos >= predicate.get_arity()) {
-            throw std::runtime_error("PrimitiveConcept::PrimitiveConcept - object index does not match predicate arity ("s + std::to_string(m_pos) + " > " + std::to_string(predicate.get_arity()) + ").");
-        }
-        if (predicate.get_vocabulary_info() != &vocabulary) {
-            throw std::runtime_error("PrimitiveConcept::PrimitiveConcept - predicate does not come from same vocabulary.");
-        }
     }
 
     int compute_complexity() const override {

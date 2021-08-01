@@ -15,8 +15,15 @@ protected:
     const Role_Ptr m_role;
     const Concept_Ptr m_concept_to;
 
-protected:
-    const int& evaluate_impl(const State& state) override {
+public:
+    ConceptDistanceNumerical(const VocabularyInfo& vocabulary, Concept_Ptr concept_from, Role_Ptr role, Concept_Ptr concept_to)
+    : Numerical(vocabulary, "n_concept_distance"), m_concept_from(concept_from), m_role(role), m_concept_to(concept_to) {
+        if (!(concept_from && role && concept_to)) {
+            throw std::runtime_error("ConceptDistanceNumerical::ConceptDistanceNumerical - child is not of type Concept, Role, Concept.");
+        }
+    }
+
+    const int& evaluate(const State& state) override {
         const ConceptDenotation& c_from_vec = m_concept_from->evaluate(state);
         if (c_from_vec.empty()) {
             m_result = 0;
@@ -42,14 +49,6 @@ protected:
             }
         }
         return m_result;
-    }
-
-public:
-    ConceptDistanceNumerical(const VocabularyInfo& vocabulary, Concept_Ptr concept_from, Role_Ptr role, Concept_Ptr concept_to)
-    : Numerical(vocabulary, "n_concept_distance"), m_concept_from(concept_from), m_role(role), m_concept_to(concept_to) {
-        if (!(concept_from && role && concept_to)) {
-            throw std::runtime_error("ConceptDistanceNumerical::ConceptDistanceNumerical - child is not of type Concept, Role, Concept.");
-        }
     }
 
     int compute_complexity() const override {

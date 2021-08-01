@@ -43,8 +43,10 @@ class Constant {
 private:
     pimpl<ConstantImpl> m_pImpl;
 
-public:
     Constant(const VocabularyInfo* vocabulary_info, const std::string& name, int index);
+    friend class VocabularyInfoImpl;
+
+public:
     Constant(const Constant& other);
     ~Constant();
 
@@ -64,8 +66,10 @@ class Predicate {
 private:
     pimpl<PredicateImpl> m_pImpl;
 
-public:
     Predicate(const VocabularyInfo* vocabulary_info, const std::string& name, int index, int arity);
+    friend class VocabularyInfoImpl;
+
+public:
     Predicate(const Predicate& other);
     ~Predicate();
 
@@ -89,8 +93,10 @@ class Object {
 private:
     pimpl<ObjectImpl> m_pImpl;
 
-public:
     Object(const InstanceInfo* instance_info, const std::string& name, int index);
+    friend class InstanceInfoImpl;
+
+public:
     Object(const Object& other);
     ~Object();
 
@@ -110,13 +116,15 @@ class Atom {
 private:
     pimpl<AtomImpl> m_pImpl;
 
-public:
     Atom(const InstanceInfo* instance_info,
         const std::string& name,
         int index,
         const Predicate& predicate,
         const std::vector<Object> &objects,
         bool is_static);
+    friend class InstanceInfoImpl;
+
+public:
     Atom(const Atom& other);
     ~Atom();
 
@@ -242,7 +250,7 @@ public:
     /**
      * Evaluates the element for a state given as a vector of atom indices.
      */
-    virtual T evaluate(const State& state) = 0;
+    virtual T evaluate(const State& state) const = 0;
 
     /**
      * Returns the complexity of the element
@@ -271,7 +279,7 @@ public:
     Concept(const Concept& other);
     ~Concept() override;
 
-    ConceptDenotation evaluate(const State& state) override;
+    ConceptDenotation evaluate(const State& state) const override;
 
     int compute_complexity() const override;
 
@@ -293,7 +301,7 @@ public:
     Role(const Role& other);
     ~Role() override;
 
-    RoleDenotation evaluate(const State& state) override;
+    RoleDenotation evaluate(const State& state) const override;
 
     int compute_complexity() const override;
 
@@ -315,7 +323,7 @@ public:
     Numerical(const Numerical& other);
     ~Numerical() override;
 
-    int evaluate(const State& state) override;
+    int evaluate(const State& state) const override;
 
     int compute_complexity() const override;
 
@@ -337,7 +345,7 @@ public:
     Boolean(const Boolean& other);
     ~Boolean() override;
 
-    bool evaluate(const State& state) override;
+    bool evaluate(const State& state) const override;
 
     int compute_complexity() const override;
 

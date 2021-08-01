@@ -11,8 +11,17 @@ protected:
     const Role_Ptr m_role_left;
     const Role_Ptr m_role_right;
 
-protected:
-    const RoleDenotation& evaluate_impl(const State& state) override {
+public:
+    AndRole(const VocabularyInfo& vocabulary, Role_Ptr role_1, Role_Ptr role_2)
+    : Role(vocabulary, "r_and"),
+      m_role_left(role_1->compute_repr() < role_2->compute_repr() ? role_1 : role_2),
+      m_role_right(role_1->compute_repr() < role_2->compute_repr() ? role_2 : role_1) {
+        if (!(role_1 && role_2)) {
+            throw std::runtime_error("AndRole::AndRole - at least one child is a nullptr.");
+        }
+    }
+
+    const RoleDenotation& evaluate(const State& state) override {
         const RoleDenotation& l_vec = m_role_left->evaluate(state);
         const RoleDenotation& r_vec = m_role_right->evaluate(state);
         RoleDenotation_Set r_set(r_vec.begin(), r_vec.end());
@@ -23,16 +32,6 @@ protected:
             }
         }
         return m_result;
-    }
-
-public:
-    AndRole(const VocabularyInfo& vocabulary, Role_Ptr role_1, Role_Ptr role_2)
-    : Role(vocabulary, "r_and"),
-      m_role_left(role_1->compute_repr() < role_2->compute_repr() ? role_1 : role_2),
-      m_role_right(role_1->compute_repr() < role_2->compute_repr() ? role_2 : role_1) {
-        if (!(role_1 && role_2)) {
-            throw std::runtime_error("AndRole::AndRole - at least one child is a nullptr.");
-        }
     }
 
     int compute_complexity() const override {

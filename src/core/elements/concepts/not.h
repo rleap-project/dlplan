@@ -11,8 +11,15 @@ protected:
     const Concept_Ptr m_concept;
     ConceptDenotation_Set m_universe_set;
 
-protected:
-    const ConceptDenotation& evaluate_impl(const State& state) override {
+public:
+    NotConcept(const VocabularyInfo& vocabulary, Concept_Ptr concept)
+    : Concept(vocabulary, "c_not"), m_concept(concept) {
+        if (!concept) {
+            throw std::runtime_error("NotConcept::NotConcept - child is a nullptr");
+        }
+    }
+
+    const ConceptDenotation& evaluate(const State& state) override {
         if (m_universe_set.empty()) {
             int num_objects = state.get_instance_info()->get_num_objects();
             for (int object_idx = 0; object_idx < num_objects; ++object_idx) {
@@ -27,14 +34,6 @@ protected:
         m_result.clear();
         m_result.insert(m_result.begin(), r_set.begin(), r_set.end());
         return m_result;
-    }
-
-public:
-    NotConcept(const VocabularyInfo& vocabulary, Concept_Ptr concept)
-    : Concept(vocabulary, "c_not"), m_concept(concept) {
-        if (!concept) {
-            throw std::runtime_error("NotConcept::NotConcept - child is a nullptr");
-        }
     }
 
     int compute_complexity() const override {

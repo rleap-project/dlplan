@@ -11,8 +11,15 @@ class TransitiveReflexiveClosureRole : public Role {
 protected:
     const Role_Ptr m_role;
 
-protected:
-    const RoleDenotation& evaluate_impl(const State& state) override {
+public:
+    TransitiveReflexiveClosureRole(const VocabularyInfo& vocabulary, Role_Ptr role)
+    : Role(vocabulary, "r_transitive_reflexive_closure"), m_role(role) {
+        if (!role) {
+            throw std::runtime_error("TransitiveReflexiveClosureRole::TransitiveReflexiveClosureRole - child is a nullptr.");
+        }
+    }
+
+    const RoleDenotation& evaluate(const State& state) override {
         const RoleDenotation& r_vec = m_role->evaluate(state);
         // TODO(dominik): Compute an indexing scheme that only considers objects that are part of the role
         // 2. Compute an adjacency list from the newly mapped role denotations.
@@ -36,14 +43,6 @@ protected:
         m_result.clear();
         m_result.insert(m_result.begin(), result_set.begin(), result_set.end());
         return m_result;
-    }
-
-public:
-    TransitiveReflexiveClosureRole(const VocabularyInfo& vocabulary, Role_Ptr role)
-    : Role(vocabulary, "r_transitive_reflexive_closure"), m_role(role) {
-        if (!role) {
-            throw std::runtime_error("TransitiveReflexiveClosureRole::TransitiveReflexiveClosureRole - child is a nullptr.");
-        }
     }
 
     int compute_complexity() const override {

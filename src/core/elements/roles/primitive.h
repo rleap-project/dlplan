@@ -12,8 +12,18 @@ protected:
     const int m_pos_1;
     const int m_pos_2;
 
-protected:
-    const RoleDenotation& evaluate_impl(const State& state) override {
+public:
+    PrimitiveRole(const VocabularyInfo& vocabulary, const Predicate& predicate, int pos_1, int pos_2)
+    : Role(vocabulary, predicate.get_name()), m_predicate(predicate), m_pos_1(pos_1), m_pos_2(pos_2) {
+        if (m_pos_1 >= predicate.get_arity() || m_pos_2 >= predicate.get_arity()) {
+            throw std::runtime_error("PrimitiveRole::evaluate_impl - object index does not match predicate arity ("s + std::to_string(m_pos_1) + " or " + std::to_string(m_pos_2)  + " > " + std::to_string(predicate.get_arity()) + ").");
+        }
+        if (predicate.get_vocabulary_info() != &vocabulary) {
+            throw std::runtime_error("PrimitiveRole::PrimitiveRole - predicate does not come from same vocabulary.");
+        }
+    }
+
+    const RoleDenotation& evaluate(const State& state) override {
         const InstanceInfo& info = *state.get_instance_info();
         RoleDenotation_Set result_set;
         for (int atom_idx : state.get_atom_idxs()) {
@@ -25,17 +35,6 @@ protected:
         m_result.clear();
         m_result.insert(m_result.end(), result_set.begin(), result_set.end());
         return m_result;
-    }
-
-public:
-    PrimitiveRole(const VocabularyInfo& vocabulary, const Predicate& predicate, int pos_1, int pos_2)
-    : Role(vocabulary, predicate.get_name()), m_predicate(predicate), m_pos_1(pos_1), m_pos_2(pos_2) {
-        if (m_pos_1 >= predicate.get_arity() || m_pos_2 >= predicate.get_arity()) {
-            throw std::runtime_error("PrimitiveRole::evaluate_impl - object index does not match predicate arity ("s + std::to_string(m_pos_1) + " or " + std::to_string(m_pos_2)  + " > " + std::to_string(predicate.get_arity()) + ").");
-        }
-        if (predicate.get_vocabulary_info() != &vocabulary) {
-            throw std::runtime_error("PrimitiveRole::PrimitiveRole - predicate does not come from same vocabulary.");
-        }
     }
 
     int compute_complexity() const override {

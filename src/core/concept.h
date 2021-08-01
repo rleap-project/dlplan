@@ -18,7 +18,7 @@ public:
     }
     ~ConceptImpl() override = default;
 
-    const ConceptDenotation& evaluate(const State& state) override {
+    const ConceptDenotation& evaluate(const State& state) const override {
         if (state.get_instance_info()->get_vocabulary_info().get() != m_vocabulary_info) {
             throw std::runtime_error("ConceptImpl::evaluate - mismatched vocabularies of Concept and State.");
         }

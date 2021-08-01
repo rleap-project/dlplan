@@ -289,7 +289,7 @@ Concept::Concept(const Concept& other)
 
 Concept::~Concept() = default;
 
-ConceptDenotation Concept::evaluate(const State& state) {
+ConceptDenotation Concept::evaluate(const State& state) const {
     return m_pImpl->evaluate(state);
 }
 
@@ -309,7 +309,7 @@ Role::Role(const Role& other)
 
 Role::~Role() = default;
 
-RoleDenotation Role::evaluate(const State& state) {
+RoleDenotation Role::evaluate(const State& state) const {
     return m_pImpl->evaluate(state);
 }
 
@@ -330,7 +330,7 @@ Numerical::Numerical(const Numerical& other)
 
 Numerical::~Numerical() = default;
 
-int Numerical::evaluate(const State& state) {
+int Numerical::evaluate(const State& state) const {
     return m_pImpl->evaluate(state);
 }
 
@@ -351,7 +351,7 @@ Boolean::Boolean(const Boolean& other)
 
 Boolean::~Boolean() = default;
 
-bool Boolean::evaluate(const State& state) {
+bool Boolean::evaluate(const State& state) const {
     return m_pImpl->evaluate(state);
 }
 

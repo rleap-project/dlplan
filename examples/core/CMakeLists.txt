@@ -1,2 +1,2 @@
 add_executable(simple simple.cpp)
-target_link_libraries(simple core)
+target_link_libraries(simple dlplancore)

@@ -11,17 +11,6 @@ protected:
     const Concept_Ptr m_concept_left;
     const Concept_Ptr m_concept_right;
 
-protected:
-    const ConceptDenotation& evaluate_impl(const State& state) override {
-        const ConceptDenotation& l_vec = m_concept_left->evaluate(state);
-        const ConceptDenotation& r_vec = m_concept_right->evaluate(state);
-        ConceptDenotation_Set r_set(l_vec.begin(), l_vec.end());
-        r_set.insert(r_vec.begin(), r_vec.end());
-        m_result.clear();
-        m_result.insert(m_result.begin(), r_set.begin(), r_set.end());
-        return m_result;
-    }
-
 public:
     OrConcept(const VocabularyInfo& vocabulary, Concept_Ptr concept_1, Concept_Ptr concept_2)
     : Concept(vocabulary, "c_or"),
@@ -30,6 +19,16 @@ public:
         if (!(concept_1 && concept_2)) {
             throw std::runtime_error("OrConcept::OrConcept - at least one child is a nullptr.");
         }
+    }
+
+    const ConceptDenotation& evaluate(const State& state) override {
+        const ConceptDenotation& l_vec = m_concept_left->evaluate(state);
+        const ConceptDenotation& r_vec = m_concept_right->evaluate(state);
+        ConceptDenotation_Set r_set(l_vec.begin(), l_vec.end());
+        r_set.insert(r_vec.begin(), r_vec.end());
+        m_result.clear();
+        m_result.insert(m_result.begin(), r_set.begin(), r_set.end());
+        return m_result;
     }
 
     int compute_complexity() const override {

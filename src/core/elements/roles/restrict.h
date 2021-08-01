@@ -12,8 +12,15 @@ protected:
     const Role_Ptr m_role;
     const Concept_Ptr m_concept;
 
-protected:
-    const RoleDenotation& evaluate_impl(const State& state) override {
+public:
+    RestrictRole(const VocabularyInfo& vocabulary, Role_Ptr role, Concept_Ptr concept)
+    : Role(vocabulary, "r_restrict"), m_role(role), m_concept(concept) {
+        if (!(role && concept)) {
+            throw std::runtime_error("RestrictRole::RestrictRole - at least one child is a nullptr.");
+        }
+    }
+
+    const RoleDenotation& evaluate(const State& state) override {
         const RoleDenotation& r_vec = m_role->evaluate(state);
         const ConceptDenotation& c_vec = m_concept->evaluate(state);
         ConceptDenotation_Set c_set(c_vec.begin(), c_vec.end());
@@ -24,14 +31,6 @@ protected:
             }
         }
         return m_result;
-    }
-
-public:
-    RestrictRole(const VocabularyInfo& vocabulary, Role_Ptr role, Concept_Ptr concept)
-    : Role(vocabulary, "r_restrict"), m_role(role), m_concept(concept) {
-        if (!(role && concept)) {
-            throw std::runtime_error("RestrictRole::RestrictRole - at least one child is a nullptr.");
-        }
     }
 
     int compute_complexity() const override {

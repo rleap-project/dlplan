@@ -15,8 +15,15 @@ protected:
     const Role_Ptr m_role;
     const Role_Ptr m_role_to;
 
-protected:
-    const int& evaluate_impl(const State& state) override {
+public:
+    SumRoleDistanceNumerical(const VocabularyInfo& vocabulary, Role_Ptr role_from, Role_Ptr role, Role_Ptr role_to)
+    : Numerical(vocabulary, "n_sum_role_distance"), m_role_from(role_from), m_role(role), m_role_to(role_to) {
+        if (!(role_from && role && role_to)) {
+            throw std::runtime_error("SumRoleDistanceNumerical::SumRoleDistanceNumerical - child is not of type Role, Role, Role.");
+        }
+    }
+
+    const int& evaluate(const State& state) override {
         const RoleDenotation& r_from_vec = m_role_from->evaluate(state);
         if (r_from_vec.empty()) {
             m_result = 0;
@@ -49,14 +56,6 @@ protected:
             m_result = utils::path_addition(m_result, min_distance);
         }
         return m_result;
-    }
-
-public:
-    SumRoleDistanceNumerical(const VocabularyInfo& vocabulary, Role_Ptr role_from, Role_Ptr role, Role_Ptr role_to)
-    : Numerical(vocabulary, "n_sum_role_distance"), m_role_from(role_from), m_role(role), m_role_to(role_to) {
-        if (!(role_from && role && role_to)) {
-            throw std::runtime_error("SumRoleDistanceNumerical::SumRoleDistanceNumerical - child is not of type Role, Role, Role.");
-        }
     }
 
     int compute_complexity() const override {

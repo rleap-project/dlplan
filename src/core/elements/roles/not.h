@@ -11,8 +11,15 @@ protected:
     const Role_Ptr m_role;
     RoleDenotation_Set m_universe_set;
 
-protected:
-    const RoleDenotation& evaluate_impl(const State& state) override {
+public:
+    NotRole(const VocabularyInfo& vocabulary, Role_Ptr role)
+    : Role(vocabulary, "r_not"), m_role(role) {
+        if (!role) {
+            throw std::runtime_error("NotRole::NotRole - child is a nullptr.");
+        }
+    }
+
+    const RoleDenotation& evaluate(const State& state) override {
         if (m_universe_set.empty()) {
             int num_objects = state.get_instance_info()->get_num_objects();
             for (int object_idx_1 = 0; object_idx_1 < num_objects; ++object_idx_1) {
@@ -29,14 +36,6 @@ protected:
         m_result.clear();
         m_result.insert(m_result.begin(), r_set.begin(), r_set.end());
         return m_result;
-    }
-
-public:
-    NotRole(const VocabularyInfo& vocabulary, Role_Ptr role)
-    : Role(vocabulary, "r_not"), m_role(role) {
-        if (!role) {
-            throw std::runtime_error("NotRole::NotRole - child is a nullptr.");
-        }
     }
 
     int compute_complexity() const override {

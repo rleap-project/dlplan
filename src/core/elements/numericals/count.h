@@ -11,14 +11,13 @@ class CountNumerical : public Numerical {
 protected:
     const T m_element;
 
-protected:
-    const int& evaluate_impl(const State& state) override {
+public:
+    CountNumerical(const VocabularyInfo& vocabulary, T element) : Numerical(vocabulary, "n_count"), m_element(element) { }
+
+    const int& evaluate(const State& state) override {
         m_result = m_element->evaluate(state).size();
         return m_result;
     }
-
-public:
-    CountNumerical(const VocabularyInfo& vocabulary, T element) : Numerical(vocabulary, "n_count"), m_element(element) { }
 
     int compute_complexity() const override {
         return m_element->compute_complexity() + 1;

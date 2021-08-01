@@ -7,14 +7,13 @@
 namespace dlplan::core::element {
 
 class BotConcept : public Concept {
-protected:
-    const ConceptDenotation& evaluate_impl(const State&) override {
-        return m_result;
-    }
-
 public:
     BotConcept(const VocabularyInfo& vocabulary)
     : Concept(vocabulary, "c_bot") {
+    }
+
+    const ConceptDenotation& evaluate(const State&) override {
+        return m_result;
     }
 
     int compute_complexity() const override {

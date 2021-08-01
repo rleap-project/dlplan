@@ -16,7 +16,7 @@ public:
     }
     ~BooleanImpl() override = default;
 
-    const bool& evaluate(const State& state) override {
+    const bool& evaluate(const State& state) const override {
         if (state.get_instance_info()->get_vocabulary_info().get() != m_vocabulary_info) {
             throw std::runtime_error("BooleanImpl::evaluate - mismatched vocabularies of Boolean and State.");
         }
