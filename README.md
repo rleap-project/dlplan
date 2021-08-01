@@ -8,7 +8,7 @@ Welcome to the "description logics state features for planning" library.
 Run the following from the project root to build the library.
 By default, the library compiles in `Debug` mode.
 ```console
-cmake -DCMAKE_INSTALL_PREFIX=/usr/local/ -S . -B build
+cmake -DCMAKE_INSTALL_PREFIX=/usr/local -S . -B build
 cmake --build build -j4
 ```
 
@@ -23,8 +23,8 @@ To install the library, run
 cmake --install build
 ```
 
-Don't forget to add the corresponding prefix + /dlplan/lib to LD_LIBRARY_PATH before linking to your CPP program.
-In this case we add /usr/local/dlplan/lib
+Don't forget to add the corresponding `prefix + /include/dlplan` to the environment variable `CPLUS_INCLUDE_PATH` before compiling your CPP program.
+Don't forget to add the corresponding `prefix + /lib/dlplan` to the environment variable `LD_LIBRARY_PATH` before linking to your CPP program.
 
 ### Building Python Bindings
 At the moment we recommend building and installing the Python bindings directly into a virtual environment.
