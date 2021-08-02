@@ -32,4 +32,4 @@ jobs:
       - name: Test
         run: pytest api/python
         env:
-            LD_LIBRARY_PATH: LD_LIBRARY_PATH=/build/bdist.linux-x86_64/wheel
+            LD_LIBRARY_PATH: LD_LIBRARY_PATH=/home/runner/work/dlplan/dlplan/build/bdist.linux-x86_64/wheel
