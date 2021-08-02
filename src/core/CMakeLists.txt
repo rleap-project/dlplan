@@ -1,4 +1,4 @@
-add_library(dlplancore SHARED
+add_library(dlplancore
     atom.cpp
     state.cpp
     constant.cpp
