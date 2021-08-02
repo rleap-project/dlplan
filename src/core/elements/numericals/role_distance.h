@@ -44,11 +44,11 @@ public:
         // 4. Find closest target.
         m_result = INF;
         for (const auto& r1 : r_from_vec) {
-            int source = r1.first;
+            int source = r1.second;
             for (const auto& r2 : r_to_vec) {
-                int target = r2.first;
+                int target = r2.second;
                 // the second component of role denotations must agree.
-                if (r1.second == r2.second) {
+                if (r1.first == r2.first) {
                     m_result = std::min<int>(m_result, pairwise_distances[source][target]);
                 }
             }

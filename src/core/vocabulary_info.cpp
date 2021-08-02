@@ -24,6 +24,7 @@ const Constant& VocabularyInfoImpl::add_constant(const VocabularyInfo& parent, c
     }
     int object_idx = m_constants.size();
     m_constants.push_back(Constant(&parent, constant_name, object_idx));
+    m_constant_name_to_constant_idx.emplace(constant_name, object_idx);
     return m_constants.back();
 }
 
@@ -49,8 +50,12 @@ const Predicate& VocabularyInfoImpl::get_predicate(int predicate_idx) const {
     return m_predicates[predicate_idx];
 }
 
+bool VocabularyInfoImpl::exists_constant_name(const std::string& name) const {
+    return m_constant_name_to_constant_idx.find(name) != m_constant_name_to_constant_idx.end();
+}
+
 int VocabularyInfoImpl::get_constant_idx(const std::string& name) const {
-    if (m_constant_name_to_constant_idx.find(name) == m_constant_name_to_constant_idx.end()) {
+    if (!exists_constant_name(name)) {
         throw std::runtime_error("VocabularyInfoImpl::get_constant_idx - no constant with name ("s + name + ").");
     }
     return m_constant_name_to_constant_idx.at(name);

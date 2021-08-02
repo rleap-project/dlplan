@@ -80,6 +80,7 @@ public:
     const std::vector<Predicate>& get_predicates() const;
     int get_predicate_idx(const std::string& name) const;
     const Predicate& get_predicate(int index) const;
+    bool exists_constant_name(const std::string& name) const;
     int get_constant_idx(const std::string& name) const;
     const Constant& get_constant(int constant_idx) const;
     const std::vector<Constant>& get_constants() const;

@@ -193,6 +193,7 @@ public:
     const std::vector<Predicate>& get_predicates() const;
     int get_predicate_idx(const std::string& name) const;
     const Predicate& get_predicate(int index) const;
+    bool exists_constant_name(const std::string& name) const;
     int get_constant_idx(const std::string& name) const;
     const Constant& get_constant(int index) const;
     const std::vector<Constant>& get_constants() const;
@@ -227,6 +228,7 @@ public:
     const std::vector<Atom>& get_atoms() const;
     const Atom& get_atom(int index) const;
     int get_atom_idx(const std::string& name) const;
+    bool exists_object(const std::string name) const;
     const std::vector<Object>& get_objects() const;
     const Object& get_object(int index) const;
     int get_object_idx(const std::string& name) const;

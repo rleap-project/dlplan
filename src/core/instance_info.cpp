@@ -100,6 +100,10 @@ int InstanceInfoImpl::get_atom_idx(const std::string& name) const {
     return m_atom_name_to_atom_idx.at(name);
 }
 
+bool InstanceInfoImpl::exists_object(const std::string name) const {
+    return m_object_name_to_object_idx.find(name) != m_object_name_to_object_idx.end();
+}
+
 const std::vector<Object>& InstanceInfoImpl::get_objects() const {
     return m_objects;
 }

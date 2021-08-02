@@ -56,6 +56,7 @@ public:
     const std::vector<Atom>& get_atoms() const;
     const Atom& get_atom(int atom_idx) const;
     int get_atom_idx(const std::string& name) const;
+    bool exists_object(const std::string name) const;
     const std::vector<Object>& get_objects() const;
     const Object& get_object(int object_idx) const;
     int get_object_idx(const std::string& object_name) const;

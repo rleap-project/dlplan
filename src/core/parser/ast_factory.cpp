@@ -138,6 +138,10 @@ Expression_Ptr AST_Factory::make_ast(const VocabularyInfo& vocabulary_info, cons
             throw std::runtime_error("AST_Factory::make_ast - Unspecified projection for predicate ("s + name + "). Is this supposed to be a concept or a role?");
         }
     }
+    // case 3: name is constant in VocabularyInfo
+    else if (vocabulary_info.exists_constant_name(name)) {
+        return std::make_unique<Expression>(Expression(name, std::move(children)));
+    }
     // case 3: name is an integer indicating projection
     else if (is_number(name)) {
         return std::make_unique<Expression>(Expression(name, std::move(children)));

@@ -48,6 +48,10 @@ int InstanceInfo::get_atom_idx(const std::string& name) const {
     return m_pImpl->get_atom_idx(name);
 }
 
+bool InstanceInfo::exists_object(const std::string name) const {
+    return m_pImpl->exists_object(name);
+}
+
 const std::vector<Object>& InstanceInfo::get_objects() const {
     return m_pImpl->get_objects();
 }
@@ -101,6 +105,10 @@ int VocabularyInfo::get_predicate_idx(const std::string& name) const {
 
 const Predicate& VocabularyInfo::get_predicate(int index) const {
     return m_pImpl->get_predicate(index);
+}
+
+bool VocabularyInfo::exists_constant_name(const std::string& name) const {
+    return m_pImpl->exists_constant_name(name);
 }
 
 int VocabularyInfo::get_constant_idx(const std::string& name) const {
