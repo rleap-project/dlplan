@@ -31,3 +31,5 @@ jobs:
 
       - name: Test
         run: pytest api/python
+        env:
+            LD_LIBRARY_PATH: LD_LIBRARY_PATH=/tmp/pip-req-build-za8316z1/build/temp.linux-x86_64-3.6
