@@ -1,4 +1,4 @@
-add_library(dlplangenerator
+add_library(dlplangenerator SHARED
     feature_collection.cpp
     feature_generator.cpp
     generator.cpp
