@@ -13,6 +13,7 @@ FetchContent_MakeAvailable(googletest)
 add_executable(
     ${TEST_NAME}
     core.cpp
+    transitive_closure.cpp
 )
 target_link_libraries(${TEST_NAME} dlplancore gtest_main)
 

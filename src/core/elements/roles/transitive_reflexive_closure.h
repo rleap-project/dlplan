@@ -29,8 +29,8 @@ public:
         utils::PairwiseDistances pairwise_distances = utils::compute_pairwise_distances(adj_list);
         // 4. Extract the transitive closure from the pairwise distances.
         RoleDenotation_Set result_set;
-        for (int source = 0; source < static_cast<int>(adj_list.size()); ++source) {
-            for (int target : adj_list[source]) {
+        for (int source = 0; source < num_objects; ++source) {
+            for (int target = 0; target < num_objects; ++target) {
                 if (pairwise_distances[source][target] < INF) {
                     result_set.emplace(source, target);
                 }
