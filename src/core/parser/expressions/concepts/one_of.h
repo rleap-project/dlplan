@@ -13,8 +13,12 @@ protected:
         if (m_children.size() != 1) {
             throw std::runtime_error("OneOfConcept::parse_concept_impl - number of children ("s + std::to_string(m_children.size()) + " != 1).");
         }
+        std::string constant_name = m_children[0]->get_name();
+        if (!vocabulary.exists_constant_name(constant_name)) {
+            throw std::runtime_error("OneOfConcept::parse_concept_impl - VocabularyInfo does not contain constant (" + constant_name + ")");
+        }
         // 2. Construct element
-        return std::make_unique<element::OneOfConcept>(vocabulary, vocabulary.get_constant(vocabulary.get_constant_idx(m_children[0]->get_name())));
+        return std::make_unique<element::OneOfConcept>(vocabulary, vocabulary.get_constant(vocabulary.get_constant_idx(constant_name)));
     }
 
 public:

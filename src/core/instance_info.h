@@ -37,7 +37,7 @@ private:
     const Atom& add_atom(const InstanceInfo& parent, const std::string &predicate_name, const Name_Vec &object_names, bool is_static);
 
 public:
-    InstanceInfoImpl(const InstanceInfo& parent, std::shared_ptr<const VocabularyInfo> vocabulary_info);
+    InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info);
     ~InstanceInfoImpl() = default;
 
     /**

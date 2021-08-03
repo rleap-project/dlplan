@@ -24,7 +24,7 @@
 
 namespace dlplan::core {
 
-InstanceInfo::InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info) : m_pImpl(InstanceInfoImpl(*this, vocabulary_info)) { }
+InstanceInfo::InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info) : m_pImpl(InstanceInfoImpl(vocabulary_info)) { }
 
 InstanceInfo::~InstanceInfo() = default;
 
