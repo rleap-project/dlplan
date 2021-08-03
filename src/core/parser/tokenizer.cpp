@@ -34,6 +34,7 @@ Tokens Tokenizer::tokenize(const std::string &description) const {
             switch (c) {
                 case ' ':
                 case '\t':
+                case '\n':
                 case ',': {
                     add_token(ss, is_num, tokens);
                     break;
