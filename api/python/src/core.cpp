@@ -66,7 +66,7 @@ void init_core(py::module_ &m) {
 
     py::class_<core::InstanceInfo, std::shared_ptr<core::InstanceInfo>>(m, "InstanceInfo")
         .def(py::init<std::shared_ptr<core::VocabularyInfo>>())
-        .def("add_atom", &core::InstanceInfo::add_atom, "name"_a, "object_names"_a, "negated"_a = false)
+        .def("add_atom", &core::InstanceInfo::add_atom, py::arg("name"), py::arg("object_names"), py::arg("negated") = false)
         .def("add_static_atom", &core::InstanceInfo::add_static_atom)
         .def("get_atoms", &core::InstanceInfo::get_atoms)
         .def("get_atom", &core::InstanceInfo::get_atom)
