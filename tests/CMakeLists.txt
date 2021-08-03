@@ -14,6 +14,7 @@ add_executable(
     ${TEST_NAME}
     core.cpp
     transitive_closure.cpp
+    concept_distance.cpp
 )
 target_link_libraries(${TEST_NAME} dlplancore gtest_main)
 

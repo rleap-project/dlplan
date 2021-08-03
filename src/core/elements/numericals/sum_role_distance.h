@@ -45,12 +45,10 @@ public:
         m_result = 0;
         for (const auto& r1 : r_from_vec) {
             int min_distance = INF;
-            int source = r1.second;
             for (const auto& r2 : r_to_vec) {
-                int target = r2.second;
                 // the first component of role denotations must agree.
                 if (r1.first == r2.first) {
-                    min_distance = std::min<int>(min_distance, pairwise_distances[source][target]);
+                    min_distance = std::min<int>(min_distance, pairwise_distances[r1.second][r2.second]);
                 }
             }
             m_result = utils::path_addition(m_result, min_distance);
