@@ -34,7 +34,7 @@ private:
     std::unordered_map<std::string, unsigned> m_object_name_to_object_idx;
     std::vector<Object> m_objects;
 
-    const Atom& add_atom(const InstanceInfo& parent, const std::string &predicate_name, const Name_Vec &object_names, bool is_static);
+    const Atom& add_atom(const InstanceInfo& parent, const std::string &predicate_name, const Name_Vec &object_names, bool negated, bool is_static);
 
 public:
     InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info);
@@ -43,7 +43,7 @@ public:
     /**
      * Adds an atom that may have varying evaluation depending on the state.
      */
-    const Atom& add_atom(const InstanceInfo& parent, const std::string &predicate_name, const Name_Vec &object_names);
+    const Atom& add_atom(const InstanceInfo& parent, const std::string &predicate_name, const Name_Vec &object_names, bool negated);
 
     /**
      * Adds an atom that remains true forever.

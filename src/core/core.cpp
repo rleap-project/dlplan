@@ -28,8 +28,8 @@ InstanceInfo::InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info
 
 InstanceInfo::~InstanceInfo() = default;
 
-const Atom& InstanceInfo::add_atom(const std::string &name, const Name_Vec &object_names) {
-    return m_pImpl->add_atom(*this, name, object_names);
+const Atom& InstanceInfo::add_atom(const std::string &name, const Name_Vec &object_names, bool negated) {
+    return m_pImpl->add_atom(*this, name, object_names, negated);
 }
 
 const Atom& InstanceInfo::add_static_atom(const std::string &name, const Name_Vec &object_names) {
@@ -261,10 +261,6 @@ bool Atom::get_is_static() const {
 
 
 State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms) : m_pImpl(instance_info, atoms) { }
-
-State::State(std::shared_ptr<const InstanceInfo> instance_info, const Name_Vec& atom_names) : m_pImpl(instance_info, atom_names) { }
-
-State::State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_indices) : m_pImpl(instance_info, atom_indices) { }
 
 State::State(const State& other) : m_pImpl(*other.m_pImpl) {}
 

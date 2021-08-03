@@ -153,8 +153,6 @@ private:
 
 public:
     State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms);
-    State(std::shared_ptr<const InstanceInfo> instance_info, const Name_Vec& atom_names);
-    State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_indices);
     State(const State& other);
     ~State();
 
@@ -215,7 +213,7 @@ public:
     /**
      * Adds an atom that may have varying evaluation depending on the state.
      */
-    const Atom& add_atom(const std::string& name, const Name_Vec& object_names);
+    const Atom& add_atom(const std::string& name, const Name_Vec& object_names, bool negated=false);
 
     /**
      * Adds an atom that remains true forever.

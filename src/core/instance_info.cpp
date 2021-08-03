@@ -23,7 +23,7 @@ InstanceInfoImpl::InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabul
     : m_vocabulary_info(vocabulary_info) {
 }
 
-const Atom& InstanceInfoImpl::add_atom(const InstanceInfo& parent, const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
+const Atom& InstanceInfoImpl::add_atom(const InstanceInfo& parent, const std::string &predicate_name, const Name_Vec &object_names, bool negated, bool is_static) {
     if (!m_vocabulary_info->exists_predicate_name(predicate_name)) {
         throw std::runtime_error("InstanceInfoImpl::add_atom - name of predicate missing in vocabulary ("s + predicate_name + ")");
     } else if (m_vocabulary_info->get_predicate(m_vocabulary_info->get_predicate_idx(predicate_name)).get_arity() != static_cast<int>(object_names.size())) {
@@ -34,7 +34,7 @@ const Atom& InstanceInfoImpl::add_atom(const InstanceInfo& parent, const std::st
     const Predicate& predicate = m_vocabulary_info->get_predicate(predicate_idx);
     // object related
     std::stringstream ss;
-    // if (negated) ss << "not ";
+    if (negated) ss << "not ";
     ss << predicate_name << "(";
     std::vector<Object> objects;
     for (int i = 0; i < static_cast<int>(object_names.size()); ++i) {
@@ -70,12 +70,12 @@ const Atom& InstanceInfoImpl::add_atom(const InstanceInfo& parent, const std::st
     return m_atoms.back();
 }
 
-const Atom& InstanceInfoImpl::add_atom(const InstanceInfo& parent, const std::string &predicate_name, const Name_Vec &object_names) {
-    return add_atom(parent, predicate_name, object_names, false);
+const Atom& InstanceInfoImpl::add_atom(const InstanceInfo& parent, const std::string &predicate_name, const Name_Vec &object_names, bool negated) {
+    return add_atom(parent, predicate_name, object_names, negated, false);
 }
 
 const Atom& InstanceInfoImpl::add_static_atom(const InstanceInfo& parent, const std::string& predicate_name, const Name_Vec& object_names) {
-    return add_atom(parent, predicate_name, object_names, true);
+    return add_atom(parent, predicate_name, object_names, false, true);
 }
 
 const std::vector<Atom>& InstanceInfoImpl::get_atoms() const {
