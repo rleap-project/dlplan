@@ -20,8 +20,10 @@ private:
 
 public:
     StateImpl(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms);
+    /* deprecated
     StateImpl(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs);
     StateImpl(std::shared_ptr<const InstanceInfo> instance_info, const Name_Vec& atom_names);
+    */
     ~StateImpl() = default;
 
     /**

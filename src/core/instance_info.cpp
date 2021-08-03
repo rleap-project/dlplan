@@ -23,7 +23,7 @@ InstanceInfoImpl::InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabul
     : m_vocabulary_info(vocabulary_info) {
 }
 
-const Atom& InstanceInfoImpl::add_atom(const InstanceInfo& parent, const std::string &predicate_name, const Name_Vec &object_names, bool negated, bool is_static) {
+const Atom& InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool negated, bool is_static) {
     if (!m_vocabulary_info->exists_predicate_name(predicate_name)) {
         throw std::runtime_error("InstanceInfoImpl::add_atom - name of predicate missing in vocabulary ("s + predicate_name + ")");
     } else if (m_vocabulary_info->get_predicate(m_vocabulary_info->get_predicate_idx(predicate_name)).get_arity() != static_cast<int>(object_names.size())) {
@@ -43,12 +43,12 @@ const Atom& InstanceInfoImpl::add_atom(const InstanceInfo& parent, const std::st
         int object_idx;
         if (!object_exists) {
             object_idx = m_objects.size();
-            m_objects.push_back(Object(&parent, object_name, object_idx));
+            m_objects.push_back(Object(object_name, object_idx));
             m_object_name_to_object_idx.emplace(object_name, object_idx);
         } else {
             object_idx = m_object_name_to_object_idx.at(object_name);
         }
-        objects.push_back(Object(&parent, object_name, object_idx));
+        objects.push_back(Object(object_name, object_idx));
         ss << object_name;
         if (i < static_cast<int>(object_names.size()) - 1) {
             ss << ",";
@@ -66,16 +66,24 @@ const Atom& InstanceInfoImpl::add_atom(const InstanceInfo& parent, const std::st
         m_static_atom_idxs.push_back(atom_idx);
     }
 
-    m_atoms.push_back(Atom(&parent, atom_name, atom_idx, predicate, objects, is_static));
+    m_atoms.push_back(Atom(atom_name, atom_idx, predicate, objects, is_static));
     return m_atoms.back();
 }
 
-const Atom& InstanceInfoImpl::add_atom(const InstanceInfo& parent, const std::string &predicate_name, const Name_Vec &object_names, bool negated) {
-    return add_atom(parent, predicate_name, object_names, negated, false);
+const Atom& InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool negated) {
+    return add_atom(predicate_name, object_names, negated, false);
 }
 
-const Atom& InstanceInfoImpl::add_static_atom(const InstanceInfo& parent, const std::string& predicate_name, const Name_Vec& object_names) {
-    return add_atom(parent, predicate_name, object_names, false, true);
+const Atom& InstanceInfoImpl::add_static_atom(const std::string& predicate_name, const Name_Vec& object_names) {
+    return add_atom(predicate_name, object_names, false, true);
+}
+
+bool InstanceInfoImpl::exists_atom(const Atom& atom) const {
+    if (!utils::in_bounds(atom.get_index(), m_atoms)) {
+        throw std::runtime_error("InstanceInfoImpl::exists_atom: atom index out of range.");
+    }
+    // we only need to check the position with the corresponding index.
+    return (m_atoms[atom.get_index()] == atom) ? true : false;
 }
 
 const std::vector<Atom>& InstanceInfoImpl::get_atoms() const {
@@ -94,6 +102,14 @@ int InstanceInfoImpl::get_atom_idx(const std::string& name) const {
         throw std::runtime_error("InstanceInfoImpl::get_atom_idx - no atom with name ("s + name + ").");
     }
     return m_atom_name_to_atom_idx.at(name);
+}
+
+bool InstanceInfoImpl::exists_object(const Object& object) const {
+    if (!utils::in_bounds(object.get_index(), m_objects)) {
+        throw std::runtime_error("InstanceInfoImpl::exists_object: object index out of range.");
+    }
+    // we only need to check the position with the corresponding index.
+    return (m_objects[object.get_index()] == object) ? true : false;
 }
 
 bool InstanceInfoImpl::exists_object(const std::string name) const {

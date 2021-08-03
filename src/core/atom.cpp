@@ -10,18 +10,13 @@ using namespace std::string_literals;
 namespace dlplan::core {
 
 AtomImpl::AtomImpl(
-    const InstanceInfo* instance_info,
     const std::string& name,
     int index,
     const Predicate& predicate,
     const std::vector<Object> &objects,
     bool is_static)
-    : m_instance_info(instance_info), m_name(name), m_index(index),
+    : m_name(name), m_index(index),
       m_predicate(predicate), m_objects(objects), m_is_static(is_static) { }
-
-const InstanceInfo* AtomImpl::get_instance_info() const {
-    return m_instance_info;
-}
 
 const std::string& AtomImpl::get_name() const {
     return m_name;

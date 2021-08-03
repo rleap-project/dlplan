@@ -43,17 +43,16 @@ class Constant {
 private:
     pimpl<ConstantImpl> m_pImpl;
 
-    Constant(const VocabularyInfo* vocabulary_info, const std::string& name, int index);
+    Constant(const std::string& name, int index);
     friend class VocabularyInfoImpl;
 
 public:
     Constant(const Constant& other);
     ~Constant();
 
-    bool operator==(const Constant& other);
-    bool operator!=(const Constant& other);
+    bool operator==(const Constant& other) const;
+    bool operator!=(const Constant& other) const;
 
-    const VocabularyInfo* get_vocabulary_info() const;
     int get_index() const;
     const std::string& get_name() const;
 };
@@ -66,20 +65,19 @@ class Predicate {
 private:
     pimpl<PredicateImpl> m_pImpl;
 
-    Predicate(const VocabularyInfo* vocabulary_info, const std::string& name, int index, int arity);
+    Predicate(const std::string& name, int index, int arity);
     friend class VocabularyInfoImpl;
 
 public:
     Predicate(const Predicate& other);
     ~Predicate();
 
-    bool operator==(const Predicate& other);
-    bool operator!=(const Predicate& other);
+    bool operator==(const Predicate& other) const;
+    bool operator!=(const Predicate& other) const;
 
     /**
      * Getters.
      */
-    const VocabularyInfo* get_vocabulary_info() const;
     int get_index() const;
     const std::string& get_name() const;
     int get_arity() const;
@@ -93,17 +91,16 @@ class Object {
 private:
     pimpl<ObjectImpl> m_pImpl;
 
-    Object(const InstanceInfo* instance_info, const std::string& name, int index);
+    Object(const std::string& name, int index);
     friend class InstanceInfoImpl;
 
 public:
     Object(const Object& other);
     ~Object();
 
-    bool operator==(const Object& other);
-    bool operator!=(const Object& other);
+    bool operator==(const Object& other) const;
+    bool operator!=(const Object& other) const;
 
-    const InstanceInfo* get_instance_info() const;
     int get_index() const;
     const std::string& get_name() const;
 };
@@ -116,8 +113,7 @@ class Atom {
 private:
     pimpl<AtomImpl> m_pImpl;
 
-    Atom(const InstanceInfo* instance_info,
-        const std::string& name,
+    Atom(const std::string& name,
         int index,
         const Predicate& predicate,
         const std::vector<Object> &objects,
@@ -128,13 +124,12 @@ public:
     Atom(const Atom& other);
     ~Atom();
 
-    bool operator==(const Atom& other);
-    bool operator!=(const Atom& other);
+    bool operator==(const Atom& other) const;
+    bool operator!=(const Atom& other) const;
 
     /**
      * Getters.
      */
-    const InstanceInfo* get_instance_info() const;
     const std::string& get_name() const;
     int get_index() const;
     const Predicate& get_predicate() const;
@@ -156,8 +151,8 @@ public:
     State(const State& other);
     ~State();
 
-    bool operator==(const State& other);
-    bool operator!=(const State& other);
+    bool operator==(const State& other) const;
+    bool operator!=(const State& other) const;
 
     /**
      * Computes string-like representation of the state.
@@ -187,10 +182,12 @@ public:
 
     const Constant& add_constant(const std::string& name);
 
+    bool exists_predicate(const Predicate& predicate) const;
     bool exists_predicate_name(const std::string& name) const;
     const std::vector<Predicate>& get_predicates() const;
     int get_predicate_idx(const std::string& name) const;
     const Predicate& get_predicate(int index) const;
+    bool exists_constant(const Constant& constant) const;
     bool exists_constant_name(const std::string& name) const;
     int get_constant_idx(const std::string& name) const;
     const Constant& get_constant(int index) const;
@@ -223,9 +220,11 @@ public:
     /**
      * Getters.
      */
+    bool exists_atom(const Atom& atom) const;
     const std::vector<Atom>& get_atoms() const;
     const Atom& get_atom(int index) const;
     int get_atom_idx(const std::string& name) const;
+    bool exists_object(const Object& object) const;
     bool exists_object(const std::string name) const;
     const std::vector<Object>& get_objects() const;
     const Object& get_object(int index) const;

@@ -29,11 +29,15 @@ InstanceInfo::InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info
 InstanceInfo::~InstanceInfo() = default;
 
 const Atom& InstanceInfo::add_atom(const std::string &name, const Name_Vec &object_names, bool negated) {
-    return m_pImpl->add_atom(*this, name, object_names, negated);
+    return m_pImpl->add_atom(name, object_names, negated);
 }
 
 const Atom& InstanceInfo::add_static_atom(const std::string &name, const Name_Vec &object_names) {
-    return m_pImpl->add_static_atom(*this, name, object_names);
+    return m_pImpl->add_static_atom(name, object_names);
+}
+
+bool InstanceInfo::exists_atom(const Atom& atom) const {
+    return m_pImpl->exists_atom(atom);
 }
 
 const std::vector<Atom>& InstanceInfo::get_atoms() const {
@@ -46,6 +50,10 @@ const Atom& InstanceInfo::get_atom(int index) const {
 
 int InstanceInfo::get_atom_idx(const std::string& name) const {
     return m_pImpl->get_atom_idx(name);
+}
+
+bool InstanceInfo::exists_object(const Object& object) const {
+    return m_pImpl->exists_object(object);
 }
 
 bool InstanceInfo::exists_object(const std::string name) const {
@@ -84,11 +92,15 @@ VocabularyInfo::VocabularyInfo(const VocabularyInfo& other) : m_pImpl(*other.m_p
 VocabularyInfo::~VocabularyInfo() = default;
 
 const Predicate& VocabularyInfo::add_predicate(const std::string &name, int arity) {
-    return m_pImpl->add_predicate(*this, name, arity);
+    return m_pImpl->add_predicate(name, arity);
 }
 
 const Constant& VocabularyInfo::add_constant(const std::string& name) {
-    return m_pImpl->add_constant(*this, name);
+    return m_pImpl->add_constant(name);
+}
+
+bool VocabularyInfo::exists_predicate(const Predicate& predicate) const {
+    return m_pImpl->exists_predicate(predicate);
 }
 
 bool VocabularyInfo::exists_predicate_name(const std::string& name) const {
@@ -105,6 +117,10 @@ int VocabularyInfo::get_predicate_idx(const std::string& name) const {
 
 const Predicate& VocabularyInfo::get_predicate(int index) const {
     return m_pImpl->get_predicate(index);
+}
+
+bool VocabularyInfo::exists_constant(const Constant& constant) const {
+    return m_pImpl->exists_constant(constant);
 }
 
 bool VocabularyInfo::exists_constant_name(const std::string& name) const {
@@ -124,23 +140,19 @@ const std::vector<Constant>& VocabularyInfo::get_constants() const {
 }
 
 
-Constant::Constant(const VocabularyInfo* vocabulary_info, const std::string& name, int index)
-    : m_pImpl(ConstantImpl(vocabulary_info, name, index)) { }
+Constant::Constant(const std::string& name, int index)
+    : m_pImpl(ConstantImpl(name, index)) { }
 
 Constant::Constant(const Constant& other) : m_pImpl(*other.m_pImpl) { }
 
 Constant::~Constant() { }
 
-bool Constant::operator==(const Constant& other) {
-    return (get_index() == other.get_index() && (get_vocabulary_info() == other.get_vocabulary_info()));
+bool Constant::operator==(const Constant& other) const {
+    return (get_index() == other.get_index() && (get_name() == other.get_name()));
 }
 
-bool Constant::operator!=(const Constant& other) {
+bool Constant::operator!=(const Constant& other) const {
     return !(*this == other);
-}
-
-const VocabularyInfo* Constant::get_vocabulary_info() const {
-    return m_pImpl->get_vocabulary_info();
 }
 
 int Constant::get_index() const {
@@ -152,23 +164,19 @@ const std::string& Constant::get_name() const {
 }
 
 
-Predicate::Predicate(const VocabularyInfo* vocabulary_info, const std::string& name, int index, int arity)
-    : m_pImpl(PredicateImpl(vocabulary_info, name, index, arity)) { }
+Predicate::Predicate(const std::string& name, int index, int arity)
+    : m_pImpl(PredicateImpl(name, index, arity)) { }
 
 Predicate::Predicate(const Predicate& other) : m_pImpl(*other.m_pImpl) { }
 
 Predicate::~Predicate() = default;
 
-bool Predicate::operator==(const Predicate& other)  {
-    return (get_index() == other.get_index()) && (get_vocabulary_info() == other.get_vocabulary_info());
+bool Predicate::operator==(const Predicate& other) const {
+    return (get_index() == other.get_index()) && (get_name() == other.get_name() && get_arity() == other.get_arity());
 }
 
-bool Predicate::operator!=(const Predicate& other) {
+bool Predicate::operator!=(const Predicate& other) const {
     return !(*this == other);
-}
-
-const VocabularyInfo* Predicate::get_vocabulary_info() const {
-    return m_pImpl->get_vocabulary_info();
 }
 
 int Predicate::get_index() const {
@@ -184,23 +192,19 @@ int Predicate::get_arity() const {
 }
 
 
-Object::Object(const InstanceInfo* instance_info, const std::string& name, int index)
-    : m_pImpl(ObjectImpl(instance_info, name, index)) {}
+Object::Object(const std::string& name, int index)
+    : m_pImpl(ObjectImpl(name, index)) {}
 
 Object::Object(const Object& other) : m_pImpl(*other.m_pImpl) { }
 
 Object::~Object() = default;
 
-bool Object::operator==(const Object& other) {
-    return (get_index() == other.get_index()) && (get_instance_info() == other.get_instance_info());
+bool Object::operator==(const Object& other) const {
+    return (get_index() == other.get_index()) && (get_name() == other.get_name());
 }
 
-bool Object::operator!=(const Object& other) {
+bool Object::operator!=(const Object& other) const {
     return !(*this == other);
-}
-
-const InstanceInfo* Object::get_instance_info() const {
-    return m_pImpl->get_instance_info();
 }
 
 const std::string& Object::get_name() const {
@@ -212,27 +216,22 @@ int Object::get_index() const {
 }
 
 
-Atom::Atom(const InstanceInfo* instance_info,
-    const std::string& name,
+Atom::Atom(const std::string& name,
     int index,
     const Predicate& predicate,
     const std::vector<Object> &objects,
-    bool is_static) : m_pImpl(AtomImpl(instance_info, name, index, predicate, objects, is_static)) { }
+    bool is_static) : m_pImpl(AtomImpl(name, index, predicate, objects, is_static)) { }
 
 Atom::Atom(const Atom& other) : m_pImpl(*other.m_pImpl) { }
 
 Atom::~Atom() = default;
 
-bool Atom::operator==(const Atom& other) {
-    return (get_index() == other.get_index()) && (get_instance_info() == other.get_instance_info());
+bool Atom::operator==(const Atom& other) const {
+    return (get_index() == other.get_index()) && (get_name() == other.get_name());
 }
 
-bool Atom::operator!=(const Atom& other) {
+bool Atom::operator!=(const Atom& other) const {
     return !(*this == other);
-}
-
-const InstanceInfo* Atom::get_instance_info() const {
-    return m_pImpl->get_instance_info();
 }
 
 const std::string& Atom::get_name() const {
@@ -266,11 +265,11 @@ State::State(const State& other) : m_pImpl(*other.m_pImpl) {}
 
 State::~State() = default;
 
-bool State::operator==(const State& other) {
+bool State::operator==(const State& other) const {
     return (get_atom_idxs() == other.get_atom_idxs()) && (get_instance_info() == other.get_instance_info());
 }
 
-bool State::operator!=(const State& other) {
+bool State::operator!=(const State& other) const {
     return !(*this == other);
 }
 

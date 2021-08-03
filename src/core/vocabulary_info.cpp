@@ -8,24 +8,32 @@
 
 namespace dlplan::core {
 
-const Predicate& VocabularyInfoImpl::add_predicate(const VocabularyInfo& parent, const std::string &predicate_name, int arity) {
+const Predicate& VocabularyInfoImpl::add_predicate(const std::string &predicate_name, int arity) {
     if (m_predicate_name_to_predicate_idx.find(predicate_name) != m_predicate_name_to_predicate_idx.end()) {
         throw std::runtime_error("VocabularyInfoImpl::add_predicate - predicate with name ("s + predicate_name + ") already exists.");
     }
     int predicate_idx = m_predicates.size();
-    m_predicates.push_back(Predicate(&parent, predicate_name, predicate_idx, arity));
+    m_predicates.push_back(Predicate(predicate_name, predicate_idx, arity));
     m_predicate_name_to_predicate_idx.emplace(predicate_name, predicate_idx);
     return m_predicates.back();
 }
 
-const Constant& VocabularyInfoImpl::add_constant(const VocabularyInfo& parent, const std::string& constant_name) {
+const Constant& VocabularyInfoImpl::add_constant(const std::string& constant_name) {
     if (m_constant_name_to_constant_idx.find(constant_name) != m_constant_name_to_constant_idx.end()) {
         throw std::runtime_error("VocabularyInfoImpl::add_constant - constant with name ("s + constant_name + ") already exists.");
     }
     int object_idx = m_constants.size();
-    m_constants.push_back(Constant(&parent, constant_name, object_idx));
+    m_constants.push_back(Constant(constant_name, object_idx));
     m_constant_name_to_constant_idx.emplace(constant_name, object_idx);
     return m_constants.back();
+}
+
+bool VocabularyInfoImpl::exists_predicate(const Predicate& predicate) const {
+    if (!utils::in_bounds(predicate.get_index(), m_predicates)) {
+        throw std::runtime_error("VocabularyInfoImpl::exists_predicate: predicate index out of range.");
+    }
+    // we only need to check the position with the corresponding index.
+    return (m_predicates[predicate.get_index()] == predicate) ? true : false;
 }
 
 bool VocabularyInfoImpl::exists_predicate_name(const std::string& name) const {
@@ -48,6 +56,14 @@ const Predicate& VocabularyInfoImpl::get_predicate(int predicate_idx) const {
         throw std::runtime_error("VocabularyInfoImpl::get_predicate - predicate index out of range.");
     }
     return m_predicates[predicate_idx];
+}
+
+bool VocabularyInfoImpl::exists_constant(const Constant& constant) const {
+    if (!utils::in_bounds(constant.get_index(), m_constants)) {
+        throw std::runtime_error("VocabularyInfoImpl::exists_constant: constant index out of range.");
+    }
+    // we only need to check the position with the corresponding index.
+    return (m_constants[constant.get_index()] == constant) ? true : false;
 }
 
 bool VocabularyInfoImpl::exists_constant_name(const std::string& name) const {
