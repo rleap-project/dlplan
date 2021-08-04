@@ -46,7 +46,7 @@ public:
 
     std::string compute_repr() const override {
         std::stringstream ss;
-        ss << m_name << "(" << std::to_string(m_pos) << ")";
+        ss << m_name << "(" << m_role->compute_repr() << "," << std::to_string(m_pos) << ")";
         return ss.str();
     }
 };
