@@ -45,7 +45,6 @@ public:
                     ++r_it_2;
                 }
                 ++l_it;
-                ++r_it;
             }
         }
         m_result.clear();
