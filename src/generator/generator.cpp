@@ -59,8 +59,8 @@ const BooleanFeatures& FeatureCollection::get_boolean_features() const {
 }
 
 
-FeatureGenerator::FeatureGenerator(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit)
-    : m_pImpl(FeatureGeneratorImpl(factory, complexity, time_limit)) { }
+FeatureGenerator::FeatureGenerator(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit)
+    : m_pImpl(FeatureGeneratorImpl(factory, complexity, time_limit, feature_limit)) { }
 
 FeatureGenerator::~FeatureGenerator() = default;
 

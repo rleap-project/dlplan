@@ -95,7 +95,7 @@ private:
     pimpl<FeatureGeneratorImpl> m_pImpl;
 
 public:
-    FeatureGenerator(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit);
+    FeatureGenerator(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit);
     ~FeatureGenerator();
 
     /**

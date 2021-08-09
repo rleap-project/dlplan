@@ -30,6 +30,7 @@ private:
     const std::shared_ptr<core::SyntacticElementFactory> m_factory;
     const int m_complexity;
     const int m_time_limit;
+    const int m_feature_limit;
 
     /**
      * Generated features sorted by their complexity.
@@ -49,7 +50,18 @@ private:
      */
     utils::CountdownTimer m_timer;
 
+    /**
+     * Some statistics.
+     */
+    int m_count_features;
+
 private:
+    /**
+     * Returns true iff the limiting constraints are satisfied, i.e.,
+     * time limit or feature limit reached
+     */
+    bool reached_limit() const;
+
     /**
      * Adds the respective element if it is syntactically and empirically unique.
      * Additionally, adds information related to them in the FeatureCollection.
@@ -105,7 +117,7 @@ private:
     void generate_transitive_reflexive_closure_role(const States& states, int iteration);
 
 public:
-    FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit);
+    FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit);
 
     /**
      * Exhaustively generates features with pairwise disjoint feature evaluations on the states.

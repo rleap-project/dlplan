@@ -90,14 +90,15 @@ static std::vector<int> flatten_role_denotation(const std::vector<std::vector<st
 
 
 
-FeatureGeneratorImpl::FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit)
-    : m_factory(factory), m_complexity(complexity), m_time_limit(time_limit),
+FeatureGeneratorImpl::FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit)
+    : m_factory(factory), m_complexity(complexity), m_time_limit(time_limit), m_feature_limit(feature_limit),
       m_concept_elements_by_complexity(complexity+1),
       m_role_elements_by_complexity(complexity+1),
       m_numerical_elements_by_complexity(complexity+1),
       m_boolean_elements_by_complexity(complexity+1),
       m_hash_table(std::make_unique<HashTableSha256>()),
-      m_timer(time_limit) { }
+      m_timer(time_limit),
+      m_count_features(0) { }
 
 FeatureCollection FeatureGeneratorImpl::generate(const States& states) {
     FeatureCollection feature_collection;
@@ -157,6 +158,10 @@ void FeatureGeneratorImpl::generate_inductively(const States& states, FeatureCol
     utils::g_log << "Finished generating composite features." << std::endl;
 }
 
+bool FeatureGeneratorImpl::reached_limit() const {
+    return (m_timer.is_expired() || (m_count_features >= m_feature_limit));
+}
+
 void FeatureGeneratorImpl::add_concept(const States& states, core::Concept&& concept) {
     const std::vector<int>& denotation = flatten_concept_denotation(evaluate<core::ConceptDenotation>(concept, states));
     if (m_hash_table->insert_concept(denotation)) {
@@ -177,6 +182,7 @@ void FeatureGeneratorImpl::add_numerical(const States& states, core::Numerical&&
     if (m_hash_table->insert_numerical(denotation)) {
         m_numerical_elements_by_complexity[numerical.compute_complexity()].emplace_back(numerical);
         feature_collection.add_numerical_feature(Numerical(repr, denotation));
+        ++m_count_features;
     }
 }
 
@@ -186,6 +192,7 @@ void FeatureGeneratorImpl::add_boolean(const States& states, core::Boolean&& boo
     if (m_hash_table->insert_boolean(denotation)) {
         m_boolean_elements_by_complexity[boolean.compute_complexity()].emplace_back(boolean);
         feature_collection.add_boolean_feature(Boolean(repr, denotation));
+        ++m_count_features;
     }
 }
 
@@ -230,10 +237,12 @@ void FeatureGeneratorImpl::generate_one_of_concept(const States& states) {
 
 void FeatureGeneratorImpl::generate_empty_boolean(const States& states, int iteration, FeatureCollection& feature_collection) {
     for (const auto& concept : m_concept_elements_by_complexity[iteration]) {
-        if (!m_timer.is_expired()) add_boolean(states, m_factory->make_empty_boolean(concept), feature_collection);
+        if (reached_limit()) return;
+        else add_boolean(states, m_factory->make_empty_boolean(concept), feature_collection);
     }
     for (const auto& role : m_role_elements_by_complexity[iteration]) {
-        if (!m_timer.is_expired()) add_boolean(states, m_factory->make_empty_boolean(role), feature_collection);
+        if (reached_limit()) return;
+        else add_boolean(states, m_factory->make_empty_boolean(role), feature_collection);
     }
 }
 
@@ -242,7 +251,8 @@ void FeatureGeneratorImpl::generate_all_concept(const States& states, int iterat
         int j = iteration - i;
         for (const auto& role : m_role_elements_by_complexity[i]) {
             for (const auto& concept : m_concept_elements_by_complexity[j]) {
-                if (!m_timer.is_expired()) add_concept(states, m_factory->make_all_concept(role, concept));
+                if (reached_limit()) return;
+                else add_concept(states, m_factory->make_all_concept(role, concept));
             }
         }
     }
@@ -253,7 +263,8 @@ void FeatureGeneratorImpl::generate_and_concept(const States& states, int iterat
         int j = iteration - i;
         for (const auto& concept_left : m_concept_elements_by_complexity[i]) {
             for (const auto& concept_right : m_concept_elements_by_complexity[j]) {
-                if (!m_timer.is_expired()) add_concept(states, m_factory->make_and_concept(concept_left, concept_right));
+                if (reached_limit()) return;
+                else add_concept(states, m_factory->make_and_concept(concept_left, concept_right));
             }
         }
     }
@@ -264,7 +275,8 @@ void FeatureGeneratorImpl::generate_diff_concept(const States& states, int itera
         int j = iteration - i;
         for (const auto& concept_left : m_concept_elements_by_complexity[i]) {
             for (const auto& concept_right : m_concept_elements_by_complexity[j]) {
-                if (!m_timer.is_expired()) add_concept(states, m_factory->make_diff_concept(concept_left, concept_right));
+                if (reached_limit()) return;
+                else add_concept(states, m_factory->make_diff_concept(concept_left, concept_right));
             }
         }
     }
@@ -272,7 +284,8 @@ void FeatureGeneratorImpl::generate_diff_concept(const States& states, int itera
 
 void FeatureGeneratorImpl::generate_not_concept(const States& states, int iteration) {
     for (const auto& concept : m_concept_elements_by_complexity[iteration]) {
-        if (!m_timer.is_expired()) add_concept(states, m_factory->make_not_concept(concept));
+        if (reached_limit()) return;
+        else add_concept(states, m_factory->make_not_concept(concept));
     }
 }
 
@@ -281,7 +294,8 @@ void FeatureGeneratorImpl::generate_or_concept(const States& states, int iterati
         int j = iteration - i;
         for (const auto& concept_left : m_concept_elements_by_complexity[i]) {
             for (const auto& concept_right : m_concept_elements_by_complexity[j]) {
-                if (!m_timer.is_expired()) add_concept(states, m_factory->make_or_concept(concept_left, concept_right));
+                if (reached_limit()) return;
+                else add_concept(states, m_factory->make_or_concept(concept_left, concept_right));
             }
         }
     }
@@ -291,7 +305,8 @@ void FeatureGeneratorImpl::generate_projection_concept(const States& states, int
     for (const auto& role : m_role_elements_by_complexity[iteration]) {
         if (!m_timer.is_expired()) {
             for (int pos = 0; pos < 2; ++pos) {
-                add_concept(states, m_factory->make_projection_concept(role, pos));
+                if (reached_limit()) return;
+                else add_concept(states, m_factory->make_projection_concept(role, pos));
             }
         }
     }
@@ -302,7 +317,8 @@ void FeatureGeneratorImpl::generate_some_concept(const States& states, int itera
         int j = iteration - i;
         for (const auto& role : m_role_elements_by_complexity[i]) {
             for (const auto& concept : m_concept_elements_by_complexity[j]) {
-                if (!m_timer.is_expired()) add_concept(states, m_factory->make_some_concept(role, concept));
+                if (reached_limit()) return;
+                else add_concept(states, m_factory->make_some_concept(role, concept));
             }
         }
     }
@@ -313,7 +329,8 @@ void FeatureGeneratorImpl::generate_subset_concept(const States& states, int ite
         int j = iteration - i;
         for (const auto& role_left : m_role_elements_by_complexity[i]) {
             for (const auto& role_right : m_role_elements_by_complexity[j]) {
-                if (!m_timer.is_expired()) add_concept(states, m_factory->make_subset_concept(role_left, role_right));
+                if (reached_limit()) return;
+                else add_concept(states, m_factory->make_subset_concept(role_left, role_right));
             }
         }
     }
@@ -326,7 +343,8 @@ void FeatureGeneratorImpl::generate_concept_distance_numerical(const States& sta
             for (const auto& concept_left : m_concept_elements_by_complexity[i]) {
                 for (const auto& role : m_role_elements_by_complexity[j]) {
                     for (const auto& concept_right : m_concept_elements_by_complexity[k]) {
-                        if (!m_timer.is_expired()) add_numerical(states, m_factory->make_concept_distance(concept_left, role, concept_right), feature_collection);
+                        if (reached_limit()) return;
+                        else add_numerical(states, m_factory->make_concept_distance(concept_left, role, concept_right), feature_collection);
                     }
                 }
             }
@@ -336,10 +354,12 @@ void FeatureGeneratorImpl::generate_concept_distance_numerical(const States& sta
 
 void FeatureGeneratorImpl::generate_count_numerical(const States& states, int iteration, FeatureCollection& feature_collection) {
     for (const auto& concept : m_concept_elements_by_complexity[iteration]) {
-        if (!m_timer.is_expired()) add_numerical(states, m_factory->make_count(concept), feature_collection);
+        if (reached_limit()) return;
+        else add_numerical(states, m_factory->make_count(concept), feature_collection);
     }
     for (const auto& role : m_role_elements_by_complexity[iteration]) {
-        if (!m_timer.is_expired()) add_numerical(states, m_factory->make_count(role), feature_collection);
+        if (reached_limit()) return;
+        else add_numerical(states, m_factory->make_count(role), feature_collection);
     }
 }
 
@@ -350,7 +370,8 @@ void FeatureGeneratorImpl::generate_role_distance_numerical(const States& states
             for (const auto& role_left : m_role_elements_by_complexity[i]) {
                 for (const auto& role : m_role_elements_by_complexity[j]) {
                     for (const auto& role_right : m_role_elements_by_complexity[k]) {
-                        if (!m_timer.is_expired()) add_numerical(states, m_factory->make_role_distance(role_left, role, role_right), feature_collection);
+                        if (reached_limit()) return;
+                        else add_numerical(states, m_factory->make_role_distance(role_left, role, role_right), feature_collection);
                     }
                 }
             }
@@ -365,7 +386,8 @@ void FeatureGeneratorImpl::generate_sum_concept_distance_numerical(const States&
             for (const auto& concept_left : m_concept_elements_by_complexity[i]) {
                 for (const auto& role : m_role_elements_by_complexity[j]) {
                     for (const auto& concept_right : m_concept_elements_by_complexity[k]) {
-                        if (!m_timer.is_expired()) add_numerical(states, m_factory->make_sum_concept_distance(concept_left, role, concept_right), feature_collection);
+                        if (reached_limit()) return;
+                        else add_numerical(states, m_factory->make_sum_concept_distance(concept_left, role, concept_right), feature_collection);
                     }
                 }
             }
@@ -380,7 +402,8 @@ void FeatureGeneratorImpl::generate_sum_role_distance_numerical(const States& st
             for (const auto& role_left : m_role_elements_by_complexity[i]) {
                 for (const auto& role : m_role_elements_by_complexity[j]) {
                     for (const auto& role_right : m_role_elements_by_complexity[k]) {
-                        if (!m_timer.is_expired()) add_numerical(states, m_factory->make_sum_role_distance(role_left, role, role_right), feature_collection);
+                        if (reached_limit()) return;
+                        else add_numerical(states, m_factory->make_sum_role_distance(role_left, role, role_right), feature_collection);
                     }
                 }
             }
@@ -393,7 +416,8 @@ void FeatureGeneratorImpl::generate_and_role(const States& states, int iteration
         int j = iteration - i;
         for (const auto& role_left : m_role_elements_by_complexity[i]) {
             for (const auto& role_right : m_role_elements_by_complexity[j]) {
-                if (!m_timer.is_expired()) add_role(states, m_factory->make_and_role(role_left, role_right));
+                if (reached_limit()) return;
+                else add_role(states, m_factory->make_and_role(role_left, role_right));
             }
         }
     }
@@ -404,7 +428,8 @@ void FeatureGeneratorImpl::generate_compose_role(const States& states, int itera
         int j = iteration - i;
         for (const auto& role_left : m_role_elements_by_complexity[i]) {
             for (const auto& role_right : m_role_elements_by_complexity[j]) {
-                if (!m_timer.is_expired()) add_role(states, m_factory->make_compose_role(role_left, role_right));
+                if (reached_limit()) return;
+                else add_role(states, m_factory->make_compose_role(role_left, role_right));
             }
         }
     }
@@ -415,7 +440,8 @@ void FeatureGeneratorImpl::generate_diff_role(const States& states, int iteratio
         int j = iteration - i;
         for (const auto& role_left : m_role_elements_by_complexity[i]) {
             for (const auto& role_right : m_role_elements_by_complexity[j]) {
-                if (!m_timer.is_expired()) add_role(states, m_factory->make_diff_role(role_left, role_right));
+                if (reached_limit()) return;
+                else add_role(states, m_factory->make_diff_role(role_left, role_right));
             }
         }
     }
@@ -423,19 +449,22 @@ void FeatureGeneratorImpl::generate_diff_role(const States& states, int iteratio
 
 void FeatureGeneratorImpl::generate_identity_role(const States& states, int iteration) {
     for (const auto& concept : m_concept_elements_by_complexity[iteration]) {
-        if (!m_timer.is_expired()) add_role(states, m_factory->make_identity_role(concept));
+        if (reached_limit()) return;
+        else add_role(states, m_factory->make_identity_role(concept));
     }
 }
 
 void FeatureGeneratorImpl::generate_inverse_role(const States& states, int iteration) {
     for (const auto& role : m_role_elements_by_complexity[iteration]) {
-        if (!m_timer.is_expired()) add_role(states, m_factory->make_inverse_role(role));
+        if (reached_limit()) return;
+        else add_role(states, m_factory->make_inverse_role(role));
     }
 }
 
 void FeatureGeneratorImpl::generate_not_role(const States& states, int iteration) {
     for (const auto& role : m_role_elements_by_complexity[iteration]) {
-        if (!m_timer.is_expired()) add_role(states, m_factory->make_not_role(role));
+        if (reached_limit()) return;
+        else add_role(states, m_factory->make_not_role(role));
     }
 }
 
@@ -444,7 +473,8 @@ void FeatureGeneratorImpl::generate_or_role(const States& states, int iteration)
         int j = iteration - i;
         for (const auto& role_left : m_role_elements_by_complexity[i]) {
             for (const auto& role_right : m_role_elements_by_complexity[j]) {
-                if (!m_timer.is_expired()) add_role(states, m_factory->make_or_role(role_left, role_right));
+                if (reached_limit()) return;
+                else add_role(states, m_factory->make_or_role(role_left, role_right));
             }
         }
     }
@@ -455,7 +485,8 @@ void FeatureGeneratorImpl::generate_restrict_role(const States& states, int iter
         int j = iteration - i;
         for (const auto& role : m_role_elements_by_complexity[i]) {
             for (const auto& concept : m_concept_elements_by_complexity[j]) {
-                if (!m_timer.is_expired()) add_role(states, m_factory->make_restrict_role(role, concept));
+                if (reached_limit()) return;
+                else add_role(states, m_factory->make_restrict_role(role, concept));
             }
         }
     }
@@ -463,13 +494,15 @@ void FeatureGeneratorImpl::generate_restrict_role(const States& states, int iter
 
 void FeatureGeneratorImpl::generate_transitive_closure_role(const States& states, int iteration) {
     for (const auto& role : m_role_elements_by_complexity[iteration]) {
-        if (!m_timer.is_expired()) add_role(states, m_factory->make_transitive_closure(role));
+        if (reached_limit()) return;
+        else add_role(states, m_factory->make_transitive_closure(role));
     }
 }
 
 void FeatureGeneratorImpl::generate_transitive_reflexive_closure_role(const States& states, int iteration) {
     for (const auto& role : m_role_elements_by_complexity[iteration]) {
-        if (!m_timer.is_expired()) add_role(states, m_factory->make_transitive_reflexive_closure(role));
+        if (reached_limit()) return;
+        else add_role(states, m_factory->make_transitive_reflexive_closure(role));
     }
 }
 

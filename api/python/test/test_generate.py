@@ -30,7 +30,7 @@ def test_generate_exhaustively():
     vocabulary = generate_bw_vocabulary()
     instance = generate_bw_instance(vocabulary)
     factory = SyntacticElementFactory(vocabulary)
-    generator = FeatureGenerator(factory, 2, 180)
+    generator = FeatureGenerator(factory, 2, 180, 100000)
 
     a0, a1, a2, a3, a4, a5, a6, a7, a8 = instance.get_atoms()
     s0 = State(instance, [a0, a3])  # a on b
