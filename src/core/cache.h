@@ -35,6 +35,7 @@ But as you may know, this can be impractical, as the transformation may cause an
 
 /**
  * A thread-safe reference-counted object cache.
+ * TODO(dominik): implement the thread safety
  * Idea taken from Herb Sutter: https://channel9.msdn.com/Events/GoingNative/2013/My-Favorite-Cpp-10-Liner
  * Other sources: (1) https://stackoverflow.com/questions/49782011/herb-sutters-10-liner-with-cleanup
  */
