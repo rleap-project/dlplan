@@ -57,42 +57,42 @@ Consider concepts C,D and roles R,S,T.
 
 ### Concepts
 
-- Value Restriction (c_all R C): <img src="https://render.githubusercontent.com/render/math?math=\forall R.C\equiv \{a\in\triangle\mid\forall b.(a,b)\in R\rightarrow b\in C\}">
-- Intersection (c_and C D): <img src="https://render.githubusercontent.com/render/math?math=C\sqcap D\equiv C\cap D">
-- Bottom (c_bot): <img src="https://render.githubusercontent.com/render/math?math=\bot = \emptyset">
-- Difference (c_diff C D): <img src="https://render.githubusercontent.com/render/math?math=C\setminus D\equiv C\sqcap \neg D">
-- Negation (c_not C): <img src="https://render.githubusercontent.com/render/math?math=\neg C = \top\setminus C">
-- One-of (c_one-of x): <img src="https://render.githubusercontent.com/render/math?math=x = \{x\} ">
-- Union (c_or C D): <img src="https://render.githubusercontent.com/render/math?math=C\sqcup D\equiv C\cup D">
-- Primitive (predicate_name pos): <img src="https://render.githubusercontent.com/render/math?math=\text{predicate_name}[\text{pos}]\equiv\{c_{\text{pos}}\in\top\mid \text{predicate_name}(c_1,\ldots,c_{pos},\ldots,c_n)\in s  \}">
-- Projection (R pos): <img src="https://render.githubusercontent.com/render/math?math=R[0]\equiv\exists R.\top, R[1]\equiv\exists R^{-1}.\top">
-- Existential abstraction (c_some R C): <img src="https://render.githubusercontent.com/render/math?math=\exists R.C\equiv \{a\in\triangle\mid\exists b:(a,b)\in R\land b\in C  \}">
-- Role-value-map (c_subset R S): <img src="https://render.githubusercontent.com/render/math?math=R\subseteq S\equiv \{a\in\triangle\mid \forall (a,b)\in R\rightarrow (a,b)\in S \}">
-- Top (c_top): <img src="https://render.githubusercontent.com/render/math?math=\top = \triangle">
+- Value Restriction c_all(R,C): <img src="https://render.githubusercontent.com/render/math?math=\forall R.C\equiv \{a\in\triangle\mid\forall b.(a,b)\in R\rightarrow b\in C\}">
+- Intersection c_and(C,D): <img src="https://render.githubusercontent.com/render/math?math=C\sqcap D\equiv C\cap D">
+- Bottom c_bot: <img src="https://render.githubusercontent.com/render/math?math=\bot = \emptyset">
+- Difference c_diff(C,D): <img src="https://render.githubusercontent.com/render/math?math=C\setminus D\equiv C\sqcap \neg D">
+- Negation c_not(C): <img src="https://render.githubusercontent.com/render/math?math=\neg C = \top\setminus C">
+- One-of c_one-of(x): <img src="https://render.githubusercontent.com/render/math?math=x = \{x\} ">
+- Union c_or(C,D): <img src="https://render.githubusercontent.com/render/math?math=C\sqcup D\equiv C\cup D">
+- Primitive predicate_name(pos): <img src="https://render.githubusercontent.com/render/math?math=\text{predicate_name}[\text{pos}]\equiv\{c_{\text{pos}}\in\top\mid \text{predicate_name}(c_1,\ldots,c_{pos},\ldots,c_n)\in s  \}">
+- Projection c_projection(R,pos): <img src="https://render.githubusercontent.com/render/math?math=R[0]\equiv\exists R.\top, R[1]\equiv\exists R^{-1}.\top">
+- Existential abstraction c_some(R,C): <img src="https://render.githubusercontent.com/render/math?math=\exists R.C\equiv \{a\in\triangle\mid\exists b:(a,b)\in R\land b\in C  \}">
+- Role-value-map c_subset(R,S): <img src="https://render.githubusercontent.com/render/math?math=R\subseteq S\equiv \{a\in\triangle\mid \forall (a,b)\in R\rightarrow (a,b)\in S \}">
+- Top c_top: <img src="https://render.githubusercontent.com/render/math?math=\top = \triangle">
 
 ### Roles
 
-- Intersection (r_and R S)
-- Composition (r_compose R S)
-- Identity (r_identity C)
-- Inverse (r_inverse R)
-- Negation (r_not R)
-- Union (r_or R S)
-- Primitive (predicate_name pos_1 pos_2)
-- Restriction (r_restrict R C)
-- Universal role (r_top)
-- Transitive Closure (r_transitive_closure R)
-- Reflexive transitive closure (r_reflexive_transitive_closure R)
+- Intersection r_and(R,S)
+- Composition r_compose(R,S)
+- Identity r_identity(C)
+- Inverse r_inverse(R)
+- Negation r_not(R)
+- Union r_or(R,S)
+- Primitive predicate_name(pos_1,pos_2)
+- Restriction r_restrict(R,C)
+- Universal role r_top
+- Transitive Closure r_transitive_closure(R)
+- Reflexive transitive closure r_reflexive_transitive_closure(R)
 
 ### Numericals
 
-- Concept distance (n_concept_distance C R D)
-- Sum concept distance (n_sum_concept_distance C R D)
-- Role distance (n_role_distance R S T)
-- Sum role distance (n_sum_role_distance R S T)
-- Count (n_count R) or (n_count C)
+- Concept distance n_concept_distance(C,R,D)
+- Sum concept distance n_sum_concept_distance(C,R,D)
+- Role distance n_role_distance(R,S,T)
+- Sum role distance n_sum_role_distance(R,S,T)
+- Count n_count(R) or n_count(C)
 
 ### Booleans
 
-- Empty (b_empty R) or (n_count C)
+- Empty b_empty(R) or b_empty(C)
 
