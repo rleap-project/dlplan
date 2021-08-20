@@ -50,3 +50,14 @@ The Python bindings also come with their own set of tests. Run them with
 ```console
 pytest api/python/
 ```
+
+## Available Elements:
+
+# Concepts
+
+# Roles
+
+# Numericals
+
+# Booleans
+
