@@ -53,6 +53,8 @@ pytest api/python/
 
 ## Available Elements:
 
+Consider concepts C,D and roles R,S,T.
+
 ### Concepts
 
 - Value Restriction (c_all R C)
