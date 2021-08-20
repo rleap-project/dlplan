@@ -55,22 +55,42 @@ pytest api/python/
 
 ### Concepts
 
-- Value Restriction (all R C)
-- Intersection (and C D)
-- Bottom (bot)
-- Difference (diff C D)
-- Negation (not C)
-- One-of (one-of x)
-- Union (or C D)
-- Primitive (name pos)
+- Value Restriction (c_all R C)
+- Intersection (c_and C D)
+- Bottom (c_bot)
+- Difference (c_diff C D)
+- Negation (c_not C)
+- One-of (c_one-of x)
+- Union (c_or C D)
+- Primitive (predicate_name pos)
 - Projection (C pos)
-- Existential abstraction (some R C)
-- Role-value-map (subset R S)
-- Top (top)
+- Existential abstraction (c_some R C)
+- Role-value-map (c_subset R S)
+- Top (c_top)
 
 ### Roles
 
+- Intersection (r_and R S)
+- Composition (r_compose R S)
+- Identity (r_identity C)
+- Inverse (r_inverse R)
+- Negation (r_not R)
+- Union (r_or R S)
+- Primitive (predicate_name pos_1 pos_2)
+- Restriction (r_restrict R C)
+- Universal role (r_top)
+- Transitive Closure (r_transitive_closure R)
+- Reflexive transitive closure (r_reflexive_transitive_closure R)
+
 ### Numericals
 
+- Concept distance (n_concept_distance C R D)
+- Sum concept distance (n_sum_concept_distance C R D)
+- Role distance (n_role_distance R S T)
+- Sum role distance (n_sum_role_distance R S T)
+- Count (n_count R) or (n_count C)
+
 ### Booleans
+
+- Empty (b_empty R) or (n_count C)
 
