@@ -22,8 +22,8 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        const ConceptDenotation& l_vec = m_concept_left->evaluate(state);
-        const ConceptDenotation& r_vec = m_concept_right->evaluate(state);
+        const ConceptDenotation l_vec = m_concept_left->evaluate(state);
+        const ConceptDenotation r_vec = m_concept_right->evaluate(state);
         ConceptDenotation_Set r_set(r_vec.begin(), r_vec.end());
         ConceptDenotation result;
         result.reserve(state.get_instance_info()->get_num_objects());

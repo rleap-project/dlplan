@@ -19,7 +19,7 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        const RoleDenotation& r_vec = m_role->evaluate(state);
+        const RoleDenotation r_vec = m_role->evaluate(state);
         RoleDenotation result;
         result.reserve(r_vec.size());
         for (const auto& r : r_vec) {

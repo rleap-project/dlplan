@@ -9,7 +9,7 @@ using namespace dlplan::core;
 
 
 // Test the transitive closure
-TEST(DLPTests, SumRoleDistance) {
+TEST(DLPTests, NumericalSumRoleDistance) {
     // Add predicates
     std::shared_ptr<VocabularyInfo> vocabulary = std::make_shared<VocabularyInfo>();
     Predicate p0 = vocabulary->add_predicate("conn", 2);

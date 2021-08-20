@@ -21,8 +21,8 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        const RoleDenotation& r_vec = m_role->evaluate(state);
-        const ConceptDenotation& c_vec = m_concept->evaluate(state);
+        const RoleDenotation r_vec = m_role->evaluate(state);
+        const ConceptDenotation c_vec = m_concept->evaluate(state);
         ConceptDenotation_Set c_set(c_vec.begin(), c_vec.end());
         RoleDenotation result;
         result.reserve(r_vec.size());

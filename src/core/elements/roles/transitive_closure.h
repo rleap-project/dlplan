@@ -20,7 +20,7 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        const RoleDenotation& r_vec = m_role->evaluate(state);
+        const RoleDenotation r_vec = m_role->evaluate(state);
         // TODO(dominik): Compute an indexing scheme that only considers objects that are part of the role
         // 2. Compute an adjacency list from the newly mapped role denotations.
         int num_objects = state.get_instance_info()->get_num_objects();

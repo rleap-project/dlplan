@@ -27,7 +27,7 @@ public:
             }
         }
         ConceptDenotation_Set r_set = m_universe_set;
-        const ConceptDenotation& c_vec = m_concept->evaluate(state);
+        const ConceptDenotation c_vec = m_concept->evaluate(state);
         for (int c : c_vec) {
             r_set.erase(c);
         }

@@ -28,8 +28,8 @@ public:
         if (r_from_vec.empty()) {
             return 0;
         }
-        const RoleDenotation& r_vec = m_role->evaluate(state);
-        const RoleDenotation& r_to_vec = m_role_to->evaluate(state);
+        const RoleDenotation r_vec = m_role->evaluate(state);
+        const RoleDenotation r_to_vec = m_role_to->evaluate(state);
         if (r_to_vec.empty()) {
             return INF;
         }

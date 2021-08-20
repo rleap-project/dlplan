@@ -13,10 +13,23 @@ FetchContent_MakeAvailable(googletest)
 add_executable(
     ${TEST_NAME}
     core.cpp
-    transitive_closure.cpp
-    concept_distance.cpp
-    sum_role_distance.cpp
-    compose.cpp
+    b_empty.cpp
+    c_all.cpp
+    c_some.cpp
+    c_and.cpp
+    c_or.cpp
+    c_diff.cpp
+    c_not.cpp
+    c_primitive.cpp
+    c_projection.cpp
+    c_bot.cpp
+    c_top.cpp
+    c_one_of.cpp
+    c_subset.cpp
+    r_transitive_closure.cpp
+    n_concept_distance.cpp
+    n_sum_role_distance.cpp
+    r_compose.cpp
 )
 target_link_libraries(${TEST_NAME} dlplancore gtest_main)
 

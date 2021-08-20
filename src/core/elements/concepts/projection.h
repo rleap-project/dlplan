@@ -26,7 +26,7 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        const RoleDenotation& role_result = m_role->evaluate(state);
+        const RoleDenotation role_result = m_role->evaluate(state);
         ConceptDenotation_Set result_set;
         for (const auto& r : role_result) {
             if (m_pos == 0) {

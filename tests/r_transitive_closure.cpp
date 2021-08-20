@@ -7,7 +7,7 @@ using namespace dlplan::core;
 
 
 // Test the transitive closure
-TEST(DLPTests, TransitiveClosure) {
+TEST(DLPTests, RoleTransitiveClosure) {
     // Add predicates
     std::shared_ptr<VocabularyInfo> vocabulary = std::make_shared<VocabularyInfo>();
     Predicate p0 = vocabulary->add_predicate("conn", 2);

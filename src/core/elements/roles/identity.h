@@ -20,7 +20,7 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        const ConceptDenotation& c_vec = m_concept->evaluate(state);
+        const ConceptDenotation c_vec = m_concept->evaluate(state);
         RoleDenotation result;
         result.reserve(state.get_instance_info()->get_num_objects());
         for (int c : c_vec) {

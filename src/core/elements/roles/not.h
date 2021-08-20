@@ -29,7 +29,7 @@ public:
             }
         }
         RoleDenotation_Set r_set = m_universe_set;
-        const RoleDenotation& r_vec = m_role->evaluate(state);
+        const RoleDenotation r_vec = m_role->evaluate(state);
         for (const auto& r : r_vec) {
             r_set.erase(r);
         }
