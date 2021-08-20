@@ -5,7 +5,7 @@
 using namespace dlplan::core;
 
 
-TEST(DLPTests, BooleanEmpty) {
+TEST(DLPTests, NumericalCount) {
     // Add predicates
     std::shared_ptr<VocabularyInfo> vocabulary = std::make_shared<VocabularyInfo>();
     Predicate p0 = vocabulary->add_predicate("concept_0", 1);
@@ -21,15 +21,15 @@ TEST(DLPTests, BooleanEmpty) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    Boolean boolean1 = factory.parse_boolean("b_empty(concept_0(0))");
-    EXPECT_EQ(boolean1.evaluate(state), false);
+    Numerical numerical1 = factory.parse_numerical("n_count(concept_0(0))");
+    EXPECT_EQ(numerical1.evaluate(state), 1);
 
-    Boolean boolean2 = factory.parse_boolean("b_empty(concept_1(0))");
-    EXPECT_EQ(boolean2.evaluate(state), true);
+    Numerical numerical2 = factory.parse_numerical("n_count(concept_1(0))");
+    EXPECT_EQ(numerical2.evaluate(state), 0);
 
-    Boolean boolean3 = factory.parse_boolean("b_empty(role_0(0, 1))");
-    EXPECT_EQ(boolean3.evaluate(state), false);
+    Numerical numerical3 = factory.parse_numerical("n_count(role_0(0, 1))");
+    EXPECT_EQ(numerical3.evaluate(state), 1);
 
-    Boolean boolean4 = factory.parse_boolean("b_empty(role_1(0, 1))");
-    EXPECT_EQ(boolean4.evaluate(state), true);
+    Numerical numerical4 = factory.parse_numerical("n_count(role_1(0, 1))");
+    EXPECT_EQ(numerical4.evaluate(state), 0);
 }

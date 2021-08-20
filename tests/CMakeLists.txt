@@ -37,9 +37,12 @@ add_executable(
     r_top.cpp
     r_transitive_closure.cpp
     r_transitive_reflexive_closure.cpp
-    n_concept_distance.cpp
-    n_sum_role_distance.cpp
     r_compose.cpp
+    n_concept_distance.cpp
+    n_sum_concept_distance.cpp
+    n_role_distance.cpp
+    n_sum_role_distance.cpp
+    n_count.cpp
 )
 target_link_libraries(${TEST_NAME} dlplancore gtest_main)
 
