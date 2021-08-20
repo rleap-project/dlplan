@@ -57,18 +57,18 @@ Consider concepts C,D and roles R,S,T.
 
 ### Concepts
 
-- Value Restriction (c_all R C)
-- Intersection (c_and C D)
-- Bottom (c_bot)
-- Difference (c_diff C D)
-- Negation (c_not C)
-- One-of (c_one-of x)
-- Union (c_or C D)
-- Primitive (predicate_name pos)
-- Projection (C pos)
-- Existential abstraction (c_some R C)
-- Role-value-map (c_subset R S)
-- Top (c_top)
+- Value Restriction (c_all R C): <img src="https://render.githubusercontent.com/render/math?math=\forall R.C\equiv \{a\in\triangle\mid\forall b.(a,b)\in R\rightarrow b\in C\}">
+- Intersection (c_and C D): <img src="https://render.githubusercontent.com/render/math?math=C\sqcap D\equiv C\cap D">
+- Bottom (c_bot): <img src="https://render.githubusercontent.com/render/math?math=\bot = \emptyset">
+- Difference (c_diff C D): <img src="https://render.githubusercontent.com/render/math?math=C\setminus D\equiv C\sqcap \neg D">
+- Negation (c_not C): <img src="https://render.githubusercontent.com/render/math?math=\neg C = \top\setminus C">
+- One-of (c_one-of x): <img src="https://render.githubusercontent.com/render/math?math=x = \{x\} ">
+- Union (c_or C D): <img src="https://render.githubusercontent.com/render/math?math=C\sqcup D\equiv C\cup D">
+- Primitive (predicate_name pos): <img src="https://render.githubusercontent.com/render/math?math=\text{predicate_name}[\text{pos}]\equiv\{c_{\text{pos}}\in\top\mid \text{predicate_name}(c_1,\ldots,c_{pos},\ldots,c_n)\in s  \}">
+- Projection (R pos): <img src="https://render.githubusercontent.com/render/math?math=R[0]\equiv\exists R.\top, R[1]\equiv\exists R^{-1}.\top">
+- Existential abstraction (c_some R C): <img src="https://render.githubusercontent.com/render/math?math=\exists R.C\equiv \{a\in\triangle\mid\exists b:(a,b)\in R\land b\in C  \}">
+- Role-value-map (c_subset R S): <img src="https://render.githubusercontent.com/render/math?math=R\subseteq S\equiv \{a\in\triangle\mid \forall (a,b)\in R\rightarrow (a,b)\in S \}">
+- Top (c_top): <img src="https://render.githubusercontent.com/render/math?math=\top = \triangle">
 
 ### Roles
 
