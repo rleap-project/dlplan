@@ -5,11 +5,10 @@
 using namespace dlplan::core;
 
 
-TEST(DLPTests, ConceptOneOf) {
+TEST(DLPTests, RoleIdentity) {
     // Add predicates
     std::shared_ptr<VocabularyInfo> vocabulary = std::make_shared<VocabularyInfo>();
     Predicate p0 = vocabulary->add_predicate("concept", 1);
-    Constant c0 = vocabulary->add_constant("A");
     std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary);
     // Add state atoms
     Atom a0 = instance->add_atom("concept", {"A"});
@@ -19,6 +18,6 @@ TEST(DLPTests, ConceptOneOf) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    Concept concept = factory.parse_concept("c_one_of(A)");
-    EXPECT_EQ(concept.evaluate(state), dlplan::core::ConceptDenotation({0}));
+    Role role = factory.parse_role("r_identity(concept(0))");
+    EXPECT_EQ(role.evaluate(state), dlplan::core::RoleDenotation({{0,0},{1,1}}));
 }

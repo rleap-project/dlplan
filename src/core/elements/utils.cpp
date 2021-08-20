@@ -28,11 +28,13 @@ AdjList compute_adjacency_list(const RoleDenotation& r_vec, int num_objects) {
     return adjacency_list;
 }
 
-Distances compute_distances_from_state(const AdjList& adj_list, int source) {
+Distances compute_distances_from_state(const AdjList& adj_list, int source, bool reflexive) {
     Distances distances(adj_list.size(), INF);
     std::vector<bool> visited(adj_list.size(), false);
-    distances[source] = 0;
-    visited[source] = true;
+    if (reflexive) {
+        distances[source] = 0;
+        visited[source] = true;
+    }
     std::deque<int> queue;
     queue.push_back(source);
     while (!queue.empty()) {
@@ -52,10 +54,10 @@ Distances compute_distances_from_state(const AdjList& adj_list, int source) {
     return distances;
 }
 
-PairwiseDistances compute_pairwise_distances(const AdjList& adj_list) {
+PairwiseDistances compute_pairwise_distances(const AdjList& adj_list, bool reflexive) {
     PairwiseDistances pairwise_distances;
     for (int source = 0; source < static_cast<int>(adj_list.size()); ++source) {
-        pairwise_distances.push_back(compute_distances_from_state(adj_list, source));
+        pairwise_distances.push_back(compute_distances_from_state(adj_list, source, reflexive));
     }
     return pairwise_distances;
 }

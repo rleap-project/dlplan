@@ -5,19 +5,18 @@
 using namespace dlplan::core;
 
 
-TEST(DLPTests, ConceptTop) {
+TEST(DLPTests, RoleNot) {
     // Add predicates
     std::shared_ptr<VocabularyInfo> vocabulary = std::make_shared<VocabularyInfo>();
-    Predicate p0 = vocabulary->add_predicate("concept", 1);
+    Predicate p0 = vocabulary->add_predicate("role", 2);
     std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary);
     // Add state atoms
-    Atom a0 = instance->add_atom("concept", {"A"});
-    Atom a1 = instance->add_atom("concept", {"B"});
+    Atom a0 = instance->add_atom("role", {"A", "B"});
 
-    State state(instance, {a0, a1});
+    State state(instance, {a0});
 
     SyntacticElementFactory factory(vocabulary);
 
-    Concept concept = factory.parse_concept("c_top");
-    EXPECT_EQ(concept.evaluate(state), dlplan::core::ConceptDenotation({0, 1}));
+    Role role = factory.parse_role("r_not(role(0,1))");
+    EXPECT_EQ(role.evaluate(state), dlplan::core::RoleDenotation({{0,0},{1,0},{1,1}}));
 }

@@ -26,7 +26,7 @@ public:
         int num_objects = state.get_instance_info()->get_num_objects();
         utils::AdjList adj_list = utils::compute_adjacency_list(r_vec, num_objects);
         // 3. Compute pairwise distances using a sequence of bfs calls.
-        utils::PairwiseDistances pairwise_distances = utils::compute_pairwise_distances(adj_list);
+        utils::PairwiseDistances pairwise_distances = utils::compute_pairwise_distances(adj_list, false);
         // 4. Extract the transitive closure from the pairwise distances.
         RoleDenotation result;
         result.reserve(state.get_instance_info()->get_num_objects() * state.get_instance_info()->get_num_objects());

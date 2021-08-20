@@ -5,7 +5,7 @@
 using namespace dlplan::core;
 
 
-TEST(DLPTests, ConceptPrimitive) {
+TEST(DLPTests, RolePrimitive) {
     // Add predicates
     std::shared_ptr<VocabularyInfo> vocabulary = std::make_shared<VocabularyInfo>();
     Predicate p0 = vocabulary->add_predicate("predicate", 3);
@@ -19,12 +19,12 @@ TEST(DLPTests, ConceptPrimitive) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    Concept concept1 = factory.parse_concept("predicate(0)");
-    EXPECT_EQ(concept1.evaluate(state), dlplan::core::ConceptDenotation({0, 3}));
+    Role role1 = factory.parse_role("predicate(0,1)");
+    EXPECT_EQ(role1.evaluate(state), dlplan::core::RoleDenotation({{0, 1}, {3, 4}}));
 
-    Concept concept2 = factory.parse_concept("predicate(1)");
-    EXPECT_EQ(concept2.evaluate(state), dlplan::core::ConceptDenotation({1, 4}));
+    Role role2 = factory.parse_role("predicate(1,2)");
+    EXPECT_EQ(role2.evaluate(state), dlplan::core::RoleDenotation({{1, 2}, {4, 5}}));
 
-    Concept concept3 = factory.parse_concept("predicate(2)");
-    EXPECT_EQ(concept3.evaluate(state), dlplan::core::ConceptDenotation({2, 5}));
+    Role role3 = factory.parse_role("predicate(2,0)");
+    EXPECT_EQ(role3.evaluate(state), dlplan::core::RoleDenotation({{2, 0}, {5, 3}}));
 }

@@ -5,7 +5,6 @@
 using namespace dlplan::core;
 
 
-// Test the transitive closure
 TEST(DLPTests, ConceptSubset) {
     // Add predicates
     std::shared_ptr<VocabularyInfo> vocabulary = std::make_shared<VocabularyInfo>();
