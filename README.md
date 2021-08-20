@@ -62,7 +62,7 @@ Consider concepts C,D and roles R,S,T.
 - Bottom c_bot: <img src="https://render.githubusercontent.com/render/math?math=\bot = \emptyset">
 - Difference c_diff(C,D): <img src="https://render.githubusercontent.com/render/math?math=C\setminus D\equiv C\sqcap \neg D">
 - Negation c_not(C): <img src="https://render.githubusercontent.com/render/math?math=\neg C = \top\setminus C">
-- One-of c_one-of(x): <img src="https://render.githubusercontent.com/render/math?math=x = \{x\} ">
+- One-of c_one_of(x): <img src="https://render.githubusercontent.com/render/math?math=x = \{x\} ">
 - Union c_or(C,D): <img src="https://render.githubusercontent.com/render/math?math=C\sqcup D\equiv C\cup D">
 - Primitive predicate_name(pos): <img src="https://render.githubusercontent.com/render/math?math=\text{predicate_name}[\text{pos}]\equiv\{c_{\text{pos}}\in\top\mid \text{predicate_name}(c_1,\ldots,c_{pos},\ldots,c_n)\in s  \}">
 - Projection c_projection(R,pos): <img src="https://render.githubusercontent.com/render/math?math=R[0]\equiv\exists R.\top, R[1]\equiv\exists R^{-1}.\top">
