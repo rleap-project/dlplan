@@ -55,6 +55,19 @@ pytest api/python/
 
 ### Concepts
 
+- Value Restriction (all R C)
+- Intersection (and C D)
+- Bottom (bot)
+- Difference (diff C D)
+- Negation (not C)
+- One-of (one-of x)
+- Union (or C D)
+- Primitive (name pos)
+- Projection (C pos)
+- Existential abstraction (some R C)
+- Role-value-map (subset R S)
+- Top (top)
+
 ### Roles
 
 ### Numericals
