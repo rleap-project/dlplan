@@ -23,7 +23,7 @@ public:
         }
     }
 
-    const RoleDenotation& evaluate(const State& state) override {
+    RoleDenotation evaluate(const State& state) const override {
         const InstanceInfo& info = *state.get_instance_info();
         RoleDenotation_Set result_set;
         for (int atom_idx : state.get_atom_idxs()) {
@@ -32,9 +32,7 @@ public:
                 result_set.emplace(atom.get_object(m_pos_1).get_index(), atom.get_object(m_pos_2).get_index());
             }
         }
-        m_result.clear();
-        m_result.insert(m_result.end(), result_set.begin(), result_set.end());
-        return m_result;
+        return RoleDenotation(result_set.begin(), result_set.end());
     }
 
     int compute_complexity() const override {

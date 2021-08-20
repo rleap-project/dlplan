@@ -19,7 +19,7 @@ public:
         }
     }
 
-    const RoleDenotation& evaluate(const State& state) override {
+    RoleDenotation evaluate(const State& state) const override {
         const RoleDenotation& r_vec = m_role->evaluate(state);
         // TODO(dominik): Compute an indexing scheme that only considers objects that are part of the role
         // 2. Compute an adjacency list from the newly mapped role denotations.
@@ -28,21 +28,19 @@ public:
         // 3. Compute pairwise distances using a sequence of bfs calls.
         utils::PairwiseDistances pairwise_distances = utils::compute_pairwise_distances(adj_list);
         // 4. Extract the transitive closure from the pairwise distances.
-        RoleDenotation_Set result_set;
+        RoleDenotation result;
+        result.reserve(state.get_instance_info()->get_num_objects() * state.get_instance_info()->get_num_objects());
         for (int source = 0; source < num_objects; ++source) {
             for (int target = 0; target < num_objects; ++target) {
-                if (pairwise_distances[source][target] < INF) {
-                    result_set.emplace(source, target);
+                if (source == target) {
+                    result.emplace_back(source, target);
+                } else if (pairwise_distances[source][target] < INF) {
+                    result.emplace_back(source, target);
                 }
             }
         }
-        // 5. Add the reflexive part
-        for (int object_idx = 0; object_idx < num_objects; ++object_idx) {
-            result_set.emplace(object_idx, object_idx);
-        }
-        m_result.clear();
-        m_result.insert(m_result.begin(), result_set.begin(), result_set.end());
-        return m_result;
+        result.shrink_to_fit();
+        return result;
     }
 
     int compute_complexity() const override {

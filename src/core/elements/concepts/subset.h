@@ -12,7 +12,7 @@ protected:
     const Role_Ptr m_role_left;
     const Role_Ptr m_role_right;
 
-    ConceptDenotation_Set m_top;
+    mutable ConceptDenotation_Set m_top;
 
 public:
     SubsetConcept(const VocabularyInfo& vocabulary, Role_Ptr role_left, Role_Ptr role_right)
@@ -22,7 +22,7 @@ public:
         }
     }
 
-    const ConceptDenotation& evaluate(const State& state) override {
+    ConceptDenotation evaluate(const State& state) const override {
         /*
         // TODO(dominik): implement improved version by making use of role denotations sorted by their first component.
         RoleDenotation left_vec = m_role_left->evaluate(state);
@@ -70,9 +70,7 @@ public:
                 }
             }
         }
-        m_result.clear();
-        m_result.insert(m_result.begin(), result_set.begin(), result_set.end());
-        return m_result;
+        return ConceptDenotation(result_set.begin(), result_set.end());
     }
 
     int compute_complexity() const override {

@@ -18,14 +18,14 @@ public:
         }
     }
 
-    const RoleDenotation& evaluate(const State& state) override {
+    RoleDenotation evaluate(const State& state) const override {
         const RoleDenotation& r_vec = m_role->evaluate(state);
-        m_result.clear();
-        m_result.reserve(r_vec.size());
+        RoleDenotation result;
+        result.reserve(r_vec.size());
         for (const auto& r : r_vec) {
-            m_result.emplace_back(r.second, r.first);
+            result.emplace_back(r.second, r.first);
         }
-        return m_result;
+        return result;
     }
 
     int compute_complexity() const override {

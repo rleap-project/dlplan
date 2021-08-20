@@ -21,17 +21,19 @@ public:
         }
     }
 
-    const RoleDenotation& evaluate(const State& state) override {
+    RoleDenotation evaluate(const State& state) const override {
         const RoleDenotation& l_vec = m_role_left->evaluate(state);
         const RoleDenotation& r_vec = m_role_right->evaluate(state);
         RoleDenotation_Set r_set(r_vec.begin(), r_vec.end());
-        m_result.clear();
+        RoleDenotation result;
+        result.reserve(state.get_instance_info()->get_num_objects() * state.get_instance_info()->get_num_objects());
         for (const auto& r : l_vec) {
             if (r_set.find(r) != r_set.end()) {
-                m_result.push_back(r);
+                result.push_back(r);
             }
         }
-        return m_result;
+        result.shrink_to_fit();
+        return result;
     }
 
     int compute_complexity() const override {

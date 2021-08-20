@@ -9,7 +9,7 @@ namespace dlplan::core::element {
 class NotRole : public Role {
 protected:
     const Role_Ptr m_role;
-    RoleDenotation_Set m_universe_set;
+    mutable RoleDenotation_Set m_universe_set;
 
 public:
     NotRole(const VocabularyInfo& vocabulary, Role_Ptr role)
@@ -19,7 +19,7 @@ public:
         }
     }
 
-    const RoleDenotation& evaluate(const State& state) override {
+    RoleDenotation evaluate(const State& state) const override {
         if (m_universe_set.empty()) {
             int num_objects = state.get_instance_info()->get_num_objects();
             for (int object_idx_1 = 0; object_idx_1 < num_objects; ++object_idx_1) {
@@ -33,9 +33,7 @@ public:
         for (const auto& r : r_vec) {
             r_set.erase(r);
         }
-        m_result.clear();
-        m_result.insert(m_result.begin(), r_set.begin(), r_set.end());
-        return m_result;
+        return RoleDenotation(r_set.begin(), r_set.end());
     }
 
     int compute_complexity() const override {

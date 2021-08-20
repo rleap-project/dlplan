@@ -14,9 +14,8 @@ protected:
 public:
     EmptyBoolean(const VocabularyInfo& vocabulary, T element) : Boolean(vocabulary, "b_empty"), m_element(element) { }
 
-    const bool& evaluate(const State& state) override {
-        m_result = m_element->evaluate(state).empty();
-        return m_result;
+    bool evaluate(const State& state) const override {
+        return m_element->evaluate(state).empty();
     }
 
     int compute_complexity() const override {

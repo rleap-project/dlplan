@@ -21,17 +21,19 @@ public:
         }
     }
 
-    const ConceptDenotation& evaluate(const State& state) override {
+    ConceptDenotation evaluate(const State& state) const override {
         const ConceptDenotation& l_vec = m_concept_left->evaluate(state);
         const ConceptDenotation& r_vec = m_concept_right->evaluate(state);
         ConceptDenotation_Set r_set(r_vec.begin(), r_vec.end());
-        m_result.clear();
+        ConceptDenotation result;
+        result.reserve(state.get_instance_info()->get_num_objects());
         for (int c : l_vec) {
             if (r_set.find(c) != r_set.end()) {
-                m_result.push_back(c);
+                result.push_back(c);
             }
         }
-        return m_result;
+        result.shrink_to_fit();
+        return result;
     }
 
     int compute_complexity() const override {

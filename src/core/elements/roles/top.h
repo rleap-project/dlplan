@@ -7,12 +7,15 @@
 namespace dlplan::core::element {
 
 class TopRole : public Role {
+private:
+    mutable RoleDenotation m_result;
+
 public:
     TopRole(const VocabularyInfo& vocabulary)
     : Role(vocabulary, "r_top"){
     }
 
-    const RoleDenotation& evaluate(const State& state) override {
+    RoleDenotation evaluate(const State& state) const override {
         if (m_result.empty()) {
             int num_objects = state.get_instance_info()->get_num_objects();
             m_result.reserve(num_objects * num_objects);

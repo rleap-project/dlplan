@@ -20,7 +20,7 @@ public:
         }
     }
 
-    const RoleDenotation& evaluate(const State& state) override {
+    RoleDenotation evaluate(const State& state) const override {
         RoleDenotation l_vec = m_role_left->evaluate(state);
         RoleDenotation r_vec = m_role_right->evaluate(state);
         // complexity
@@ -47,9 +47,7 @@ public:
                 ++l_it;
             }
         }
-        m_result.clear();
-        m_result.insert(m_result.begin(), result_set.begin(), result_set.end());
-        return m_result;
+        return RoleDenotation(result_set.begin(), result_set.end());
     }
 
     int compute_complexity() const override {

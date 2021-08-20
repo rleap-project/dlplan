@@ -23,7 +23,7 @@ public:
         }
     }
 
-    const ConceptDenotation& evaluate(const State& state) override {
+    ConceptDenotation evaluate(const State& state) const override {
         const InstanceInfo& info = *state.get_instance_info();
         ConceptDenotation_Set result_set;
         for (int atom_idx : state.get_atom_idxs()) {
@@ -32,9 +32,7 @@ public:
                 result_set.insert(atom.get_object(m_pos).get_index());
             }
         }
-        m_result.clear();
-        m_result.insert(m_result.end(), result_set.begin(), result_set.end());
-        return m_result;
+        return ConceptDenotation(result_set.begin(), result_set.end());
     }
 
     int compute_complexity() const override {

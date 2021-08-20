@@ -9,7 +9,7 @@ namespace dlplan::core::element {
 class NotConcept : public Concept {
 protected:
     const Concept_Ptr m_concept;
-    ConceptDenotation_Set m_universe_set;
+    mutable ConceptDenotation_Set m_universe_set;
 
 public:
     NotConcept(const VocabularyInfo& vocabulary, Concept_Ptr concept)
@@ -19,7 +19,7 @@ public:
         }
     }
 
-    const ConceptDenotation& evaluate(const State& state) override {
+    ConceptDenotation evaluate(const State& state) const override {
         if (m_universe_set.empty()) {
             int num_objects = state.get_instance_info()->get_num_objects();
             for (int object_idx = 0; object_idx < num_objects; ++object_idx) {
@@ -31,9 +31,7 @@ public:
         for (int c : c_vec) {
             r_set.erase(c);
         }
-        m_result.clear();
-        m_result.insert(m_result.begin(), r_set.begin(), r_set.end());
-        return m_result;
+        return ConceptDenotation(r_set.begin(), r_set.end());
     }
 
     int compute_complexity() const override {

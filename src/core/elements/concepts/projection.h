@@ -25,7 +25,7 @@ public:
         }
     }
 
-    const ConceptDenotation& evaluate(const State& state) override {
+    ConceptDenotation evaluate(const State& state) const override {
         const RoleDenotation& role_result = m_role->evaluate(state);
         ConceptDenotation_Set result_set;
         for (const auto& r : role_result) {
@@ -35,9 +35,7 @@ public:
                 result_set.insert(r.second);
             }
         }
-        m_result.clear();
-        m_result.insert(m_result.end(), result_set.begin(), result_set.end());
-        return m_result;
+        return ConceptDenotation(result_set.begin(), result_set.end());
     }
 
     int compute_complexity() const override {

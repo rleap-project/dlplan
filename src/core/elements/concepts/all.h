@@ -20,7 +20,7 @@ public:
         }
     }
 
-    const ConceptDenotation& evaluate(const State& state) override {
+    ConceptDenotation evaluate(const State& state) const override {
         const RoleDenotation& r_vec = m_role->evaluate(state);
         const ConceptDenotation& c_vec = m_concept->evaluate(state);
         ConceptDenotation_Set c_set(c_vec.begin(), c_vec.end());
@@ -38,9 +38,7 @@ public:
                 result_set.erase(r.first);
             }
         }
-        m_result.clear();
-        m_result.insert(m_result.begin(), result_set.begin(), result_set.end());
-        return m_result;
+        return ConceptDenotation(result_set.begin(), result_set.end());
     }
 
     int compute_complexity() const override {

@@ -7,12 +7,15 @@
 namespace dlplan::core::element {
 
 class TopConcept : public Concept {
+private:
+    mutable ConceptDenotation m_result;
+
 public:
     TopConcept(const VocabularyInfo& vocabulary)
     : Concept(vocabulary, "c_top") {
     }
 
-    const ConceptDenotation& evaluate(const State& state) override {
+    ConceptDenotation evaluate(const State& state) const override {
         if (m_result.empty()) {
             int num_objects = state.get_instance_info()->get_num_objects();
             m_result.reserve(num_objects);

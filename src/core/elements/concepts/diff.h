@@ -19,16 +19,14 @@ public:
         }
     }
 
-    const ConceptDenotation& evaluate(const State& state) override {
+    ConceptDenotation evaluate(const State& state) const override {
         const ConceptDenotation& l_vec = m_concept_left->evaluate(state);
         const ConceptDenotation& r_vec = m_concept_right->evaluate(state);
         ConceptDenotation_Set r_set(l_vec.begin(), l_vec.end());
         for (int c : r_vec) {
             r_set.erase(c);
         }
-        m_result.clear();
-        m_result.insert(m_result.begin(), r_set.begin(), r_set.end());
-        return m_result;
+        return ConceptDenotation(r_set.begin(), r_set.end());
     }
 
     int compute_complexity() const override {

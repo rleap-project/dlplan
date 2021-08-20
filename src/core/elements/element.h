@@ -18,17 +18,15 @@ class Element {
 protected:
     // The name.
     const std::string m_name;
-    // Evaluation result
-    T m_result;
 
 public:
-    Element(const VocabularyInfo&, const std::string& name) : m_name(name), m_result(T()) { }
+    Element(const VocabularyInfo&, const std::string& name) : m_name(name) { }
     virtual ~Element() = default;
 
     /**
      * Evaluate and cache the last result.
      */
-    virtual const T& evaluate(const State& state) = 0;
+    virtual T evaluate(const State& state) const = 0;
 
     /**
      * Returns the complexity of the element.

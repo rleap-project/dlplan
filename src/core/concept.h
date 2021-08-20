@@ -18,13 +18,13 @@ public:
     }
     ~ConceptImpl() override = default;
 
-    const ConceptDenotation& evaluate(const State& state) const override {
+    ConceptDenotation evaluate(const State& state) const override {
         if (state.get_instance_info()->get_vocabulary_info().get() != m_vocabulary_info) {
             throw std::runtime_error("ConceptImpl::evaluate - mismatched vocabularies of Concept and State.");
         }
-        m_result = m_element->evaluate(state);
-        std::sort(m_result.begin(), m_result.end());
-        return m_result;
+        ConceptDenotation result = m_element->evaluate(state);
+        std::sort(result.begin(), result.end());
+        return result;
     }
 };
 

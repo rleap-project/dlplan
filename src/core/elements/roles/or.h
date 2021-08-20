@@ -21,14 +21,12 @@ public:
         }
     }
 
-    const RoleDenotation& evaluate(const State& state) override {
+    RoleDenotation evaluate(const State& state) const override {
         const RoleDenotation& l_vec = m_role_left->evaluate(state);
         const RoleDenotation& r_vec = m_role_right->evaluate(state);
         RoleDenotation_Set r_set(l_vec.begin(), l_vec.end());
         r_set.insert(r_vec.begin(), r_vec.end());
-        m_result.clear();
-        m_result.insert(m_result.begin(), r_set.begin(), r_set.end());
-        return m_result;
+        return RoleDenotation(r_set.begin(), r_set.end());
     }
 
     int compute_complexity() const override {

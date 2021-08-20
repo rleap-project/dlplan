@@ -23,17 +23,15 @@ public:
         }
     }
 
-    const int& evaluate(const State& state) override {
+    int evaluate(const State& state) const override {
         const ConceptDenotation& c_from_vec = m_concept_from->evaluate(state);
         if (c_from_vec.empty()) {
-            m_result = 0;
-            return m_result;
+            return 0;
         }
         const RoleDenotation& r_vec = m_role->evaluate(state);
         const ConceptDenotation& c_to_vec = m_concept_to->evaluate(state);
         if (c_to_vec.empty()) {
-            m_result = INF;
-            return m_result;
+            return INF;
         }
         // TODO(dominik): Compute an indexing scheme that only considers objects that are part of the role
         // 2. Compute an adjacency list from the newly mapped role denotations.
@@ -42,15 +40,15 @@ public:
         // 3. Compute pairwise distances using a sequence of bfs calls.
         utils::PairwiseDistances pairwise_distances = utils::compute_pairwise_distances(adj_list);
         // 4. Find closest target.
-        m_result = 0;
+        int result = 0;
         for (int source : c_from_vec) {
             int min_distance = INF;
             for (int target : c_to_vec) {
                 min_distance = std::min<int>(min_distance, pairwise_distances[source][target]);
             }
-            m_result = utils::path_addition(m_result, min_distance);
+            result = utils::path_addition(result, min_distance);
         }
-        return m_result;
+        return result;
     }
 
     int compute_complexity() const override {

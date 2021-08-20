@@ -14,9 +14,8 @@ protected:
 public:
     CountNumerical(const VocabularyInfo& vocabulary, T element) : Numerical(vocabulary, "n_count"), m_element(element) { }
 
-    const int& evaluate(const State& state) override {
-        m_result = m_element->evaluate(state).size();
-        return m_result;
+    int evaluate(const State& state) const override {
+        return m_element->evaluate(state).size();
     }
 
     int compute_complexity() const override {

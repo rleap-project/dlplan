@@ -20,17 +20,19 @@ public:
         }
     }
 
-    const RoleDenotation& evaluate(const State& state) override {
+    RoleDenotation evaluate(const State& state) const override {
         const RoleDenotation& r_vec = m_role->evaluate(state);
         const ConceptDenotation& c_vec = m_concept->evaluate(state);
         ConceptDenotation_Set c_set(c_vec.begin(), c_vec.end());
-        m_result.clear();
+        RoleDenotation result;
+        result.reserve(r_vec.size());
         for (const auto& r : r_vec) {
             if (c_set.find(r.second) != c_set.end()) {
-                m_result.push_back(r);
+                result.push_back(r);
             }
         }
-        return m_result;
+        result.shrink_to_fit();
+        return result;
     }
 
     int compute_complexity() const override {

@@ -14,7 +14,6 @@ class ElementImpl {
 protected:
     const VocabularyInfo* m_vocabulary_info;
     std::shared_ptr<element::Element<T>> m_element;
-    mutable T m_result;
 
 public:
     ElementImpl(const VocabularyInfo& vocabulary_info, std::shared_ptr<element::Element<T>>&& element)
@@ -24,7 +23,7 @@ public:
     /**
      * Evaluate and cache the last result.
      */
-    virtual const T& evaluate(const State& state) const = 0;
+    virtual T evaluate(const State& state) const = 0;
 
     int compute_complexity() const {
         return m_element->compute_complexity();
