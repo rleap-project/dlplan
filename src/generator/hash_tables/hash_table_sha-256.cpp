@@ -8,10 +8,8 @@
 namespace dlplan::generator {
 
 static std::array<uint8_t, 32> compute_hash(const std::vector<int>& denotation) {
-    uint8_t h[32];
-    calc_sha_256(h, denotation.begin().base(), sizeof(int) * denotation.size());
     std::array<uint8_t, 32> a;
-    for (int i = 0; i < 32; ++i) a[i] = h[i];
+    calc_sha_256(a.begin(), denotation.begin().base(), sizeof(int) * denotation.size());
     return a;
 }
 

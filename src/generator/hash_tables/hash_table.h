@@ -2,8 +2,49 @@
 #define DLPLAN_SRC_GENERATOR_HASH_TABLES_HASH_TABLE_H_
 
 #include <vector>
+#include <array>
+
+#include "utils.h"
 
 #include "../types.h"
+
+
+namespace std {
+    /**
+     * For combining hash value we use the boost::hash_combine one-liner.
+     * https://stackoverflow.com/questions/20511347/a-good-hash-function-for-a-vector
+     *
+     * We provide custom specialization of std::hash that are injected in the namespace std.
+     * https://en.cppreference.com/w/cpp/utility/hash
+     */
+    template<> struct hash<std::vector<int>> {
+        std::size_t operator()(const std::vector<int>& denotation) const noexcept {
+            std::size_t seed = denotation.size();
+            for (const auto& i : denotation) {
+                dlplan::generator::hash_combine(seed, i);
+            }
+            return seed;
+        }
+    };
+    template<> struct hash<std::array<uint8_t, 32>> {
+        std::size_t operator()(const std::array<uint8_t, 32>& h) const noexcept {
+            std::size_t seed = 32;
+            for (int i = 0; i < 32; ++i) {
+                dlplan::generator::hash_combine(seed, h[i]);
+            }
+            return seed;
+        }
+    };
+    template<> struct hash<std::array<uint32_t, 4>> {
+        std::size_t operator()(const std::array<uint32_t, 4>& h) const noexcept {
+            std::size_t seed = 4;
+            for (int i = 0; i < 4; ++i) {
+                dlplan::generator::hash_combine(seed, h[i]);
+            }
+            return seed;
+        }
+    };
+}
 
 
 namespace dlplan::generator {

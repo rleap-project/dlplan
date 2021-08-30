@@ -9,6 +9,7 @@
 #include "numerical.h"
 #include "hash_tables/hash_table_lossless.h"
 #include "hash_tables/hash_table_sha-256.h"
+#include "hash_tables/hash_table_murmur.h"
 
 
 namespace dlplan::generator {
@@ -96,7 +97,7 @@ FeatureGeneratorImpl::FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElemen
       m_role_elements_by_complexity(complexity+1),
       m_numerical_elements_by_complexity(complexity+1),
       m_boolean_elements_by_complexity(complexity+1),
-      m_hash_table(std::make_unique<HashTableSha256>()),
+      m_hash_table(std::make_unique<HashTableMurmur>()),
       m_timer(time_limit),
       m_count_features(0) { }
 

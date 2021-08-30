@@ -38,7 +38,6 @@ using RoleDenotation = std::vector<std::pair<int, int>>;
 using Name_Vec = std::vector<std::string>;
 using Index_Vec = std::vector<int>;
 
-
 class Constant {
 private:
     pimpl<ConstantImpl> m_pImpl;
@@ -427,7 +426,6 @@ public:
     Role make_transitive_closure(const Role& role);
     Role make_transitive_reflexive_closure(const Role& role);
 };
-
 
 }
 

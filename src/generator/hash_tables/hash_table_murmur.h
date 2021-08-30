@@ -1,5 +1,5 @@
-#ifndef DLPLAN_SRC_GENERATOR_HASH_TABLE_SHA_2_H_
-#define DLPLAN_SRC_GENERATOR_HASH_TABLE_SHA_2_H_
+#ifndef DLPLAN_SRC_GENERATOR_HASH_TABLE_MURMUR_H_
+#define DLPLAN_SRC_GENERATOR_HASH_TABLE_MURMUR_H_
 
 #include <unordered_set>
 #include <vector>
@@ -10,12 +10,12 @@
 
 namespace dlplan::generator {
 
-class HashTableSha256 : public HashTable {
+class HashTableMurmur : public HashTable {
 private:
     // TODO(dominik): Should combine the caches?
-    std::unordered_set<std::array<uint8_t, 32>> m_concept_denotation_cache;
-    std::unordered_set<std::array<uint8_t, 32>> m_role_denotation_cache;
-    std::unordered_set<std::array<uint8_t, 32>> m_numerical_denotation_cache;
+    std::unordered_set<std::array<uint32_t, 4>> m_concept_denotation_cache;
+    std::unordered_set<std::array<uint32_t, 4>> m_role_denotation_cache;
+    std::unordered_set<std::array<uint32_t, 4>> m_numerical_denotation_cache;
     std::unordered_set<std::vector<bool>> m_boolean_denotation_cache;
 
 protected:
