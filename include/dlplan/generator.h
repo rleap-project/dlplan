@@ -95,7 +95,31 @@ private:
     pimpl<FeatureGeneratorImpl> m_pImpl;
 
 public:
-    FeatureGenerator(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit);
+    FeatureGenerator(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit,
+        bool generate_empty_boolean=true,
+        bool generate_all_concept=true,
+        bool generate_and_concept=true,
+        bool generate_diff_concept=true,
+        bool generate_not_concept=true,
+        bool generate_or_concept=true,
+        bool generate_projection_concept=true,
+        bool generate_some_concept=true,
+        bool generate_subset_concept=true,
+        bool generate_concept_distance_numerical=true,
+        bool generate_count_numerical=true,
+        bool generate_role_distance_numerical=true,
+        bool generate_sum_concept_distance_numerical=true,
+        bool generate_sum_role_distance_numerical=true,
+        bool generate_and_role=true,
+        bool generate_compose_role=true,
+        bool generate_diff_role=true,
+        bool generate_identity_role=true,
+        bool generate_inverse_role=true,
+        bool generate_not_role=true,
+        bool generate_or_role=true,
+        bool generate_restrict_role=true,
+        bool generate_transitive_closure_role=true,
+        bool generate_transitive_reflexive_closure_role=true);
     ~FeatureGenerator();
 
     /**

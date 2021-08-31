@@ -32,6 +32,31 @@ private:
     const int m_time_limit;
     const int m_feature_limit;
 
+    const bool m_generate_empty_boolean;
+    const bool m_generate_all_concept;
+    const bool m_generate_and_concept;
+    const bool m_generate_diff_concept;
+    const bool m_generate_not_concept;
+    const bool m_generate_or_concept;
+    const bool m_generate_projection_concept;
+    const bool m_generate_some_concept;
+    const bool m_generate_subset_concept;
+    const bool m_generate_concept_distance_numerical;
+    const bool m_generate_count_numerical;
+    const bool m_generate_role_distance_numerical;
+    const bool m_generate_sum_concept_distance_numerical;
+    const bool m_generate_sum_role_distance_numerical;
+    const bool m_generate_and_role;
+    const bool m_generate_compose_role;
+    const bool m_generate_diff_role;
+    const bool m_generate_identity_role;
+    const bool m_generate_inverse_role;
+    const bool m_generate_not_role;
+    const bool m_generate_or_role;
+    const bool m_generate_restrict_role;
+    const bool m_generate_transitive_closure_role;
+    const bool m_generate_transitive_reflexive_closure_role;
+
     /**
      * Generated features sorted by their complexity.
      */
@@ -117,7 +142,31 @@ private:
     void generate_transitive_reflexive_closure_role(const States& states, int iteration);
 
 public:
-    FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit);
+    FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit,
+        bool generate_empty_boolean=true,
+        bool generate_all_concept=true,
+        bool generate_and_concept=true,
+        bool generate_diff_concept=true,
+        bool generate_not_concept=true,
+        bool generate_or_concept=true,
+        bool generate_projection_concept=true,
+        bool generate_some_concept=true,
+        bool generate_subset_concept=true,
+        bool generate_concept_distance_numerical=true,
+        bool generate_count_numerical=true,
+        bool generate_role_distance_numerical=true,
+        bool generate_sum_concept_distance_numerical=true,
+        bool generate_sum_role_distance_numerical=true,
+        bool generate_and_role=true,
+        bool generate_compose_role=true,
+        bool generate_diff_role=true,
+        bool generate_identity_role=true,
+        bool generate_inverse_role=true,
+        bool generate_not_role=true,
+        bool generate_or_role=true,
+        bool generate_restrict_role=true,
+        bool generate_transitive_closure_role=true,
+        bool generate_transitive_reflexive_closure_role=true);
 
     /**
      * Exhaustively generates features with pairwise disjoint feature evaluations on the states.

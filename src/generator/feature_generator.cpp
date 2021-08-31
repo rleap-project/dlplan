@@ -91,8 +91,56 @@ static std::vector<int> flatten_role_denotation(const std::vector<std::vector<st
 
 
 
-FeatureGeneratorImpl::FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit)
+FeatureGeneratorImpl::FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit,
+    bool generate_empty_boolean,
+    bool generate_all_concept,
+    bool generate_and_concept,
+    bool generate_diff_concept,
+    bool generate_not_concept,
+    bool generate_or_concept,
+    bool generate_projection_concept,
+    bool generate_some_concept,
+    bool generate_subset_concept,
+    bool generate_concept_distance_numerical,
+    bool generate_count_numerical,
+    bool generate_role_distance_numerical,
+    bool generate_sum_concept_distance_numerical,
+    bool generate_sum_role_distance_numerical,
+    bool generate_and_role,
+    bool generate_compose_role,
+    bool generate_diff_role,
+    bool generate_identity_role,
+    bool generate_inverse_role,
+    bool generate_not_role,
+    bool generate_or_role,
+    bool generate_restrict_role,
+    bool generate_transitive_closure_role,
+    bool generate_transitive_reflexive_closure_role)
     : m_factory(factory), m_complexity(complexity), m_time_limit(time_limit), m_feature_limit(feature_limit),
+      m_generate_empty_boolean(generate_empty_boolean),
+      m_generate_all_concept(generate_all_concept),
+      m_generate_and_concept(generate_and_concept),
+      m_generate_diff_concept(generate_diff_concept),
+      m_generate_not_concept(generate_not_concept),
+      m_generate_or_concept(generate_or_concept),
+      m_generate_projection_concept(generate_projection_concept),
+      m_generate_some_concept(generate_some_concept),
+      m_generate_subset_concept(generate_subset_concept),
+      m_generate_concept_distance_numerical(generate_concept_distance_numerical),
+      m_generate_count_numerical(generate_count_numerical),
+      m_generate_role_distance_numerical(generate_role_distance_numerical),
+      m_generate_sum_concept_distance_numerical(generate_sum_concept_distance_numerical),
+      m_generate_sum_role_distance_numerical(generate_sum_role_distance_numerical),
+      m_generate_and_role(generate_and_role),
+      m_generate_compose_role(generate_compose_role),
+      m_generate_diff_role(generate_diff_role),
+      m_generate_identity_role(generate_identity_role),
+      m_generate_inverse_role(generate_inverse_role),
+      m_generate_not_role(generate_not_role),
+      m_generate_or_role(generate_or_role),
+      m_generate_restrict_role(generate_restrict_role),
+      m_generate_transitive_closure_role(generate_transitive_closure_role),
+      m_generate_transitive_reflexive_closure_role(generate_transitive_reflexive_closure_role),
       m_concept_elements_by_complexity(complexity+1),
       m_role_elements_by_complexity(complexity+1),
       m_numerical_elements_by_complexity(complexity+1),
@@ -128,30 +176,30 @@ void FeatureGeneratorImpl::generate_inductively(const States& states, FeatureCol
     utils::g_log << "Started generating composite features." << std::endl;
     for (int iteration = 1; iteration < m_complexity; ++iteration) {  // every composition adds at least one complexity
         if (m_timer.is_expired()) break;
-        generate_empty_boolean(states, iteration, feature_collection);
-        generate_all_concept(states, iteration);
-        generate_and_concept(states, iteration);
-        generate_diff_concept(states, iteration);
-        generate_not_concept(states, iteration);
-        generate_or_concept(states, iteration);
-        generate_projection_concept(states, iteration);
-        generate_some_concept(states, iteration);
-        generate_subset_concept(states, iteration);
-        generate_concept_distance_numerical(states, iteration, feature_collection);
-        generate_count_numerical(states, iteration, feature_collection);
-        generate_role_distance_numerical(states, iteration, feature_collection);
-        generate_sum_concept_distance_numerical(states, iteration, feature_collection);
-        generate_sum_role_distance_numerical(states, iteration, feature_collection);
-        generate_and_role(states, iteration);
-        generate_compose_role(states, iteration);
-        generate_diff_role(states, iteration);
-        generate_identity_role(states, iteration);
-        generate_inverse_role(states, iteration);
-        generate_not_role(states, iteration);
-        generate_or_role(states, iteration);
-        generate_restrict_role(states, iteration);
-        generate_transitive_closure_role(states, iteration);
-        generate_transitive_reflexive_closure_role(states, iteration);
+        if (m_generate_empty_boolean) generate_empty_boolean(states, iteration, feature_collection);
+        if (m_generate_all_concept) generate_all_concept(states, iteration);
+        if (m_generate_and_concept) generate_and_concept(states, iteration);
+        if (m_generate_diff_concept) generate_diff_concept(states, iteration);
+        if (m_generate_not_concept) generate_not_concept(states, iteration);
+        if (m_generate_or_concept) generate_or_concept(states, iteration);
+        if (m_generate_projection_concept) generate_projection_concept(states, iteration);
+        if (m_generate_some_concept) generate_some_concept(states, iteration);
+        if (m_generate_subset_concept) generate_subset_concept(states, iteration);
+        if (m_generate_concept_distance_numerical) generate_concept_distance_numerical(states, iteration, feature_collection);
+        if (m_generate_count_numerical) generate_count_numerical(states, iteration, feature_collection);
+        if (m_generate_role_distance_numerical) generate_role_distance_numerical(states, iteration, feature_collection);
+        if (m_generate_sum_concept_distance_numerical) generate_sum_concept_distance_numerical(states, iteration, feature_collection);
+        if (m_generate_sum_role_distance_numerical) generate_sum_role_distance_numerical(states, iteration, feature_collection);
+        if (m_generate_and_role) generate_and_role(states, iteration);
+        if (m_generate_compose_role) generate_compose_role(states, iteration);
+        if (m_generate_diff_role) generate_diff_role(states, iteration);
+        if (m_generate_identity_role) generate_identity_role(states, iteration);
+        if (m_generate_inverse_role) generate_inverse_role(states, iteration);
+        if (m_generate_not_role) generate_not_role(states, iteration);
+        if (m_generate_or_role) generate_or_role(states, iteration);
+        if (m_generate_restrict_role) generate_restrict_role(states, iteration);
+        if (m_generate_transitive_closure_role) generate_transitive_closure_role(states, iteration);
+        if (m_generate_transitive_reflexive_closure_role) generate_transitive_reflexive_closure_role(states, iteration);
 
         utils::g_log << "Complexity " << iteration+1 << ":" << std::endl;
         print_brief_statistics();

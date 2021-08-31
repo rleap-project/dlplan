@@ -5,6 +5,11 @@
 #ifndef _MURMURHASH3_H_
 #define _MURMURHASH3_H_
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 //-----------------------------------------------------------------------------
 // Platform-specific functions and macros
 
@@ -25,11 +30,6 @@ typedef unsigned __int64 uint64_t;
 #endif // !defined(_MSC_VER)
 
 //-----------------------------------------------------------------------------
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif
 
 void MurmurHash3_x86_32  ( const void * key, int len, uint32_t seed, void * out );
 
