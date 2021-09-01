@@ -67,10 +67,10 @@ some constant $a$ that occurs in every instance.
     Union & $C\sqcup D$ & c\_or(C, D) \\
     Negation & $\neg C$ & c\_not(C) \\
     Difference & $C\setminus D$ & c\_diff(C, D) \\
-    Value restriction & $\forall R.C$ & all(R, C) \\
-    Existential quantification & $\exists R.C$ & some(R, C) \\
-    Role-value-map & $R\subseteq S$ & subset(R, S) \\
-    One-of & $a$ & one-of(a) \\
+    Value restriction & $\forall R.C$ & c\_all(R, C) \\
+    Existential quantification & $\exists R.C$ & c\_some(R, C) \\
+    Role-value-map & $R\subseteq S$ & c\_subset(R, S) \\
+    One-of & $a$ & c\_one-of(a) \\
     Projection & $R[k]$ & c\_projection(R, k) \\
     \end{tabular}
     \caption{Concepts}
