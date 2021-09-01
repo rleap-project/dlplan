@@ -4,7 +4,7 @@ add_library(dlplangenerator SHARED
     generator.cpp
     ../utils/countdown_timer.cpp
     ../utils/sha-256.c
-    ../utils/MurmurHash3.c
+    ../utils/MurmurHash3.cpp
     hash_tables/hash_table.cpp
     hash_tables/hash_table_lossless.cpp
     hash_tables/hash_table_sha-256.cpp
@@ -16,7 +16,7 @@ add_library(staticdlplangenerator STATIC
     generator.cpp
     ../utils/countdown_timer.cpp
     ../utils/sha-256.c
-    ../utils/MurmurHash3.c
+    ../utils/MurmurHash3.cpp
     hash_tables/hash_table.cpp
     hash_tables/hash_table_lossless.cpp
     hash_tables/hash_table_sha-256.cpp
