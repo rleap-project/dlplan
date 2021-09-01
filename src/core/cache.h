@@ -43,7 +43,7 @@ template<typename KEY, typename VALUE>
 class Cache : public std::enable_shared_from_this<Cache<KEY, VALUE>> {
 private:
     std::unordered_map<KEY, std::weak_ptr<VALUE>> m_cache;
-    // std::mutex m_mutex;
+    std::mutex m_mutex;
 
 public:
     /**
@@ -58,16 +58,17 @@ public:
      */
     std::shared_ptr<VALUE> insert(std::unique_ptr<VALUE>&& element) {
         KEY key = element->compute_repr();
-        // std::lock_guard<std::mutex> hold(m_mutex);
+        std::shared_ptr<VALUE> sp;  // we must declare this before the lock s.t. the deleter is called after the mutex was released.
+        std::lock_guard<std::mutex> hold(m_mutex);
         auto& cached = m_cache[key];
-        auto sp = cached.lock();
+        sp = cached.lock();
         if (!sp) {
             cached = sp = std::shared_ptr<VALUE>(
                 element.get(),
                 [parent=this->shared_from_this(), original_deleter=element.get_deleter()](VALUE* x)
                 {
                     // Note that if the deleter is called during the insert operation we obtain a deadlock.
-                    // std::lock_guard<std::mutex> hold(parent->m_mutex);
+                    std::lock_guard<std::mutex> hold(parent->m_mutex);
                     parent->m_cache.erase(x->compute_repr());
                     original_deleter(x);
                 }
@@ -91,9 +92,7 @@ struct Caches {
         : m_concept_cache(std::make_shared<Cache<std::string, element::Concept>>()),
           m_role_cache(std::make_shared<Cache<std::string, element::Role>>()),
           m_numerical_cache(std::make_shared<Cache<std::string, element::Numerical>>()),
-          m_boolean_cache(std::make_shared<Cache<std::string, element::Boolean>>()) {
-          }
-
+          m_boolean_cache(std::make_shared<Cache<std::string, element::Boolean>>()) { }
 };
 
 
