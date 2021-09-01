@@ -1,0 +1,199 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{makecell}
+\usepackage{float}
+
+\title{
+    Description Logics State Features for Planning (dlplan)
+}
+\author{
+Dominik Drexler \\
+Link{\"o}ping University, Link\"oping, Sweden\\
+dominik.drexler@liu.se
+}
+
+\begin{document}
+\maketitle
+
+\newcommand{\emptyelement}[1]{\ensuremath{\mathit{Empty}(#1)}}
+
+\newcommand{\countelement}[1]{\ensuremath{\mathit{Count}(#1)}}
+\newcommand{\conceptdistanceelement}[3]{\ensuremath{\mathit{ConceptDistance}(#1, #2, #3)}}
+\newcommand{\sumconceptdistanceelement}[3]{\ensuremath{\mathit{SumConceptDistance}(#1, #2, #3)}}
+\newcommand{\roledistanceelement}[3]{\ensuremath{\mathit{RoleDistance}(#1, #2, #3)}}
+\newcommand{\sumroledistanceelement}[3]{\ensuremath{\mathit{SumRoleDistance}(#1, #2, #3)}}
+
+\section{Introduction}
+
+This document aims at providing a better understanding of the different types of elements
+and different elements itself that can be used with this library.
+There are four different types of elements: concepts, roles, boolean, and numericals.
+The main difference is that each type returns different types of objects when evaluated on a given planning state.
+Evaluating a concept returns a set of unary relations over objects,
+evaluating a role returns a set of binary relations over objects,
+evaluating a boolean returns a Boolean, and
+evaluating a numerical returns a natural number.
+The following section shows how elements can be composed to obtain more complex elements.
+
+\section{Available Elements}
+
+In this section, we describe the elements that are available to construct more complex elements.
+We make use of description logics \cite{baader-et-al-2003} and include Boolean and numerical
+elements as described in \cite{drexler-et-al-arxiv2021}.
+
+Consider concepts $C, D$, roles $R, S, T$,
+the universe $\Delta$ containing all objects,
+and $X$ to be either a concept or a role.
+Also consider some predicate $p(c_0,\ldots,c_{n-1})$ with arity $n$,
+integers $0\leq i,j\leq n-1$, integer $k\in\{0, 1\}$, and
+some constant $a$ that occurs in every instance.
+
+\subsection{Syntax Overview}
+
+\subsubsection{Concepts}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ccc}
+    Name & Abstract syntax & Concrete syntax \\
+    \hline
+    Primitive concept & $p(i)$ & p(i) \\
+    Top & $\top$ & c\_top \\
+    Bottom & $\bot$ & c\_bot \\
+    Intersection & $C\sqcap D$ & c\_and(C, D) \\
+    Union & $C\sqcup D$ & c\_or(C, D) \\
+    Negation & $\neg C$ & c\_not(C) \\
+    Difference & $C\setminus D$ & c\_diff(C, D) \\
+    Value restriction & $\forall R.C$ & all(R, C) \\
+    Existential quantification & $\exists R.C$ & some(R, C) \\
+    Role-value-map & $R\subseteq S$ & subset(R, S) \\
+    One-of & $a$ & one-of(a) \\
+    Projection & $R[k]$ & c\_projection(R, k) \\
+    \end{tabular}
+    \caption{Concepts}
+\end{table}
+
+\subsubsection{Roles}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ccc}
+    Name & Abstract syntax & Concrete syntax \\
+    \hline
+    Primitive role & $p(i,j)$ & p(i,j) \\
+    Universal role & $\top$ & r\_top \\
+    Intersection & $R\sqcap S$ & r\_and(R, S) \\
+    Union & $R\sqcup S$ & r\_or(R, S) \\
+    Complement & $\neg R$ & r\_not(R) \\
+    Difference & $R\setminus S$ & r\_diff(R, S) \\
+    Inverse & $R^{-1}$ & r\_inverse(R) \\
+    Composition & $R\circ S$ & r\_compose(R, S) \\
+    Transitive closure & $R^+$ & r\_transitive\_closure(R) \\
+    Transitive reflexive closure & $R^*$ & r\_transitive\_reflexive\_closure(R) \\
+    Role restriction & $R\vert_{C}$ & r\_restrict(R, C) \\
+    Identity & $\mathit{id}(C)$ & r\_identity(C) \\
+    \end{tabular}
+    \caption{Roles}
+\end{table}
+
+\subsubsection{Booleans}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ccc}
+    Name & Abstract syntax & Concrete syntax \\
+    \hline
+    Empty & \emptyelement{X} & b\_empty(X) \\
+    \end{tabular}
+    \caption{Booleans}
+\end{table}
+
+\subsubsection{Numericals}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ccc}
+    Name & Abstract syntax & Concrete syntax \\
+    \hline
+    Count & \countelement{X} & n\_count(X) \\
+    Concept distance & \conceptdistanceelement{C}{R}{D} & n\_concept\_distance(C, R, D) \\
+    Sum concept distance & \sumconceptdistanceelement{C}{R}{D} & n\_sum\_concept\_distance(C, R, D) \\
+    Role distance & \roledistanceelement{R}{S}{T} & n\_role\_distance(R, S, T) \\
+    Sum role distance & \sumroledistanceelement{R}{S}{T} & n\_sum\_role\_distance(R, S, T) \\
+    \end{tabular}
+    \caption{Numericals}
+\end{table}
+
+\subsection{Semantics}
+
+\subsubsection{Concepts}
+
+\begin{itemize}
+    \item $(p(i))^s$ is a concept that denotes the set of
+    objects occuring at index $i$ in ground atoms of predicate $p$ in state $s$.
+    \item $\top^s = \Delta^s$
+    \item $\bot^s = \emptyset$
+    \item $(C\sqcap D)^s = C^s\cap D^s$
+    \item $(C\sqcup D)^s = C^s\cup D^s$
+    \item $(\neg C)^s = \Delta^s\setminus C^s$
+    \item $(C\setminus D)^s = (C^s\setminus D^s)$
+    \item $(\forall R.C)^s = \{a\mid\forall b:(a,b)\in R^s\rightarrow b\in C^s\}$
+    \item $(\exists R.C)^s = \{a\mid\exists b:(a,b)\in R^s\land b\in C^s\}$
+    \item $(R\subseteq S)^s = \{a\mid\forall b:(a,b)\in R^s\rightarrow (a,b)\in S^s\}$
+    \item $a^s = \{a\}$
+    \item $(R[k])^s = \begin{cases}(\exists R.\top)^s & \text{ if } k = 0\\ (\exists R^{-1}.\top)^s & \text{ if } k = 1 \end{cases}$
+\end{itemize}
+
+\subsubsection{Roles}
+
+\begin{itemize}
+    \item $p(i,j)^s$ is a role that denotes the set of pairs of
+    objects occuring at index $i$ and $j$ in ground atoms of $p$ in state $s$.
+    \item $\top^s = \Delta^s\times\Delta^s$
+    \item $(R\sqcap S)^s = R^s\cap S^s$
+    \item $(R\sqcup S)^s = R^s\cup S^s$
+    \item $(\neg R)^s = \top^s\setminus R^s$
+    \item $(R\setminus S)^s = (R^s\setminus S^s)$
+    \item $(R^{-1})^s = \{(b,a)\in\top^s\mid (a,b)\in R^s\}$
+    \item $(R\circ S)^s = R^s\circ S^s$
+    \item $(R^+)^s = \bigcup_{n\geq 1}(R^s)^n$
+    \item $(R^*)^s = \bigcup_{n\geq 0}(R^s)^n$
+    \item $(R\vert_{C})^s = R^s\sqcap (\Delta^s\times C^s)$
+    \item $\mathit{id}(C) = \{(d,d)\mid d\in C^s \}$
+\end{itemize}
+
+where the iterated composition $(R^s)^n$ is inductively defined as
+$(R^s)^0 = \{(d,d)\mid d\in\Delta^s\}$ and $(R^s)^{n+1} = (R^s)^n\circ R^s$.
+
+\subsubsection{Booleans}
+
+\begin{itemize}
+    \item $\emptyelement{X}^s$ is true iff $|X^s| = 0$
+\end{itemize}
+
+\subsubsection{Numericals}
+
+\begin{itemize}
+    \item $\countelement{X}^s\equiv |X^s|$
+    \item $\conceptdistanceelement{C}{R}{D}^s$ is the smallest $n\in\mathbb{N}_0$
+    s.t.\ there are objects $x_0,\ldots,x_n$ with
+    $x_0\in C^s$, $x_n\in D^s$ and $(x_i, x_{i+1})\in R^s$ for $i = 0,\ldots,n-1$.
+    Special cases: If $C^s$ is empty then the element evaluates to $0$ and if no such $n$ exists then it evaluates to $\infty$.
+    \item $\sumconceptdistanceelement{C}{R}{D}^s:=\sum_{x\in C^s}\conceptdistanceelement{\{x\}}{R}{D}^s$
+    where the sum evaluates to $\infty$ if any term is $\infty$.
+    \item $\roledistanceelement{R}{S}{T}^s$ is the smallest $n\in\mathbb{N}_0$
+    s.t.\ there are objects $x_0,\ldots,x_n$,
+    there exists some $(a,x_0)\in R^s$, $(a,x_n)\in T^s$,
+    and $(x_i, x_{i+1})\in S^s$ for $i = 0,\ldots,n-1$.
+    Special cases: If $R^s$ is emtpy then the element evaluates to $0$ and if no such $n$ exists then it evaluates to $\infty$.
+    \item $\sumroledistanceelement{R}{S}{T}^s:=\sum_{r\in R^s}\roledistanceelement{\{r\}}{S}{T}^s$,
+    where the sum evaluates to $\infty$ if any term is $\infty$.
+\end{itemize}
+
+\bibliographystyle{plain}
+\bibliography{literature.bib}
+
+\end{document}
