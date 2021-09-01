@@ -175,7 +175,7 @@ void FeatureGeneratorImpl::generate_base(const States& states) {
 void FeatureGeneratorImpl::generate_inductively(const States& states, FeatureCollection& feature_collection) {
     utils::g_log << "Started generating composite features." << std::endl;
     for (int iteration = 1; iteration < m_complexity; ++iteration) {  // every composition adds at least one complexity
-        if (m_timer.is_expired()) break;
+        if (reached_limit()) break;
         if (m_generate_empty_boolean) generate_empty_boolean(states, iteration, feature_collection);
         if (m_generate_all_concept) generate_all_concept(states, iteration);
         if (m_generate_and_concept) generate_and_concept(states, iteration);
