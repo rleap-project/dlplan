@@ -15,7 +15,6 @@ namespace dlplan::generator {
  */
 class HashTableLossLess : public HashTable {
 private:
-    // TODO(dominik): Should combine the caches?
     std::unordered_set<std::vector<int>> m_concept_denotation_cache;
     std::unordered_set<std::vector<int>> m_role_denotation_cache;
     std::unordered_set<std::vector<int>> m_numerical_denotation_cache;

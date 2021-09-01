@@ -12,7 +12,6 @@ namespace dlplan::generator {
 
 class HashTableSha256 : public HashTable {
 private:
-    // TODO(dominik): Should combine the caches?
     std::unordered_set<std::array<uint8_t, 32>> m_concept_denotation_cache;
     std::unordered_set<std::array<uint8_t, 32>> m_role_denotation_cache;
     std::unordered_set<std::array<uint8_t, 32>> m_numerical_denotation_cache;

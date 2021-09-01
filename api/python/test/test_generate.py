@@ -37,28 +37,34 @@ def test_generate_exhaustively():
     s1 = State(instance, [a1, a2])  # b on a
     s2 = State(instance, [a2, a3])  # both on table
     states = [s0, s1, s2]
-    collection = generator.generate(states)
-    assert len(collection.get_boolean_features()) == 3
-    assert len(collection.get_numerical_features()) == 6
+    feature_reprs = generator.generate(states)
+    print(feature_reprs)
 
-    b0, b1, b2 = collection.get_boolean_features()
-    assert b0.get_repr() == "b_empty(on(0))"
-    assert b0.get_state_evaluations() == [False, False, True]
-    assert b1.get_repr() == "b_empty(on_g(0))"
-    assert b1.get_state_evaluations() == [False, False, False]
-    assert b2.get_repr() == "b_empty(holding(0))"
-    assert b2.get_state_evaluations() == [True, True, True]
+    boolean_reprs = [repr for repr in feature_reprs if repr.startswith("b_")]
+    numerical_reprs = [repr for repr in feature_reprs if repr.startswith("n_")]
 
-    n0, n1, n2, n3, n4, n5 = collection.get_numerical_features()
-    assert n0.get_repr() == "n_count(on(0))"
-    assert n0.get_state_evaluations() == [1, 1, 0]
-    assert n1.get_repr() == "n_count(on_g(0))"
-    assert n1.get_state_evaluations() == [1, 1, 1]
-    assert n2.get_repr() == "n_count(ontable(0))"
-    assert n2.get_state_evaluations() == [1, 1, 2]
-    assert n3.get_repr() == "n_count(holding(0))"
-    assert n3.get_state_evaluations() == [0, 0, 0]
-    assert n4.get_repr() == "n_count(c_top)"
-    assert n4.get_state_evaluations() == [2, 2, 2]
-    assert n5.get_repr() == "n_count(r_top)"
-    assert n5.get_state_evaluations() == [4, 4, 4]
+    assert boolean_reprs == ['b_empty(on(0))', 'b_empty(on_g(0))', 'b_empty(holding(0))']
+    assert numerical_reprs == ['n_count(on(0))', 'n_count(on_g(0))', 'n_count(ontable(0))', 'n_count(holding(0))', 'n_count(c_top)', 'n_count(r_top)']
+
+    b0, b1, b2 = [factory.parse_boolean(b) for b in boolean_reprs]
+    n0, n1, n2, n3, n4, n5 = [factory.parse_numerical(n) for n in numerical_reprs]
+
+    assert b0.compute_repr() == "b_empty(on(0))"
+    assert [b0.evaluate(s) for s in states] == [False, False, True]
+    assert b1.compute_repr() == "b_empty(on_g(0))"
+    assert [b1.evaluate(s) for s in states] == [False, False, False]
+    assert b2.compute_repr() == "b_empty(holding(0))"
+    assert [b2.evaluate(s) for s in states] == [True, True, True]
+
+    assert n0.compute_repr() == "n_count(on(0))"
+    assert [n0.evaluate(s) for s in states] == [1, 1, 0]
+    assert n1.compute_repr() == "n_count(on_g(0))"
+    assert [n1.evaluate(s) for s in states] == [1, 1, 1]
+    assert n2.compute_repr() == "n_count(ontable(0))"
+    assert [n2.evaluate(s) for s in states] == [1, 1, 2]
+    assert n3.compute_repr() == "n_count(holding(0))"
+    assert [n3.evaluate(s) for s in states] == [0, 0, 0]
+    assert n4.compute_repr() == "n_count(c_top)"
+    assert [n4.evaluate(s) for s in states] == [2, 2, 2]
+    assert n5.compute_repr() == "n_count(r_top)"
+    assert [n5.evaluate(s) for s in states] == [4, 4, 4]

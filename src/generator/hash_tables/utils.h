@@ -4,6 +4,10 @@
 
 namespace dlplan::generator {
 
+/**
+ * For combining hash value we use the boost::hash_combine one-liner.
+ * https://stackoverflow.com/questions/20511347/a-good-hash-function-for-a-vector
+ */
 template <class T>
 inline void hash_combine(std::size_t& seed, const T& v)
 {

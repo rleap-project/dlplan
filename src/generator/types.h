@@ -14,8 +14,8 @@ namespace core {
 }
 namespace generator {
 
-
 using States = std::vector<core::State>;
+using FeatureRepresentations = std::vector<std::string>;
 
 using Name_Vec = std::vector<std::string>;
 using Index_Vec = std::vector<int>;

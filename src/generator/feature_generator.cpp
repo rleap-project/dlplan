@@ -5,8 +5,6 @@
 
 #include "../../include/dlplan/generator.h"
 #include "../utils/logging.h"
-#include "boolean.h"
-#include "numerical.h"
 #include "hash_tables/hash_table_lossless.h"
 #include "hash_tables/hash_table_sha-256.h"
 #include "hash_tables/hash_table_murmur.h"
@@ -149,13 +147,13 @@ FeatureGeneratorImpl::FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElemen
       m_timer(time_limit),
       m_count_features(0) { }
 
-FeatureCollection FeatureGeneratorImpl::generate(const States& states) {
-    FeatureCollection feature_collection;
+FeatureRepresentations FeatureGeneratorImpl::generate(const States& states) {
+    FeatureRepresentations feature_reprs;
     generate_base(states);
-    generate_inductively(states, feature_collection);
+    generate_inductively(states, feature_reprs);
     utils::g_log << "Overall results: " << std::endl;
     // print_overall_statistics();
-    return feature_collection;
+    return feature_reprs;
 }
 
 
@@ -172,11 +170,11 @@ void FeatureGeneratorImpl::generate_base(const States& states) {
     utils::g_log << "Finished generating base features." << std::endl;
 }
 
-void FeatureGeneratorImpl::generate_inductively(const States& states, FeatureCollection& feature_collection) {
+void FeatureGeneratorImpl::generate_inductively(const States& states, FeatureRepresentations& feature_repr) {
     utils::g_log << "Started generating composite features." << std::endl;
     for (int iteration = 1; iteration < m_complexity; ++iteration) {  // every composition adds at least one complexity
         if (reached_limit()) break;
-        if (m_generate_empty_boolean) generate_empty_boolean(states, iteration, feature_collection);
+        if (m_generate_empty_boolean) generate_empty_boolean(states, iteration, feature_repr);
         if (m_generate_all_concept) generate_all_concept(states, iteration);
         if (m_generate_and_concept) generate_and_concept(states, iteration);
         if (m_generate_diff_concept) generate_diff_concept(states, iteration);
@@ -185,11 +183,11 @@ void FeatureGeneratorImpl::generate_inductively(const States& states, FeatureCol
         if (m_generate_projection_concept) generate_projection_concept(states, iteration);
         if (m_generate_some_concept) generate_some_concept(states, iteration);
         if (m_generate_subset_concept) generate_subset_concept(states, iteration);
-        if (m_generate_concept_distance_numerical) generate_concept_distance_numerical(states, iteration, feature_collection);
-        if (m_generate_count_numerical) generate_count_numerical(states, iteration, feature_collection);
-        if (m_generate_role_distance_numerical) generate_role_distance_numerical(states, iteration, feature_collection);
-        if (m_generate_sum_concept_distance_numerical) generate_sum_concept_distance_numerical(states, iteration, feature_collection);
-        if (m_generate_sum_role_distance_numerical) generate_sum_role_distance_numerical(states, iteration, feature_collection);
+        if (m_generate_concept_distance_numerical) generate_concept_distance_numerical(states, iteration, feature_repr);
+        if (m_generate_count_numerical) generate_count_numerical(states, iteration, feature_repr);
+        if (m_generate_role_distance_numerical) generate_role_distance_numerical(states, iteration, feature_repr);
+        if (m_generate_sum_concept_distance_numerical) generate_sum_concept_distance_numerical(states, iteration, feature_repr);
+        if (m_generate_sum_role_distance_numerical) generate_sum_role_distance_numerical(states, iteration, feature_repr);
         if (m_generate_and_role) generate_and_role(states, iteration);
         if (m_generate_compose_role) generate_compose_role(states, iteration);
         if (m_generate_diff_role) generate_diff_role(states, iteration);
@@ -225,22 +223,22 @@ void FeatureGeneratorImpl::add_role(const States& states, core::Role&& role) {
     }
 }
 
-void FeatureGeneratorImpl::add_numerical(const States& states, core::Numerical&& numerical, FeatureCollection& feature_collection) {
+void FeatureGeneratorImpl::add_numerical(const States& states, core::Numerical&& numerical, FeatureRepresentations& feature_reprs) {
     std::string repr = numerical.compute_repr();
     const std::vector<int>& denotation = evaluate<int>(numerical, states);
     if (m_hash_table->insert_numerical(denotation)) {
         m_numerical_elements_by_complexity[numerical.compute_complexity()].emplace_back(numerical);
-        feature_collection.add_numerical_feature(Numerical(repr, denotation));
+        feature_reprs.push_back(repr);
         ++m_count_features;
     }
 }
 
-void FeatureGeneratorImpl::add_boolean(const States& states, core::Boolean&& boolean, FeatureCollection& feature_collection) {
+void FeatureGeneratorImpl::add_boolean(const States& states, core::Boolean&& boolean, FeatureRepresentations& feature_reprs) {
     std::string repr = boolean.compute_repr();
     const std::vector<bool>& denotation = evaluate<bool>(boolean, states);
     if (m_hash_table->insert_boolean(denotation)) {
         m_boolean_elements_by_complexity[boolean.compute_complexity()].emplace_back(boolean);
-        feature_collection.add_boolean_feature(Boolean(repr, denotation));
+        feature_reprs.push_back(repr);
         ++m_count_features;
     }
 }
@@ -284,14 +282,14 @@ void FeatureGeneratorImpl::generate_one_of_concept(const States& states) {
 }
 
 
-void FeatureGeneratorImpl::generate_empty_boolean(const States& states, int iteration, FeatureCollection& feature_collection) {
+void FeatureGeneratorImpl::generate_empty_boolean(const States& states, int iteration, FeatureRepresentations& feature_reprs) {
     for (const auto& concept : m_concept_elements_by_complexity[iteration]) {
         if (reached_limit()) return;
-        else add_boolean(states, m_factory->make_empty_boolean(concept), feature_collection);
+        else add_boolean(states, m_factory->make_empty_boolean(concept), feature_reprs);
     }
     for (const auto& role : m_role_elements_by_complexity[iteration]) {
         if (reached_limit()) return;
-        else add_boolean(states, m_factory->make_empty_boolean(role), feature_collection);
+        else add_boolean(states, m_factory->make_empty_boolean(role), feature_reprs);
     }
 }
 
@@ -385,7 +383,7 @@ void FeatureGeneratorImpl::generate_subset_concept(const States& states, int ite
     }
 }
 
-void FeatureGeneratorImpl::generate_concept_distance_numerical(const States& states, int iteration, FeatureCollection& feature_collection) {
+void FeatureGeneratorImpl::generate_concept_distance_numerical(const States& states, int iteration, FeatureRepresentations& feature_reprs) {
     for (int i = 1; i < iteration; ++i) {
         for (int j = 1; j < iteration - i; ++j) {
             int k = iteration - i - j;
@@ -393,7 +391,7 @@ void FeatureGeneratorImpl::generate_concept_distance_numerical(const States& sta
                 for (const auto& role : m_role_elements_by_complexity[j]) {
                     for (const auto& concept_right : m_concept_elements_by_complexity[k]) {
                         if (reached_limit()) return;
-                        else add_numerical(states, m_factory->make_concept_distance(concept_left, role, concept_right), feature_collection);
+                        else add_numerical(states, m_factory->make_concept_distance(concept_left, role, concept_right), feature_reprs);
                     }
                 }
             }
@@ -401,18 +399,18 @@ void FeatureGeneratorImpl::generate_concept_distance_numerical(const States& sta
     }
 }
 
-void FeatureGeneratorImpl::generate_count_numerical(const States& states, int iteration, FeatureCollection& feature_collection) {
+void FeatureGeneratorImpl::generate_count_numerical(const States& states, int iteration, FeatureRepresentations& feature_reprs) {
     for (const auto& concept : m_concept_elements_by_complexity[iteration]) {
         if (reached_limit()) return;
-        else add_numerical(states, m_factory->make_count(concept), feature_collection);
+        else add_numerical(states, m_factory->make_count(concept), feature_reprs);
     }
     for (const auto& role : m_role_elements_by_complexity[iteration]) {
         if (reached_limit()) return;
-        else add_numerical(states, m_factory->make_count(role), feature_collection);
+        else add_numerical(states, m_factory->make_count(role), feature_reprs);
     }
 }
 
-void FeatureGeneratorImpl::generate_role_distance_numerical(const States& states, int iteration, FeatureCollection& feature_collection) {
+void FeatureGeneratorImpl::generate_role_distance_numerical(const States& states, int iteration, FeatureRepresentations& feature_reprs) {
     for (int i = 1; i < iteration; ++i) {
         for (int j = 1; j < iteration - i; ++j) {
             int k = iteration - i - j;
@@ -420,7 +418,7 @@ void FeatureGeneratorImpl::generate_role_distance_numerical(const States& states
                 for (const auto& role : m_role_elements_by_complexity[j]) {
                     for (const auto& role_right : m_role_elements_by_complexity[k]) {
                         if (reached_limit()) return;
-                        else add_numerical(states, m_factory->make_role_distance(role_left, role, role_right), feature_collection);
+                        else add_numerical(states, m_factory->make_role_distance(role_left, role, role_right), feature_reprs);
                     }
                 }
             }
@@ -428,7 +426,7 @@ void FeatureGeneratorImpl::generate_role_distance_numerical(const States& states
     }
 }
 
-void FeatureGeneratorImpl::generate_sum_concept_distance_numerical(const States& states, int iteration, FeatureCollection& feature_collection) {
+void FeatureGeneratorImpl::generate_sum_concept_distance_numerical(const States& states, int iteration, FeatureRepresentations& feature_reprs) {
     for (int i = 1; i < iteration; ++i) {
         for (int j = 1; j < iteration - i; ++j) {
             int k = iteration - i - j;
@@ -436,7 +434,7 @@ void FeatureGeneratorImpl::generate_sum_concept_distance_numerical(const States&
                 for (const auto& role : m_role_elements_by_complexity[j]) {
                     for (const auto& concept_right : m_concept_elements_by_complexity[k]) {
                         if (reached_limit()) return;
-                        else add_numerical(states, m_factory->make_sum_concept_distance(concept_left, role, concept_right), feature_collection);
+                        else add_numerical(states, m_factory->make_sum_concept_distance(concept_left, role, concept_right), feature_reprs);
                     }
                 }
             }
@@ -444,7 +442,7 @@ void FeatureGeneratorImpl::generate_sum_concept_distance_numerical(const States&
     }
 }
 
-void FeatureGeneratorImpl::generate_sum_role_distance_numerical(const States& states, int iteration, FeatureCollection& feature_collection) {
+void FeatureGeneratorImpl::generate_sum_role_distance_numerical(const States& states, int iteration, FeatureRepresentations& feature_reprs) {
     for (int i = 1; i < iteration; ++i) {
         for (int j = 1; j < iteration - i; ++j) {
             int k = iteration - i - j;
@@ -452,7 +450,7 @@ void FeatureGeneratorImpl::generate_sum_role_distance_numerical(const States& st
                 for (const auto& role : m_role_elements_by_complexity[j]) {
                     for (const auto& role_right : m_role_elements_by_complexity[k]) {
                         if (reached_limit()) return;
-                        else add_numerical(states, m_factory->make_sum_role_distance(role_left, role, role_right), feature_collection);
+                        else add_numerical(states, m_factory->make_sum_role_distance(role_left, role, role_right), feature_reprs);
                     }
                 }
             }

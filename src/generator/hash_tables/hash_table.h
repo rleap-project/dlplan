@@ -11,9 +11,6 @@
 
 namespace std {
     /**
-     * For combining hash value we use the boost::hash_combine one-liner.
-     * https://stackoverflow.com/questions/20511347/a-good-hash-function-for-a-vector
-     *
      * We provide custom specialization of std::hash that are injected in the namespace std.
      * https://en.cppreference.com/w/cpp/utility/hash
      */
