@@ -51,7 +51,7 @@ public:
                         std::lock_guard<std::mutex> hold(parent->m_mutex);
                         parent->m_cache.erase(x->compute_repr());
                     }
-                    /* After cache removal, we can call the objective destructor
+                    /* After cache removal, we can call the objects destructor
                        and recursively call the deleter of children if their ref count goes to 0 */
                     original_deleter(x);
                 }

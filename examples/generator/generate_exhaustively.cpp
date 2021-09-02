@@ -1,35 +1,71 @@
 #include "../../include/dlplan/generator.h"
 
-#include <memory>
 #include <iostream>
 
+using namespace dlplan::core;
+using namespace dlplan::generator;
+
+static std::shared_ptr<VocabularyInfo> construct_vocabulary_info() {
+    std::shared_ptr<VocabularyInfo> v = std::make_shared<VocabularyInfo>();
+    // Add predicates and constants of the domain.
+    // Note that there are no constants in Blocksworld.
+    v->add_predicate("on", 2);
+    v->add_predicate("on_g", 2);
+    v->add_predicate("ontable", 1);
+    v->add_predicate("holding", 1);
+    v->add_predicate("clear", 1);
+    return v;
+}
+
+static std::shared_ptr<InstanceInfo> construct_instance_info(std::shared_ptr<VocabularyInfo> v) {
+    std::shared_ptr<InstanceInfo> i = std::make_shared<InstanceInfo>(v);
+    // Add dynamic atoms
+    i->add_atom("on", {"a", "b"});
+    i->add_atom("on", {"b", "a"});
+    i->add_atom("ontable", {"a"});
+    i->add_atom("ontable", {"b"});
+    i->add_atom("holding", {"a"});
+    i->add_atom("holding", {"b"});
+    i->add_atom("clear", {"a"});
+    i->add_atom("clear", {"b"});
+    // Add static goal atoms
+    i->add_static_atom("on_g", {"a", "b"});
+    // Add static atoms
+    // Note that there are no static atoms in Blocksworld.
+    return i;
+}
+
+
 int main() {
-    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary = std::make_shared<dlplan::core::VocabularyInfo>();
-    dlplan::core::Predicate p0 = vocabulary->add_predicate("on", 2);
-    dlplan::core::Predicate p1 = vocabulary->add_predicate("ontable", 1);
-    dlplan::core::Predicate p2 = vocabulary->add_predicate("holding", 1);
-    dlplan::core::Predicate p3 = vocabulary->add_predicate("clear", 1);
-    dlplan::core::Predicate p4 = vocabulary->add_predicate("on_g", 2);
-    std::shared_ptr<dlplan::core::InstanceInfo> instance = std::make_shared<dlplan::core::InstanceInfo>(vocabulary);
-    dlplan::core::Atom a0 = instance->add_atom("on", {"A", "B"});
-    dlplan::core::Atom a1 = instance->add_atom("on", {"B", "A"});
-    dlplan::core::Atom a2 = instance->add_atom("ontable", {"A"});
-    dlplan::core::Atom a3 = instance->add_atom("ontable", {"B"});
-    dlplan::core::Atom a4 = instance->add_atom("holding", {"A"});
-    dlplan::core::Atom a5 = instance->add_atom("holding", {"B"});
-    dlplan::core::Atom a6 = instance->add_atom("clear", {"A"});
-    dlplan::core::Atom a7 = instance->add_atom("clear", {"B"});
-    dlplan::core::Atom a8 = instance->add_static_atom("on_g", {"A", "B"});
-    std::shared_ptr<dlplan::core::SyntacticElementFactory> factory = std::make_shared<dlplan::core::SyntacticElementFactory>(vocabulary);
+    // 1. Initialize VocabularyInfo
+    auto v = construct_vocabulary_info();
+    // 2. Initialize InstanceInfo
+    auto i = construct_instance_info(v);
+    // 3. Initialize SyntacticElementFactory
+    std::shared_ptr<SyntacticElementFactory> f = std::make_shared<SyntacticElementFactory>(v);
 
-    // Generate a bunch of states
-    dlplan::core::State s0(instance, {a0, a3, a6});
-    dlplan::core::State s1(instance, {a1, a2, a7});
-    dlplan::core::State s2(instance, {a2, a3, a6, a7});
-    dlplan::core::State s3(instance, {a3, a4, a7});
-    dlplan::core::State s4(instance, {a2, a5, a6});
-    dlplan::generator::States states({s0, s1, s2, s3, s4});
+    // 4. Construct a bunch of states
+    const auto& atoms = i->get_atoms();
+    const Atom& a0 = atoms[0];
+    const Atom& a1 = atoms[1];
+    const Atom& a2 = atoms[2];
+    const Atom& a3 = atoms[3];
+    const Atom& a4 = atoms[4];
+    const Atom& a5 = atoms[5];
+    const Atom& a6 = atoms[6];
+    const Atom& a7 = atoms[7];
+    State s0(i, {a0, a3, a6});
+    State s1(i, {a1, a2, a7});
+    State s2(i, {a2, a3, a6, a7});
+    State s3(i, {a3, a4, a7});
+    State s4(i, {a2, a5, a6});
+    States states({s0, s1, s2, s3, s4});
 
-    dlplan::generator::FeatureGenerator generator(factory, 10, 180, 100000);
-    dlplan::generator::FeatureRepresentations features = generator.generate(states);
+    // 5. Generate features up to complexity 4 with at most 180 seconds and at most 100000 features in total
+    FeatureGenerator generator(f, 4, 180, 100000);
+    FeatureRepresentations features = generator.generate(states);
+
+    for (const auto& feature : features) {
+        std::cout << feature << std::endl;
+    }
 }
