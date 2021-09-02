@@ -33,11 +33,16 @@ if you prefer an _editable_ install because you're working on the library code.
 ## Running the Examples
 
 The subdirectory `examples/` contains a number of helpful examples that illustrate different use cases of this library.
-You can run these examples e.g. with:
-
+You can run the C++ examples with
 ```console
 ./build/examples/core/simple
 ./build/examples/generator/generate_exhaustively
+```
+
+The Python bindings also come with the same examples. Run them with
+```console
+python3 examples/core/simple.py
+python3 examples/core/generate_exhaustively.py
 ```
 
 ## Running the Tests
