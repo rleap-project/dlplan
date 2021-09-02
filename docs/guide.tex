@@ -60,7 +60,7 @@ some constant $a$ that occurs in every instance.
     \begin{tabular}{ccc}
     Name & Abstract syntax & Concrete syntax \\
     \hline
-    Primitive concept & $p(i)$ & p(i) \\
+    Primitive concept & $p[i]$ & p(i) \\
     Top & $\top$ & c\_top \\
     Bottom & $\bot$ & c\_bot \\
     Intersection & $C\sqcap D$ & c\_and(C, D) \\
@@ -83,7 +83,7 @@ some constant $a$ that occurs in every instance.
     \begin{tabular}{ccc}
     Name & Abstract syntax & Concrete syntax \\
     \hline
-    Primitive role & $p(i,j)$ & p(i,j) \\
+    Primitive role & $p[i,j]$ & p(i,j) \\
     Universal role & $\top$ & r\_top \\
     Intersection & $R\sqcap S$ & r\_and(R, S) \\
     Union & $R\sqcup S$ & r\_or(R, S) \\
@@ -132,7 +132,7 @@ some constant $a$ that occurs in every instance.
 \subsubsection{Concepts}
 
 \begin{itemize}
-    \item $(p(i))^s$ is a concept that denotes the set of
+    \item $(p[i])^s$ is a concept that denotes the set of
     objects occuring at index $i$ in ground atoms of predicate $p$ in state $s$.
     \item $\top^s = \Delta^s$
     \item $\bot^s = \emptyset$
@@ -150,19 +150,19 @@ some constant $a$ that occurs in every instance.
 \subsubsection{Roles}
 
 \begin{itemize}
-    \item $p(i,j)^s$ is a role that denotes the set of pairs of
+    \item $p[i,j]^s$ is a role that denotes the set of pairs of
     objects occuring at index $i$ and $j$ in ground atoms of $p$ in state $s$.
     \item $\top^s = \Delta^s\times\Delta^s$
     \item $(R\sqcap S)^s = R^s\cap S^s$
     \item $(R\sqcup S)^s = R^s\cup S^s$
     \item $(\neg R)^s = \top^s\setminus R^s$
     \item $(R\setminus S)^s = (R^s\setminus S^s)$
-    \item $(R^{-1})^s = \{(b,a)\in\top^s\mid (a,b)\in R^s\}$
-    \item $(R\circ S)^s = R^s\circ S^s$
+    \item $(R^{-1})^s = \{(b,a)\in\Delta^s\times\Delta^s\mid (a,b)\in R^s\}$
+    \item $(R\circ S)^s = \{(a,c)\in\Delta^s\times\Delta^s\mid (a,b)\in R^s\land (b,c)\in S^s \}$
     \item $(R^+)^s = \bigcup_{n\geq 1}(R^s)^n$
     \item $(R^*)^s = \bigcup_{n\geq 0}(R^s)^n$
     \item $(R\vert_{C})^s = R^s\sqcap (\Delta^s\times C^s)$
-    \item $\mathit{id}(C) = \{(d,d)\mid d\in C^s \}$
+    \item $(\mathit{id}(C))^s = \{(d,d)\mid d\in C^s \}$
 \end{itemize}
 
 where the iterated composition $(R^s)^n$ is inductively defined as
