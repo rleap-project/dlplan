@@ -129,16 +129,17 @@ some constant $a$ that occurs in every instance.
 
 \subsection{Semantics}
 
+Our \emph{interpretation} is a state $s$ that consists of ground atoms over a set of predicates.
+
 \subsubsection{Concepts}
 
 \begin{itemize}
-    \item $(p[i])^s$ is a concept that denotes the set of
-    objects occuring at index $i$ in ground atoms of predicate $p$ in state $s$.
-    \item $\top^s = \Delta^s$
+    \item $(p[i])^s = \{c_i\in\Delta\mid p(c_0,\ldots,c_i,\ldots,c_{\mathit{arity}(p)})\in s \}$
+    \item $\top^s = \Delta$
     \item $\bot^s = \emptyset$
     \item $(C\sqcap D)^s = C^s\cap D^s$
     \item $(C\sqcup D)^s = C^s\cup D^s$
-    \item $(\neg C)^s = \Delta^s\setminus C^s$
+    \item $(\neg C)^s = \Delta\setminus C^s$
     \item $(C\setminus D)^s = (C^s\setminus D^s)$
     \item $(\forall R.C)^s = \{a\mid\forall b:(a,b)\in R^s\rightarrow b\in C^s\}$
     \item $(\exists R.C)^s = \{a\mid\exists b:(a,b)\in R^s\land b\in C^s\}$
@@ -150,23 +151,22 @@ some constant $a$ that occurs in every instance.
 \subsubsection{Roles}
 
 \begin{itemize}
-    \item $p[i,j]^s$ is a role that denotes the set of pairs of
-    objects occuring at index $i$ and $j$ in ground atoms of $p$ in state $s$.
-    \item $\top^s = \Delta^s\times\Delta^s$
+    \item $(p[i,j])^s = \{(c_i,c_j)\in\Delta\times\Delta\mid p(c_0,\ldots,c_i,\ldots,c_j,\ldots,c_{\mathit{arity}(p)})\in s \}$
+    \item $\top^s = \Delta\times\Delta$
     \item $(R\sqcap S)^s = R^s\cap S^s$
     \item $(R\sqcup S)^s = R^s\cup S^s$
     \item $(\neg R)^s = \top^s\setminus R^s$
     \item $(R\setminus S)^s = (R^s\setminus S^s)$
-    \item $(R^{-1})^s = \{(b,a)\in\Delta^s\times\Delta^s\mid (a,b)\in R^s\}$
-    \item $(R\circ S)^s = \{(a,c)\in\Delta^s\times\Delta^s\mid (a,b)\in R^s\land (b,c)\in S^s \}$
+    \item $(R^{-1})^s = \{(b,a)\in\Delta\times\Delta\mid (a,b)\in R^s\}$
+    \item $(R\circ S)^s = \{(a,c)\in\Delta\times\Delta\mid (a,b)\in R^s\land (b,c)\in S^s \}$
     \item $(R^+)^s = \bigcup_{n\geq 1}(R^s)^n$
     \item $(R^*)^s = \bigcup_{n\geq 0}(R^s)^n$
-    \item $(R\vert_{C})^s = R^s\sqcap (\Delta^s\times C^s)$
+    \item $(R\vert_{C})^s = R^s\sqcap (\Delta\times C^s)$
     \item $(\mathit{id}(C))^s = \{(d,d)\mid d\in C^s \}$
 \end{itemize}
 
 where the iterated composition $(R^s)^n$ is inductively defined as
-$(R^s)^0 = \{(d,d)\mid d\in\Delta^s\}$ and $(R^s)^{n+1} = (R^s)^n\circ R^s$.
+$(R^s)^0 = \{(d,d)\mid d\in\Delta\}$ and $(R^s)^{n+1} = (R^s)^n\circ R^s$.
 
 \subsubsection{Booleans}
 
