@@ -48,7 +48,7 @@ python3 examples/generator/generate_exhaustively.py
 ## Running the Tests
 You can run the C++ tests with:
 ```console
-./build/tests/dlp_tests
+./build/tests/dlplan_tests
 ```
 
 The Python bindings also come with their own set of tests. Run them with
