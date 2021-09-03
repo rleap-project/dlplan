@@ -42,7 +42,7 @@ You can run the C++ examples with
 The Python bindings also come with the same examples. Run them with
 ```console
 python3 examples/core/simple.py
-python3 examples/core/generate_exhaustively.py
+python3 examples/generator/generate_exhaustively.py
 ```
 
 ## Running the Tests
