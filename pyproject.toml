@@ -6,3 +6,15 @@ requires = [
     "cmake>=3.16.3",
 ]
 build-backend = "setuptools.build_meta"
+
+[tool.tox]
+legacy_tox_ini="""
+[tox]
+envlist = py37
+
+[testenv]
+deps =
+    pytest
+commands =
+    pytest
+"""
