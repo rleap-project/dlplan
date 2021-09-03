@@ -57,7 +57,7 @@ pytest api/python/
 ```
 
 or use the tox test tool. Run it with
-```
+```console
 tox
 ```
 
