@@ -56,6 +56,11 @@ The Python bindings also come with their own set of tests. Run them with
 pytest api/python/
 ```
 
+or use the tox test tool. Run it with
+```
+tox
+```
+
 ## Available Elements:
 
 We included `guide.pdf` in the `docs` folder with further information regarding the available elements with a description of their syntax and semantics.
