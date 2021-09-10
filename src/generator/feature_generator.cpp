@@ -256,7 +256,7 @@ void FeatureGeneratorImpl::generate_primitive_roles(const States& states) {
     const std::vector<core::Predicate>& predicates = m_factory->get_vocabulary_info()->get_predicates();
     for (const auto& predicate : predicates) {
         for (int pos1 = 0; pos1 < predicate.get_arity(); ++pos1) {
-            for (int pos2 = 0; pos2 < predicate.get_arity(); ++pos2) {
+            for (int pos2 = pos1 + 1; pos2 < predicate.get_arity(); ++pos2) {
                 add_role(states, m_factory->make_primitive_role(predicate, pos1, pos2));
             }
         }
