@@ -26,6 +26,13 @@ namespace dlplan::core {
 
 InstanceInfo::InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info) : m_pImpl(InstanceInfoImpl(vocabulary_info)) { }
 
+InstanceInfo& InstanceInfo::operator=(const InstanceInfo& other) {
+    if (this != &other) {
+        m_pImpl = other.m_pImpl;
+    }
+    return *this;
+}
+
 InstanceInfo::~InstanceInfo() = default;
 
 const Atom& InstanceInfo::add_atom(const std::string &name, const Name_Vec &object_names, bool negated) {
@@ -89,6 +96,13 @@ VocabularyInfo::VocabularyInfo() : m_pImpl(VocabularyInfoImpl()) { }
 
 VocabularyInfo::VocabularyInfo(const VocabularyInfo& other) : m_pImpl(*other.m_pImpl) { }
 
+VocabularyInfo& VocabularyInfo::operator=(const VocabularyInfo& other) {
+    if (this != &other) {
+        m_pImpl = other.m_pImpl;
+    }
+    return *this;
+}
+
 VocabularyInfo::~VocabularyInfo() = default;
 
 const Predicate& VocabularyInfo::add_predicate(const std::string &name, int arity) {
@@ -145,6 +159,13 @@ Constant::Constant(const std::string& name, int index)
 
 Constant::Constant(const Constant& other) : m_pImpl(*other.m_pImpl) { }
 
+Constant& Constant::operator=(const Constant& other) {
+    if (this != &other) {
+        m_pImpl = other.m_pImpl;
+    }
+    return *this;
+}
+
 Constant::~Constant() { }
 
 bool Constant::operator==(const Constant& other) const {
@@ -168,6 +189,13 @@ Predicate::Predicate(const std::string& name, int index, int arity)
     : m_pImpl(PredicateImpl(name, index, arity)) { }
 
 Predicate::Predicate(const Predicate& other) : m_pImpl(*other.m_pImpl) { }
+
+Predicate& Predicate::operator=(const Predicate& other) {
+    if (this != &other) {
+        m_pImpl = other.m_pImpl;
+    }
+    return *this;
+}
 
 Predicate::~Predicate() = default;
 
@@ -197,6 +225,13 @@ Object::Object(const std::string& name, int index)
 
 Object::Object(const Object& other) : m_pImpl(*other.m_pImpl) { }
 
+Object& Object::operator=(const Object& other) {
+    if (this != &other) {
+        m_pImpl = other.m_pImpl;
+    }
+    return *this;
+}
+
 Object::~Object() = default;
 
 bool Object::operator==(const Object& other) const {
@@ -223,6 +258,13 @@ Atom::Atom(const std::string& name,
     bool is_static) : m_pImpl(AtomImpl(name, index, predicate, objects, is_static)) { }
 
 Atom::Atom(const Atom& other) : m_pImpl(*other.m_pImpl) { }
+
+Atom& Atom::operator=(const Atom& other) {
+    if (this != &other) {
+        m_pImpl = other.m_pImpl;
+    }
+    return *this;
+}
 
 Atom::~Atom() = default;
 
@@ -263,6 +305,13 @@ State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vecto
 
 State::State(const State& other) : m_pImpl(*other.m_pImpl) {}
 
+State& State::operator=(const State& other) {
+    if (this != &other) {
+        m_pImpl = other.m_pImpl;
+    }
+    return *this;
+}
+
 State::~State() = default;
 
 bool State::operator==(const State& other) const {
@@ -290,6 +339,13 @@ Concept::Concept(const VocabularyInfo& vocabulary_info, element::Concept_Ptr&& c
 Concept::Concept(const Concept& other)
     : m_pImpl(ConceptImpl(*other.m_pImpl)) { }
 
+Concept& Concept::operator=(const Concept& other) {
+    if (this != &other) {
+        m_pImpl = other.m_pImpl;
+    }
+    return *this;
+}
+
 Concept::~Concept() = default;
 
 ConceptDenotation Concept::evaluate(const State& state) const {
@@ -309,6 +365,13 @@ Role::Role(const VocabularyInfo& vocabulary_info, element::Role_Ptr&& role)
 
 Role::Role(const Role& other)
     : m_pImpl(RoleImpl(*other.m_pImpl)) { }
+
+Role& Role::operator=(const Role& other) {
+    if (this != &other) {
+        m_pImpl = other.m_pImpl;
+    }
+    return *this;
+}
 
 Role::~Role() = default;
 
@@ -331,6 +394,13 @@ Numerical::Numerical(const VocabularyInfo& vocabulary_info, element::Numerical_P
 Numerical::Numerical(const Numerical& other)
     : m_pImpl(NumericalImpl(*other.m_pImpl)) { }
 
+Numerical& Numerical::operator=(const Numerical& other) {
+    if (this != &other) {
+        m_pImpl = other.m_pImpl;
+    }
+    return *this;
+}
+
 Numerical::~Numerical() = default;
 
 int Numerical::evaluate(const State& state) const {
@@ -352,6 +422,13 @@ Boolean::Boolean(const VocabularyInfo& vocabulary_info, element::Boolean_Ptr&& b
 Boolean::Boolean(const Boolean& other)
     : m_pImpl(BooleanImpl(*other.m_pImpl)) { }
 
+Boolean& Boolean::operator=(const Boolean& other) {
+    if (this != &other) {
+        m_pImpl = other.m_pImpl;
+    }
+    return *this;
+}
+
 Boolean::~Boolean() = default;
 
 bool Boolean::evaluate(const State& state) const {
@@ -370,6 +447,13 @@ std::string Boolean::compute_repr() const {
 SyntacticElementFactory::SyntacticElementFactory(std::shared_ptr<const VocabularyInfo> vocabulary_info) : m_pImpl(SyntacticElementFactoryImpl(vocabulary_info)) { }
 
 SyntacticElementFactory::SyntacticElementFactory(const SyntacticElementFactory& other) : m_pImpl(*other.m_pImpl) { }
+
+SyntacticElementFactory& SyntacticElementFactory::operator=(const SyntacticElementFactory& other) {
+    if (this != &other) {
+        m_pImpl = other.m_pImpl;
+    }
+    return *this;
+}
 
 SyntacticElementFactory::~SyntacticElementFactory() = default;
 

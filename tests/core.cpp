@@ -48,13 +48,9 @@ TEST(DLPTests, InstanceCreation) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    std::cout << "a" << std::endl;
     Numerical numerical = factory.parse_numerical("n_count(c_and(on_g(0),on(0)))");
-    std::cout << "b" << std::endl;
     EXPECT_EQ(numerical.compute_complexity(), 4);
 
     State state(instance, {a0, a1});
     EXPECT_EQ(numerical.evaluate(state), 1);
-
-    std::cout << "c" << std::endl;
 }

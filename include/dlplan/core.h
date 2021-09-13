@@ -47,6 +47,7 @@ private:
 
 public:
     Constant(const Constant& other);
+    Constant& operator=(const Constant& other);
     ~Constant();
 
     bool operator==(const Constant& other) const;
@@ -69,6 +70,7 @@ private:
 
 public:
     Predicate(const Predicate& other);
+    Predicate& operator=(const Predicate& other);
     ~Predicate();
 
     bool operator==(const Predicate& other) const;
@@ -95,6 +97,7 @@ private:
 
 public:
     Object(const Object& other);
+    Object& operator=(const Object& other);
     ~Object();
 
     bool operator==(const Object& other) const;
@@ -121,6 +124,7 @@ private:
 
 public:
     Atom(const Atom& other);
+    Atom& operator=(const Atom& other);
     ~Atom();
 
     bool operator==(const Atom& other) const;
@@ -148,6 +152,7 @@ private:
 public:
     State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms);
     State(const State& other);
+    State& operator=(const State& other);
     ~State();
 
     bool operator==(const State& other) const;
@@ -175,6 +180,7 @@ private:
 public:
     VocabularyInfo();
     VocabularyInfo(const VocabularyInfo& other);
+    VocabularyInfo& operator=(const VocabularyInfo& other);
     ~VocabularyInfo();
 
     const Predicate& add_predicate(const std::string &name, int arity);
@@ -203,6 +209,7 @@ private:
 
 public:
     InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info);
+    InstanceInfo& operator=(const InstanceInfo& other);
     InstanceInfo() = delete;
     ~InstanceInfo();
 
@@ -275,6 +282,7 @@ protected:
 
 public:
     Concept(const Concept& other);
+    Concept& operator=(const Concept& other);
     ~Concept() override;
 
     ConceptDenotation evaluate(const State& state) const override;
@@ -297,6 +305,7 @@ protected:
 
 public:
     Role(const Role& other);
+    Role& operator=(const Role& other);
     ~Role() override;
 
     RoleDenotation evaluate(const State& state) const override;
@@ -319,6 +328,7 @@ protected:
 
 public:
     Numerical(const Numerical& other);
+    Numerical& operator=(const Numerical& other);
     ~Numerical() override;
 
     int evaluate(const State& state) const override;
@@ -341,6 +351,7 @@ protected:
 
 public:
     Boolean(const Boolean& other);
+    Boolean& operator=(const Boolean& other);
     ~Boolean() override;
 
     bool evaluate(const State& state) const override;
@@ -361,6 +372,7 @@ private:
 public:
     SyntacticElementFactory(std::shared_ptr<const VocabularyInfo> vocabulary_info);
     SyntacticElementFactory(const SyntacticElementFactory& other);
+    SyntacticElementFactory& operator=(const SyntacticElementFactory& other);
     ~SyntacticElementFactory();
 
     const VocabularyInfo* get_vocabulary_info() const;

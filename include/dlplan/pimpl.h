@@ -20,6 +20,7 @@ private:
     std::unique_ptr<T> m;
 
 public:
+
     pimpl() : m{ new T{} } { }
 
     // Variadic templates
@@ -35,8 +36,16 @@ public:
     pimpl( Arg1&& arg1, Arg2&& arg2, Arg3&& arg3 )
         : m( new T( std::forward<Arg1>(arg1), std::forward<Arg2>(arg2), std::forward<Arg3>(arg3) ) ) { }
 
-    // A baseline copy constructor.
-    // pimpl(const pimpl<T> &other) : m( new T(*(other.m))) { }
+    // Copy constructor.
+    pimpl(const pimpl<T> &other) : m( new T(*(other.m))) { }
+
+    // Copy assignment operator
+    pimpl<T>& operator=(const pimpl<T> &other) {
+        if (this != &other) {
+            m = std::unique_ptr<T>(new T(*(other.m)));
+        }
+        return *this;
+    }
 
     ~pimpl() = default;
 

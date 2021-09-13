@@ -28,3 +28,27 @@ TEST(DLPTests, ConceptAll) {
     Concept concept = factory.parse_concept("c_all(role(0,1),concept(0))");
     EXPECT_EQ(concept.evaluate(state), dlplan::core::ConceptDenotation({0}));
 }
+
+TEST(DLPTests, ConceptAll2) {
+    // Example for the spanner domain
+    // Add predicates
+    std::shared_ptr<VocabularyInfo> vocabulary = std::make_shared<VocabularyInfo>();
+    Predicate p0 = vocabulary->add_predicate("at", 2);
+    Predicate p1 = vocabulary->add_predicate("man", 1);
+    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary);
+    // Add state atoms
+    Atom a0 = instance->add_atom("at", {"spanner_1", "location_1"});
+    Atom a1 = instance->add_atom("at", {"spanner_2", "location_2"});
+    Atom a2 = instance->add_atom("at", {"bob", "location_1"});
+    Atom a3 = instance->add_atom("man", {"bob"});
+
+    State state_1(instance, {a0, a1, a2, a3});  // bob and spanner_1 at location_0
+    State state_2(instance, {a1, a2, a3});  // only bob at location_0
+
+    SyntacticElementFactory factory(vocabulary);
+
+    Concept concept = factory.parse_concept("c_all(at(1,0),man(0))");
+    EXPECT_EQ(concept.evaluate(state_1), dlplan::core::ConceptDenotation({}));
+
+    EXPECT_EQ(concept.evaluate(state_2), dlplan::core::ConceptDenotation({1}));
+}
