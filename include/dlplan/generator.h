@@ -30,6 +30,7 @@ public:
         bool generate_all_concept=true,
         bool generate_and_concept=true,
         bool generate_diff_concept=true,
+        bool generate_equal_concept=true,
         bool generate_not_concept=true,
         bool generate_or_concept=true,
         bool generate_projection_concept=true,
