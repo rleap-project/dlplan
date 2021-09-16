@@ -18,6 +18,7 @@ enum EXPRESSION_TYPE {
     C_AND,
     C_BOT,
     C_DIFF,
+    C_EQUAL,
     C_NOT,
     C_ONE_OF,
     C_OR,

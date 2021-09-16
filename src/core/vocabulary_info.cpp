@@ -93,6 +93,7 @@ std::unordered_map<std::string, EXPRESSION_TYPE> VocabularyInfoImpl::m_element_n
     {"c_and", C_AND },
     {"c_bot", C_BOT },
     {"c_diff", C_DIFF },
+    {"c_equal", C_EQUAL },
     {"c_not", C_NOT },
     {"c_one_of", C_ONE_OF },
     {"c_or", C_OR },

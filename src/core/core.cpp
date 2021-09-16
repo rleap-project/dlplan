@@ -502,6 +502,10 @@ Concept SyntacticElementFactory::make_diff_concept(const Concept& concept_left, 
     return m_pImpl->make_diff_concept(concept_left, concept_right);
 }
 
+Concept SyntacticElementFactory::make_equal_concept(const Role& role_left, const Role& role_right) {
+    return m_pImpl->make_equal_concept(role_left, role_right);
+}
+
 Concept SyntacticElementFactory::make_not_concept(const Concept& concept) {
     return m_pImpl->make_not_concept(concept);
 }

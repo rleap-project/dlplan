@@ -19,6 +19,7 @@ add_executable(
     c_and.cpp
     c_or.cpp
     c_diff.cpp
+    c_equal.cpp
     c_not.cpp
     c_primitive.cpp
     c_projection.cpp

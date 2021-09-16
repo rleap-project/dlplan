@@ -7,6 +7,7 @@
 #include "elements/concepts/bot.h"
 #include "elements/concepts/and.h"
 #include "elements/concepts/diff.h"
+#include "elements/concepts/equal.h"
 #include "elements/concepts/not.h"
 #include "elements/concepts/one_of.h"
 #include "elements/concepts/or.h"
@@ -106,6 +107,13 @@ Concept SyntacticElementFactoryImpl::make_diff_concept(const Concept& concept_le
     return Concept(*m_vocabulary_info, m_caches.m_concept_cache->insert(std::move(result_ptr)));
 }
 
+Concept SyntacticElementFactoryImpl::make_equal_concept(const Role& role_left, const Role& role_right) {
+    element::Role_Ptr role_left_ptr = m_caches.m_role_cache->at(role_left.compute_repr());
+    element::Role_Ptr role_right_ptr = m_caches.m_role_cache->at(role_right.compute_repr());
+    std::unique_ptr<element::Concept> result_ptr = std::make_unique<element::EqualConcept>(*m_vocabulary_info, role_left_ptr, role_right_ptr);
+    return Concept(*m_vocabulary_info, m_caches.m_concept_cache->insert(std::move(result_ptr)));
+}
+
 Concept SyntacticElementFactoryImpl::make_not_concept(const Concept& concept) {
     element::Concept_Ptr concept_ptr = m_caches.m_concept_cache->at(concept.compute_repr());
     std::unique_ptr<element::Concept> result_ptr = std::make_unique<element::NotConcept>(*m_vocabulary_info, concept_ptr);
@@ -129,7 +137,6 @@ Concept SyntacticElementFactoryImpl::make_projection_concept(const Role& role, i
     std::unique_ptr<element::Concept> result_ptr = std::make_unique<element::ProjectionConcept>(*m_vocabulary_info, role_ptr, pos);
     return Concept(*m_vocabulary_info, m_caches.m_concept_cache->insert(std::move(result_ptr)));
 }
-
 
 Concept SyntacticElementFactoryImpl::make_primitive_concept(const Predicate& predicate, int pos) {
     std::unique_ptr<element::Concept> result_ptr = std::make_unique<element::PrimitiveConcept>(*m_vocabulary_info, predicate, pos);

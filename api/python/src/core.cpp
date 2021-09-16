@@ -123,6 +123,7 @@ void init_core(py::module_ &m) {
         .def("make_and_concept", &core::SyntacticElementFactory::make_and_concept)
         .def("make_bot_concept", &core::SyntacticElementFactory::make_bot_concept)
         .def("make_diff_concept", &core::SyntacticElementFactory::make_diff_concept)
+        .def("make_equal_concept", &core::SyntacticElementFactory::make_equal_concept)
         .def("make_not_concept", &core::SyntacticElementFactory::make_not_concept)
         .def("make_one_of_concept", &core::SyntacticElementFactory::make_one_of_concept)
         .def("make_or_concept", &core::SyntacticElementFactory::make_or_concept)

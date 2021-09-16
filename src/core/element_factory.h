@@ -35,6 +35,7 @@ public:
     Concept make_and_concept(const Concept& concept_left, const Concept& concept_right);
     Concept make_bot_concept();
     Concept make_diff_concept(const Concept& concept_left, const Concept& concept_right);
+    Concept make_equal_concept(const Role& role_left, const Role& role_right);
     Concept make_not_concept(const Concept& concept);
     Concept make_one_of_concept(const Constant& constant);
     Concept make_or_concept(const Concept& concept_left, const Concept& concept_right);

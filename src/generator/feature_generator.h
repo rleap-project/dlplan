@@ -35,6 +35,7 @@ private:
     const bool m_generate_all_concept;
     const bool m_generate_and_concept;
     const bool m_generate_diff_concept;
+    const bool m_generate_equal_concept;
     const bool m_generate_not_concept;
     const bool m_generate_or_concept;
     const bool m_generate_projection_concept;
@@ -117,6 +118,7 @@ private:
     void generate_all_concept(const States& states, int iteration);
     void generate_and_concept(const States& states, int iteration);
     void generate_diff_concept(const States& states, int iteration);
+    void generate_equal_concept(const States& states, int iteration);
     void generate_not_concept(const States& states, int iteration);
     void generate_or_concept(const States& states, int iteration);
     void generate_projection_concept(const States& states, int iteration);
@@ -146,6 +148,7 @@ public:
         bool generate_all_concept=true,
         bool generate_and_concept=true,
         bool generate_diff_concept=true,
+        bool generate_equal_concept=true,
         bool generate_not_concept=true,
         bool generate_or_concept=true,
         bool generate_projection_concept=true,

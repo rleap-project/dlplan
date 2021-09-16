@@ -94,6 +94,7 @@ FeatureGeneratorImpl::FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElemen
     bool generate_all_concept,
     bool generate_and_concept,
     bool generate_diff_concept,
+    bool generate_equal_concept,
     bool generate_not_concept,
     bool generate_or_concept,
     bool generate_projection_concept,
@@ -119,6 +120,7 @@ FeatureGeneratorImpl::FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElemen
       m_generate_all_concept(generate_all_concept),
       m_generate_and_concept(generate_and_concept),
       m_generate_diff_concept(generate_diff_concept),
+      m_generate_equal_concept(generate_equal_concept),
       m_generate_not_concept(generate_not_concept),
       m_generate_or_concept(generate_or_concept),
       m_generate_projection_concept(generate_projection_concept),
@@ -178,6 +180,7 @@ void FeatureGeneratorImpl::generate_inductively(const States& states, FeatureRep
         if (m_generate_all_concept) generate_all_concept(states, iteration);
         if (m_generate_and_concept) generate_and_concept(states, iteration);
         if (m_generate_diff_concept) generate_diff_concept(states, iteration);
+        if (m_generate_equal_concept) generate_equal_concept(states, iteration);
         if (m_generate_not_concept) generate_not_concept(states, iteration);
         if (m_generate_or_concept) generate_or_concept(states, iteration);
         if (m_generate_projection_concept) generate_projection_concept(states, iteration);
@@ -324,6 +327,18 @@ void FeatureGeneratorImpl::generate_diff_concept(const States& states, int itera
             for (const auto& concept_right : m_concept_elements_by_complexity[j]) {
                 if (reached_limit()) return;
                 else add_concept(states, m_factory->make_diff_concept(concept_left, concept_right));
+            }
+        }
+    }
+}
+
+void FeatureGeneratorImpl::generate_equal_concept(const States& states, int iteration) {
+    for (int i = 1; i < iteration; ++i) {
+        int j = iteration - i;
+        for (const auto& role_left : m_role_elements_by_complexity[i]) {
+            for (const auto& role_right : m_role_elements_by_complexity[j]) {
+                if (reached_limit()) return;
+                else add_concept(states, m_factory->make_equal_concept(role_left, role_right));
             }
         }
     }
