@@ -93,13 +93,17 @@ FeatureGeneratorImpl::FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElemen
     bool generate_empty_boolean,
     bool generate_all_concept,
     bool generate_and_concept,
+    bool generate_bot_concept,
     bool generate_diff_concept,
     bool generate_equal_concept,
     bool generate_not_concept,
+    bool generate_one_of_concept,
     bool generate_or_concept,
+    bool generate_primitive_concept,
     bool generate_projection_concept,
     bool generate_some_concept,
     bool generate_subset_concept,
+    bool generate_top_concept,
     bool generate_concept_distance_numerical,
     bool generate_count_numerical,
     bool generate_role_distance_numerical,
@@ -112,20 +116,26 @@ FeatureGeneratorImpl::FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElemen
     bool generate_inverse_role,
     bool generate_not_role,
     bool generate_or_role,
+    bool generate_primitive_role,
     bool generate_restrict_role,
+    bool generate_top_role,
     bool generate_transitive_closure_role,
     bool generate_transitive_reflexive_closure_role)
     : m_factory(factory), m_complexity(complexity), m_time_limit(time_limit), m_feature_limit(feature_limit),
       m_generate_empty_boolean(generate_empty_boolean),
       m_generate_all_concept(generate_all_concept),
       m_generate_and_concept(generate_and_concept),
+      m_generate_bot_concept(generate_bot_concept),
       m_generate_diff_concept(generate_diff_concept),
       m_generate_equal_concept(generate_equal_concept),
       m_generate_not_concept(generate_not_concept),
+      m_generate_one_of_concept(generate_one_of_concept),
       m_generate_or_concept(generate_or_concept),
+      m_generate_primitive_concept(generate_primitive_concept),
       m_generate_projection_concept(generate_projection_concept),
       m_generate_some_concept(generate_some_concept),
       m_generate_subset_concept(generate_subset_concept),
+      m_generate_top_concept(generate_top_concept),
       m_generate_concept_distance_numerical(generate_concept_distance_numerical),
       m_generate_count_numerical(generate_count_numerical),
       m_generate_role_distance_numerical(generate_role_distance_numerical),
@@ -138,7 +148,9 @@ FeatureGeneratorImpl::FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElemen
       m_generate_inverse_role(generate_inverse_role),
       m_generate_not_role(generate_not_role),
       m_generate_or_role(generate_or_role),
+      m_generate_primitive_role(generate_primitive_role),
       m_generate_restrict_role(generate_restrict_role),
+      m_generate_top_role(generate_top_role),
       m_generate_transitive_closure_role(generate_transitive_closure_role),
       m_generate_transitive_reflexive_closure_role(generate_transitive_reflexive_closure_role),
       m_concept_elements_by_complexity(complexity+1),
@@ -161,12 +173,12 @@ FeatureRepresentations FeatureGeneratorImpl::generate(const States& states) {
 
 void FeatureGeneratorImpl::generate_base(const States& states) {
     utils::g_log << "Started generating base features of complexity 1." << std::endl;
-    generate_primitive_concepts(states);
-    generate_bot_concept(states);
-    generate_top_concept(states);
-    generate_primitive_roles(states);
-    generate_top_role(states);
-    generate_one_of_concept(states);
+    if (m_generate_primitive_concept) generate_primitive_concept(states);
+    if (m_generate_bot_concept) generate_bot_concept(states);
+    if (m_generate_top_concept) generate_top_concept(states);
+    if (m_generate_primitive_role) generate_primitive_roles(states);
+    if (m_generate_top_role) generate_top_role(states);
+    if (m_generate_one_of_concept) generate_one_of_concept(states);
     utils::g_log << "Complexity " << 1 << ":" << std::endl;
     print_brief_statistics();
     utils::g_log << "Finished generating base features." << std::endl;
@@ -246,7 +258,7 @@ void FeatureGeneratorImpl::add_boolean(const States& states, core::Boolean&& boo
     }
 }
 
-void FeatureGeneratorImpl::generate_primitive_concepts(const States& states) {
+void FeatureGeneratorImpl::generate_primitive_concept(const States& states) {
     const std::vector<core::Predicate>& predicates = m_factory->get_vocabulary_info()->get_predicates();
     for (const auto& predicate : predicates) {
         for (int pos = 0; pos < predicate.get_arity(); ++pos) {

@@ -34,13 +34,17 @@ private:
     const bool m_generate_empty_boolean;
     const bool m_generate_all_concept;
     const bool m_generate_and_concept;
+    const bool m_generate_bot_concept;
     const bool m_generate_diff_concept;
     const bool m_generate_equal_concept;
     const bool m_generate_not_concept;
+    const bool m_generate_one_of_concept;
     const bool m_generate_or_concept;
+    const bool m_generate_primitive_concept;
     const bool m_generate_projection_concept;
     const bool m_generate_some_concept;
     const bool m_generate_subset_concept;
+    const bool m_generate_top_concept;
     const bool m_generate_concept_distance_numerical;
     const bool m_generate_count_numerical;
     const bool m_generate_role_distance_numerical;
@@ -53,7 +57,9 @@ private:
     const bool m_generate_inverse_role;
     const bool m_generate_not_role;
     const bool m_generate_or_role;
+    const bool m_generate_primitive_role;
     const bool m_generate_restrict_role;
+    const bool m_generate_top_role;
     const bool m_generate_transitive_closure_role;
     const bool m_generate_transitive_reflexive_closure_role;
 
@@ -102,7 +108,7 @@ private:
      */
     void generate_base(const States& states);
 
-    void generate_primitive_concepts(const States& states);
+    void generate_primitive_concept(const States& states);
     void generate_primitive_roles(const States& states);
     void generate_top_role(const States& states);
     void generate_bot_concept(const States& states);
@@ -147,13 +153,17 @@ public:
         bool generate_empty_boolean=true,
         bool generate_all_concept=true,
         bool generate_and_concept=true,
+        bool generate_bot_concept=true,
         bool generate_diff_concept=true,
         bool generate_equal_concept=true,
         bool generate_not_concept=true,
+        bool generate_one_of_concept=true,
         bool generate_or_concept=true,
+        bool generate_primitive_concept=true,
         bool generate_projection_concept=true,
         bool generate_some_concept=true,
         bool generate_subset_concept=true,
+        bool generate_top_concept=true,
         bool generate_concept_distance_numerical=true,
         bool generate_count_numerical=true,
         bool generate_role_distance_numerical=true,
@@ -166,7 +176,9 @@ public:
         bool generate_inverse_role=true,
         bool generate_not_role=true,
         bool generate_or_role=true,
+        bool generate_primitive_role=true,
         bool generate_restrict_role=true,
+        bool generate_top_role=true,
         bool generate_transitive_closure_role=true,
         bool generate_transitive_reflexive_closure_role=true);
 
