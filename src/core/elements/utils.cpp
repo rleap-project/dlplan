@@ -58,10 +58,6 @@ PairwiseDistances compute_pairwise_distances(const AdjList& adj_list, bool refle
     PairwiseDistances pairwise_distances;
     for (int source = 0; source < static_cast<int>(adj_list.size()); ++source) {
         pairwise_distances.push_back(compute_distances_from_state(adj_list, source, reflexive));
-        for (int x : pairwise_distances[source]) {
-            std::cout << x << ", ";
-        }
-        std::cout << std::endl;
     }
     return pairwise_distances;
 }
