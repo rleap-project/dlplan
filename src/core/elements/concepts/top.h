@@ -10,8 +10,7 @@ class TopConcept : public Concept {
 private:
     mutable ConceptDenotation m_result;
 
-    // Store a weak reference to the InstanceInfo of the previously evaluated state to avoid recomputation.
-    mutable std::weak_ptr<const InstanceInfo> m_evaluation_instance;
+    mutable int m_num_objects;
 
 public:
     TopConcept(const VocabularyInfo& vocabulary)
@@ -19,15 +18,14 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        std::shared_ptr<const InstanceInfo> instance = state.get_instance_info();
-        if (instance != m_evaluation_instance.lock()) {
-            int num_objects = state.get_instance_info()->get_num_objects();
+        int num_objects = state.get_instance_info()->get_num_objects();
+        if (m_num_objects != num_objects) {
             m_result.clear();
             m_result.reserve(num_objects);
             for (int object_idx = 0; object_idx < num_objects; ++object_idx) {
                 m_result.push_back(object_idx);
             }
-            m_evaluation_instance = instance;
+            m_num_objects = num_objects;
         }
         return m_result;
     }

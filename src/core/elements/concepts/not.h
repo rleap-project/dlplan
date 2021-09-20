@@ -11,6 +11,8 @@ protected:
     const Concept_Ptr m_concept;
     mutable ConceptDenotation_Set m_universe_set;
 
+    mutable int m_num_objects;
+
 public:
     NotConcept(const VocabularyInfo& vocabulary, Concept_Ptr concept)
     : Concept(vocabulary, "c_not"), m_concept(concept) {
@@ -20,11 +22,13 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        if (m_universe_set.empty()) {
-            int num_objects = state.get_instance_info()->get_num_objects();
+        int num_objects = state.get_instance_info()->get_num_objects();
+        if (m_num_objects != num_objects) {
+            m_universe_set.clear();
             for (int object_idx = 0; object_idx < num_objects; ++object_idx) {
                 m_universe_set.insert(object_idx);
             }
+            m_num_objects = num_objects;
         }
         ConceptDenotation_Set r_set = m_universe_set;
         const ConceptDenotation c_vec = m_concept->evaluate(state);

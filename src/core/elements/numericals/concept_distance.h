@@ -39,6 +39,7 @@ public:
         utils::AdjList adj_list = utils::compute_adjacency_list(r_vec, num_objects);
         // 3. Compute pairwise distances using a sequence of bfs calls.
         utils::PairwiseDistances pairwise_distances = utils::compute_pairwise_distances(adj_list);
+        std::cout << num_objects << std::endl;
         // 4. Find closest target.
         int result = INF;
         for (int source : c_from_vec) {

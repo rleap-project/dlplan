@@ -135,7 +135,7 @@ int InstanceInfoImpl::get_object_idx(const std::string& object_name) const {
 }
 
 int InstanceInfoImpl::get_num_objects() const {
-    return m_object_name_to_object_idx.size();
+    return m_objects.size();
 }
 
 std::shared_ptr<const VocabularyInfo> InstanceInfoImpl::get_vocabulary_info() const {
