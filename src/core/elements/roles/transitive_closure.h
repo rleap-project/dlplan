@@ -7,6 +7,7 @@
 
 namespace dlplan::core::element {
 
+// https://stackoverflow.com/questions/3517524/what-is-the-best-known-transitive-closure-algorithm-for-a-directed-graph
 class TransitiveClosureRole : public Role {
 protected:
     const Role_Ptr m_role;
@@ -21,24 +22,12 @@ public:
 
     RoleDenotation evaluate(const State& state) const override {
         const RoleDenotation r_vec = m_role->evaluate(state);
-        // TODO(dominik): Compute an indexing scheme that only considers objects that are part of the role
-        // 2. Compute an adjacency list from the newly mapped role denotations.
-        int num_objects = state.get_instance_info()->get_num_objects();
-        utils::AdjList adj_list = utils::compute_adjacency_list(r_vec, num_objects);
-        // 3. Compute pairwise distances using a sequence of bfs calls.
-        utils::PairwiseDistances pairwise_distances = utils::compute_pairwise_distances(adj_list, false);
-        // 4. Extract the transitive closure from the pairwise distances.
-        RoleDenotation result;
-        result.reserve(state.get_instance_info()->get_num_objects() * state.get_instance_info()->get_num_objects());
-        for (int source = 0; source < num_objects; ++source) {
-            for (int target = 0; target < num_objects; ++target) {
-                if (pairwise_distances[source][target] < INF) {
-                    result.emplace_back(source, target);
-                }
-            }
-        }
-        result.shrink_to_fit();
-        return result;
+        // 1. Compute an adjacency list from the newly mapped role denotations.
+        utils::AdjList adj_list = utils::compute_adjacency_list(r_vec, state.get_instance_info()->get_num_objects());
+        // 2. Compute pairwise distances
+        utils::PairwiseDistances pairwise_distances = utils::compute_floyd_warshall(adj_list, false);
+        // 3. Extract the transitive closure from the pairwise distances.
+        return utils::compute_transitive_closure(pairwise_distances);
     }
 
     int compute_complexity() const override {

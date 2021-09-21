@@ -37,13 +37,13 @@ public:
         // 2. Compute an adjacency list from the newly mapped role denotations.
         int num_objects = state.get_instance_info()->get_num_objects();
         utils::AdjList adj_list = utils::compute_adjacency_list(r_vec, num_objects);
-        // 3. Compute pairwise distances using a sequence of bfs calls.
-        utils::PairwiseDistances pairwise_distances = utils::compute_pairwise_distances(adj_list);
         // 4. Find closest target.
         int result = INF;
         for (int source : c_from_vec) {
+            // TODO: stop the BFS as soon as we find a node in c_to_vec?
+            utils::Distances distances = utils::compute_distances_from_state(adj_list, source);
             for (int target : c_to_vec) {
-                result = std::min<int>(result, pairwise_distances[source][target]);
+                result = std::min<int>(result, distances[target]);
             }
         }
         return result;

@@ -38,7 +38,7 @@ public:
         int num_objects = state.get_instance_info()->get_num_objects();
         utils::AdjList adj_list = utils::compute_adjacency_list(r_vec, num_objects);
         // 3. Compute pairwise distances using a sequence of bfs calls.
-        utils::PairwiseDistances pairwise_distances = utils::compute_pairwise_distances(adj_list);
+        utils::PairwiseDistances pairwise_distances = utils::compute_floyd_warshall(adj_list, true);
         // 4. Find closest target.
         int result = INF;
         for (const auto& r1 : r_from_vec) {

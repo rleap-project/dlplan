@@ -28,13 +28,11 @@ AdjList compute_adjacency_list(const RoleDenotation& r_vec, int num_objects) {
     return adjacency_list;
 }
 
-Distances compute_distances_from_state(const AdjList& adj_list, int source, bool reflexive) {
+Distances compute_distances_from_state(const AdjList& adj_list, int source) {
     Distances distances(adj_list.size(), INF);
     std::vector<bool> visited(adj_list.size(), false);
-    if (reflexive) {
-        distances[source] = 0;
-        visited[source] = true;
-    }
+    distances[source] = 0;
+    visited[source] = true;
     std::deque<int> queue;
     queue.push_back(source);
     while (!queue.empty()) {
@@ -54,12 +52,47 @@ Distances compute_distances_from_state(const AdjList& adj_list, int source, bool
     return distances;
 }
 
-PairwiseDistances compute_pairwise_distances(const AdjList& adj_list, bool reflexive) {
-    PairwiseDistances pairwise_distances;
-    for (int source = 0; source < static_cast<int>(adj_list.size()); ++source) {
-        pairwise_distances.push_back(compute_distances_from_state(adj_list, source, reflexive));
+PairwiseDistances compute_floyd_warshall(const AdjList& adj_list, bool reflexive) {
+    int num_nodes = adj_list.size();
+    PairwiseDistances dist(num_nodes, Distances(num_nodes, INF));
+    // initialize edge costs
+    for (int source = 0; source < num_nodes; ++source) {
+        for (int target : adj_list[source]) {
+            dist[source][target] = 1;
+        }
     }
-    return pairwise_distances;
+    // reflexive?
+    if (reflexive) {
+        for (int source = 0; source < num_nodes; ++source) {
+            dist[source][source] = 0;
+        }
+    }
+    // main loop
+    for (int k = 0; k < num_nodes; ++k) {
+        for (int i = 0; i < num_nodes; ++i) {
+            for (int j = 0; j < num_nodes; ++j) {
+                if (dist[i][j] > path_addition(dist[i][k], dist[k][j])) {
+                    dist[i][j] = path_addition(dist[i][k], dist[k][j]);
+                }
+            }
+        }
+    }
+    return dist;
+}
+
+RoleDenotation compute_transitive_closure(const PairwiseDistances& distances) {
+    int num_objects = distances.size();
+    RoleDenotation result;
+    result.reserve(num_objects * num_objects);
+    for (int source = 0; source < num_objects; ++source) {
+        for (int target = 0; target < num_objects; ++target) {
+            if (distances[source][target] < INF) {
+                result.emplace_back(source, target);
+            }
+        }
+    }
+    result.shrink_to_fit();
+    return result;
 }
 
 }

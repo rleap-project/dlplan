@@ -23,12 +23,17 @@ extern AdjList compute_adjacency_list(const RoleDenotation& r_vec, int num_objec
 /**
  * Compute distances from a given state in a graph defined by an adjacency list.
  */
-extern Distances compute_distances_from_state(const AdjList& adj_list, int source, bool reflexive=true);
+extern Distances compute_distances_from_state(const AdjList& adj_list, int source);
 
 /**
- * Compute pairwise distances in a graph defined by an adjacency list.
+ * Compute pairwise distances with floyd warshall algorithm.
  */
-extern PairwiseDistances compute_pairwise_distances(const AdjList& adj_list, bool reflexive=true);
+extern PairwiseDistances compute_floyd_warshall(const AdjList& adj_list, bool reflexive=true);
+
+/**
+ * Compute the transitive (reflexive) closure over the role denotation
+ */
+extern RoleDenotation compute_transitive_closure(const PairwiseDistances& distances);
 
 }
 
