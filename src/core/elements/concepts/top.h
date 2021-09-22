@@ -14,7 +14,7 @@ private:
 
 public:
     TopConcept(const VocabularyInfo& vocabulary)
-    : Concept(vocabulary, "c_top") {
+    : Concept(vocabulary, "c_top"), m_num_objects(-1) {
     }
 
     ConceptDenotation evaluate(const State& state) const override {

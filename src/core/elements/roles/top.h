@@ -14,7 +14,7 @@ private:
 
 public:
     TopRole(const VocabularyInfo& vocabulary)
-    : Role(vocabulary, "r_top"){
+    : Role(vocabulary, "r_top"), m_num_objects(-1) {
     }
 
     RoleDenotation evaluate(const State& state) const override {

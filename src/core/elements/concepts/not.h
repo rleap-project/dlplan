@@ -15,7 +15,7 @@ protected:
 
 public:
     NotConcept(const VocabularyInfo& vocabulary, Concept_Ptr concept)
-    : Concept(vocabulary, "c_not"), m_concept(concept) {
+    : Concept(vocabulary, "c_not"), m_concept(concept), m_num_objects(-1) {
         if (!concept) {
             throw std::runtime_error("NotConcept::NotConcept - child is a nullptr");
         }
