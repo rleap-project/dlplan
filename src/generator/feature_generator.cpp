@@ -165,7 +165,7 @@ FeatureRepresentations FeatureGeneratorImpl::generate(const States& states) {
     FeatureRepresentations feature_reprs;
     generate_base(states);
     generate_inductively(states, feature_reprs);
-    utils::g_log << "Overall results: " << std::endl;
+    // utils::g_log << "Overall results: " << std::endl;
     // print_overall_statistics();
     return feature_reprs;
 }

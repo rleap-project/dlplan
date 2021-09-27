@@ -70,6 +70,7 @@ some constant $a$ that occurs in every instance.
     Value restriction & $\forall R.C$ & c\_all(R, C) \\
     Existential quantification & $\exists R.C$ & c\_some(R, C) \\
     Role-value-map & $R\subseteq S$ & c\_subset(R, S) \\
+     & $R = S$ & c\_equal(R, S) \\
     One-of & $a$ & c\_one-of(a) \\
     Projection & $R[k]$ & c\_projection(R, k) \\
     \end{tabular}
@@ -144,6 +145,7 @@ Our \emph{interpretation} is a state $s$ that consists of ground atoms over a se
     \item $(\forall R.C)^s = \{a\mid\forall b:(a,b)\in R^s\rightarrow b\in C^s\}$
     \item $(\exists R.C)^s = \{a\mid\exists b:(a,b)\in R^s\land b\in C^s\}$
     \item $(R\subseteq S)^s = \{a\mid\forall b:(a,b)\in R^s\rightarrow (a,b)\in S^s\}$
+    \item $(R = S)^s = \{a\mid\forall b:(a,b)\in R^s\leftrightarrow (a,b)\in S^s\}$
     \item $a^s = \{a\}$
     \item $(R[k])^s = \begin{cases}(\exists R.\top)^s & \text{ if } k = 0\\ (\exists R^{-1}.\top)^s & \text{ if } k = 1 \end{cases}$
 \end{itemize}
