@@ -1,11 +1,13 @@
-#ifndef DLPLAN_INCLUDE_DLP_CORE_H_
-#define DLPLAN_INCLUDE_DLP_CORE_H_
+#ifndef DLPLAN_INCLUDE_DLPLAN_CORE_H_
+#define DLPLAN_INCLUDE_DLPLAN_CORE_H_
 
 #include <memory>
 #include <string>
 #include <vector>
+#include <unordered_set>
 
 #include "pimpl.h"
+#include "types.h"
 
 
 namespace dlplan::core {
@@ -30,13 +32,6 @@ namespace element {
     class Numerical;
     class Boolean;
 }
-
-using ConceptDenotation = std::vector<int>;
-
-using RoleDenotation = std::vector<std::pair<int, int>>;
-
-using Name_Vec = std::vector<std::string>;
-using Index_Vec = std::vector<int>;
 
 class Constant {
 private:
@@ -238,6 +233,10 @@ public:
     int get_num_objects() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
     const Index_Vec& get_static_atom_idxs() const;
+    const ConceptDenotation_Set& get_top_concept_set() const;
+    const ConceptDenotation& get_top_concept_vec() const;
+    const RoleDenotation_Set& get_top_role_set() const;
+    const RoleDenotation& get_top_role_vec() const;
 };
 
 

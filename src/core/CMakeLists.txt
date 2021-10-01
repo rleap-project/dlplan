@@ -34,4 +34,4 @@ add_library(staticdlplancore STATIC
     ../utils/system.cpp
     ../utils/timer.cpp
 )
-set_target_properties(dlplancore PROPERTIES PUBLIC_HEADER "include/dlplan/core.h;include/dlplan/pimpl.h")
+set_target_properties(dlplancore PROPERTIES PUBLIC_HEADER "include/dlplan/core.h;include/dlplan/pimpl.h;include/dlplan/types.h")

@@ -1,7 +1,7 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_ELEMENT_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_ELEMENT_H_
 
-#include "types.h"
+#include "../../../include/dlplan/types.h"
 #include "../state.h"
 #include "../instance_info.h"
 #include "../vocabulary_info.h"

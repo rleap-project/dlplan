@@ -25,6 +25,7 @@ add_executable(
     c_projection.cpp
     c_bot.cpp
     c_top.cpp
+    multi_instance.cpp
     c_one_of.cpp
     c_subset.cpp
     r_and.cpp

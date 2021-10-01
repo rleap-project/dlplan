@@ -9,30 +9,17 @@ namespace dlplan::core::element {
 class NotRole : public Role {
 protected:
     const Role_Ptr m_role;
-    mutable RoleDenotation_Set m_universe_set;
-
-    mutable int m_num_objects;
 
 public:
     NotRole(const VocabularyInfo& vocabulary, Role_Ptr role)
-    : Role(vocabulary, "r_not"), m_role(role), m_num_objects(-1) {
+    : Role(vocabulary, "r_not"), m_role(role) {
         if (!role) {
             throw std::runtime_error("NotRole::NotRole - child is a nullptr.");
         }
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        int num_objects = state.get_instance_info()->get_num_objects();
-        if (m_num_objects != num_objects) {
-            m_universe_set.clear();
-            for (int object_idx_1 = 0; object_idx_1 < num_objects; ++object_idx_1) {
-                for (int object_idx_2 = 0; object_idx_2 < num_objects; ++object_idx_2) {
-                    m_universe_set.emplace(object_idx_1, object_idx_2);
-                }
-            }
-            m_num_objects = num_objects;
-        }
-        RoleDenotation_Set r_set = m_universe_set;
+        RoleDenotation_Set r_set = state.get_instance_info()->get_top_role_set();
         const RoleDenotation r_vec = m_role->evaluate(state);
         for (const auto& r : r_vec) {
             r_set.erase(r);

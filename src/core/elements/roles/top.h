@@ -18,18 +18,7 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        int num_objects = state.get_instance_info()->get_num_objects();
-        if (m_num_objects != num_objects) {
-            m_result.clear();
-            m_result.reserve(num_objects * num_objects);
-            for (int object_idx_1 = 0; object_idx_1 < num_objects; ++object_idx_1) {
-                for (int object_idx_2 = 0; object_idx_2 < num_objects; ++object_idx_2) {
-                    m_result.emplace_back(object_idx_1, object_idx_2);
-                }
-            }
-            m_num_objects = num_objects;
-        }
-        return m_result;
+        return state.get_instance_info()->get_top_role_vec();
     }
 
     int compute_complexity() const override {

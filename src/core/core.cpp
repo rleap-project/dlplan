@@ -1,5 +1,8 @@
 #include "dlplan/core.h"
 
+#include <iostream>
+#include <algorithm>
+
 #include "elements/concept.h"
 #include "elements/role.h"
 #include "elements/numerical.h"
@@ -17,9 +20,7 @@
 #include "role.h"
 #include "numerical.h"
 #include "boolean.h"
-
-#include <iostream>
-#include <algorithm>
+#include "elements/types.h"
 
 
 namespace dlplan::core {
@@ -89,6 +90,22 @@ std::shared_ptr<const VocabularyInfo> InstanceInfo::get_vocabulary_info() const 
 
 const Index_Vec& InstanceInfo::get_static_atom_idxs() const {
     return m_pImpl->get_static_atom_idxs();
+}
+
+const ConceptDenotation_Set& InstanceInfo::get_top_concept_set() const {
+    return m_pImpl->get_top_concept_set();
+}
+
+const ConceptDenotation& InstanceInfo::get_top_concept_vec() const {
+    return m_pImpl->get_top_concept_vec();
+}
+
+const RoleDenotation_Set& InstanceInfo::get_top_role_set() const {
+    return m_pImpl->get_top_role_set();
+}
+
+const RoleDenotation& InstanceInfo::get_top_role_vec() const {
+    return m_pImpl->get_top_role_vec();
 }
 
 

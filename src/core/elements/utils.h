@@ -2,6 +2,7 @@
 #define DLPLAN_SRC_CORE_ELEMENTS_UTILS_H_
 
 #include "types.h"
+#include "../../../include/dlplan/types.h"
 
 
 namespace dlplan::core::element::utils {
