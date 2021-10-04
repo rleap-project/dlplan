@@ -187,30 +187,33 @@ void FeatureGeneratorImpl::generate_base(const States& states) {
 void FeatureGeneratorImpl::generate_inductively(const States& states, FeatureRepresentations& feature_repr) {
     utils::g_log << "Started generating composite features." << std::endl;
     for (int iteration = 1; iteration < m_complexity; ++iteration) {  // every composition adds at least one complexity
-        if (reached_limit()) break;
+        if (reached_limit()) break;        
         if (m_generate_empty_boolean) generate_empty_boolean(states, iteration, feature_repr);
-        if (m_generate_all_concept) generate_all_concept(states, iteration);
-        if (m_generate_and_concept) generate_and_concept(states, iteration);
-        if (m_generate_diff_concept) generate_diff_concept(states, iteration);
-        if (m_generate_equal_concept) generate_equal_concept(states, iteration);
-        if (m_generate_not_concept) generate_not_concept(states, iteration);
-        if (m_generate_or_concept) generate_or_concept(states, iteration);
-        if (m_generate_projection_concept) generate_projection_concept(states, iteration);
-        if (m_generate_some_concept) generate_some_concept(states, iteration);
-        if (m_generate_subset_concept) generate_subset_concept(states, iteration);
-        if (m_generate_concept_distance_numerical) generate_concept_distance_numerical(states, iteration, feature_repr);
+        
         if (m_generate_count_numerical) generate_count_numerical(states, iteration, feature_repr);
+        if (m_generate_concept_distance_numerical) generate_concept_distance_numerical(states, iteration, feature_repr);
         if (m_generate_role_distance_numerical) generate_role_distance_numerical(states, iteration, feature_repr);
         if (m_generate_sum_concept_distance_numerical) generate_sum_concept_distance_numerical(states, iteration, feature_repr);
         if (m_generate_sum_role_distance_numerical) generate_sum_role_distance_numerical(states, iteration, feature_repr);
-        if (m_generate_and_role) generate_and_role(states, iteration);
-        if (m_generate_compose_role) generate_compose_role(states, iteration);
-        if (m_generate_diff_role) generate_diff_role(states, iteration);
+
+        if (m_generate_projection_concept) generate_projection_concept(states, iteration);
+        if (m_generate_equal_concept) generate_equal_concept(states, iteration);
+        if (m_generate_and_concept) generate_and_concept(states, iteration);
+        if (m_generate_diff_concept) generate_diff_concept(states, iteration);
+        if (m_generate_not_concept) generate_not_concept(states, iteration);
+        if (m_generate_or_concept) generate_or_concept(states, iteration);
+        if (m_generate_subset_concept) generate_subset_concept(states, iteration);
+        if (m_generate_some_concept) generate_some_concept(states, iteration);
+        if (m_generate_all_concept) generate_all_concept(states, iteration);
+
         if (m_generate_identity_role) generate_identity_role(states, iteration);
         if (m_generate_inverse_role) generate_inverse_role(states, iteration);
-        if (m_generate_not_role) generate_not_role(states, iteration);
-        if (m_generate_or_role) generate_or_role(states, iteration);
+        if (m_generate_and_role) generate_and_role(states, iteration);        
+        if (m_generate_diff_role) generate_diff_role(states, iteration);        
         if (m_generate_restrict_role) generate_restrict_role(states, iteration);
+        if (m_generate_compose_role) generate_compose_role(states, iteration);
+        if (m_generate_or_role) generate_or_role(states, iteration);        
+        if (m_generate_not_role) generate_not_role(states, iteration);
         if (m_generate_transitive_closure_role) generate_transitive_closure_role(states, iteration);
         if (m_generate_transitive_reflexive_closure_role) generate_transitive_reflexive_closure_role(states, iteration);
 
