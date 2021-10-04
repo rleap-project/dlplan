@@ -65,3 +65,8 @@ tox
 
 We included `guide.pdf` in the `docs` folder with further information regarding the available elements with a description of their syntax and semantics.
 
+## Modifying/Extending the library:
+
+1. Adding new elements to [core](https://github.com/rleap-project/dlplan/wiki/Adding-elements-to-the-core-component) and [generator](https://github.com/rleap-project/dlplan/wiki/Adding-elements-to-the-generator-component) component.
+
+2. [Current order and modifying the order of feature generation.](https://github.com/rleap-project/dlplan/wiki/Modifying-the-order-of-feature-generation)
