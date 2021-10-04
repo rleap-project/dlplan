@@ -63,6 +63,38 @@ private:
     const bool m_generate_transitive_closure_role;
     const bool m_generate_transitive_reflexive_closure_role;
 
+    int m_count_empty_boolean = 0;
+    int m_count_all_concept = 0;
+    int m_count_and_concept = 0;
+    int m_count_bot_concept = 0;
+    int m_count_diff_concept = 0;
+    int m_count_equal_concept = 0;
+    int m_count_not_concept = 0;
+    int m_count_one_of_concept = 0;
+    int m_count_or_concept = 0;
+    int m_count_primitive_concept = 0;
+    int m_count_projection_concept = 0;
+    int m_count_some_concept = 0;
+    int m_count_subset_concept = 0;
+    int m_count_top_concept = 0;
+    int m_count_concept_distance_numerical = 0;
+    int m_count_count_numerical = 0;
+    int m_count_role_distance_numerical = 0;
+    int m_count_sum_concept_distance_numerical = 0;
+    int m_count_sum_role_distance_numerical = 0;
+    int m_count_and_role = 0;
+    int m_count_compose_role = 0;
+    int m_count_diff_role = 0;
+    int m_count_identity_role = 0;
+    int m_count_inverse_role = 0;
+    int m_count_not_role = 0;
+    int m_count_or_role = 0;
+    int m_count_primitive_role = 0;
+    int m_count_restrict_role = 0;
+    int m_count_top_role = 0;
+    int m_count_transitive_closure_role = 0;
+    int m_count_transitive_reflexive_closure_role = 0;
+
     /**
      * Generated features sorted by their complexity.
      */
@@ -98,10 +130,10 @@ private:
      * Additionally, adds information related to them in the FeatureCollection.
      * Those features are the final result of the feature generation.
      */
-    void add_concept(const States& states, core::Concept&& concept);
-    void add_role(const States& states, core::Role&& role);
-    void add_numerical(const States& states, core::Numerical&& numerical, FeatureRepresentations& feature_reprs);
-    void add_boolean(const States& states, core::Boolean&& boolean, FeatureRepresentations& feature_reprs);
+    bool add_concept(const States& states, core::Concept&& concept);
+    bool add_role(const States& states, core::Role&& role);
+    bool add_numerical(const States& states, core::Numerical&& numerical, FeatureRepresentations& feature_reprs);
+    bool add_boolean(const States& states, core::Boolean&& boolean, FeatureRepresentations& feature_reprs);
 
     /**
      * Generates all Elements with complexity 1.
