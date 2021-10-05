@@ -138,7 +138,7 @@ void FeatureGeneratorImpl::generate_base(const States& states, FeatureGeneratorD
 
 void FeatureGeneratorImpl::generate_inductively(const States& states, FeatureGeneratorData& data) {
     utils::g_log << "Started generating composite features." << std::endl;
-    for (int iteration = 1; iteration < data.get_complexity(); ++iteration) {  // every composition adds at least one complexity
+    for (int iteration = 1; iteration < m_complexity; ++iteration) {  // every composition adds at least one complexity
         if (data.reached_limit()) break;        
         for (const auto& rule : m_inductive_rules) {
             rule->generate(states, iteration, data);

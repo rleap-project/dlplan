@@ -80,7 +80,6 @@ public:
      * Getters
      */
     core::SyntacticElementFactory& get_factory() const;
-    int get_complexity() const;
     const std::vector<std::vector<dlplan::core::Concept>>& get_concept_elements_by_complexity() const;
     const std::vector<std::vector<dlplan::core::Role>>& get_role_elements_by_complexity() const;
     const std::vector<std::vector<dlplan::core::Numerical>>& get_numerical_elements_by_complexity() const;

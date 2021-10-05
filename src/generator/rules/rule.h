@@ -46,10 +46,6 @@ public:
         if (m_enabled)
             std::cout << "    " << m_name << ": " << m_count_instantiations << std::endl;
     }
-
-    int get_count_instantiations() const {
-        return m_count_instantiations;
-    }
 };
 
 }

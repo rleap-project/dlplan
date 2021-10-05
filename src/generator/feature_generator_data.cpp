@@ -156,10 +156,6 @@ core::SyntacticElementFactory& FeatureGeneratorData::get_factory() const {
     return *m_factory;
 }
 
-int FeatureGeneratorData::get_complexity() const {
-    return m_complexity;
-}
-
 const std::vector<std::vector<dlplan::core::Concept>>& FeatureGeneratorData::get_concept_elements_by_complexity() const {
     return m_concept_elements_by_complexity;
 }
