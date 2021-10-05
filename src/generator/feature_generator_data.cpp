@@ -76,13 +76,13 @@ static std::vector<int> flatten_role_denotation(const std::vector<std::vector<st
 
 
 FeatureGeneratorData::FeatureGeneratorData(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit) : 
-      m_factory(factory), m_complexity(complexity), m_time_limit(time_limit), m_feature_limit(feature_limit),
-      m_hash_table(std::make_unique<HashTableMurmur>()),
-      m_timer(time_limit),
+      m_factory(factory), m_complexity(complexity), m_time_limit(time_limit), m_feature_limit(feature_limit),      
       m_concept_elements_by_complexity(std::vector<std::vector<dlplan::core::Concept>>(complexity+1)),
       m_role_elements_by_complexity(std::vector<std::vector<dlplan::core::Role>>(complexity+1)),
       m_numerical_elements_by_complexity(std::vector<std::vector<dlplan::core::Numerical>>(complexity+1)),
-      m_boolean_elements_by_complexity(std::vector<std::vector<dlplan::core::Boolean>>(complexity+1)) { }
+      m_boolean_elements_by_complexity(std::vector<std::vector<dlplan::core::Boolean>>(complexity+1)),
+      m_hash_table(std::make_unique<HashTableMurmur>()),
+      m_timer(time_limit) { }
 
 
 bool FeatureGeneratorData::reached_limit() const {

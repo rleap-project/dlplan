@@ -29,7 +29,7 @@ protected:
     int m_count_instantiations = 0;
 
 protected:
-    virtual void generate_impl(const States& states, int iteration, FeatureGeneratorData& data) {
+    virtual void generate_impl(const States&, int, FeatureGeneratorData&) {
         throw std::runtime_error("Rule::generate_impl: error calling function of abstract base class");
     }
 

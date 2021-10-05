@@ -116,6 +116,7 @@ FeatureGeneratorImpl::FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElemen
         m_inductive_rules.emplace_back(std::make_unique<rules::TransitiveReflexiveClosureRole>(generate_transitive_reflexive_closure_role));
     }
 
+
 FeatureRepresentations FeatureGeneratorImpl::generate(const States& states) {
     FeatureGeneratorData data(m_factory, m_complexity, m_time_limit, m_feature_limit);
     generate_base(states, data);
