@@ -79,45 +79,52 @@ FeatureGeneratorImpl::FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElemen
     bool generate_transitive_closure_role,
     bool generate_transitive_reflexive_closure_role)
     : m_factory(factory), m_complexity(complexity), m_time_limit(time_limit), m_feature_limit(feature_limit) { 
-        m_primitive_rules.emplace_back(std::make_unique<rules::OneOfConcept>(generate_one_of_concept));  // one of is the simplest primitive to interpret.
-        m_primitive_rules.emplace_back(std::make_unique<rules::PrimitiveConcept>(generate_primitive_concept));
-        m_primitive_rules.emplace_back(std::make_unique<rules::PrimitiveRole>(generate_primitive_role));
-        m_primitive_rules.emplace_back(std::make_unique<rules::BotConcept>(generate_bot_concept));
-        m_primitive_rules.emplace_back(std::make_unique<rules::TopConcept>(generate_top_concept));
-        m_primitive_rules.emplace_back(std::make_unique<rules::TopRole>(generate_top_role));
+        if (generate_one_of_concept) m_primitive_rules.emplace_back(std::make_unique<rules::OneOfConcept>());  // one of is the simplest primitive to interpret.
+        if (generate_primitive_concept) m_primitive_rules.emplace_back(std::make_unique<rules::PrimitiveConcept>());
+        if (generate_primitive_role) m_primitive_rules.emplace_back(std::make_unique<rules::PrimitiveRole>());
+        if (generate_bot_concept) m_primitive_rules.emplace_back(std::make_unique<rules::BotConcept>());
+        if (generate_top_concept) m_primitive_rules.emplace_back(std::make_unique<rules::TopConcept>());
+        if (generate_top_role) m_primitive_rules.emplace_back(std::make_unique<rules::TopRole>());
 
-        m_inductive_rules.emplace_back(std::make_unique<rules::CountNumerical>(generate_count_numerical));
-        m_inductive_rules.emplace_back(std::make_unique<rules::ConceptDistanceNumerical>(generate_concept_distance_numerical));
-        m_inductive_rules.emplace_back(std::make_unique<rules::RoleDistanceNumerical>(generate_role_distance_numerical));
-        m_inductive_rules.emplace_back(std::make_unique<rules::SumConceptDistanceNumerical>(generate_sum_concept_distance_numerical));
-        m_inductive_rules.emplace_back(std::make_unique<rules::SumRoleDistanceNumerical>(generate_sum_role_distance_numerical));
+        if (generate_count_numerical) m_inductive_rules.emplace_back(std::make_unique<rules::CountNumerical>());
+        if (generate_concept_distance_numerical) m_inductive_rules.emplace_back(std::make_unique<rules::ConceptDistanceNumerical>());
+        if (generate_role_distance_numerical) m_inductive_rules.emplace_back(std::make_unique<rules::RoleDistanceNumerical>());
+        if (generate_sum_concept_distance_numerical) m_inductive_rules.emplace_back(std::make_unique<rules::SumConceptDistanceNumerical>());
+        if (generate_sum_role_distance_numerical) m_inductive_rules.emplace_back(std::make_unique<rules::SumRoleDistanceNumerical>());
 
-        m_inductive_rules.emplace_back(std::make_unique<rules::EmptyBoolean>(generate_empty_boolean));
+        if (generate_empty_boolean) m_inductive_rules.emplace_back(std::make_unique<rules::EmptyBoolean>());
 
-        m_inductive_rules.emplace_back(std::make_unique<rules::ProjectionConcept>(generate_projection_concept));
-        m_inductive_rules.emplace_back(std::make_unique<rules::EqualConcept>(generate_equal_concept));
-        m_inductive_rules.emplace_back(std::make_unique<rules::AndConcept>(generate_and_concept));
-        m_inductive_rules.emplace_back(std::make_unique<rules::DiffConcept>(generate_diff_concept));
-        m_inductive_rules.emplace_back(std::make_unique<rules::OrConcept>(generate_or_concept));
-        m_inductive_rules.emplace_back(std::make_unique<rules::NotConcept>(generate_not_concept));
-        m_inductive_rules.emplace_back(std::make_unique<rules::SubsetConcept>(generate_subset_concept));
-        m_inductive_rules.emplace_back(std::make_unique<rules::SomeConcept>(generate_some_concept));
-        m_inductive_rules.emplace_back(std::make_unique<rules::AllConcept>(generate_all_concept));
+        if (generate_projection_concept) m_inductive_rules.emplace_back(std::make_unique<rules::ProjectionConcept>());
+        if (generate_equal_concept) m_inductive_rules.emplace_back(std::make_unique<rules::EqualConcept>());
+        if (generate_and_concept) m_inductive_rules.emplace_back(std::make_unique<rules::AndConcept>());
+        if (generate_diff_concept) m_inductive_rules.emplace_back(std::make_unique<rules::DiffConcept>());
+        if (generate_or_concept) m_inductive_rules.emplace_back(std::make_unique<rules::OrConcept>());
+        if (generate_not_concept) m_inductive_rules.emplace_back(std::make_unique<rules::NotConcept>());
+        if (generate_subset_concept) m_inductive_rules.emplace_back(std::make_unique<rules::SubsetConcept>());
+        if (generate_some_concept) m_inductive_rules.emplace_back(std::make_unique<rules::SomeConcept>());
+        if (generate_all_concept) m_inductive_rules.emplace_back(std::make_unique<rules::AllConcept>());
 
-        m_inductive_rules.emplace_back(std::make_unique<rules::IdentityRole>(generate_identity_role));
-        m_inductive_rules.emplace_back(std::make_unique<rules::InverseRole>(generate_inverse_role));
-        m_inductive_rules.emplace_back(std::make_unique<rules::AndRole>(generate_and_role));
-        m_inductive_rules.emplace_back(std::make_unique<rules::DiffRole>(generate_diff_role));
-        m_inductive_rules.emplace_back(std::make_unique<rules::RestrictRole>(generate_restrict_role));
-        m_inductive_rules.emplace_back(std::make_unique<rules::ComposeRole>(generate_compose_role));
-        m_inductive_rules.emplace_back(std::make_unique<rules::OrRole>(generate_or_role));
-        m_inductive_rules.emplace_back(std::make_unique<rules::NotRole>(generate_not_role));
-        m_inductive_rules.emplace_back(std::make_unique<rules::TransitiveClosureRole>(generate_transitive_closure_role));
-        m_inductive_rules.emplace_back(std::make_unique<rules::TransitiveReflexiveClosureRole>(generate_transitive_reflexive_closure_role));
+        if (generate_identity_role) m_inductive_rules.emplace_back(std::make_unique<rules::IdentityRole>());
+        if (generate_inverse_role) m_inductive_rules.emplace_back(std::make_unique<rules::InverseRole>());
+        if (generate_and_role) m_inductive_rules.emplace_back(std::make_unique<rules::AndRole>());
+        if (generate_diff_role) m_inductive_rules.emplace_back(std::make_unique<rules::DiffRole>());
+        if (generate_restrict_role) m_inductive_rules.emplace_back(std::make_unique<rules::RestrictRole>());
+        if (generate_compose_role) m_inductive_rules.emplace_back(std::make_unique<rules::ComposeRole>());
+        if (generate_or_role) m_inductive_rules.emplace_back(std::make_unique<rules::OrRole>());
+        if (generate_not_role) m_inductive_rules.emplace_back(std::make_unique<rules::NotRole>());
+        if (generate_transitive_closure_role) m_inductive_rules.emplace_back(std::make_unique<rules::TransitiveClosureRole>());
+        if (generate_transitive_reflexive_closure_role) m_inductive_rules.emplace_back(std::make_unique<rules::TransitiveReflexiveClosureRole>());
     }
 
 
 FeatureRepresentations FeatureGeneratorImpl::generate(const States& states) {
+    // Resets the counters
+    for (const auto& rule : m_primitive_rules) {
+        rule->initialize();
+    }
+    for (const auto& rule : m_inductive_rules) {
+        rule->initialize();
+    }
     FeatureGeneratorData data(m_factory, m_complexity, m_time_limit, m_feature_limit);
     generate_base(states, data);
     generate_inductively(states, data);

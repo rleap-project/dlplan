@@ -7,10 +7,8 @@
 #include <bitset>
 
 #include "../../include/dlplan/core.h"
-#include "../utils/countdown_timer.h"
 
 #include "types.h"
-#include "hash_tables/hash_table.h"
 #include "feature_generator_data.h"
 
 #include "rules/rule.h"
@@ -18,10 +16,6 @@
 
 namespace dlplan {
 namespace core {
-    class Concept;
-    class Role;
-    class Numerical;
-    class Boolean;
     class SyntacticElementFactory;
 }
 namespace generator {

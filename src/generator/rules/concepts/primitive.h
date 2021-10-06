@@ -4,8 +4,10 @@
 namespace dlplan::generator::rules {
 
 class PrimitiveConcept : public Rule {
-protected:
-    virtual void generate_impl(const States& states, int, FeatureGeneratorData& data) override {
+public:
+    PrimitiveConcept() : Rule("c_primitive") { }
+
+    virtual void generate(const States& states, int, FeatureGeneratorData& data) override {
         const std::vector<core::Predicate>& predicates = data.get_factory().get_vocabulary_info()->get_predicates();
         for (const auto& predicate : predicates) {
             for (int pos = 0; pos < predicate.get_arity(); ++pos) {
@@ -15,9 +17,6 @@ protected:
             }
         }
     }
-
-public:
-    PrimitiveConcept(bool enabled) : Rule("c_primitive", enabled) { }
 };
 
 }

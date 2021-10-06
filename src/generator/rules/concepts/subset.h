@@ -4,8 +4,10 @@
 namespace dlplan::generator::rules {
 
 class SubsetConcept : public Rule {
-protected:
-    virtual void generate_impl(const States& states, int iteration, FeatureGeneratorData& data) override {
+public:
+    SubsetConcept() : Rule("c_subset") { }
+
+    virtual void generate(const States& states, int iteration, FeatureGeneratorData& data) override {
         for (int i = 1; i < iteration; ++i) {
             int j = iteration - i;
             for (const auto& role_left : data.get_role_elements_by_complexity()[i]) {
@@ -18,9 +20,6 @@ protected:
             }
         }
     }
-
-public:
-    SubsetConcept(bool enabled) : Rule("c_subset", enabled) { }
 };
 
 }

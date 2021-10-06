@@ -19,32 +19,23 @@ protected:
     const std::string m_name;
 
     /**
-     * Whether the construction of this specific element is enabled or not.
-     */
-    const bool m_enabled;
-
-    /**
      * Count the number of instantiations of this specific element.
      */
     int m_count_instantiations = 0;
 
-protected:
-    virtual void generate_impl(const States&, int, FeatureGeneratorData&) {
-        throw std::runtime_error("Rule::generate_impl: error calling function of abstract base class");
+public:
+    Rule(const std::string& name) : m_name(name) { }
+
+    virtual void generate(const States&, int, FeatureGeneratorData&) { 
+        throw std::runtime_error("Rule::generate: error calling function of abstract base class");
     }
 
-public:
-    Rule(const std::string& name, bool enabled) : m_name(name), m_enabled(enabled) { }
-
-    virtual void generate(const States& states, int iteration, FeatureGeneratorData& data) { 
-        if (m_enabled) 
-            generate_impl(states, iteration, data);
-        
+    void initialize() {
+        m_count_instantiations = 0;
     }
 
     void print_statistics() const {
-        if (m_enabled)
-            std::cout << "    " << m_name << ": " << m_count_instantiations << std::endl;
+        std::cout << "    " << m_name << ": " << m_count_instantiations << std::endl;
     }
 };
 

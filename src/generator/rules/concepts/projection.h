@@ -4,8 +4,10 @@
 namespace dlplan::generator::rules {
 
 class ProjectionConcept : public Rule {
-protected:
-    virtual void generate_impl(const States& states, int iteration, FeatureGeneratorData& data) override {
+public:
+    ProjectionConcept() : Rule("c_projection") { }
+
+    virtual void generate(const States& states, int iteration, FeatureGeneratorData& data) override {
         for (const auto& role : data.get_role_elements_by_complexity()[iteration]) {
             for (int pos = 0; pos < 2; ++pos) {
                 if (data.reached_limit()) return;
@@ -17,9 +19,6 @@ protected:
             }
         }
     }
-
-public:
-    ProjectionConcept(bool enabled) : Rule("c_projection", enabled) { }
 };
 
 }

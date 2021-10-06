@@ -2,7 +2,7 @@
 #define DLPLAN_SRC_GENERATOR_FEATURE_GENERATOR_DATA_H_
 
 #include <memory>
-#include <dlplan/core.h>
+#include "../../include/dlplan/core.h"
 
 #include "hash_tables/hash_table.h"
 #include "types.h"
@@ -19,6 +19,9 @@ namespace core {
 }
 namespace generator {
 
+/**
+ * Stores byproducts and the result of the feature generation.
+ */
 class FeatureGeneratorData {
 private:
     const std::shared_ptr<core::SyntacticElementFactory> m_factory;
@@ -64,9 +67,7 @@ public:
     bool reached_limit() const;
 
     /**
-     * Adds the respective element if it is syntactically and empirically unique.
-     * Additionally, adds information related to them in the FeatureCollection.
-     * Those features are the final result of the feature generation.
+     * Adds the respective element to the result if it is syntactically and empirically unique.
      */
     bool add_concept(const States& states, core::Concept&& concept);
     bool add_role(const States& states, core::Role&& role);
