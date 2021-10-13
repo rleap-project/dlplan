@@ -10,11 +10,9 @@ class TopRole : public Role {
 private:
     mutable RoleDenotation m_result;
 
-    mutable int m_num_objects;
-
 public:
     TopRole(const VocabularyInfo& vocabulary)
-    : Role(vocabulary, "r_top"), m_num_objects(-1) {
+    : Role(vocabulary, "r_top") {
     }
 
     RoleDenotation evaluate(const State& state) const override {
