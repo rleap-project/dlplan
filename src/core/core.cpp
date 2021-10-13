@@ -1,4 +1,4 @@
-#include "dlplan/core.h"
+#include "../../include/dlplan/core.h"
 
 #include <iostream>
 #include <algorithm>
