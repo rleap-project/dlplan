@@ -62,8 +62,6 @@ protected:
 
     virtual bool insert_numerical_impl(const std::vector<int>& denotation) = 0;
 
-    virtual bool insert_boolean_impl(const std::vector<bool>& denotation) = 0;
-
 public:
     HashTable() : m_cache_hits(0), m_cache_misses(0) { }
     virtual ~HashTable() = default;
@@ -74,6 +72,9 @@ public:
 
     bool insert_numerical(const std::vector<int>& denotation);
 
+    /** We cast boolean denoation to numerical and store it in a single hash map
+      * because Booleans are a special case of Numericals.
+      */
     bool insert_boolean(const std::vector<bool>& denotation);
 
     /**
