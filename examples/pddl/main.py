@@ -12,7 +12,7 @@ from transition_system_generator import TransitionSystemGenerator
 from dlplan_wrapper import construct_vocabulary_info, construct_instance_info, construct_syntactic_element_factory
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Parse PDDL with tarski')
+    parser = argparse.ArgumentParser(description='Example on how to initialize VocabularyInfo, InstanceInfo, SyntacticElementFactory from PDDL files.')
     parser.add_argument("--domain", type=str, required=True)
     parser.add_argument("--instance", type=str, required=True)
     parser.add_argument("--path_to_sse", type=str, required=True)
