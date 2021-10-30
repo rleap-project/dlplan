@@ -28,10 +28,11 @@ class Predicate:
 
 class Atom:
     """ An atom occuring in an instance. """
-    def __init__(self, index, predicate, objects):
+    def __init__(self, index, predicate, objects, negated):
         self.index = index
         self.predicate = predicate
         self.objects = objects
+        self.negated = negated
 
 class State:
     """ A state over ground atoms of an instance. """
