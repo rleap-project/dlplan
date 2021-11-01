@@ -9,7 +9,8 @@ import argparse
 from domain_data import DomainData
 from instance_data import InstanceData
 from transition_system_generator import TransitionSystemGenerator
-from dlplan_wrapper import construct_vocabulary_info, construct_instance_info, construct_syntactic_element_factory
+from dlplan_utils import construct_vocabulary_info, construct_instance_info, construct_syntactic_element_factory
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Example on how to initialize VocabularyInfo, InstanceInfo, SyntacticElementFactory from PDDL files.')
