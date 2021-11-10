@@ -43,7 +43,7 @@ def test_generate_exhaustively():
     boolean_reprs = [repr for repr in feature_reprs if repr.startswith("b_")]
     numerical_reprs = [repr for repr in feature_reprs if repr.startswith("n_")]
 
-    assert boolean_reprs == ['b_empty(c_top)', 'b_empty(on(0))', 'b_empty(holding(0))']
+    assert boolean_reprs == ['b_empty(c_top)', 'b_empty(c_bot)', 'b_empty(on(0))']
     assert numerical_reprs == ['n_count(c_top)', 'n_count(on(0))', 'n_count(ontable(0))', 'n_count(r_top)']
 
     b0, b1, b2 = [factory.parse_boolean(b) for b in boolean_reprs]
@@ -51,10 +51,10 @@ def test_generate_exhaustively():
 
     assert b0.compute_repr() == "b_empty(c_top)"
     assert [b0.evaluate(s) for s in states] == [False, False, False]
-    assert b1.compute_repr() == "b_empty(on(0))"
-    assert [b1.evaluate(s) for s in states] == [False, False, True]
-    assert b2.compute_repr() == "b_empty(holding(0))"
-    assert [b2.evaluate(s) for s in states] == [True, True, True]
+    assert b1.compute_repr() == "b_empty(c_bot)"
+    assert [b1.evaluate(s) for s in states] == [True, True, True]
+    assert b2.compute_repr() == "b_empty(on(0))"
+    assert [b2.evaluate(s) for s in states] == [False, False, True]
 
     assert n0.compute_repr() == "n_count(c_top)"
     assert [n0.evaluate(s) for s in states] == [2, 2, 2]
