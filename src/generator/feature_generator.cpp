@@ -82,10 +82,10 @@ FeatureGeneratorImpl::FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElemen
         // order should remain like it is
         if (generate_one_of_concept) m_primitive_rules.emplace_back(std::make_unique<rules::OneOfConcept>());  // c_one_of is the simplest primitive to interpret.
         if (generate_top_concept) m_primitive_rules.emplace_back(std::make_unique<rules::TopConcept>());  // c_top is easier to interpret than c_primitive
+        if (generate_bot_concept) m_primitive_rules.emplace_back(std::make_unique<rules::BotConcept>());  // c_bot is easier to interpret than c_primitive
         if (generate_primitive_concept) m_primitive_rules.emplace_back(std::make_unique<rules::PrimitiveConcept>());
         if (generate_top_role) m_primitive_rules.emplace_back(std::make_unique<rules::TopRole>());  // r_top is easier to interpret than r_primitive
         if (generate_primitive_role) m_primitive_rules.emplace_back(std::make_unique<rules::PrimitiveRole>());
-        if (generate_bot_concept) m_primitive_rules.emplace_back(std::make_unique<rules::BotConcept>());  // no previous primitive can mimic c_bot so it does not matter where we place it.
 
         // order should remain like it is, booleans should always be generated before numericals
         if (generate_empty_boolean) m_inductive_rules.emplace_back(std::make_unique<rules::EmptyBoolean>());
