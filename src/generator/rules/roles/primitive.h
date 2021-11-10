@@ -6,7 +6,6 @@ namespace dlplan::generator::rules {
 class PrimitiveRole : public Rule {
 public:
     PrimitiveRole() : Rule("r_primitive") { }
-
     virtual void generate(const States& states, int, FeatureGeneratorData& data) override {
         const std::vector<core::Predicate>& predicates = data.get_factory().get_vocabulary_info()->get_predicates();
         for (const auto& predicate : predicates) {

@@ -9,13 +9,20 @@
 namespace dlplan::core {
 
 static Index_Vec convert_atoms(const InstanceInfo& instance_info, const std::vector<Atom>& atoms) {
-    if (!std::all_of(atoms.begin(), atoms.end(), [&](const Atom& atom){ return instance_info.exists_atom(atom); })) {
-        throw std::runtime_error("State::convert_atoms - atom does not exist in InstanceInfo.");
+    for (const Atom& atom : atoms) {
+        if (!instance_info.exists_atom(atom)) {
+            throw std::runtime_error("State::convert_atoms - atom (" + atom.get_name() + ") does not exist in InstanceInfo.");
+        } 
+        //else if (atom.get_is_static()) {
+        //    throw std::runtime_error("State::convert_atoms - atom ("+  atom.get_name() + ") is static. A State can only be constructed from dynamic atoms.");
+        //}
     }
     Index_Vec atom_indices;
     atom_indices.reserve(atoms.size() + instance_info.get_static_atom_idxs().size());
     for (const auto& atom : atoms) {
-        atom_indices.push_back(atom.get_index());
+        if (!atom.get_is_static()) {
+            atom_indices.push_back(atom.get_index());
+        }
     }
     atom_indices.insert(atom_indices.end(), instance_info.get_static_atom_idxs().begin(), instance_info.get_static_atom_idxs().end());
     return atom_indices;
