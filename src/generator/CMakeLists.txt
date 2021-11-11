@@ -2,6 +2,7 @@ add_library(dlplangenerator SHARED
     feature_generator.cpp
     feature_generator_data.cpp
     generator.cpp
+    ../utils/logging.cpp
     ../utils/countdown_timer.cpp
     ../utils/sha-256.c
     ../utils/MurmurHash3.cpp
@@ -14,6 +15,7 @@ add_library(staticdlplangenerator STATIC
     feature_generator.cpp
     feature_generator_data.cpp
     generator.cpp
+    ../utils/logging.cpp
     ../utils/countdown_timer.cpp
     ../utils/sha-256.c
     ../utils/MurmurHash3.cpp
