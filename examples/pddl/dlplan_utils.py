@@ -31,11 +31,9 @@ def construct_instance_info(domain_data, instance_data):
         instance_info.add_static_atom(predicate_name + "_g", object_names)
     # Adddynamic atoms
     for atom in instance_data.transition_system.dynamic_atoms:
-        if not atom.objects: continue
         instance_info.add_atom(atom.predicate.name, [object.name for object in atom.objects])
     # Add other static atoms
     for static_atom in instance_data.transition_system.static_atoms:
-        if not static_atom.objects: continue
         instance_info.add_static_atom(static_atom.predicate.name, [object.name for object in static_atom.objects])
     return instance_info
 
