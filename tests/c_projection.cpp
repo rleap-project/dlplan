@@ -18,15 +18,15 @@ TEST(DLPTests, ConceptProjection) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    Concept concept1 = factory.parse_concept("c_projection(predicate(0, 1), 0)");
+    Concept concept1 = factory.parse_concept("c_projection(r_primitive(predicate,0,1),0)");
     EXPECT_EQ(concept1.evaluate(state), dlplan::core::ConceptDenotation({0, 2}));
 
-    Concept concept2 = factory.parse_concept("c_projection(predicate(1, 0), 0)");
+    Concept concept2 = factory.parse_concept("c_projection(r_primitive(predicate,1,0),0)");
     EXPECT_EQ(concept2.evaluate(state), dlplan::core::ConceptDenotation({1, 3}));
 
-    Concept concept3 = factory.parse_concept("c_projection(predicate(0, 1), 1)");
+    Concept concept3 = factory.parse_concept("c_projection(r_primitive(predicate,0,1),1)");
     EXPECT_EQ(concept3.evaluate(state), dlplan::core::ConceptDenotation({1, 3}));
 
-    Concept concept4 = factory.parse_concept("c_projection(predicate(1, 0), 1)");
+    Concept concept4 = factory.parse_concept("c_projection(r_primitive(predicate,1,0),1)");
     EXPECT_EQ(concept4.evaluate(state), dlplan::core::ConceptDenotation({0, 2}));
 }

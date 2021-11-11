@@ -21,10 +21,10 @@ TEST(DLPTests, RoleTransitiveClosure) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    Role role1 = factory.parse_role("conn(0,1)");
+    Role role1 = factory.parse_role("r_primitive(conn,0,1)");
     EXPECT_EQ(role1.evaluate(state), dlplan::core::RoleDenotation({{0, 1}, {1, 2}, {2, 0}, {3, 4}, {4, 0}}));
 
-    Role role2 = factory.parse_role("r_transitive_closure(conn(0,1))");
+    Role role2 = factory.parse_role("r_transitive_closure(r_primitive(conn,0,1))");
     // Note that (A, A), (B, B), (C, C) are included but (D, D), (E, E) are not
     EXPECT_EQ(role2.evaluate(state), dlplan::core::RoleDenotation({{0, 0}, {0, 1}, {0, 2}, {1, 0}, {1, 1}, {1, 2}, {2, 0}, {2, 1}, {2, 2}, {3, 0}, {3, 1}, {3, 2}, {3, 4}, {4, 0}, {4, 1}, {4, 2}}));
 }

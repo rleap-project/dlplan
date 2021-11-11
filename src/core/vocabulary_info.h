@@ -22,6 +22,7 @@ enum EXPRESSION_TYPE {
     C_NOT,
     C_ONE_OF,
     C_OR,
+    C_PRIMITIVE,
     C_PROJECTION,
     C_SOME,
     C_SUBSET,
@@ -34,6 +35,7 @@ enum EXPRESSION_TYPE {
     R_INVERSE,
     R_NOT,
     R_OR,
+    R_PRIMITIVE,
     R_RESTRICT,
     R_TOP,
     R_TRANSITIVE_CLOSURE,
@@ -46,6 +48,7 @@ enum EXPRESSION_TYPE {
     N_SUM_ROLE_DISTANCE,
     // boolean
     B_EMPTY,
+    B_NULLARY,
 };
 
 class VocabularyInfoImpl {

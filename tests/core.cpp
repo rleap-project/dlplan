@@ -48,7 +48,7 @@ TEST(DLPTests, InstanceCreation) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    Numerical numerical = factory.parse_numerical("n_count(c_and(on_g(0),on(0)))");
+    Numerical numerical = factory.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))");
     EXPECT_EQ(numerical.compute_complexity(), 4);
 
     State state(instance, {a0, a1});

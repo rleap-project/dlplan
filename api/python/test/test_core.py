@@ -95,14 +95,14 @@ def test_factory():
     state = State(instance, [a0, a3, a6])
     assert str(state) == "{on(a,b), ontable(b), clear(a), on_g(a,b)}"
 
-    numerical = factory.parse_numerical("n_count(c_and(on_g(0),on(0)))")
+    numerical = factory.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))")
     assert numerical.compute_complexity() == 4
     assert numerical.evaluate(state) == 1
 
-    boolean = factory.parse_boolean("b_empty(c_and(on_g(0),on(0)))")
+    boolean = factory.parse_boolean("b_empty(c_and(c_primitive(on_g,0),c_primitive(on,0)))")
     assert boolean.compute_complexity() == 4
     assert boolean.evaluate(state) == 0
 
-    numerical = factory.parse_numerical("n_count(c_projection(on_g(0,1), 1))")
+    numerical = factory.parse_numerical("n_count(c_projection(r_primitive(on_g,0,1), 1))")
     assert numerical.compute_complexity() == 3
     assert numerical.evaluate(state) == 1

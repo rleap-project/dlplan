@@ -1,5 +1,7 @@
-#include "../rule.h"
+#ifndef DLPLAN_SRC_GENERATOR_RULES_CONCEPTS_ONE_OF_H_
+#define DLPLAN_SRC_GENERATOR_RULES_CONCEPTS_ONE_OF_H_
 
+#include "../rule.h"
 
 namespace dlplan::generator::rules {
 
@@ -17,3 +19,5 @@ public:
 };
 
 }
+
+#endif

@@ -3,6 +3,7 @@
 #include "parser/parser.h"
 #include "parser/expressions/expression.h"
 #include "elements/booleans/empty.h"
+#include "elements/booleans/nullary.h"
 #include "elements/concepts/all.h"
 #include "elements/concepts/bot.h"
 #include "elements/concepts/and.h"
@@ -78,6 +79,11 @@ Boolean SyntacticElementFactoryImpl::make_empty_boolean(const Concept& concept) 
 Boolean SyntacticElementFactoryImpl::make_empty_boolean(const Role& role) {
     element::Role_Ptr role_ptr = m_caches.m_role_cache->at(role.compute_repr());
     std::unique_ptr<element::Boolean> result_ptr = std::make_unique<element::EmptyBoolean<element::Role_Ptr>>(*m_vocabulary_info, role_ptr);
+    return Boolean(*m_vocabulary_info, m_caches.m_boolean_cache->insert(std::move(result_ptr)));
+}
+
+Boolean SyntacticElementFactoryImpl::make_nullary_boolean(const Predicate& predicate) {
+    std::unique_ptr<element::Boolean> result_ptr = std::make_unique<element::NullaryBoolean>(*m_vocabulary_info, predicate);
     return Boolean(*m_vocabulary_info, m_caches.m_boolean_cache->insert(std::move(result_ptr)));
 }
 

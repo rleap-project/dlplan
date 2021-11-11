@@ -19,12 +19,12 @@ TEST(DLPTests, ConceptPrimitive) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    Concept concept1 = factory.parse_concept("predicate(0)");
+    Concept concept1 = factory.parse_concept("c_primitive(predicate,0)");
     EXPECT_EQ(concept1.evaluate(state), dlplan::core::ConceptDenotation({0, 3}));
 
-    Concept concept2 = factory.parse_concept("predicate(1)");
+    Concept concept2 = factory.parse_concept("c_primitive(predicate,1)");
     EXPECT_EQ(concept2.evaluate(state), dlplan::core::ConceptDenotation({1, 4}));
 
-    Concept concept3 = factory.parse_concept("predicate(2)");
+    Concept concept3 = factory.parse_concept("c_primitive(predicate,2)");
     EXPECT_EQ(concept3.evaluate(state), dlplan::core::ConceptDenotation({2, 5}));
 }

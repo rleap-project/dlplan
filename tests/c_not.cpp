@@ -22,6 +22,6 @@ TEST(DLPTests, ConceptNot) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    Concept concept = factory.parse_concept("c_not(concept_1(0))");
+    Concept concept = factory.parse_concept("c_not(c_primitive(concept_1,0))");
     EXPECT_EQ(concept.evaluate(state), dlplan::core::ConceptDenotation({2}));
 }

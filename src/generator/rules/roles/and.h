@@ -1,3 +1,6 @@
+#ifndef DLPLAN_SRC_GENERATOR_RULES_ROLES_AND_H_
+#define DLPLAN_SRC_GENERATOR_RULES_ROLES_AND_H_
+
 #include "../rule.h"
 
 
@@ -23,3 +26,5 @@ public:
 };
 
 }
+
+#endif

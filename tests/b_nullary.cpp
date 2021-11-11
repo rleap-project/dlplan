@@ -5,18 +5,20 @@
 using namespace dlplan::core;
 
 
-TEST(DLPTests, RoleNot) {
+TEST(DLPTests, BooleanNullary) {
     // Add predicates
     std::shared_ptr<VocabularyInfo> vocabulary = std::make_shared<VocabularyInfo>();
-    Predicate p0 = vocabulary->add_predicate("role", 2);
+    Predicate p0 = vocabulary->add_predicate("predicate", 0);
     std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary);
     // Add state atoms
-    Atom a0 = instance->add_atom("role", {"A", "B"});
+    Atom a0 = instance->add_atom("predicate", {});
 
-    State state(instance, {a0});
+    State s0(instance, {a0});
+    State s1(instance, {});
 
     SyntacticElementFactory factory(vocabulary);
 
-    Role role = factory.parse_role("r_not(r_primitive(role,0,1))");
-    EXPECT_EQ(role.evaluate(state), dlplan::core::RoleDenotation({{0,0},{1,0},{1,1}}));
+    Boolean boolean = factory.parse_boolean("b_nullary(predicate)");
+    EXPECT_EQ(boolean.evaluate(s0), true);
+    EXPECT_EQ(boolean.evaluate(s1), false);
 }

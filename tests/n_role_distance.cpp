@@ -36,14 +36,14 @@ TEST(DLPTests, NumericalRoleDistance) {
     SyntacticElementFactory factory(vocabulary);
 
     // All distances are finite
-    Numerical numerical = factory.parse_numerical("n_role_distance(start(0,1), conn(0,1), end(0,1))");
+    Numerical numerical = factory.parse_numerical("n_role_distance(r_primitive(start,0,1),r_primitive(conn,0,1),r_primitive(end,0,1))");
     EXPECT_EQ(numerical.evaluate(state), 2);
 
     // If for at least one source there is no reachable target then the sum is defined as infinity
-    Numerical numerical2 = factory.parse_numerical("n_role_distance(start2(0,1), conn(0,1), end2(0,1))");
+    Numerical numerical2 = factory.parse_numerical("n_role_distance(r_primitive(start2,0,1),r_primitive(conn,0,1),r_primitive(end2,0,1))");
     EXPECT_EQ(numerical2.evaluate(state), std::numeric_limits<int>::max());
 
     // SumRoleDistance with no sources is defined as 0
-    Numerical numerical3 = factory.parse_numerical("n_role_distance(start3(0,1), conn(0,1), end2(0,1))");
+    Numerical numerical3 = factory.parse_numerical("n_role_distance(r_primitive(start3,0,1),r_primitive(conn,0,1),r_primitive(end2,0,1))");
     EXPECT_EQ(numerical3.evaluate(state), 0);
 }

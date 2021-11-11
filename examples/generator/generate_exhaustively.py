@@ -12,6 +12,7 @@ def construct_vocabulary_info():
     v.add_predicate("ontable", 1)
     v.add_predicate("holding", 1)
     v.add_predicate("clear", 1)
+    v.add_predicate("arm-empty", 0)
     return v
 
 
@@ -26,6 +27,7 @@ def construct_instance_info(v):
     i.add_atom("holding", ["b"])
     i.add_atom("clear", ["a"])
     i.add_atom("clear", ["b"])
+    i.add_atom("arm-empty", [])
     # Add static goal atoms
     i.add_static_atom("on_g", ["a", "b"])
     # Add static atoms
@@ -51,9 +53,10 @@ def main():
     a5 = atoms[5]
     a6 = atoms[6]
     a7 = atoms[7]
-    s0 = dlplan.State(i, [a0, a3, a6])
-    s1 = dlplan.State(i, [a1, a2, a7])
-    s2 = dlplan.State(i, [a2, a3, a6, a7])
+    a8 = atoms[8]
+    s0 = dlplan.State(i, [a0, a3, a6, a8])
+    s1 = dlplan.State(i, [a1, a2, a7, a8])
+    s2 = dlplan.State(i, [a2, a3, a6, a7, a8])
     s3 = dlplan.State(i, [a3, a4, a7])
     s4 = dlplan.State(i, [a2, a5, a6])
     states = [s0, s1, s2, s3, s4]

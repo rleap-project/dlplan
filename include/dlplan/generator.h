@@ -27,6 +27,7 @@ private:
 public:
     FeatureGenerator(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit,
         bool generate_empty_boolean=true,
+        bool generate_nullary_boolean=true,
         bool generate_all_concept=true,
         bool generate_and_concept=true,
         bool generate_bot_concept=true,

@@ -46,7 +46,7 @@ TEST(DLPTests, MultiInstance) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    Numerical numerical = factory.parse_numerical("n_concept_distance(start(0), conn(0,1), end(0))");
+    Numerical numerical = factory.parse_numerical("n_concept_distance(c_primitive(start,0), r_primitive(conn,0,1), c_primitive(end,0))");
     EXPECT_EQ(numerical.evaluate(state1), 3);
     EXPECT_EQ(numerical.evaluate(state2), 3);
     // Shortest distance in union of graphs reduces to 2

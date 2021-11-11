@@ -14,7 +14,7 @@ protected:
 
 public:
     PrimitiveConcept(const VocabularyInfo& vocabulary, const Predicate& predicate, int pos)
-    : Concept(vocabulary, predicate.get_name()), m_predicate(predicate), m_pos(pos) {
+    : Concept(vocabulary, "c_primitive"), m_predicate(predicate), m_pos(pos) {
         if (m_pos >= predicate.get_arity()) {
             throw std::runtime_error("PrimitiveConcept::PrimitiveConcept - object index does not match predicate arity ("s + std::to_string(m_pos) + " > " + std::to_string(predicate.get_arity()) + ").");
         }
@@ -42,7 +42,7 @@ public:
 
     std::string compute_repr() const override {
         std::stringstream ss;
-        ss << m_name << "(" << std::to_string(m_pos) << ")";
+        ss << m_name << "(" << m_predicate.get_name() << "," << std::to_string(m_pos) << ")";
         return ss.str();
     }
 };

@@ -48,20 +48,20 @@ def test_core_instance():
     instance = generate_barman_instance(vocabulary)
     factory = SyntacticElementFactory(vocabulary)
     state = State(instance, instance.get_atoms())
-    concept = factory.parse_concept("shaker-level(0)")
+    concept = factory.parse_concept("c_primitive(shaker-level,0)")
     result = concept.evaluate(state)
     assert result == [0]
     assert instance.get_object(result[0]).get_name() == "shaker1"
-    concept = factory.parse_concept("c_some(contains(1,0),shaker-level(0))")
+    concept = factory.parse_concept("c_some(r_primitive(contains,1,0),c_primitive(shaker-level,0))")
     result = concept.evaluate(state)
     assert result == [2]
     assert instance.get_object(result[0]).get_name() == "ingredient2"
-    role = factory.parse_role("cocktail-part1(0,1)")
+    role = factory.parse_role("r_primitive(cocktail-part1,0,1)")
     result = role.evaluate(state)
     assert result == [(6,2)]
-    concept = factory.parse_concept("c_some(cocktail-part1(0,1),c_some(contains(1,0),shaker-level(0)))")
+    concept = factory.parse_concept("c_some(r_primitive(cocktail-part1,0,1),c_some(r_primitive(contains,1,0),c_primitive(shaker-level,0)))")
     result = concept.evaluate(state)
     assert result == [6]
     assert instance.get_object(result[0]).get_name() == "cocktail1"
-    numerical = factory.parse_numerical("n_count(c_and(c_some(cocktail-part1(0,1),c_some(contains(1,0),shaker-level(0))),c_projection(r_diff(contains_g(0,1),contains(0,1)),1)))")
+    numerical = factory.parse_numerical("n_count(c_and(c_some(r_primitive(cocktail-part1,0,1),c_some(r_primitive(contains,1,0),c_primitive(shaker-level,0))),c_projection(r_diff(r_primitive(contains_g,0,1),r_primitive(contains,0,1)),1)))")
     assert numerical.evaluate(state) == 1

@@ -14,7 +14,7 @@ protected:
 
 public:
     PrimitiveRole(const VocabularyInfo& vocabulary, const Predicate& predicate, int pos_1, int pos_2)
-    : Role(vocabulary, predicate.get_name()), m_predicate(predicate), m_pos_1(pos_1), m_pos_2(pos_2) {
+    : Role(vocabulary, "r_primitive"), m_predicate(predicate), m_pos_1(pos_1), m_pos_2(pos_2) {
         if (m_pos_1 >= predicate.get_arity() || m_pos_2 >= predicate.get_arity()) {
             throw std::runtime_error("PrimitiveRole::evaluate_impl - object index does not match predicate arity ("s + std::to_string(m_pos_1) + " or " + std::to_string(m_pos_2)  + " > " + std::to_string(predicate.get_arity()) + ").");
         }
@@ -41,7 +41,7 @@ public:
 
     std::string compute_repr() const override {
         std::stringstream ss;
-        ss << m_name << "(" << std::to_string(m_pos_1) << "," << std::to_string(m_pos_2) << ")";
+        ss << m_name << "(" << m_predicate.get_name() << "," << std::to_string(m_pos_1) << "," << std::to_string(m_pos_2) << ")";
         return ss.str();
     }
 };

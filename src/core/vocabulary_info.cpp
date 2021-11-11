@@ -97,7 +97,8 @@ std::unordered_map<std::string, EXPRESSION_TYPE> VocabularyInfoImpl::m_element_n
     {"c_not", C_NOT },
     {"c_one_of", C_ONE_OF },
     {"c_or", C_OR },
-    {"c_projection", C_PROJECTION},
+    {"c_primitive", C_PRIMITIVE },
+    {"c_projection", C_PROJECTION },
     {"c_some", C_SOME },
     {"c_subset", C_SUBSET},
     {"c_top", C_TOP },
@@ -108,6 +109,7 @@ std::unordered_map<std::string, EXPRESSION_TYPE> VocabularyInfoImpl::m_element_n
     {"r_inverse", R_INVERSE },
     {"r_not", R_NOT },
     {"r_or", R_OR },
+    {"r_primitive", R_PRIMITIVE },
     {"r_restrict", R_RESTRICT },
     {"r_top", R_TOP },
     {"r_transitive_closure", R_TRANSITIVE_CLOSURE },
@@ -117,7 +119,8 @@ std::unordered_map<std::string, EXPRESSION_TYPE> VocabularyInfoImpl::m_element_n
     {"n_sum_concept_distance", N_SUM_CONCEPT_DISTANCE },
     {"n_role_distance", N_ROLE_DISTANCE },
     {"n_sum_role_distance", N_SUM_ROLE_DISTANCE },
-    {"b_empty", B_EMPTY }
+    {"b_empty", B_EMPTY },
+    {"b_nullary", B_NULLARY }
 };
 
 bool VocabularyInfoImpl::exists_element_name(const std::string& name) {

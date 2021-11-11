@@ -19,12 +19,12 @@ TEST(DLPTests, RolePrimitive) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    Role role1 = factory.parse_role("predicate(0,1)");
+    Role role1 = factory.parse_role("r_primitive(predicate,0,1)");
     EXPECT_EQ(role1.evaluate(state), dlplan::core::RoleDenotation({{0, 1}, {3, 4}}));
 
-    Role role2 = factory.parse_role("predicate(1,2)");
+    Role role2 = factory.parse_role("r_primitive(predicate,1,2)");
     EXPECT_EQ(role2.evaluate(state), dlplan::core::RoleDenotation({{1, 2}, {4, 5}}));
 
-    Role role3 = factory.parse_role("predicate(2,0)");
+    Role role3 = factory.parse_role("r_primitive(predicate,2,0)");
     EXPECT_EQ(role3.evaluate(state), dlplan::core::RoleDenotation({{2, 0}, {5, 3}}));
 }

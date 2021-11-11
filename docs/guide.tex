@@ -19,6 +19,7 @@ dominik.drexler@liu.se
 \maketitle
 
 \newcommand{\emptyelement}[1]{\ensuremath{\mathit{Empty}(#1)}}
+\newcommand{\nullaryelement}[1]{\ensuremath{\mathit{Nullary}(#1)}}
 
 \newcommand{\countelement}[1]{\ensuremath{\mathit{Count}(#1)}}
 \newcommand{\conceptdistanceelement}[3]{\ensuremath{\mathit{ConceptDistance}(#1, #2, #3)}}
@@ -60,7 +61,7 @@ some constant $a$ that occurs in every instance.
     \begin{tabular}{ccc}
     Name & Abstract syntax & Concrete syntax \\
     \hline
-    Primitive concept & $p[i]$ & p(i) \\
+    Primitive concept & $p[i]$ & c\_primitive(p,i) \\
     Top & $\top$ & c\_top \\
     Bottom & $\bot$ & c\_bot \\
     Intersection & $C\sqcap D$ & c\_and(C, D) \\
@@ -84,7 +85,7 @@ some constant $a$ that occurs in every instance.
     \begin{tabular}{ccc}
     Name & Abstract syntax & Concrete syntax \\
     \hline
-    Primitive role & $p[i,j]$ & p(i,j) \\
+    Primitive role & $p[i,j]$ & r\_primitive(p,i,j) \\
     Universal role & $\top$ & r\_top \\
     Intersection & $R\sqcap S$ & r\_and(R, S) \\
     Union & $R\sqcup S$ & r\_or(R, S) \\
@@ -108,6 +109,7 @@ some constant $a$ that occurs in every instance.
     Name & Abstract syntax & Concrete syntax \\
     \hline
     Empty & \emptyelement{X} & b\_empty(X) \\
+    Nullary & \nullaryelement{p} & b\_nullary(p) 
     \end{tabular}
     \caption{Booleans}
 \end{table}
@@ -174,6 +176,7 @@ $(R^s)^0 = \{(d,d)\mid d\in\Delta\}$ and $(R^s)^{n+1} = (R^s)^n\circ R^s$.
 
 \begin{itemize}
     \item $\emptyelement{X}^s$ is true iff $|X^s| = 0$
+    \item $\nullaryelement{p}^s$ is true iff $p()\in s$
 \end{itemize}
 
 \subsubsection{Numericals}

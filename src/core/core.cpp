@@ -503,6 +503,10 @@ Boolean SyntacticElementFactory::make_empty_boolean(const Role& role) {
     return m_pImpl->make_empty_boolean(role);
 }
 
+Boolean SyntacticElementFactory::make_nullary_boolean(const Predicate& predicate) {
+    return m_pImpl->make_nullary_boolean(predicate);
+}
+
 Concept SyntacticElementFactory::make_all_concept(const Role& role, const Concept& concept) {
     return m_pImpl->make_all_concept(role, concept);
 }

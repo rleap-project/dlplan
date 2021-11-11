@@ -21,6 +21,6 @@ TEST(DLPTests, RoleRestrict) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    Role role = factory.parse_role("r_restrict(role(0,1),concept(0))");
+    Role role = factory.parse_role("r_restrict(r_primitive(role,0,1),c_primitive(concept,0))");
     EXPECT_EQ(role.evaluate(state), dlplan::core::RoleDenotation({{0, 1}}));
 }

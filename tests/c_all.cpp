@@ -25,7 +25,7 @@ TEST(DLPTests, ConceptAll) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    Concept concept = factory.parse_concept("c_all(role(0,1),concept(0))");
+    Concept concept = factory.parse_concept("c_all(r_primitive(role,0,1),c_primitive(concept,0))");
     EXPECT_EQ(concept.evaluate(state), dlplan::core::ConceptDenotation({0}));
 }
 
@@ -47,7 +47,7 @@ TEST(DLPTests, ConceptAll2) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    Concept concept = factory.parse_concept("c_all(at(1,0),man(0))");
+    Concept concept = factory.parse_concept("c_all(r_primitive(at,1,0),c_primitive(man,0))");
     EXPECT_EQ(concept.evaluate(state_1), dlplan::core::ConceptDenotation({}));
 
     EXPECT_EQ(concept.evaluate(state_2), dlplan::core::ConceptDenotation({1}));

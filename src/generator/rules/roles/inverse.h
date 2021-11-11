@@ -1,5 +1,7 @@
-#include "../rule.h"
+#ifndef DLPLAN_SRC_GENERATOR_RULES_ROLES_INVERSE_H_
+#define DLPLAN_SRC_GENERATOR_RULES_ROLES_INVERSE_H_
 
+#include "../rule.h"
 
 namespace dlplan::generator::rules {
 
@@ -19,3 +21,5 @@ public:
 };
 
 }
+
+#endif

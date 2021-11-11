@@ -14,6 +14,7 @@ static std::shared_ptr<VocabularyInfo> construct_vocabulary_info() {
     v->add_predicate("ontable", 1);
     v->add_predicate("holding", 1);
     v->add_predicate("clear", 1);
+    v->add_predicate("arm-empty", 0);
     return v;
 }
 
@@ -28,6 +29,7 @@ static std::shared_ptr<InstanceInfo> construct_instance_info(std::shared_ptr<Voc
     i->add_atom("holding", {"b"});
     i->add_atom("clear", {"a"});
     i->add_atom("clear", {"b"});
+    i->add_atom("arm-empty", {});
     // Add static goal atoms
     i->add_static_atom("on_g", {"a", "b"});
     // Add static atoms
@@ -54,9 +56,10 @@ int main() {
     const Atom& a5 = atoms[5];
     const Atom& a6 = atoms[6];
     const Atom& a7 = atoms[7];
-    State s0(i, {a0, a3, a6});
-    State s1(i, {a1, a2, a7});
-    State s2(i, {a2, a3, a6, a7});
+    const Atom& a8 = atoms[8];
+    State s0(i, {a0, a3, a6, a8});
+    State s1(i, {a1, a2, a7, a8});
+    State s2(i, {a2, a3, a6, a7, a8});
     State s3(i, {a3, a4, a7});
     State s4(i, {a2, a5, a6});
     States states({s0, s1, s2, s3, s4});

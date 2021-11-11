@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "expressions/booleans/empty.h"
+#include "expressions/booleans/nullary.h"
 #include "expressions/concepts/all.h"
 #include "expressions/concepts/and.h"
 #include "expressions/concepts/bot.h"
@@ -46,6 +47,9 @@ Expression_Ptr AST_Factory::make_ast(const VocabularyInfo& vocabulary_info, cons
             case B_EMPTY: {
                 return std::make_unique<EmptyBoolean>(EmptyBoolean(name, std::move(children)));
             }
+            case B_NULLARY: {
+                return std::make_unique<NullaryBoolean>(NullaryBoolean(name, std::move(children)));
+            }
             case C_ALL: {
                 return std::make_unique<AllConcept>(AllConcept(name, std::move(children)));
             }
@@ -69,6 +73,9 @@ Expression_Ptr AST_Factory::make_ast(const VocabularyInfo& vocabulary_info, cons
             }
             case C_OR: {
                 return std::make_unique<OrConcept>(OrConcept(name, std::move(children)));
+            }
+            case C_PRIMITIVE: {
+                return std::make_unique<PrimitiveConcept>(PrimitiveConcept(name, std::move(children)));
             }
             case C_PROJECTION: {
                 return std::make_unique<ProjectionConcept>(ProjectionConcept(name, std::move(children)));
@@ -118,6 +125,9 @@ Expression_Ptr AST_Factory::make_ast(const VocabularyInfo& vocabulary_info, cons
             case R_OR: {
                 return std::make_unique<OrRole>(OrRole(name, std::move(children)));
             }
+            case R_PRIMITIVE: {
+                return std::make_unique<PrimitiveRole>(PrimitiveRole(name, std::move(children)));
+            }
             case R_RESTRICT: {
                 return std::make_unique<RestrictRole>(RestrictRole(name, std::move(children)));
             }
@@ -134,13 +144,7 @@ Expression_Ptr AST_Factory::make_ast(const VocabularyInfo& vocabulary_info, cons
     }
     // case 2: name is in alphabet of VocabularyInfo
     else if (vocabulary_info.exists_predicate_name(name)) {
-        if (children.size() == 2) {
-            return std::make_unique<PrimitiveRole>(PrimitiveRole(name, std::move(children)));
-        } else if (children.size() == 1) {
-            return std::make_unique<PrimitiveConcept>(PrimitiveConcept(name, std::move(children)));
-        } else if (children.size() == 0) {
-            throw std::runtime_error("AST_Factory::make_ast - Unspecified projection for predicate ("s + name + "). Is this supposed to be a concept or a role?");
-        }
+        return std::make_unique<Expression>(Expression(name, std::move(children)));
     }
     // case 3: name is constant in VocabularyInfo
     else if (vocabulary_info.exists_constant_name(name)) {

@@ -38,6 +38,7 @@
 #include "rules/numericals/sum_role_distance.h"
 
 #include "rules/booleans/empty.h"
+#include "rules/booleans/nullary.h"
 
 #include "../../include/dlplan/generator.h"
 #include "../utils/logging.h"
@@ -48,6 +49,7 @@ namespace dlplan::generator {
 
 FeatureGeneratorImpl::FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit,
     bool generate_empty_boolean,
+    bool generate_nullary_boolean,
     bool generate_all_concept,
     bool generate_and_concept,
     bool generate_bot_concept,
@@ -88,6 +90,7 @@ FeatureGeneratorImpl::FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElemen
         if (generate_primitive_role) m_primitive_rules.emplace_back(std::make_unique<rules::PrimitiveRole>());
 
         // order should remain like it is, booleans should always be generated before numericals
+        if (generate_nullary_boolean) m_inductive_rules.emplace_back(std::make_unique<rules::NullaryBoolean>());
         if (generate_empty_boolean) m_inductive_rules.emplace_back(std::make_unique<rules::EmptyBoolean>());
         if (generate_count_numerical) m_inductive_rules.emplace_back(std::make_unique<rules::CountNumerical>());
         if (generate_concept_distance_numerical) m_inductive_rules.emplace_back(std::make_unique<rules::ConceptDistanceNumerical>());
