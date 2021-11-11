@@ -12,6 +12,7 @@ def construct_vocabulary_info():
     v.add_predicate("ontable", 1)
     v.add_predicate("holding", 1)
     v.add_predicate("clear", 1)
+    v.add_predicate("arm-empty", 0)
     return v
 
 
@@ -26,6 +27,7 @@ def construct_instance_info(v):
     i.add_atom("holding", ["b"])
     i.add_atom("clear", ["a"])
     i.add_atom("clear", ["b"])
+    i.add_atom("arm-empty", [])
     # Add static goal atoms
     i.add_static_atom("on_g", ["a", "b"])
     # Add static atoms
@@ -50,11 +52,11 @@ def main():
     state = dlplan.State(i, [a0, a3, a6])
 
     # 5. Parse and evaluate elements.
-    numerical = f.parse_numerical("n_count(c_and(on_g(0),on(0)))")
+    numerical = f.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))")
     print(f"repr: {numerical.compute_repr()}")
     print(f"value: {numerical.evaluate(state)}")
 
-    boolean = f.parse_boolean("b_empty(c_and(on_g(0),on(0)))")
+    boolean = f.parse_boolean("b_empty(c_and(c_primitive(on_g,0),c_primitive(on,0)))")
     print(f"repr: {boolean.compute_repr()}")
     print(f"value: {boolean.evaluate(state)}")
 

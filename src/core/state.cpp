@@ -1,6 +1,7 @@
 #include "state.h"
 
 #include <algorithm>
+#include <stdexcept>
 
 #include "instance_info.h"
 #include "../utils/collections.h"

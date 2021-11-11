@@ -13,6 +13,7 @@ static std::shared_ptr<VocabularyInfo> construct_vocabulary_info() {
     v->add_predicate("ontable", 1);
     v->add_predicate("holding", 1);
     v->add_predicate("clear", 1);
+    v->add_predicate("arm-empty", 0);
     return v;
 }
 
@@ -27,6 +28,7 @@ static std::shared_ptr<InstanceInfo> construct_instance_info(std::shared_ptr<Voc
     i->add_atom("holding", {"b"});
     i->add_atom("clear", {"a"});
     i->add_atom("clear", {"b"});
+    i->add_atom("arm-empty", {});
     // Add static goal atoms
     i->add_static_atom("on_g", {"a", "b"});
     // Add static atoms
@@ -54,11 +56,11 @@ int main() {
     State state(i, {a0, a3, a6});
 
     // 5. Parse and evaluate elements.
-    Numerical numerical = f.parse_numerical("n_count(c_and(on_g(0),on(0)))");
+    Numerical numerical = f.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))");
     std::cout << "repr: " << numerical.compute_repr() << std::endl;
     std::cout << "value: " << numerical.evaluate(state) << std::endl;
 
-    Boolean boolean = f.parse_boolean("b_empty(c_and(on_g(0),on(0)))");
+    Boolean boolean = f.parse_boolean("b_empty(c_and(c_primitive(on_g,0),c_primitive(on,0)))");
     std::cout << "repr: " << boolean.compute_repr() << std::endl;
     std::cout << "value: " << boolean.evaluate(state) << std::endl;
 
