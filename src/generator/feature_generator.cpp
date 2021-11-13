@@ -123,6 +123,7 @@ FeatureGeneratorImpl::FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElemen
 
 FeatureRepresentations FeatureGeneratorImpl::generate(const States& states) {
     // Resets the counters
+    // TODO: reinitialize rules 1 by 1
     for (const auto& rule : m_primitive_rules) {
         rule->initialize();
     }
@@ -152,6 +153,7 @@ void FeatureGeneratorImpl::generate_inductively(const States& states, FeatureGen
     utils::g_log << "Started generating composite features." << std::endl;
     for (int iteration = 1; iteration < m_complexity; ++iteration) {  // every composition adds at least one complexity
         if (data.reached_limit()) break;
+        // TODO: call generate for each rule
         for (const auto& rule : m_inductive_rules) {
             rule->generate(states, iteration, data);
         }

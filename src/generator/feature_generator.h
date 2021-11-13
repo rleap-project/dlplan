@@ -31,6 +31,8 @@ private:
     std::vector<std::unique_ptr<rules::Rule>> m_primitive_rules;
     std::vector<std::unique_ptr<rules::Rule>> m_inductive_rules;
 
+    // TODO: Store all rules here, add disable option to rule
+
 private:
     /**
      * Generates all Elements with complexity 1.
@@ -86,6 +88,8 @@ public:
      * Exhaustively generates features with pairwise disjoint feature evaluations on the states.
      */
     FeatureRepresentations generate(const States& states);
+
+    // TODO: add generate setters for each rule and forward call to respective rule
 };
 
 }

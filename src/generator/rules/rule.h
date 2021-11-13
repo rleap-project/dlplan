@@ -26,7 +26,7 @@ protected:
 public:
     Rule(const std::string& name) : m_name(name) { }
 
-    virtual void generate(const States&, int, FeatureGeneratorData&) { 
+    virtual void generate(const States&, int, FeatureGeneratorData&) {
         throw std::runtime_error("Rule::generate: error calling function of abstract base class");
     }
 
