@@ -198,6 +198,15 @@ $(R^s)^0 = \{(d,d)\mid d\in\Delta\}$ and $(R^s)^{n+1} = (R^s)^n\circ R^s$.
     where the sum evaluates to $\infty$ if any term is $\infty$.
 \end{itemize}
 
+\section{Feature Generation}
+
+In the feature generation, we place the following additional restrictions on the above elements in order to decrease the combinatorial blowup.
+\begin{itemize}
+    \item r\_restrict(R, C), r\_inverse(R), r\_transitive\_closure(R), c\_equal(R, S), \\
+          r\_transitive\_reflexive\_closure(R) where R, S are a primitive roles and C is a primitive concept
+    \item \conceptdistanceelement{C}{R}{D} where R is restricted to complexity at most $2$
+\end{itemize}
+
 \bibliographystyle{plain}
 \bibliography{literature.bib}
 

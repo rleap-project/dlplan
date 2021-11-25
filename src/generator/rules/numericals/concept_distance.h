@@ -11,7 +11,7 @@ public:
 
     virtual void generate(const States& states, int iteration, FeatureGeneratorData& data) override {
         for (int i = 1; i < iteration; ++i) {
-            for (int j = 1; j < iteration - i; ++j) {
+            for (int j = 1; j < std::max(2,iteration - i); ++j) {
                 int k = iteration - i - j;
                 for (const auto& concept_left : data.get_concept_elements_by_complexity()[i]) {
                     for (const auto& role : data.get_role_elements_by_complexity()[j]) {
