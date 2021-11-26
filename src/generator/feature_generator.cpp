@@ -81,11 +81,11 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
       r_compose(std::make_shared<rules::ComposeRole>(rules::ComposeRole())),
       r_transitive_closure(std::make_shared<rules::TransitiveClosureRole>(rules::TransitiveClosureRole())),
       r_transitive_reflexive_closure(std::make_shared<rules::TransitiveReflexiveClosureRole>(rules::TransitiveReflexiveClosureRole())) {
-    m_primitive_rules.push_back(c_one_of);
+    m_primitive_rules.emplace_back(c_one_of);
     m_primitive_rules.emplace_back(c_top);
     m_primitive_rules.emplace_back(c_bot);
     m_primitive_rules.emplace_back(c_primitive);
-    m_primitive_rules.emplace_back(c_top);
+    m_primitive_rules.emplace_back(r_top);
     m_primitive_rules.emplace_back(r_primitive);
 
     m_inductive_rules.emplace_back(b_nullary);

@@ -42,8 +42,7 @@ public:
     }
 
     void initialize() {
-        std::cout << "initialize" << std::endl;
-        // m_count_instantiations = 0;
+        m_count_instantiations = 0;
     }
 
     void print_statistics() const {
