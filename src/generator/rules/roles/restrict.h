@@ -9,7 +9,7 @@ class RestrictRole : public Rule {
 public:
     RestrictRole() : Rule("r_restrict") { }
 
-    virtual void generate(const States& states, int iteration, FeatureGeneratorData& data) override {
+    virtual void generate_impl(const States& states, int iteration, FeatureGeneratorData& data) override {
         if (iteration == 2) {
             for (const auto& role : data.get_role_elements_by_complexity()[1]) {
                 for (const auto& concept : data.get_concept_elements_by_complexity()[1]) {

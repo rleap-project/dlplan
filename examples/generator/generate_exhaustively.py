@@ -62,8 +62,8 @@ def main():
     states = [s0, s1, s2, s3, s4]
 
     # 5. Generate features up to complexity 4 with at most 180 seconds and at most 100000 features in total
-    generator = dlplan.FeatureGenerator(f, 4, 180, 100000)
-    features = generator.generate(states)
+    generator = dlplan.FeatureGenerator()
+    features = generator.generate(f, 4, 180, 100000, states)
 
     for feature in features:
         print(feature)

@@ -9,7 +9,7 @@ class EqualConcept : public Rule {
 public:
     EqualConcept() : Rule("c_equal") { }
 
-    virtual void generate(const States& states, int iteration, FeatureGeneratorData& data) override {
+    virtual void generate_impl(const States& states, int iteration, FeatureGeneratorData& data) override {
         if (iteration == 2) {
             for (const auto& role_left : data.get_role_elements_by_complexity()[1]) {
                 // Some further restriction used in D2L where righthandside can only be goal version of left handside.

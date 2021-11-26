@@ -47,81 +47,79 @@
 namespace dlplan::generator {
 
 
-FeatureGeneratorImpl::FeatureGeneratorImpl(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit,
-    bool generate_empty_boolean,
-    bool generate_nullary_boolean,
-    bool generate_all_concept,
-    bool generate_and_concept,
-    bool generate_bot_concept,
-    bool generate_diff_concept,
-    bool generate_equal_concept,
-    bool generate_not_concept,
-    bool generate_one_of_concept,
-    bool generate_or_concept,
-    bool generate_primitive_concept,
-    bool generate_projection_concept,
-    bool generate_some_concept,
-    bool generate_subset_concept,
-    bool generate_top_concept,
-    bool generate_concept_distance_numerical,
-    bool generate_count_numerical,
-    bool generate_role_distance_numerical,
-    bool generate_sum_concept_distance_numerical,
-    bool generate_sum_role_distance_numerical,
-    bool generate_and_role,
-    bool generate_compose_role,
-    bool generate_diff_role,
-    bool generate_identity_role,
-    bool generate_inverse_role,
-    bool generate_not_role,
-    bool generate_or_role,
-    bool generate_primitive_role,
-    bool generate_restrict_role,
-    bool generate_top_role,
-    bool generate_transitive_closure_role,
-    bool generate_transitive_reflexive_closure_role)
-    : m_factory(factory), m_complexity(complexity), m_time_limit(time_limit), m_feature_limit(feature_limit) {
-        // order should remain like it is
-        if (generate_one_of_concept) m_primitive_rules.emplace_back(std::make_unique<rules::OneOfConcept>());  // c_one_of is the simplest primitive to interpret.
-        if (generate_top_concept) m_primitive_rules.emplace_back(std::make_unique<rules::TopConcept>());  // c_top is easier to interpret than c_primitive
-        if (generate_bot_concept) m_primitive_rules.emplace_back(std::make_unique<rules::BotConcept>());  // c_bot is easier to interpret than c_primitive
-        if (generate_primitive_concept) m_primitive_rules.emplace_back(std::make_unique<rules::PrimitiveConcept>());
-        if (generate_top_role) m_primitive_rules.emplace_back(std::make_unique<rules::TopRole>());  // r_top is easier to interpret than r_primitive
-        if (generate_primitive_role) m_primitive_rules.emplace_back(std::make_unique<rules::PrimitiveRole>());
+FeatureGeneratorImpl::FeatureGeneratorImpl()
+    : c_one_of(std::make_shared<rules::OneOfConcept>(rules::OneOfConcept())),
+      c_top(std::make_shared<rules::TopConcept>(rules::TopConcept())),
+      c_bot(std::make_shared<rules::BotConcept>(rules::BotConcept())),
+      c_primitive(std::make_shared<rules::PrimitiveConcept>(rules::PrimitiveConcept())),
+      r_top(std::make_shared<rules::TopRole>(rules::TopRole())),
+      r_primitive(std::make_shared<rules::PrimitiveRole>(rules::PrimitiveRole())),
+      b_nullary(std::make_shared<rules::NullaryBoolean>(rules::NullaryBoolean())),
+      b_empty(std::make_shared<rules::EmptyBoolean>(rules::EmptyBoolean())),
+      n_count(std::make_shared<rules::CountNumerical>(rules::CountNumerical())),
+      b_inclusion(std::make_shared<rules::InclusionBoolean>(rules::InclusionBoolean())),
+      n_concept_distance(std::make_shared<rules::ConceptDistanceNumerical>(rules::ConceptDistanceNumerical())),
+      n_role_distance(std::make_shared<rules::RoleDistanceNumerical>(rules::RoleDistanceNumerical())),
+      n_sum_concept_distance(std::make_shared<rules::SumConceptDistanceNumerical>(rules::SumConceptDistanceNumerical())),
+      n_sum_role_distance(std::make_shared<rules::SumRoleDistanceNumerical>(rules::SumRoleDistanceNumerical())),
+      c_and(std::make_shared<rules::AndConcept>(rules::AndConcept())),
+      c_or(std::make_shared<rules::OrConcept>(rules::OrConcept())),
+      c_not(std::make_shared<rules::NotConcept>(rules::NotConcept())),
+      c_diff(std::make_shared<rules::DiffConcept>(rules::DiffConcept())),
+      c_projection(std::make_shared<rules::ProjectionConcept>(rules::ProjectionConcept())),
+      c_equal(std::make_shared<rules::EqualConcept>(rules::EqualConcept())),
+      c_subset(std::make_shared<rules::SubsetConcept>(rules::SubsetConcept())),
+      c_some(std::make_shared<rules::SomeConcept>(rules::SomeConcept())),
+      c_all(std::make_shared<rules::AllConcept>(rules::AllConcept())),
+      r_and(std::make_shared<rules::AndRole>(rules::AndRole())),
+      r_or(std::make_shared<rules::OrRole>(rules::OrRole())),
+      r_not(std::make_shared<rules::NotRole>(rules::NotRole())),
+      r_diff(std::make_shared<rules::DiffRole>(rules::DiffRole())),
+      r_identity(std::make_shared<rules::IdentityRole>(rules::IdentityRole())),
+      r_inverse(std::make_shared<rules::InverseRole>(rules::InverseRole())),
+      r_restrict(std::make_shared<rules::RestrictRole>(rules::RestrictRole())),
+      r_compose(std::make_shared<rules::ComposeRole>(rules::ComposeRole())),
+      r_transitive_closure(std::make_shared<rules::TransitiveClosureRole>(rules::TransitiveClosureRole())),
+      r_transitive_reflexive_closure(std::make_shared<rules::TransitiveReflexiveClosureRole>(rules::TransitiveReflexiveClosureRole())) {
+    m_primitive_rules.push_back(c_one_of);
+    m_primitive_rules.emplace_back(c_top);
+    m_primitive_rules.emplace_back(c_bot);
+    m_primitive_rules.emplace_back(c_primitive);
+    m_primitive_rules.emplace_back(c_top);
+    m_primitive_rules.emplace_back(r_primitive);
 
-        // order should remain like it is, booleans should always be generated before numericals
-        if (generate_nullary_boolean) m_inductive_rules.emplace_back(std::make_unique<rules::NullaryBoolean>());
-        if (generate_empty_boolean) m_inductive_rules.emplace_back(std::make_unique<rules::EmptyBoolean>());
-        if (generate_count_numerical) m_inductive_rules.emplace_back(std::make_unique<rules::CountNumerical>());
-        if (generate_concept_distance_numerical) m_inductive_rules.emplace_back(std::make_unique<rules::ConceptDistanceNumerical>());
-        if (generate_role_distance_numerical) m_inductive_rules.emplace_back(std::make_unique<rules::RoleDistanceNumerical>());
-        if (generate_sum_concept_distance_numerical) m_inductive_rules.emplace_back(std::make_unique<rules::SumConceptDistanceNumerical>());
-        if (generate_sum_role_distance_numerical) m_inductive_rules.emplace_back(std::make_unique<rules::SumRoleDistanceNumerical>());
+    m_inductive_rules.emplace_back(b_nullary);
+    m_inductive_rules.emplace_back(b_empty);
+    m_inductive_rules.emplace_back(n_count);
+    m_inductive_rules.emplace_back(b_inclusion);
+    m_inductive_rules.emplace_back(n_concept_distance);
+    m_inductive_rules.emplace_back(n_role_distance);
+    m_inductive_rules.emplace_back(n_sum_concept_distance);
+    m_inductive_rules.emplace_back(n_sum_role_distance);
 
-        if (generate_and_concept) m_inductive_rules.emplace_back(std::make_unique<rules::AndConcept>());
-        if (generate_or_concept) m_inductive_rules.emplace_back(std::make_unique<rules::OrConcept>());
-        if (generate_not_concept) m_inductive_rules.emplace_back(std::make_unique<rules::NotConcept>());
-        if (generate_diff_concept) m_inductive_rules.emplace_back(std::make_unique<rules::DiffConcept>());
-        if (generate_projection_concept) m_inductive_rules.emplace_back(std::make_unique<rules::ProjectionConcept>());
-        if (generate_equal_concept) m_inductive_rules.emplace_back(std::make_unique<rules::EqualConcept>());  // easier than c_subset
-        if (generate_subset_concept) m_inductive_rules.emplace_back(std::make_unique<rules::SubsetConcept>());
-        if (generate_some_concept) m_inductive_rules.emplace_back(std::make_unique<rules::SomeConcept>());  // less constraint than c_all
-        if (generate_all_concept) m_inductive_rules.emplace_back(std::make_unique<rules::AllConcept>());
+    m_inductive_rules.emplace_back(c_and);
+    m_inductive_rules.emplace_back(c_or);
+    m_inductive_rules.emplace_back(c_not);
+    m_inductive_rules.emplace_back(c_diff);
+    m_inductive_rules.emplace_back(c_projection);
+    m_inductive_rules.emplace_back(c_equal);
+    m_inductive_rules.emplace_back(c_subset);
+    m_inductive_rules.emplace_back(c_some);
+    m_inductive_rules.emplace_back(c_all);
 
-        if (generate_and_role) m_inductive_rules.emplace_back(std::make_unique<rules::AndRole>());
-        if (generate_or_role) m_inductive_rules.emplace_back(std::make_unique<rules::OrRole>());
-        if (generate_not_role) m_inductive_rules.emplace_back(std::make_unique<rules::NotRole>());
-        if (generate_diff_role) m_inductive_rules.emplace_back(std::make_unique<rules::DiffRole>());
-        if (generate_identity_role) m_inductive_rules.emplace_back(std::make_unique<rules::IdentityRole>());
-        if (generate_inverse_role) m_inductive_rules.emplace_back(std::make_unique<rules::InverseRole>());
-        if (generate_restrict_role) m_inductive_rules.emplace_back(std::make_unique<rules::RestrictRole>());
-        if (generate_compose_role) m_inductive_rules.emplace_back(std::make_unique<rules::ComposeRole>());  // compose is easier to interpret than transitive closure because transitive closure is the iterated composition
-        if (generate_transitive_closure_role) m_inductive_rules.emplace_back(std::make_unique<rules::TransitiveClosureRole>());
-        if (generate_transitive_reflexive_closure_role) m_inductive_rules.emplace_back(std::make_unique<rules::TransitiveReflexiveClosureRole>());
-    }
+    m_inductive_rules.emplace_back(r_and);
+    m_inductive_rules.emplace_back(r_or);
+    m_inductive_rules.emplace_back(r_not);
+    m_inductive_rules.emplace_back(r_diff);
+    m_inductive_rules.emplace_back(r_identity);
+    m_inductive_rules.emplace_back(r_inverse);
+    m_inductive_rules.emplace_back(r_restrict);
+    m_inductive_rules.emplace_back(r_compose);
+    m_inductive_rules.emplace_back(r_transitive_closure);
+    m_inductive_rules.emplace_back(r_transitive_reflexive_closure);
+}
 
-
-FeatureRepresentations FeatureGeneratorImpl::generate(const States& states) {
+FeatureRepresentations FeatureGeneratorImpl::generate(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit, const States& states) {
     // Resets the counters
     for (const auto& rule : m_primitive_rules) {
         rule->initialize();
@@ -129,9 +127,9 @@ FeatureRepresentations FeatureGeneratorImpl::generate(const States& states) {
     for (const auto& rule : m_inductive_rules) {
         rule->initialize();
     }
-    FeatureGeneratorData data(m_factory, m_complexity, m_time_limit, m_feature_limit);
+    FeatureGeneratorData data(factory, complexity, time_limit, feature_limit);
     generate_base(states, data);
-    generate_inductively(states, data);
+    generate_inductively(complexity, states, data);
     // utils::g_log << "Overall results: " << std::endl;
     // print_overall_statistics();
     return data.get_feature_reprs();
@@ -148,9 +146,9 @@ void FeatureGeneratorImpl::generate_base(const States& states, FeatureGeneratorD
     utils::g_log << "Finished generating base features." << std::endl;
 }
 
-void FeatureGeneratorImpl::generate_inductively(const States& states, FeatureGeneratorData& data) {
+void FeatureGeneratorImpl::generate_inductively(int complexity, const States& states, FeatureGeneratorData& data) {
     utils::g_log << "Started generating composite features." << std::endl;
-    for (int iteration = 1; iteration < m_complexity; ++iteration) {  // every composition adds at least one complexity
+    for (int iteration = 1; iteration < complexity; ++iteration) {  // every composition adds at least one complexity
         if (data.reached_limit()) break;
         for (const auto& rule : m_inductive_rules) {
             rule->generate(states, iteration, data);
@@ -170,5 +168,138 @@ void FeatureGeneratorImpl::print_brief_statistics() const {
         rule->print_statistics();
     }
 }
+
+void FeatureGeneratorImpl::set_generate_empty_boolean(bool enable) {
+    b_empty->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_inclusion_boolean(bool enable) {
+    b_inclusion->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_nullary_boolean(bool enable) {
+    b_nullary->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_all_concept(bool enable) {
+    c_all->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_and_concept(bool enable) {
+    c_and->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_bot_concept(bool enable) {
+    c_bot->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_diff_concept(bool enable) {
+    c_diff->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_equal_concept(bool enable) {
+    c_equal->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_not_concept(bool enable) {
+    c_not->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_one_of_concept(bool enable) {
+    c_one_of->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_or_concept(bool enable) {
+    c_or->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_primitive_concept(bool enable) {
+    c_primitive->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_projection_concept(bool enable) {
+    c_projection->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_some_concept(bool enable) {
+    c_some->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_subset_concept(bool enable) {
+    c_subset->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_top_concept(bool enable) {
+    c_top->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_concept_distance_numerical(bool enable) {
+    n_concept_distance->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_count_numerical(bool enable) {
+    n_count->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_role_distance_numerical(bool enable) {
+    n_role_distance->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_sum_concept_distance_numerical(bool enable) {
+    n_sum_concept_distance->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_sum_role_distance_numerical(bool enable) {
+    n_sum_role_distance->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_and_role(bool enable) {
+    r_and->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_compose_role(bool enable) {
+    r_compose->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_diff_role(bool enable) {
+    r_diff->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_identity_role(bool enable) {
+    r_identity->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_inverse_role(bool enable) {
+    r_inverse->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_not_role(bool enable) {
+    r_not->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_or_role(bool enable) {
+    r_or->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_primitive_role(bool enable) {
+    r_primitive->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_restrict_role(bool enable) {
+    r_restrict->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_top_role(bool enable) {
+    r_top->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_transitive_closure_role(bool enable) {
+    r_transitive_closure->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_transitive_reflexive_closure_role(bool enable) {
+    r_transitive_reflexive_closure->set_enabled(enable);
+}
+
 
 }
