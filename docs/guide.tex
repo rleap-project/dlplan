@@ -109,7 +109,9 @@ some constant $a$ that occurs in every instance.
     Name & Abstract syntax & Concrete syntax \\
     \hline
     Empty & \emptyelement{X} & b\_empty(X) \\
-    Nullary & \nullaryelement{p} & b\_nullary(p) 
+    Concept inclusion & $C\sqsubseteq D$ & b\_inclusion(C, D) \\
+    Role inclusion & $R\sqsubseteq S$ & b\_inclusion(R, S) \\
+    Nullary & \nullaryelement{p} & b\_nullary(p)
     \end{tabular}
     \caption{Booleans}
 \end{table}
@@ -176,6 +178,8 @@ $(R^s)^0 = \{(d,d)\mid d\in\Delta\}$ and $(R^s)^{n+1} = (R^s)^n\circ R^s$.
 
 \begin{itemize}
     \item $\emptyelement{X}^s$ is true iff $|X^s| = 0$
+    \item $(C\sqsubseteq D)^s$ is true iff $C^s\subseteq D^s$
+    \item $(R\sqsubseteq S)^s$ is true iff $R^s\subseteq S^s$
     \item $\nullaryelement{p}^s$ is true iff $p()\in s$
 \end{itemize}
 
