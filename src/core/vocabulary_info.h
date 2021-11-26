@@ -48,6 +48,7 @@ enum EXPRESSION_TYPE {
     N_SUM_ROLE_DISTANCE,
     // boolean
     B_EMPTY,
+    B_INCLUSION,
     B_NULLARY,
 };
 

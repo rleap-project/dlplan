@@ -117,6 +117,9 @@ void init_core(py::module_ &m) {
 
         .def("make_empty_boolean", py::overload_cast<const core::Concept&>(&core::SyntacticElementFactory::make_empty_boolean))
         .def("make_empty_boolean", py::overload_cast<const core::Role&>(&core::SyntacticElementFactory::make_empty_boolean))
+        .def("make_concept_inclusion_boolean", &core::SyntacticElementFactory::make_concept_inclusion_boolean)
+        .def("make_role_inclusion_boolean", &core::SyntacticElementFactory::make_role_inclusion_boolean)
+        .def("make_nullary_boolean", &core::SyntacticElementFactory::make_nullary_boolean)
 
         .def("make_all_concept", &core::SyntacticElementFactory::make_all_concept)
         .def("make_and_concept", &core::SyntacticElementFactory::make_and_concept)

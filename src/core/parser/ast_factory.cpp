@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "expressions/booleans/empty.h"
+#include "expressions/booleans/inclusion.h"
 #include "expressions/booleans/nullary.h"
 #include "expressions/concepts/all.h"
 #include "expressions/concepts/and.h"
@@ -46,6 +47,9 @@ Expression_Ptr AST_Factory::make_ast(const VocabularyInfo& vocabulary_info, cons
         switch (expression_type) {
             case B_EMPTY: {
                 return std::make_unique<EmptyBoolean>(EmptyBoolean(name, std::move(children)));
+            }
+            case B_INCLUSION: {
+                return std::make_unique<InclusionBoolean>(InclusionBoolean(name, std::move(children)));
             }
             case B_NULLARY: {
                 return std::make_unique<NullaryBoolean>(NullaryBoolean(name, std::move(children)));

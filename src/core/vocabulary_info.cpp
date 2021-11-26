@@ -120,6 +120,7 @@ std::unordered_map<std::string, EXPRESSION_TYPE> VocabularyInfoImpl::m_element_n
     {"n_role_distance", N_ROLE_DISTANCE },
     {"n_sum_role_distance", N_SUM_ROLE_DISTANCE },
     {"b_empty", B_EMPTY },
+    {"b_inclusion", B_INCLUSION },
     {"b_nullary", B_NULLARY }
 };
 

@@ -503,6 +503,14 @@ Boolean SyntacticElementFactory::make_empty_boolean(const Role& role) {
     return m_pImpl->make_empty_boolean(role);
 }
 
+Boolean SyntacticElementFactory::make_concept_inclusion_boolean(const Concept& concept_left, const Concept& concept_right) {
+    return m_pImpl->make_concept_inclusion_boolean(concept_left, concept_right);
+}
+
+Boolean SyntacticElementFactory::make_role_inclusion_boolean(const Role& role_left, const Role& role_right) {
+    return m_pImpl->make_role_inclusion_boolean(role_left, role_right);
+}
+
 Boolean SyntacticElementFactory::make_nullary_boolean(const Predicate& predicate) {
     return m_pImpl->make_nullary_boolean(predicate);
 }

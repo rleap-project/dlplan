@@ -403,6 +403,8 @@ public:
 
     Boolean make_empty_boolean(const Concept& concept);
     Boolean make_empty_boolean(const Role& role);
+    Boolean make_concept_inclusion_boolean(const Concept& concept_left, const Concept& concept_right);
+    Boolean make_role_inclusion_boolean(const Role& role_left, const Role& role_right);
     Boolean make_nullary_boolean(const Predicate& predicate);
 
     Concept make_all_concept(const Role& role, const Concept& concept);

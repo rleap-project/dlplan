@@ -14,6 +14,7 @@ add_executable(
     ${TEST_NAME}
     core.cpp
     b_empty.cpp
+    b_inclusion.cpp
     b_nullary.cpp
     c_all.cpp
     c_some.cpp

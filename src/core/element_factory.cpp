@@ -3,6 +3,7 @@
 #include "parser/parser.h"
 #include "parser/expressions/expression.h"
 #include "elements/booleans/empty.h"
+#include "elements/booleans/inclusion.h"
 #include "elements/booleans/nullary.h"
 #include "elements/concepts/all.h"
 #include "elements/concepts/bot.h"
@@ -79,6 +80,20 @@ Boolean SyntacticElementFactoryImpl::make_empty_boolean(const Concept& concept) 
 Boolean SyntacticElementFactoryImpl::make_empty_boolean(const Role& role) {
     element::Role_Ptr role_ptr = m_caches.m_role_cache->at(role.compute_repr());
     std::unique_ptr<element::Boolean> result_ptr = std::make_unique<element::EmptyBoolean<element::Role_Ptr>>(*m_vocabulary_info, role_ptr);
+    return Boolean(*m_vocabulary_info, m_caches.m_boolean_cache->insert(std::move(result_ptr)));
+}
+
+Boolean SyntacticElementFactoryImpl::make_concept_inclusion_boolean(const Concept& concept_left, const Concept& concept_right) {
+    element::Concept_Ptr concept_left_ptr = m_caches.m_concept_cache->at(concept_left.compute_repr());
+    element::Concept_Ptr concept_right_ptr = m_caches.m_concept_cache->at(concept_right.compute_repr());
+    std::unique_ptr<element::Boolean> result_ptr = std::make_unique<element::ConceptInclusionBoolean>(*m_vocabulary_info, concept_left_ptr, concept_right_ptr);
+    return Boolean(*m_vocabulary_info, m_caches.m_boolean_cache->insert(std::move(result_ptr)));
+}
+
+Boolean SyntacticElementFactoryImpl::make_role_inclusion_boolean(const Role& role_left, const Role& role_right) {
+    element::Role_Ptr role_left_ptr = m_caches.m_role_cache->at(role_left.compute_repr());
+    element::Role_Ptr role_right_ptr = m_caches.m_role_cache->at(role_right.compute_repr());
+    std::unique_ptr<element::Boolean> result_ptr = std::make_unique<element::RoleInclusionBoolean>(*m_vocabulary_info, role_left_ptr, role_right_ptr);
     return Boolean(*m_vocabulary_info, m_caches.m_boolean_cache->insert(std::move(result_ptr)));
 }
 
