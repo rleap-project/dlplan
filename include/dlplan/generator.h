@@ -25,45 +25,47 @@ private:
     pimpl<FeatureGeneratorImpl> m_pImpl;
 
 public:
-    FeatureGenerator(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit,
-        bool generate_empty_boolean=true,
-        bool generate_nullary_boolean=true,
-        bool generate_all_concept=true,
-        bool generate_and_concept=true,
-        bool generate_bot_concept=true,
-        bool generate_diff_concept=true,
-        bool generate_equal_concept=true,
-        bool generate_not_concept=true,
-        bool generate_one_of_concept=true,
-        bool generate_or_concept=true,
-        bool generate_primitive_concept=true,
-        bool generate_projection_concept=true,
-        bool generate_some_concept=true,
-        bool generate_subset_concept=true,
-        bool generate_top_concept=true,
-        bool generate_concept_distance_numerical=true,
-        bool generate_count_numerical=true,
-        bool generate_role_distance_numerical=true,
-        bool generate_sum_concept_distance_numerical=true,
-        bool generate_sum_role_distance_numerical=true,
-        bool generate_and_role=true,
-        bool generate_compose_role=true,
-        bool generate_diff_role=true,
-        bool generate_identity_role=true,
-        bool generate_inverse_role=true,
-        bool generate_not_role=true,
-        bool generate_or_role=true,
-        bool generate_primitive_role=true,
-        bool generate_restrict_role=true,
-        bool generate_top_role=true,
-        bool generate_transitive_closure_role=true,
-        bool generate_transitive_reflexive_closure_role=true);
+    FeatureGenerator();
     ~FeatureGenerator();
 
     /**
      * Exhaustively generates features with pairwise disjoint feature evaluations on the states.
      */
-    FeatureRepresentations generate(const States& states);
+    FeatureRepresentations generate(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit, const States& states);
+
+    void set_generate_empty_boolean(bool enable);
+    void set_generate_inclusion_boolean(bool enable);
+    void set_generate_nullary_boolean(bool enable);
+    void set_generate_all_concept(bool enable);
+    void set_generate_and_concept(bool enable);
+    void set_generate_bot_concept(bool enable);
+    void set_generate_diff_concept(bool enable);
+    void set_generate_equal_concept(bool enable);
+    void set_generate_not_concept(bool enable);
+    void set_generate_one_of_concept(bool enable);
+    void set_generate_or_concept(bool enable);
+    void set_generate_primitive_concept(bool enable);
+    void set_generate_projection_concept(bool enable);
+    void set_generate_some_concept(bool enable);
+    void set_generate_subset_concept(bool enable);
+    void set_generate_top_concept(bool enable);
+    void set_generate_concept_distance_numerical(bool enable);
+    void set_generate_count_numerical(bool enable);
+    void set_generate_role_distance_numerical(bool enable);
+    void set_generate_sum_concept_distance_numerical(bool enable);
+    void set_generate_sum_role_distance_numerical(bool enable);
+    void set_generate_and_role(bool enable);
+    void set_generate_compose_role(bool enable);
+    void set_generate_diff_role(bool enable);
+    void set_generate_identity_role(bool enable);
+    void set_generate_inverse_role(bool enable);
+    void set_generate_not_role(bool enable);
+    void set_generate_or_role(bool enable);
+    void set_generate_primitive_role(bool enable);
+    void set_generate_restrict_role(bool enable);
+    void set_generate_top_role(bool enable);
+    void set_generate_transitive_closure_role(bool enable);
+    void set_generate_transitive_reflexive_closure_role(bool enable);
 };
 
 

@@ -10,7 +10,7 @@ class NullaryBoolean : public Rule {
 public:
     NullaryBoolean() : Rule("b_nullary") { }
 
-    virtual void generate(const States& states, int, FeatureGeneratorData& data) override {
+    virtual void generate_impl(const States& states, int, FeatureGeneratorData& data) override {
         const std::vector<core::Predicate>& predicates = data.get_factory().get_vocabulary_info()->get_predicates();
         for (const auto& predicate : predicates) {
             if (predicate.get_arity() == 0) {

@@ -9,7 +9,7 @@ class AndConcept : public Rule {
 public:
     AndConcept() : Rule("c_and") { }
 
-    virtual void generate(const States& states, int iteration, FeatureGeneratorData& data) override {
+    virtual void generate_impl(const States& states, int iteration, FeatureGeneratorData& data) override {
         for (int i = 1; i < iteration; ++i) {
             int j = iteration - i;
             for (const auto& concept_left : data.get_concept_elements_by_complexity()[i]) {

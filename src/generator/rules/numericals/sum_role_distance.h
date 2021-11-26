@@ -9,7 +9,7 @@ class SumRoleDistanceNumerical : public Rule {
 public:
     SumRoleDistanceNumerical() : Rule("n_sum_role_distance") { }
 
-    virtual void generate(const States& states, int iteration, FeatureGeneratorData& data) override {
+    virtual void generate_impl(const States& states, int iteration, FeatureGeneratorData& data) override {
         for (int i = 1; i < iteration; ++i) {
             for (int j = 1; j < iteration - i; ++j) {
                 int k = iteration - i - j;

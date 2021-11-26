@@ -9,7 +9,7 @@ class InverseRole : public Rule {
 public:
     InverseRole() : Rule("r_inverse") { }
 
-    virtual void generate(const States& states, int iteration, FeatureGeneratorData& data) override {
+    virtual void generate_impl(const States& states, int iteration, FeatureGeneratorData& data) override {
         if (iteration == 1) {
             for (const auto& role : data.get_role_elements_by_complexity()[1]) {
                 if (data.reached_limit()) return;

@@ -10,7 +10,7 @@ class EmptyBoolean : public Rule {
 public:
     EmptyBoolean() : Rule("b_empty") { }
 
-    virtual void generate(const States& states, int iteration, FeatureGeneratorData& data) override {
+    virtual void generate_impl(const States& states, int iteration, FeatureGeneratorData& data) override {
         for (const auto& concept : data.get_concept_elements_by_complexity()[iteration]) {
             if (data.reached_limit()) return;
             else if (data.add_boolean(states, data.get_factory().make_empty_boolean(concept))) {

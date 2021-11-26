@@ -65,8 +65,8 @@ int main() {
     States states({s0, s1, s2, s3, s4});
 
     // 5. Generate features up to complexity 4 with at most 180 seconds and at most 100000 features in total
-    FeatureGenerator generator(f, 4, 180, 100000);
-    FeatureRepresentations features = generator.generate(states);
+    FeatureGenerator generator;
+    FeatureRepresentations features = generator.generate(f, 4, 180, 100000, states);
 
     for (const auto& feature : features) {
         std::cout << feature << std::endl;
