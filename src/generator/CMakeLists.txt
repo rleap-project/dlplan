@@ -28,4 +28,7 @@ add_library(staticdlplangenerator STATIC
     ../utils/timer.cpp
     ../utils/system.cpp
 )
+TARGET_LINK_LIBRARIES(dlplangenerator dlplancore)
+TARGET_LINK_LIBRARIES(staticdlplangenerator staticdlplancore)
+
 set_target_properties(dlplangenerator PROPERTIES PUBLIC_HEADER "include/dlplan/generator.h;include/dlplan/pimpl.h")

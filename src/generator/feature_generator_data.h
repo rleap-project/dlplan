@@ -2,11 +2,11 @@
 #define DLPLAN_SRC_GENERATOR_FEATURE_GENERATOR_DATA_H_
 
 #include <memory>
-#include "../../include/dlplan/core.h"
 
 #include "hash_tables/hash_table.h"
 #include "types.h"
 
+#include "../../include/dlplan/core.h"
 #include "../utils/countdown_timer.h"
 
 
@@ -56,7 +56,7 @@ private:
      * Store the result.
      */
     FeatureRepresentations m_feature_reprs;
-    
+
 public:
     FeatureGeneratorData(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit);
 
