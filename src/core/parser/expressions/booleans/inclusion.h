@@ -12,7 +12,7 @@ protected:
         if (m_children.size() != 2) {
             throw std::runtime_error("InclusionBoolean::parse_boolean_impl - number of children ("s + std::to_string(m_children.size()) + " != 2).");
         }
-        // 1. Parse children
+        // 1. Parse and construct children
         element::Concept_Ptr concept_left = m_children[0]->parse_concept(vocabulary, cache);
         element::Concept_Ptr concept_right = m_children[1]->parse_concept(vocabulary, cache);
         if (concept_left && concept_right) {
@@ -23,7 +23,7 @@ protected:
         if (role_left && role_right) {
             return std::make_unique<element::RoleInclusionBoolean>(vocabulary, role_left, role_right);
         }
-        // 2. Construct element
+        // 2. If unsuccessful then throw a runtime error.
         throw std::runtime_error("EmptyBoolean::parse_boolean_impl - unable to construct children elements.");
     }
 
