@@ -320,6 +320,8 @@ bool Atom::get_is_static() const {
 
 State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms) : m_pImpl(instance_info, atoms) { }
 
+State::State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs) : m_pImpl(instance_info, atom_idxs) { }
+
 State::State(const State& other) : m_pImpl(*other.m_pImpl) {}
 
 State& State::operator=(const State& other) {

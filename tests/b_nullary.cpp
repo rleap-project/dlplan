@@ -14,7 +14,7 @@ TEST(DLPTests, BooleanNullary) {
     Atom a0 = instance->add_atom("predicate", {});
 
     State s0(instance, {a0});
-    State s1(instance, {});
+    State s1(instance, std::vector<Atom>());
 
     SyntacticElementFactory factory(vocabulary);
 

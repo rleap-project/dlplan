@@ -52,5 +52,7 @@ TEST(DLPTests, InstanceCreation) {
     EXPECT_EQ(numerical.compute_complexity(), 4);
 
     State state(instance, {a0, a1});
+    State state2(instance, std::vector<int>({0, 1}));
+    EXPECT_EQ(state, state2);
     EXPECT_EQ(numerical.evaluate(state), 1);
 }
