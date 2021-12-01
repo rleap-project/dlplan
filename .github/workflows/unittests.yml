@@ -15,6 +15,9 @@ jobs:
 
       - name: Configure CMake
         run: cmake -S $GITHUB_WORKSPACE -B ${{runner.workspace}}/build
+        
+      - name: Export compilation flags
+        run: export CXXFLAGS="-Werror"
 
       - name: Build
         working-directory: ${{runner.workspace}}/build
