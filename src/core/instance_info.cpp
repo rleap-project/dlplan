@@ -147,7 +147,7 @@ const Index_Vec& InstanceInfoImpl::get_static_atom_idxs() const {
 }
 
 const ConceptDenotation_Set& InstanceInfoImpl::get_top_concept_set() const {
-    if (m_top_concept_set.size() != get_num_objects()) {
+    if (static_cast<int>(m_top_concept_set.size()) != get_num_objects()) {
         m_top_concept_set.clear();
         for (int i = 0; i < get_num_objects(); ++i) {
             m_top_concept_set.insert(i);
@@ -157,7 +157,7 @@ const ConceptDenotation_Set& InstanceInfoImpl::get_top_concept_set() const {
 }
 
 const ConceptDenotation& InstanceInfoImpl::get_top_concept_vec() const {
-    if (m_top_concept_vec.size() != get_num_objects()) {
+    if (static_cast<int>(m_top_concept_vec.size()) != get_num_objects()) {
         m_top_concept_vec.clear();
         for (int i = 0; i < get_num_objects(); ++i) {
             m_top_concept_vec.push_back(i);
@@ -168,7 +168,7 @@ const ConceptDenotation& InstanceInfoImpl::get_top_concept_vec() const {
 }
 
 const RoleDenotation_Set& InstanceInfoImpl::get_top_role_set() const {
-    if (m_top_role_set.size() != get_num_objects() * get_num_objects()) {
+    if (static_cast<int>(m_top_role_set.size()) != get_num_objects() * get_num_objects()) {
         m_top_role_set.clear();
         for (int i = 0; i < get_num_objects(); ++i) {
             for (int j = 0; j < get_num_objects(); ++j) {
@@ -180,7 +180,7 @@ const RoleDenotation_Set& InstanceInfoImpl::get_top_role_set() const {
 }
 
 const RoleDenotation& InstanceInfoImpl::get_top_role_vec() const {
-    if (m_top_role_vec.size() != get_num_objects() * get_num_objects()) {
+    if (static_cast<int>(m_top_role_vec.size()) != get_num_objects() * get_num_objects()) {
         m_top_role_vec.clear();
         for (int i = 0; i < get_num_objects(); ++i) {
             for (int j = 0; j < get_num_objects(); ++j) {

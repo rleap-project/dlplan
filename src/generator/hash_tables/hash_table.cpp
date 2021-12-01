@@ -6,7 +6,7 @@ namespace dlplan::generator {
 static std::vector<int> bool_vec_to_num_vec(const std::vector<bool>& bool_vec) {
     std::vector<int> num_vec;
     num_vec.reserve(bool_vec.size());
-    for (int i = 0; i < bool_vec.size(); ++i) {
+    for (size_t i = 0; i < bool_vec.size(); ++i) {
         num_vec.push_back(bool_vec[i]);
     }
     return num_vec;
