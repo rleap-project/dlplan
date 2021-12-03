@@ -372,11 +372,11 @@ ConceptDenotation Concept::evaluate(const State& state) const {
 }
 
 int Concept::compute_complexity() const {
-    return m_pImpl->compute_complexity(this);
+    return m_element->compute_complexity();
 }
 
 std::string Concept::compute_repr() const {
-    return m_pImpl->compute_repr(this);
+    return m_element->compute_repr();
 }
 
 Role::Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, element::Role_Ptr&& role)
@@ -399,11 +399,11 @@ RoleDenotation Role::evaluate(const State& state) const {
 }
 
 int Role::compute_complexity() const {
-    return m_pImpl->compute_complexity(this);
+    return m_element->compute_complexity();
 }
 
 std::string Role::compute_repr() const {
-    return m_pImpl->compute_repr(this);
+    return m_element->compute_repr();
 }
 
 
@@ -427,11 +427,11 @@ int Numerical::evaluate(const State& state) const {
 }
 
 int Numerical::compute_complexity() const {
-    return m_pImpl->compute_complexity(this);
+    return m_element->compute_complexity();
 }
 
 std::string Numerical::compute_repr() const {
-    return m_pImpl->compute_repr(this);
+    return m_element->compute_repr();
 }
 
 
@@ -455,11 +455,11 @@ bool Boolean::evaluate(const State& state) const {
 }
 
 int Boolean::compute_complexity() const {
-    return m_pImpl->compute_complexity(this);
+    return m_element->compute_complexity();
 }
 
 std::string Boolean::compute_repr() const {
-    return m_pImpl->compute_repr(this);
+    return m_element->compute_repr();
 }
 
 

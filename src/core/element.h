@@ -17,10 +17,6 @@ public:
 
     virtual T evaluate(const Element<T>* parent, const State& state) const = 0;
 
-    int compute_complexity(const Element<T>* parent) const {
-        return parent->compute_complexity();
-    }
-
     /*
         Andrés:
 
@@ -41,9 +37,6 @@ public:
         then the NNFs can be transformed into CNF or DNF using distributivity.
         But as you may know, this can be impractical, as the transformation may cause an exponential blowup in the size of the formulas.
     */
-    std::string compute_repr(const Element<T>* parent) const {
-        return parent->compute_repr();
-    }
 };
 
 }
