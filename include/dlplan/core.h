@@ -274,7 +274,7 @@ public:
  * Concept evaluates to ConceptDenotation.
  */
 class Concept : public Element<ConceptDenotation> {
-protected:
+private:
     pimpl<ConceptImpl> m_pImpl;
 
     Concept(const VocabularyInfo& vocabulary_info, std::shared_ptr<element::Concept>&& concept);
@@ -297,7 +297,7 @@ public:
  * Concept evaluates to RoleDenotation.
  */
 class Role : public Element<RoleDenotation> {
-protected:
+private:
     pimpl<RoleImpl> m_pImpl;
 
     Role(const VocabularyInfo& vocabulary_info, std::shared_ptr<element::Role>&& role);
@@ -320,7 +320,7 @@ public:
  * Numerical evaluates to int.
  */
 class Numerical : public Element<int> {
-protected:
+private:
     pimpl<NumericalImpl> m_pImpl;
 
     Numerical(const VocabularyInfo& vocabulary_info, std::shared_ptr<element::Numerical>&& numerical);
@@ -343,7 +343,7 @@ public:
  * Boolean evaluates to bool.
  */
 class Boolean : public Element<bool> {
-protected:
+private:
     pimpl<BooleanImpl> m_pImpl;
 
     Boolean(const VocabularyInfo& vocabulary_info, std::shared_ptr<element::Boolean>&& boolean);

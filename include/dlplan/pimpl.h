@@ -1,7 +1,8 @@
 // Code by Herb Sutter, taken from https://herbsutter.com/gotw/_101/
-// We follow the rules describes in https://herbsutter.com/gotw/_100/:
-//   1. private and nonvirtual functions should be in the pimpl class.
-//   2. virtuals that need to be visible to derived classes are part of the public interface.
+// We follow option 4 (10/10) described in https://herbsutter.com/gotw/_100/:
+//   * Put all private nonvirtual members into impl;
+//   * Furthermore, we also use passthrough from public interface
+//     to avoid the backpointer to visible class.
 
 #ifndef DLPLAN_INCLUDE_DLPLAN_PIMPL_H_
 #define DLPLAN_INCLUDE_DLPLAN_PIMPL_H_
