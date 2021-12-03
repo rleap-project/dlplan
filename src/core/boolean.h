@@ -8,19 +8,18 @@ namespace dlplan::core {
 
 class BooleanImpl : public ElementImpl<bool> {
 public:
-    BooleanImpl(const VocabularyInfo& vocabulary_info, std::shared_ptr<element::Element<bool>>&& element)
-    : ElementImpl<bool>(vocabulary_info, std::move(element)) {
-        if (!m_element) {
+    BooleanImpl(const std::shared_ptr<element::Element<bool>>& element) {
+        if (!element) {
             throw std::runtime_error("BooleanImpl::BooleanImpl - tried to construct Boolean from nullptr");
         }
     }
     ~BooleanImpl() override = default;
 
-    bool evaluate(const State& state) const override {
-        if (state.get_instance_info()->get_vocabulary_info().get() != m_vocabulary_info) {
+    bool evaluate(const Element<bool>* parent, const State& state) const override {
+        if (state.get_instance_info()->get_vocabulary_info() != parent->get_vocabulary_info()) {
             throw std::runtime_error("BooleanImpl::evaluate - mismatched vocabularies of Boolean and State.");
         }
-        return m_element->evaluate(state);
+        return parent->get_element()->evaluate(state);
     }
 };
 

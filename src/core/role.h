@@ -10,19 +10,18 @@ namespace dlplan::core {
 
 class RoleImpl : public ElementImpl<RoleDenotation> {
 public:
-    RoleImpl(const VocabularyInfo& vocabulary_info, std::shared_ptr<element::Element<RoleDenotation>>&& element)
-    : ElementImpl<RoleDenotation>(vocabulary_info, std::move(element)) {
-        if (!m_element) {
+    RoleImpl(const std::shared_ptr<element::Element<RoleDenotation>>& element) {
+        if (!element) {
             throw std::runtime_error("RoleImpl::RoleImpl - tried to construct Role from nullptr");
         }
     }
     ~RoleImpl() override = default;
 
-    RoleDenotation evaluate(const State& state) const override {
-        if (state.get_instance_info()->get_vocabulary_info().get() != m_vocabulary_info) {
+    RoleDenotation evaluate(const Element<RoleDenotation>* parent, const State& state) const override {
+        if (state.get_instance_info()->get_vocabulary_info() != parent->get_vocabulary_info()) {
             throw std::runtime_error("RoleImpl::evaluate - mismatched vocabularies of Role and State.");
         }
-        RoleDenotation result = m_element->evaluate(state);
+        RoleDenotation result = parent->get_element()->evaluate(state);
         std::sort(result.begin(), result.end());
         return result;
     }

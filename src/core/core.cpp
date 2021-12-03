@@ -352,11 +352,11 @@ const Index_Vec& State::get_atom_idxs() const {
 }
 
 
-Concept::Concept(const VocabularyInfo& vocabulary_info, element::Concept_Ptr&& concept)
-    : m_pImpl(ConceptImpl(vocabulary_info, std::move(concept))) { }
+Concept::Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, element::Concept_Ptr&& concept)
+    : Element<ConceptDenotation>(vocabulary_info, concept), m_pImpl(ConceptImpl(concept)) { }
 
 Concept::Concept(const Concept& other)
-    : m_pImpl(ConceptImpl(*other.m_pImpl)) { }
+    : Element<ConceptDenotation>(other.get_vocabulary_info(), other.get_element()), m_pImpl(ConceptImpl(*other.m_pImpl)) { }
 
 Concept& Concept::operator=(const Concept& other) {
     if (this != &other) {
@@ -368,22 +368,22 @@ Concept& Concept::operator=(const Concept& other) {
 Concept::~Concept() = default;
 
 ConceptDenotation Concept::evaluate(const State& state) const {
-    return m_pImpl->evaluate(state);
+    return m_pImpl->evaluate(this, state);
 }
 
 int Concept::compute_complexity() const {
-    return m_pImpl->compute_complexity();
+    return m_pImpl->compute_complexity(this);
 }
 
 std::string Concept::compute_repr() const {
-    return m_pImpl->compute_repr();
+    return m_pImpl->compute_repr(this);
 }
 
-Role::Role(const VocabularyInfo& vocabulary_info, element::Role_Ptr&& role)
-    : m_pImpl(RoleImpl(vocabulary_info, std::move(role))) { }
+Role::Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, element::Role_Ptr&& role)
+    : Element<RoleDenotation>(vocabulary_info, role), m_pImpl(RoleImpl(role)) { }
 
 Role::Role(const Role& other)
-    : m_pImpl(RoleImpl(*other.m_pImpl)) { }
+    : Element<RoleDenotation>(other.get_vocabulary_info(), other.get_element()), m_pImpl(RoleImpl(*other.m_pImpl)) { }
 
 Role& Role::operator=(const Role& other) {
     if (this != &other) {
@@ -395,23 +395,23 @@ Role& Role::operator=(const Role& other) {
 Role::~Role() = default;
 
 RoleDenotation Role::evaluate(const State& state) const {
-    return m_pImpl->evaluate(state);
+    return m_pImpl->evaluate(this, state);
 }
 
 int Role::compute_complexity() const {
-    return m_pImpl->compute_complexity();
+    return m_pImpl->compute_complexity(this);
 }
 
 std::string Role::compute_repr() const {
-    return m_pImpl->compute_repr();
+    return m_pImpl->compute_repr(this);
 }
 
 
-Numerical::Numerical(const VocabularyInfo& vocabulary_info, element::Numerical_Ptr&& numerical)
-    : m_pImpl(NumericalImpl(vocabulary_info, std::move(numerical))) { }
+Numerical::Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, element::Numerical_Ptr&& numerical)
+    : Element<int>(vocabulary_info, numerical), m_pImpl(NumericalImpl(numerical)) { }
 
 Numerical::Numerical(const Numerical& other)
-    : m_pImpl(NumericalImpl(*other.m_pImpl)) { }
+    : Element<int>(other.get_vocabulary_info(), other.get_element()), m_pImpl(NumericalImpl(*other.m_pImpl)) { }
 
 Numerical& Numerical::operator=(const Numerical& other) {
     if (this != &other) {
@@ -423,23 +423,23 @@ Numerical& Numerical::operator=(const Numerical& other) {
 Numerical::~Numerical() = default;
 
 int Numerical::evaluate(const State& state) const {
-    return m_pImpl->evaluate(state);
+    return m_pImpl->evaluate(this, state);
 }
 
 int Numerical::compute_complexity() const {
-    return m_pImpl->compute_complexity();
+    return m_pImpl->compute_complexity(this);
 }
 
 std::string Numerical::compute_repr() const {
-    return m_pImpl->compute_repr();
+    return m_pImpl->compute_repr(this);
 }
 
 
-Boolean::Boolean(const VocabularyInfo& vocabulary_info, element::Boolean_Ptr&& boolean)
-    : m_pImpl(BooleanImpl(vocabulary_info, std::move(boolean))) { }
+Boolean::Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, element::Boolean_Ptr&& boolean)
+    : Element<bool>(vocabulary_info, boolean), m_pImpl(BooleanImpl(boolean)) { }
 
 Boolean::Boolean(const Boolean& other)
-    : m_pImpl(BooleanImpl(*other.m_pImpl)) { }
+    : Element<bool>(other.get_vocabulary_info(), other.get_element()), m_pImpl(BooleanImpl(*other.m_pImpl)) { }
 
 Boolean& Boolean::operator=(const Boolean& other) {
     if (this != &other) {
@@ -451,15 +451,15 @@ Boolean& Boolean::operator=(const Boolean& other) {
 Boolean::~Boolean() = default;
 
 bool Boolean::evaluate(const State& state) const {
-    return m_pImpl->evaluate(state);
+    return m_pImpl->evaluate(this, state);
 }
 
 int Boolean::compute_complexity() const {
-    return m_pImpl->compute_complexity();
+    return m_pImpl->compute_complexity(this);
 }
 
 std::string Boolean::compute_repr() const {
-    return m_pImpl->compute_repr();
+    return m_pImpl->compute_repr(this);
 }
 
 

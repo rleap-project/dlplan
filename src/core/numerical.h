@@ -8,19 +8,18 @@ namespace dlplan::core {
 
 class NumericalImpl : public ElementImpl<int> {
 public:
-    NumericalImpl(const VocabularyInfo& vocabulary_info, std::shared_ptr<element::Element<int>>&& element)
-    : ElementImpl<int>(vocabulary_info, std::move(element)) {
-        if (!m_element) {
+    NumericalImpl(const std::shared_ptr<element::Element<int>>& element)  {
+        if (!element) {
             throw std::runtime_error("NumericalImpl::NumericalImpl - tried to construct Numerical from nullptr");
         }
     }
     ~NumericalImpl() override = default;
 
-    int evaluate(const State& state) const override {
-        if (state.get_instance_info()->get_vocabulary_info().get() != m_vocabulary_info) {
+    int evaluate(const Element<int>* parent, const State& state) const override {
+        if (state.get_instance_info()->get_vocabulary_info() != parent->get_vocabulary_info()) {
             throw std::runtime_error("NumericalImpl::evaluate - mismatched vocabularies of Numerical and State.");
         }
-        return m_element->evaluate(state);
+        return parent->get_element()->evaluate(state);
     }
 };
 

@@ -27,6 +27,8 @@ class SyntacticElementFactory;
 class InstanceInfo;
 class VocabularyInfo;
 namespace element {
+    template<typename T>
+    class Element;
     class Concept;
     class Role;
     class Numerical;
@@ -247,7 +249,14 @@ public:
 template<typename T>
 class Element {
 protected:
-    Element() = default;
+    const std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
+    const std::shared_ptr<const element::Element<T>> m_element;
+
+protected:
+    Element(
+        std::shared_ptr<const VocabularyInfo> vocabulary_info,
+        std::shared_ptr<const element::Element<T>> element)
+        : m_vocabulary_info(vocabulary_info), m_element(element) { }
 
 public:
     virtual ~Element() = default;
@@ -267,6 +276,17 @@ public:
      * Returns a canonical string representation.
      */
     virtual std::string compute_repr() const = 0;
+
+    /**
+     * Getters.
+     */
+    std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const {
+        return m_vocabulary_info;
+    }
+
+    std::shared_ptr<const element::Element<T>> get_element() const {
+        return m_element;
+    }
 };
 
 
@@ -277,7 +297,7 @@ class Concept : public Element<ConceptDenotation> {
 private:
     pimpl<ConceptImpl> m_pImpl;
 
-    Concept(const VocabularyInfo& vocabulary_info, std::shared_ptr<element::Concept>&& concept);
+    Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<element::Concept>&& concept);
     friend class SyntacticElementFactoryImpl;
 
 public:
@@ -300,7 +320,7 @@ class Role : public Element<RoleDenotation> {
 private:
     pimpl<RoleImpl> m_pImpl;
 
-    Role(const VocabularyInfo& vocabulary_info, std::shared_ptr<element::Role>&& role);
+    Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<element::Role>&& role);
     friend class SyntacticElementFactoryImpl;
 
 public:
@@ -323,7 +343,7 @@ class Numerical : public Element<int> {
 private:
     pimpl<NumericalImpl> m_pImpl;
 
-    Numerical(const VocabularyInfo& vocabulary_info, std::shared_ptr<element::Numerical>&& numerical);
+    Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<element::Numerical>&& numerical);
     friend class SyntacticElementFactoryImpl;
 
 public:
@@ -346,7 +366,7 @@ class Boolean : public Element<bool> {
 private:
     pimpl<BooleanImpl> m_pImpl;
 
-    Boolean(const VocabularyInfo& vocabulary_info, std::shared_ptr<element::Boolean>&& boolean);
+    Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<element::Boolean>&& boolean);
     friend class SyntacticElementFactoryImpl;
 
 public:

@@ -15,7 +15,7 @@ class VocabularyInfoImpl;
 
 
 class SyntacticElementFactoryImpl {
-protected:
+private:
     const std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
 
     Caches m_caches;

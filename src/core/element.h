@@ -11,22 +11,14 @@ namespace dlplan::core {
  */
 template<typename T>
 class ElementImpl {
-protected:
-    const VocabularyInfo* m_vocabulary_info;
-    std::shared_ptr<element::Element<T>> m_element;
-
 public:
-    ElementImpl(const VocabularyInfo& vocabulary_info, std::shared_ptr<element::Element<T>>&& element)
-    : m_vocabulary_info(&vocabulary_info), m_element(std::move(element)) { }
+    ElementImpl() = default;
     virtual ~ElementImpl() = default;
 
-    /**
-     * Evaluate and cache the last result.
-     */
-    virtual T evaluate(const State& state) const = 0;
+    virtual T evaluate(const Element<T>* parent, const State& state) const = 0;
 
-    int compute_complexity() const {
-        return m_element->compute_complexity();
+    int compute_complexity(const Element<T>* parent) const {
+        return parent->compute_complexity();
     }
 
     /*
@@ -49,8 +41,8 @@ public:
         then the NNFs can be transformed into CNF or DNF using distributivity.
         But as you may know, this can be impractical, as the transformation may cause an exponential blowup in the size of the formulas.
     */
-    std::string compute_repr() const {
-        return m_element->compute_repr();
+    std::string compute_repr(const Element<T>* parent) const {
+        return parent->compute_repr();
     }
 };
 
