@@ -1,0 +1,3 @@
+[submodule "submodules/tarski"]
+	path = submodules/tarski
+	url = git@github.com:drexlerd/tarski.git

@@ -1,5 +1,6 @@
 import tarski
 from tarski.io import PDDLReader
+from dlplan_utils import construct_vocabulary_info, construct_syntactic_element_factory
 
 
 class DomainData:
@@ -15,8 +16,8 @@ class DomainData:
         # Exclude intervals from types.
         self.tarski_sorts = [sort for sort in problem.language.sorts if not isinstance(sort, tarski.syntax.sorts.Interval)]
         # Store other domain related data here
-        self.vocabulary_info = None
-        self.syntactic_element_factory = None
+        self.vocabulary_info = construct_vocabulary_info(self)
+        self.syntactic_element_factory = construct_syntactic_element_factory(self)
 
     def _parse_domain_file(self, domain_file):
         """ Parses the PDDL domain file using Tarski. """
