@@ -5,6 +5,7 @@
 """
 
 import argparse
+import logging
 
 from domain_data import DomainData
 from instance_data import InstanceData
@@ -21,3 +22,11 @@ if __name__ == "__main__":
 
     domain_data = DomainData(args.domain)
     instance_data = InstanceData(args.instance, domain_data)
+    dlplan_states = [state.dlplan_state for state in instance_data.states]
+
+    domain_data.feature_generator.generate(domain_data.syntactic_element_factory, 20, 1800, 100000, dlplan_states)
+
+    print("Instance information:")
+    print(f"Number of states: {len(dlplan_states)}")
+    print(f"Number of dynamic atoms: {len(instance_data.dynamic_atoms)}")
+    print(f"Number of static atoms: {len(instance_data.static_atoms)}")
