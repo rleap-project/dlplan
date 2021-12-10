@@ -34,16 +34,23 @@ BENCHMARKS_DIR = os.environ["DOWNWARD_BENCHMARKS"]
 BENCHMARKS_DIR = "../benchmarks"
 if REMOTE:
     ENV = BaselSlurmEnvironment(email="my.name@unibas.ch")
+    SUITE = ["visitall", "childsnack", "gripper"]
 else:
     ENV = LocalEnvironment(processes=2)
-SUITE = ["visitall:instance.pddl"]
+    SUITE = ["visitall:p-1-0.5-2-0.pddl"]
 ATTRIBUTES = [
-    Attribute("time", absolute=True, min_wins=True, scale="linear"),
+    Attribute("time_complexity_5", absolute=True, min_wins=True, scale="linear"),
+    Attribute("memory_complexity_5", absolute=True, min_wins=True, scale="linear"),
+    Attribute("num_generated_features_complexity_5", absolute=True, min_wins=True, scale="linear"),
+    Attribute("num_novel_features_complexity_5", absolute=True, min_wins=True, scale="linear"),
+    Attribute("num_states", absolute=True, min_wins=False, scale="linear"),
+    Attribute("num_dynamic_atoms", absolute=True, min_wins=False, scale="linear"),
+    Attribute("num_static_atoms", absolute=True, min_wins=False, scale="linear"),
 ]
 TIME_LIMIT = 1800
 MEMORY_LIMIT = 2048
 
-GENERATOR_COMPLEXITY_LIMIT = 10
+GENERATOR_COMPLEXITY_LIMIT = 5  # when changing this, we must adapt the parser as well
 GENERATOR_TIME_LIMIT = 1800
 GENERATOR_FEATURE_LIMIT = 1000000
 
