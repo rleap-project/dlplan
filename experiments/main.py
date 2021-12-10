@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 """ Module description: library initialization using the PDDL parsing
     functionality of Tarski (https://tarski.readthedocs.io/en/latest/)
 """
