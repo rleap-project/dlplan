@@ -30,6 +30,7 @@ class BaseReport(AbsoluteReport):
 
 NODE = platform.node()
 REMOTE = NODE.endswith("tetralith1.nsc.liu.se") or NODE.endswith("tetralith2.nsc.liu.se") or NODE.endswith(".scicore.unibas.ch") or NODE.endswith(".cluster.bc2.ch")
+REMOTE = True
 BENCHMARKS_DIR = "../benchmarks"
 if REMOTE:
     ENV = TetralithEnvironment(
