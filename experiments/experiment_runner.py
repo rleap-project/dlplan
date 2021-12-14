@@ -32,11 +32,18 @@ NODE = platform.node()
 REMOTE = NODE.endswith("tetralith.nsc.liu.se") or NODE.endswith(".scicore.unibas.ch") or NODE.endswith(".cluster.bc2.ch")
 BENCHMARKS_DIR = "../benchmarks"
 if REMOTE:
-    ENV = TetralithEnvironment(email="")
+    ENV = TetralithEnvironment(
+        partition="tetralith",
+        email="",
+        memory_per_cpu="2048MB",
+        setup=TetralithEnvironment.DEFAULT_SETUP,
+        extra_options="#SBATCH --account=snic2021-5-330")
     SUITE = ["barman", "blocksworld_3", "blocksworld_4", "childsnack", "delivery", "gripper", "miconic", "reward", "spanner", "visitall"]
+    TIME_LIMIT = 24 * 1800
 else:
     ENV = LocalEnvironment(processes=2)
     SUITE = ["visitall:p-1-0.5-2-0.pddl", "barman:p-1-2-1-0.pddl"]
+    TIME_LIMIT = 10
 ATTRIBUTES = [
     Attribute("time_complexity_5", absolute=True, min_wins=True, scale="linear"),
     Attribute("memory_complexity_5", absolute=True, min_wins=True, scale="linear"),
@@ -46,13 +53,11 @@ ATTRIBUTES = [
     Attribute("num_dynamic_atoms", absolute=True, min_wins=False, scale="linear"),
     Attribute("num_static_atoms", absolute=True, min_wins=False, scale="linear"),
 ]
-TIME_LIMIT = 24 * 1800
-MEMORY_LIMIT = 3000
+MEMORY_LIMIT = 2048
 
 GENERATOR_COMPLEXITY_LIMIT = 5  # when changing this, we must adapt the parser as well
 GENERATOR_TIME_LIMIT = 24 * 1800
 GENERATOR_FEATURE_LIMIT = 1000000
-
 
 # Create a new experiment.
 exp = Experiment(environment=ENV)
