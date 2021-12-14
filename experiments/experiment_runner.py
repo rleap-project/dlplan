@@ -30,14 +30,13 @@ class BaseReport(AbsoluteReport):
 
 NODE = platform.node()
 REMOTE = NODE.endswith("tetralith.nsc.liu.se") or NODE.endswith(".scicore.unibas.ch") or NODE.endswith(".cluster.bc2.ch")
-BENCHMARKS_DIR = os.environ["DOWNWARD_BENCHMARKS"]
 BENCHMARKS_DIR = "../benchmarks"
 if REMOTE:
-    ENV = BaselSlurmEnvironment(email="my.name@unibas.ch")
-    SUITE = ["visitall", "childsnack", "gripper"]
+    ENV = TetralithEnvironment(email="")
+    SUITE = ["barman", "blocksworld_3", "blocksworld_4", "childsnack", "delivery", "gripper", "miconic", "reward", "spanner", "visitall"]
 else:
     ENV = LocalEnvironment(processes=2)
-    SUITE = ["visitall:p-1-0.5-2-0.pddl"]
+    SUITE = ["visitall:p-1-0.5-2-0.pddl", "barman:p-1-2-1-0.pddl"]
 ATTRIBUTES = [
     Attribute("time_complexity_5", absolute=True, min_wins=True, scale="linear"),
     Attribute("memory_complexity_5", absolute=True, min_wins=True, scale="linear"),
@@ -47,11 +46,11 @@ ATTRIBUTES = [
     Attribute("num_dynamic_atoms", absolute=True, min_wins=False, scale="linear"),
     Attribute("num_static_atoms", absolute=True, min_wins=False, scale="linear"),
 ]
-TIME_LIMIT = 1800
-MEMORY_LIMIT = 2048
+TIME_LIMIT = 24 * 1800
+MEMORY_LIMIT = 3000
 
 GENERATOR_COMPLEXITY_LIMIT = 5  # when changing this, we must adapt the parser as well
-GENERATOR_TIME_LIMIT = 1800
+GENERATOR_TIME_LIMIT = 24 * 1800
 GENERATOR_FEATURE_LIMIT = 1000000
 
 
@@ -66,11 +65,12 @@ for task in suites.build_suite(BENCHMARKS_DIR, SUITE):
     # could also use absolute paths in add_command().
     run.add_resource("domain", task.domain_file, symlink=True)
     run.add_resource("problem", task.problem_file, symlink=True)
+    run.add_resource("main", "main.py", symlink=True)
     # 'ff' binary has to be on the PATH.
     # We could also use exp.add_resource().
     run.add_command(
         "baseline",
-        ["python3", "/home/dominik/projects/code/dlplan/experiments/main.py", "--domain", "{domain}", "--instance", "{problem}", "--c", GENERATOR_COMPLEXITY_LIMIT, "--t", GENERATOR_TIME_LIMIT, "--f", GENERATOR_FEATURE_LIMIT],
+        ["python3", "main.py", "--domain", "{domain}", "--instance", "{problem}", "--c", GENERATOR_COMPLEXITY_LIMIT, "--t", GENERATOR_TIME_LIMIT, "--f", GENERATOR_FEATURE_LIMIT],
         time_limit=TIME_LIMIT,
         memory_limit=MEMORY_LIMIT,
     )
