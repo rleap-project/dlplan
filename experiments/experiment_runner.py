@@ -35,7 +35,7 @@ if REMOTE:
     ENV = TetralithEnvironment(
         partition="tetralith",
         email="",
-        memory_per_cpu="2048MB",
+        memory_per_cpu="2048M",
         setup=TetralithEnvironment.DEFAULT_SETUP,
         extra_options="#SBATCH --account=snic2021-5-330")
     SUITE = ["barman", "blocksworld_3", "blocksworld_4", "childsnack", "delivery", "gripper", "miconic", "reward", "spanner", "visitall"]
