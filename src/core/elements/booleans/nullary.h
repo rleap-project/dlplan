@@ -22,7 +22,6 @@ public:
 
     bool evaluate(const State& state) const override {
         const InstanceInfo& info = *state.get_instance_info();
-        ConceptDenotation_Set result_set;
         for (int atom_idx : state.get_atom_idxs()) {
             const Atom& atom = info.get_atom(atom_idx);
             if (atom.get_predicate().get_index() == m_predicate.get_index()) {

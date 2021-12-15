@@ -19,15 +19,9 @@ public:
     : Boolean(vocabulary, "b_inclusion"), m_concept_left(concept_left), m_concept_right(concept_right) { }
 
     bool evaluate(const State& state) const override {
-        const ConceptDenotation l_vec = m_concept_left->evaluate(state);
-        const ConceptDenotation r_vec = m_concept_right->evaluate(state);
-        ConceptDenotation_Set r_set(r_vec.begin(), r_vec.end());
-        for (auto c : l_vec) {
-            if (r_set.find(c) == r_set.end()) {
-                return false;
-            }
-        }
-        return true;
+        const ConceptDenotation l = m_concept_left->evaluate(state);
+        const ConceptDenotation r = m_concept_right->evaluate(state);
+        return l.is_subset_of(r);
     }
 
     int compute_complexity() const override {
@@ -51,15 +45,9 @@ public:
     : Boolean(vocabulary, "b_inclusion"), m_role_left(role_left), m_role_right(role_right) { }
 
     bool evaluate(const State& state) const override {
-        const RoleDenotation l_vec = m_role_left->evaluate(state);
-        const RoleDenotation r_vec = m_role_right->evaluate(state);
-        RoleDenotation_Set r_set(r_vec.begin(), r_vec.end());
-        for (auto c : l_vec) {
-            if (r_set.find(c) == r_set.end()) {
-                return false;
-            }
-        }
-        return true;
+        const RoleDenotation l = m_role_left->evaluate(state);
+        const RoleDenotation r = m_role_right->evaluate(state);
+        return l.is_subset_of(r);
     }
 
     int compute_complexity() const override {

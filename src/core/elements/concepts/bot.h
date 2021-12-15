@@ -12,8 +12,8 @@ public:
     : Concept(vocabulary, "c_bot") {
     }
 
-    ConceptDenotation evaluate(const State&) const override {
-        return ConceptDenotation();
+    ConceptDenotation evaluate(const State& state) const override {
+        return ConceptDenotation(state.get_instance_info()->get_num_objects());
     }
 
     int compute_complexity() const override {

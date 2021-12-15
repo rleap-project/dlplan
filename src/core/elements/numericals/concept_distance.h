@@ -24,26 +24,27 @@ public:
     }
 
     int evaluate(const State& state) const override {
-        const ConceptDenotation c_from_vec = m_concept_from->evaluate(state);
-        if (c_from_vec.empty()) {
+        const ConceptDenotation c = m_concept_from->evaluate(state);
+        if (c.count() == 0) {
             return 0;
         }
-        const RoleDenotation r_vec = m_role->evaluate(state);
-        const ConceptDenotation c_to_vec = m_concept_to->evaluate(state);
-        if (c_to_vec.empty()) {
+        const RoleDenotation r = m_role->evaluate(state);
+        const ConceptDenotation d = m_concept_to->evaluate(state);
+        if (d.count() == 0) {
             return INF;
         }
-        // TODO(dominik): Compute an indexing scheme that only considers objects that are part of the role
-        // 2. Compute an adjacency list from the newly mapped role denotations.
         int num_objects = state.get_instance_info()->get_num_objects();
-        utils::AdjList adj_list = utils::compute_adjacency_list(r_vec, num_objects);
-        // 4. Find closest target.
+        utils::AdjList adj_list = utils::compute_adjacency_list(r, num_objects);
         int result = INF;
-        for (int source : c_from_vec) {
-            // TODO: stop the BFS as soon as we find a node in c_to_vec?
-            utils::Distances distances = utils::compute_distances_from_state(adj_list, source);
-            for (int target : c_to_vec) {
-                result = std::min<int>(result, distances[target]);
+        for (int i = 0; i < num_objects; ++i) {
+            if (c.test(i)) {
+                // TODO: stop the BFS as soon as we find a node in c_to_vec?
+                utils::Distances distances = utils::compute_distances_from_state(adj_list, i);
+                for (int j = 0; j < num_objects; ++j) {
+                    if (d.test(j)) {
+                        result = std::min<int>(result, distances[j]);
+                    }
+                }
             }
         }
         return result;

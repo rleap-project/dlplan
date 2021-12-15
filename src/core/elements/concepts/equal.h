@@ -21,28 +21,20 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        const RoleDenotation left_vec = m_role_left->evaluate(state);
-        const RoleDenotation right_vec = m_role_right->evaluate(state);
-        const RoleDenotation_Set left_set(left_vec.begin(), left_vec.end());
-        const RoleDenotation_Set right_set(right_vec.begin(), right_vec.end());
-
+        const RoleDenotation r = m_role_left->evaluate(state);
+        const RoleDenotation s = m_role_right->evaluate(state);
         int num_objects = state.get_instance_info()->get_num_objects();
-        ConceptDenotation result;
-        result.reserve(num_objects);
+        ConceptDenotation result = state.get_instance_info()->get_top_concept_vec();
+        // find counterexample [(a,b) in R and (a,b) not in S] or [(a,b) not in R and (a,b) in S]
         for (int i = 0; i < num_objects; ++i) {
-            // If the set of y such that (x, y) in sd1 is equal to the set of z such that (x, z) in sd2,
-            // then x makes it into the denotation of this concept
-            bool in_denotation = true;
             for (int j = 0; j < num_objects; ++j) {
-                std::pair<int, int> r(i, j);
-                bool in_left = (left_set.find(r) != left_set.end());
-                bool in_right = (right_set.find(r) != right_set.end());
-                // std::cout << i << " " << j << " : " << in_left << " " << in_right << std::endl;
-                if (in_left != in_right) in_denotation = false;
+                int index = i * num_objects + j;
+                if (r[index] != s[index]) {
+                    result.reset(i);
+                    break;
+                }
             }
-            if (in_denotation) result.push_back(i);
         }
-        result.shrink_to_fit();
         return result;
     }
 

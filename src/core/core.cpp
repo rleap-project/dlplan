@@ -92,16 +92,8 @@ const Index_Vec& InstanceInfo::get_static_atom_idxs() const {
     return m_pImpl->get_static_atom_idxs();
 }
 
-const ConceptDenotation_Set& InstanceInfo::get_top_concept_set() const {
-    return m_pImpl->get_top_concept_set();
-}
-
 const ConceptDenotation& InstanceInfo::get_top_concept_vec() const {
     return m_pImpl->get_top_concept_vec();
-}
-
-const RoleDenotation_Set& InstanceInfo::get_top_role_set() const {
-    return m_pImpl->get_top_role_set();
 }
 
 const RoleDenotation& InstanceInfo::get_top_role_vec() const {

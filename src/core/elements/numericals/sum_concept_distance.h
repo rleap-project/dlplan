@@ -24,31 +24,17 @@ public:
     }
 
     int evaluate(const State& state) const override {
-        const ConceptDenotation& c_from_vec = m_concept_from->evaluate(state);
-        if (c_from_vec.empty()) {
+        const ConceptDenotation& c = m_concept_from->evaluate(state);
+        if (c.count() == 0) {
             return 0;
         }
-        const RoleDenotation r_vec = m_role->evaluate(state);
-        const ConceptDenotation c_to_vec = m_concept_to->evaluate(state);
-        if (c_to_vec.empty()) {
+        const RoleDenotation r = m_role->evaluate(state);
+        const ConceptDenotation d = m_concept_to->evaluate(state);
+        if (d.count() == 0) {
             return INF;
         }
-        // TODO(dominik): Compute an indexing scheme that only considers objects that are part of the role
-        // 2. Compute an adjacency list from the newly mapped role denotations.
         int num_objects = state.get_instance_info()->get_num_objects();
-        utils::AdjList adj_list = utils::compute_adjacency_list(r_vec, num_objects);
-        // 4. Find closest target.
-        int result = 0;
-        for (int source : c_from_vec) {
-            // TODO: stop the BFS as soon as we find a node in c_to_vec.
-            utils::Distances distances = utils::compute_distances_from_state(adj_list, source);
-            int min_distance = INF;
-            for (int target : c_to_vec) {
-                min_distance = std::min<int>(min_distance, distances[target]);
-            }
-            result = utils::path_addition(result, min_distance);
-        }
-        return result;
+        throw std::runtime_error("not implemented");
     }
 
     int compute_complexity() const override {
