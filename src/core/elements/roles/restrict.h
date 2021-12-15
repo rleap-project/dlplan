@@ -25,7 +25,9 @@ public:
         const ConceptDenotation c_vec = m_concept->evaluate(state);
         int num_objects = state.get_instance_info()->get_num_objects();
         for (int i = 0; i < num_objects; ++i) {
+            for (int j = 0; j < num_objects; ++j) {
 
+            }
         }
         result.reserve(r_vec.size());
         for (const auto& r : r_vec) {
