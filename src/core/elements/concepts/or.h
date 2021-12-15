@@ -22,11 +22,9 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        const ConceptDenotation l_vec = m_concept_left->evaluate(state);
-        const ConceptDenotation r_vec = m_concept_right->evaluate(state);
-        ConceptDenotation_Set r_set(l_vec.begin(), l_vec.end());
-        r_set.insert(r_vec.begin(), r_vec.end());
-        return ConceptDenotation(r_set.begin(), r_set.end());
+        ConceptDenotation l = m_concept_left->evaluate(state);
+        const ConceptDenotation r = m_concept_right->evaluate(state);
+        return l |= r;
     }
 
     int compute_complexity() const override {

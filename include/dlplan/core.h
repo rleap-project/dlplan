@@ -8,6 +8,7 @@
 
 #include "pimpl.h"
 #include "types.h"
+#include "dynamic_bitset.h"
 
 
 namespace dlplan::core {
@@ -236,9 +237,7 @@ public:
     int get_num_objects() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
     const Index_Vec& get_static_atom_idxs() const;
-    const ConceptDenotation_Set& get_top_concept_set() const;
     const ConceptDenotation& get_top_concept_vec() const;
-    const RoleDenotation_Set& get_top_role_set() const;
     const RoleDenotation& get_top_role_vec() const;
 };
 

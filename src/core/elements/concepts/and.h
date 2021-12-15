@@ -22,18 +22,9 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        const ConceptDenotation l_vec = m_concept_left->evaluate(state);
-        const ConceptDenotation r_vec = m_concept_right->evaluate(state);
-        ConceptDenotation_Set r_set(r_vec.begin(), r_vec.end());
-        ConceptDenotation result;
-        result.reserve(state.get_instance_info()->get_num_objects());
-        for (int c : l_vec) {
-            if (r_set.find(c) != r_set.end()) {
-                result.push_back(c);
-            }
-        }
-        result.shrink_to_fit();
-        return result;
+        ConceptDenotation l = m_concept_left->evaluate(state);
+        const ConceptDenotation r = m_concept_right->evaluate(state);
+        return l &= r;
     }
 
     int compute_complexity() const override {

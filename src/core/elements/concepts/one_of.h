@@ -20,7 +20,9 @@ public:
         if (!state.get_instance_info()->exists_object(m_constant.get_name())) {
             throw std::runtime_error("OneOfConcept::evaluate - no object with name of constant exists in instance: (" + m_constant.get_name() + ")");
         }
-        return ConceptDenotation({ state.get_instance_info()->get_object_idx(m_constant.get_name()) });
+        ConceptDenotation result(state.get_instance_info()->get_num_objects());
+        result.set(state.get_instance_info()->get_object_idx(m_constant.get_name()));
+        return result;
     }
 
     int compute_complexity() const override {

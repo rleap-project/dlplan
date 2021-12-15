@@ -19,12 +19,7 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        ConceptDenotation_Set r_set = state.get_instance_info()->get_top_concept_set();
-        const ConceptDenotation c_vec = m_concept->evaluate(state);
-        for (int c : c_vec) {
-            r_set.erase(c);
-        }
-        return ConceptDenotation(r_set.begin(), r_set.end());
+        return ~m_concept->evaluate(state);
     }
 
     int compute_complexity() const override {

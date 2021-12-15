@@ -22,5 +22,6 @@ target_sources(dlplancore
 set(PUBLIC_HEADERS_FILES
     include/dlplan/core.h
     include/dlplan/pimpl.h
-    include/dlplan/types.h)
+    include/dlplan/types.h
+    include/dlplan/dynamic_bitset.h)
 set_target_properties(dlplancore PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS_FILES}")
