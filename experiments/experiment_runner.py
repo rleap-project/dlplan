@@ -42,6 +42,7 @@ if REMOTE:
         setup=TetralithEnvironment.DEFAULT_SETUP,
         extra_options="#SBATCH --account=snic2021-5-330")
     SUITE = ["barman", "blocksworld_3", "blocksworld_4", "childsnack", "delivery", "gripper", "miconic", "reward", "spanner", "visitall"]
+    SUITE = ["visitall:p-1-0.5-2-0.pddl", "barman:p-1-2-1-0.pddl"]
     TIME_LIMIT = 24 * 1800
 else:
     ENV = LocalEnvironment(processes=2)
