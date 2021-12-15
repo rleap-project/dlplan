@@ -51,13 +51,17 @@ ATTRIBUTES = [
     Attribute("memory_complexity_5", absolute=True, min_wins=True, scale="linear"),
     Attribute("num_generated_features_complexity_5", absolute=True, min_wins=True, scale="linear"),
     Attribute("num_novel_features_complexity_5", absolute=True, min_wins=True, scale="linear"),
+    Attribute("time_complexity_10", absolute=True, min_wins=True, scale="linear"),
+    Attribute("memory_complexity_10", absolute=True, min_wins=True, scale="linear"),
+    Attribute("num_generated_features_complexity_10", absolute=True, min_wins=True, scale="linear"),
+    Attribute("num_novel_features_complexity_10", absolute=True, min_wins=True, scale="linear"),
     Attribute("num_states", absolute=True, min_wins=False, scale="linear"),
     Attribute("num_dynamic_atoms", absolute=True, min_wins=False, scale="linear"),
     Attribute("num_static_atoms", absolute=True, min_wins=False, scale="linear"),
 ]
 MEMORY_LIMIT = 2048
 
-GENERATOR_COMPLEXITY_LIMIT = 5  # when changing this, we must adapt the parser as well
+GENERATOR_COMPLEXITY_LIMIT = 10  # when changing this, we must adapt the parser as well
 GENERATOR_TIME_LIMIT = 24 * 1800
 GENERATOR_FEATURE_LIMIT = 1000000
 
