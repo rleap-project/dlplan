@@ -29,8 +29,10 @@ class BaseReport(AbsoluteReport):
 
 
 NODE = platform.node()
+print(str(NODE))
 # This line does not work yet, so we have to manually change this
-REMOTE = NODE.endswith(".nsc.liu.se") or NODE.endswith(".nsc.liu.se") or NODE.endswith(".scicore.unibas.ch") or NODE.endswith(".cluster.bc2.ch")
+REMOTE = NODE.endswith(".nsc.liu.se") or NODE.endswith(".scicore.unibas.ch") or NODE.endswith(".cluster.bc2.ch")
+print(REMOTE)
 BENCHMARKS_DIR = "../benchmarks"
 if REMOTE:
     ENV = TetralithEnvironment(
