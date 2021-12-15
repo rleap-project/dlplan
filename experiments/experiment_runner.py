@@ -7,6 +7,7 @@ Example experiment for the FF planner
 
 import os
 import platform
+import re
 
 from downward import suites
 from downward.reports.absolute import AbsoluteReport
@@ -29,10 +30,7 @@ class BaseReport(AbsoluteReport):
 
 
 NODE = platform.node()
-print(str(NODE))
-# This line does not work yet, so we have to manually change this
-REMOTE = NODE.endswith(".nsc.liu.se") or NODE.endswith(".scicore.unibas.ch") or NODE.endswith(".cluster.bc2.ch")
-print(REMOTE)
+REMOTE = re.match(r"tetralith\d+.nsc.liu.se|n\d+", NODE)
 BENCHMARKS_DIR = "../benchmarks"
 if REMOTE:
     ENV = TetralithEnvironment(
@@ -42,11 +40,10 @@ if REMOTE:
         setup=TetralithEnvironment.DEFAULT_SETUP,
         extra_options="#SBATCH --account=snic2021-5-330")
     SUITE = ["barman", "blocksworld_3", "blocksworld_4", "childsnack", "delivery", "gripper", "miconic", "reward", "spanner", "visitall"]
-    SUITE = ["visitall:p-1-0.5-2-0.pddl"]
     TIME_LIMIT = 24 * 1800
 else:
     ENV = LocalEnvironment(processes=2)
-    SUITE = ["visitall:p-1-0.5-2-0.pddl", "barman:p-1-2-1-0.pddl"]
+    SUITE = ["visitall:p-1-0.5-2-0.pddl"]
     TIME_LIMIT = 10
 ATTRIBUTES = [
     Attribute("time_complexity_5", absolute=True, min_wins=True, scale="linear"),
