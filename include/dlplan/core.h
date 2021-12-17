@@ -249,17 +249,18 @@ public:
 template<typename T>
 class Element {
 protected:
-    const std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
-    const std::shared_ptr<const element::Element<T>> m_element;
+    std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
+    std::shared_ptr<const element::Element<T>> m_element;
 
 protected:
     Element(
         std::shared_ptr<const VocabularyInfo> vocabulary_info,
-        std::shared_ptr<const element::Element<T>> element)
-        : m_vocabulary_info(vocabulary_info), m_element(element) { }
+        std::shared_ptr<const element::Element<T>> element);
 
 public:
-    virtual ~Element() = default;
+    Element(const Element& other);
+    Element& operator=(const Element& other);
+    virtual ~Element();
 
     /**
      * Evaluates the element for a state given as a vector of atom indices.
@@ -280,13 +281,8 @@ public:
     /**
      * Getters.
      */
-    std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const {
-        return m_vocabulary_info;
-    }
-
-    std::shared_ptr<const element::Element<T>> get_element() const {
-        return m_element;
-    }
+    std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
+    std::shared_ptr<const element::Element<T>> get_element() const;
 };
 
 
@@ -464,5 +460,7 @@ public:
 };
 
 }
+
+#include "../../src/core/core.tpp"
 
 #endif

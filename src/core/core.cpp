@@ -360,6 +360,7 @@ Concept::Concept(const Concept& other)
 
 Concept& Concept::operator=(const Concept& other) {
     if (this != &other) {
+        Element<ConceptDenotation>::operator=(other);
         m_pImpl = other.m_pImpl;
     }
     return *this;
@@ -387,6 +388,7 @@ Role::Role(const Role& other)
 
 Role& Role::operator=(const Role& other) {
     if (this != &other) {
+        Element<RoleDenotation>::operator=(other);
         m_pImpl = other.m_pImpl;
     }
     return *this;
@@ -415,6 +417,7 @@ Numerical::Numerical(const Numerical& other)
 
 Numerical& Numerical::operator=(const Numerical& other) {
     if (this != &other) {
+        Element<int>::operator=(other);
         m_pImpl = other.m_pImpl;
     }
     return *this;
@@ -443,6 +446,7 @@ Boolean::Boolean(const Boolean& other)
 
 Boolean& Boolean::operator=(const Boolean& other) {
     if (this != &other) {
+        Element<bool>::operator=(other);
         m_pImpl = other.m_pImpl;
     }
     return *this;
