@@ -29,6 +29,7 @@ public:
 
             }
         }
+
         result.reserve(r_vec.size());
         for (const auto& r : r_vec) {
             if (c_set.find(r.second) != c_set.end()) {
