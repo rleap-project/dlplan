@@ -5,10 +5,10 @@
 #include <limits>
 #include <vector>
 
+
 /*
   Poor man's version of boost::dynamic_bitset, mostly copied from there.
 */
-
 namespace dynamic_bitset {
 template<typename Block = unsigned int>
 class DynamicBitset {
@@ -154,6 +154,22 @@ public:
                 return false;
         }
         return true;
+    }
+
+    std::size_t compute_hash() const {
+        size_t seed = blocks.size();
+        for (const Block b : blocks) {
+
+        }
+        throw std::runtime_error("Not implemented");
+        return seed;
+    }
+
+    /**
+     * Useful for copying the underlying data when computing a hash for a collection of bitsets.
+     */
+    const std::vector<Block>& get_blocks() const {
+        return blocks;
     }
 };
 

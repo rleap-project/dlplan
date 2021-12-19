@@ -33,6 +33,7 @@ public:
         if (d.count() == 0) {
             return INF;
         }
+
         int num_objects = state.get_instance_info()->get_num_objects();
         utils::AdjList adj_list = utils::compute_adjacency_list(r, num_objects);
         int result = INF;

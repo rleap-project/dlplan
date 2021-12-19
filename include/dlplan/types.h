@@ -8,8 +8,8 @@
 
 #include "dynamic_bitset.h"
 
-namespace dlplan::core {
 
+namespace dlplan::core {
 
 using ConceptDenotation = dynamic_bitset::DynamicBitset<unsigned int>;
 using RoleDenotation = dynamic_bitset::DynamicBitset<unsigned int>;

@@ -66,7 +66,22 @@ int main() {
 
     // 5. Generate features up to complexity 4 with at most 180 seconds and at most 100000 features in total
     FeatureGenerator generator;
-    FeatureRepresentations features = generator.generate(f, 4, 180, 100000, states);
+    generator.set_generate_inclusion_boolean(false);
+    generator.set_generate_diff_concept(false);
+    generator.set_generate_or_concept(false);
+    generator.set_generate_subset_concept(false);
+    generator.set_generate_role_distance_numerical(false);
+    generator.set_generate_sum_concept_distance_numerical(false);
+    generator.set_generate_sum_role_distance_numerical(false);
+    generator.set_generate_and_role(false);
+    generator.set_generate_compose_role(false);
+    generator.set_generate_diff_role(false);
+    generator.set_generate_identity_role(false);
+    generator.set_generate_not_role(false);
+    generator.set_generate_or_role(false);
+    generator.set_generate_top_role(false);
+    generator.set_generate_transitive_reflexive_closure_role(false);
+    FeatureRepresentations features = generator.generate(f, 10, 180, 100000, states);
 
     for (const auto& feature : features) {
         std::cout << feature << std::endl;

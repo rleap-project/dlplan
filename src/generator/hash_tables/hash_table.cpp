@@ -12,9 +12,14 @@ static std::vector<int> bool_vec_to_num_vec(const std::vector<bool>& bool_vec) {
     return num_vec;
 }
 
+static std::vector<int> bitset_to_num_vec(const std::vector<dynamic_bitset::DynamicBitset<unsigned>>& bitset) {
+    std::vector<int> num_vec;
+    return num_vec;
+}
 
-bool HashTable::insert_concept(const std::vector<int>& denotation) {
-    if (insert_concept_impl(denotation)) {
+
+bool HashTable::insert_concept(const std::vector<core::ConceptDenotation>& denotation) {
+    if (insert_concept_impl(bitset_to_num_vec(denotation))) {
         ++m_cache_misses;
         return true;
     } else {
@@ -23,8 +28,8 @@ bool HashTable::insert_concept(const std::vector<int>& denotation) {
     }
 }
 
-bool HashTable::insert_role(const std::vector<int>& denotation) {
-    if (insert_role_impl(denotation)) {
+bool HashTable::insert_role(const std::vector<core::RoleDenotation>& denotation) {
+    if (insert_role_impl(bitset_to_num_vec(denotation))) {
         ++m_cache_misses;
         return true;
     } else {

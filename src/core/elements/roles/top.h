@@ -7,9 +7,6 @@
 namespace dlplan::core::element {
 
 class TopRole : public Role {
-private:
-    mutable RoleDenotation m_result;
-
 public:
     TopRole(const VocabularyInfo& vocabulary)
     : Role(vocabulary, "r_top") {

@@ -52,6 +52,7 @@ def construct_syntactic_element_factory(domain_data):
 
 def construct_feature_generator():
     feature_generator = dlplan.FeatureGenerator()
+    feature_generator.set_generate_inclusion_boolean(False)
     feature_generator.set_generate_diff_concept(False)
     feature_generator.set_generate_or_concept(False)
     feature_generator.set_generate_subset_concept(False)
@@ -67,4 +68,3 @@ def construct_feature_generator():
     feature_generator.set_generate_top_role(False)
     feature_generator.set_generate_transitive_reflexive_closure_role(False)
     return feature_generator
-

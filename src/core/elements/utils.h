@@ -34,7 +34,7 @@ extern PairwiseDistances compute_floyd_warshall(const AdjList& adj_list, bool re
 /**
  * Compute the transitive (reflexive) closure over the role denotation
  */
-extern RoleDenotation compute_transitive_closure(const PairwiseDistances& distances);
+extern RoleDenotation compute_transitive_closure(const PairwiseDistances& distances, int num_objects);
 
 }
 
