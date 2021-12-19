@@ -12,9 +12,20 @@ static std::vector<int> bool_vec_to_num_vec(const std::vector<bool>& bool_vec) {
     return num_vec;
 }
 
-static std::vector<int> bitset_to_num_vec(const std::vector<dynamic_bitset::DynamicBitset<unsigned>>& bitset) {
-    std::vector<int> num_vec;
-    return num_vec;
+static std::vector<int> bitset_to_num_vec(const std::vector<dynamic_bitset::DynamicBitset<unsigned>>& bitsets) {
+    static_assert(sizeof(int) == sizeof(unsigned));
+    size_t size = 0;
+    for (const auto& b : bitsets) {
+        size += b.get_blocks().size();
+    }
+    std::vector<int> result;
+    result.reserve(size);
+    size_t pos = 0;
+    for (const auto& b : bitsets) {
+        result.insert(result.begin() + pos, b.get_blocks().begin(), b.get_blocks().end());
+        pos += b.get_blocks().size();
+    }
+    return result;
 }
 
 
