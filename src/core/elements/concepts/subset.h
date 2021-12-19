@@ -23,32 +23,15 @@ public:
     ConceptDenotation evaluate(const State& state) const override {
         const RoleDenotation left_vec = m_role_left->evaluate(state);
         const RoleDenotation right_vec = m_role_right->evaluate(state);
-        std::vector<RoleDenotation> left_by_first(state.get_instance_info()->get_num_objects());
-        for (const auto& role : left_vec) {
-            left_by_first[role.first].push_back(role);
-        }
-        RoleDenotation_Set right_set(right_vec.begin(), right_vec.end());
-
-        ConceptDenotation result;
-        result.reserve(state.get_instance_info()->get_num_objects());
-        for (int c = 0; c < state.get_instance_info()->get_num_objects(); ++c) {
-            if (left_by_first[c].empty()) {
-                // nothing that violates the condition (a,b) in R -> (a,b) in S
-                result.push_back(c);
-            } else {
-                bool violated = false;
-                for (const auto& role : left_by_first[c]) {
-                    if (right_set.find(role) == right_set.end()) {
-                        violated = true;
-                        break;
-                    }
-                }
-                if (!violated) {
-                    result.push_back(c);
-                }
+        const RoleDenotation_Set right_set(right_vec.begin(), right_vec.end());
+        ConceptDenotation_Set result_set = state.get_instance_info()->get_top_concept_set();
+        // Find counterexample: (a,b) in R and (a,b) not in S => remove a
+        for (const auto& r : left_vec) {  // (a,b) in R
+            if (right_set.find(r) == right_set.end()) {  // (a,b) notin S
+                result_set.erase(r.first);
             }
         }
-        return result;
+        return ConceptDenotation(result_set.begin(), result_set.end());
     }
 
     int compute_complexity() const override {

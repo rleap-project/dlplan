@@ -26,7 +26,7 @@ TEST(DLPTests, ConceptAll) {
     SyntacticElementFactory factory(vocabulary);
 
     Concept concept = factory.parse_concept("c_all(r_primitive(role,0,1),c_primitive(concept,0))");
-    EXPECT_EQ(concept.evaluate(state), dlplan::core::ConceptDenotation({0}));
+    EXPECT_EQ(concept.evaluate(state), dlplan::core::ConceptDenotation({0, 2, 3}));
 }
 
 TEST(DLPTests, ConceptAll2) {
@@ -42,13 +42,13 @@ TEST(DLPTests, ConceptAll2) {
     Atom a2 = instance->add_atom("at", {"bob", "location_1"});
     Atom a3 = instance->add_atom("man", {"bob"});
 
-    State state_1(instance, {a0, a1, a2, a3});  // bob and spanner_1 at location_0
-    State state_2(instance, {a1, a2, a3});  // only bob at location_0
+    State state_1(instance, {a0, a1, a2, a3});  // bob and spanner_1 at location_1
+    State state_2(instance, {a1, a2, a3});  // only bob at location_1
 
     SyntacticElementFactory factory(vocabulary);
 
     Concept concept = factory.parse_concept("c_all(r_primitive(at,1,0),c_primitive(man,0))");
-    EXPECT_EQ(concept.evaluate(state_1), dlplan::core::ConceptDenotation({}));
+    EXPECT_EQ(concept.evaluate(state_1), dlplan::core::ConceptDenotation({0, 2, 4}));  // location_1 not included because spanner_1 not in C, location_2 not included because spanner_2 not in C
 
-    EXPECT_EQ(concept.evaluate(state_2), dlplan::core::ConceptDenotation({1}));
+    EXPECT_EQ(concept.evaluate(state_2), dlplan::core::ConceptDenotation({0, 1, 2, 4}));  // location_1 now included because only bob there and bob in C.
 }

@@ -25,25 +25,20 @@ public:
         const RoleDenotation right_vec = m_role_right->evaluate(state);
         const RoleDenotation_Set left_set(left_vec.begin(), left_vec.end());
         const RoleDenotation_Set right_set(right_vec.begin(), right_vec.end());
-
-        int num_objects = state.get_instance_info()->get_num_objects();
-        ConceptDenotation result;
-        result.reserve(num_objects);
-        for (int i = 0; i < num_objects; ++i) {
-            // If the set of y such that (x, y) in sd1 is equal to the set of z such that (x, z) in sd2,
-            // then x makes it into the denotation of this concept
-            bool in_denotation = true;
-            for (int j = 0; j < num_objects; ++j) {
-                std::pair<int, int> r(i, j);
-                bool in_left = (left_set.find(r) != left_set.end());
-                bool in_right = (right_set.find(r) != right_set.end());
-                // std::cout << i << " " << j << " : " << in_left << " " << in_right << std::endl;
-                if (in_left != in_right) in_denotation = false;
+        ConceptDenotation_Set result_set = state.get_instance_info()->get_top_concept_set();
+        // Find counterexample: (a,b) in R and (a,b) not in S => remove a
+        for (const auto& r : left_vec) {  // (a,b) in R
+            if (right_set.find(r) == right_set.end()) {  // (a,b) notin S
+                result_set.erase(r.first);
             }
-            if (in_denotation) result.push_back(i);
         }
-        result.shrink_to_fit();
-        return result;
+        // Find counterexample: (a,b) in S and (a,b) not in R => remove a
+        for (const auto& r : right_vec) {  // (a,b) in S
+            if (left_set.find(r) == left_set.end()) {  // (a,b) notin R
+                result_set.erase(r.first);
+            }
+        }
+        return ConceptDenotation(result_set.begin(), result_set.end());
     }
 
     int compute_complexity() const override {

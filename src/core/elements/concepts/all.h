@@ -24,18 +24,11 @@ public:
         const RoleDenotation r_vec = m_role->evaluate(state);
         const ConceptDenotation c_vec = m_concept->evaluate(state);
         ConceptDenotation_Set c_set(c_vec.begin(), c_vec.end());
-        // 1. perform existential abstraction to find elements for which some relation to b exists.
-        ConceptDenotation_Set result_set;
-        for (const auto& r : r_vec) {
-            if (c_set.find(r.second) != c_set.end()) {
-                result_set.insert(r.first);
-            }
-        }
-        // 2. remove objects for which not all relations contain object from b
-        for (const auto& r : r_vec) {
-            if ((result_set.find(r.first) != result_set.end()) &&
-                (c_set.find(r.second) == c_set.end())) {
-                result_set.erase(r.first);
+        // Find counterexample: (a,b) in R and b notin C => remove a
+        ConceptDenotation_Set result_set = state.get_instance_info()->get_top_concept_set();
+        for (const auto& r : r_vec) {  // (a,b) in R
+            if (c_set.find(r.second) == c_set.end()) {  // b not in C
+                result_set.erase(r.first);  // remove a
             }
         }
         return ConceptDenotation(result_set.begin(), result_set.end());
