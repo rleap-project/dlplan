@@ -1,4 +1,4 @@
-#include "../../include/dlplan/core.h"
+#include "core.h"
 
 namespace dlplan::core {
 

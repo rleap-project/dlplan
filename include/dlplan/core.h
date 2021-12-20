@@ -461,6 +461,6 @@ public:
 
 }
 
-#include "../../src/core/core.tpp"
+#include "core.tpp"
 
 #endif
