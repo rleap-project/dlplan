@@ -20,10 +20,8 @@ static std::vector<int> bitset_to_num_vec(const std::vector<dynamic_bitset::Dyna
     }
     std::vector<int> result;
     result.reserve(size);
-    size_t pos = 0;
     for (const auto& b : bitsets) {
-        result.insert(result.begin() + pos, b.get_blocks().begin(), b.get_blocks().end());
-        pos += b.get_blocks().size();
+        result.insert(result.end(), b.get_blocks().begin(), b.get_blocks().end());
     }
     return result;
 }

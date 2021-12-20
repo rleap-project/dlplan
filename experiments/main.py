@@ -24,7 +24,9 @@ if __name__ == "__main__":
     instance_data = InstanceData(args.instance, domain_data)
     dlplan_states = [state.dlplan_state for state in instance_data.states]
 
-    domain_data.feature_generator.generate(domain_data.syntactic_element_factory, args.c, args.t, args.f, dlplan_states)
+    features = domain_data.feature_generator.generate(domain_data.syntactic_element_factory, args.c, args.t, args.f, dlplan_states)
+    for f in features:
+        print(f)
 
     print("Instance information:")
     print(f"Number of states: {len(dlplan_states)}")
