@@ -24,7 +24,7 @@ public:
     }
 
     int evaluate(const State& state) const override {
-        const ConceptDenotation& c = m_concept_from->evaluate(state);
+        const ConceptDenotation c = m_concept_from->evaluate(state);
         if (c.count() == 0) {
             return 0;
         }
@@ -33,8 +33,24 @@ public:
         if (d.count() == 0) {
             return INF;
         }
+
         int num_objects = state.get_instance_info()->get_num_objects();
-        throw std::runtime_error("not implemented");
+        utils::AdjList adj_list = utils::compute_adjacency_list(r, num_objects);
+        int result = 0;
+        for (int i = 0; i < num_objects; ++i) {  // source
+            if (c.test(i)) {
+                // TODO: stop the BFS as soon as we find a node in c_to_vec?
+                utils::Distances distances = utils::compute_distances_from_state(adj_list, i);
+                int min_distance = INF;
+                for (int j = 0; j < num_objects; ++j) {  // target
+                    if (d.test(j)) {
+                        min_distance = std::min<int>(min_distance, distances[j]);
+                    }
+                }
+                result = utils::path_addition(result, min_distance);
+            }
+        }
+        return result;
     }
 
     int compute_complexity() const override {

@@ -23,7 +23,7 @@ public:
     ConceptDenotation evaluate(const State& state) const override {
         const RoleDenotation r = m_role->evaluate(state);
         const ConceptDenotation c = m_concept->evaluate(state);
-        ConceptDenotation result = state.get_instance_info()->get_top_concept_vec();
+        ConceptDenotation result = state.get_instance_info()->get_top_concept();
         // find counterexamples b : exists b . (a,b) in R and b notin C
         int num_objects = state.get_instance_info()->get_num_objects();
         for (int i = 0; i < num_objects; ++i) {

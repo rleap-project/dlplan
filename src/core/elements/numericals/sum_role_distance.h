@@ -34,7 +34,26 @@ public:
             return INF;
         }
         int num_objects = state.get_instance_info()->get_num_objects();
-        throw std::runtime_error("not implemented");
+        utils::AdjList adj_list = utils::compute_adjacency_list(s, num_objects);
+        // 3. Compute pairwise distances using a sequence of bfs calls.
+        utils::PairwiseDistances pairwise_distances = utils::compute_floyd_warshall(adj_list, true);
+        int result = 0;
+        for (int k = 0; k < num_objects; ++k) {  // property
+            for (int i = 0; i < num_objects; ++i) {  // source
+                int ki = k * num_objects + i;
+                if (r.test(ki)) {
+                    int min_distance = INF;
+                    for (int j = 0; j < num_objects; ++j) {  // target
+                        int kj = k * num_objects + j;
+                        if (t.test(kj)) {
+                            min_distance = std::min<int>(min_distance, pairwise_distances[i][j]);
+                        }
+                    }
+                    result = utils::path_addition(result, min_distance);
+                }
+            }
+        }
+        return result;
     }
 
     int compute_complexity() const override {

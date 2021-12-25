@@ -24,7 +24,7 @@ public:
         const RoleDenotation r = m_role_left->evaluate(state);
         const RoleDenotation s = m_role_right->evaluate(state);
         int num_objects = state.get_instance_info()->get_num_objects();
-        ConceptDenotation result = state.get_instance_info()->get_top_concept_vec();
+        ConceptDenotation result = state.get_instance_info()->get_top_concept();
         // find counterexamples a : exists b . (a,b) in R and (a,b) notin S
         for (int i = 0; i < num_objects; ++i) {
             for (int j = 0; j < num_objects; ++j) {

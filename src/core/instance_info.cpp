@@ -20,7 +20,7 @@ static bool exists(const std::string& name, std::unordered_map<std::string, unsi
 }
 
 InstanceInfoImpl::InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info)
-    : m_vocabulary_info(vocabulary_info), m_top_concept_vec(ConceptDenotation(0)), m_top_role_vec(RoleDenotation(0)) {
+    : m_vocabulary_info(vocabulary_info), m_top_concept(ConceptDenotation(0)), m_top_role(RoleDenotation(0)) {
 }
 
 const Atom& InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool negated, bool is_static) {
@@ -146,26 +146,26 @@ const Index_Vec& InstanceInfoImpl::get_static_atom_idxs() const {
     return m_static_atom_idxs;
 }
 
-const ConceptDenotation& InstanceInfoImpl::get_top_concept_vec() const {
-    if (static_cast<int>(m_top_concept_vec.size()) != get_num_objects()) {
-        m_top_concept_vec = ConceptDenotation(get_num_objects());
+const ConceptDenotation& InstanceInfoImpl::get_top_concept() const {
+    if (static_cast<int>(m_top_concept.size()) != get_num_objects()) {
+        m_top_concept = ConceptDenotation(get_num_objects());
         // for hashing, we want to ensure that the bits outside the range remain 0.
         for (int i = 0; i < get_num_objects(); ++i) {
-            m_top_concept_vec.set(i);
+            m_top_concept.set(i);
         }
     }
-    return m_top_concept_vec;
+    return m_top_concept;
 }
 
-const RoleDenotation& InstanceInfoImpl::get_top_role_vec() const {
-    if (static_cast<int>(m_top_role_vec.size()) != get_num_objects() * get_num_objects()) {
-        m_top_role_vec = RoleDenotation(get_num_objects() * get_num_objects());
+const RoleDenotation& InstanceInfoImpl::get_top_role() const {
+    if (static_cast<int>(m_top_role.size()) != get_num_objects() * get_num_objects()) {
+        m_top_role = RoleDenotation(get_num_objects() * get_num_objects());
         // for hashing, we want to ensure that the bits outside the range remain 0.
         for (int i = 0; i < get_num_objects() * get_num_objects(); ++i) {
-            m_top_role_vec.set(i);
+            m_top_role.set(i);
         }
     }
-    return m_top_role_vec;
+    return m_top_role;
 }
 
 }

@@ -13,7 +13,7 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        return state.get_instance_info()->get_top_role_vec();
+        return state.get_instance_info()->get_top_role();
     }
 
     int compute_complexity() const override {

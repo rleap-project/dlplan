@@ -237,8 +237,8 @@ public:
     int get_num_objects() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
     const Index_Vec& get_static_atom_idxs() const;
-    const ConceptDenotation& get_top_concept_vec() const;
-    const RoleDenotation& get_top_role_vec() const;
+    const ConceptDenotation& get_top_concept() const;
+    const RoleDenotation& get_top_role() const;
 };
 
 

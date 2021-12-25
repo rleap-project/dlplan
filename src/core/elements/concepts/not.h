@@ -19,7 +19,7 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        return ~m_concept->evaluate(state) &= state.get_instance_info()->get_top_concept_vec();
+        return ~m_concept->evaluate(state) &= state.get_instance_info()->get_top_concept();
     }
 
     int compute_complexity() const override {
