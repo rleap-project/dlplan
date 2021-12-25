@@ -21,11 +21,24 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        RoleDenotation l_vec = m_role_left->evaluate(state);
-        RoleDenotation r_vec = m_role_right->evaluate(state);
-        // complexity
+        const RoleDenotation l = m_role_left->evaluate(state);
+        const RoleDenotation r = m_role_right->evaluate(state);
         int num_objects = state.get_instance_info()->get_num_objects();
-        throw std::runtime_error("not implemented");
+        RoleDenotation result(num_objects * num_objects);
+        for (int i = 0; i < num_objects; ++i) {  // source
+            for (int j = 0; j < num_objects; ++j) {  // target
+                int ij = i * num_objects + j;
+                for (int k = 0; k < num_objects; ++k) {  // middle
+                    int ik = i * num_objects + k;
+                    int kj = k * num_objects + j;
+                    if (l.test(ik) && r.test(kj)) {
+                        result.set(ij);
+                        break;
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     int compute_complexity() const override {

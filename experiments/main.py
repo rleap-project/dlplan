@@ -32,3 +32,4 @@ if __name__ == "__main__":
     print(f"Number of states: {len(dlplan_states)}")
     print(f"Number of dynamic atoms: {len(instance_data.dynamic_atoms)}")
     print(f"Number of static atoms: {len(instance_data.static_atoms)}")
+    print(f"Number of objects: {instance_data.instance_info.get_num_objects()}")
