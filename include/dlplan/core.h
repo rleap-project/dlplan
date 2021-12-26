@@ -36,6 +36,29 @@ namespace element {
     class Boolean;
 }
 
+/**
+ * Proxy to underlying Bitset with additional functionality.
+ */
+class ConceptDenotation {
+public:
+    ConceptDenotation(int num_objects);
+    ~ConceptDenotation();
+
+    std::vector<int> to_vector() const;
+
+    const dynamic_bitset::DynamicBitset<unsigned>& get_data() const;
+};
+
+/**
+ * Proxy to underlying Bitset with additional functionality.
+ */
+class RoleDenotation {
+public:
+
+};
+
+
+
 class Constant {
 private:
     pimpl<ConstantImpl> m_pImpl;
