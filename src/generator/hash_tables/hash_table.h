@@ -8,7 +8,7 @@
 
 #include "../types.h"
 
-#include "../../../include/dlplan/types.h"
+#include "../../../include/dlplan/core.h"
 
 
 namespace std {
@@ -37,7 +37,12 @@ namespace std {
 }
 
 
-namespace dlplan::generator {
+namespace dlplan {
+namespace core {
+class ConceptDenotation;
+class RoleDenotation;
+}
+namespace generator {
 
 /**
  * ElementHashTable provides an interface for storing elements
@@ -78,6 +83,7 @@ public:
     int get_cache_misses() const;
 };
 
+}
 }
 
 #endif

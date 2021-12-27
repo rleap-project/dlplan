@@ -20,12 +20,14 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        const ConceptDenotation c = m_concept->evaluate(state);
+        const auto c = m_concept->evaluate(state);
+        const auto& c_data = c.get_const_data();
         int num_objects = state.get_instance_info()->get_num_objects();
         RoleDenotation result(num_objects * num_objects);
+        auto& result_data = result.get_data();
         for (int i = 0; i < num_objects; ++i) {
-            if (c.test(i)) {
-                result.set(i * num_objects + i);
+            if (c_data.test(i)) {
+                result_data.set(i * num_objects + i);
             }
         }
         return result;

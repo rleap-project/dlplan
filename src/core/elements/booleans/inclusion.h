@@ -21,7 +21,7 @@ public:
     bool evaluate(const State& state) const override {
         const ConceptDenotation l = m_concept_left->evaluate(state);
         const ConceptDenotation r = m_concept_right->evaluate(state);
-        return l.is_subset_of(r);
+        return l.get_const_data().is_subset_of(r.get_const_data());
     }
 
     int compute_complexity() const override {
@@ -47,7 +47,7 @@ public:
     bool evaluate(const State& state) const override {
         const RoleDenotation l = m_role_left->evaluate(state);
         const RoleDenotation r = m_role_right->evaluate(state);
-        return l.is_subset_of(r);
+        return l.get_const_data().is_subset_of(r.get_const_data());
     }
 
     int compute_complexity() const override {

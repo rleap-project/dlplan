@@ -21,7 +21,7 @@ public:
             throw std::runtime_error("OneOfConcept::evaluate - no object with name of constant exists in instance: (" + m_constant.get_name() + ")");
         }
         ConceptDenotation result(state.get_instance_info()->get_num_objects());
-        result.set(state.get_instance_info()->get_object_idx(m_constant.get_name()));
+        result.get_data().set(state.get_instance_info()->get_object_idx(m_constant.get_name()));
         return result;
     }
 

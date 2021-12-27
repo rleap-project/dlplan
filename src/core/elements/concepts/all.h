@@ -22,15 +22,18 @@ public:
 
     ConceptDenotation evaluate(const State& state) const override {
         const RoleDenotation r = m_role->evaluate(state);
+        const auto& r_data = r.get_const_data();
         const ConceptDenotation c = m_concept->evaluate(state);
+        const auto& c_data = c.get_const_data();
         ConceptDenotation result = state.get_instance_info()->get_top_concept();
+        auto& result_data = result.get_data();
         // find counterexamples b : exists b . (a,b) in R and b notin C
         int num_objects = state.get_instance_info()->get_num_objects();
         for (int i = 0; i < num_objects; ++i) {
             for (int j = 0; j < num_objects; ++j) {
-                if (!c.test(j)) {
-                    if (r.test(i * num_objects + j)) {
-                        result.reset(i);
+                if (!c_data.test(j)) {
+                    if (r_data.test(i * num_objects + j)) {
+                        result_data.reset(i);
                         break;
                     }
                 }

@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "../types.h"
+#include "../../../include/dlplan/core.h"
 
 
 namespace dlplan::core::element::utils {
@@ -20,11 +21,13 @@ extern int path_addition(int a, int b) {
     }
 }
 
-AdjList compute_adjacency_list(const RoleDenotation& r, int num_objects) {
+AdjList compute_adjacency_list(const RoleDenotation& r) {
+    int num_objects = r.get_num_objects();
+    const auto& r_data = r.get_const_data();
     AdjList adjacency_list(num_objects);
     for (int i = 0; i < num_objects; ++i) {
         for (int j = 0; j < num_objects; ++j) {
-            if (r.test(i * num_objects + j)) {
+            if (r_data.test(i * num_objects + j)) {
                 adjacency_list[i].push_back(j);
             }
         }
@@ -88,10 +91,11 @@ PairwiseDistances compute_floyd_warshall(const AdjList& adj_list, bool reflexive
 
 RoleDenotation compute_transitive_closure(const PairwiseDistances& distances, int num_objects) {
     RoleDenotation result(num_objects * num_objects);
+    auto& result_data = result.get_data();
     for (int i = 0; i < num_objects; ++i) {
         for (int j = 0; j < num_objects; ++j) {
             if (distances[i][j] < INF) {
-                result.set(i * num_objects + j);
+                result_data.set(i * num_objects + j);
             }
         }
     }

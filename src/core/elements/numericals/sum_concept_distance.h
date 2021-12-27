@@ -25,25 +25,26 @@ public:
 
     int evaluate(const State& state) const override {
         const ConceptDenotation c = m_concept_from->evaluate(state);
-        if (c.count() == 0) {
+        const auto& c_data = c.get_const_data();
+        if (c_data.count() == 0) {
             return 0;
         }
-        const RoleDenotation r = m_role->evaluate(state);
         const ConceptDenotation d = m_concept_to->evaluate(state);
-        if (d.count() == 0) {
+        const auto& d_data = d.get_const_data();
+        if (d_data.count() == 0) {
             return INF;
         }
-
+        const RoleDenotation r = m_role->evaluate(state);
         int num_objects = state.get_instance_info()->get_num_objects();
-        utils::AdjList adj_list = utils::compute_adjacency_list(r, num_objects);
+        utils::AdjList adj_list = utils::compute_adjacency_list(r);
         int result = 0;
         for (int i = 0; i < num_objects; ++i) {  // source
-            if (c.test(i)) {
+            if (c_data.test(i)) {
                 // TODO: stop the BFS as soon as we find a node in c_to_vec?
                 utils::Distances distances = utils::compute_distances_from_state(adj_list, i);
                 int min_distance = INF;
                 for (int j = 0; j < num_objects; ++j) {  // target
-                    if (d.test(j)) {
+                    if (d_data.test(j)) {
                         min_distance = std::min<int>(min_distance, distances[j]);
                     }
                 }

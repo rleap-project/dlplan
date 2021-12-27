@@ -25,6 +25,72 @@
 
 namespace dlplan::core {
 
+ConceptDenotation::ConceptDenotation(int num_objects)
+    : m_num_objects(num_objects), m_data(dynamic_bitset::DynamicBitset<unsigned>(num_objects)) { }
+
+ConceptDenotation::ConceptDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data)
+    : m_num_objects(num_objects), m_data(std::move(data)) { }
+
+ConceptDenotation::~ConceptDenotation() { }
+
+std::vector<int> ConceptDenotation::to_vector() const {
+    std::vector<int> result;
+    result.reserve(m_num_objects);
+    for (int i = 0; i < m_num_objects; ++i) {
+        if (m_data.test(i)) result.push_back(i);
+    }
+    result.shrink_to_fit();
+    return result;
+}
+
+int ConceptDenotation::get_num_objects() const {
+    return m_num_objects;
+}
+
+dynamic_bitset::DynamicBitset<unsigned>& ConceptDenotation::get_data() {
+    return m_data;
+}
+
+const dynamic_bitset::DynamicBitset<unsigned>& ConceptDenotation::get_const_data() const {
+    return m_data;
+}
+
+
+RoleDenotation::RoleDenotation(int num_objects)
+    : m_num_objects(num_objects), m_data(dynamic_bitset::DynamicBitset<unsigned>(num_objects)) { }
+
+RoleDenotation::RoleDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data)
+    : m_num_objects(num_objects), m_data(std::move(data)) { }
+
+RoleDenotation::~RoleDenotation() { }
+
+std::vector<std::pair<int, int>> RoleDenotation::to_vector() const {
+    std::vector<std::pair<int, int>> result;
+    result.reserve(m_num_objects * m_num_objects);
+    for (int i = 0; i < m_num_objects; ++i) {
+        for (int j = 0; j < m_num_objects; ++j) {
+            if (m_data.test(i * m_num_objects + j)) {
+                result.emplace_back(i, j);
+            }
+        }
+    }
+    result.shrink_to_fit();
+    return result;
+}
+
+int RoleDenotation::get_num_objects() const {
+    return m_num_objects;
+}
+
+dynamic_bitset::DynamicBitset<unsigned>& RoleDenotation::get_data() {
+    return m_data;
+}
+
+const dynamic_bitset::DynamicBitset<unsigned>& RoleDenotation::get_const_data() const {
+    return m_data;
+}
+
+
 InstanceInfo::InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info) : m_pImpl(InstanceInfoImpl(vocabulary_info)) { }
 
 InstanceInfo& InstanceInfo::operator=(const InstanceInfo& other) {

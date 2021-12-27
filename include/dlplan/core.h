@@ -40,23 +40,41 @@ namespace element {
  * Proxy to underlying Bitset with additional functionality.
  */
 class ConceptDenotation {
+private:
+    int m_num_objects;
+    dynamic_bitset::DynamicBitset<unsigned> m_data;
+
 public:
-    ConceptDenotation(int num_objects);
+    explicit ConceptDenotation(int num_objects);
+    ConceptDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data);
     ~ConceptDenotation();
 
     std::vector<int> to_vector() const;
 
-    const dynamic_bitset::DynamicBitset<unsigned>& get_data() const;
+    int get_num_objects() const;
+    dynamic_bitset::DynamicBitset<unsigned>& get_data();
+    const dynamic_bitset::DynamicBitset<unsigned>& get_const_data() const;
 };
 
 /**
  * Proxy to underlying Bitset with additional functionality.
  */
 class RoleDenotation {
+private:
+    int m_num_objects;
+    dynamic_bitset::DynamicBitset<unsigned> m_data;
+
 public:
+    explicit RoleDenotation(int num_objects);
+    RoleDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data);
+    ~RoleDenotation();
 
+    std::vector<std::pair<int, int>> to_vector() const;
+
+    int get_num_objects() const;
+    dynamic_bitset::DynamicBitset<unsigned>& get_data();
+    const dynamic_bitset::DynamicBitset<unsigned>& get_const_data() const;
 };
-
 
 
 class Constant {

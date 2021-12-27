@@ -11,9 +11,6 @@
 
 namespace dlplan::core {
 
-using ConceptDenotation = dynamic_bitset::DynamicBitset<unsigned int>;
-using RoleDenotation = dynamic_bitset::DynamicBitset<unsigned int>;
-
 using Name_Vec = std::vector<std::string>;
 using Index_Vec = std::vector<int>;
 

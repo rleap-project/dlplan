@@ -21,7 +21,8 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        RoleDenotation r = m_role->evaluate(state);
+        auto r = m_role->evaluate(state);
+        auto& r_data = r.get_data();
         int num_objects = state.get_instance_info()->get_num_objects();
         for (int k = 0; k < num_objects; ++k) {
             for (int i = 0; i < num_objects; ++i) {
@@ -29,8 +30,8 @@ public:
                 for (int j = 0; j < num_objects; ++j) {
                     int ij = i * num_objects + j;
                     int kj = k * num_objects + j;
-                    if (r.test(ik) && r.test(kj)) {
-                        r.set(ij);
+                    if (r_data.test(ik) && r_data.test(kj)) {
+                        r_data.set(ij);
                     }
                 }
             }

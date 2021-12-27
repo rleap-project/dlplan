@@ -25,27 +25,29 @@ public:
 
     int evaluate(const State& state) const override {
         const RoleDenotation& r = m_role_from->evaluate(state);
-        if (r.count() == 0) {
+        const auto& r_data = r.get_const_data();
+        if (r_data.count() == 0) {
             return 0;
         }
-        const RoleDenotation s = m_role->evaluate(state);
         const RoleDenotation t = m_role_to->evaluate(state);
-        if (t.count() == 0) {
+        const auto& t_data = t.get_const_data();
+        if (t_data.count() == 0) {
             return INF;
         }
+        const RoleDenotation s = m_role->evaluate(state);
         int num_objects = state.get_instance_info()->get_num_objects();
-        utils::AdjList adj_list = utils::compute_adjacency_list(s, num_objects);
+        utils::AdjList adj_list = utils::compute_adjacency_list(s);
         // 3. Compute pairwise distances using a sequence of bfs calls.
         utils::PairwiseDistances pairwise_distances = utils::compute_floyd_warshall(adj_list, true);
         int result = 0;
         for (int k = 0; k < num_objects; ++k) {  // property
             for (int i = 0; i < num_objects; ++i) {  // source
                 int ki = k * num_objects + i;
-                if (r.test(ki)) {
+                if (r_data.test(ki)) {
                     int min_distance = INF;
                     for (int j = 0; j < num_objects; ++j) {  // target
                         int kj = k * num_objects + j;
-                        if (t.test(kj)) {
+                        if (t_data.test(kj)) {
                             min_distance = std::min<int>(min_distance, pairwise_distances[i][j]);
                         }
                     }
