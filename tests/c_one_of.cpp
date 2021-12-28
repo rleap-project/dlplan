@@ -20,5 +20,5 @@ TEST(DLPTests, ConceptOneOf) {
     SyntacticElementFactory factory(vocabulary);
 
     Concept concept = factory.parse_concept("c_one_of(A)");
-    EXPECT_EQ(concept.evaluate(state), dlplan::core::ConceptDenotation({0}));
+    EXPECT_EQ(concept.evaluate(state).to_vector(), Index_Vec({0}));
 }

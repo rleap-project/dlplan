@@ -25,8 +25,8 @@ TEST(DLPTests, ConceptEqual) {
     SyntacticElementFactory factory(vocabulary);
 
     Concept concept1 = factory.parse_concept("c_equal(r_primitive(role_1,0,1),r_primitive(role_2,0,1))");
-    EXPECT_EQ(concept1.evaluate(state), dlplan::core::ConceptDenotation({0, 2, 3}));
+    EXPECT_EQ(concept1.evaluate(state).to_vector(), Index_Vec({0, 2, 3}));
 
     Concept concept2 = factory.parse_concept("c_equal(r_primitive(role_2,0,1),r_primitive(role_1,0,1))");
-    EXPECT_EQ(concept2.evaluate(state), dlplan::core::ConceptDenotation({0, 2, 3}));
+    EXPECT_EQ(concept2.evaluate(state).to_vector(), Index_Vec({0, 2, 3}));
 }

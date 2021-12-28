@@ -57,7 +57,7 @@ const dynamic_bitset::DynamicBitset<unsigned>& ConceptDenotation::get_const_data
 
 
 RoleDenotation::RoleDenotation(int num_objects)
-    : m_num_objects(num_objects), m_data(dynamic_bitset::DynamicBitset<unsigned>(num_objects)) { }
+    : m_num_objects(num_objects), m_data(dynamic_bitset::DynamicBitset<unsigned>(num_objects * num_objects)) { }
 
 RoleDenotation::RoleDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data)
     : m_num_objects(num_objects), m_data(std::move(data)) { }

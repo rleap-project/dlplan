@@ -23,7 +23,7 @@ public:
         const auto c = m_concept->evaluate(state);
         const auto& c_data = c.get_const_data();
         int num_objects = state.get_instance_info()->get_num_objects();
-        RoleDenotation result(num_objects * num_objects);
+        RoleDenotation result(num_objects);
         auto& result_data = result.get_data();
         for (int i = 0; i < num_objects; ++i) {
             if (c_data.test(i)) {

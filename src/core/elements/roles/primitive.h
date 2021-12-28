@@ -26,7 +26,7 @@ public:
     RoleDenotation evaluate(const State& state) const override {
         const InstanceInfo& info = *state.get_instance_info();
         int num_objects = info.get_num_objects();
-        RoleDenotation result(num_objects * num_objects);
+        RoleDenotation result(num_objects);
         auto& result_data = result.get_data();
         for (int atom_idx : state.get_atom_idxs()) {
             const Atom& atom = info.get_atom(atom_idx);
