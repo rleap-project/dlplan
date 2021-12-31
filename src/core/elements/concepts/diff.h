@@ -20,8 +20,8 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        ConceptDenotation l = m_concept_left->evaluate(state);
-        const ConceptDenotation r = m_concept_right->evaluate(state);
+        auto l = m_concept_left->evaluate(state);
+        const auto r = m_concept_right->evaluate(state);
         l.get_data() -= r.get_const_data();
         return l;
     }

@@ -21,9 +21,9 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        const RoleDenotation r = m_role->evaluate(state);
+        const auto r = m_role->evaluate(state);
         const auto& r_data = r.get_const_data();
-        const ConceptDenotation c = m_concept->evaluate(state);
+        const auto c = m_concept->evaluate(state);
         const auto& c_data = c.get_const_data();
         ConceptDenotation result = state.get_instance_info()->get_top_concept();
         auto& result_data = result.get_data();
