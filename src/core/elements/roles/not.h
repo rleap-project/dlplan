@@ -19,12 +19,10 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        RoleDenotation_Set r_set = state.get_instance_info()->get_top_role_set();
-        const RoleDenotation r_vec = m_role->evaluate(state);
-        for (const auto& r : r_vec) {
-            r_set.erase(r);
-        }
-        return RoleDenotation(r_set.begin(), r_set.end());
+        const auto r = m_role->evaluate(state);
+        RoleDenotation result = state.get_instance_info()->get_top_role();
+        result.get_data() &= ~r.get_const_data();
+        return result;
     }
 
     int compute_complexity() const override {

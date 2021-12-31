@@ -12,6 +12,14 @@ using namespace dlplan;
 
 
 void init_core(py::module_ &m) {
+    py::class_<core::ConceptDenotation>(m, "ConceptDenotation")
+        .def("to_vector", &core::ConceptDenotation::to_vector)
+    ;
+
+    py::class_<core::RoleDenotation>(m, "RoleDenotation")
+        .def("to_vector", &core::RoleDenotation::to_vector)
+    ;
+
     py::class_<core::Constant>(m, "Constant")
         .def("__eq__", &core::Constant::operator==)
         .def("__neq__", &core::Constant::operator!=)
@@ -47,7 +55,6 @@ void init_core(py::module_ &m) {
 
     py::class_<core::State>(m, "State")
         .def(py::init<std::shared_ptr<const core::InstanceInfo>, const std::vector<core::Atom>&>())
-        // .def("__hash__", [](const core::State& state){ return std::hash<core::State>{}(state); })
         .def("__eq__", &core::State::operator==)
         .def("__neq__", &core::State::operator!=)
         .def("__repr__", &core::State::str)

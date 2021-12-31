@@ -21,17 +21,25 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        const RoleDenotation r_vec = m_role->evaluate(state);
-        const ConceptDenotation c_vec = m_concept->evaluate(state);
-        const ConceptDenotation_Set c_set(c_vec.begin(), c_vec.end());
-        // Find examples: (a,b) in R and b in C => add a
-        ConceptDenotation_Set result_set;
-        for (const auto& r : r_vec) {  // (a,b) in R
-            if (c_set.find(r.second) != c_set.end()) {  // b in C
-                result_set.insert(r.first);  // add a
+        const auto r = m_role->evaluate(state);
+        const auto& r_data = r.get_const_data();
+        const auto c = m_concept->evaluate(state);
+        const auto& c_data = c.get_const_data();
+        int num_objects = state.get_instance_info()->get_num_objects();
+        ConceptDenotation result(num_objects);
+        auto& result_data = result.get_data();
+        // find examples a : exists b . (a,b) in R and b in C
+        for (int i = 0; i < num_objects; ++i) {
+            for (int j = 0; j < num_objects; ++j) {
+                if (c_data.test(j)) {
+                    if (r_data.test(i * num_objects + j)) {
+                        result_data.set(i);
+                        break;
+                    }
+                }
             }
         }
-        return ConceptDenotation(result_set.begin(), result_set.end());
+        return result;
     }
 
     int compute_complexity() const override {

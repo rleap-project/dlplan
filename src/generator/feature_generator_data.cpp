@@ -3,8 +3,6 @@
 #include <numeric>
 
 #include "../utils/logging.h"
-#include "hash_tables/hash_table_lossless.h"
-#include "hash_tables/hash_table_sha-256.h"
 #include "hash_tables/hash_table_murmur.h"
 
 
@@ -34,47 +32,6 @@ std::vector<D> evaluate(core::Element<D>& element, const States& states) {
 }
 
 
-/**
- * Flattens a vector of concept denotations
- */
-static std::vector<int> flatten_concept_denotation(const std::vector<std::vector<int>>& denotations) {
-    std::vector<int> result;
-    // the layout
-    result.push_back(denotations.size());
-    for (const auto& denot : denotations) {
-        result.push_back(denot.size());
-    }
-    // the data
-    for (const auto& denot : denotations) {
-        result.insert(result.end(), denot.begin(), denot.end());
-    }
-    result.shrink_to_fit();
-    return result;
-}
-
-
-/**
- * Flattens a vector of role denotations
- */
-static std::vector<int> flatten_role_denotation(const std::vector<std::vector<std::pair<int, int>>>& denotations) {
-    std::vector<int> result;
-    // the layout
-    result.push_back(denotations.size());
-    for (const auto& denot : denotations) {
-        result.push_back(denot.size());
-    }
-    // the data
-    for (const auto& denot : denotations) {
-        for (const auto& p : denot) {
-            result.push_back(p.first);
-            result.push_back(p.second);
-        }
-    }
-    result.shrink_to_fit();
-    return result;
-}
-
-
 FeatureGeneratorData::FeatureGeneratorData(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit) :
       m_factory(factory), m_complexity(complexity), m_time_limit(time_limit), m_feature_limit(feature_limit),
       m_concept_elements_by_complexity(std::vector<std::vector<dlplan::core::Concept>>(complexity+1)),
@@ -90,7 +47,7 @@ bool FeatureGeneratorData::reached_limit() const {
 }
 
 bool FeatureGeneratorData::add_concept(const States& states, core::Concept&& concept) {
-    const std::vector<int>& denotation = flatten_concept_denotation(evaluate<core::ConceptDenotation>(concept, states));
+    const auto& denotation = evaluate<core::ConceptDenotation>(concept, states);
     if (m_hash_table->insert_concept(denotation)) {
         m_concept_elements_by_complexity[concept.compute_complexity()].emplace_back(concept);
         m_feature_reprs.push_back(concept.compute_repr());
@@ -101,7 +58,7 @@ bool FeatureGeneratorData::add_concept(const States& states, core::Concept&& con
 }
 
 bool FeatureGeneratorData::add_role(const States& states, core::Role&& role) {
-    const std::vector<int>& denotation = flatten_role_denotation(evaluate<core::RoleDenotation>(role, states));
+    const auto& denotation = evaluate<core::RoleDenotation>(role, states);
     if (m_hash_table->insert_role(denotation)) {
         m_role_elements_by_complexity[role.compute_complexity()].emplace_back(role);
         m_feature_reprs.push_back(role.compute_repr());
@@ -112,7 +69,7 @@ bool FeatureGeneratorData::add_role(const States& states, core::Role&& role) {
 }
 
 bool FeatureGeneratorData::add_numerical(const States& states, core::Numerical&& numerical) {
-    const std::vector<int>& denotation = evaluate<int>(numerical, states);
+    const auto& denotation = evaluate<int>(numerical, states);
     if (m_hash_table->insert_numerical(denotation)) {
         m_numerical_elements_by_complexity[numerical.compute_complexity()].emplace_back(numerical);
         m_feature_reprs.push_back(numerical.compute_repr());

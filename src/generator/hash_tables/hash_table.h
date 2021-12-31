@@ -8,6 +8,8 @@
 
 #include "../types.h"
 
+#include "../../../include/dlplan/core.h"
+
 
 namespace std {
     /**
@@ -19,15 +21,6 @@ namespace std {
             std::size_t seed = denotation.size();
             for (const auto& i : denotation) {
                 dlplan::generator::hash_combine(seed, i);
-            }
-            return seed;
-        }
-    };
-    template<> struct hash<std::array<uint8_t, 32>> {
-        std::size_t operator()(const std::array<uint8_t, 32>& h) const noexcept {
-            std::size_t seed = 32;
-            for (int i = 0; i < 32; ++i) {
-                dlplan::generator::hash_combine(seed, h[i]);
             }
             return seed;
         }
@@ -44,7 +37,12 @@ namespace std {
 }
 
 
-namespace dlplan::generator {
+namespace dlplan {
+namespace core {
+class ConceptDenotation;
+class RoleDenotation;
+}
+namespace generator {
 
 /**
  * ElementHashTable provides an interface for storing elements
@@ -66,15 +64,16 @@ public:
     HashTable() : m_cache_hits(0), m_cache_misses(0) { }
     virtual ~HashTable() = default;
 
-    bool insert_concept(const std::vector<int>& denotation);
+    bool insert_concept(const std::vector<core::ConceptDenotation>& denotation);
 
-    bool insert_role(const std::vector<int>& denotation);
+    bool insert_role(const std::vector<core::RoleDenotation>& denotation);
 
     bool insert_numerical(const std::vector<int>& denotation);
 
-    /** We cast boolean denoation to numerical and store it in a single hash map
-      * because Booleans are a special case of Numericals.
-      */
+    /**
+     * We cast boolean denoation to numerical and store it in a single hash map
+     * because Booleans are a special case of Numericals.
+     */
     bool insert_boolean(const std::vector<bool>& denotation);
 
     /**
@@ -84,6 +83,7 @@ public:
     int get_cache_misses() const;
 };
 
+}
 }
 
 #endif

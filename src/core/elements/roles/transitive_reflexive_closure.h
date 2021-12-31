@@ -20,13 +20,24 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        const RoleDenotation r_vec = m_role->evaluate(state);
-        // 1. Compute an adjacency list from the newly mapped role denotations.
-        utils::AdjList adj_list = utils::compute_adjacency_list(r_vec, state.get_instance_info()->get_num_objects());
-        // 2. Compute pairwise distances
-        utils::PairwiseDistances pairwise_distances = utils::compute_floyd_warshall(adj_list, true);
-        // 3. Extract the transitive closure from the pairwise distances.
-        return utils::compute_transitive_closure(pairwise_distances);
+        auto r = m_role->evaluate(state);
+        auto& r_data = r.get_data();
+        int num_objects = state.get_instance_info()->get_num_objects();
+        for (int k = 0; k < num_objects; ++k) {
+            for (int i = 0; i < num_objects; ++i) {
+                int ik = i * num_objects + k;
+                for (int j = 0; j < num_objects; ++j) {
+                    int ij = i * num_objects + j;
+                    int kj = k * num_objects + j;
+                    if (r_data.test(ik) && r_data.test(kj)) {
+                        r_data.set(ij);
+                    }
+                }
+            }
+            // reflexive
+            r_data.set(k * num_objects + k);
+        }
+        return r;
     }
 
     int compute_complexity() const override {

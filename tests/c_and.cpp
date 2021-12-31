@@ -23,5 +23,5 @@ TEST(DLPTests, ConceptAnd) {
     SyntacticElementFactory factory(vocabulary);
 
     Concept concept = factory.parse_concept("c_and(c_primitive(concept_1,0),c_primitive(concept_2,0))");
-    EXPECT_EQ(concept.evaluate(state), dlplan::core::ConceptDenotation({1}));
+    EXPECT_EQ(concept.evaluate(state).to_vector(), Index_Vec({1}));
 }

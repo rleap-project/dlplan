@@ -23,5 +23,5 @@ TEST(DLPTests, RoleDiff) {
     SyntacticElementFactory factory(vocabulary);
 
     Role role = factory.parse_role("r_diff(r_primitive(role_1,0,1),r_primitive(role_2,0,1))");
-    EXPECT_EQ(role.evaluate(state), dlplan::core::RoleDenotation({{0, 1}}));
+    EXPECT_EQ(role.evaluate(state).to_vector(), IndexPair_Vec({{0, 1}}));
 }

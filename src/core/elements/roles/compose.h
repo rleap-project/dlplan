@@ -21,33 +21,27 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        RoleDenotation l_vec = m_role_left->evaluate(state);
-        RoleDenotation r_vec = m_role_right->evaluate(state);
-        // complexity
-        // sorted by second component
-        std::sort(l_vec.begin(), l_vec.end(), [](const auto& l, const auto& r){ return l.second < r.second; });
-        // sorted by first component
-        std::sort(r_vec.begin(), r_vec.end(), [](const auto& l, const auto& r){ return l.first < r.first; });
-        auto l_it = l_vec.begin();
-        auto r_it = r_vec.begin();
-        RoleDenotation_Set result_set;
-        while (l_it != l_vec.end() && r_it != r_vec.end()) {
-            if (l_it->second < r_it->first) {
-                ++l_it;
-            } else if (l_it->second > r_it->first) {
-                ++r_it;
-            } else {
-                // The second component of pair in l_vec and first component of pair in r_vec comply for composition.
-                auto r_it_2 = r_it;
-                // Iterate all in r_vec that comply with the current one in l_vec.
-                while (r_it_2 != r_vec.end() && l_it->second == r_it_2->first) {
-                    result_set.emplace(l_it->first, r_it_2->second);
-                    ++r_it_2;
+        const auto l = m_role_left->evaluate(state);
+        const auto& l_data = l.get_const_data();
+        const auto r = m_role_right->evaluate(state);
+        const auto& r_data = r.get_const_data();
+        int num_objects = state.get_instance_info()->get_num_objects();
+        RoleDenotation result(num_objects);
+        auto& result_data = result.get_data();
+        for (int i = 0; i < num_objects; ++i) {  // source
+            for (int j = 0; j < num_objects; ++j) {  // target
+                int ij = i * num_objects + j;
+                for (int k = 0; k < num_objects; ++k) {  // middle
+                    int ik = i * num_objects + k;
+                    int kj = k * num_objects + j;
+                    if (l_data.test(ik) && r_data.test(kj)) {
+                        result_data.set(ij);
+                        break;
+                    }
                 }
-                ++l_it;
             }
         }
-        return RoleDenotation(result_set.begin(), result_set.end());
+        return result;
     }
 
     int compute_complexity() const override {

@@ -12,9 +12,24 @@ static std::vector<int> bool_vec_to_num_vec(const std::vector<bool>& bool_vec) {
     return num_vec;
 }
 
+template<typename T>
+static std::vector<int> bitset_to_num_vec(const std::vector<T>& denotation) {
+    static_assert(sizeof(int) == sizeof(unsigned));
+    size_t size = 0;
+    for (const auto& b : denotation) {
+        size += b.get_const_data().get_blocks().size();
+    }
+    std::vector<int> result;
+    result.reserve(size);
+    for (const auto& b : denotation) {
+        result.insert(result.end(), b.get_const_data().get_blocks().begin(), b.get_const_data().get_blocks().end());
+    }
+    return result;
+}
 
-bool HashTable::insert_concept(const std::vector<int>& denotation) {
-    if (insert_concept_impl(denotation)) {
+
+bool HashTable::insert_concept(const std::vector<core::ConceptDenotation>& denotation) {
+    if (insert_concept_impl(bitset_to_num_vec(denotation))) {
         ++m_cache_misses;
         return true;
     } else {
@@ -23,8 +38,8 @@ bool HashTable::insert_concept(const std::vector<int>& denotation) {
     }
 }
 
-bool HashTable::insert_role(const std::vector<int>& denotation) {
-    if (insert_role_impl(denotation)) {
+bool HashTable::insert_role(const std::vector<core::RoleDenotation>& denotation) {
+    if (insert_role_impl(bitset_to_num_vec(denotation))) {
         ++m_cache_misses;
         return true;
     } else {

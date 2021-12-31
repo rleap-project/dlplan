@@ -21,24 +21,24 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        const RoleDenotation left_vec = m_role_left->evaluate(state);
-        const RoleDenotation right_vec = m_role_right->evaluate(state);
-        const RoleDenotation_Set left_set(left_vec.begin(), left_vec.end());
-        const RoleDenotation_Set right_set(right_vec.begin(), right_vec.end());
-        ConceptDenotation_Set result_set = state.get_instance_info()->get_top_concept_set();
-        // Find counterexample: (a,b) in R and (a,b) not in S => remove a
-        for (const auto& r : left_vec) {  // (a,b) in R
-            if (right_set.find(r) == right_set.end()) {  // (a,b) notin S
-                result_set.erase(r.first);
+        const auto r = m_role_left->evaluate(state);
+        const auto& r_data = r.get_const_data();
+        const auto s = m_role_right->evaluate(state);
+        const auto& s_data = s.get_const_data();
+        int num_objects = state.get_instance_info()->get_num_objects();
+        ConceptDenotation result = state.get_instance_info()->get_top_concept();
+        auto& result_data = result.get_data();
+        // find counterexample [(a,b) in R and (a,b) not in S] or [(a,b) not in R and (a,b) in S]
+        for (int i = 0; i < num_objects; ++i) {
+            for (int j = 0; j < num_objects; ++j) {
+                int index = i * num_objects + j;
+                if (r_data.test(index) != s_data.test(index)) {
+                    result_data.reset(i);
+                    break;
+                }
             }
         }
-        // Find counterexample: (a,b) in S and (a,b) not in R => remove a
-        for (const auto& r : right_vec) {  // (a,b) in S
-            if (left_set.find(r) == left_set.end()) {  // (a,b) notin R
-                result_set.erase(r.first);
-            }
-        }
-        return ConceptDenotation(result_set.begin(), result_set.end());
+        return result;
     }
 
     int compute_complexity() const override {

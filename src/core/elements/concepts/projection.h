@@ -26,16 +26,33 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        const RoleDenotation role_result = m_role->evaluate(state);
-        ConceptDenotation_Set result_set;
-        for (const auto& r : role_result) {
-            if (m_pos == 0) {
-                result_set.insert(r.first);
-            } else if (m_pos == 1) {
-                result_set.insert(r.second);
+        const auto r = m_role->evaluate(state);
+        const auto& r_data = r.get_const_data();
+        int num_objects = state.get_instance_info()->get_num_objects();
+        ConceptDenotation result(num_objects);
+        auto& result_data = result.get_data();
+        if (m_pos == 0) {
+            for (int i = 0; i < num_objects; ++i) {
+                for (int j = 0; j < num_objects; ++j) {
+                    int index = i * num_objects + j;
+                    if (r_data.test(index)) {
+                        result_data.set(i);
+                        break;
+                    }
+                }
+            }
+        } else if (m_pos == 1) {
+            for (int j = 0; j < num_objects; ++j) {
+                for (int i = 0; i < num_objects; ++i) {
+                    int index = i * num_objects + j;
+                    if (r_data.test(index)) {
+                        result_data.set(j);
+                        break;
+                    }
+                }
             }
         }
-        return ConceptDenotation(result_set.begin(), result_set.end());
+        return result;
     }
 
     int compute_complexity() const override {

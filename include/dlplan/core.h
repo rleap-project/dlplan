@@ -8,6 +8,7 @@
 
 #include "pimpl.h"
 #include "types.h"
+#include "dynamic_bitset.h"
 
 
 namespace dlplan::core {
@@ -34,6 +35,47 @@ namespace element {
     class Numerical;
     class Boolean;
 }
+
+/**
+ * Proxy to underlying Bitset with additional functionality.
+ */
+class ConceptDenotation {
+private:
+    int m_num_objects;
+    dynamic_bitset::DynamicBitset<unsigned> m_data;
+
+public:
+    explicit ConceptDenotation(int num_objects);
+    ConceptDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data);
+    ~ConceptDenotation();
+
+    std::vector<int> to_vector() const;
+
+    int get_num_objects() const;
+    dynamic_bitset::DynamicBitset<unsigned>& get_data();
+    const dynamic_bitset::DynamicBitset<unsigned>& get_const_data() const;
+};
+
+/**
+ * Proxy to underlying Bitset with additional functionality.
+ */
+class RoleDenotation {
+private:
+    int m_num_objects;
+    dynamic_bitset::DynamicBitset<unsigned> m_data;
+
+public:
+    explicit RoleDenotation(int num_objects);
+    RoleDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data);
+    ~RoleDenotation();
+
+    std::vector<std::pair<int, int>> to_vector() const;
+
+    int get_num_objects() const;
+    dynamic_bitset::DynamicBitset<unsigned>& get_data();
+    const dynamic_bitset::DynamicBitset<unsigned>& get_const_data() const;
+};
+
 
 class Constant {
 private:
@@ -236,10 +278,8 @@ public:
     int get_num_objects() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
     const Index_Vec& get_static_atom_idxs() const;
-    const ConceptDenotation_Set& get_top_concept_set() const;
-    const ConceptDenotation& get_top_concept_vec() const;
-    const RoleDenotation_Set& get_top_role_set() const;
-    const RoleDenotation& get_top_role_vec() const;
+    const ConceptDenotation& get_top_concept() const;
+    const RoleDenotation& get_top_role() const;
 };
 
 

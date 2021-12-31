@@ -24,32 +24,36 @@ public:
     }
 
     int evaluate(const State& state) const override {
-        const RoleDenotation& r_from_vec = m_role_from->evaluate(state);
-        if (r_from_vec.empty()) {
+        const RoleDenotation& r = m_role_from->evaluate(state);
+        const auto& r_data = r.get_const_data();
+        if (r_data.count() == 0) {
             return 0;
         }
-        const RoleDenotation r_vec = m_role->evaluate(state);
-        const RoleDenotation r_to_vec = m_role_to->evaluate(state);
-        if (r_to_vec.empty()) {
+        const RoleDenotation t = m_role_to->evaluate(state);
+        const auto& t_data = t.get_const_data();
+        if (t_data.count() == 0) {
             return INF;
         }
-        // TODO(dominik): Compute an indexing scheme that only considers objects that are part of the role
-        // 2. Compute an adjacency list from the newly mapped role denotations.
+        const RoleDenotation s = m_role->evaluate(state);
         int num_objects = state.get_instance_info()->get_num_objects();
-        utils::AdjList adj_list = utils::compute_adjacency_list(r_vec, num_objects);
+        utils::AdjList adj_list = utils::compute_adjacency_list(s);
         // 3. Compute pairwise distances using a sequence of bfs calls.
         utils::PairwiseDistances pairwise_distances = utils::compute_floyd_warshall(adj_list, true);
-        // 4. Find closest target.
         int result = 0;
-        for (const auto& r1 : r_from_vec) {
-            int min_distance = INF;
-            for (const auto& r2 : r_to_vec) {
-                // the first component of role denotations must agree.
-                if (r1.first == r2.first) {
-                    min_distance = std::min<int>(min_distance, pairwise_distances[r1.second][r2.second]);
+        for (int k = 0; k < num_objects; ++k) {  // property
+            for (int i = 0; i < num_objects; ++i) {  // source
+                int ki = k * num_objects + i;
+                if (r_data.test(ki)) {
+                    int min_distance = INF;
+                    for (int j = 0; j < num_objects; ++j) {  // target
+                        int kj = k * num_objects + j;
+                        if (t_data.test(kj)) {
+                            min_distance = std::min<int>(min_distance, pairwise_distances[i][j]);
+                        }
+                    }
+                    result = utils::path_addition(result, min_distance);
                 }
             }
-            result = utils::path_addition(result, min_distance);
         }
         return result;
     }

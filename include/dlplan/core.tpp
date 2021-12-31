@@ -33,8 +33,7 @@ std::shared_ptr<const element::Element<T>> Element<T>::get_element() const {
     return m_element;
 }
 
-template class Element<ConceptDenotation>;
-template class Element<RoleDenotation>;
+template class Element<dynamic_bitset::DynamicBitset<unsigned int>>;
 template class Element<int>;
 template class Element<bool>;
 

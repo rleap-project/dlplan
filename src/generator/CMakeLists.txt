@@ -6,8 +6,6 @@ target_sources(dlplangenerator
         feature_generator_data.cpp
         generator.cpp
         hash_tables/hash_table.cpp
-        hash_tables/hash_table_lossless.cpp
-        hash_tables/hash_table_sha-256.cpp
         hash_tables/hash_table_murmur.cpp
         ../utils/logging.cpp
         ../utils/countdown_timer.cpp

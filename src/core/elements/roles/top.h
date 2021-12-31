@@ -7,16 +7,13 @@
 namespace dlplan::core::element {
 
 class TopRole : public Role {
-private:
-    mutable RoleDenotation m_result;
-
 public:
     TopRole(const VocabularyInfo& vocabulary)
     : Role(vocabulary, "r_top") {
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        return state.get_instance_info()->get_top_role_vec();
+        return state.get_instance_info()->get_top_role();
     }
 
     int compute_complexity() const override {

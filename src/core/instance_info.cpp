@@ -20,7 +20,7 @@ static bool exists(const std::string& name, std::unordered_map<std::string, unsi
 }
 
 InstanceInfoImpl::InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info)
-    : m_vocabulary_info(vocabulary_info) {
+    : m_vocabulary_info(vocabulary_info), m_top_concept(ConceptDenotation(0)), m_top_role(RoleDenotation(0)) {
 }
 
 const Atom& InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool negated, bool is_static) {
@@ -146,50 +146,26 @@ const Index_Vec& InstanceInfoImpl::get_static_atom_idxs() const {
     return m_static_atom_idxs;
 }
 
-const ConceptDenotation_Set& InstanceInfoImpl::get_top_concept_set() const {
-    if (static_cast<int>(m_top_concept_set.size()) != get_num_objects()) {
-        m_top_concept_set.clear();
+const ConceptDenotation& InstanceInfoImpl::get_top_concept() const {
+    if (static_cast<int>(m_top_concept.get_const_data().size()) != get_num_objects()) {
+        m_top_concept = ConceptDenotation(get_num_objects());
+        // for hashing, we want to ensure that the bits outside the range remain 0.
         for (int i = 0; i < get_num_objects(); ++i) {
-            m_top_concept_set.insert(i);
+            m_top_concept.get_data().set(i);
         }
     }
-    return m_top_concept_set;
+    return m_top_concept;
 }
 
-const ConceptDenotation& InstanceInfoImpl::get_top_concept_vec() const {
-    if (static_cast<int>(m_top_concept_vec.size()) != get_num_objects()) {
-        m_top_concept_vec.clear();
-        for (int i = 0; i < get_num_objects(); ++i) {
-            m_top_concept_vec.push_back(i);
-        }
-        m_top_concept_vec.shrink_to_fit();
-    }
-    return m_top_concept_vec;
-}
-
-const RoleDenotation_Set& InstanceInfoImpl::get_top_role_set() const {
-    if (static_cast<int>(m_top_role_set.size()) != get_num_objects() * get_num_objects()) {
-        m_top_role_set.clear();
-        for (int i = 0; i < get_num_objects(); ++i) {
-            for (int j = 0; j < get_num_objects(); ++j) {
-                m_top_role_set.emplace(i, j);
-            }
+const RoleDenotation& InstanceInfoImpl::get_top_role() const {
+    if (static_cast<int>(m_top_role.get_const_data().size()) != get_num_objects() * get_num_objects()) {
+        m_top_role = RoleDenotation(get_num_objects());
+        // for hashing, we want to ensure that the bits outside the range remain 0.
+        for (int i = 0; i < get_num_objects() * get_num_objects(); ++i) {
+            m_top_role.get_data().set(i);
         }
     }
-    return m_top_role_set;
-}
-
-const RoleDenotation& InstanceInfoImpl::get_top_role_vec() const {
-    if (static_cast<int>(m_top_role_vec.size()) != get_num_objects() * get_num_objects()) {
-        m_top_role_vec.clear();
-        for (int i = 0; i < get_num_objects(); ++i) {
-            for (int j = 0; j < get_num_objects(); ++j) {
-                m_top_role_vec.emplace_back(i, j);
-            }
-        }
-        m_top_role_vec.shrink_to_fit();
-    }
-    return m_top_role_vec;
+    return m_top_role;
 }
 
 }
