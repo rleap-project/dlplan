@@ -19,7 +19,7 @@ class State:
 
 class InstanceData:
     """ Store data related to a single instance. """
-    def __init__(self, instance_file, domain_data):
+    def __init__(self, instance_file, domain_data, max_num_states):
         self.instance_file = instance_file
         self.domain_data = domain_data
 
@@ -34,7 +34,7 @@ class InstanceData:
         self.tarski_goal_atoms = parse_conjunctive_formula(self.problem.goal)
         self.instance_info, self.tarski_atom_to_dlplan_atom = construct_instance_info(domain_data, self)
         self.search_model = GroundForwardSearchModel(self.problem, ground_problem_schemas_into_plain_operators(self.problem))
-        self.states = [State(index, model.as_atoms(), self.map_tarski_atoms_to_dlplan_state(model.as_atoms())) for index, model in enumerate(state_space_exploration(self.problem, self.search_model))]
+        self.states = [State(index, model.as_atoms(), self.map_tarski_atoms_to_dlplan_state(model.as_atoms())) for index, model in enumerate(state_space_exploration(self.problem, self.search_model, max_num_states))]
 
     def map_tarski_atoms_to_dlplan_state(self, tarski_atoms):
         # TODO: add error checking
@@ -64,12 +64,13 @@ def parse_conjunctive_formula(goal):
         return [goal]
 
 
-def state_space_exploration(problem, search_model):
+def state_space_exploration(problem, search_model, max_num_states):
     """ Run DFS to explore state space. """
     frontier = []
     frontier.append(problem.init)
     generated = set()
     generated.add(problem.init)
+    num_states = 0
     while frontier:
         cur = frontier.pop()
         successors = search_model.successors(cur)
@@ -77,6 +78,9 @@ def state_space_exploration(problem, search_model):
             if succ in generated: continue
             frontier.append(succ)
             generated.add(succ)
+            num_states += 1
+            if num_states == max_num_states:
+                return generated
     return generated
 
 

@@ -43,24 +43,24 @@ if REMOTE:
     TIME_LIMIT = 24 * 1800
 else:
     ENV = LocalEnvironment(processes=2)
-    SUITE = ["visitall:p-1-0.5-2-0.pddl"]
+    SUITE = ["visitall:p05.pddl"]
     TIME_LIMIT = 10
 ATTRIBUTES = [
-    Attribute("time_complexity_5", absolute=True, min_wins=True, scale="linear"),
-    Attribute("memory_complexity_5", absolute=True, min_wins=True, scale="linear"),
+    Attribute("generate_time_complexity_5", absolute=True, min_wins=True, scale="linear"),
+    Attribute("generate_memory_complexity_5", absolute=True, min_wins=True, scale="linear"),
     Attribute("num_generated_features_complexity_5", absolute=True, min_wins=True, scale="linear"),
     Attribute("num_novel_features_complexity_5", absolute=True, min_wins=True, scale="linear"),
-    Attribute("time_complexity_10", absolute=True, min_wins=True, scale="linear"),
-    Attribute("memory_complexity_10", absolute=True, min_wins=True, scale="linear"),
+    Attribute("generate_time_complexity_10", absolute=True, min_wins=True, scale="linear"),
+    Attribute("generate_memory_complexity_10", absolute=True, min_wins=True, scale="linear"),
     Attribute("num_generated_features_complexity_10", absolute=True, min_wins=True, scale="linear"),
     Attribute("num_novel_features_complexity_10", absolute=True, min_wins=True, scale="linear"),
     Attribute("num_states", absolute=True, min_wins=False, scale="linear"),
     Attribute("num_dynamic_atoms", absolute=True, min_wins=False, scale="linear"),
     Attribute("num_static_atoms", absolute=True, min_wins=False, scale="linear"),
+    Attribute("evaluate_time", absolute=True, min_wins=True, scale="linear"),
 ]
 MEMORY_LIMIT = 2048
 
-GENERATOR_COMPLEXITY_LIMIT = 10  # when changing this, we must adapt the parser as well
 GENERATOR_TIME_LIMIT = 24 * 1800
 GENERATOR_FEATURE_LIMIT = 1000000
 
@@ -70,33 +70,35 @@ exp = Experiment(environment=ENV)
 exp.add_parser("experiment_parser.py")
 
 for task in suites.build_suite(BENCHMARKS_DIR, SUITE):
-    run = exp.add_run()
-    # Create symbolic links and aliases. This is optional. We
-    # could also use absolute paths in add_command().
-    run.add_resource("domain", task.domain_file, symlink=True)
-    run.add_resource("problem", task.problem_file, symlink=True)
-    run.add_resource("main", "main.py", symlink=True)
-    # 'ff' binary has to be on the PATH.
-    # We could also use exp.add_resource().
-    run.add_command(
-        "baseline",
-        ["python3", "main.py", "--domain", "{domain}", "--instance", "{problem}", "--c", GENERATOR_COMPLEXITY_LIMIT, "--t", GENERATOR_TIME_LIMIT, "--f", GENERATOR_FEATURE_LIMIT],
-        time_limit=TIME_LIMIT,
-        memory_limit=MEMORY_LIMIT,
-    )
-    # AbsoluteReport needs the following properties:
-    # 'domain', 'problem', 'algorithm', 'coverage'.
-    run.set_property("domain", task.domain)
-    run.set_property("problem", task.problem)
-    run.set_property("algorithm", "baseline")
-    # BaseReport needs the following properties:
-    # 'time_limit', 'memory_limit'.
-    run.set_property("time_limit", TIME_LIMIT)
-    run.set_property("memory_limit", MEMORY_LIMIT)
-    # Every run has to have a unique id in the form of a list.
-    # The algorithm name is only really needed when there are
-    # multiple algorithms.
-    run.set_property("id", ["baseline", task.domain, task.problem])
+    for c in [5,10]:
+        run = exp.add_run()
+        # Create symbolic links and aliases. This is optional. We
+        # could also use absolute paths in add_command().
+        run.add_resource("domain", task.domain_file, symlink=True)
+        run.add_resource("problem", task.problem_file, symlink=True)
+        run.add_resource("main", "main.py", symlink=True)
+        # 'ff' binary has to be on the PATH.
+        # We could also use exp.add_resource().
+        # up to complexity 5
+        run.add_command(
+            f"complexity-{c}",
+            ["python3", "main.py", "--domain", "{domain}", "--instance", "{problem}", "--max_num_states", "100", "--c", c, "--t", GENERATOR_TIME_LIMIT, "--f", GENERATOR_FEATURE_LIMIT],
+            time_limit=TIME_LIMIT,
+            memory_limit=MEMORY_LIMIT,
+        )
+        # AbsoluteReport needs the following properties:
+        # 'domain', 'problem', 'algorithm', 'coverage'.
+        run.set_property("domain", task.domain)
+        run.set_property("problem", task.problem)
+        run.set_property("algorithm", f"complexity-{c}")
+        # BaseReport needs the following properties:
+        # 'time_limit', 'memory_limit'.
+        run.set_property("time_limit", TIME_LIMIT)
+        run.set_property("memory_limit", MEMORY_LIMIT)
+        # Every run has to have a unique id in the form of a list.
+        # The algorithm name is only really needed when there are
+        # multiple algorithms.
+        run.set_property("id", [f"complexity-{c}", task.domain, task.problem])
 
 # Add step that writes experiment files to disk.
 exp.add_step("build", exp.build)
