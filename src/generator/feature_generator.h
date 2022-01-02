@@ -105,12 +105,12 @@ private:
     /**
      * Generates all Elements with complexity 1.
      */
-    void generate_base(const States& states, FeatureGeneratorData& data);
+    void generate_base(const States& states, FeatureGeneratorData& data, utils::threadpool::ThreadPool& th);
 
     /**
      * Inductively generate Elements of higher complexity.
      */
-    void generate_inductively(int complexity, const States& states, FeatureGeneratorData& data);
+    void generate_inductively(int complexity, const States& states, FeatureGeneratorData& data, utils::threadpool::ThreadPool& th);
 
     /**
      * Print some brief overview.

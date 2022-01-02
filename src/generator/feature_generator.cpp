@@ -42,7 +42,7 @@
 
 #include "../../include/dlplan/generator.h"
 #include "../utils/logging.h"
-
+#include "../utils/threadpool.h"
 
 namespace dlplan::generator {
 
@@ -128,17 +128,18 @@ FeatureRepresentations FeatureGeneratorImpl::generate(std::shared_ptr<core::Synt
         rule->initialize();
     }
     FeatureGeneratorData data(factory, complexity, time_limit, feature_limit);
-    generate_base(states, data);
-    generate_inductively(complexity, states, data);
+    utils::threadpool::ThreadPool th;
+    generate_base(states, data, th);
+    generate_inductively(complexity, states, data, th);
     // utils::g_log << "Overall results: " << std::endl;
     // print_overall_statistics();
     return data.get_feature_reprs();
 }
 
-void FeatureGeneratorImpl::generate_base(const States& states, FeatureGeneratorData& data) {
+void FeatureGeneratorImpl::generate_base(const States& states, FeatureGeneratorData& data, utils::threadpool::ThreadPool& th) {
     utils::g_log << "Started generating base features of complexity 1." << std::endl;
     for (const auto& rule : m_primitive_rules) {
-        rule->generate(states, 0, data);
+        rule->generate(states, 0, data, th);
     }
     utils::g_log << "Complexity " << 1 << ":" << std::endl;
     data.print_statistics();
@@ -146,13 +147,18 @@ void FeatureGeneratorImpl::generate_base(const States& states, FeatureGeneratorD
     utils::g_log << "Finished generating base features." << std::endl;
 }
 
-void FeatureGeneratorImpl::generate_inductively(int complexity, const States& states, FeatureGeneratorData& data) {
+void FeatureGeneratorImpl::generate_inductively(int complexity, const States& states, FeatureGeneratorData& data, utils::threadpool::ThreadPool& th) {
     utils::g_log << "Started generating composite features." << std::endl;
+    // Initialize default threadpool
+    utils::threadpool::ThreadPool th;
     for (int iteration = 1; iteration < complexity; ++iteration) {  // every composition adds at least one complexity
         if (data.reached_limit()) break;
+        // TODO(dominik): Add tasks to threadpool queue
         for (const auto& rule : m_inductive_rules) {
-            rule->generate(states, iteration, data);
+            rule->generate(states, iteration, data, th);
         }
+        // TODO(dominik): sleep main thread until queue is empty.
+        while (!th.get_queue().empty()) { }
         utils::g_log << "Complexity " << iteration+1 << ":" << std::endl;
         data.print_statistics();
         print_brief_statistics();

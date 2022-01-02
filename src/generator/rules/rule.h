@@ -5,8 +5,9 @@
 #include <iostream>
 
 #include "../types.h"
-
 #include "../feature_generator_data.h"
+
+#include "../../utils/threadpool.h"
 
 
 namespace dlplan::generator::rules {
@@ -29,15 +30,15 @@ protected:
     bool m_enabled;
 
 protected:
-    virtual void generate_impl(const States& states, int iteration, FeatureGeneratorData& data) = 0;
+    virtual void generate_impl(const States& states, int iteration, FeatureGeneratorData& data, utils::threadpool::ThreadPool& th) = 0;
 
 public:
     Rule(const std::string& name) : m_name(name), m_count_instantiations(0), m_enabled(true) { }
     virtual ~Rule() = default;
 
-    void generate(const States& states, int iteration, FeatureGeneratorData& data) {
+    void generate(const States& states, int iteration, FeatureGeneratorData& data, utils::threadpool::ThreadPool& th) {
         if (m_enabled) {
-            generate_impl(states, iteration, data);
+            generate_impl(states, iteration, data, th);
         }
     }
 
