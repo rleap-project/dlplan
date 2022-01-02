@@ -11,7 +11,6 @@
 #include "../../utils/threadpool.h"
 
 
-
 namespace dlplan {
 namespace core {
     class Concept;
