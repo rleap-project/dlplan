@@ -7,6 +7,12 @@
 
 #include "../generator_data.h"
 #include "../types.h"
+<<<<<<< HEAD
+
+#include "../../utils/threadpool.h"
+=======
+#include "../feature_generator_data.h"
+>>>>>>> added threadpool implementation
 
 #include "../../utils/threadpool.h"
 

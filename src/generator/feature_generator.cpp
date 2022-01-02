@@ -49,7 +49,10 @@
 #include "../../include/dlplan/generator.h"
 #include "../utils/logging.h"
 #include "../utils/threadpool.h"
+<<<<<<< HEAD
 
+=======
+>>>>>>> added threadpool implementation
 
 namespace dlplan::generator {
 
@@ -127,10 +130,14 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
 }
 
 FeatureRepresentations FeatureGeneratorImpl::generate(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit, const States& states) {
-    for (auto& r : m_primitive_rules) r->initialize();
-    for (auto& r : m_inductive_rules) r->initialize();
-    GeneratorData data(factory, complexity);
-    // Initialize default threadpool
+    // Resets the counters
+    for (const auto& rule : m_primitive_rules) {
+        rule->initialize();
+    }
+    for (const auto& rule : m_inductive_rules) {
+        rule->initialize();
+    }
+    FeatureGeneratorData data(factory, complexity, time_limit, feature_limit);
     utils::threadpool::ThreadPool th;
     generate_base(states, data, th);
     generate_inductively(complexity, states, data, th);
@@ -154,6 +161,8 @@ void FeatureGeneratorImpl::generate_base(const States& states, GeneratorData& da
 
 void FeatureGeneratorImpl::generate_inductively(int complexity, const States& states, GeneratorData& data, utils::threadpool::ThreadPool& th) {
     utils::g_log << "Started generating composite features." << std::endl;
+    // Initialize default threadpool
+    utils::threadpool::ThreadPool th;
     for (int iteration = 1; iteration < complexity; ++iteration) {  // every composition adds at least one complexity
         for (const auto& rule : m_inductive_rules) {
             rule->submit_tasks(states, iteration, data, th);
@@ -161,6 +170,8 @@ void FeatureGeneratorImpl::generate_inductively(int complexity, const States& st
         for (const auto& rule : m_inductive_rules) {
             rule->parse_results_of_tasks(iteration, data);
         }
+        // TODO(dominik): sleep main thread until queue is empty.
+        while (!th.get_queue().empty()) { }
         utils::g_log << "Complexity " << iteration+1 << ":" << std::endl;
         data.print_statistics();
         print_brief_statistics();
