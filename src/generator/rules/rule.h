@@ -7,20 +7,11 @@
 
 #include "../generator_data.h"
 #include "../types.h"
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-#include "../../utils/threadpool.h"
-=======
-#include "../feature_generator_data.h"
->>>>>>> added threadpool implementation
-=======
->>>>>>> added mutexes
 
 #include "../../utils/threadpool.h"
 
 
-<<<<<<< HEAD
+
 namespace dlplan {
 namespace core {
     class Concept;
@@ -30,9 +21,6 @@ namespace core {
     class SyntacticElementFactory;
 }
 namespace generator {
-=======
-namespace dlplan::generator {
->>>>>>> added mutexes
 class GeneratorData;
 namespace rules {
 
@@ -143,7 +131,7 @@ inline std::vector<int> bitset_to_num_vec(const std::vector<T>& denotation) {
     return result;
 }
 
-}
+
 }
 }
 }
