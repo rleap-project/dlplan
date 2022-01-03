@@ -54,6 +54,7 @@
 =======
 >>>>>>> added threadpool implementation
 
+
 namespace dlplan::generator {
 
 
@@ -137,7 +138,7 @@ FeatureRepresentations FeatureGeneratorImpl::generate(std::shared_ptr<core::Synt
     for (const auto& rule : m_inductive_rules) {
         rule->initialize();
     }
-    FeatureGeneratorData data(factory, complexity, time_limit, feature_limit);
+    GeneratorData data(factory, complexity);
     utils::threadpool::ThreadPool th;
     generate_base(states, data, th);
     generate_inductively(complexity, states, data, th);

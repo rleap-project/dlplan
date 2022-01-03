@@ -7,7 +7,6 @@
 
 #include "hash_table.h"
 
-
 namespace dlplan::generator {
 
 struct GeneratorData {
