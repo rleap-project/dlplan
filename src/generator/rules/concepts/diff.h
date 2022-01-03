@@ -18,12 +18,7 @@ public:
                         [&](const auto& c2){
                             th.submit([&](){
                                 auto result = data.m_factory->make_diff_concept(c1, c2);
-                                auto denotations = evaluate<core::ConceptDenotation>(result, states);
-                                auto flat = bitset_to_num_vec<core::ConceptDenotation>(denotations);
-                                if (data.m_concept_hash_table.insert(compute_hash(flat))) {
-                                    data.m_concept_iteration_data[iteration+1].push_back(std::move(result));
-                                    increment_instantiations();
-                                }
+                                add_concept(*this, iteration, std::move(result), states, data);
                             });
                         }
                     );

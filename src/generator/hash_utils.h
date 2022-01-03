@@ -9,12 +9,7 @@
 #include "../utils/MurmurHash3.h"
 
 
-namespace dlplan {
-namespace core {
-template<typename T>
-class Element;
-}
-namespace generator {
+namespace dlplan::generator {
 
 /**
  * For combining hash value we use the boost::hash_combine one-liner.
@@ -33,54 +28,6 @@ std::array<uint32_t, 4> compute_hash(const std::vector<int>& denotation) {
     return a;
 }
 
-template<typename T>
-static void print_elements(const std::vector<std::vector<T>>& elements_by_complexity) {
-    for (const auto& elements : elements_by_complexity) {
-        for (const auto& element : elements) {
-            std::cout << element.compute_complexity() << " " << element.compute_repr() << std::endl;
-        }
-    }
-}
-
-/**
- * Evaluates an element on a collection of states.
- */
-template<typename D>
-std::vector<D> evaluate(core::Element<D>& element, const States& states) {
-    std::vector<D> result;
-    result.reserve(states.size());
-    for (const auto& state : states) {
-        result.push_back(element.evaluate(state));
-    }
-    result.shrink_to_fit();
-    return result;
-}
-
-std::vector<int> bool_vec_to_num_vec(const std::vector<bool>& bool_vec) {
-    std::vector<int> num_vec;
-    num_vec.reserve(bool_vec.size());
-    for (size_t i = 0; i < bool_vec.size(); ++i) {
-        num_vec.push_back(bool_vec[i]);
-    }
-    return num_vec;
-}
-
-template<typename T>
-std::vector<int> bitset_to_num_vec(const std::vector<T>& denotation) {
-    static_assert(sizeof(int) == sizeof(unsigned));
-    size_t size = 0;
-    for (const auto& b : denotation) {
-        size += b.get_const_data().get_blocks().size();
-    }
-    std::vector<int> result;
-    result.reserve(size);
-    for (const auto& b : denotation) {
-        result.insert(result.end(), b.get_const_data().get_blocks().begin(), b.get_const_data().get_blocks().end());
-    }
-    return result;
-}
-
-}
 }
 
 
