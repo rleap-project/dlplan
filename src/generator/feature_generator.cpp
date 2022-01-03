@@ -49,10 +49,6 @@
 #include "../../include/dlplan/generator.h"
 #include "../utils/logging.h"
 #include "../utils/threadpool.h"
-<<<<<<< HEAD
-
-=======
->>>>>>> added threadpool implementation
 
 
 namespace dlplan::generator {
@@ -158,8 +154,6 @@ void FeatureGeneratorImpl::generate_base(const States& states, GeneratorData& da
 
 void FeatureGeneratorImpl::generate_inductively(int complexity, const States& states, GeneratorData& data, utils::threadpool::ThreadPool& th) {
     utils::g_log << "Started generating composite features." << std::endl;
-    // Initialize default threadpool
-    utils::threadpool::ThreadPool th;
     for (int iteration = 1; iteration < complexity; ++iteration) {  // every composition adds at least one complexity
         for (const auto& rule : m_inductive_rules) {
             rule->submit_tasks(states, iteration, data, th);

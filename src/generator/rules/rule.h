@@ -133,6 +133,5 @@ inline std::vector<int> bitset_to_num_vec(const std::vector<T>& denotation) {
 }
 }
 }
-}
 
 #endif
