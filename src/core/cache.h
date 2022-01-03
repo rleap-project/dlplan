@@ -28,6 +28,7 @@ public:
      * Retrieves a certain element.
      */
     std::shared_ptr<VALUE> at(const KEY& key) {
+        std::lock_guard<std::mutex> hold(m_mutex);
         return m_cache.at(key).lock();
     }
 

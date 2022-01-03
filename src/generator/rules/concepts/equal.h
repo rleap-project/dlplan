@@ -9,17 +9,27 @@ class EqualConcept : public Rule {
 public:
     EqualConcept() : Rule("c_equal") { }
 
-    virtual void generate_impl(const States& states, int iteration, FeatureGeneratorData& data) override {
+    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
         if (iteration == 2) {
-            for (const auto& role_left : data.get_role_elements_by_complexity()[1]) {
-                // Some further restriction used in D2L where righthandside can only be goal version of left handside.
-                // However, this the EqualConcept does not contribute much to the blowup so we don't use it.
-                for (const auto& role_right : data.get_role_elements_by_complexity()[1]) { 
-                    if (data.reached_limit()) return;
-                    else if (data.add_concept(states, data.get_factory().make_equal_concept(role_left, role_right))) {
-                        m_count_instantiations += 1;
+            for (int i = 1; i < iteration; ++i) {
+                int j = iteration - i;
+                data.m_role_iteration_data[i].for_each(
+                    [&](const auto& r1){
+                        data.m_role_iteration_data[j].for_each(
+                            [&](const auto& r2){
+                                th.submit([&](){
+                                    auto result = data.m_factory->make_equal_concept(r1, r2);
+                                    auto denotations = evaluate<core::ConceptDenotation>(result, states);
+                                    auto flat = bitset_to_num_vec<core::ConceptDenotation>(denotations);
+                                    if (data.m_concept_hash_table.insert(compute_hash(flat))) {
+                                        data.m_concept_iteration_data[iteration+1].push_back(std::move(result));
+                                        increment_instantiations();
+                                    }
+                                });
+                            }
+                        );
                     }
-                }           
+                );
             }
         }
     }

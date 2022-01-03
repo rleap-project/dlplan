@@ -40,9 +40,13 @@
 #include "rules/booleans/empty.h"
 #include "rules/booleans/nullary.h"
 
+#include "hash_table.h"
+#include "generator_data.h"
+
 #include "../../include/dlplan/generator.h"
 #include "../utils/logging.h"
 #include "../utils/threadpool.h"
+
 
 namespace dlplan::generator {
 
@@ -127,32 +131,32 @@ FeatureRepresentations FeatureGeneratorImpl::generate(std::shared_ptr<core::Synt
     for (const auto& rule : m_inductive_rules) {
         rule->initialize();
     }
-    FeatureGeneratorData data(factory, complexity, time_limit, feature_limit);
+    GeneratorData data(factory, complexity);
     utils::threadpool::ThreadPool th;
     generate_base(states, data, th);
     generate_inductively(complexity, states, data, th);
     // utils::g_log << "Overall results: " << std::endl;
     // print_overall_statistics();
-    return data.get_feature_reprs();
+    return data.m_result_data.get_reprs();
 }
 
-void FeatureGeneratorImpl::generate_base(const States& states, FeatureGeneratorData& data, utils::threadpool::ThreadPool& th) {
+void FeatureGeneratorImpl::generate_base(const States& states, GeneratorData& data, utils::threadpool::ThreadPool& th) {
     utils::g_log << "Started generating base features of complexity 1." << std::endl;
     for (const auto& rule : m_primitive_rules) {
         rule->generate(states, 0, data, th);
     }
     utils::g_log << "Complexity " << 1 << ":" << std::endl;
-    data.print_statistics();
     print_brief_statistics();
     utils::g_log << "Finished generating base features." << std::endl;
 }
 
-void FeatureGeneratorImpl::generate_inductively(int complexity, const States& states, FeatureGeneratorData& data, utils::threadpool::ThreadPool& th) {
+void FeatureGeneratorImpl::generate_inductively(int complexity, const States& states, GeneratorData& data, utils::threadpool::ThreadPool& th) {
     utils::g_log << "Started generating composite features." << std::endl;
     // Initialize default threadpool
     utils::threadpool::ThreadPool th;
     for (int iteration = 1; iteration < complexity; ++iteration) {  // every composition adds at least one complexity
-        if (data.reached_limit()) break;
+        // TODO(dominik): Add checks whether limits are reached.
+        // if (data.reached_limit()) break;
         // TODO(dominik): Add tasks to threadpool queue
         for (const auto& rule : m_inductive_rules) {
             rule->generate(states, iteration, data, th);

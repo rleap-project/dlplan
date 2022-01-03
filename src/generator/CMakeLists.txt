@@ -3,10 +3,7 @@ add_library(dlplangenerator SHARED)
 target_sources(dlplangenerator
     PRIVATE
         feature_generator.cpp
-        feature_generator_data.cpp
         generator.cpp
-        hash_tables/hash_table.cpp
-        hash_tables/hash_table_murmur.cpp
         ../utils/logging.cpp
         ../utils/countdown_timer.cpp
         ../utils/sha-256.c

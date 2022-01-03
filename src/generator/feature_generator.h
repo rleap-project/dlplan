@@ -46,7 +46,7 @@
 #include "../../include/dlplan/core.h"
 
 #include "types.h"
-#include "feature_generator_data.h"
+#include "iteration_data.h"
 
 #include "rules/rule.h"
 
@@ -56,6 +56,7 @@ namespace core {
     class SyntacticElementFactory;
 }
 namespace generator {
+struct GeneratorData;
 
 using Rule_Ptr = std::shared_ptr<rules::Rule>;
 
@@ -105,12 +106,12 @@ private:
     /**
      * Generates all Elements with complexity 1.
      */
-    void generate_base(const States& states, FeatureGeneratorData& data, utils::threadpool::ThreadPool& th);
+    void generate_base(const States& states, GeneratorData& data, utils::threadpool::ThreadPool& th);
 
     /**
      * Inductively generate Elements of higher complexity.
      */
-    void generate_inductively(int complexity, const States& states, FeatureGeneratorData& data, utils::threadpool::ThreadPool& th);
+    void generate_inductively(int complexity, const States& states, GeneratorData& data, utils::threadpool::ThreadPool& th);
 
     /**
      * Print some brief overview.
