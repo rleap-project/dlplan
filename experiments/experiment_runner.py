@@ -82,7 +82,7 @@ for task in suites.build_suite(BENCHMARKS_DIR, SUITE):
         # up to complexity 5
         run.add_command(
             f"complexity-{c}",
-            ["python3", "main.py", "--domain", "{domain}", "--instance", "{problem}", "--max_num_states", "100", "--c", c, "--t", GENERATOR_TIME_LIMIT, "--f", GENERATOR_FEATURE_LIMIT],
+            ["python3", "main.py", "--domain", "{domain}", "--instance", "{problem}", "--c", c, "--t", GENERATOR_TIME_LIMIT, "--f", GENERATOR_FEATURE_LIMIT],
             time_limit=TIME_LIMIT,
             memory_limit=MEMORY_LIMIT,
         )
