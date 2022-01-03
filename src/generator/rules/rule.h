@@ -40,6 +40,8 @@ protected:
      */
     int m_count;
 
+    mutable std::mutex m_mutex;
+
 protected:
     virtual void submit_tasks_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) = 0;
 
@@ -72,12 +74,14 @@ public:
     }
 
     void print_statistics() const {
+        std::lock_guard<std::mutex> hold(m_mutex);
         if (m_enabled) {
             std::cout << "    " << m_name << ": " << m_count << std::endl;
         }
     }
 
     void set_enabled(bool enabled) {
+        std::lock_guard<std::mutex> hold(m_mutex);
         m_enabled = enabled;
     }
 };
@@ -126,6 +130,7 @@ inline std::vector<int> bitset_to_num_vec(const std::vector<T>& denotation) {
     return result;
 }
 
+}
 }
 }
 }
