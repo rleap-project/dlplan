@@ -5,6 +5,7 @@
 
 
 
+
 namespace dlplan::generator::rules {
 
 class SomeConcept : public Concept {
