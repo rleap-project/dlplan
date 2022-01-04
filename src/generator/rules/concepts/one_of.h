@@ -15,6 +15,7 @@ public:
                 auto result = data.m_factory->make_one_of_concept(constant);
                 add_concept(*this, iteration, std::move(result), states, data);
             }
+            return;
         });
     }
 };
