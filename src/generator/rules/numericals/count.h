@@ -3,25 +3,30 @@
 
 #include "../rule.h"
 
+
 namespace dlplan::generator::rules {
 
 class CountNumerical : public Rule {
 public:
     CountNumerical() : Rule("n_count") { }
 
-    virtual void generate_impl(const States& states, int iteration, FeatureGeneratorData& data) override {
-        for (const auto& concept : data.get_concept_elements_by_complexity()[iteration]) {
-            if (data.reached_limit()) return;
-            else if (data.add_numerical(states, data.get_factory().make_count(concept))) {
-                m_count_instantiations += 1;
+    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+        data.m_concept_iteration_data[iteration].for_each(
+            [&](const auto& c){
+                th.submit([&](){
+                    auto result = data.m_factory->make_count(c);
+                    add_numerical(*this, iteration, std::move(result), states, data);
+                });
             }
-        }
-        for (const auto& role : data.get_role_elements_by_complexity()[iteration]) {
-            if (data.reached_limit()) return;
-            else if (data.add_numerical(states, data.get_factory().make_count(role))) {
-                m_count_instantiations += 1;
+        );
+        data.m_role_iteration_data[iteration].for_each(
+            [&](const auto& r){
+                th.submit([&](){
+                    auto result = data.m_factory->make_count(r);
+                    add_numerical(*this, iteration, std::move(result), states, data);
+                });
             }
-        }
+        );
     }
 };
 

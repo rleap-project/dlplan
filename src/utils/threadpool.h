@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <functional>
 #include <future>
+#include <iostream>
 #include <memory>
 #include <mutex>
 #include <queue>
@@ -253,6 +254,7 @@ public:
             destroy();
             throw;
         }
+        std::cout << "Constructed thread pool with " << m_threads.size() << " thread." << std::endl;
     }
 
     /**

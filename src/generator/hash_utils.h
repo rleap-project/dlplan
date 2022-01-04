@@ -22,7 +22,7 @@ void hash_combine(std::size_t& seed, const T& v)
     seed ^= hasher(v) + 0x9e3779b9 + (seed<<6) + (seed>>2);
 }
 
-std::array<uint32_t, 4> compute_hash(const std::vector<int>& denotation) {
+inline std::array<uint32_t, 4> compute_hash(const std::vector<int>& denotation) {
     std::array<uint32_t, 4> a;
     MurmurHash3_x86_128(denotation.begin().base(), sizeof(int) * denotation.size(), denotation.size(), a.begin());
     return a;

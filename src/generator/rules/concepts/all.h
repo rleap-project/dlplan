@@ -2,7 +2,6 @@
 #define DLPLAN_SRC_GENERATOR_RULES_CONCEPTS_ALL_H_
 
 #include "../rule.h"
-#include "../../generator_data.h"
 
 
 namespace dlplan::generator::rules {

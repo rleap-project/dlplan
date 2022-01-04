@@ -9,17 +9,18 @@ class InverseRole : public Rule {
 public:
     InverseRole() : Rule("r_inverse") { }
 
-    virtual void generate_impl(const States& states, int iteration, FeatureGeneratorData& data) override {
+    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
         if (iteration == 1) {
-            for (const auto& role : data.get_role_elements_by_complexity()[1]) {
-                if (data.reached_limit()) return;
-                else if (data.add_role(states, data.get_factory().make_inverse_role(role))) {
-                    m_count_instantiations += 1;
+            data.m_role_iteration_data[1].for_each(
+                [&](const auto& r){
+                    th.submit([&](){
+                        auto result = data.m_factory->make_inverse_role(r);
+                        add_role(*this, iteration, std::move(result), states, data);
+                    });
                 }
-            }
+            );
         }
     }
-
 };
 
 }

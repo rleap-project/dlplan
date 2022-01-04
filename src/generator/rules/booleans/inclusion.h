@@ -10,28 +10,36 @@ class InclusionBoolean : public Rule {
 public:
     InclusionBoolean() : Rule("b_inclusion") { }
 
-    virtual void generate_impl(const States& states, int iteration, FeatureGeneratorData& data) override {
+    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
         for (int i = 1; i < iteration; ++i) {
             int j = iteration - i;
-            for (const auto& concept_left : data.get_concept_elements_by_complexity()[i]) {
-                for (const auto& concept_right : data.get_concept_elements_by_complexity()[j]) {
-                    if (data.reached_limit()) return;
-                    else if (data.add_boolean(states, data.get_factory().make_concept_inclusion_boolean(concept_left, concept_right))) {
-                        m_count_instantiations += 1;
-                    }
+            data.m_concept_iteration_data[i].for_each(
+                [&](const auto& c1){
+                    data.m_concept_iteration_data[j].for_each(
+                        [&](const auto& c2){
+                            th.submit([&](){
+                                auto result = data.m_factory->make_concept_inclusion_boolean(c1, c2);
+                                add_boolean(*this, iteration, std::move(result), states, data);
+                            });
+                        }
+                    );
                 }
-            }
+            );
         }
         for (int i = 1; i < iteration; ++i) {
             int j = iteration - i;
-            for (const auto& role_left : data.get_role_elements_by_complexity()[i]) {
-                for (const auto& role_right : data.get_role_elements_by_complexity()[j]) {
-                    if (data.reached_limit()) return;
-                    else if (data.add_boolean(states, data.get_factory().make_role_inclusion_boolean(role_left, role_right))) {
-                        m_count_instantiations += 1;
-                    }
+            data.m_role_iteration_data[i].for_each(
+                [&](const auto& r1){
+                    data.m_role_iteration_data[j].for_each(
+                        [&](const auto& r2){
+                            th.submit([&](){
+                                auto result = data.m_factory->make_role_inclusion_boolean(r1, r2);
+                                add_boolean(*this, iteration, std::move(result), states, data);
+                            });
+                        }
+                    );
                 }
-            }
+            );
         }
     }
 };

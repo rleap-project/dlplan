@@ -3,6 +3,7 @@ add_library(dlplangenerator SHARED)
 target_sources(dlplangenerator
     PRIVATE
         feature_generator.cpp
+        hash_table.cpp
         generator.cpp
         ../utils/logging.cpp
         ../utils/countdown_timer.cpp
@@ -10,7 +11,7 @@ target_sources(dlplangenerator
         ../utils/MurmurHash3.cpp
         ../utils/timer.cpp
         ../utils/system.cpp)
-target_link_libraries(dlplangenerator dlplancore)
+target_link_libraries(dlplangenerator dlplancore pthread)
 
 set(PUBLIC_HEADER_FILES
     include/dlplan/generator.h

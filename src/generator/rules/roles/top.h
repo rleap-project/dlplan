@@ -9,10 +9,11 @@ class TopRole : public Rule {
 public:
     TopRole() : Rule("r_top") { }
 
-    virtual void generate_impl(const States& states, int, FeatureGeneratorData& data) override {
-        if (data.add_role(states, data.get_factory().make_top_role())) {
-            m_count_instantiations += 1;
-        }
+    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+        th.submit([&](){
+            auto result = data.m_factory->make_top_role();
+            add_role(*this, iteration, std::move(result), states, data);
+        });
     }
 };
 

@@ -3,6 +3,7 @@
 
 #include "../rule.h"
 
+
 namespace dlplan::generator::rules {
 
 class PrimitiveRole : public Rule {
@@ -15,13 +16,8 @@ public:
             for (int pos1 = 0; pos1 < predicate.get_arity(); ++pos1) {
                 for (int pos2 = pos1 + 1; pos2 < predicate.get_arity(); ++pos2) {
                     th.submit([&, pos1, pos2](){
-                        auto role = data.m_factory->make_primitive_role(predicate, pos1, pos2);
-                        auto denotations = evaluate<core::RoleDenotation>(role, states);
-                        auto flat = bitset_to_num_vec<core::RoleDenotation>(denotations);
-                        if (data.m_role_hash_table.insert(compute_hash(flat))) {
-                            data.m_role_iteration_data[1].push_back(std::move(role));
-                            increment_instantiations();
-                        }
+                        auto result = data.m_factory->make_primitive_role(predicate, pos1, pos2);
+                        add_role(*this, iteration, std::move(result), states, data);
                     });
                 }
             }

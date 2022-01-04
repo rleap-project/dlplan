@@ -9,20 +9,26 @@ class ConceptDistanceNumerical : public Rule {
 public:
     ConceptDistanceNumerical() : Rule("n_concept_distance") { }
 
-    virtual void generate_impl(const States& states, int iteration, FeatureGeneratorData& data) override {
+    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
         for (int i = 1; i < iteration; ++i) {
             for (int j = 1; j < std::max(2,iteration - i); ++j) {
                 int k = iteration - i - j;
-                for (const auto& concept_left : data.get_concept_elements_by_complexity()[i]) {
-                    for (const auto& role : data.get_role_elements_by_complexity()[j]) {
-                        for (const auto& concept_right : data.get_concept_elements_by_complexity()[k]) {
-                            if (data.reached_limit()) return;
-                            else if (data.add_numerical(states, data.get_factory().make_concept_distance(concept_left, role, concept_right))) {
-                                m_count_instantiations += 1;
+                data.m_concept_iteration_data[i].for_each(
+                    [&](const auto& c1){
+                        data.m_role_iteration_data[j].for_each(
+                            [&](const auto& r) {
+                                data.m_concept_iteration_data[k].for_each(
+                                    [&](const auto& c2) {
+                                        th.submit([&](){
+                                            auto result = data.m_factory->make_concept_distance(c1, r, c2);
+                                            add_numerical(*this, iteration, std::move(result), states, data);
+                                        });
+                                    }
+                                );
                             }
-                        }
+                        );
                     }
-                }
+                );
             }
         }
     }

@@ -52,39 +52,39 @@ namespace dlplan::generator {
 
 
 FeatureGeneratorImpl::FeatureGeneratorImpl()
-    : c_one_of(std::make_shared<rules::OneOfConcept>(rules::OneOfConcept())),
-      c_top(std::make_shared<rules::TopConcept>(rules::TopConcept())),
-      c_bot(std::make_shared<rules::BotConcept>(rules::BotConcept())),
-      c_primitive(std::make_shared<rules::PrimitiveConcept>(rules::PrimitiveConcept())),
-      r_top(std::make_shared<rules::TopRole>(rules::TopRole())),
-      r_primitive(std::make_shared<rules::PrimitiveRole>(rules::PrimitiveRole())),
-      b_nullary(std::make_shared<rules::NullaryBoolean>(rules::NullaryBoolean())),
-      b_empty(std::make_shared<rules::EmptyBoolean>(rules::EmptyBoolean())),
-      n_count(std::make_shared<rules::CountNumerical>(rules::CountNumerical())),
-      b_inclusion(std::make_shared<rules::InclusionBoolean>(rules::InclusionBoolean())),
-      n_concept_distance(std::make_shared<rules::ConceptDistanceNumerical>(rules::ConceptDistanceNumerical())),
-      n_role_distance(std::make_shared<rules::RoleDistanceNumerical>(rules::RoleDistanceNumerical())),
-      n_sum_concept_distance(std::make_shared<rules::SumConceptDistanceNumerical>(rules::SumConceptDistanceNumerical())),
-      n_sum_role_distance(std::make_shared<rules::SumRoleDistanceNumerical>(rules::SumRoleDistanceNumerical())),
-      c_and(std::make_shared<rules::AndConcept>(rules::AndConcept())),
-      c_or(std::make_shared<rules::OrConcept>(rules::OrConcept())),
-      c_not(std::make_shared<rules::NotConcept>(rules::NotConcept())),
-      c_diff(std::make_shared<rules::DiffConcept>(rules::DiffConcept())),
-      c_projection(std::make_shared<rules::ProjectionConcept>(rules::ProjectionConcept())),
-      c_equal(std::make_shared<rules::EqualConcept>(rules::EqualConcept())),
-      c_subset(std::make_shared<rules::SubsetConcept>(rules::SubsetConcept())),
-      c_some(std::make_shared<rules::SomeConcept>(rules::SomeConcept())),
-      c_all(std::make_shared<rules::AllConcept>(rules::AllConcept())),
-      r_and(std::make_shared<rules::AndRole>(rules::AndRole())),
-      r_or(std::make_shared<rules::OrRole>(rules::OrRole())),
-      r_not(std::make_shared<rules::NotRole>(rules::NotRole())),
-      r_diff(std::make_shared<rules::DiffRole>(rules::DiffRole())),
-      r_identity(std::make_shared<rules::IdentityRole>(rules::IdentityRole())),
-      r_inverse(std::make_shared<rules::InverseRole>(rules::InverseRole())),
-      r_restrict(std::make_shared<rules::RestrictRole>(rules::RestrictRole())),
-      r_compose(std::make_shared<rules::ComposeRole>(rules::ComposeRole())),
-      r_transitive_closure(std::make_shared<rules::TransitiveClosureRole>(rules::TransitiveClosureRole())),
-      r_transitive_reflexive_closure(std::make_shared<rules::TransitiveReflexiveClosureRole>(rules::TransitiveReflexiveClosureRole())) {
+    : c_one_of(std::make_shared<rules::OneOfConcept>()),
+      c_top(std::make_shared<rules::TopConcept>()),
+      c_bot(std::make_shared<rules::BotConcept>()),
+      c_primitive(std::make_shared<rules::PrimitiveConcept>()),
+      r_top(std::make_shared<rules::TopRole>()),
+      r_primitive(std::make_shared<rules::PrimitiveRole>()),
+      b_nullary(std::make_shared<rules::NullaryBoolean>()),
+      b_empty(std::make_shared<rules::EmptyBoolean>()),
+      n_count(std::make_shared<rules::CountNumerical>()),
+      b_inclusion(std::make_shared<rules::InclusionBoolean>()),
+      n_concept_distance(std::make_shared<rules::ConceptDistanceNumerical>()),
+      n_role_distance(std::make_shared<rules::RoleDistanceNumerical>()),
+      n_sum_concept_distance(std::make_shared<rules::SumConceptDistanceNumerical>()),
+      n_sum_role_distance(std::make_shared<rules::SumRoleDistanceNumerical>()),
+      c_and(std::make_shared<rules::AndConcept>()),
+      c_or(std::make_shared<rules::OrConcept>()),
+      c_not(std::make_shared<rules::NotConcept>()),
+      c_diff(std::make_shared<rules::DiffConcept>()),
+      c_projection(std::make_shared<rules::ProjectionConcept>()),
+      c_equal(std::make_shared<rules::EqualConcept>()),
+      c_subset(std::make_shared<rules::SubsetConcept>()),
+      c_some(std::make_shared<rules::SomeConcept>()),
+      c_all(std::make_shared<rules::AllConcept>()),
+      r_and(std::make_shared<rules::AndRole>()),
+      r_or(std::make_shared<rules::OrRole>()),
+      r_not(std::make_shared<rules::NotRole>()),
+      r_diff(std::make_shared<rules::DiffRole>()),
+      r_identity(std::make_shared<rules::IdentityRole>()),
+      r_inverse(std::make_shared<rules::InverseRole>()),
+      r_restrict(std::make_shared<rules::RestrictRole>()),
+      r_compose(std::make_shared<rules::ComposeRole>()),
+      r_transitive_closure(std::make_shared<rules::TransitiveClosureRole>()),
+      r_transitive_reflexive_closure(std::make_shared<rules::TransitiveReflexiveClosureRole>()) {
     m_primitive_rules.emplace_back(c_one_of);
     m_primitive_rules.emplace_back(c_top);
     m_primitive_rules.emplace_back(c_bot);
@@ -124,14 +124,10 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
 }
 
 FeatureRepresentations FeatureGeneratorImpl::generate(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit, const States& states) {
-    // Resets the counters
-    for (const auto& rule : m_primitive_rules) {
-        rule->initialize();
-    }
-    for (const auto& rule : m_inductive_rules) {
-        rule->initialize();
-    }
+    for (auto& r : m_primitive_rules) r->get_stats().initialize();
+    for (auto& r : m_inductive_rules) r->get_stats().initialize();
     GeneratorData data(factory, complexity);
+    // Initialize default threadpool
     utils::threadpool::ThreadPool th;
     generate_base(states, data, th);
     generate_inductively(complexity, states, data, th);
@@ -152,8 +148,6 @@ void FeatureGeneratorImpl::generate_base(const States& states, GeneratorData& da
 
 void FeatureGeneratorImpl::generate_inductively(int complexity, const States& states, GeneratorData& data, utils::threadpool::ThreadPool& th) {
     utils::g_log << "Started generating composite features." << std::endl;
-    // Initialize default threadpool
-    utils::threadpool::ThreadPool th;
     for (int iteration = 1; iteration < complexity; ++iteration) {  // every composition adds at least one complexity
         // TODO(dominik): Add checks whether limits are reached.
         // if (data.reached_limit()) break;
@@ -162,6 +156,7 @@ void FeatureGeneratorImpl::generate_inductively(int complexity, const States& st
             rule->generate(states, iteration, data, th);
         }
         // TODO(dominik): sleep main thread until queue is empty.
+        std::cout << "generated tasks for iteration: " << iteration << std::endl;
         while (!th.get_queue().empty()) { }
         utils::g_log << "Complexity " << iteration+1 << ":" << std::endl;
         data.print_statistics();
@@ -171,12 +166,8 @@ void FeatureGeneratorImpl::generate_inductively(int complexity, const States& st
 }
 
 void FeatureGeneratorImpl::print_brief_statistics() const {
-    for (const auto& rule : m_primitive_rules) {
-        rule->print_statistics();
-    }
-    for (const auto& rule : m_inductive_rules) {
-        rule->print_statistics();
-    }
+    for (auto& r : m_primitive_rules) r->print_statistics();
+    for (auto& r : m_inductive_rules) r->print_statistics();
 }
 
 void FeatureGeneratorImpl::set_generate_empty_boolean(bool enable) {

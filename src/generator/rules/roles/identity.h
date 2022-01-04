@@ -9,12 +9,16 @@ class IdentityRole : public Rule {
 public:
     IdentityRole() : Rule("r_identity") { }
 
-    virtual void generate_impl(const States& states, int iteration, FeatureGeneratorData& data) override {
-        for (const auto& concept : data.get_concept_elements_by_complexity()[iteration]) {
-            if (data.reached_limit()) return;
-            else if (data.add_role(states, data.get_factory().make_identity_role(concept))) {
-                m_count_instantiations += 1;
-            }
+    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+        for (int i = 1; i < iteration; ++i) {
+            data.m_concept_iteration_data[i].for_each(
+                [&](const auto& c){
+                    th.submit([&](){
+                        auto result = data.m_factory->make_identity_role(c);
+                        add_role(*this, iteration, std::move(result), states, data);
+                    });
+                }
+            );
         }
     }
 };

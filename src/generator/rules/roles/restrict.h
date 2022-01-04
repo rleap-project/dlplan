@@ -9,16 +9,20 @@ class RestrictRole : public Rule {
 public:
     RestrictRole() : Rule("r_restrict") { }
 
-    virtual void generate_impl(const States& states, int iteration, FeatureGeneratorData& data) override {
+    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
         if (iteration == 2) {
-            for (const auto& role : data.get_role_elements_by_complexity()[1]) {
-                for (const auto& concept : data.get_concept_elements_by_complexity()[1]) {
-                    if (data.reached_limit()) return;
-                    else if (data.add_role(states, data.get_factory().make_restrict_role(role, concept))) {
-                        m_count_instantiations += 1;
-                    }
+            data.m_role_iteration_data[1].for_each(
+                [&](const auto& r){
+                    data.m_concept_iteration_data[1].for_each(
+                        [&](const auto& c){
+                            th.submit([&](){
+                                auto result = data.m_factory->make_restrict_role(r, c);
+                                add_role(*this, iteration, std::move(result), states, data);
+                            });
+                        }
+                    );
                 }
-            }
+            );
         }
     }
 };

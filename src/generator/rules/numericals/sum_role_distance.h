@@ -9,20 +9,26 @@ class SumRoleDistanceNumerical : public Rule {
 public:
     SumRoleDistanceNumerical() : Rule("n_sum_role_distance") { }
 
-    virtual void generate_impl(const States& states, int iteration, FeatureGeneratorData& data) override {
+    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
         for (int i = 1; i < iteration; ++i) {
             for (int j = 1; j < iteration - i; ++j) {
                 int k = iteration - i - j;
-                for (const auto& role_left : data.get_role_elements_by_complexity()[i]) {
-                    for (const auto& role : data.get_role_elements_by_complexity()[j]) {
-                        for (const auto& role_right : data.get_role_elements_by_complexity()[k]) {
-                            if (data.reached_limit()) return;
-                            else if (data.add_numerical(states, data.get_factory().make_sum_role_distance(role_left, role, role_right))) {
-                                m_count_instantiations += 1;
+                data.m_role_iteration_data[i].for_each(
+                    [&](const auto& r1){
+                        data.m_role_iteration_data[j].for_each(
+                            [&](const auto& r2) {
+                                data.m_role_iteration_data[k].for_each(
+                                    [&](const auto& r3) {
+                                        th.submit([&](){
+                                            auto result = data.m_factory->make_sum_role_distance(r1, r2, r3);
+                                            add_numerical(*this, iteration, std::move(result), states, data);
+                                        });
+                                    }
+                                );
                             }
-                        }
+                        );
                     }
-                }
+                );
             }
         }
     }
