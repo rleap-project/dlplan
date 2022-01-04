@@ -21,7 +21,7 @@ public:
      * Returns true if element is newly inserted.
      */
     void push_back(T&& element) {
-        std::lock_guard<std::mutex> hold(m_mutex);
+        // std::lock_guard<std::mutex> hold(m_mutex);
         m_elements.push_back(std::move(element));
     }
 
@@ -29,14 +29,14 @@ public:
      * Apply function to all elements with in the iteration.
      */
     void for_each(std::function<void(const T&)> function) const {
-        std::lock_guard<std::mutex> hold(m_mutex);
+        // std::lock_guard<std::mutex> hold(m_mutex);
         for (const auto& c : m_elements) {
             function(c);
         }
     }
 
     size_t size() const {
-        std::lock_guard<std::mutex> hold(m_mutex);
+        // std::lock_guard<std::mutex> hold(m_mutex);
         return m_elements.size();
     }
 };

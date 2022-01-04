@@ -28,7 +28,7 @@ public:
                             std::ref(*data.m_factory))
                     );
                 }
-            }
+            );
         }
         for (int i = 1; i < iteration; ++i) {
             int j = iteration - i;
@@ -47,7 +47,7 @@ public:
                             std::ref(*data.m_factory))
                     );
                 }
-            }
+            );
         }
     }
 };
