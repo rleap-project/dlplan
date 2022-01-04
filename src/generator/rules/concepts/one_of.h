@@ -10,12 +10,12 @@ public:
     OneOfConcept() : Rule("c_one_of") { }
 
     virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
-        for (const auto& constant : data.m_factory->get_vocabulary_info()->get_constants()) {
-            th.submit([&](){
+        th.submit([&](){
+            for (const auto& constant : data.m_factory->get_vocabulary_info()->get_constants()) {
                 auto result = data.m_factory->make_one_of_concept(constant);
                 add_concept(*this, iteration, std::move(result), states, data);
-            });
-        }
+            }
+        });
     }
 };
 

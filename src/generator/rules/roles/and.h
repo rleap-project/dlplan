@@ -7,21 +7,29 @@
 namespace dlplan::generator::rules {
 
 class AndRole : public Rule {
+private:
+    std::vector<std::vector<core::Role>> m_roles_by_iteration;
+
 public:
     AndRole() : Rule("r_and") { }
 
     virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
-        for (int i = 1; i < iteration; ++i) {
-            int j = iteration - i;
-            for (const auto& r1 : data.m_role_iteration_data[i].get_elements()) {
-                for (const auto& r2 : data.m_role_iteration_data[j].get_elements()) {
-                    th.submit([&](){
+        // Copy missing data.
+        for (int i = static_cast<int>(m_roles_by_iteration.size()); i < iteration; ++i) {
+            m_roles_by_iteration.push_back(data.m_role_iteration_data[i].get_elements());
+        }
+        // Use 1 thread for the rule.
+        th.submit([&](){
+            for (int i = 1; i < iteration; ++i) {
+                int j = iteration - i;
+                for (const auto& r1 : m_roles_by_iteration[i]) {
+                    for (const auto& r2 : m_roles_by_iteration[j]) {
                         auto result = data.m_factory->make_and_role(r1, r2);
                         add_role(*this, iteration, std::move(result), states, data);
-                    });
+                    }
                 }
             }
-        }
+        });
     }
 };
 

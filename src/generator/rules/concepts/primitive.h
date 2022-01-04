@@ -11,15 +11,14 @@ public:
     PrimitiveConcept() : Rule("c_primitive") { }
 
     virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
-        const std::vector<core::Predicate>& predicates = data.m_factory->get_vocabulary_info()->get_predicates();
-        for (const auto& predicate : predicates) {
-            for (int pos = 0; pos < predicate.get_arity(); ++pos) {
-                th.submit([&, pos](){
+        th.submit([&](){
+            for (const auto& predicate : data.m_factory->get_vocabulary_info()->get_predicates()) {
+                for (int pos = 0; pos < predicate.get_arity(); ++pos) {
                     auto result = data.m_factory->make_primitive_concept(predicate, pos);
                     add_concept(*this, iteration, std::move(result), states, data);
-                });
+                }
             }
-        }
+        });
     }
 };
 

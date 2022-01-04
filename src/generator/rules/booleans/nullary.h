@@ -12,14 +12,14 @@ public:
 
     virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
         const std::vector<core::Predicate>& predicates = data.m_factory->get_vocabulary_info()->get_predicates();
-        for (const auto& predicate : predicates) {
-            if (predicate.get_arity() == 0) {
-                th.submit([&](){
+        th.submit([&](){
+            for (const auto& predicate : predicates) {
+                if (predicate.get_arity() == 0) {
                     auto result = data.m_factory->make_nullary_boolean(predicate);
                     add_boolean(*this, iteration, std::move(result), states, data);
-                });
+                }
             }
-        }
+        });
     }
 };
 

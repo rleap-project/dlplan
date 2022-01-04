@@ -6,21 +6,29 @@
 namespace dlplan::generator::rules {
 
 class OrConcept : public Rule {
+private:
+    std::vector<std::vector<core::Concept>> m_concepts_by_iteration;
+
 public:
     OrConcept() : Rule("c_or") { }
 
     virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
-        for (int i = 1; i < iteration; ++i) {
-            int j = iteration - i;
-            for (const auto& c1 : data.m_concept_iteration_data[i].get_elements()) {
-                for (const auto& c2 : data.m_concept_iteration_data[j].get_elements()) {
-                    th.submit([&](){
+        // Copy missing data.
+        for (int i = static_cast<int>(m_concepts_by_iteration.size()); i < iteration; ++i) {
+            m_concepts_by_iteration.push_back(data.m_concept_iteration_data[i].get_elements());
+        }
+        // Use 1 thread for the rule.
+        th.submit([&](){
+            for (int i = 1; i < iteration; ++i) {
+                int j = iteration - i;
+                for (const auto& c1 : m_concepts_by_iteration[i]) {
+                    for (const auto& c2 : m_concepts_by_iteration[j]) {
                         auto result = data.m_factory->make_or_concept(c1, c2);
                         add_concept(*this, iteration, std::move(result), states, data);
-                    });
+                    }
                 }
             }
-        }
+        });
     }
 };
 
