@@ -292,9 +292,10 @@ public:
         using TaskType = ThreadTask<PackagedTask>;
 
         PackagedTask task{std::move(boundTask)};
-        TaskFuture<ResultType> result{task.get_future()};
+        // TaskFuture<ResultType> result{task.get_future()};
         m_workQueue.push(std::make_unique<TaskType>(std::move(task)));
-        return result;
+        // std::cout << "finish: " << std::endl;
+        return;
     }
 
     const ThreadSafeQueue<std::unique_ptr<IThreadTask>>& get_queue() const {
@@ -310,6 +311,8 @@ private:
         while(!m_done)
         {
             std::unique_ptr<IThreadTask> pTask{nullptr};
+            std::thread::id this_id = std::this_thread::get_id();
+            //std::cout << "wait:  " << this_id << std::endl;
             if(m_workQueue.waitPop(pTask))
             {
                 std::cout << "start" << std::endl;
