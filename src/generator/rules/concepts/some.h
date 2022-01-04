@@ -4,6 +4,7 @@
 #include "../concept.h"
 
 
+
 namespace dlplan::generator::rules {
 
 class SomeConcept : public Concept {
@@ -28,7 +29,7 @@ public:
                             std::ref(*data.m_factory))
                     );
                 }
-            }
+            );
         }
     }
 };
