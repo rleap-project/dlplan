@@ -25,7 +25,7 @@ public:
                 pos,
                 std::ref(*data.m_factory)));
             }
-        }
+        });
     }
 };
 
