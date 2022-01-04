@@ -27,7 +27,7 @@ public:
                             std::ref(*data.m_factory))
                     );
                 }
-            );
+            }
         }
     }
 };

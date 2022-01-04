@@ -49,10 +49,6 @@
 #include "../../include/dlplan/generator.h"
 #include "../utils/logging.h"
 #include "../utils/threadpool.h"
-<<<<<<< HEAD
-
-=======
->>>>>>> added threadpool implementation
 
 
 namespace dlplan::generator {
@@ -166,7 +162,6 @@ void FeatureGeneratorImpl::generate_inductively(int complexity, const States& st
             rule->parse_results_of_tasks(iteration, data);
         }
         // TODO(dominik): sleep main thread until queue is empty.
-        std::cout << "generated tasks for iteration: " << iteration << std::endl;
         while (!th.get_queue().empty()) { }
         utils::g_log << "Complexity " << iteration+1 << ":" << std::endl;
         data.print_statistics();
