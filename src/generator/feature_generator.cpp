@@ -151,12 +151,10 @@ void FeatureGeneratorImpl::generate_inductively(int complexity, const States& st
     for (int iteration = 1; iteration < complexity; ++iteration) {  // every composition adds at least one complexity
         // TODO(dominik): Add checks whether limits are reached.
         // if (data.reached_limit()) break;
-        // TODO(dominik): Add tasks to threadpool queue
         for (const auto& rule : m_inductive_rules) {
             rule->generate(states, iteration, data, th);
         }
         // TODO(dominik): sleep main thread until queue is empty.
-        std::cout << "generated tasks for iteration: " << iteration << std::endl;
         while (!th.get_queue().empty()) { }
         utils::g_log << "Complexity " << iteration+1 << ":" << std::endl;
         data.print_statistics();

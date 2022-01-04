@@ -11,14 +11,12 @@ public:
 
     virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
         if (iteration == 1) {
-            data.m_role_iteration_data[1].for_each(
-                [&](const auto& r){
-                    th.submit([&](){
-                        auto result = data.m_factory->make_transitive_reflexive_closure(r);
-                        add_role(*this, iteration, std::move(result), states, data);
-                    });
-                }
-            );
+            for (const auto& r : data.m_role_iteration_data[iteration].get_elements()) {
+            th.submit([&](){
+                auto result = data.m_factory->make_transitive_reflexive_closure(r);
+                add_role(*this, iteration, std::move(result), states, data);
+            });
+        }
         }
     }
 };

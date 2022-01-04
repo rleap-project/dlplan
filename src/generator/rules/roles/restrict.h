@@ -11,18 +11,14 @@ public:
 
     virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
         if (iteration == 2) {
-            data.m_role_iteration_data[1].for_each(
-                [&](const auto& r){
-                    data.m_concept_iteration_data[1].for_each(
-                        [&](const auto& c){
-                            th.submit([&](){
-                                auto result = data.m_factory->make_restrict_role(r, c);
-                                add_role(*this, iteration, std::move(result), states, data);
-                            });
-                        }
-                    );
+            for (const auto& r : data.m_role_iteration_data[1].get_elements()) {
+                for (const auto& c : data.m_concept_iteration_data[1].get_elements()) {
+                    th.submit([&](){
+                        auto result = data.m_factory->make_restrict_role(r, c);
+                        add_role(*this, iteration, std::move(result), states, data);
+                    });
                 }
-            );
+            }
         }
     }
 };

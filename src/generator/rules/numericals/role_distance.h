@@ -13,22 +13,16 @@ public:
         for (int i = 1; i < iteration; ++i) {
             for (int j = 1; j < iteration - i; ++j) {
                 int k = iteration - i - j;
-                data.m_role_iteration_data[i].for_each(
-                    [&](const auto& r1){
-                        data.m_role_iteration_data[j].for_each(
-                            [&](const auto& r2) {
-                                data.m_role_iteration_data[k].for_each(
-                                    [&](const auto& r3) {
-                                        th.submit([&](){
-                                            auto result = data.m_factory->make_role_distance(r1, r2, r3);
-                                            add_numerical(*this, iteration, std::move(result), states, data);
-                                        });
-                                    }
-                                );
-                            }
-                        );
+                for (const auto& r1 : data.m_role_iteration_data[i].get_elements()) {
+                    for (const auto& r2 : data.m_role_iteration_data[j].get_elements()) {
+                        for (const auto& r3 : data.m_role_iteration_data[k].get_elements()) {
+                            th.submit([&](){
+                                auto result = data.m_factory->make_role_distance(r1, r2, r3);
+                                add_numerical(*this, iteration, std::move(result), states, data);
+                            });
+                        }
                     }
-                );
+                }
             }
         }
     }

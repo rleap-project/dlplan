@@ -14,7 +14,6 @@ public:
         const std::vector<core::Predicate>& predicates = data.m_factory->get_vocabulary_info()->get_predicates();
         for (const auto& predicate : predicates) {
             for (int pos = 0; pos < predicate.get_arity(); ++pos) {
-                std::cout << "submit" << std::endl;
                 th.submit([&, pos](){
                     auto result = data.m_factory->make_primitive_concept(predicate, pos);
                     add_concept(*this, iteration, std::move(result), states, data);
