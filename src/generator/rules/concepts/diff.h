@@ -18,7 +18,7 @@ public:
             m_concepts_by_iteration.push_back(data.m_concept_iteration_data[i].get_elements());
         }
         // Use 1 thread for the rule.
-        th.submit([&](){
+        tasks.push_back(th.submit([&](){
             for (int i = 1; i < iteration; ++i) {
                 int j = iteration - i;
                 for (const auto& c1 : m_concepts_by_iteration[i]) {
@@ -28,7 +28,7 @@ public:
                     }
                 }
             }
-        });
+        }));
     }
 };
 

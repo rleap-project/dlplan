@@ -22,7 +22,7 @@ public:
             m_roles_by_iteration.push_back(data.m_role_iteration_data[i].get_elements());
         }
         // Use 1 thread for the rule.
-        th.submit([&](){
+        tasks.push_back(th.submit([&](){
             for (int i = 1; i < iteration; ++i) {
                 for (int j = 1; j < iteration - i; ++j) {
                     int k = iteration - i - j;
@@ -36,7 +36,7 @@ public:
                     }
                 }
             }
-        });
+        }));
     }
 };
 

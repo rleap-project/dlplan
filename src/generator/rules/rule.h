@@ -157,7 +157,7 @@ inline void add_role(Rule& rule, int iteration, core::Role&& result, const State
     auto flat = bitset_to_num_vec<core::RoleDenotation>(denotations);
     if (data.m_role_hash_table.insert(compute_hash(flat))) {
         data.m_result_data.add_repr(result.compute_repr());
-        // data.m_role_iteration_data[iteration+1].push_back(std::move(result));
+        data.m_role_iteration_data[iteration+1].push_back(std::move(result));
         rule.get_stats().increment();
     }
 }
