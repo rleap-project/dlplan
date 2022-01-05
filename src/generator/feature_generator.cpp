@@ -3,6 +3,9 @@
 #include <numeric>
 #include <iostream>
 #include <cassert>
+#include <chrono>
+#include <thread>
+
 
 #include "rules/concepts/all.h"
 #include "rules/concepts/and.h"
@@ -138,8 +141,12 @@ FeatureRepresentations FeatureGeneratorImpl::generate(std::shared_ptr<core::Synt
 
 void FeatureGeneratorImpl::generate_base(const States& states, GeneratorData& data, utils::threadpool::ThreadPool& th) {
     utils::g_log << "Started generating base features of complexity 1." << std::endl;
+    std::vector<utils::threadpool::ThreadPool::TaskFuture<void>> tasks;
     for (const auto& rule : m_primitive_rules) {
-        rule->generate(states, 0, data, th);
+        rule->generate(states, 0, data, th, tasks);
+    }
+    for (auto& task : tasks) {
+        task.get();
     }
     utils::g_log << "Complexity " << 1 << ":" << std::endl;
     print_brief_statistics();
@@ -149,14 +156,13 @@ void FeatureGeneratorImpl::generate_base(const States& states, GeneratorData& da
 void FeatureGeneratorImpl::generate_inductively(int complexity, const States& states, GeneratorData& data, utils::threadpool::ThreadPool& th) {
     utils::g_log << "Started generating composite features." << std::endl;
     for (int iteration = 1; iteration < complexity; ++iteration) {  // every composition adds at least one complexity
-        // TODO(dominik): Add checks whether limits are reached.
-        // if (data.reached_limit()) break;
+        std::vector<utils::threadpool::ThreadPool::TaskFuture<void>> tasks;
         for (const auto& rule : m_inductive_rules) {
-            // rule->generate(states, iteration, data, th);
+            rule->generate(states, iteration, data, th, tasks);
         }
-        // TODO(dominik): sleep main thread until queue is empty.
-        std::cout << th.get_queue().empty() << std::endl;
-        while (!th.get_queue().empty()) { }
+        for (auto& task : tasks) {
+            task.get();
+        }
         utils::g_log << "Complexity " << iteration+1 << ":" << std::endl;
         data.print_statistics();
         print_brief_statistics();

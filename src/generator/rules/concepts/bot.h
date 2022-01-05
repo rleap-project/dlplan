@@ -9,7 +9,7 @@ class BotConcept : public Rule {
 public:
     BotConcept() : Rule("c_bot") { }
 
-    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th, std::vector<utils::threadpool::ThreadPool::TaskFuture<void>>& tasks) override {
         th.submit([&](){
             auto result = data.m_factory->make_bot_concept();
             add_concept(*this, iteration, std::move(result), states, data);

@@ -66,15 +66,15 @@ protected:
     RuleStats m_stats;
 
 protected:
-    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) = 0;
+    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th, std::vector<utils::threadpool::ThreadPool::TaskFuture<void>>& tasks) = 0;
 
 public:
     Rule(const std::string& name) : m_name(name), m_enabled(true) { }
     virtual ~Rule() = default;
 
-    void generate(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) {
+    void generate(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th, std::vector<utils::threadpool::ThreadPool::TaskFuture<void>>& tasks) {
         if (m_enabled) {
-            generate_impl(states, iteration, data, th);
+            generate_impl(states, iteration, data, th, tasks);
         }
     }
 
@@ -146,7 +146,8 @@ inline void add_concept(Rule& rule, int iteration, core::Concept&& result, const
     if (data.m_concept_hash_table.insert(compute_hash(flat))) {
         data.m_result_data.add_repr(result.compute_repr());
         // TODO(dominik): the following crashes
-        // data.m_concept_iteration_data[iteration+1].push_back(std::move(result));
+        //std::cout << &data.m_concept_iteration_data[iteration+1]<< " " << data.m_concept_iteration_data[iteration+1].size() << std::endl;
+        data.m_concept_iteration_data[iteration+1].push_back(std::move(result));
         rule.get_stats().increment();
     }
 }
@@ -154,30 +155,30 @@ inline void add_concept(Rule& rule, int iteration, core::Concept&& result, const
 inline void add_role(Rule& rule, int iteration, core::Role&& result, const States& states, GeneratorData& data) {
     auto denotations = evaluate<core::RoleDenotation>(result, states);
     auto flat = bitset_to_num_vec<core::RoleDenotation>(denotations);
-    //if (data.m_role_hash_table.insert(compute_hash(flat))) {
-    //    data.m_result_data.add_repr(result.compute_repr());
-    //    data.m_role_iteration_data[iteration+1].push_back(std::move(result));
-    //    rule.get_stats().increment();
-    //}
+    if (data.m_role_hash_table.insert(compute_hash(flat))) {
+        data.m_result_data.add_repr(result.compute_repr());
+        // data.m_role_iteration_data[iteration+1].push_back(std::move(result));
+        rule.get_stats().increment();
+    }
 }
 
 inline void add_boolean(Rule& rule, int iteration, core::Boolean&& result, const States& states, GeneratorData& data) {
     auto denotations = evaluate<bool>(result, states);
     auto flat = bool_vec_to_num_vec(denotations);
-    //if (data.m_boolean_and_numerical_hash_table.insert(compute_hash(flat))) {
-    //    data.m_result_data.add_repr(result.compute_repr());
-    //    data.m_boolean_iteration_data[iteration+1].push_back(std::move(result));
-    //    rule.get_stats().increment();
-    //}
+    if (data.m_boolean_and_numerical_hash_table.insert(compute_hash(flat))) {
+        data.m_result_data.add_repr(result.compute_repr());
+        data.m_boolean_iteration_data[iteration+1].push_back(std::move(result));
+        rule.get_stats().increment();
+    }
 }
 
 inline void add_numerical(Rule& rule, int iteration, core::Numerical&& result, const States& states, GeneratorData& data) {
     auto denotations = evaluate<int>(result, states);
-    //if (data.m_boolean_and_numerical_hash_table.insert(compute_hash(denotations))) {
-    //    data.m_result_data.add_repr(result.compute_repr());
-    //    data.m_numerical_iteration_data[iteration+1].push_back(std::move(result));
-    //    rule.get_stats().increment();
-    //}
+    if (data.m_boolean_and_numerical_hash_table.insert(compute_hash(denotations))) {
+        data.m_result_data.add_repr(result.compute_repr());
+        data.m_numerical_iteration_data[iteration+1].push_back(std::move(result));
+        rule.get_stats().increment();
+    }
 }
 
 }

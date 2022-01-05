@@ -10,7 +10,7 @@ class NullaryBoolean : public Rule {
 public:
     NullaryBoolean() : Rule("b_nullary") { }
 
-    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th, std::vector<utils::threadpool::ThreadPool::TaskFuture<void>>& tasks) override {
         const std::vector<core::Predicate>& predicates = data.m_factory->get_vocabulary_info()->get_predicates();
         th.submit([&](){
             for (const auto& predicate : predicates) {

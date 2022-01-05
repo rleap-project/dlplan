@@ -9,7 +9,7 @@ class EqualConcept : public Rule {
 public:
     EqualConcept() : Rule("c_equal") { }
 
-    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th, std::vector<utils::threadpool::ThreadPool::TaskFuture<void>>& tasks) override {
         if (iteration == 2) {
             for (int i = 1; i < iteration; ++i) {
                 int j = iteration - i;

@@ -9,7 +9,7 @@ class TopConcept : public Rule {
 public:
     TopConcept() : Rule("c_top") { }
 
-    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th, std::vector<utils::threadpool::ThreadPool::TaskFuture<void>>& tasks) override {
         th.submit([&](){
             auto result = data.m_factory->make_top_concept();
             add_concept(*this, iteration, std::move(result), states, data);

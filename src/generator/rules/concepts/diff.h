@@ -12,7 +12,7 @@ private:
 public:
     DiffConcept() : Rule("c_diff") { }
 
-    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th, std::vector<utils::threadpool::ThreadPool::TaskFuture<void>>& tasks) override {
         // Copy missing data.
         for (int i = static_cast<int>(m_concepts_by_iteration.size()); i < iteration; ++i) {
             m_concepts_by_iteration.push_back(data.m_concept_iteration_data[i].get_elements());
