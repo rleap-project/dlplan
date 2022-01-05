@@ -292,10 +292,10 @@ public:
         using TaskType = ThreadTask<PackagedTask>;
 
         PackagedTask task{std::move(boundTask)};
-        // TaskFuture<ResultType> result{task.get_future()};
+        TaskFuture<ResultType> result{task.get_future()};
         m_workQueue.push(std::make_unique<TaskType>(std::move(task)));
         // std::cout << "finish: " << std::endl;
-        return;
+        return result;
     }
 
     const ThreadSafeQueue<std::unique_ptr<IThreadTask>>& get_queue() const {
