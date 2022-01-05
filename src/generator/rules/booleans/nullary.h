@@ -23,7 +23,7 @@ public:
                 std::cref(predicate),
                 std::ref(*data.m_factory)));
             }
-        });
+        }));
     }
 };
 
