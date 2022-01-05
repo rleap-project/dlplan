@@ -141,6 +141,7 @@ FeatureRepresentations FeatureGeneratorImpl::generate(std::shared_ptr<core::Synt
 
 void FeatureGeneratorImpl::generate_base(const States& states, GeneratorData& data, utils::threadpool::ThreadPool& th) {
     utils::g_log << "Started generating base features of complexity 1." << std::endl;
+    std::vector<utils::threadpool::ThreadPool::TaskFuture<void>> tasks;
     for (const auto& rule : m_primitive_rules) {
         rule->submit_tasks(states, 0, data, th);
     }
@@ -161,9 +162,6 @@ void FeatureGeneratorImpl::generate_inductively(int complexity, const States& st
         for (const auto& rule : m_inductive_rules) {
             rule->parse_results_of_tasks(iteration, data);
         }
-        // TODO(dominik): sleep main thread until queue is empty.
-        std::cout << th.get_queue().empty() << std::endl;
-        while (!th.get_queue().empty()) { }
         utils::g_log << "Complexity " << iteration+1 << ":" << std::endl;
         data.print_statistics();
         print_brief_statistics();
