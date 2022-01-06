@@ -23,8 +23,7 @@ public:
             int j = iteration - i;
             for (const auto& r1 : m_roles_by_iteration[i]) {
                 for (const auto& r2 : m_roles_by_iteration[j]) {
-                    auto result = data.m_factory->make_diff_role(r1, r2);
-                    add_role(*this, iteration, std::move(result), states, data);
+                    add_role(*this, iteration, data.m_factory->make_diff_role(r1, r2), states, data);
                 }
             }
             }

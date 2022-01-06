@@ -28,8 +28,7 @@ public:
                 int j = iteration - i;
                 for (const auto& r : m_roles_by_iteration[i]) {
                     for (const auto& c : m_concepts_by_iteration[j]) {
-                        auto result = data.m_factory->make_some_concept(r, c);
-                        add_concept(*this, iteration, std::move(result), states, data);
+                        add_concept(*this, iteration, data.m_factory->make_some_concept(r, c), states, data);
                     }
                 }
             }

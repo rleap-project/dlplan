@@ -13,8 +13,7 @@ public:
         tasks.push_back(th.submit([&](){
             for (const auto& r : data.m_role_iteration_data[iteration].get_elements()) {
                 for (int pos = 0; pos < 2; ++pos) {
-                    auto result = data.m_factory->make_projection_concept(r, pos);
-                    add_concept(*this, iteration, std::move(result), states, data);
+                    add_concept(*this, iteration, data.m_factory->make_projection_concept(r, pos), states, data);
                 }
             }
         }));

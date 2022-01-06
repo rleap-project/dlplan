@@ -14,8 +14,7 @@ public:
             tasks.push_back(th.submit([&](){
                 for (const auto& r : data.m_role_iteration_data[1].get_elements()) {
                     for (const auto& c : data.m_concept_iteration_data[1].get_elements()) {
-                        auto result = data.m_factory->make_restrict_role(r, c);
-                        add_role(*this, iteration, std::move(result), states, data);
+                        add_role(*this, iteration, data.m_factory->make_restrict_role(r, c), states, data);
                     }
                 }
             }));

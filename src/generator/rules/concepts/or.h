@@ -23,8 +23,7 @@ public:
                 int j = iteration - i;
                 for (const auto& c1 : m_concepts_by_iteration[i]) {
                     for (const auto& c2 : m_concepts_by_iteration[j]) {
-                        auto result = data.m_factory->make_or_concept(c1, c2);
-                        add_concept(*this, iteration, std::move(result), states, data);
+                        add_concept(*this, iteration, data.m_factory->make_or_concept(c1, c2), states, data);
                     }
                 }
             }

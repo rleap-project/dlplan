@@ -97,7 +97,7 @@ public:
  * Evaluates an element on a collection of states.
  */
 template<typename D>
-std::vector<D> evaluate(core::Element<D>& element, const States& states) {
+std::vector<D> evaluate(const core::Element<D>& element, const States& states) {
     std::vector<D> result;
     result.reserve(states.size());
     for (const auto& state : states) {
@@ -146,7 +146,8 @@ inline void add_concept(Rule& rule, int iteration, core::Concept&& result, const
     if (data.m_concept_hash_table.insert(compute_hash(flat))) {
         data.m_result_data.add_repr(result.compute_repr());
         // TODO(dominik): the following crashes
-        //std::cout << &data.m_concept_iteration_data[iteration+1]<< " " << data.m_concept_iteration_data[iteration+1].size() << std::endl;
+        // std::cout << &data << std::endl;
+        //std::cout << " " << data.m_concept_iteration_data[iteration+1].size() << std::endl;
         data.m_concept_iteration_data[iteration+1].push_back(std::move(result));
         rule.get_stats().increment();
     }
@@ -157,7 +158,7 @@ inline void add_role(Rule& rule, int iteration, core::Role&& result, const State
     auto flat = bitset_to_num_vec<core::RoleDenotation>(denotations);
     if (data.m_role_hash_table.insert(compute_hash(flat))) {
         data.m_result_data.add_repr(result.compute_repr());
-        data.m_role_iteration_data[iteration+1].push_back(std::move(result));
+        //data.m_role_iteration_data[iteration+1].push_back(std::move(result));
         rule.get_stats().increment();
     }
 }
@@ -167,7 +168,7 @@ inline void add_boolean(Rule& rule, int iteration, core::Boolean&& result, const
     auto flat = bool_vec_to_num_vec(denotations);
     if (data.m_boolean_and_numerical_hash_table.insert(compute_hash(flat))) {
         data.m_result_data.add_repr(result.compute_repr());
-        data.m_boolean_iteration_data[iteration+1].push_back(std::move(result));
+        // data.m_boolean_iteration_data[iteration+1].push_back(std::move(result));
         rule.get_stats().increment();
     }
 }
@@ -176,7 +177,7 @@ inline void add_numerical(Rule& rule, int iteration, core::Numerical&& result, c
     auto denotations = evaluate<int>(result, states);
     if (data.m_boolean_and_numerical_hash_table.insert(compute_hash(denotations))) {
         data.m_result_data.add_repr(result.compute_repr());
-        data.m_numerical_iteration_data[iteration+1].push_back(std::move(result));
+        // data.m_numerical_iteration_data[iteration+1].push_back(std::move(result));
         rule.get_stats().increment();
     }
 }

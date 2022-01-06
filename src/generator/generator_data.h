@@ -24,10 +24,10 @@ struct GeneratorData {
 
     GeneratorData(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity)
       : m_factory(factory),
-        m_boolean_iteration_data(complexity + 1),
-        m_numerical_iteration_data(complexity + 1),
-        m_concept_iteration_data(complexity + 1),
-        m_role_iteration_data(complexity + 1) { }
+        m_boolean_iteration_data(std::vector<IterationData<core::Boolean>>(complexity + 1)),
+        m_numerical_iteration_data(std::vector<IterationData<core::Numerical>>(complexity + 1)),
+        m_concept_iteration_data(std::vector<IterationData<core::Concept>>(complexity + 1)),
+        m_role_iteration_data(std::vector<IterationData<core::Role>>(complexity + 1)) { }
 
     void print_statistics() const {
         std::cout << "Total generated features: " << m_boolean_and_numerical_hash_table.get_cache_hits() + m_boolean_and_numerical_hash_table.get_cache_misses() + m_concept_hash_table.get_cache_hits() + m_concept_hash_table.get_cache_misses() + m_role_hash_table.get_cache_hits() + m_role_hash_table.get_cache_misses() << std::endl
