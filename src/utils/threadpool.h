@@ -177,7 +177,9 @@ private:
          */
         void execute() override
         {
+            std::cout << "start" << std::endl;
             m_func();
+            std::cout << "end" << std::endl;
         }
 
     private:
@@ -225,8 +227,7 @@ public:
      * Constructor.
      */
     ThreadPool(void)
-        : //ThreadPool{std::max(std::thread::hardware_concurrency(), 2u) - 1u}
-          ThreadPool{1}
+        : ThreadPool{std::max(std::thread::hardware_concurrency(), 2u) - 1u}
     {
         /*
         * Always create at least one thread.  If hardware_concurrency() returns 0,
@@ -282,8 +283,6 @@ public:
     template <typename Func, typename... Args>
     auto submit(Func&& func, Args&&... args)
     {
-        std::thread::id this_id = std::this_thread::get_id();
-        // std::cout << "submit: " << this_id << std::endl;
         auto boundTask = std::bind(std::forward<Func>(func), std::forward<Args>(args)...);
         using ResultType = std::result_of_t<decltype(boundTask)()>;
         using PackagedTask = std::packaged_task<ResultType()>;
@@ -292,7 +291,6 @@ public:
         PackagedTask task{std::move(boundTask)};
         TaskFuture<ResultType> result{task.get_future()};
         m_workQueue.push(std::make_unique<TaskType>(std::move(task)));
-        // std::cout << "finish: " << std::endl;
         return result;
     }
 
@@ -309,13 +307,9 @@ private:
         while(!m_done)
         {
             std::unique_ptr<IThreadTask> pTask{nullptr};
-            std::thread::id this_id = std::this_thread::get_id();
-            //std::cout << "wait:  " << this_id << std::endl;
             if(m_workQueue.waitPop(pTask))
             {
-                //std::cout << "start: " << this_id << std::endl;
                 pTask->execute();
-                //std::cout << "end:   " << this_id << std::endl;
             }
         }
     }

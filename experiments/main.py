@@ -8,8 +8,6 @@ import time
 
 from domain_data import DomainData
 from instance_data import InstanceData
-from transition_system_generator import TransitionSystemGenerator
-
 
 
 if __name__ == "__main__":

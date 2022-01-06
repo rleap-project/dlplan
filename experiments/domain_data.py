@@ -66,5 +66,5 @@ def construct_feature_generator():
     feature_generator.set_generate_not_role(False)
     feature_generator.set_generate_or_role(False)
     feature_generator.set_generate_top_role(False)
-    feature_generator.set_generate_transitive_reflexive_closure_role(False)
+    feature_generator.set_generate_transitive_closure_role(False)
     return feature_generator

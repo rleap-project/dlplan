@@ -158,7 +158,7 @@ void FeatureGeneratorImpl::generate_inductively(int complexity, const States& st
     for (int iteration = 1; iteration < complexity; ++iteration) {  // every composition adds at least one complexity
         std::vector<utils::threadpool::ThreadPool::TaskFuture<void>> tasks;
         for (const auto& rule : m_inductive_rules) {
-            rule->generate(states, iteration, data, th, tasks);
+            // rule->generate(states, iteration, data, th, tasks);
         }
         for (auto& task : tasks) {
             task.get();
