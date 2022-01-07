@@ -169,6 +169,8 @@ inline void add_concept(Rule& rule, int iteration, core::Concept&& result, const
     if (data.m_concept_hash_table.insert(compute_hash(flat))) {
         data.m_result_data.add_repr(result.compute_repr());
         // TODO(dominik): the following crashes
+        std::cout << "a" << std::endl;
+        std::cout << &data.m_concept_iteration_data[iteration+1] << std::endl;
         data.m_concept_iteration_data[iteration+1].push_back(std::move(result));
         rule.get_stats().increment();
     }
