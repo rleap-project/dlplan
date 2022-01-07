@@ -20,7 +20,7 @@ extern int path_addition(int a, int b);
 /**
  * Computes an adjacency list from a given role.
  */
-extern AdjList compute_adjacency_list(const RoleDenotation& r);
+extern AdjList compute_adjacency_list(const RoleDenotation& r, bool inverse=false);
 
 /**
  * Compute distances from a given state in a graph defined by an adjacency list.
