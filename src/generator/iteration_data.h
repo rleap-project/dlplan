@@ -16,13 +16,15 @@ private:
     mutable std::mutex m_mutex;
 
 public:
+    IterationData() : m_elements(), m_mutex() { }
+
     /**
      * Tries to add an element with a specific hash.
      * Returns true if element is newly inserted.
      */
     void push_back(T&& element) {
         std::lock_guard<std::mutex> hold(m_mutex);
-        m_elements.push_back(std::move(element));
+        m_elements.push_back(element);
     }
 
     std::vector<T> get_elements() const {
