@@ -77,11 +77,11 @@ int compute_multi_source_multi_target_shortest_distance(const AdjList& adj_list,
         for (int t : adj_list[s]) {
             int alt = distances[s] + 1;
             if (distances[t] > alt) {
-                queue.push_back(t);
-                distances[t] = alt;
                 if (targets.test(t)) {
                     return distances[t];
                 }
+                queue.push_back(t);
+                distances[t] = alt;
             }
         }
     }
