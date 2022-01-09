@@ -284,7 +284,7 @@ public:
     template <typename Func, typename... Args>
     auto submit(Func&& func, Args&&... args)
     {
-        std::cout << "submit" << std::endl;
+        // std::cout << "submit" << std::endl;
         auto boundTask = std::bind(std::forward<Func>(func), std::forward<Args>(args)...);
         //using ResultType = std::result_of_t<decltype(func)()>;
         using ResultType = typename std::result_of<Func(Args...)>::type;
@@ -312,9 +312,9 @@ private:
             std::unique_ptr<IThreadTask> pTask{nullptr};
             if(m_workQueue.waitPop(pTask))
             {
-                std::cout << "start" << std::endl;
+                // std::cout << "start" << std::endl;
                 pTask->execute();
-                std::cout << "end" << std::endl;
+                // std::cout << "end" << std::endl;
             }
         }
     }
