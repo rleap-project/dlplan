@@ -74,18 +74,14 @@ int compute_multi_source_multi_target_shortest_distance(const AdjList& adj_list,
     while (!queue.empty()) {
         int s = queue.front();
         queue.pop_front();
-        if (targets.test(s)) {
-            // s is goal.
-            return distances[s];
-        }
         for (int t : adj_list[s]) {
             int alt = distances[s] + 1;
             if (distances[t] > alt) {
-                if (distances[t] == INF) {
-                    // visited t the first time
-                    queue.push_back(t);
-                }
+                queue.push_back(t);
                 distances[t] = alt;
+                if (targets.test(t)) {
+                    return distances[t];
+                }
             }
         }
     }
