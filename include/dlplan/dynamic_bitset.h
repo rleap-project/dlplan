@@ -9,7 +9,7 @@
 /*
   Poor man's version of boost::dynamic_bitset, mostly copied from there.
 */
-namespace dynamic_bitset {
+namespace dlplan::dynamic_bitset {
 template<typename Block = unsigned int>
 class DynamicBitset {
     static_assert(
@@ -78,6 +78,13 @@ public:
         return result;
     }
 
+    bool empty() const {
+        for (std::size_t i = 0; i < blocks.size(); ++i) {
+            if (blocks[i]) return false;
+        }
+        return true;
+    }
+
     void set() {
         std::fill(blocks.begin(), blocks.end(), ones);
         zero_unused_bits();
@@ -135,6 +142,10 @@ public:
         for (std::size_t i = 0; i < blocks.size(); ++i) {
             result.blocks[i] = ~blocks[i];
         }
+        // we must reset bits outside of the range num_bits for correct hashing.
+        for (std::size_t pos = num_bits; pos < blocks.size() * bits_per_block; ++pos) {
+            result.blocks[block_index(pos)] &= ~bit_mask(pos);
+        }
         return result;
     }
 
@@ -177,8 +188,7 @@ template<typename Block>
 const Block DynamicBitset<Block>::zeros = Block(0);
 
 template<typename Block>
-// MSVC's bitwise negation always returns a signed type.
-const Block DynamicBitset<Block>::ones = Block(~Block(0));
+const Block DynamicBitset<Block>::ones = ~DynamicBitset<Block>::zeros;
 }
 
 /*

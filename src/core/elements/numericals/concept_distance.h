@@ -34,9 +34,12 @@ public:
         if (d_data.count() == 0) {
             return INF;
         }
+        if (c_data.intersects(d_data)) {
+            return 0;
+        }
         const RoleDenotation r = m_role->evaluate(state);
         const utils::AdjList adj_list = utils::compute_adjacency_list(r);
-        return utils::compute_multi_source_multi_target_shortest_distance(adj_list, c.to_vector(), d.to_vector());
+        return utils::compute_multi_source_multi_target_shortest_distance(adj_list, c_data, d_data);
     }
 
     int compute_complexity() const override {

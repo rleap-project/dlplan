@@ -61,31 +61,30 @@ Distances compute_distances_from_state(const AdjList& adj_list, int source) {
 }
 
 
-int compute_multi_source_multi_target_shortest_distance(const AdjList& adj_list, const std::vector<int>& sources, const std::vector<int>& targets) {
+int compute_multi_source_multi_target_shortest_distance(const AdjList& adj_list, const dynamic_bitset::DynamicBitset<unsigned>& sources, const dynamic_bitset::DynamicBitset<unsigned>& targets) {
     Distances distances(adj_list.size(), INF);
     std::deque<int> queue;
-    for (int s : sources) {
-        distances[s] = 0;
-        queue.push_back(s);
+    for (int i = 0; i < static_cast<int>(adj_list.size()); ++i) {
+        if (sources.test(i)) {
+            distances[i] = 0;
+            queue.push_back(i);
+        }
     }
     std::vector<bool> is_target(adj_list.size(), false);
-    for (int t : targets) {
-        is_target[t] = true;
-    }
     while (!queue.empty()) {
         int s = queue.front();
         queue.pop_front();
-        if (is_target[s]) {
+        if (targets.test(s)) {
             // s is goal.
             return distances[s];
         }
         for (int t : adj_list[s]) {
-            if (distances[t] == INF) {
-                // visited t the first time
-                queue.push_back(t);
-            }
-            int alt = path_addition(distances[s], 1);
+            int alt = distances[s] + 1;
             if (distances[t] > alt) {
+                if (distances[t] == INF) {
+                    // visited t the first time
+                    queue.push_back(t);
+                }
                 distances[t] = alt;
             }
         }
