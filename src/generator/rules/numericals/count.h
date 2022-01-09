@@ -4,7 +4,6 @@
 #include "../numerical.h"
 
 
-
 namespace dlplan::generator::rules {
 
 class CountNumerical : public Numerical {

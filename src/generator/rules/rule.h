@@ -23,32 +23,6 @@ namespace generator {
 class GeneratorData;
 namespace rules {
 
-class RuleStats {
-private:
-    mutable std::mutex m_mutex;
-
-    int m_count;
-
-public:
-    RuleStats() : m_count(0) { }
-
-    void initialize() {
-        std::lock_guard<std::mutex> hold(m_mutex);
-        m_count = 0;
-    }
-
-    void increment() {
-        std::lock_guard<std::mutex> hold(m_mutex);
-        ++m_count;
-    }
-
-    int get_count() const {
-        std::lock_guard<std::mutex> hold(m_mutex);
-        return m_count;
-    }
-};
-
-
 class Rule {
 protected:
     /**
@@ -65,11 +39,6 @@ protected:
      * Collect some statistics.
      */
     int m_count;
-
-    /**
-     * Collect some statistics.
-     */
-    RuleStats m_stats;
 
 protected:
     virtual void submit_tasks_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) = 0;

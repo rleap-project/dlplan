@@ -4,7 +4,6 @@
 #include "../role.h"
 
 
-
 namespace dlplan::generator::rules {
 
 class PrimitiveRole : public Role {
