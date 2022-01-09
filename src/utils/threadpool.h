@@ -179,9 +179,7 @@ private:
          */
         void execute() override
         {
-            std::cout << "start" << std::endl;
             m_func();
-            std::cout << "end" << std::endl;
         }
 
     private:

@@ -88,11 +88,11 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
       r_compose(std::make_shared<rules::ComposeRole>()),
       r_transitive_closure(std::make_shared<rules::TransitiveClosureRole>()),
       r_transitive_reflexive_closure(std::make_shared<rules::TransitiveReflexiveClosureRole>()) {
-    // m_primitive_rules.emplace_back(c_one_of);
-    // m_primitive_rules.emplace_back(c_top);
-    // m_primitive_rules.emplace_back(c_bot);
+    m_primitive_rules.emplace_back(c_one_of);
+    m_primitive_rules.emplace_back(c_top);
+    m_primitive_rules.emplace_back(c_bot);
     m_primitive_rules.emplace_back(c_primitive);
-    // m_primitive_rules.emplace_back(r_top);
+    m_primitive_rules.emplace_back(r_top);
     m_primitive_rules.emplace_back(r_primitive);
 
     m_inductive_rules.emplace_back(b_nullary);
@@ -127,8 +127,8 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
 }
 
 FeatureRepresentations FeatureGeneratorImpl::generate(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit, const States& states) {
-    for (auto& r : m_primitive_rules) r->get_stats().initialize();
-    for (auto& r : m_inductive_rules) r->get_stats().initialize();
+    for (auto& r : m_primitive_rules) r->initialize();
+    for (auto& r : m_inductive_rules) r->initialize();
     GeneratorData data(factory, complexity);
     // Initialize default threadpool
     utils::threadpool::ThreadPool th;
