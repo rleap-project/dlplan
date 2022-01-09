@@ -47,12 +47,9 @@ Distances compute_distances_from_state(const AdjList& adj_list, int source) {
         int s = queue.front();
         queue.pop_front();
         for (int t : adj_list[s]) {
-            if (distances[t] == INF) {
-                // visited t the first time
-                queue.push_back(t);
-            }
-            int alt = path_addition(distances[s], 1);
+            int alt = distances[s] + 1;
             if (distances[t] > alt) {
+                queue.push_back(t);
                 distances[t] = alt;
             }
         }
@@ -70,7 +67,6 @@ int compute_multi_source_multi_target_shortest_distance(const AdjList& adj_list,
             queue.push_back(i);
         }
     }
-    std::vector<bool> is_target(adj_list.size(), false);
     while (!queue.empty()) {
         int s = queue.front();
         queue.pop_front();
@@ -78,7 +74,7 @@ int compute_multi_source_multi_target_shortest_distance(const AdjList& adj_list,
             int alt = distances[s] + 1;
             if (distances[t] > alt) {
                 if (targets.test(t)) {
-                    return distances[t];
+                    return alt;
                 }
                 queue.push_back(t);
                 distances[t] = alt;
