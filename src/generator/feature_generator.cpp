@@ -93,7 +93,7 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
     // m_primitive_rules.emplace_back(c_bot);
     m_primitive_rules.emplace_back(c_primitive);
     // m_primitive_rules.emplace_back(r_top);
-    // m_primitive_rules.emplace_back(r_primitive);
+    m_primitive_rules.emplace_back(r_primitive);
 
     m_inductive_rules.emplace_back(b_nullary);
     m_inductive_rules.emplace_back(b_empty);
@@ -141,7 +141,6 @@ FeatureRepresentations FeatureGeneratorImpl::generate(std::shared_ptr<core::Synt
 
 void FeatureGeneratorImpl::generate_base(const States& states, GeneratorData& data, utils::threadpool::ThreadPool& th) {
     utils::g_log << "Started generating base features of complexity 1." << std::endl;
-    std::vector<utils::threadpool::ThreadPool::TaskFuture<void>> tasks;
     for (const auto& rule : m_primitive_rules) {
         rule->submit_tasks(states, 0, data, th);
     }
