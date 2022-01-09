@@ -17,6 +17,7 @@ protected:
             auto result = m_tasks.front().get();
             m_tasks.pop_front();
             if (data.m_role_hash_table.insert(std::move(result.second))) {
+                data.m_reprs.push_back(result.first.compute_repr());
                 data.m_roles_by_iteration[iteration+1].push_back(std::move(result.first));
                 ++m_count;
             }
