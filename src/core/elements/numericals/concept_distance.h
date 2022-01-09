@@ -35,27 +35,8 @@ public:
             return INF;
         }
         const RoleDenotation r = m_role->evaluate(state);
-
-        int num_c = c.get_const_data().count();
-        int num_d = d.get_const_data().count();
-        const ConceptDenotation a = (num_c <= num_d) ? c : d;
-        const ConceptDenotation b = (num_c <= num_d) ? d : c;
-        const utils::AdjList adj_list = (num_c <= num_d) ? utils::compute_adjacency_list(r) : utils::compute_adjacency_list(r, true);
-
-        int num_objects = state.get_instance_info()->get_num_objects();
-        int result = INF;
-        for (int i = 0; i < num_objects; ++i) {  // source
-            if (a.get_const_data().test(i)) {
-                // TODO: stop the BFS as soon as we find a node in c_to_vec?
-                utils::Distances distances = utils::compute_distances_from_state(adj_list, i);
-                for (int j = 0; j < num_objects; ++j) {  // target
-                    if (b.get_const_data().test(j)) {
-                        result = std::min<int>(result, distances[j]);
-                    }
-                }
-            }
-        }
-        return result;
+        const utils::AdjList adj_list = utils::compute_adjacency_list(r);
+        return utils::compute_multi_source_multi_target_shortest_distance(adj_list, c.to_vector(), d.to_vector());
     }
 
     int compute_complexity() const override {

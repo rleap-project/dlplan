@@ -27,6 +27,8 @@ extern AdjList compute_adjacency_list(const RoleDenotation& r, bool inverse=fals
  */
 extern Distances compute_distances_from_state(const AdjList& adj_list, int source);
 
+extern int compute_multi_source_multi_target_shortest_distance(const AdjList& adj_list, const std::vector<int>& sources, const std::vector<int>& targets);
+
 /**
  * Compute pairwise distances with floyd warshall algorithm.
  */

@@ -21,6 +21,7 @@ extern int path_addition(int a, int b) {
     }
 }
 
+
 AdjList compute_adjacency_list(const RoleDenotation& r, bool inverse) {
     int num_objects = r.get_num_objects();
     const auto& r_data = r.get_const_data();
@@ -39,27 +40,59 @@ AdjList compute_adjacency_list(const RoleDenotation& r, bool inverse) {
 
 Distances compute_distances_from_state(const AdjList& adj_list, int source) {
     Distances distances(adj_list.size(), INF);
-    std::vector<bool> visited(adj_list.size(), false);
     distances[source] = 0;
-    visited[source] = true;
     std::deque<int> queue;
     queue.push_back(source);
     while (!queue.empty()) {
-        int source = queue.front();
+        int s = queue.front();
         queue.pop_front();
-        for (int target : adj_list[source]) {
-            if (!visited[target]) {
-                int alt = path_addition(distances[source], 1);
-                if (distances[target] > alt) {
-                    distances[target] = alt;
-                }
-                visited[target] = true;
-                queue.push_back(target);
+        for (int t : adj_list[s]) {
+            if (distances[t] == INF) {
+                // visited t the first time
+                queue.push_back(t);
+            }
+            int alt = path_addition(distances[s], 1);
+            if (distances[t] > alt) {
+                distances[t] = alt;
             }
         }
     }
     return distances;
 }
+
+
+int compute_multi_source_multi_target_shortest_distance(const AdjList& adj_list, const std::vector<int>& sources, const std::vector<int>& targets) {
+    Distances distances(adj_list.size(), INF);
+    std::deque<int> queue;
+    for (int s : sources) {
+        distances[s] = 0;
+        queue.push_back(s);
+    }
+    std::vector<bool> is_target(adj_list.size(), false);
+    for (int t : targets) {
+        is_target[t] = true;
+    }
+    while (!queue.empty()) {
+        int s = queue.front();
+        queue.pop_front();
+        if (is_target[s]) {
+            // s is goal.
+            return distances[s];
+        }
+        for (int t : adj_list[s]) {
+            if (distances[t] == INF) {
+                // visited t the first time
+                queue.push_back(t);
+            }
+            int alt = path_addition(distances[s], 1);
+            if (distances[t] > alt) {
+                distances[t] = alt;
+            }
+        }
+    }
+    return INF;
+}
+
 
 PairwiseDistances compute_floyd_warshall(const AdjList& adj_list, bool reflexive) {
     int num_nodes = adj_list.size();
@@ -102,6 +135,5 @@ RoleDenotation compute_transitive_closure(const PairwiseDistances& distances, in
     }
     return result;
 }
-
 
 }
