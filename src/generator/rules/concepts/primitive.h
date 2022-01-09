@@ -25,7 +25,14 @@ public:
                 pos,
                 std::ref(*data.m_factory)));
             }
-        }));
+        }
+        /* Wait for the result and add it. */
+        for (auto& task : tasks) {
+            auto result = task.get();
+            if (data.m_concept_hash_table.insert(std::move(result.second))) {
+                data.m_concept_iteration_data[iteration].push_back(std::move(result.first));
+            }
+        }
     }
 };
 

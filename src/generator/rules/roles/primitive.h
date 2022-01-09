@@ -28,7 +28,13 @@ public:
                     std::ref(*data.m_factory)));
                 }
             }
-        }));
+        },
+            &states,
+            iteration,
+            this,
+            &data,
+            &th,
+            &tasks));
     }
 };
 
