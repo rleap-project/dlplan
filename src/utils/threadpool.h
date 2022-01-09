@@ -17,6 +17,8 @@
 #include <vector>
 
 
+#include "../../include/dlplan/core.h"
+
 namespace dlplan::utils::threadpool {
 
 /* Code taken from:
@@ -280,11 +282,13 @@ public:
     /**
      * Submit a job to be run by the thread pool.
      */
+    // https://gist.github.com/matthewjberger/3630dd0bc07c32808431ae5ffb80a2ff
     template <typename Func, typename... Args>
     auto submit(Func&& func, Args&&... args)
     {
         auto boundTask = std::bind(std::forward<Func>(func), std::forward<Args>(args)...);
-        using ResultType = std::result_of_t<decltype(boundTask)()>;
+        //using ResultType = std::result_of_t<decltype(func)()>;
+        using ResultType = typename std::result_of<Func(Args...)>::type;
         using PackagedTask = std::packaged_task<ResultType()>;
         using TaskType = ThreadTask<PackagedTask>;
 
