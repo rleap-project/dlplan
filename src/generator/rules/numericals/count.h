@@ -2,7 +2,10 @@
 #define DLPLAN_SRC_GENERATOR_RULES_NUMERICALS_COUNT_H_
 
 #include "../numerical.h"
+<<<<<<< HEAD
 
+=======
+>>>>>>> added multicore v1
 
 
 namespace dlplan::generator::rules {

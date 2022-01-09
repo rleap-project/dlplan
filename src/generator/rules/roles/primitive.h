@@ -4,7 +4,6 @@
 #include "../role.h"
 
 
-
 namespace dlplan::generator::rules {
 
 class PrimitiveRole : public Role {
@@ -28,13 +27,7 @@ public:
                     std::ref(*data.m_factory)));
                 }
             }
-        },
-            &states,
-            iteration,
-            this,
-            &data,
-            &th,
-            &tasks));
+        }
     }
 };
 

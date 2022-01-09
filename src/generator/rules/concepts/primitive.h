@@ -4,7 +4,6 @@
 #include "../concept.h"
 
 
-
 namespace dlplan::generator::rules {
 
 class PrimitiveConcept : public Concept {
