@@ -23,32 +23,6 @@ namespace generator {
 class GeneratorData;
 namespace rules {
 
-class RuleStats {
-private:
-    mutable std::mutex m_mutex;
-
-    int m_count;
-
-public:
-    RuleStats() : m_count(0) { }
-
-    void initialize() {
-        std::lock_guard<std::mutex> hold(m_mutex);
-        m_count = 0;
-    }
-
-    void increment() {
-        std::lock_guard<std::mutex> hold(m_mutex);
-        ++m_count;
-    }
-
-    int get_count() const {
-        std::lock_guard<std::mutex> hold(m_mutex);
-        return m_count;
-    }
-};
-
-
 class Rule {
 protected:
     /**
@@ -64,33 +38,47 @@ protected:
     /**
      * Collect some statistics.
      */
-    RuleStats m_stats;
+    int m_count;
 
 protected:
-    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) = 0;
+    virtual void submit_tasks_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) = 0;
+
+    virtual void parse_results_of_tasks_impl(int iteration, GeneratorData& data) = 0;
 
 public:
-    Rule(const std::string& name) : m_name(name), m_enabled(true) { }
+    Rule(const std::string& name) : m_name(name), m_enabled(true), m_count(0) { }
     virtual ~Rule() = default;
 
-    void generate(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) {
+    void initialize() {
+        m_count = 0;
+    }
+
+    /**
+     * Submits tasks to threadpool.
+     */
+    void submit_tasks(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) {
         if (m_enabled) {
-            generate_impl(states, iteration, data, th);
+            submit_tasks_impl(states, iteration, data, th);
+        }
+    }
+
+    /**
+     * Parses the result of each task.
+     */
+    void parse_results_of_tasks(int iteration, GeneratorData& data) {
+        if (m_enabled) {
+            parse_results_of_tasks_impl(iteration, data);
         }
     }
 
     void print_statistics() const {
         if (m_enabled) {
-            std::cout << "    " << m_name << ": " << m_stats.get_count() << std::endl;
+            std::cout << "    " << m_name << ": " << m_count << std::endl;
         }
     }
 
     void set_enabled(bool enabled) {
         m_enabled = enabled;
-    }
-
-    RuleStats& get_stats() {
-        return m_stats;
     }
 };
 

@@ -1,20 +1,29 @@
 #ifndef DLPLAN_SRC_GENERATOR_RULES_CONCEPTS_ONE_OF_H_
 #define DLPLAN_SRC_GENERATOR_RULES_CONCEPTS_ONE_OF_H_
 
-#include "../rule.h"
+#include "../concept.h"
+
 
 namespace dlplan::generator::rules {
 
-class OneOfConcept : public Rule {
+class OneOfConcept : public Concept {
 public:
-    OneOfConcept() : Rule("c_one_of") { }
+    OneOfConcept() : Concept("c_one_of") { }
 
-    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th, std::vector<utils::threadpool::ThreadPool::TaskFuture<void>>& tasks) override {
-        tasks.push_back(th.submit([](const States* const states, int iteration, Rule* const rule, GeneratorData* const data, utils::threadpool::ThreadPool* const th, std::vector<utils::threadpool::ThreadPool::TaskFuture<void>>* const tasks){
-            for (const auto& constant : data.m_factory->get_vocabulary_info()->get_constants()) {
-                add_concept(*this, iteration, data.m_factory->make_one_of_concept(constant), states, data);
-            }
-        }));
+    virtual void submit_tasks_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+        for (const auto& constant : data.m_factory->get_vocabulary_info()->get_constants()) {
+            m_tasks.push_back(
+                th.submit([](const States& states, const core::Constant& constant, core::SyntacticElementFactory& factory) {
+                        auto element = factory.make_one_of_concept(constant);
+                        auto denotation = evaluate<core::ConceptDenotation>(element, states);
+                        auto hash = compute_hash(bitset_to_num_vec(denotation));
+                        return std::make_pair(std::move(element),std::move(hash));
+                    },
+                    std::cref(states),
+                    std::cref(constant),
+                    std::ref(*data.m_factory))
+            );
+        }
     }
 };
 

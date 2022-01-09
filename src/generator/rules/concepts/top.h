@@ -1,18 +1,25 @@
 #ifndef DLPLAN_SRC_GENERATOR_RULES_CONCEPTS_TOP_H_
 #define DLPLAN_SRC_GENERATOR_RULES_CONCEPTS_TOP_H_
 
-#include "../rule.h"
+#include "../concept.h"
+
 
 namespace dlplan::generator::rules {
 
-class TopConcept : public Rule {
+class TopConcept : public Concept {
 public:
-    TopConcept() : Rule("c_top") { }
+    TopConcept() : Concept("c_top") { }
 
-    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th, std::vector<utils::threadpool::ThreadPool::TaskFuture<void>>& tasks) override {
-        tasks.push_back(th.submit([](const States* const states, int iteration, Rule* const rule, GeneratorData* const data, utils::threadpool::ThreadPool* const th, std::vector<utils::threadpool::ThreadPool::TaskFuture<void>>* const tasks){
-            add_concept(*this, iteration, data.m_factory->make_top_concept(), states, data);
-        }));
+    virtual void submit_tasks_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+        m_tasks.push_back(th.submit([](const States& states, core::SyntacticElementFactory& factory) {
+                auto element = factory.make_top_concept();
+                auto denotation = evaluate<core::ConceptDenotation>(element, states);
+                auto hash = compute_hash(bitset_to_num_vec(denotation));
+                return std::make_pair(std::move(element),std::move(hash));
+            },
+            std::cref(states),
+            std::ref(*data.m_factory)
+        ));
     }
 };
 

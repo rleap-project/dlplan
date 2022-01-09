@@ -1,28 +1,40 @@
 #ifndef DLPLAN_SRC_GENERATOR_RULES_NUMERICALS_COUNT_H_
 #define DLPLAN_SRC_GENERATOR_RULES_NUMERICALS_COUNT_H_
 
-#include "../rule.h"
+#include "../numerical.h"
 
 
 namespace dlplan::generator::rules {
 
-class CountNumerical : public Rule {
+class CountNumerical : public Numerical {
 public:
-    CountNumerical() : Rule("n_count") { }
+    CountNumerical() : Numerical("n_count") { }
 
-    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th, std::vector<utils::threadpool::ThreadPool::TaskFuture<void>>& tasks) override {
-        tasks.push_back(th.submit([&](){
-            for (const auto& c : data.m_concept_iteration_data[iteration].get_elements()) {
-                auto result = data.m_factory->make_count(c);
-                add_numerical(*this, iteration, std::move(result), states, data);
-            }
-        }));
-        tasks.push_back(th.submit([&](){
-            for (const auto& r : data.m_role_iteration_data[iteration].get_elements()) {
-                auto result = data.m_factory->make_count(r);
-                add_numerical(*this, iteration, std::move(result), states, data);
-            }
-        }));
+    virtual void submit_tasks_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+        for (const auto& c : data.m_concepts_by_iteration[iteration]) {
+            m_tasks.push_back(
+                th.submit([&](const core::Concept& c, core::SyntacticElementFactory& factory){
+                    auto element = factory.make_count(c);
+                    auto denotation = evaluate<int>(element, states);
+                    auto hash = compute_hash(denotation);
+                    return std::make_pair(std::move(element),std::move(hash));
+                },
+                std::cref(c),
+                std::ref(*data.m_factory))
+            );
+        }
+        for (const auto& r : data.m_roles_by_iteration[iteration]) {
+            m_tasks.push_back(
+                th.submit([&](const core::Role& r, core::SyntacticElementFactory& factory){
+                    auto element = factory.make_count(r);
+                    auto denotation = evaluate<int>(element, states);
+                    auto hash = compute_hash(denotation);
+                    return std::make_pair(std::move(element),std::move(hash));
+                },
+                std::cref(r),
+                std::ref(*data.m_factory))
+            );
+        }
     }
 };
 

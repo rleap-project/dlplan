@@ -1,30 +1,29 @@
 #ifndef DLPLAN_SRC_GENERATOR_RULES_BOOLEANS_NULLARY_H_
 #define DLPLAN_SRC_GENERATOR_RULES_BOOLEANS_NULLARY_H_
 
-#include "../rule.h"
+#include "../boolean.h"
 
 
 namespace dlplan::generator::rules {
 
-class NullaryBoolean : public Rule {
+class NullaryBoolean : public Boolean {
 public:
-    NullaryBoolean() : Rule("b_nullary") { }
+    NullaryBoolean() : Boolean("b_nullary") { }
 
-    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th, std::vector<utils::threadpool::ThreadPool::TaskFuture<void>>& tasks) override {
-        tasks.push_back(th.submit([](const States* const states, int iteration, Rule* const rule, GeneratorData* const data, utils::threadpool::ThreadPool* const th, std::vector<utils::threadpool::ThreadPool::TaskFuture<void>>* const tasks){
-            const std::vector<core::Predicate>& predicates = data->m_factory->get_vocabulary_info()->get_predicates();
-            for (const auto& predicate : predicates) {
-                if (predicate.get_arity() == 0) {
-                    add_boolean(*rule, iteration, data->m_factory->make_nullary_boolean(predicate), *states, *data);
-                }
+    virtual void submit_tasks_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+        for (const auto& predicate : data.m_factory->get_vocabulary_info()->get_predicates()) {
+            if (predicate.get_arity() == 0) {
+                m_tasks.push_back(th.submit([](const States& states, const core::Predicate& predicate, core::SyntacticElementFactory& factory){
+                    auto element = factory.make_nullary_boolean(predicate);
+                    auto denotation = evaluate<bool>(element, states);
+                    auto hash = compute_hash(bool_vec_to_num_vec(denotation));
+                    return std::make_pair(std::move(element),std::move(hash));
+                },
+                std::cref(states),
+                std::cref(predicate),
+                std::ref(*data.m_factory)));
             }
-        },
-            &states,
-            iteration,
-            this,
-            &data,
-            &th,
-            &tasks));
+        }
     }
 };
 

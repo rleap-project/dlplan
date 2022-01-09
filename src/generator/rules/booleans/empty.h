@@ -1,26 +1,40 @@
 #ifndef DLPLAN_SRC_GENERATOR_RULES_BOOLEANS_EMPTY_H_
 #define DLPLAN_SRC_GENERATOR_RULES_BOOLEANS_EMPTY_H_
 
-#include "../rule.h"
+#include "../boolean.h"
 
 
 namespace dlplan::generator::rules {
 
-class EmptyBoolean : public Rule {
+class EmptyBoolean : public Boolean {
 public:
-    EmptyBoolean() : Rule("b_empty") { }
+    EmptyBoolean() : Boolean("b_empty") { }
 
-    virtual void generate_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th, std::vector<utils::threadpool::ThreadPool::TaskFuture<void>>& tasks) override {
-        tasks.push_back(th.submit([&](){
-            for (const auto& c : data.m_concept_iteration_data[iteration].get_elements()) {
-                add_boolean(*this, iteration, data.m_factory->make_empty_boolean(c), states, data);
-            }
-        }));
-        tasks.push_back(th.submit([&](){
-            for (const auto& r : data.m_role_iteration_data[iteration].get_elements()) {
-                add_boolean(*this, iteration, data.m_factory->make_empty_boolean(r), states, data);
-            }
-        }));
+    virtual void submit_tasks_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+        for (const auto& c : data.m_concepts_by_iteration[iteration]) {
+            m_tasks.push_back(
+                th.submit([&](const core::Concept& c, core::SyntacticElementFactory& factory){
+                    auto element = factory.make_empty_boolean(c);
+                    auto denotation = evaluate<bool>(element, states);
+                    auto hash = compute_hash(bool_vec_to_num_vec(denotation));
+                    return std::make_pair(std::move(element),std::move(hash));
+                },
+                std::cref(c),
+                std::ref(*data.m_factory))
+            );
+        }
+        for (const auto& r : data.m_roles_by_iteration[iteration]) {
+            m_tasks.push_back(
+                th.submit([&](const core::Role& r, core::SyntacticElementFactory& factory){
+                    auto element = factory.make_empty_boolean(r);
+                    auto denotation = evaluate<bool>(element, states);
+                    auto hash = compute_hash(bool_vec_to_num_vec(denotation));
+                    return std::make_pair(std::move(element),std::move(hash));
+                },
+                std::cref(r),
+                std::ref(*data.m_factory))
+            );
+        }
     }
 };
 

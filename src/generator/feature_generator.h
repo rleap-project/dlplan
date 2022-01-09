@@ -46,7 +46,6 @@
 #include "../../include/dlplan/core.h"
 
 #include "types.h"
-#include "iteration_data.h"
 
 #include "rules/rule.h"
 

@@ -88,11 +88,11 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
       r_compose(std::make_shared<rules::ComposeRole>()),
       r_transitive_closure(std::make_shared<rules::TransitiveClosureRole>()),
       r_transitive_reflexive_closure(std::make_shared<rules::TransitiveReflexiveClosureRole>()) {
-    // m_primitive_rules.emplace_back(c_one_of);
-    // m_primitive_rules.emplace_back(c_top);
-    // m_primitive_rules.emplace_back(c_bot);
+    m_primitive_rules.emplace_back(c_one_of);
+    m_primitive_rules.emplace_back(c_top);
+    m_primitive_rules.emplace_back(c_bot);
     m_primitive_rules.emplace_back(c_primitive);
-    // m_primitive_rules.emplace_back(r_top);
+    m_primitive_rules.emplace_back(r_top);
     m_primitive_rules.emplace_back(r_primitive);
 
     m_inductive_rules.emplace_back(b_nullary);
@@ -127,8 +127,8 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
 }
 
 FeatureRepresentations FeatureGeneratorImpl::generate(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit, const States& states) {
-    for (auto& r : m_primitive_rules) r->get_stats().initialize();
-    for (auto& r : m_inductive_rules) r->get_stats().initialize();
+    for (auto& r : m_primitive_rules) r->initialize();
+    for (auto& r : m_inductive_rules) r->initialize();
     GeneratorData data(factory, complexity);
     // Initialize default threadpool
     utils::threadpool::ThreadPool th;
@@ -136,13 +136,16 @@ FeatureRepresentations FeatureGeneratorImpl::generate(std::shared_ptr<core::Synt
     generate_inductively(complexity, states, data, th);
     // utils::g_log << "Overall results: " << std::endl;
     // print_overall_statistics();
-    return data.m_result_data.get_reprs();
+    return data.m_reprs;
 }
 
 void FeatureGeneratorImpl::generate_base(const States& states, GeneratorData& data, utils::threadpool::ThreadPool& th) {
     utils::g_log << "Started generating base features of complexity 1." << std::endl;
     for (const auto& rule : m_primitive_rules) {
-        rule->generate(states, 0, data, th);
+        rule->submit_tasks(states, 0, data, th);
+    }
+    for (const auto& rule : m_primitive_rules) {
+        rule->parse_results_of_tasks(0, data);
     }
     utils::g_log << "Complexity " << 1 << ":" << std::endl;
     print_brief_statistics();
@@ -153,7 +156,10 @@ void FeatureGeneratorImpl::generate_inductively(int complexity, const States& st
     utils::g_log << "Started generating composite features." << std::endl;
     for (int iteration = 1; iteration < complexity; ++iteration) {  // every composition adds at least one complexity
         for (const auto& rule : m_inductive_rules) {
-            // rule->generate(states, iteration, data, th, tasks);
+            rule->submit_tasks(states, iteration, data, th);
+        }
+        for (const auto& rule : m_inductive_rules) {
+            rule->parse_results_of_tasks(iteration, data);
         }
         utils::g_log << "Complexity " << iteration+1 << ":" << std::endl;
         data.print_statistics();
