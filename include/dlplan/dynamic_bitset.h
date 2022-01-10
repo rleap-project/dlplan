@@ -78,7 +78,7 @@ public:
         return result;
     }
 
-    bool empty() const {
+    bool none() const {
         for (std::size_t i = 0; i < blocks.size(); ++i) {
             if (blocks[i]) return false;
         }
