@@ -26,12 +26,12 @@ public:
     int evaluate(const State& state) const override {
         const ConceptDenotation c = m_concept_from->evaluate(state);
         const auto& c_data = c.get_const_data();
-        if (c_data.count() == 0) {
+        if (c_data.empty()) {
             return 0;
         }
         const ConceptDenotation d = m_concept_to->evaluate(state);
         const auto& d_data = d.get_const_data();
-        if (d_data.count() == 0) {
+        if (d_data.empty()) {
             return INF;
         }
         const RoleDenotation r = m_role->evaluate(state);
