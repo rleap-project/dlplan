@@ -36,8 +36,10 @@ if REMOTE:
     ENV = TetralithEnvironment(
         partition="tetralith",
         email="",
+        memory_per_cpu="3G",
+        cpus_per_task=32,
         setup=TetralithEnvironment.DEFAULT_SETUP,
-        extra_options="#SBATCH -C thin --exclusive\n#SBATCH --account=snic2021-5-330")
+        extra_options="#SBATCH --account=snic2021-5-330")
     SUITE = ["barman", "blocksworld_3", "blocksworld_4", "childsnack", "delivery", "gripper", "miconic", "reward", "spanner", "visitall"]
     TIME_LIMIT = 24 * 1800
 else:
