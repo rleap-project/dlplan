@@ -35,7 +35,8 @@ Timer::Timer(bool start) {
 
 double Timer::current_clock() const {
     timespec tp;
-    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tp);
+    // CLOCK_MONOTONIC for wallclock, CLOCK_PROCESS_CPUTIME_ID for accumulate over threads
+    clock_gettime(CLOCK_MONOTONIC, &tp);
     return tp.tv_sec + tp.tv_nsec / 1e9;
 }
 
