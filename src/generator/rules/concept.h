@@ -14,6 +14,7 @@ protected:
     virtual void parse_results_of_tasks_impl(int iteration, GeneratorData& data) override {
         /* Wait for the result and add it. */
         while (!m_tasks.empty()) {
+            if (data.reached_resource_limit()) return;
             auto result = m_tasks.front().get();
             m_tasks.pop_front();
             if (data.m_concept_hash_table.insert(std::move(result.second))) {

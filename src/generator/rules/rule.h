@@ -11,7 +11,6 @@
 #include "../../utils/threadpool.h"
 
 
-
 namespace dlplan {
 namespace core {
     class Concept;
@@ -23,6 +22,11 @@ namespace core {
 namespace generator {
 class GeneratorData;
 namespace rules {
+
+enum class ReturnCode {
+    SUCCESS,
+    RESOURCE_LIMIT_REACHED,
+};
 
 class Rule {
 protected:
@@ -68,7 +72,7 @@ public:
      */
     void parse_results_of_tasks(int iteration, GeneratorData& data) {
         if (m_enabled) {
-            parse_results_of_tasks_impl(iteration, data);
+            return parse_results_of_tasks_impl(iteration, data);
         }
     }
 
