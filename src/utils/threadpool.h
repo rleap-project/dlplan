@@ -1,3 +1,23 @@
+/*
+    Copyright (c) 2018, Will Pearce
+
+    Link: http://roar11.com/2016/01/a-platform-independent-thread-pool-using-c14/
+
+    BSD-2-license:
+        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+        AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+        IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+        ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+        LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+        CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+        SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+        INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+        CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+        ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+        POSSIBILITY OF SUCH DAMAGE.
+*/
+
+
 #ifndef DLPLAN_SRC_UTILS_THREADPOOL_H
 #define DLPLAN_SRC_UTILS_THREADPOOL_H
 
@@ -21,9 +41,6 @@
 
 namespace dlplan::utils::threadpool {
 
-/* Code taken from:
-    http://roar11.com/2016/01/a-platform-independent-thread-pool-using-c14/
-*/
 template <typename T>
 class ThreadSafeQueue
 {
@@ -280,11 +297,10 @@ public:
     /**
      * Submit a job to be run by the thread pool.
      */
-    // https://gist.github.com/matthewjberger/3630dd0bc07c32808431ae5ffb80a2ff
+    // Modification: https://gist.github.com/matthewjberger/3630dd0bc07c32808431ae5ffb80a2ff
     template <typename Func, typename... Args>
     auto submit(Func&& func, Args&&... args)
     {
-        // std::cout << "submit" << std::endl;
         auto boundTask = std::bind(std::forward<Func>(func), std::forward<Args>(args)...);
         //using ResultType = std::result_of_t<decltype(func)()>;
         using ResultType = typename std::result_of<Func(Args...)>::type;
@@ -312,9 +328,7 @@ private:
             std::unique_ptr<IThreadTask> pTask{nullptr};
             if(m_workQueue.waitPop(pTask))
             {
-                // std::cout << "start" << std::endl;
                 pTask->execute();
-                // std::cout << "end" << std::endl;
             }
         }
     }
