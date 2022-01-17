@@ -27,6 +27,10 @@ protected:
 
 public:
     Boolean(const std::string& name) : Rule(name) { }
+
+    virtual void cleanup() override {
+        m_tasks.clear();
+    }
 };
 
 }

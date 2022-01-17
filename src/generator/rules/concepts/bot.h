@@ -10,7 +10,7 @@ class BotConcept : public Concept {
 public:
     BotConcept() : Concept("c_bot") { }
 
-    virtual void submit_tasks_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+    virtual void submit_tasks_impl(const States& states, int, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
         m_tasks.push_back(th.submit([](const States& states, core::SyntacticElementFactory& factory) {
                 auto element = factory.make_bot_concept();
                 auto denotation = evaluate<core::ConceptDenotation>(element, states);

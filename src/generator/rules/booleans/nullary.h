@@ -10,7 +10,7 @@ class NullaryBoolean : public Boolean {
 public:
     NullaryBoolean() : Boolean("b_nullary") { }
 
-    virtual void submit_tasks_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+    virtual void submit_tasks_impl(const States& states, int, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
         for (const auto& predicate : data.m_factory->get_vocabulary_info()->get_predicates()) {
             if (predicate.get_arity() == 0) {
                 m_tasks.push_back(th.submit([](const States& states, const core::Predicate& predicate, core::SyntacticElementFactory& factory){

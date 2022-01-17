@@ -59,6 +59,11 @@ public:
     }
 
     /**
+     * Destruct the threadpool tasks.
+     */
+    virtual void cleanup() = 0;
+
+    /**
      * Submits tasks to threadpool.
      */
     void submit_tasks(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) {

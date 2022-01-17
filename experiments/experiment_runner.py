@@ -36,12 +36,12 @@ if REMOTE:
     ENV = TetralithEnvironment(
         partition="tetralith",
         email="",
-        memory_per_cpu="3G",
-        cpus_per_task=32,
+        #memory_per_cpu="3G",
+        #cpus_per_task=32,
         setup=TetralithEnvironment.DEFAULT_SETUP,
-        extra_options="#SBATCH --account=snic2021-5-330")
+        extra_options="#SBATCH -C fat --exclusive\n#SBATCH --account=snic2021-5-330")
     SUITE = ["barman", "blocksworld_3", "blocksworld_4", "childsnack", "delivery", "gripper", "miconic", "reward", "spanner", "visitall"]
-    TIME_LIMIT = 24 * 1800
+    TIME_LIMIT = 3 * 3600
 else:
     ENV = LocalEnvironment(processes=2)
     SUITE = ["visitall:p05.pddl"]
@@ -62,8 +62,9 @@ ATTRIBUTES = [
 ]
 MEMORY_LIMIT = 2048
 
-GENERATOR_TIME_LIMIT = 24 * 1800
+GENERATOR_TIME_LIMIT = 2 * 3600
 GENERATOR_FEATURE_LIMIT = 1000000
+GENERATOR_NUM_THREADS = 32
 
 # Create a new experiment.
 exp = Experiment(environment=ENV)
@@ -83,7 +84,7 @@ for task in suites.build_suite(BENCHMARKS_DIR, SUITE):
         # up to complexity 5
         run.add_command(
             f"complexity-{c}",
-            ["python3", "main.py", "--domain", "{domain}", "--instance", "{problem}", "--c", c, "--t", GENERATOR_TIME_LIMIT, "--f", GENERATOR_FEATURE_LIMIT],
+            ["python3", "main.py", "--domain", "{domain}", "--instance", "{problem}", "--c", c, "--t", GENERATOR_TIME_LIMIT, "--f", GENERATOR_FEATURE_LIMIT, "--n", GENERATOR_NUM_THREADS],
             time_limit=TIME_LIMIT,
             memory_limit=MEMORY_LIMIT,
         )

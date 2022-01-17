@@ -18,13 +18,14 @@ if __name__ == "__main__":
     parser.add_argument("--c", type=int, required=False, default=5)
     parser.add_argument("--t", type=int, required=False, default=1800)
     parser.add_argument("--f", type=int, required=False, default=1000000)
+    parser.add_argument("--n", type=int, required=False, default=1)
     args = parser.parse_args()
 
     domain_data = DomainData(args.domain)
     instance_data = InstanceData(args.instance, domain_data, args.max_num_states)
     dlplan_states = [state.dlplan_state for state in instance_data.states]
 
-    feature_reprs = domain_data.feature_generator.generate(domain_data.syntactic_element_factory, args.c, args.t, args.f, dlplan_states)
+    feature_reprs = domain_data.feature_generator.generate(domain_data.syntactic_element_factory, args.c, args.t, args.f, args.n, dlplan_states)
     start = time.time()
     for feature_repr in feature_reprs:
         if feature_repr.startswith("n_"):

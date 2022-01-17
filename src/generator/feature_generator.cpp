@@ -126,16 +126,24 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
     m_inductive_rules.emplace_back(r_transitive_reflexive_closure);
 }
 
-FeatureRepresentations FeatureGeneratorImpl::generate(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit, const States& states) {
+FeatureRepresentations FeatureGeneratorImpl::generate(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit, int num_threads, const States& states) {
+    // Initialize statistics in each rule.
     for (auto& r : m_primitive_rules) r->initialize();
     for (auto& r : m_inductive_rules) r->initialize();
+    // Initialize memory to store intermediate results.
     GeneratorData data(factory, complexity, time_limit, feature_limit);
     // Initialize default threadpool
-    utils::threadpool::ThreadPool th;
+    utils::threadpool::ThreadPool th(num_threads);
     generate_base(states, data, th);
     generate_inductively(complexity, states, data, th);
     // utils::g_log << "Overall results: " << std::endl;
     // print_overall_statistics();
+    /* Tasks must be destructed before the threadpool.
+       We can get rid of this if we move the threadpool to the members.
+       This requires to add functionality for increasing/decreasing the threadpool. */
+    for (auto& r : m_primitive_rules) r->cleanup();
+    for (auto& r : m_inductive_rules) r->cleanup();
+    // Return just the representation that can be parsed again.
     return data.m_reprs;
 }
 

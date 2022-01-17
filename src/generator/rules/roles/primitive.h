@@ -10,7 +10,7 @@ class PrimitiveRole : public Role {
 public:
     PrimitiveRole() : Role("r_primitive") { }
 
-    virtual void submit_tasks_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+    virtual void submit_tasks_impl(const States& states, int, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
         for (const auto& predicate : data.m_factory->get_vocabulary_info()->get_predicates()) {
             for (int pos1 = 0; pos1 < predicate.get_arity(); ++pos1) {
                 for (int pos2 = pos1+1; pos2 < predicate.get_arity(); ++pos2) {

@@ -10,7 +10,7 @@ class OneOfConcept : public Concept {
 public:
     OneOfConcept() : Concept("c_one_of") { }
 
-    virtual void submit_tasks_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+    virtual void submit_tasks_impl(const States& states, int, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
         for (const auto& constant : data.m_factory->get_vocabulary_info()->get_constants()) {
             m_tasks.push_back(
                 th.submit([](const States& states, const core::Constant& constant, core::SyntacticElementFactory& factory) {

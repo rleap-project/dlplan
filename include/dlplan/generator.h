@@ -31,7 +31,7 @@ public:
     /**
      * Exhaustively generates features with pairwise disjoint feature evaluations on the states.
      */
-    FeatureRepresentations generate(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit, const States& states);
+    FeatureRepresentations generate(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit, int num_threads, const States& states);
 
     void set_generate_empty_boolean(bool enable);
     void set_generate_inclusion_boolean(bool enable);

@@ -10,7 +10,7 @@ class PrimitiveConcept : public Concept {
 public:
     PrimitiveConcept() : Concept("c_primitive") { }
 
-    virtual void submit_tasks_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+    virtual void submit_tasks_impl(const States& states, int, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
         for (const auto& predicate : data.m_factory->get_vocabulary_info()->get_predicates()) {
             for (int pos = 0; pos < predicate.get_arity(); ++pos) {
                 m_tasks.push_back(th.submit([](const States& states, const core::Predicate& predicate, int pos, core::SyntacticElementFactory& factory){
