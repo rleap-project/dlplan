@@ -22,7 +22,7 @@ public:
      * Construct or retrieve the Concept.
      */
     virtual element::Concept_Ptr parse_concept(const VocabularyInfo& vocabulary, Caches &caches) const {
-        return caches.m_concept_cache->insert(parse_concept_impl(vocabulary, caches));
+        return caches.m_concept_cache->insert(parse_concept_impl(vocabulary, caches)).first;
     }
 };
 

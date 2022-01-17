@@ -23,7 +23,7 @@ public:
      * Construct or retrieve the Boolean.
      */
     virtual element::Boolean_Ptr parse_boolean(const VocabularyInfo& vocabulary, Caches &caches) const {
-        return caches.m_boolean_cache->insert(parse_boolean_impl(vocabulary, caches));
+        return caches.m_boolean_cache->insert(parse_boolean_impl(vocabulary, caches)).first;
     }
 };
 

@@ -41,6 +41,7 @@ namespace element {
  */
 class ConceptDenotation {
 private:
+    // no pimpl to save indirection.
     int m_num_objects;
     dynamic_bitset::DynamicBitset<unsigned> m_data;
 
@@ -61,6 +62,7 @@ public:
  */
 class RoleDenotation {
 private:
+    // no pimpl to save indirection.
     int m_num_objects;
     dynamic_bitset::DynamicBitset<unsigned> m_data;
 

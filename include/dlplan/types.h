@@ -6,8 +6,6 @@
 #include <vector>
 #include <unordered_set>
 
-#include "dynamic_bitset.h"
-
 
 namespace dlplan::core {
 
