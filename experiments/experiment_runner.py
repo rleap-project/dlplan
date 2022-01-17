@@ -37,7 +37,7 @@ if REMOTE:
         partition="tetralith",
         email="",
         memory_per_cpu="3G",
-        cpus_per_task=32,
+        cpus_per_task=16,
         setup=TetralithEnvironment.DEFAULT_SETUP,
         extra_options="#SBATCH --account=snic2021-5-330")
     SUITE = ["barman", "blocksworld_3", "blocksworld_4", "childsnack", "delivery", "gripper", "miconic", "reward", "spanner", "visitall"]
@@ -71,7 +71,7 @@ exp = Experiment(environment=ENV)
 exp.add_parser("experiment_parser.py")
 
 for task in suites.build_suite(BENCHMARKS_DIR, SUITE):
-    for n in [1,16,32]:
+    for n in [1,8,16]:
         for c in [5,10]:
             run = exp.add_run()
             # Create symbolic links and aliases. This is optional. We
