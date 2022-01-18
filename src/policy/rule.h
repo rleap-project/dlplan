@@ -28,8 +28,8 @@ public:
         std::unordered_set<std::shared_ptr<const BaseCondition>>&& conditions,
         std::unordered_set<std::shared_ptr<const BaseEffect>>&& effects);
 
-    bool is_condition_satisfied() const;
-    bool is_effect_satisfied() const;
+    bool is_condition_satisfied(const core::State& source) const;
+    bool is_effect_satisfied(const core::State& source, const core::State& target) const;
 
     std::string str() const;
 

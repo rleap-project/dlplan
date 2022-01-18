@@ -33,16 +33,16 @@ RuleImpl::RuleImpl(
     std::unordered_set<std::shared_ptr<const BaseEffect>>&& effects)
     : m_root(root), m_conditions(sort(std::move(conditions))), m_effects(sort(std::move(effects))) { }
 
-bool RuleImpl::is_condition_satisfied() const {
+bool RuleImpl::is_condition_satisfied(const core::State& source) const {
     for (const auto& condition : m_conditions) {
-        if (!condition->is_satisfied()) return false;
+        if (!condition->is_satisfied(source)) return false;
     }
     return true;
 }
 
-bool RuleImpl::is_effect_satisfied() const {
+bool RuleImpl::is_effect_satisfied(const core::State& source, const core::State& target) const {
     for (const auto& effect : m_effects) {
-        if (!effect->is_satisfied()) return false;
+        if (!effect->is_satisfied(source, target)) return false;
     }
     return true;
 }

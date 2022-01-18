@@ -50,12 +50,12 @@ Rule& Rule::operator=(const Rule& other) {
 
 Rule::~Rule() { }
 
-bool Rule::is_condition_satisfied() const {
-    return m_pImpl->is_condition_satisfied();
+bool Rule::is_condition_satisfied(const core::State& source) const {
+    return m_pImpl->is_condition_satisfied(source);
 }
 
-bool Rule::is_effect_satisfied() const {
-    return m_pImpl->is_effect_satisfied();
+bool Rule::is_effect_satisfied(const core::State& source, const core::State& target) const {
+    return m_pImpl->is_effect_satisfied(source, target);
 }
 
 std::string Rule::str() const {
@@ -156,20 +156,20 @@ std::vector<std::shared_ptr<Feature<int>>> Policy::get_numerical_features() cons
 }
 
 
-GeneralPolicyReader::GeneralPolicyReader() { }
+PolicyReader::PolicyReader() { }
 
-GeneralPolicyReader::~GeneralPolicyReader() { }
+PolicyReader::~PolicyReader() { }
 
-Policy GeneralPolicyReader::read(const std::string& data) const {
+Policy PolicyReader::read(const std::string& data) const {
     return m_pImpl->read(data);
 }
 
 
-GeneralPolicyWriter::GeneralPolicyWriter() { }
+PolicyWriter::PolicyWriter() { }
 
-GeneralPolicyWriter::~GeneralPolicyWriter() { }
+PolicyWriter::~PolicyWriter() { }
 
-std::string GeneralPolicyWriter::write(const Policy& policy) const {
+std::string PolicyWriter::write(const Policy& policy) const {
     return m_pImpl->write(policy);
 }
 

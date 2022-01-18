@@ -60,7 +60,7 @@ ATTRIBUTES = [
     Attribute("num_static_atoms", absolute=True, min_wins=False, scale="linear"),
     Attribute("evaluate_time", absolute=True, min_wins=True, scale="linear"),
 ]
-MEMORY_LIMIT = 32 * 3000000 - 10000
+MEMORY_LIMIT = 16 * 3000000 - 10000
 
 GENERATOR_TIME_LIMIT = 2 * 3600
 GENERATOR_FEATURE_LIMIT = 1000000

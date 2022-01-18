@@ -73,22 +73,19 @@ std::shared_ptr<const Rule> PolicyImpl::add_rule(
     return result.first;
 }
 
-std::vector<int> PolicyImpl::compute_rules_with_satisfied_condition() const {
-    std::vector<int> rule_idxs;
-    rule_idxs.reserve(m_rules.size());
-    for (int i = 0; i < static_cast<int>(m_rules.size()); ++i) {
-        if (m_rules[i]->is_condition_satisfied()) {
-            rule_idxs.push_back(i);
-        }
-    }
-    rule_idxs.shrink_to_fit();
-    return rule_idxs;
+void PolicyImpl::reset_cached_source_evaluations() {
+    for (auto& b : m_boolean_features) b->reset_cached_source_evaluation();
+    for (auto& n : m_numerical_features) n->reset_cached_source_evaluation();
 }
 
-bool PolicyImpl::exists_rule_with_satisfied_effect(const std::vector<int>& rule_idxs) const {
-    // TODO: add check for in bound
-    for (int i : rule_idxs) {
-        if (m_rules[i]->is_effect_satisfied()) return true;
+void PolicyImpl::reset_cached_target_evaluations() {
+    for (auto& b : m_boolean_features) b->reset_cached_target_evaluation();
+    for (auto& n : m_numerical_features) n->reset_cached_target_evaluation();
+}
+
+bool PolicyImpl::evaluate_lazy(const core::State& source, const core::State& target) {
+    for (auto& r : m_rules) {
+        if (r->is_condition_satisfied(source) && r->is_effect_satisfied(source, target)) return true;
     }
     return false;
 }

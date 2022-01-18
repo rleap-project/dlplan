@@ -46,11 +46,10 @@ public:
         std::unordered_set<std::shared_ptr<const BaseCondition>>&& conditions,
         std::unordered_set<std::shared_ptr<const BaseEffect>>&& effects);
 
-    /**
-     * These two functions in combination can be useful for evaluating a transition.
-     */
-    std::vector<int> compute_rules_with_satisfied_condition() const;
-    bool exists_rule_with_satisfied_effect(const std::vector<int>& rule_idxs) const;
+    void reset_cached_source_evaluations();
+    void reset_cached_target_evaluations();
+
+    bool evaluate_lazy(const core::State& source, const core::State& target);
 
     std::string str() const;
 
