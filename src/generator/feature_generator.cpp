@@ -161,24 +161,6 @@ void FeatureGeneratorImpl::generate_base(const States& states, GeneratorData& da
     utils::g_log << "Finished generating base features." << std::endl;
 }
 
-void FeatureGeneratorImpl::generate_inductively(int complexity, const States& states, GeneratorData& data, utils::threadpool::ThreadPool& th) {
-    utils::g_log << "Started generating composite features." << std::endl;
-    for (int iteration = 1; iteration < complexity; ++iteration) {  // every composition adds at least one complexity
-        if (data.reached_resource_limit()) break;
-        for (const auto& rule : m_inductive_rules) {
-            rule->submit_tasks(states, iteration, data, th);
-        }
-        for (const auto& rule : m_inductive_rules) {
-            if (data.reached_resource_limit()) break;
-            rule->parse_results_of_tasks(iteration, data);
-        }
-        utils::g_log << "Complexity " << iteration+1 << ":" << std::endl;
-        data.print_statistics();
-        print_brief_statistics();
-    }
-    utils::g_log << "Finished generating composite features." << std::endl;
-}
-
 void FeatureGeneratorImpl::print_brief_statistics() const {
     for (auto& r : m_primitive_rules) r->print_statistics();
     for (auto& r : m_inductive_rules) r->print_statistics();
