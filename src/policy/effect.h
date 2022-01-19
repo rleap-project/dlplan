@@ -17,7 +17,7 @@ protected:
     const std::shared_ptr<const Feature<T>> m_feature;
 
 protected:
-    Effect(std::shared_ptr<const Feature<T>> feature);
+    Effect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<T>> feature);
 
 public:
     virtual std::shared_ptr<const Feature<T>> get_feature() const;
@@ -28,9 +28,9 @@ protected:
     virtual std::unique_ptr<BaseEffect> clone_impl() const override;
 
 public:
-    PositiveBooleanEffect(std::shared_ptr<const Feature<bool>> boolean_feature);
+    PositiveBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature);
 
-    virtual bool is_satisfied(const core::State& source, const core::State& target) const override;
+    virtual bool evaluate(const State& source, const State& target) const override;
 
     virtual std::string str() const override;
 };
@@ -40,9 +40,9 @@ protected:
     virtual std::unique_ptr<BaseEffect> clone_impl() const override;
 
 public:
-    NegativeBooleanEffect(std::shared_ptr<const Feature<bool>> boolean_feature);
+    NegativeBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature);
 
-    virtual bool is_satisfied(const core::State& source, const core::State& target) const override;
+    virtual bool evaluate(const State& source, const State& target) const override;
 
     virtual std::string str() const override;
 };
@@ -52,9 +52,9 @@ protected:
     virtual std::unique_ptr<BaseEffect> clone_impl() const override;
 
 public:
-    UnchangedBooleanEffect(std::shared_ptr<const Feature<bool>> boolean_feature);
+    UnchangedBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature);
 
-    virtual bool is_satisfied(const core::State& source, const core::State& target) const override;
+    virtual bool evaluate(const State& source, const State& target) const override;
 
     virtual std::string str() const override;
 };
@@ -64,9 +64,9 @@ protected:
     virtual std::unique_ptr<BaseEffect> clone_impl() const override;
 
 public:
-    IncrementNumericalEffect(std::shared_ptr<const Feature<int>> numerical_feature);
+    IncrementNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature);
 
-    virtual bool is_satisfied(const core::State& source, const core::State& target) const override;
+    virtual bool evaluate(const State& source, const State& target) const override;
 
     virtual std::string str() const override;
 };
@@ -76,9 +76,9 @@ protected:
     virtual std::unique_ptr<BaseEffect> clone_impl() const override;
 
 public:
-    DecrementNumericalEffect(std::shared_ptr<const Feature<int>> numerical_feature);
+    DecrementNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature);
 
-    virtual bool is_satisfied(const core::State& source, const core::State& target) const override;
+    virtual bool evaluate(const State& source, const State& target) const override;
 
     virtual std::string str() const override;
 };
@@ -88,9 +88,9 @@ protected:
     virtual std::unique_ptr<BaseEffect> clone_impl() const override;
 
 public:
-    UnchangedNumericalEffect(std::shared_ptr<const Feature<int>> numerical_feature);
+    UnchangedNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature);
 
-    virtual bool is_satisfied(const core::State& source, const core::State& target) const override;
+    virtual bool evaluate(const State& source, const State& target) const override;
 
     virtual std::string str() const override;
 };

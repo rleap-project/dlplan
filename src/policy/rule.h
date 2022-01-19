@@ -8,8 +8,7 @@
 
 namespace dlplan::policy {
 class PolicyRoot;
-template<typename T>
-class Feature;
+class State;
 class BaseCondition;
 class BaseEffect;
 
@@ -28,8 +27,8 @@ public:
         std::unordered_set<std::shared_ptr<const BaseCondition>>&& conditions,
         std::unordered_set<std::shared_ptr<const BaseEffect>>&& effects);
 
-    bool is_condition_satisfied(const core::State& source) const;
-    bool is_effect_satisfied(const core::State& source, const core::State& target) const;
+    bool evaluate_conditions(const State& source) const;
+    bool evaluate_effects(const State& source, const State& target) const;
 
     std::string str() const;
 

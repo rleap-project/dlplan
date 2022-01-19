@@ -6,61 +6,61 @@
 #include "effect.h"
 
 #include "../include/dlplan/core.h"
+#include "../include/dlplan/policy.h"
 
 
 namespace dlplan::policy {
 
 PolicyImpl::PolicyImpl() : m_root(std::make_shared<PolicyRoot>(PolicyRoot())) { }
 
-std::shared_ptr<Feature<bool>> PolicyImpl::add_boolean_feature() {
-    m_boolean_features.push_back(std::make_shared<Feature<bool>>(Feature<bool>(m_root, m_boolean_features.size())));
+std::shared_ptr<BooleanFeature> PolicyImpl::add_boolean_feature(core::Boolean boolean) {
+    m_boolean_features.push_back(std::make_shared<BooleanFeature>(BooleanFeature(m_root, m_boolean_features.size(), std::move(boolean))));
     return m_boolean_features.back();
-
 }
 
-std::shared_ptr<Feature<int>> PolicyImpl::add_numerical_feature() {
-    m_numerical_features.push_back(std::make_shared<Feature<int>>(Feature<int>(m_root, m_numerical_features.size())));
+std::shared_ptr<NumericalFeature> PolicyImpl::add_numerical_feature(core::Numerical numerical) {
+    m_numerical_features.push_back(std::make_shared<NumericalFeature>(NumericalFeature(m_root, m_numerical_features.size(), std::move(numerical))));
     return m_numerical_features.back();
 }
 
-std::shared_ptr<const BaseCondition> PolicyImpl::add_b_pos_condition(std::shared_ptr<const Feature<bool>> b) {
-    return m_caches.m_condition_cache->insert(std::make_unique<PositiveBooleanCondition>(PositiveBooleanCondition(b))).first;
+std::shared_ptr<const BaseCondition> PolicyImpl::add_b_pos_condition(std::shared_ptr<const BooleanFeature> b) {
+    return m_caches.m_condition_cache->insert(std::make_unique<PositiveBooleanCondition>(PositiveBooleanCondition(m_root, b))).first;
 }
 
-std::shared_ptr<const BaseCondition> PolicyImpl::add_b_neg_condition(std::shared_ptr<const Feature<bool>> b) {
-    return m_caches.m_condition_cache->insert(std::make_unique<NegativeBooleanCondition>(NegativeBooleanCondition(b))).first;
+std::shared_ptr<const BaseCondition> PolicyImpl::add_b_neg_condition(std::shared_ptr<const BooleanFeature> b) {
+    return m_caches.m_condition_cache->insert(std::make_unique<NegativeBooleanCondition>(NegativeBooleanCondition(m_root, b))).first;
 }
 
-std::shared_ptr<const BaseCondition> PolicyImpl::add_n_gt_condition(std::shared_ptr<const Feature<int>> n) {
-    return m_caches.m_condition_cache->insert(std::make_unique<GreaterNumericalCondition>(GreaterNumericalCondition(n))).first;
+std::shared_ptr<const BaseCondition> PolicyImpl::add_n_gt_condition(std::shared_ptr<const NumericalFeature> n) {
+    return m_caches.m_condition_cache->insert(std::make_unique<GreaterNumericalCondition>(GreaterNumericalCondition(m_root, n))).first;
 }
 
-std::shared_ptr<const BaseCondition> PolicyImpl::add_n_eq_condition(std::shared_ptr<const Feature<int>> n) {
-    return m_caches.m_condition_cache->insert(std::make_unique<EqualNumericalCondition>(EqualNumericalCondition(n))).first;
+std::shared_ptr<const BaseCondition> PolicyImpl::add_n_eq_condition(std::shared_ptr<const NumericalFeature> n) {
+    return m_caches.m_condition_cache->insert(std::make_unique<EqualNumericalCondition>(EqualNumericalCondition(m_root, n))).first;
 }
 
-std::shared_ptr<const BaseEffect> PolicyImpl::add_b_pos_effect(std::shared_ptr<const Feature<bool>> b) {
-    return m_caches.m_effect_cache->insert(std::make_unique<PositiveBooleanEffect>(PositiveBooleanEffect(b))).first;
+std::shared_ptr<const BaseEffect> PolicyImpl::add_b_pos_effect(std::shared_ptr<const BooleanFeature> b) {
+    return m_caches.m_effect_cache->insert(std::make_unique<PositiveBooleanEffect>(PositiveBooleanEffect(m_root, b))).first;
 }
 
-std::shared_ptr<const BaseEffect> PolicyImpl::add_b_neg_effect(std::shared_ptr<const Feature<bool>> b) {
-    return m_caches.m_effect_cache->insert(std::make_unique<NegativeBooleanEffect>(NegativeBooleanEffect(b))).first;
+std::shared_ptr<const BaseEffect> PolicyImpl::add_b_neg_effect(std::shared_ptr<const BooleanFeature> b) {
+    return m_caches.m_effect_cache->insert(std::make_unique<NegativeBooleanEffect>(NegativeBooleanEffect(m_root, b))).first;
 }
 
-std::shared_ptr<const BaseEffect> PolicyImpl::add_b_bot_effect(std::shared_ptr<const Feature<bool>> b) {
-    return m_caches.m_effect_cache->insert(std::make_unique<UnchangedBooleanEffect>(UnchangedBooleanEffect(b))).first;
+std::shared_ptr<const BaseEffect> PolicyImpl::add_b_bot_effect(std::shared_ptr<const BooleanFeature> b) {
+    return m_caches.m_effect_cache->insert(std::make_unique<UnchangedBooleanEffect>(UnchangedBooleanEffect(m_root, b))).first;
 }
 
-std::shared_ptr<const BaseEffect> PolicyImpl::add_n_inc_effect(std::shared_ptr<const Feature<int>> n) {
-    return m_caches.m_effect_cache->insert(std::make_unique<IncrementNumericalEffect>(IncrementNumericalEffect(n))).first;
+std::shared_ptr<const BaseEffect> PolicyImpl::add_n_inc_effect(std::shared_ptr<const NumericalFeature> n) {
+    return m_caches.m_effect_cache->insert(std::make_unique<IncrementNumericalEffect>(IncrementNumericalEffect(m_root, n))).first;
 }
 
-std::shared_ptr<const BaseEffect> PolicyImpl::add_n_dec_effect(std::shared_ptr<const Feature<int>> n) {
-    return m_caches.m_effect_cache->insert(std::make_unique<DecrementNumericalEffect>(DecrementNumericalEffect(n))).first;
+std::shared_ptr<const BaseEffect> PolicyImpl::add_n_dec_effect(std::shared_ptr<const NumericalFeature> n) {
+    return m_caches.m_effect_cache->insert(std::make_unique<DecrementNumericalEffect>(DecrementNumericalEffect(m_root, n))).first;
 }
 
-std::shared_ptr<const BaseEffect> PolicyImpl::add_n_bot_effect(std::shared_ptr<const Feature<int>> n) {
-    return m_caches.m_effect_cache->insert(std::make_unique<UnchangedNumericalEffect>(UnchangedNumericalEffect(n))).first;
+std::shared_ptr<const BaseEffect> PolicyImpl::add_n_bot_effect(std::shared_ptr<const NumericalFeature> n) {
+    return m_caches.m_effect_cache->insert(std::make_unique<UnchangedNumericalEffect>(UnchangedNumericalEffect(m_root, n))).first;
 }
 
 std::shared_ptr<const Rule> PolicyImpl::add_rule(
@@ -73,19 +73,9 @@ std::shared_ptr<const Rule> PolicyImpl::add_rule(
     return result.first;
 }
 
-void PolicyImpl::reset_cached_source_evaluations() {
-    for (auto& b : m_boolean_features) b->reset_cached_source_evaluation();
-    for (auto& n : m_numerical_features) n->reset_cached_source_evaluation();
-}
-
-void PolicyImpl::reset_cached_target_evaluations() {
-    for (auto& b : m_boolean_features) b->reset_cached_target_evaluation();
-    for (auto& n : m_numerical_features) n->reset_cached_target_evaluation();
-}
-
-bool PolicyImpl::evaluate_lazy(const core::State& source, const core::State& target) {
+bool PolicyImpl::evaluate_lazy(const State& source, const State& target) {
     for (auto& r : m_rules) {
-        if (r->is_condition_satisfied(source) && r->is_effect_satisfied(source, target)) return true;
+        if (r->evaluate_conditions(source) && r->evaluate_effects(source, target)) return true;
     }
     return false;
 }
@@ -109,11 +99,11 @@ std::shared_ptr<const PolicyRoot> PolicyImpl::get_root() const {
     return m_root;
 }
 
-std::vector<std::shared_ptr<Feature<bool>>> PolicyImpl::get_boolean_features() const {
+std::vector<std::shared_ptr<BooleanFeature>> PolicyImpl::get_boolean_features() const {
     return m_boolean_features;
 }
 
-std::vector<std::shared_ptr<Feature<int>>> PolicyImpl::get_numerical_features() const {
+std::vector<std::shared_ptr<NumericalFeature>> PolicyImpl::get_numerical_features() const {
     return m_numerical_features;
 }
 

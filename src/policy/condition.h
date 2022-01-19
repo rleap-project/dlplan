@@ -18,7 +18,7 @@ protected:
     const std::shared_ptr<const Feature<T>> m_feature;
 
 protected:
-    Condition(std::shared_ptr<const Feature<T>> feature);
+    Condition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<T>> feature);
 
 public:
     std::shared_ptr<const Feature<T>> get_feature() const;
@@ -30,9 +30,9 @@ protected:
     virtual std::unique_ptr<BaseCondition> clone_impl() const override;
 
 public:
-    PositiveBooleanCondition(std::shared_ptr<const Feature<bool>> boolean_feature);
+    PositiveBooleanCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature);
 
-    virtual bool is_satisfied(const core::State& state) const override;
+    virtual bool evaluate(const State& state) const override;
 
     virtual std::string str() const override;
 };
@@ -42,9 +42,9 @@ protected:
     virtual std::unique_ptr<BaseCondition> clone_impl() const override;
 
 public:
-    NegativeBooleanCondition(std::shared_ptr<const Feature<bool>> boolean_feature);
+    NegativeBooleanCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature);
 
-    virtual bool is_satisfied(const core::State& state) const override;
+    virtual bool evaluate(const State& state) const override;
 
     virtual std::string str() const override;
 };
@@ -54,9 +54,9 @@ protected:
     virtual std::unique_ptr<BaseCondition> clone_impl() const override;
 
 public:
-    EqualNumericalCondition(std::shared_ptr<const Feature<int>> numerical_feature);
+    EqualNumericalCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature);
 
-    virtual bool is_satisfied(const core::State& state) const override;
+    virtual bool evaluate(const State& state) const override;
 
     virtual std::string str() const override;
 };
@@ -66,9 +66,9 @@ protected:
     virtual std::unique_ptr<BaseCondition> clone_impl() const override;
 
 public:
-    GreaterNumericalCondition(std::shared_ptr<const Feature<int>> numerical_feature);
+    GreaterNumericalCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature);
 
-    virtual bool is_satisfied(const core::State& state) const override;
+    virtual bool evaluate(const State& state) const override;
 
     virtual std::string str() const override;
 };

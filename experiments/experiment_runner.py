@@ -36,7 +36,7 @@ if REMOTE:
     ENV = TetralithEnvironment(
         partition="tetralith",
         email="",
-        memory_per_cpu="48G",
+        memory_per_cpu="3G",
         cpus_per_task=16,
         setup=TetralithEnvironment.DEFAULT_SETUP,
         extra_options="#SBATCH --account=snic2021-5-330")

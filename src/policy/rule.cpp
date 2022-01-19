@@ -33,16 +33,16 @@ RuleImpl::RuleImpl(
     std::unordered_set<std::shared_ptr<const BaseEffect>>&& effects)
     : m_root(root), m_conditions(sort(std::move(conditions))), m_effects(sort(std::move(effects))) { }
 
-bool RuleImpl::is_condition_satisfied(const core::State& source) const {
+bool RuleImpl::evaluate_conditions(const State& source) const {
     for (const auto& condition : m_conditions) {
-        if (!condition->is_satisfied(source)) return false;
+        if (!condition->evaluate(source)) return false;
     }
     return true;
 }
 
-bool RuleImpl::is_effect_satisfied(const core::State& source, const core::State& target) const {
+bool RuleImpl::evaluate_effects(const State& source, const State& target) const {
     for (const auto& effect : m_effects) {
-        if (!effect->is_satisfied(source, target)) return false;
+        if (!effect->evaluate(source, target)) return false;
     }
     return true;
 }
@@ -74,7 +74,7 @@ std::string RuleImpl::compute_repr() const {
     return ss.str();
 }
 
-std::shared_ptr<const GeneralPolicyRoot> RuleImpl::get_root() const {
+std::shared_ptr<const PolicyRoot> RuleImpl::get_root() const {
     return m_root;
 }
 

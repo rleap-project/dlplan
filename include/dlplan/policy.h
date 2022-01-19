@@ -35,6 +35,21 @@ public:
     ~PolicyRoot();
 };
 
+class State {
+private:
+    // The identifier in the cache.
+    void* m_key;
+    // The actual state data.
+    const std::shared_ptr<const core::State> m_state;
+
+public:
+    State(void* key, std::shared_ptr<const core::State> state);
+    ~State();
+
+    void* get_key() const;
+    std::shared_ptr<const core::State> get_state() const;
+};
+
 /**
  * A Feature is shared across all conditions and effects that use it.
  */
@@ -50,8 +65,7 @@ protected:
 public:
     virtual ~Feature();
 
-    virtual T get_source_evaluation(const core::State& source) = 0;
-    virtual T get_target_evaluation(const core::State& target) = 0;
+    virtual T evaluate(const State& state) const = 0;
 
     int get_index() const;
 
@@ -62,7 +76,6 @@ public:
     std::shared_ptr<const PolicyRoot> get_root() const;
 };
 
-// we need to derive to store core::Boolean because core::Element<bool> is abstract type
 class BooleanFeature : public Feature<bool> {
 private:
     const core::Boolean m_boolean;
@@ -73,11 +86,9 @@ private:
     friend class PolicyImpl;
 
 public:
-    bool get_source_evaluation(const core::State& source) override;
-    bool get_target_evaluation(const core::State& target) override;
+    bool evaluate(const State& state) const override;
 };
 
-// we need to derive to store core::Numerical because core::Element<int> is abstract type
 class NumericalFeature : public Feature<int> {
 private:
     const core::Numerical m_numerical;
@@ -88,8 +99,7 @@ private:
     friend class PolicyImpl;
 
 public:
-    int get_source_evaluation(const core::State& source) override;
-    int get_target_evaluation(const core::State& target) override;
+    int evaluate(const State& state) const override;
 };
 
 
@@ -97,19 +107,26 @@ public:
  * All different kinds of conditions.
  */
 class BaseCondition {
+private:
+    const std::shared_ptr<const PolicyRoot> m_root;
+
 protected:
     virtual std::unique_ptr<BaseCondition> clone_impl() const = 0;
+
+    BaseCondition(std::shared_ptr<const PolicyRoot> root) : m_root(root) { }
 
 public:
     virtual ~BaseCondition() = default;
 
-    virtual bool is_satisfied(const core::State& state) const = 0;
+    virtual bool evaluate(const State& state) const = 0;
 
     virtual std::string str() const = 0;
 
     virtual std::string compute_repr() const;
 
     virtual std::unique_ptr<BaseCondition> clone() const;
+
+    std::shared_ptr<const PolicyRoot> get_root() const;
 };
 
 
@@ -117,19 +134,26 @@ public:
  * All different kinds of effects.
  */
 class BaseEffect {
+private:
+    const std::shared_ptr<const PolicyRoot> m_root;
+
 protected:
     virtual std::unique_ptr<BaseEffect> clone_impl() const = 0;
+
+    BaseEffect(std::shared_ptr<const PolicyRoot> root) : m_root(root) { }
 
 public:
     virtual ~BaseEffect() = default;
 
-    virtual bool is_satisfied(const core::State& source, const core::State& target) const = 0;
+    virtual bool evaluate(const State& source, const State& target) const = 0;
 
     virtual std::string str() const = 0;
 
     virtual std::string compute_repr() const;
 
     virtual std::unique_ptr<BaseEffect> clone() const;
+
+    std::shared_ptr<const PolicyRoot> get_root() const;
 };
 
 
@@ -153,8 +177,8 @@ public:
     Rule& operator=(const Rule& other);
     ~Rule();
 
-    bool is_condition_satisfied(const core::State& source) const;
-    bool is_effect_satisfied(const core::State& source, const core::State& target) const;
+    bool evaluate_conditions(const State& source) const;
+    bool evaluate_effects(const State& source, const State& target) const;
 
     std::string str() const;
 
@@ -176,50 +200,41 @@ public:
     Policy& operator=(const Policy& other);
     ~Policy();
 
-    std::shared_ptr<Feature<bool>> add_boolean_feature(core::Boolean b);
-    std::shared_ptr<Feature<int>> add_numerical_feature(core::Numerical n);
+    std::shared_ptr<BooleanFeature> add_boolean_feature(core::Boolean b);
+    std::shared_ptr<NumericalFeature> add_numerical_feature(core::Numerical n);
 
     /**
      * Uniquely adds a condition (resp. effect) to the policy and returns it.
-     * TODO: we must check whether the underlying Feature is part of the policy
-     * by comparing the PolicyRoot.
      */
-    std::shared_ptr<const BaseCondition> add_b_pos_condition(std::shared_ptr<const Feature<bool>> b);
-    std::shared_ptr<const BaseCondition> add_b_neg_condition(std::shared_ptr<const Feature<bool>> b);
-    std::shared_ptr<const BaseCondition> add_n_gt_condition(std::shared_ptr<const Feature<int>> n);
-    std::shared_ptr<const BaseCondition> add_n_eq_condition(std::shared_ptr<const Feature<int>> n);
-    std::shared_ptr<const BaseEffect> add_b_pos_effect(std::shared_ptr<const Feature<bool>> b);
-    std::shared_ptr<const BaseEffect> add_b_neg_effect(std::shared_ptr<const Feature<bool>> b);
-    std::shared_ptr<const BaseEffect> add_b_bot_effect(std::shared_ptr<const Feature<bool>> b);
-    std::shared_ptr<const BaseEffect> add_n_inc_effect(std::shared_ptr<const Feature<int>> n);
-    std::shared_ptr<const BaseEffect> add_n_dec_effect(std::shared_ptr<const Feature<int>> n);
-    std::shared_ptr<const BaseEffect> add_n_bot_effect(std::shared_ptr<const Feature<int>> n);
+    std::shared_ptr<const BaseCondition> add_b_pos_condition(std::shared_ptr<const BooleanFeature> b);
+    std::shared_ptr<const BaseCondition> add_b_neg_condition(std::shared_ptr<const BooleanFeature> b);
+    std::shared_ptr<const BaseCondition> add_n_gt_condition(std::shared_ptr<const NumericalFeature> n);
+    std::shared_ptr<const BaseCondition> add_n_eq_condition(std::shared_ptr<const NumericalFeature> n);
+    std::shared_ptr<const BaseEffect> add_b_pos_effect(std::shared_ptr<const BooleanFeature> b);
+    std::shared_ptr<const BaseEffect> add_b_neg_effect(std::shared_ptr<const BooleanFeature> b);
+    std::shared_ptr<const BaseEffect> add_b_bot_effect(std::shared_ptr<const BooleanFeature> b);
+    std::shared_ptr<const BaseEffect> add_n_inc_effect(std::shared_ptr<const NumericalFeature> n);
+    std::shared_ptr<const BaseEffect> add_n_dec_effect(std::shared_ptr<const NumericalFeature> n);
+    std::shared_ptr<const BaseEffect> add_n_bot_effect(std::shared_ptr<const NumericalFeature> n);
 
     /**
      * Uniquely adds a rule to the policy and returns it.
-     * TODO: we must check whether the underlying BaseConditions
-     * and BaseEffects are part of the policy by comparing the PolicyRoot.
      */
     std::shared_ptr<const Rule> add_rule(
         std::unordered_set<std::shared_ptr<const BaseCondition>>&& conditions,
         std::unordered_set<std::shared_ptr<const BaseEffect>>&& effects);
 
     /**
-     * Clear cached source or target evaluations.
-     */
-    void reset_cached_source_evaluations();
-    void reset_cached_target_evaluations();
-    /**
      * Lazily evaluate the state pair.
-     * Uses cached source and target evaluations to avoid recomputation.
+     * Optimized to compute fewest features of smallest runtime complexity.
      */
-    bool evaluate_lazy(const core::State& source, const core::State& target);
+    bool evaluate_lazy(const State& source, const State& target);
 
     std::string str() const;
 
     std::shared_ptr<const PolicyRoot> get_root() const;
-    std::vector<std::shared_ptr<Feature<bool>>> get_boolean_features() const;
-    std::vector<std::shared_ptr<Feature<int>>> get_numerical_features() const;
+    std::vector<std::shared_ptr<BooleanFeature>> get_boolean_features() const;
+    std::vector<std::shared_ptr<NumericalFeature>> get_numerical_features() const;
 };
 
 
