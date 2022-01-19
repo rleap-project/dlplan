@@ -36,7 +36,7 @@ if REMOTE:
     ENV = TetralithEnvironment(
         partition="tetralith",
         email="",
-        memory_per_cpu="3G",
+        memory_per_cpu="48G",
         cpus_per_task=16,
         setup=TetralithEnvironment.DEFAULT_SETUP,
         extra_options="#SBATCH --account=snic2021-5-330")
@@ -60,7 +60,7 @@ ATTRIBUTES = [
     Attribute("num_static_atoms", absolute=True, min_wins=False, scale="linear"),
     Attribute("evaluate_time", absolute=True, min_wins=True, scale="linear"),
 ]
-MEMORY_LIMIT = 16 * 3000000 - 10000
+MEMORY_LIMIT = (16 * 3000) * 0.98
 
 GENERATOR_TIME_LIMIT = 2 * 3600
 GENERATOR_FEATURE_LIMIT = 1000000

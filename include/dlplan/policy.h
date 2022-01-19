@@ -28,18 +28,12 @@ private:
     PolicyRoot();
     friend class PolicyImpl;
 
+    // Cache the results of state evaluations here.
+    // This allows hiding the cache to the outside.
+
 public:
     ~PolicyRoot();
 };
-
-
-
-
-class ByStateInformation {
-private:
-    std::vector<int> m_data;
-};
-
 
 /**
  * A Feature is shared across all conditions and effects that use it.
@@ -47,23 +41,14 @@ private:
 template<typename T>
 class Feature {
 private:
-    // no pimpl to save indirection.
     const std::shared_ptr<const PolicyRoot> m_root;
     const int m_index;
-
-    bool m_cached_source;
-    bool m_cached_target;
-    T m_source_evaluation;
-    T m_target_evaluation;
 
 protected:
     Feature(std::shared_ptr<const PolicyRoot> root, int index);
 
 public:
     virtual ~Feature();
-
-    void reset_cached_source_evaluation();
-    void reset_cached_target_evaluation();
 
     virtual T get_source_evaluation(const core::State& source) = 0;
     virtual T get_target_evaluation(const core::State& target) = 0;
