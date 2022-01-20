@@ -150,6 +150,7 @@ FeatureRepresentations FeatureGeneratorImpl::generate(std::shared_ptr<core::Synt
 void FeatureGeneratorImpl::generate_base(const States& states, GeneratorData& data, utils::threadpool::ThreadPool& th) {
     utils::g_log << "Started generating base features of complexity 1." << std::endl;
     for (const auto& rule : m_primitive_rules) {
+        if (data.reached_resource_limit()) break;
         rule->submit_tasks(states, 0, data, th);
     }
     for (const auto& rule : m_primitive_rules) {
@@ -166,6 +167,7 @@ void FeatureGeneratorImpl::generate_inductively(int complexity, const States& st
     for (int iteration = 1; iteration < complexity; ++iteration) {  // every composition adds at least one complexity
         if (data.reached_resource_limit()) break;
         for (const auto& rule : m_inductive_rules) {
+            if (data.reached_resource_limit()) break;
             rule->submit_tasks(states, iteration, data, th);
         }
         for (const auto& rule : m_inductive_rules) {

@@ -28,7 +28,6 @@ class BaseReport(AbsoluteReport):
         "node",
     ]
 
-
 NODE = platform.node()
 REMOTE = re.match(r"tetralith\d+.nsc.liu.se|n\d+", NODE)
 BENCHMARKS_DIR = "../benchmarks"
@@ -71,8 +70,8 @@ exp = Experiment(environment=ENV)
 exp.add_parser("experiment_parser.py")
 
 for task in suites.build_suite(BENCHMARKS_DIR, SUITE):
-    for n in [1,8,16]:
-        for c in [5,10]:
+    for num_threads in [1,8,16]:
+        for complexity in [5,10]:
             run = exp.add_run()
             # Create symbolic links and aliases. This is optional. We
             # could also use absolute paths in add_command().
@@ -83,16 +82,16 @@ for task in suites.build_suite(BENCHMARKS_DIR, SUITE):
             # We could also use exp.add_resource().
             # up to complexity 5
             run.add_command(
-                f"complexity-{c}-{n}",
-                ["python3", "main.py", "--domain", "{domain}", "--instance", "{problem}", "--c", c, "--t", GENERATOR_TIME_LIMIT, "--f", GENERATOR_FEATURE_LIMIT, "--n", n],
-                time_limit=TIME_LIMIT,
+                f"complexity-{complexity}-{num_threads}",
+                ["python3", "main.py", "--domain", "{domain}", "--instance", "{problem}", "--c", complexity, "--t", GENERATOR_TIME_LIMIT, "--f", GENERATOR_FEATURE_LIMIT, "--n", num_threads],
+                time_limit=num_threads * TIME_LIMIT,
                 memory_limit=MEMORY_LIMIT,
             )
             # AbsoluteReport needs the following properties:
             # 'domain', 'problem', 'algorithm', 'coverage'.
             run.set_property("domain", task.domain)
             run.set_property("problem", task.problem)
-            run.set_property("algorithm", f"complexity-{c}-{n}")
+            run.set_property("algorithm", f"complexity-{complexity}-{num_threads}")
             # BaseReport needs the following properties:
             # 'time_limit', 'memory_limit'.
             run.set_property("time_limit", TIME_LIMIT)
@@ -100,7 +99,7 @@ for task in suites.build_suite(BENCHMARKS_DIR, SUITE):
             # Every run has to have a unique id in the form of a list.
             # The algorithm name is only really needed when there are
             # multiple algorithms.
-            run.set_property("id", [f"complexity-{c}-{n}", task.domain, task.problem])
+            run.set_property("id", [f"complexity-{complexity}-{num_threads}", task.domain, task.problem])
 
 # Add step that writes experiment files to disk.
 exp.add_step("build", exp.build)
