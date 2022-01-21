@@ -10,7 +10,7 @@
 namespace dlplan::policy::parser {
 
 std::unordered_map<std::string, EXPRESSION_TYPE> ExpressionFactory::m_element_name_to_expression_type = {
-    {":general_policy", GENERAL_POLICY },
+    {":policy", POLICY },
     {":rule", RULE},
     {":boolean_features", BOOLEAN_FEATURES},
     {":numerical_features", NUMERICAL_FEATURES},
@@ -45,8 +45,8 @@ Expression_Ptr ExpressionFactory::make_ast(const std::string &name, std::vector<
         EXPRESSION_TYPE expression_type = ExpressionFactory::element_name_to_expression_type(name);
         switch (expression_type)
         {
-            case GENERAL_POLICY: {
-                return std::make_unique<GeneralPolicyExpression>(GeneralPolicyExpression(name, std::move(children)));
+            case POLICY: {
+                return std::make_unique<PolicyExpression>(PolicyExpression(name, std::move(children)));
             }
             case RULE: {
                 return std::make_unique<RuleExpression>(RuleExpression(name, std::move(children)));

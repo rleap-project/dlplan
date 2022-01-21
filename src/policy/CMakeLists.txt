@@ -1,5 +1,5 @@
-add_library(policy SHARED)
-target_sources(policy
+add_library(dlplanpolicy SHARED)
+target_sources(dlplanpolicy
     PRIVATE
         policy.cpp
         policy_impl.cpp
@@ -17,4 +17,4 @@ set(PUBLIC_HEADERS_FILES
     include/policy.h
     include/pimpl.h
     include/policy.tpp)
-set_target_properties(policy PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS_FILES}")
+set_target_properties(dlplanpolicy PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS_FILES}")

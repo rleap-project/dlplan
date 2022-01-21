@@ -35,20 +35,20 @@ public:
     ~PolicyRoot();
 };
 
+
 class State {
 private:
-    // The identifier in the cache.
-    void* m_key;
-    // The actual state data.
+    const int m_index;
     const std::shared_ptr<const core::State> m_state;
 
 public:
-    State(void* key, std::shared_ptr<const core::State> state);
+    State(int index, std::shared_ptr<const core::State> state);
     ~State();
 
-    void* get_key() const;
+    int get_index() const;
     std::shared_ptr<const core::State> get_state() const;
 };
+
 
 /**
  * A Feature is shared across all conditions and effects that use it.
@@ -67,11 +67,9 @@ public:
 
     virtual T evaluate(const State& state) const = 0;
 
+    virtual std::string compute_repr() const = 0;
+
     int get_index() const;
-
-    std::string str() const;
-
-    std::string compute_repr() const;
 
     std::shared_ptr<const PolicyRoot> get_root() const;
 };
@@ -81,12 +79,13 @@ private:
     const core::Boolean m_boolean;
 
 private:
-    BooleanFeature(std::shared_ptr<const PolicyRoot> root, int index, core::Boolean&& boolean)
-      : Feature<bool>(root, index), m_boolean(std::move(boolean)) { }
+    BooleanFeature(std::shared_ptr<const PolicyRoot> root, int index, core::Boolean&& boolean);
     friend class PolicyImpl;
 
 public:
     bool evaluate(const State& state) const override;
+
+    std::string compute_repr() const override;
 };
 
 class NumericalFeature : public Feature<int> {
@@ -94,12 +93,13 @@ private:
     const core::Numerical m_numerical;
 
 private:
-    NumericalFeature(std::shared_ptr<const PolicyRoot> root, int index, core::Numerical&& numerical)
-      : Feature<int>(root, index), m_numerical(std::move(numerical)) { }
+    NumericalFeature(std::shared_ptr<const PolicyRoot> root, int index, core::Numerical&& numerical);
     friend class PolicyImpl;
 
 public:
     int evaluate(const State& state) const override;
+
+    std::string compute_repr() const override;
 };
 
 
@@ -118,11 +118,11 @@ protected:
 public:
     virtual ~BaseCondition() = default;
 
+    //virtual bool operator<(const BaseCondition& other) const = 0;
+
     virtual bool evaluate(const State& state) const = 0;
 
-    virtual std::string str() const = 0;
-
-    virtual std::string compute_repr() const;
+    virtual std::string compute_repr() const = 0;
 
     virtual std::unique_ptr<BaseCondition> clone() const;
 
@@ -147,9 +147,7 @@ public:
 
     virtual bool evaluate(const State& source, const State& target) const = 0;
 
-    virtual std::string str() const = 0;
-
-    virtual std::string compute_repr() const;
+    virtual std::string compute_repr() const = 0;
 
     virtual std::unique_ptr<BaseEffect> clone() const;
 
@@ -180,8 +178,6 @@ public:
     bool evaluate_conditions(const State& source) const;
     bool evaluate_effects(const State& source, const State& target) const;
 
-    std::string str() const;
-
     std::string compute_repr() const;
 
     std::shared_ptr<const PolicyRoot> get_root() const;
@@ -195,7 +191,7 @@ private:
     pimpl<PolicyImpl> m_pImpl;
 
 public:
-    Policy();
+    explicit Policy();
     Policy(const Policy& other);
     Policy& operator=(const Policy& other);
     ~Policy();
@@ -228,9 +224,9 @@ public:
      * Lazily evaluate the state pair.
      * Optimized to compute fewest features of smallest runtime complexity.
      */
-    bool evaluate_lazy(const State& source, const State& target);
+    bool evaluate(const State& source, const State& target);
 
-    std::string str() const;
+    std::string compute_repr() const;
 
     std::shared_ptr<const PolicyRoot> get_root() const;
     std::vector<std::shared_ptr<BooleanFeature>> get_boolean_features() const;
@@ -249,7 +245,7 @@ public:
     PolicyReader();
     ~PolicyReader();
 
-    Policy read(const std::string& data) const;
+    Policy read(const std::string& data, core::SyntacticElementFactory factory) const;
 };
 
 /**
@@ -268,6 +264,6 @@ public:
 }
 }
 
-//#include "policy.tpp"
+#include "policy.tpp"
 
 #endif

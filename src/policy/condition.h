@@ -21,6 +21,8 @@ protected:
     Condition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<T>> feature);
 
 public:
+   //virtual bool operator<(const BaseCondition& other) const override;
+
     std::shared_ptr<const Feature<T>> get_feature() const;
 };
 
@@ -34,7 +36,7 @@ public:
 
     virtual bool evaluate(const State& state) const override;
 
-    virtual std::string str() const override;
+    virtual std::string compute_repr() const override;
 };
 
 class NegativeBooleanCondition : public Condition<bool> {
@@ -46,7 +48,7 @@ public:
 
     virtual bool evaluate(const State& state) const override;
 
-    virtual std::string str() const override;
+    virtual std::string compute_repr() const override;
 };
 
 class EqualNumericalCondition : public Condition<int> {
@@ -58,7 +60,7 @@ public:
 
     virtual bool evaluate(const State& state) const override;
 
-    virtual std::string str() const override;
+    virtual std::string compute_repr() const override;
 };
 
 class GreaterNumericalCondition : public Condition<int> {
@@ -70,7 +72,7 @@ public:
 
     virtual bool evaluate(const State& state) const override;
 
-    virtual std::string str() const override;
+    virtual std::string compute_repr() const override;
 };
 
 }

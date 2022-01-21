@@ -23,27 +23,44 @@ Tokens Tokenizer::tokenize(const std::string& data) const {
     Tokens tokens;
     std::stringstream ss;
     bool is_num = true;
+    bool in_str = false;
     for (char c : data) {
         // char c = tolower(description.at(i));
         if (isdigit(c)) {
             ss << c;
         } else {
             switch (c) {
+                case '"': {
+                    in_str = !in_str;
+                    break;
+                }
                 case ' ':
                 case '\t':
                 case '\n':
                 case ',': {
-                    add_token(ss, is_num, tokens);
+                    if (in_str) {
+                        ss << c;
+                    } else {
+                        add_token(ss, is_num, tokens);
+                    }
                     break;
                 }
                 case '(': {
-                    add_token(ss, is_num, tokens);
-                    tokens.emplace_back(LBRACKET, "(");
+                    if (in_str) {
+                        ss << c;
+                    } else {
+                        add_token(ss, is_num, tokens);
+                        tokens.emplace_back(LBRACKET, "(");
+                    }
                     break;
                 }
                 case ')': {
-                    add_token(ss, is_num, tokens);
-                    tokens.emplace_back(LBRACKET, ")");
+                    if (in_str) {
+                        ss << c;
+                    } else {
+                        add_token(ss, is_num, tokens);
+                        tokens.emplace_back(LBRACKET, ")");
+                    }
                     break;
                 }
                 default: {

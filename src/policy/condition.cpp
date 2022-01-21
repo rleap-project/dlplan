@@ -17,8 +17,8 @@ bool PositiveBooleanCondition::evaluate(const State& state) const {
     return get_feature()->evaluate(state);
 }
 
-std::string PositiveBooleanCondition::str() const {
-    return "(:c_b_pos " + get_feature()->str() + ")";
+std::string PositiveBooleanCondition::compute_repr() const {
+    return "(:c_b_pos " + std::to_string(get_feature()->get_index()) + ")";
 }
 
 
@@ -33,8 +33,8 @@ bool NegativeBooleanCondition::evaluate(const State& state) const {
     return !get_feature()->evaluate(state);
 }
 
-std::string NegativeBooleanCondition::str() const {
-    return "(:c_b_neg " + get_feature()->str() + ")";
+std::string NegativeBooleanCondition::compute_repr() const {
+    return "(:c_b_neg " + std::to_string(get_feature()->get_index()) + ")";
 }
 
 
@@ -49,8 +49,8 @@ bool EqualNumericalCondition::evaluate(const State& state) const {
     return get_feature()->evaluate(state) == 0;
 }
 
-std::string EqualNumericalCondition::str() const {
-    return "(:c_n_eq " + get_feature()->str() + ")";
+std::string EqualNumericalCondition::compute_repr() const {
+    return "(:c_n_eq " + std::to_string(get_feature()->get_index()) + ")";
 }
 
 
@@ -65,8 +65,8 @@ bool GreaterNumericalCondition::evaluate(const State& state) const {
     return get_feature()->evaluate(state) > 0;
 }
 
-std::string GreaterNumericalCondition::str() const {
-    return "(:c_n_gt " + get_feature()->str() + ")";
+std::string GreaterNumericalCondition::compute_repr() const {
+    return "(:c_n_gt " + std::to_string(get_feature()->get_index()) + ")";
 }
 
 }

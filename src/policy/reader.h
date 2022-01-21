@@ -7,7 +7,11 @@
 #include <memory>
 
 
-namespace dlplan::policy {
+namespace dlplan {
+namespace core {
+    class SyntacticElementFactory;
+}
+namespace policy {
 template<typename T>
 class Feature;
 template<typename T>
@@ -21,9 +25,10 @@ class Policy;
 
 class PolicyReaderImpl {
 public:
-    Policy read(const std::string& data) const;
+    Policy read(const std::string& data, core::SyntacticElementFactory factory) const;
 };
 
+}
 }
 
 #endif

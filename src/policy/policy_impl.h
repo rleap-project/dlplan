@@ -46,9 +46,9 @@ public:
         std::unordered_set<std::shared_ptr<const BaseCondition>>&& conditions,
         std::unordered_set<std::shared_ptr<const BaseEffect>>&& effects);
 
-    bool evaluate_lazy(const State& source, const State& target);
+    bool evaluate(const State& source, const State& target);
 
-    std::string str() const;
+    std::string compute_repr() const;
 
     std::shared_ptr<const PolicyRoot> get_root() const;
     std::vector<std::shared_ptr<BooleanFeature>> get_boolean_features() const;

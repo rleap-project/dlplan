@@ -32,7 +32,7 @@ public:
 
     virtual bool evaluate(const State& source, const State& target) const override;
 
-    virtual std::string str() const override;
+    virtual std::string compute_repr() const override;
 };
 
 class NegativeBooleanEffect : public Effect<bool> {
@@ -44,7 +44,7 @@ public:
 
     virtual bool evaluate(const State& source, const State& target) const override;
 
-    virtual std::string str() const override;
+    virtual std::string compute_repr() const override;
 };
 
 class UnchangedBooleanEffect : public Effect<bool> {
@@ -56,7 +56,7 @@ public:
 
     virtual bool evaluate(const State& source, const State& target) const override;
 
-    virtual std::string str() const override;
+    virtual std::string compute_repr() const override;
 };
 
 class IncrementNumericalEffect : public Effect<int> {
@@ -68,7 +68,7 @@ public:
 
     virtual bool evaluate(const State& source, const State& target) const override;
 
-    virtual std::string str() const override;
+    virtual std::string compute_repr() const override;
 };
 
 class DecrementNumericalEffect : public Effect<int> {
@@ -80,7 +80,7 @@ public:
 
     virtual bool evaluate(const State& source, const State& target) const override;
 
-    virtual std::string str() const override;
+    virtual std::string compute_repr() const override;
 };
 
 class UnchangedNumericalEffect : public Effect<int> {
@@ -92,7 +92,7 @@ public:
 
     virtual bool evaluate(const State& source, const State& target) const override;
 
-    virtual std::string str() const override;
+    virtual std::string compute_repr() const override;
 };
 
 }

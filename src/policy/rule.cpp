@@ -47,30 +47,23 @@ bool RuleImpl::evaluate_effects(const State& source, const State& target) const 
     return true;
 }
 
-std::string RuleImpl::str() const {
+std::string RuleImpl::compute_repr() const {
     std::stringstream ss;
     ss << "(:rule (:conditions ";
     for (const auto& c : m_conditions) {
         if (c != m_conditions.front()) {
             ss << " ";
         }
-        ss << c->str();
+        ss << c->compute_repr();
     }
     ss << ") (:effects ";
     for (const auto& e : m_effects) {
         if (e != m_effects.front()) {
             ss << " ";
         }
-        ss << e->str();
+        ss << e->compute_repr();
     }
     ss << "))";
-    return ss.str();
-}
-
-std::string RuleImpl::compute_repr() const {
-    std::stringstream ss;
-    for (const auto& c : m_conditions) ss << c->compute_repr();
-    for (const auto& e : m_effects) ss << e->compute_repr();
     return ss.str();
 }
 

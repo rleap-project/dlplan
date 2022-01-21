@@ -25,7 +25,7 @@ enum EXPRESSION_TYPE {
     E_N_DEC,
     E_N_BOT,
     RULE,
-    GENERAL_POLICY,
+    POLICY,
 };
 
 class ExpressionFactory {

@@ -15,13 +15,36 @@ PolicyRoot::PolicyRoot() { }
 
 PolicyRoot::~PolicyRoot() { }
 
-State::State(void* key, std::shared_ptr<const core::State> state)
-    : m_key(key), m_state(state) { }
+BooleanFeature::BooleanFeature(std::shared_ptr<const PolicyRoot> root, int index, core::Boolean&& boolean)
+    : Feature<bool>(root, index), m_boolean(std::move(boolean)) { }
+
+bool BooleanFeature::evaluate(const State& state) const {
+    return m_boolean.evaluate(*state.get_state());
+}
+
+std::string BooleanFeature::compute_repr() const {
+    return m_boolean.compute_repr();
+}
+
+NumericalFeature::NumericalFeature(std::shared_ptr<const PolicyRoot> root, int index, core::Numerical&& numerical)
+    : Feature<int>(root, index), m_numerical(std::move(numerical)) { }
+
+int NumericalFeature::evaluate(const State& state) const {
+    return m_numerical.evaluate(*state.get_state());
+}
+
+std::string NumericalFeature::compute_repr() const {
+    return m_numerical.compute_repr();
+}
+
+
+State::State(int index, std::shared_ptr<const core::State> state)
+    : m_index(index), m_state(state) { }
 
 State::~State() { }
 
-void* State::get_key() const {
-    return m_key;
+int State::get_index() const {
+    return m_index;
 }
 
 std::shared_ptr<const core::State> State::get_state() const {
@@ -29,17 +52,10 @@ std::shared_ptr<const core::State> State::get_state() const {
 }
 
 
-std::string BaseCondition::compute_repr() const {
-    return str();
-}
-
 std::unique_ptr<BaseCondition> BaseCondition::clone() const {
     return clone_impl();
 }
 
-std::string BaseEffect::compute_repr() const {
-    return str();
-}
 
 std::unique_ptr<BaseEffect> BaseEffect::clone() const {
     return clone_impl();
@@ -69,10 +85,6 @@ bool Rule::evaluate_conditions(const State& source) const {
 
 bool Rule::evaluate_effects(const State& source, const State& target) const {
     return m_pImpl->evaluate_effects(source, target);
-}
-
-std::string Rule::str() const {
-    return m_pImpl->str();
 }
 
 std::string Rule::compute_repr() const {
@@ -151,9 +163,12 @@ std::shared_ptr<const Rule> Policy::add_rule(
     return m_pImpl->add_rule(std::move(conditions), std::move(effects));
 }
 
+bool Policy::evaluate(const State& source, const State& target) {
+    return m_pImpl->evaluate(source, target);
+}
 
-std::string Policy::str() const {
-    return m_pImpl->str();
+std::string Policy::compute_repr() const {
+    return m_pImpl->compute_repr();
 }
 
 std::shared_ptr<const PolicyRoot> Policy::get_root() const {
@@ -173,8 +188,8 @@ PolicyReader::PolicyReader() { }
 
 PolicyReader::~PolicyReader() { }
 
-Policy PolicyReader::read(const std::string& data) const {
-    return m_pImpl->read(data);
+Policy PolicyReader::read(const std::string& data, core::SyntacticElementFactory factory) const {
+    return m_pImpl->read(data, factory);
 }
 
 

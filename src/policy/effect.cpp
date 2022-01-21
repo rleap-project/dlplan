@@ -16,8 +16,8 @@ bool PositiveBooleanEffect::evaluate(const State&, const State& target) const{
     return get_feature()->evaluate(target);
 }
 
-std::string PositiveBooleanEffect::str() const{
-    return "(:e_b_pos " + get_feature()->str() + ")";
+std::string PositiveBooleanEffect::compute_repr() const{
+    return "(:e_b_pos " + std::to_string(get_feature()->get_index()) + ")";
 }
 
 
@@ -32,8 +32,8 @@ bool NegativeBooleanEffect::evaluate(const State&, const State& target) const{
     return !get_feature()->evaluate(target);
 }
 
-std::string NegativeBooleanEffect::str() const{
-    return "(:e_b_neg " + get_feature()->str() + ")";
+std::string NegativeBooleanEffect::compute_repr() const{
+    return "(:e_b_neg " + std::to_string(get_feature()->get_index()) + ")";
 }
 
 
@@ -48,8 +48,8 @@ bool UnchangedBooleanEffect::evaluate(const State& source, const State& target) 
     return get_feature()->evaluate(source) == get_feature()->evaluate(target);
 }
 
-std::string UnchangedBooleanEffect::str() const{
-    return "(:e_b_bot " + get_feature()->str() + ")";
+std::string UnchangedBooleanEffect::compute_repr() const{
+    return "(:e_b_bot " + std::to_string(get_feature()->get_index()) + ")";
 }
 
 
@@ -64,8 +64,8 @@ bool IncrementNumericalEffect::evaluate(const State& source, const State& target
     return get_feature()->evaluate(source) < get_feature()->evaluate(target);
 }
 
-std::string IncrementNumericalEffect::str() const{
-    return "(:e_n_inc " + get_feature()->str() + ")";
+std::string IncrementNumericalEffect::compute_repr() const{
+    return "(:e_n_inc " + std::to_string(get_feature()->get_index()) + ")";
 }
 
 
@@ -80,8 +80,8 @@ bool DecrementNumericalEffect::evaluate(const State& source, const State& target
     return get_feature()->evaluate(source) > get_feature()->evaluate(target);
 }
 
-std::string DecrementNumericalEffect::str() const{
-    return "(:e_n_dec " + get_feature()->str() + ")";
+std::string DecrementNumericalEffect::compute_repr() const{
+    return "(:e_n_dec " + std::to_string(get_feature()->get_index()) + ")";
 }
 
 
@@ -96,8 +96,8 @@ bool UnchangedNumericalEffect::evaluate(const State& source, const State& target
     return get_feature()->evaluate(source) == get_feature()->evaluate(target);
 }
 
-std::string UnchangedNumericalEffect::str() const{
-    return "(:e_n_bot " + get_feature()->str() + ")";
+std::string UnchangedNumericalEffect::compute_repr() const{
+    return "(:e_n_bot " + std::to_string(get_feature()->get_index()) + ")";
 }
 
 }

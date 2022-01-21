@@ -35,10 +35,6 @@
 #include "elements/roles/top.h"
 #include "elements/roles/transitive_closure.h"
 #include "elements/roles/transitive_reflexive_closure.h"
-#include "concept.h"
-#include "role.h"
-#include "numerical.h"
-#include "boolean.h"
 
 
 namespace dlplan::core {

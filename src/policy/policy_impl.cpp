@@ -11,7 +11,8 @@
 
 namespace dlplan::policy {
 
-PolicyImpl::PolicyImpl() : m_root(std::make_shared<PolicyRoot>(PolicyRoot())) { }
+PolicyImpl::PolicyImpl()
+    : m_root(std::make_shared<PolicyRoot>(PolicyRoot())) { }
 
 std::shared_ptr<BooleanFeature> PolicyImpl::add_boolean_feature(core::Boolean boolean) {
     m_boolean_features.push_back(std::make_shared<BooleanFeature>(BooleanFeature(m_root, m_boolean_features.size(), std::move(boolean))));
@@ -73,23 +74,33 @@ std::shared_ptr<const Rule> PolicyImpl::add_rule(
     return result.first;
 }
 
-bool PolicyImpl::evaluate_lazy(const State& source, const State& target) {
+bool PolicyImpl::evaluate(const State& source, const State& target) {
     for (auto& r : m_rules) {
         if (r->evaluate_conditions(source) && r->evaluate_effects(source, target)) return true;
     }
     return false;
 }
 
-std::string PolicyImpl::str() const {
+std::string PolicyImpl::compute_repr() const {
     std::stringstream ss;
-    ss << "(:general_policy\n";
+    ss << "(:policy\n";
     // boolean features
-    ss << "(:boolean_features " << m_boolean_features.size() << ")\n";
+    ss << "(:boolean_features ";
+    for (const auto& b : m_boolean_features) {
+        ss << "\"" << b->compute_repr() << "\"";
+        if (b != m_boolean_features.back()) ss << " ";
+    }
+    ss << ")\n";
     // numerical_features
-    ss << "(:numerical_features " << m_numerical_features.size() << ")\n";
+    ss << "(:numerical_features ";
+    for (const auto& n : m_numerical_features) {
+        ss << "\"" << n->compute_repr() << "\"";
+        if (n != m_numerical_features.back()) ss << " ";
+    }
+    ss << ")\n";
     // rules
     for (const auto& r : m_rules) {
-        ss << r->str() << "\n";
+        ss << r->compute_repr() << "\n";
     }
     ss << ")";
     return ss.str();

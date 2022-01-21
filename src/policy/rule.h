@@ -30,8 +30,6 @@ public:
     bool evaluate_conditions(const State& source) const;
     bool evaluate_effects(const State& source, const State& target) const;
 
-    std::string str() const;
-
     std::string compute_repr() const;
 
     std::shared_ptr<const PolicyRoot> get_root() const;
