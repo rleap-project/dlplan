@@ -46,10 +46,10 @@ else:
     SUITE = ["visitall:p-1-0.5-2-0.pddl"]
     TIME_LIMIT = 180
 ATTRIBUTES = [
-    Attribute("generate_time_complexity_5", absolute=True, min_wins=True, scale="linear"),
-    Attribute("generate_memory_complexity_5", absolute=True, min_wins=True, scale="linear"),
-    Attribute("num_generated_features_complexity_5", absolute=True, min_wins=True, scale="linear"),
-    Attribute("num_novel_features_complexity_5", absolute=True, min_wins=True, scale="linear"),
+    #Attribute("generate_time_complexity_5", absolute=True, min_wins=True, scale="linear"),
+    #Attribute("generate_memory_complexity_5", absolute=True, min_wins=True, scale="linear"),
+    #Attribute("num_generated_features_complexity_5", absolute=True, min_wins=True, scale="linear"),
+    #Attribute("num_novel_features_complexity_5", absolute=True, min_wins=True, scale="linear"),
     Attribute("generate_time_complexity_10", absolute=True, min_wins=True, scale="linear"),
     Attribute("generate_memory_complexity_10", absolute=True, min_wins=True, scale="linear"),
     Attribute("num_generated_features_complexity_10", absolute=True, min_wins=True, scale="linear"),
@@ -70,8 +70,8 @@ exp = Experiment(environment=ENV)
 exp.add_parser("experiment_parser.py")
 
 for task in suites.build_suite(BENCHMARKS_DIR, SUITE):
-    for num_threads in [1,8,16]:
-        for complexity in [5,10]:
+    for num_threads in [1,2,4,8,12,16]:
+        for complexity in [10]:
             run = exp.add_run()
             # Create symbolic links and aliases. This is optional. We
             # could also use absolute paths in add_command().
@@ -80,7 +80,6 @@ for task in suites.build_suite(BENCHMARKS_DIR, SUITE):
             run.add_resource("main", "main.py", symlink=True)
             # 'ff' binary has to be on the PATH.
             # We could also use exp.add_resource().
-            # up to complexity 5
             run.add_command(
                 f"complexity-{complexity}-{num_threads}",
                 ["python3", "main.py", "--domain", "{domain}", "--instance", "{problem}", "--c", complexity, "--t", GENERATOR_TIME_LIMIT, "--f", GENERATOR_FEATURE_LIMIT, "--n", num_threads],
