@@ -1,6 +1,10 @@
 #ifndef DLPLAN_SRC_UTILS_SEGMENTED_ARRAY_VECTOR_H_
 #define DLPLAN_SRC_UTILS_SEGMENTED_ARRAY_VECTOR_H_
 
+/**
+ * Taken from fast-downward.org
+ */
+
 #include <vector>
 
 

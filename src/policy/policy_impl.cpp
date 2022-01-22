@@ -4,6 +4,7 @@
 
 #include "condition.h"
 #include "effect.h"
+#include "evaluation_caches.h"
 
 #include "../include/dlplan/core.h"
 #include "../include/dlplan/policy.h"
@@ -12,7 +13,8 @@
 namespace dlplan::policy {
 
 PolicyImpl::PolicyImpl()
-    : m_root(std::make_shared<PolicyRoot>(PolicyRoot())) { }
+    : m_root(std::make_shared<PolicyRoot>(PolicyRoot())),
+      m_evaluation_caches(std::make_shared<EvaluationCaches>(EvaluationCaches())) { }
 
 std::shared_ptr<BooleanFeature> PolicyImpl::add_boolean_feature(core::Boolean boolean) {
     m_boolean_features.push_back(std::make_shared<BooleanFeature>(BooleanFeature(m_root, m_boolean_features.size(), std::move(boolean))));

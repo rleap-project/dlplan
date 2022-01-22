@@ -13,8 +13,10 @@ class Rule;
 class BooleanFeature;
 class NumericalFeature;
 class PolicyRoot;
+class EvaluationCaches;
 
-
+// TODO: we must move the construction in a builder because the number of features must be known in advance
+// to initialize the sizes of the caches.
 class PolicyImpl {
 private:
     const std::shared_ptr<const PolicyRoot> m_root;
@@ -24,6 +26,8 @@ private:
     std::vector<std::shared_ptr<BooleanFeature>> m_boolean_features;
     std::vector<std::shared_ptr<NumericalFeature>> m_numerical_features;
     std::vector<std::shared_ptr<Rule>> m_rules;
+
+    std::shared_ptr<EvaluationCaches> m_evaluation_caches;
 
 public:
     PolicyImpl();

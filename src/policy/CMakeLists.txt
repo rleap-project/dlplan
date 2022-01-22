@@ -2,9 +2,11 @@ add_library(dlplanpolicy SHARED)
 target_sources(dlplanpolicy
     PRIVATE
         policy.cpp
+        policy_builder.cpp
         policy_impl.cpp
         condition.cpp
         effect.cpp
+        evaluation_caches.cpp
         rule.cpp
         reader.cpp
         writer.cpp

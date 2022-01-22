@@ -19,19 +19,14 @@ namespace core {
 namespace policy {
 class RuleImpl;
 class PolicyImpl;
+class PolicyBuilderImpl;
 class PolicyReaderImpl;
 class PolicyWriterImpl;
 
 
 class PolicyRoot {
-private:
-    PolicyRoot();
-    friend class PolicyImpl;
-
-    // Cache the results of state evaluations here.
-    // This allows hiding the cache to the outside.
-
 public:
+    PolicyRoot();
     ~PolicyRoot();
 };
 
@@ -58,6 +53,8 @@ class Feature {
 private:
     const std::shared_ptr<const PolicyRoot> m_root;
     const int m_index;
+    // TODO: store the caches somewhere, split the into boolean and numerical?
+    const std::shared_ptr<EvaluationCaches> m_cache;
 
 protected:
     Feature(std::shared_ptr<const PolicyRoot> root, int index);
@@ -183,6 +180,7 @@ public:
     std::shared_ptr<const PolicyRoot> get_root() const;
 };
 
+
 /**
  * A policy is a set of rules over Boolean and numerical features.
  */
@@ -191,10 +189,34 @@ private:
     pimpl<PolicyImpl> m_pImpl;
 
 public:
-    explicit Policy();
+    Policy(std::vector<std::shared_ptr<const BooleanFeature>>&& boolean_features,
+           std::vector<std::shared_ptr<const NumericalFeature>>&& numerical_features,
+           std::vector<std::shared_ptr<const Rule>>&& rules);
     Policy(const Policy& other);
     Policy& operator=(const Policy& other);
     ~Policy();
+
+    /**
+     * Lazily evaluate the state pair.
+     * Optimized to compute fewest features of smallest runtime complexity.
+     */
+    bool evaluate(const State& source, const State& target);
+
+    std::string compute_repr() const;
+
+    std::shared_ptr<const PolicyRoot> get_root() const;
+    std::vector<std::shared_ptr<BooleanFeature>> get_boolean_features() const;
+    std::vector<std::shared_ptr<NumericalFeature>> get_numerical_features() const;
+};
+
+
+class PolicyBuilder {
+private:
+    pimpl<PolicyBuilderImpl> m_pImpl;
+
+public:
+    PolicyBuilder();
+    ~PolicyBuilder();
 
     std::shared_ptr<BooleanFeature> add_boolean_feature(core::Boolean b);
     std::shared_ptr<NumericalFeature> add_numerical_feature(core::Numerical n);
@@ -220,17 +242,7 @@ public:
         std::unordered_set<std::shared_ptr<const BaseCondition>>&& conditions,
         std::unordered_set<std::shared_ptr<const BaseEffect>>&& effects);
 
-    /**
-     * Lazily evaluate the state pair.
-     * Optimized to compute fewest features of smallest runtime complexity.
-     */
-    bool evaluate(const State& source, const State& target);
-
-    std::string compute_repr() const;
-
-    std::shared_ptr<const PolicyRoot> get_root() const;
-    std::vector<std::shared_ptr<BooleanFeature>> get_boolean_features() const;
-    std::vector<std::shared_ptr<NumericalFeature>> get_numerical_features() const;
+    Policy get_result();
 };
 
 
