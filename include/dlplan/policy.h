@@ -54,7 +54,7 @@ private:
     const std::shared_ptr<const PolicyRoot> m_root;
     const int m_index;
     // TODO: store the caches somewhere, split the into boolean and numerical?
-    const std::shared_ptr<EvaluationCaches> m_cache;
+    // const std::shared_ptr<EvaluationCaches> m_cache;
 
 protected:
     Feature(std::shared_ptr<const PolicyRoot> root, int index);
@@ -77,7 +77,7 @@ private:
 
 private:
     BooleanFeature(std::shared_ptr<const PolicyRoot> root, int index, core::Boolean&& boolean);
-    friend class PolicyImpl;
+    friend class PolicyBuilderImpl;
 
 public:
     bool evaluate(const State& state) const override;
@@ -91,7 +91,7 @@ private:
 
 private:
     NumericalFeature(std::shared_ptr<const PolicyRoot> root, int index, core::Numerical&& numerical);
-    friend class PolicyImpl;
+    friend class PolicyBuilderImpl;
 
 public:
     int evaluate(const State& state) const override;
@@ -165,7 +165,7 @@ private:
         std::shared_ptr<const PolicyRoot> root,
         std::unordered_set<std::shared_ptr<const BaseCondition>>&& conditions,
         std::unordered_set<std::shared_ptr<const BaseEffect>>&& effects);
-    friend class PolicyImpl;
+    friend class PolicyBuilderImpl;
 
 public:
     Rule(const Rule& other);
@@ -188,10 +188,14 @@ class Policy {
 private:
     pimpl<PolicyImpl> m_pImpl;
 
-public:
-    Policy(std::vector<std::shared_ptr<const BooleanFeature>>&& boolean_features,
+private:
+    Policy(std::shared_ptr<const PolicyRoot> root,
+           std::vector<std::shared_ptr<const BooleanFeature>>&& boolean_features,
            std::vector<std::shared_ptr<const NumericalFeature>>&& numerical_features,
            std::vector<std::shared_ptr<const Rule>>&& rules);
+    friend class PolicyBuilderImpl;
+
+public:
     Policy(const Policy& other);
     Policy& operator=(const Policy& other);
     ~Policy();
@@ -205,8 +209,8 @@ public:
     std::string compute_repr() const;
 
     std::shared_ptr<const PolicyRoot> get_root() const;
-    std::vector<std::shared_ptr<BooleanFeature>> get_boolean_features() const;
-    std::vector<std::shared_ptr<NumericalFeature>> get_numerical_features() const;
+    std::vector<std::shared_ptr<const BooleanFeature>> get_boolean_features() const;
+    std::vector<std::shared_ptr<const NumericalFeature>> get_numerical_features() const;
 };
 
 
@@ -218,8 +222,12 @@ public:
     PolicyBuilder();
     ~PolicyBuilder();
 
-    std::shared_ptr<BooleanFeature> add_boolean_feature(core::Boolean b);
-    std::shared_ptr<NumericalFeature> add_numerical_feature(core::Numerical n);
+    /**
+     * Uniquely adds features.
+     * TODO: must use cache here as well.
+     */
+    std::shared_ptr<const BooleanFeature> add_boolean_feature(core::Boolean b);
+    std::shared_ptr<const NumericalFeature> add_numerical_feature(core::Numerical n);
 
     /**
      * Uniquely adds a condition (resp. effect) to the policy and returns it.

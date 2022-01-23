@@ -4,6 +4,7 @@
 #include "effect.h"
 #include "rule.h"
 #include "policy_impl.h"
+#include "policy_builder.h"
 #include "reader.h"
 #include "writer.h"
 
@@ -96,7 +97,75 @@ std::shared_ptr<const PolicyRoot> Rule::get_root() const {
 }
 
 
-Policy::Policy() { }
+PolicyBuilder::PolicyBuilder() { }
+
+PolicyBuilder::~PolicyBuilder() { }
+
+std::shared_ptr<const BooleanFeature> PolicyBuilder::add_boolean_feature(core::Boolean boolean) {
+    return m_pImpl->add_boolean_feature(boolean);
+}
+
+std::shared_ptr<const NumericalFeature> PolicyBuilder::add_numerical_feature(core::Numerical numerical) {
+    return m_pImpl->add_numerical_feature(numerical);
+}
+
+std::shared_ptr<const BaseCondition> PolicyBuilder::add_b_pos_condition(std::shared_ptr<const BooleanFeature> b) {
+    return m_pImpl->add_b_pos_condition(b);
+}
+
+std::shared_ptr<const BaseCondition> PolicyBuilder::add_b_neg_condition(std::shared_ptr<const BooleanFeature> b) {
+    return m_pImpl->add_b_neg_condition(b);
+}
+
+std::shared_ptr<const BaseCondition> PolicyBuilder::add_n_gt_condition(std::shared_ptr<const NumericalFeature> n) {
+    return m_pImpl->add_n_gt_condition(n);
+}
+
+std::shared_ptr<const BaseCondition> PolicyBuilder::add_n_eq_condition(std::shared_ptr<const NumericalFeature> n) {
+    return m_pImpl->add_n_eq_condition(n);
+}
+
+std::shared_ptr<const BaseEffect> PolicyBuilder::add_b_pos_effect(std::shared_ptr<const BooleanFeature> b) {
+    return m_pImpl->add_b_pos_effect(b);
+}
+
+std::shared_ptr<const BaseEffect> PolicyBuilder::add_b_neg_effect(std::shared_ptr<const BooleanFeature> b) {
+    return m_pImpl->add_b_neg_effect(b);
+}
+
+std::shared_ptr<const BaseEffect> PolicyBuilder::add_b_bot_effect(std::shared_ptr<const BooleanFeature> b) {
+    return m_pImpl->add_b_bot_effect(b);
+}
+
+std::shared_ptr<const BaseEffect> PolicyBuilder::add_n_inc_effect(std::shared_ptr<const NumericalFeature> n) {
+    return m_pImpl->add_n_inc_effect(n);
+}
+
+std::shared_ptr<const BaseEffect> PolicyBuilder::add_n_dec_effect(std::shared_ptr<const NumericalFeature> n) {
+    return m_pImpl->add_n_dec_effect(n);
+}
+
+std::shared_ptr<const BaseEffect> PolicyBuilder::add_n_bot_effect(std::shared_ptr<const NumericalFeature> n) {
+    return m_pImpl->add_n_bot_effect(n);
+}
+
+std::shared_ptr<const Rule> PolicyBuilder::add_rule(
+    std::unordered_set<std::shared_ptr<const BaseCondition>>&& conditions,
+    std::unordered_set<std::shared_ptr<const BaseEffect>>&& effects) {
+    return m_pImpl->add_rule(std::move(conditions), std::move(effects));
+}
+
+Policy PolicyBuilder::get_result() {
+    return m_pImpl->get_result();
+}
+
+
+Policy::Policy(
+    std::shared_ptr<const PolicyRoot> root,
+    std::vector<std::shared_ptr<const BooleanFeature>>&& boolean_features,
+    std::vector<std::shared_ptr<const NumericalFeature>>&& numerical_features,
+    std::vector<std::shared_ptr<const Rule>>&& rules)
+    : m_pImpl(PolicyImpl(root, std::move(boolean_features), std::move(numerical_features), std::move(rules))) { }
 
 Policy::Policy(const Policy& other) : m_pImpl(*other.m_pImpl) { }
 
@@ -108,60 +177,6 @@ Policy& Policy::operator=(const Policy& other) {
 }
 
 Policy::~Policy() { }
-
-std::shared_ptr<BooleanFeature> Policy::add_boolean_feature(core::Boolean boolean) {
-    return m_pImpl->add_boolean_feature(boolean);
-}
-
-std::shared_ptr<NumericalFeature> Policy::add_numerical_feature(core::Numerical numerical) {
-    return m_pImpl->add_numerical_feature(numerical);
-}
-
-std::shared_ptr<const BaseCondition> Policy::add_b_pos_condition(std::shared_ptr<const BooleanFeature> b) {
-    return m_pImpl->add_b_pos_condition(b);
-}
-
-std::shared_ptr<const BaseCondition> Policy::add_b_neg_condition(std::shared_ptr<const BooleanFeature> b) {
-    return m_pImpl->add_b_neg_condition(b);
-}
-
-std::shared_ptr<const BaseCondition> Policy::add_n_gt_condition(std::shared_ptr<const NumericalFeature> n) {
-    return m_pImpl->add_n_gt_condition(n);
-}
-
-std::shared_ptr<const BaseCondition> Policy::add_n_eq_condition(std::shared_ptr<const NumericalFeature> n) {
-    return m_pImpl->add_n_eq_condition(n);
-}
-
-std::shared_ptr<const BaseEffect> Policy::add_b_pos_effect(std::shared_ptr<const BooleanFeature> b) {
-    return m_pImpl->add_b_pos_effect(b);
-}
-
-std::shared_ptr<const BaseEffect> Policy::add_b_neg_effect(std::shared_ptr<const BooleanFeature> b) {
-    return m_pImpl->add_b_neg_effect(b);
-}
-
-std::shared_ptr<const BaseEffect> Policy::add_b_bot_effect(std::shared_ptr<const BooleanFeature> b) {
-    return m_pImpl->add_b_bot_effect(b);
-}
-
-std::shared_ptr<const BaseEffect> Policy::add_n_inc_effect(std::shared_ptr<const NumericalFeature> n) {
-    return m_pImpl->add_n_inc_effect(n);
-}
-
-std::shared_ptr<const BaseEffect> Policy::add_n_dec_effect(std::shared_ptr<const NumericalFeature> n) {
-    return m_pImpl->add_n_dec_effect(n);
-}
-
-std::shared_ptr<const BaseEffect> Policy::add_n_bot_effect(std::shared_ptr<const NumericalFeature> n) {
-    return m_pImpl->add_n_bot_effect(n);
-}
-
-std::shared_ptr<const Rule> Policy::add_rule(
-    std::unordered_set<std::shared_ptr<const BaseCondition>>&& conditions,
-    std::unordered_set<std::shared_ptr<const BaseEffect>>&& effects) {
-    return m_pImpl->add_rule(std::move(conditions), std::move(effects));
-}
 
 bool Policy::evaluate(const State& source, const State& target) {
     return m_pImpl->evaluate(source, target);
@@ -175,11 +190,11 @@ std::shared_ptr<const PolicyRoot> Policy::get_root() const {
     return m_pImpl->get_root();
 }
 
-std::vector<std::shared_ptr<BooleanFeature>> Policy::get_boolean_features() const {
+std::vector<std::shared_ptr<const BooleanFeature>> Policy::get_boolean_features() const {
     return m_pImpl->get_boolean_features();
 }
 
-std::vector<std::shared_ptr<NumericalFeature>> Policy::get_numerical_features() const {
+std::vector<std::shared_ptr<const NumericalFeature>> Policy::get_numerical_features() const {
     return m_pImpl->get_numerical_features();
 }
 

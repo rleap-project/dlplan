@@ -6,6 +6,7 @@
  */
 
 #include <vector>
+#include <cassert>
 
 
 namespace dlplan::utils {
