@@ -6,13 +6,23 @@
 
 namespace dlplan::policy {
 
+template<typename T>
+class EvaluationCache {
+private:
+    PerStateArray<std::vector<T>> m_evaluations;
+    PerStateArray<std::vector<bool>> m_is_cached;
+
+public:
+    EvaluationCache(std::vector<T> default_value)
+    : m_evaluations(default_value), m_is_cached(std::vector<bool>(default_value.size(), false)) { }
+
+
+};
+
 class EvaluationCaches {
 private:
-    PerStateArray<std::vector<int>> m_numerical_feature_evaluations;
-    PerStateArray<std::vector<bool>> m_numerical_feature_evaluation_is_cached;
-
-    PerStateArray<std::vector<bool>> m_boolean_feature_evaluations;
-    PerStateArray<std::vector<bool>> m_boolean_feature_evaluation_is_cached;
+    EvaluationCache<int> m_numerical_cache;
+    EvaluationCache<bool> m_boolean_cache;
 
 public:
     EvaluationCaches();
