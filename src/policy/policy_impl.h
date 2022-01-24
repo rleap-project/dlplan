@@ -5,17 +5,16 @@
 #include <vector>
 #include <memory>
 
+#include "evaluation_cache.h"
+
 
 namespace dlplan::policy {
 class Rule;
 class BooleanFeature;
 class NumericalFeature;
 class PolicyRoot;
-class EvaluationCaches;
 class State;
 
-// TODO: we must move the construction in a builder because the number of features must be known in advance
-// to initialize the sizes of the caches.
 class PolicyImpl {
 private:
     const std::shared_ptr<const PolicyRoot> m_root;
@@ -24,6 +23,9 @@ private:
     std::vector<std::shared_ptr<const NumericalFeature>> m_numerical_features;
     std::vector<std::shared_ptr<const Rule>> m_rules;
 
+    // We have to store this in a shared_ptr
+    // because Policy must be copieable
+    // since we return it from the PolicyBuilder.
     std::shared_ptr<EvaluationCaches> m_evaluation_caches;
 
 public:

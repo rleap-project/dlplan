@@ -19,8 +19,14 @@ PolicyRoot::~PolicyRoot() { }
 BooleanFeature::BooleanFeature(std::shared_ptr<const PolicyRoot> root, int index, core::Boolean&& boolean)
     : Feature<bool>(root, index), m_boolean(std::move(boolean)) { }
 
-bool BooleanFeature::evaluate(const State& state) const {
-    return m_boolean.evaluate(*state.get_state());
+bool BooleanFeature::evaluate(const State& state, EvaluationCaches& evaluation_caches) const {
+    BooleanEvaluationCache& boolean_cache = evaluation_caches.get_boolean_cache();
+    if (!boolean_cache.get_is_cached()[state].test(get_index())) {
+        if (m_boolean.evaluate(*state.get_state()))
+            boolean_cache.get_evaluations()[state].set(get_index());
+        boolean_cache.get_is_cached()[state].set(get_index());
+    }
+    return boolean_cache.get_evaluations()[state].test(get_index());
 }
 
 std::string BooleanFeature::compute_repr() const {
@@ -30,8 +36,13 @@ std::string BooleanFeature::compute_repr() const {
 NumericalFeature::NumericalFeature(std::shared_ptr<const PolicyRoot> root, int index, core::Numerical&& numerical)
     : Feature<int>(root, index), m_numerical(std::move(numerical)) { }
 
-int NumericalFeature::evaluate(const State& state) const {
-    return m_numerical.evaluate(*state.get_state());
+int NumericalFeature::evaluate(const State& state, EvaluationCaches& evaluation_caches) const {
+    NumericalEvaluationCache& numerical_cache = evaluation_caches.get_numerical_cache();
+    if (!numerical_cache.get_is_cached()[state].test(get_index())) {
+        numerical_cache.get_evaluations()[state][get_index()] = m_numerical.evaluate(*state.get_state());
+        numerical_cache.get_is_cached()[state].set(get_index());
+    }
+    return numerical_cache.get_evaluations()[state][get_index()];
 }
 
 std::string NumericalFeature::compute_repr() const {
@@ -80,12 +91,12 @@ Rule& Rule::operator=(const Rule& other) {
 
 Rule::~Rule() { }
 
-bool Rule::evaluate_conditions(const State& source) const {
-    return m_pImpl->evaluate_conditions(source);
+bool Rule::evaluate_conditions(const State& source, EvaluationCaches& evaluation_caches) const {
+    return m_pImpl->evaluate_conditions(source, evaluation_caches);
 }
 
-bool Rule::evaluate_effects(const State& source, const State& target) const {
-    return m_pImpl->evaluate_effects(source, target);
+bool Rule::evaluate_effects(const State& source, const State& target, EvaluationCaches& evaluation_caches) const {
+    return m_pImpl->evaluate_effects(source, target, evaluation_caches);
 }
 
 std::string Rule::compute_repr() const {

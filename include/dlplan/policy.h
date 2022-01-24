@@ -22,6 +22,9 @@ class PolicyImpl;
 class PolicyBuilderImpl;
 class PolicyReaderImpl;
 class PolicyWriterImpl;
+class BooleanEvaluationCache;
+class NumericalEvaluationCache;
+class EvaluationCaches;
 
 
 class PolicyRoot {
@@ -53,8 +56,6 @@ class Feature {
 private:
     const std::shared_ptr<const PolicyRoot> m_root;
     const int m_index;
-    // TODO: store the caches somewhere, split the into boolean and numerical?
-    // const std::shared_ptr<EvaluationCaches> m_cache;
 
 protected:
     Feature(std::shared_ptr<const PolicyRoot> root, int index);
@@ -62,7 +63,7 @@ protected:
 public:
     virtual ~Feature();
 
-    virtual T evaluate(const State& state) const = 0;
+    virtual T evaluate(const State& state, EvaluationCaches& evaluation_caches) const = 0;
 
     virtual std::string compute_repr() const = 0;
 
@@ -80,7 +81,7 @@ private:
     friend class PolicyBuilderImpl;
 
 public:
-    bool evaluate(const State& state) const override;
+    bool evaluate(const State& state, EvaluationCaches& evaluation_caches) const override;
 
     std::string compute_repr() const override;
 };
@@ -94,7 +95,7 @@ private:
     friend class PolicyBuilderImpl;
 
 public:
-    int evaluate(const State& state) const override;
+    int evaluate(const State& state, EvaluationCaches& evaluation_caches) const override;
 
     std::string compute_repr() const override;
 };
@@ -117,7 +118,7 @@ public:
 
     //virtual bool operator<(const BaseCondition& other) const = 0;
 
-    virtual bool evaluate(const State& state) const = 0;
+    virtual bool evaluate(const State& state, EvaluationCaches& evaluation_caches) const = 0;
 
     virtual std::string compute_repr() const = 0;
 
@@ -142,7 +143,7 @@ protected:
 public:
     virtual ~BaseEffect() = default;
 
-    virtual bool evaluate(const State& source, const State& target) const = 0;
+    virtual bool evaluate(const State& source, const State& target, EvaluationCaches& evaluation_caches) const = 0;
 
     virtual std::string compute_repr() const = 0;
 
@@ -172,8 +173,8 @@ public:
     Rule& operator=(const Rule& other);
     ~Rule();
 
-    bool evaluate_conditions(const State& source) const;
-    bool evaluate_effects(const State& source, const State& target) const;
+    bool evaluate_conditions(const State& source, EvaluationCaches& evaluation_caches) const;
+    bool evaluate_effects(const State& source, const State& target, EvaluationCaches& evaluation_caches) const;
 
     std::string compute_repr() const;
 

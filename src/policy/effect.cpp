@@ -1,5 +1,6 @@
 #include "effect.h"
 
+#include "evaluation_cache.h"
 #include "../include/dlplan/policy.h"
 
 
@@ -12,8 +13,8 @@ std::unique_ptr<BaseEffect> PositiveBooleanEffect::clone_impl() const {
 PositiveBooleanEffect::PositiveBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature)
     : Effect<bool>(root, boolean_feature) {}
 
-bool PositiveBooleanEffect::evaluate(const State&, const State& target) const{
-    return get_feature()->evaluate(target);
+bool PositiveBooleanEffect::evaluate(const State&, const State& target, EvaluationCaches& evaluation_caches) const{
+    return get_feature()->evaluate(target, evaluation_caches);
 }
 
 std::string PositiveBooleanEffect::compute_repr() const{
@@ -28,8 +29,8 @@ std::unique_ptr<BaseEffect> NegativeBooleanEffect::clone_impl() const{
 NegativeBooleanEffect::NegativeBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature)
     : Effect<bool>(root, boolean_feature) {}
 
-bool NegativeBooleanEffect::evaluate(const State&, const State& target) const{
-    return !get_feature()->evaluate(target);
+bool NegativeBooleanEffect::evaluate(const State&, const State& target, EvaluationCaches& evaluation_caches) const{
+    return !get_feature()->evaluate(target, evaluation_caches);
 }
 
 std::string NegativeBooleanEffect::compute_repr() const{
@@ -44,8 +45,8 @@ std::unique_ptr<BaseEffect> UnchangedBooleanEffect::clone_impl() const{
 UnchangedBooleanEffect::UnchangedBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature)
     : Effect<bool>(root, boolean_feature) {}
 
-bool UnchangedBooleanEffect::evaluate(const State& source, const State& target) const{
-    return get_feature()->evaluate(source) == get_feature()->evaluate(target);
+bool UnchangedBooleanEffect::evaluate(const State& source, const State& target, EvaluationCaches& evaluation_caches) const{
+    return get_feature()->evaluate(source, evaluation_caches) == get_feature()->evaluate(target, evaluation_caches);
 }
 
 std::string UnchangedBooleanEffect::compute_repr() const{
@@ -60,8 +61,8 @@ std::unique_ptr<BaseEffect> IncrementNumericalEffect::clone_impl() const{
 IncrementNumericalEffect::IncrementNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature)
     : Effect<int>(root, numerical_feature) {}
 
-bool IncrementNumericalEffect::evaluate(const State& source, const State& target) const{
-    return get_feature()->evaluate(source) < get_feature()->evaluate(target);
+bool IncrementNumericalEffect::evaluate(const State& source, const State& target, EvaluationCaches& evaluation_caches) const{
+    return get_feature()->evaluate(source, evaluation_caches) < get_feature()->evaluate(target, evaluation_caches);
 }
 
 std::string IncrementNumericalEffect::compute_repr() const{
@@ -76,8 +77,8 @@ std::unique_ptr<BaseEffect> DecrementNumericalEffect::clone_impl() const{
 DecrementNumericalEffect::DecrementNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature)
     : Effect<int>(root, numerical_feature) {}
 
-bool DecrementNumericalEffect::evaluate(const State& source, const State& target) const{
-    return get_feature()->evaluate(source) > get_feature()->evaluate(target);
+bool DecrementNumericalEffect::evaluate(const State& source, const State& target, EvaluationCaches& evaluation_caches) const{
+    return get_feature()->evaluate(source, evaluation_caches) > get_feature()->evaluate(target, evaluation_caches);
 }
 
 std::string DecrementNumericalEffect::compute_repr() const{
@@ -92,8 +93,8 @@ std::unique_ptr<BaseEffect> UnchangedNumericalEffect::clone_impl() const{
 UnchangedNumericalEffect::UnchangedNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature)
     : Effect<int>(root, numerical_feature) {}
 
-bool UnchangedNumericalEffect::evaluate(const State& source, const State& target) const{
-    return get_feature()->evaluate(source) == get_feature()->evaluate(target);
+bool UnchangedNumericalEffect::evaluate(const State& source, const State& target, EvaluationCaches& evaluation_caches) const{
+    return get_feature()->evaluate(source, evaluation_caches) == get_feature()->evaluate(target, evaluation_caches);
 }
 
 std::string UnchangedNumericalEffect::compute_repr() const{

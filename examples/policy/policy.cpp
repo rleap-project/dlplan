@@ -18,20 +18,21 @@ int main() {
     dlplan::core::Numerical numerical = factory.parse_numerical("n_count(c_primitive(unary,0))");
 
     // Construct the empty policy.
-    Policy policy;
+    PolicyBuilder builder;
     // Add features.
-    std::shared_ptr<BooleanFeature> b = policy.add_boolean_feature(boolean);
-    std::shared_ptr<NumericalFeature> n = policy.add_numerical_feature(numerical);
+    std::shared_ptr<const BooleanFeature> b = builder.add_boolean_feature(boolean);
+    std::shared_ptr<const NumericalFeature> n = builder.add_numerical_feature(numerical);
     // Add conditions and effects the rule.
-    std::shared_ptr<const BaseCondition> b_neg_condition_0 = policy.add_b_neg_condition(b);
-    std::shared_ptr<const BaseEffect> b_bot_effect_0 = policy.add_b_bot_effect(b);
-    std::shared_ptr<const BaseCondition> n_gt_condition_0 = policy.add_n_gt_condition(n);
-    std::shared_ptr<const BaseEffect> n_dec_effect_0 = policy.add_n_dec_effect(n);
+    std::shared_ptr<const BaseCondition> b_neg_condition_0 = builder.add_b_neg_condition(b);
+    std::shared_ptr<const BaseEffect> b_bot_effect_0 = builder.add_b_bot_effect(b);
+    std::shared_ptr<const BaseCondition> n_gt_condition_0 = builder.add_n_gt_condition(n);
+    std::shared_ptr<const BaseEffect> n_dec_effect_0 = builder.add_n_dec_effect(n);
     // Add rule.
-    std::shared_ptr<const Rule> r = policy.add_rule(
+    std::shared_ptr<const Rule> r = builder.add_rule(
         {b_neg_condition_0, n_gt_condition_0},
         {b_bot_effect_0, n_dec_effect_0}
     );
+    Policy policy = builder.get_result();
 
     // Construct InstanceInfo and States
     std::shared_ptr<dlplan::core::InstanceInfo> instance_info = std::make_shared<dlplan::core::InstanceInfo>(vocabulary_info);

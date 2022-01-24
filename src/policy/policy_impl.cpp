@@ -4,7 +4,6 @@
 
 #include "condition.h"
 #include "effect.h"
-#include "evaluation_caches.h"
 
 #include "../include/dlplan/core.h"
 #include "../include/dlplan/policy.h"
@@ -21,11 +20,11 @@ PolicyImpl::PolicyImpl(
       m_boolean_features(std::move(boolean_features)),
       m_numerical_features(std::move(numerical_features)),
       m_rules(std::move(rules)),
-      m_evaluation_caches(std::make_shared<EvaluationCaches>(EvaluationCaches())) { }
+      m_evaluation_caches(std::make_shared<EvaluationCaches>(m_boolean_features.size(), m_numerical_features.size())) { }
 
 bool PolicyImpl::evaluate(const State& source, const State& target) {
     for (auto& r : m_rules) {
-        if (r->evaluate_conditions(source) && r->evaluate_effects(source, target)) return true;
+        if (r->evaluate_conditions(source, *m_evaluation_caches) && r->evaluate_effects(source, target, *m_evaluation_caches)) return true;
     }
     return false;
 }

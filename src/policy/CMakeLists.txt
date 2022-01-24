@@ -6,10 +6,10 @@ target_sources(dlplanpolicy
         policy_impl.cpp
         condition.cpp
         effect.cpp
-        evaluation_caches.cpp
         rule.cpp
         reader.cpp
         writer.cpp
+        per_state_bitset.cpp
         parser/parser.cpp
         parser/tokenizer.cpp
         parser/expression_factory.cpp
