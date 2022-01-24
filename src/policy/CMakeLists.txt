@@ -1,19 +1,20 @@
 add_library(dlplanpolicy SHARED)
 target_sources(dlplanpolicy
     PRIVATE
-        policy.cpp
-        policy_builder.cpp
-        policy_impl.cpp
         condition.cpp
         effect.cpp
-        rule.cpp
-        reader.cpp
-        writer.cpp
         per_state_bitset.cpp
+        policy_builder.cpp
+        policy_impl.cpp
+        policy.cpp
+        reader.cpp
+        rule.cpp
+        writer.cpp
+        parser/expression_factory.cpp
         parser/parser.cpp
         parser/tokenizer.cpp
-        parser/expression_factory.cpp
         parser/utils.cpp)
+target_link_libraries(dlplanpolicy dlplancore)
 
 set(PUBLIC_HEADERS_FILES
     include/policy.h
