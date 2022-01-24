@@ -52,7 +52,7 @@ public:
         m_entries(default_array.size()) { }
 
     ArrayView<Element> operator[](const State &state) {
-        int state_id = state.get_index();
+        size_t state_id = state.get_index();
         if (m_entries.size() < state_id) {
             m_entries.resize(state_id + 1, m_default_array.data());
         }

@@ -18,8 +18,9 @@ target_sources(_dlplan
     PRIVATE
         src/main.cpp
         src/core.cpp
-        src/generator.cpp)
-target_link_libraries(_dlplan PRIVATE pybind11::module dlplancore dlplangenerator)
+        src/generator.cpp
+        src/policy.cpp)
+target_link_libraries(_dlplan PRIVATE pybind11::module dlplancore dlplangenerator dlplanpolicy)
 target_compile_definitions(_dlplan PUBLIC DLPLAN_VERSION_INFO="${DLPLAN_VERSION_INFO}")
 
 # This would copy the generated dynamic library into a given path, but

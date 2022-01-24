@@ -37,14 +37,14 @@ public:
 class State {
 private:
     const int m_index;
-    const std::shared_ptr<const core::State> m_state;
+    const core::State m_state;
 
 public:
-    State(int index, std::shared_ptr<const core::State> state);
+    State(int index, core::State&& state);
     ~State();
 
     int get_index() const;
-    std::shared_ptr<const core::State> get_state() const;
+    const core::State& get_state() const;
 };
 
 
