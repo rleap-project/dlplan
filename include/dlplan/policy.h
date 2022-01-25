@@ -84,6 +84,8 @@ public:
     bool evaluate(const State& state, EvaluationCaches& evaluation_caches) const override;
 
     std::string compute_repr() const override;
+
+    const core::Boolean& get_boolean() const;
 };
 
 class NumericalFeature : public Feature<int> {
@@ -98,6 +100,8 @@ public:
     int evaluate(const State& state, EvaluationCaches& evaluation_caches) const override;
 
     std::string compute_repr() const override;
+
+    const core::Numerical& get_numerical() const;
 };
 
 

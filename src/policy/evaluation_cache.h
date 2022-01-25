@@ -9,55 +9,45 @@ namespace dlplan::policy {
 
 class BooleanEvaluationCache {
 private:
-    PerStateBitset m_evaluations;
-    PerStateBitset m_is_cached;
+    PerStateBitset m_data;
 
 public:
     BooleanEvaluationCache(int num_features)
-    : m_evaluations(std::vector<bool>(num_features, false)),
-      m_is_cached(std::vector<bool>(num_features, false)) { }
+    : m_data(std::vector<bool>(2 * num_features, false)) { }
 
-    PerStateBitset& get_evaluations() {
-        return m_evaluations;
-    }
-
-    const PerStateBitset& get_evaluations() const {
-        return m_evaluations;
-    }
-
-    PerStateBitset& get_is_cached() {
-        return m_is_cached;
-    }
-
-    const PerStateBitset& get_is_cached() const {
-        return m_is_cached;
+    bool get_feature_evaluation(const BooleanFeature& feature, const State& state) {
+        int index = feature.get_index();
+        auto view = m_data[state];
+        int start = 2 * index;
+        if (!view.test(start)) {
+            // Since evaluation is initialized to false,
+            // we must only set if the element evaluates to true.
+            // If it evaluates to false then marking as cached is sufficient.
+            if (feature.get_boolean().evaluate(state.get_state()))
+                view.set(start + 1);
+            view.set(start);
+        }
+        return view.test(start + 1);
     }
 };
 
 class NumericalEvaluationCache {
 private:
-    PerStateArray<int> m_evaluations;
-    PerStateBitset m_is_cached;
+
+    PerStateArray<int> m_data;
 
 public:
     NumericalEvaluationCache(int num_features)
-    : m_evaluations(std::vector<int>(num_features, -1)),
-      m_is_cached(std::vector<bool>(num_features, false)) { }
+    : m_data(std::vector<int>(num_features, -1)) { }
 
-    PerStateArray<int>& get_evaluations() {
-        return m_evaluations;
-    }
-
-    const PerStateArray<int>& get_evaluations() const {
-        return m_evaluations;
-    }
-
-    PerStateBitset& get_is_cached() {
-        return m_is_cached;
-    }
-
-    const PerStateBitset& get_is_cached() const {
-        return m_is_cached;
+    int get_feature_evaluation(const NumericalFeature& feature, const State& state) {
+        int index = feature.get_index();
+        auto view = m_data[state];
+        // -1 represents that the value is not cached.
+        if (view[index] == -1) {
+            view[index] = feature.get_numerical().evaluate(state.get_state());
+        }
+        return view[index];
     }
 };
 

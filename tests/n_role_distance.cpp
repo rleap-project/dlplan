@@ -45,5 +45,5 @@ TEST(DLPTests, NumericalRoleDistance) {
 
     // SumRoleDistance with no sources is defined as 0
     Numerical numerical3 = factory.parse_numerical("n_role_distance(r_primitive(start3,0,1),r_primitive(conn,0,1),r_primitive(end2,0,1))");
-    EXPECT_EQ(numerical3.evaluate(state), 0);
+    EXPECT_EQ(numerical3.evaluate(state), std::numeric_limits<int>::max());
 }

@@ -20,33 +20,30 @@ BooleanFeature::BooleanFeature(std::shared_ptr<const PolicyRoot> root, int index
     : Feature<bool>(root, index), m_boolean(std::move(boolean)) { }
 
 bool BooleanFeature::evaluate(const State& state, EvaluationCaches& evaluation_caches) const {
-    BooleanEvaluationCache& boolean_cache = evaluation_caches.get_boolean_cache();
-    if (!boolean_cache.get_is_cached()[state].test(get_index())) {
-        if (m_boolean.evaluate(state.get_state()))
-            boolean_cache.get_evaluations()[state].set(get_index());
-        boolean_cache.get_is_cached()[state].set(get_index());
-    }
-    return boolean_cache.get_evaluations()[state].test(get_index());
+    return evaluation_caches.get_boolean_cache().get_feature_evaluation(*this, state);
 }
 
 std::string BooleanFeature::compute_repr() const {
     return m_boolean.compute_repr();
 }
 
+const core::Boolean& BooleanFeature::get_boolean() const {
+    return m_boolean;
+}
+
 NumericalFeature::NumericalFeature(std::shared_ptr<const PolicyRoot> root, int index, core::Numerical&& numerical)
     : Feature<int>(root, index), m_numerical(std::move(numerical)) { }
 
 int NumericalFeature::evaluate(const State& state, EvaluationCaches& evaluation_caches) const {
-    NumericalEvaluationCache& numerical_cache = evaluation_caches.get_numerical_cache();
-    if (!numerical_cache.get_is_cached()[state].test(get_index())) {
-        numerical_cache.get_evaluations()[state][get_index()] = m_numerical.evaluate(state.get_state());
-        numerical_cache.get_is_cached()[state].set(get_index());
-    }
-    return numerical_cache.get_evaluations()[state][get_index()];
+    return evaluation_caches.get_numerical_cache().get_feature_evaluation(*this, state);
 }
 
 std::string NumericalFeature::compute_repr() const {
     return m_numerical.compute_repr();
+}
+
+const core::Numerical& NumericalFeature::get_numerical() const {
+    return m_numerical;
 }
 
 
