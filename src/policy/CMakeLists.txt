@@ -17,7 +17,7 @@ target_sources(dlplanpolicy
 target_link_libraries(dlplanpolicy dlplancore)
 
 set(PUBLIC_HEADERS_FILES
-    include/policy.h
-    include/pimpl.h
-    include/policy.tpp)
+    include/dlplan/policy.h
+    include/dlplan/pimpl.h
+    include/dlplan/policy.tpp)
 set_target_properties(dlplanpolicy PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS_FILES}")
