@@ -43,10 +43,10 @@ int main() {
     State s2(2, dlplan::core::State(instance_info, {a0, a1}));
 
     // Evaluate the policy.
-    assert(policy.evaluate(s2, s1));
-    assert(!policy.evaluate(s2, s0));
-    assert(!policy.evaluate(s1, s2));
-    assert(!policy.evaluate(s0, s2));
+    assert(policy.evaluate(s2, s1).second);
+    assert(!policy.evaluate(s2, s0).second);
+    assert(!policy.evaluate(s1, s2).second);
+    assert(!policy.evaluate(s0, s2).second);
 
     // Write policy to file.
     std::cout << "Write policy:" << std::endl;

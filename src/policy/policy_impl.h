@@ -35,7 +35,7 @@ public:
         std::vector<std::shared_ptr<const NumericalFeature>>&& numerical_features,
         std::vector<std::shared_ptr<const Rule>>&& rules);
 
-    bool evaluate(const State& source, const State& target);
+    std::pair<std::shared_ptr<const Rule>, bool> evaluate(const State& source, const State& target);
 
     std::string compute_repr() const;
 

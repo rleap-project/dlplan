@@ -209,7 +209,7 @@ public:
      * Lazily evaluate the state pair.
      * Optimized to compute fewest features of smallest runtime complexity.
      */
-    bool evaluate(const State& source, const State& target);
+    std::pair<std::shared_ptr<const Rule>, bool> evaluate(const State& source, const State& target);
 
     std::string compute_repr() const;
 

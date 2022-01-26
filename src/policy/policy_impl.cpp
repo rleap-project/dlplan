@@ -22,11 +22,12 @@ PolicyImpl::PolicyImpl(
       m_rules(std::move(rules)),
       m_evaluation_caches(std::make_shared<EvaluationCaches>(m_boolean_features.size(), m_numerical_features.size())) { }
 
-bool PolicyImpl::evaluate(const State& source, const State& target) {
+std::pair<std::shared_ptr<const Rule>, bool> PolicyImpl::evaluate(const State& source, const State& target) {
     for (auto& r : m_rules) {
-        if (r->evaluate_conditions(source, *m_evaluation_caches) && r->evaluate_effects(source, target, *m_evaluation_caches)) return true;
+        if (r->evaluate_conditions(source, *m_evaluation_caches) && r->evaluate_effects(source, target, *m_evaluation_caches))
+            return std::make_pair(r, true);
     }
-    return false;
+    return std::make_pair(nullptr, false);
 }
 
 std::string PolicyImpl::compute_repr() const {

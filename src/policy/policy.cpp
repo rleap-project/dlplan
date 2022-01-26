@@ -186,7 +186,7 @@ Policy& Policy::operator=(const Policy& other) {
 
 Policy::~Policy() { }
 
-bool Policy::evaluate(const State& source, const State& target) {
+std::pair<std::shared_ptr<const Rule>, bool> Policy::evaluate(const State& source, const State& target) {
     return m_pImpl->evaluate(source, target);
 }
 
