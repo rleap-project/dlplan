@@ -53,7 +53,8 @@ public:
 
     ArrayView<Element> operator[](const State &state) {
         size_t state_id = state.get_index();
-        if (m_entries.size() < state_id) {
+        // state_id does not fit anymore so we must resize
+        if (m_entries.size() <= state_id) {
             m_entries.resize(state_id + 1, m_default_array.data());
         }
         return ArrayView<Element>(m_entries[state_id], m_default_array.size());

@@ -58,10 +58,10 @@ private:
     NumericalEvaluationCache m_numerical_cache;
 
 public:
+    // HACK: we set minimum size to 1 because of division by zero
     EvaluationCaches(int num_boolean_features, int num_numerical_features)
-    : m_boolean_cache(num_boolean_features),
-      m_numerical_cache(num_numerical_features) {
-      }
+    : m_boolean_cache(std::max(1, num_boolean_features)),
+      m_numerical_cache(std::max(1, num_numerical_features)) { }
 
     BooleanEvaluationCache& get_boolean_cache() {
         return m_boolean_cache;
