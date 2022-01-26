@@ -25,6 +25,12 @@ if __name__ == "__main__":
     instance_data = InstanceData(args.instance, domain_data, args.max_num_states)
     dlplan_states = [state.dlplan_state for state in instance_data.states]
 
+    print("Instance information:")
+    print(f"Number of states: {len(dlplan_states)}")
+    print(f"Number of dynamic atoms: {len(instance_data.dynamic_atoms)}")
+    print(f"Number of static atoms: {len(instance_data.static_atoms)}")
+    print(f"Number of objects: {instance_data.instance_info.get_num_objects()}")
+
     feature_reprs = domain_data.feature_generator.generate(domain_data.syntactic_element_factory, args.c, args.t, args.f, args.n, dlplan_states)
     start = time.time()
     for feature_repr in feature_reprs:
@@ -40,10 +46,3 @@ if __name__ == "__main__":
             f.evaluate(dlplan_state)
     end = time.time()
     print(f"Time to construct and evaluate features: {end - start}s")
-
-
-    print("Instance information:")
-    print(f"Number of states: {len(dlplan_states)}")
-    print(f"Number of dynamic atoms: {len(instance_data.dynamic_atoms)}")
-    print(f"Number of static atoms: {len(instance_data.static_atoms)}")
-    print(f"Number of objects: {instance_data.instance_info.get_num_objects()}")
