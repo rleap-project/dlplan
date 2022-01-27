@@ -209,6 +209,8 @@ public:
      */
     std::shared_ptr<const InstanceInfo> get_instance_info() const;
     const Index_Vec& get_atom_idxs() const;
+
+    size_t compute_hash() const;
 };
 
 
@@ -239,6 +241,8 @@ public:
     int get_constant_idx(const std::string& name) const;
     const Constant& get_constant(int index) const;
     const std::vector<Constant>& get_constants() const;
+
+    size_t compute_hash() const;
 };
 
 
@@ -282,6 +286,8 @@ public:
     const Index_Vec& get_static_atom_idxs() const;
     const ConceptDenotation& get_top_concept() const;
     const RoleDenotation& get_top_role() const;
+
+    size_t compute_hash() const;
 };
 
 
@@ -504,5 +510,14 @@ public:
 }
 
 #include "core.tpp"
+
+namespace std {
+    template <>
+    struct hash<dlplan::core::State> {
+        std::size_t operator()(const dlplan::core::State& state) const {
+            return state.compute_hash();
+        }
+    };
+}
 
 #endif

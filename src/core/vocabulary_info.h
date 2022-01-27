@@ -92,6 +92,8 @@ public:
     const Constant& get_constant(int constant_idx) const;
     const std::vector<Constant>& get_constants() const;
 
+    size_t compute_hash() const;
+
     static bool exists_element_name(const std::string& name);
     static EXPRESSION_TYPE element_name_to_expression_type(const std::string &name);
 };

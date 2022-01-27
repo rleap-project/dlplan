@@ -5,6 +5,7 @@
 #include "element_factory.h"
 
 #include "../utils/collections.h"
+#include "../utils/hash_utils.h"
 
 namespace dlplan::core {
 
@@ -86,6 +87,10 @@ const Constant& VocabularyInfoImpl::get_constant(int constant_idx) const {
 
 const std::vector<Constant>& VocabularyInfoImpl::get_constants() const {
     return m_constants;
+}
+
+size_t VocabularyInfoImpl::compute_hash() const {
+    return (size_t)this;
 }
 
 std::unordered_map<std::string, EXPRESSION_TYPE> VocabularyInfoImpl::m_element_name_to_expression_type = {

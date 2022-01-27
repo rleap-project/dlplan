@@ -34,6 +34,7 @@ public:
 
     std::string str() const;
 
+    size_t compute_hash() const;
 };
 
 }

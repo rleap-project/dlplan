@@ -6,6 +6,7 @@
 #include <mutex>
 
 #include "hash_utils.h"
+#include "../utils/hash_utils.h"
 
 #include "../../include/dlplan/core.h"
 

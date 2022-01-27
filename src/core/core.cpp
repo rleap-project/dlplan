@@ -166,6 +166,11 @@ const RoleDenotation& InstanceInfo::get_top_role() const {
     return m_pImpl->get_top_role();
 }
 
+size_t InstanceInfo::compute_hash() const {
+    return m_pImpl->compute_hash();
+}
+
+
 
 VocabularyInfo::VocabularyInfo() : m_pImpl(VocabularyInfoImpl()) { }
 
@@ -226,6 +231,10 @@ const Constant& VocabularyInfo::get_constant(int index) const {
 
 const std::vector<Constant>& VocabularyInfo::get_constants() const {
     return m_pImpl->get_constants();
+}
+
+size_t VocabularyInfo::compute_hash() const {
+    return m_pImpl->compute_hash();
 }
 
 
@@ -407,6 +416,10 @@ std::shared_ptr<const InstanceInfo> State::get_instance_info() const {
 
 const Index_Vec& State::get_atom_idxs() const {
     return m_pImpl->get_atom_idxs();
+}
+
+size_t State::compute_hash() const {
+    return m_pImpl->compute_hash();
 }
 
 

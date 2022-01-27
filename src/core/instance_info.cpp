@@ -168,4 +168,8 @@ const RoleDenotation& InstanceInfoImpl::get_top_role() const {
     return m_top_role;
 }
 
+size_t InstanceInfoImpl::compute_hash() const {
+    return (size_t)this;
+}
+
 }
