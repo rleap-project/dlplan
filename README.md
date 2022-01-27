@@ -76,7 +76,7 @@ We included `guide.pdf` in the `docs` folder with further information regarding 
 We created a DOI on zenodo under this [link](https://zenodo.org/record/5826140#.YfK9E_so85k). A bibtex entry can look like this:
 
 ```
-@software{drexler_dominik_2022_5826140,
+@software{drexler-et-al-dlplan2022,
   author       = {Drexler, Dominik and
                   Francès, Guillem and
                   Seipp, Jendrik},
