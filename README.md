@@ -70,3 +70,21 @@ We included `guide.pdf` in the `docs` folder with further information regarding 
 1. Adding new elements to [core](https://github.com/rleap-project/dlplan/wiki/Adding-elements-to-the-core-component) and [generator](https://github.com/rleap-project/dlplan/wiki/Adding-elements-to-the-generator-component) component.
 
 2. [Current order and modifying the order of feature generation.](https://github.com/rleap-project/dlplan/wiki/Modifying-the-order-of-feature-generation)
+
+## Citing dlplan
+
+We created a DOI on zenodo under this [link](https://zenodo.org/record/5826140#.YfK9E_so85k). A bibtex entry can look like this:
+
+```
+@software{drexler_dominik_2022_5826140,
+  author       = {Drexler, Dominik and
+                  Francès, Guillem and
+                  Seipp, Jendrik},
+  title        = {{Description Logics State Features for Planning 
+                   (dlplan)}},
+  year         = 2022,
+  publisher    = {Zenodo},
+  doi          = {10.5281/zenodo.5826140},
+  url          = {https://doi.org/10.5281/zenodo.5826140}
+}
+```
