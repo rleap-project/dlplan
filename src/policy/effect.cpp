@@ -13,7 +13,7 @@ std::unique_ptr<BaseEffect> PositiveBooleanEffect::clone_impl() const {
 PositiveBooleanEffect::PositiveBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature)
     : Effect<bool>(root, boolean_feature) {}
 
-bool PositiveBooleanEffect::evaluate(const State&, const State& target, EvaluationCaches& evaluation_caches) const{
+bool PositiveBooleanEffect::evaluate(const core::State&, const core::State& target, EvaluationCaches& evaluation_caches) const{
     return get_feature()->evaluate(target, evaluation_caches);
 }
 
@@ -29,7 +29,7 @@ std::unique_ptr<BaseEffect> NegativeBooleanEffect::clone_impl() const{
 NegativeBooleanEffect::NegativeBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature)
     : Effect<bool>(root, boolean_feature) {}
 
-bool NegativeBooleanEffect::evaluate(const State&, const State& target, EvaluationCaches& evaluation_caches) const{
+bool NegativeBooleanEffect::evaluate(const core::State&, const core::State& target, EvaluationCaches& evaluation_caches) const{
     return !get_feature()->evaluate(target, evaluation_caches);
 }
 
@@ -45,7 +45,7 @@ std::unique_ptr<BaseEffect> UnchangedBooleanEffect::clone_impl() const{
 UnchangedBooleanEffect::UnchangedBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature)
     : Effect<bool>(root, boolean_feature) {}
 
-bool UnchangedBooleanEffect::evaluate(const State& source, const State& target, EvaluationCaches& evaluation_caches) const{
+bool UnchangedBooleanEffect::evaluate(const core::State& source, const core::State& target, EvaluationCaches& evaluation_caches) const{
     return get_feature()->evaluate(source, evaluation_caches) == get_feature()->evaluate(target, evaluation_caches);
 }
 
@@ -61,7 +61,7 @@ std::unique_ptr<BaseEffect> IncrementNumericalEffect::clone_impl() const{
 IncrementNumericalEffect::IncrementNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature)
     : Effect<int>(root, numerical_feature) {}
 
-bool IncrementNumericalEffect::evaluate(const State& source, const State& target, EvaluationCaches& evaluation_caches) const{
+bool IncrementNumericalEffect::evaluate(const core::State& source, const core::State& target, EvaluationCaches& evaluation_caches) const{
     return get_feature()->evaluate(source, evaluation_caches) < get_feature()->evaluate(target, evaluation_caches);
 }
 
@@ -77,7 +77,7 @@ std::unique_ptr<BaseEffect> DecrementNumericalEffect::clone_impl() const{
 DecrementNumericalEffect::DecrementNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature)
     : Effect<int>(root, numerical_feature) {}
 
-bool DecrementNumericalEffect::evaluate(const State& source, const State& target, EvaluationCaches& evaluation_caches) const{
+bool DecrementNumericalEffect::evaluate(const core::State& source, const core::State& target, EvaluationCaches& evaluation_caches) const{
     return get_feature()->evaluate(source, evaluation_caches) > get_feature()->evaluate(target, evaluation_caches);
 }
 
@@ -93,7 +93,7 @@ std::unique_ptr<BaseEffect> UnchangedNumericalEffect::clone_impl() const{
 UnchangedNumericalEffect::UnchangedNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature)
     : Effect<int>(root, numerical_feature) {}
 
-bool UnchangedNumericalEffect::evaluate(const State& source, const State& target, EvaluationCaches& evaluation_caches) const{
+bool UnchangedNumericalEffect::evaluate(const core::State& source, const core::State& target, EvaluationCaches& evaluation_caches) const{
     return get_feature()->evaluate(source, evaluation_caches) == get_feature()->evaluate(target, evaluation_caches);
 }
 

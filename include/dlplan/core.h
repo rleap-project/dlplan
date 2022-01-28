@@ -210,6 +210,9 @@ public:
     std::shared_ptr<const InstanceInfo> get_instance_info() const;
     const Index_Vec& get_atom_idxs() const;
 
+    int get_index() const;
+    void set_index(int index);
+
     size_t compute_hash() const;
 };
 

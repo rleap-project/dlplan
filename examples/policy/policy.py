@@ -25,9 +25,12 @@ def main():
     a0 = instance_info.add_atom("unary", ["A"])
     a1 = instance_info.add_atom("unary", ["B"])
 
-    s0 = dlplan.PolicyState(0, dlplan.State(instance_info, []))
-    s1 = dlplan.PolicyState(1, dlplan.State(instance_info, [a0]))
-    s2 = dlplan.PolicyState(2, dlplan.State(instance_info, [a0, a1]))
+    s0 = dlplan.State(instance_info, [])
+    s0.set_index(0)
+    s1 = dlplan.State(instance_info, [a0])
+    s1.set_index(1)
+    s2 = dlplan.State(instance_info, [a0, a1])
+    s2.set_index(2)
 
     assert policy.evaluate(s2, s1)[1]
     assert not policy.evaluate(s2, s0)[1]

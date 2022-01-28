@@ -51,7 +51,7 @@ public:
       : m_default_array(default_array),
         m_entries(default_array.size()) { }
 
-    ArrayView<Element> operator[](const State &state) {
+    ArrayView<Element> operator[](const core::State& state) {
         size_t state_id = state.get_index();
         // state_id does not fit anymore so we must resize
         if (m_entries.size() <= state_id) {

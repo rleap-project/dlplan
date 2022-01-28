@@ -59,7 +59,7 @@ public:
     PerStateBitset(const PerStateBitset &) = delete;
     PerStateBitset &operator=(const PerStateBitset &) = delete;
 
-    BitsetView operator[](const State &state);
+    BitsetView operator[](const core::State& state);
 };
 
 }

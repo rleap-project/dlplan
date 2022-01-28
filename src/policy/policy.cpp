@@ -8,6 +8,8 @@
 #include "reader.h"
 #include "writer.h"
 
+#include "../../include/dlplan/policy.h"
+
 
 namespace dlplan::policy {
 
@@ -19,7 +21,7 @@ PolicyRoot::~PolicyRoot() { }
 BooleanFeature::BooleanFeature(std::shared_ptr<const PolicyRoot> root, int index, core::Boolean&& boolean)
     : Feature<bool>(root, index), m_boolean(std::move(boolean)) { }
 
-bool BooleanFeature::evaluate(const State& state, EvaluationCaches& evaluation_caches) const {
+bool BooleanFeature::evaluate(const core::State& state, EvaluationCaches& evaluation_caches) const {
     return evaluation_caches.get_boolean_cache().get_feature_evaluation(*this, state);
 }
 
@@ -34,7 +36,7 @@ const core::Boolean& BooleanFeature::get_boolean() const {
 NumericalFeature::NumericalFeature(std::shared_ptr<const PolicyRoot> root, int index, core::Numerical&& numerical)
     : Feature<int>(root, index), m_numerical(std::move(numerical)) { }
 
-int NumericalFeature::evaluate(const State& state, EvaluationCaches& evaluation_caches) const {
+int NumericalFeature::evaluate(const core::State& state, EvaluationCaches& evaluation_caches) const {
     return evaluation_caches.get_numerical_cache().get_feature_evaluation(*this, state);
 }
 
@@ -44,20 +46,6 @@ std::string NumericalFeature::compute_repr() const {
 
 const core::Numerical& NumericalFeature::get_numerical() const {
     return m_numerical;
-}
-
-
-State::State(int index, core::State&& state)
-    : m_index(index), m_state(std::move(state)) { }
-
-State::~State() { }
-
-int State::get_index() const {
-    return m_index;
-}
-
-const core::State& State::get_state() const {
-    return m_state;
 }
 
 
@@ -88,11 +76,11 @@ Rule& Rule::operator=(const Rule& other) {
 
 Rule::~Rule() { }
 
-bool Rule::evaluate_conditions(const State& source, EvaluationCaches& evaluation_caches) const {
+bool Rule::evaluate_conditions(const core::State& source, EvaluationCaches& evaluation_caches) const {
     return m_pImpl->evaluate_conditions(source, evaluation_caches);
 }
 
-bool Rule::evaluate_effects(const State& source, const State& target, EvaluationCaches& evaluation_caches) const {
+bool Rule::evaluate_effects(const core::State& source, const core::State& target, EvaluationCaches& evaluation_caches) const {
     return m_pImpl->evaluate_effects(source, target, evaluation_caches);
 }
 
@@ -186,7 +174,7 @@ Policy& Policy::operator=(const Policy& other) {
 
 Policy::~Policy() { }
 
-std::pair<std::shared_ptr<const Rule>, bool> Policy::evaluate(const State& source, const State& target) {
+std::pair<std::shared_ptr<const Rule>, bool> Policy::evaluate(const core::State& source, const core::State& target) {
     return m_pImpl->evaluate(source, target);
 }
 

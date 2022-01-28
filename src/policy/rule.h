@@ -6,9 +6,12 @@
 #include <memory>
 
 
-namespace dlplan::policy {
+namespace dlplan {
+namespace core {
+    class State;
+}
+namespace policy {
 class PolicyRoot;
-class State;
 class BaseCondition;
 class BaseEffect;
 class EvaluationCaches;
@@ -29,14 +32,15 @@ public:
         std::unordered_set<std::shared_ptr<const BaseCondition>>&& conditions,
         std::unordered_set<std::shared_ptr<const BaseEffect>>&& effects);
 
-    bool evaluate_conditions(const State& source, EvaluationCaches& evaluation_caches) const;
-    bool evaluate_effects(const State& source, const State& target, EvaluationCaches& evaluation_caches) const;
+    bool evaluate_conditions(const core::State& source, EvaluationCaches& evaluation_caches) const;
+    bool evaluate_effects(const core::State& source, const core::State& target, EvaluationCaches& evaluation_caches) const;
 
     std::string compute_repr() const;
 
     std::shared_ptr<const PolicyRoot> get_root() const;
 };
 
+}
 }
 
 #endif

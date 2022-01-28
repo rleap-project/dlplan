@@ -60,6 +60,8 @@ void init_core(py::module_ &m) {
         .def("__repr__", &core::State::str)
         .def("get_atom_idxs", &core::State::get_atom_idxs)
         .def("get_instance_info", &core::State::get_instance_info)
+        .def("get_index", &core::State::get_index)
+        .def("set_index", &core::State::set_index)
     ;
 
     py::class_<core::VocabularyInfo, std::shared_ptr<core::VocabularyInfo>>(m, "VocabularyInfo")

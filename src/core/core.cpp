@@ -422,6 +422,14 @@ size_t State::compute_hash() const {
     return m_pImpl->compute_hash();
 }
 
+int State::get_index() const {
+    return m_pImpl->get_index();
+}
+
+void State::set_index(int index) {
+    m_pImpl->set_index(index);
+}
+
 
 Concept::Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, element::Concept_Ptr&& concept)
     : Element<ConceptDenotation>(vocabulary_info, concept), m_pImpl(ConceptImpl(concept)) { }

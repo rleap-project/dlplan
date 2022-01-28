@@ -15,6 +15,7 @@ namespace dlplan {
 namespace core {
     template<typename T>
     class Element;
+    class State;
 }
 namespace policy {
 class RuleImpl;
@@ -34,20 +35,6 @@ public:
 };
 
 
-class State {
-private:
-    const int m_index;
-    const core::State m_state;
-
-public:
-    State(int index, core::State&& state);
-    ~State();
-
-    int get_index() const;
-    const core::State& get_state() const;
-};
-
-
 /**
  * A Feature is shared across all conditions and effects that use it.
  */
@@ -63,7 +50,7 @@ protected:
 public:
     virtual ~Feature();
 
-    virtual T evaluate(const State& state, EvaluationCaches& evaluation_caches) const = 0;
+    virtual T evaluate(const core::State& state, EvaluationCaches& evaluation_caches) const = 0;
 
     virtual std::string compute_repr() const = 0;
 
@@ -81,7 +68,7 @@ private:
     friend class PolicyBuilderImpl;
 
 public:
-    bool evaluate(const State& state, EvaluationCaches& evaluation_caches) const override;
+    bool evaluate(const core::State& state, EvaluationCaches& evaluation_caches) const override;
 
     std::string compute_repr() const override;
 
@@ -97,7 +84,7 @@ private:
     friend class PolicyBuilderImpl;
 
 public:
-    int evaluate(const State& state, EvaluationCaches& evaluation_caches) const override;
+    int evaluate(const core::State& state, EvaluationCaches& evaluation_caches) const override;
 
     std::string compute_repr() const override;
 
@@ -122,7 +109,7 @@ public:
 
     //virtual bool operator<(const BaseCondition& other) const = 0;
 
-    virtual bool evaluate(const State& state, EvaluationCaches& evaluation_caches) const = 0;
+    virtual bool evaluate(const core::State& state, EvaluationCaches& evaluation_caches) const = 0;
 
     virtual std::string compute_repr() const = 0;
 
@@ -147,7 +134,7 @@ protected:
 public:
     virtual ~BaseEffect() = default;
 
-    virtual bool evaluate(const State& source, const State& target, EvaluationCaches& evaluation_caches) const = 0;
+    virtual bool evaluate(const core::State& source, const core::State& target, EvaluationCaches& evaluation_caches) const = 0;
 
     virtual std::string compute_repr() const = 0;
 
@@ -177,8 +164,8 @@ public:
     Rule& operator=(const Rule& other);
     ~Rule();
 
-    bool evaluate_conditions(const State& source, EvaluationCaches& evaluation_caches) const;
-    bool evaluate_effects(const State& source, const State& target, EvaluationCaches& evaluation_caches) const;
+    bool evaluate_conditions(const core::State& source, EvaluationCaches& evaluation_caches) const;
+    bool evaluate_effects(const core::State& source, const core::State& target, EvaluationCaches& evaluation_caches) const;
 
     std::string compute_repr() const;
 
@@ -209,7 +196,7 @@ public:
      * Lazily evaluate the state pair.
      * Optimized to compute fewest features of smallest runtime complexity.
      */
-    std::pair<std::shared_ptr<const Rule>, bool> evaluate(const State& source, const State& target);
+    std::pair<std::shared_ptr<const Rule>, bool> evaluate(const core::State& source, const core::State& target);
 
     std::string compute_repr() const;
 

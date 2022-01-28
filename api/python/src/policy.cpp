@@ -22,12 +22,6 @@ void init_policy(py::module_ &m) {
     py::class_<policy::EvaluationCaches>(m, "EvaluationCaches")
     ;
 
-    py::class_<policy::State>(m, "PolicyState")
-        .def(py::init<int, dlplan::core::State>())
-        .def("get_index", &policy::State::get_index)
-        .def("get_state", &policy::State::get_state)
-    ;
-
     py::class_<policy::BooleanFeature, std::shared_ptr<policy::BooleanFeature>>(m, "BooleanFeature")
         .def("get_index", &policy::BooleanFeature::get_index)
         .def("get_root", &policy::BooleanFeature::get_root)
@@ -67,6 +61,7 @@ void init_policy(py::module_ &m) {
         .def("get_numerical_features", &policy::Policy::get_numerical_features)
         .def("get_root", &policy::Policy::get_root)
         .def("compute_repr", &policy::Policy::compute_repr)
+        .def("clear_evaluation_cache", &policy::Policy::clear_evaluation_cache)
     ;
 
     py::class_<policy::PolicyBuilder>(m, "PolicyBuilder")
