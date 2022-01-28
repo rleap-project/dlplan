@@ -206,6 +206,10 @@ std::vector<std::shared_ptr<const NumericalFeature>> Policy::get_numerical_featu
     return m_pImpl->get_numerical_features();
 }
 
+void Policy::clear_evaluation_cache() {
+    m_pImpl->clear_evaluation_cache();
+}
+
 
 PolicyReader::PolicyReader() { }
 

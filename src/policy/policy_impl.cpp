@@ -67,4 +67,8 @@ std::vector<std::shared_ptr<const NumericalFeature>> PolicyImpl::get_numerical_f
     return m_numerical_features;
 }
 
+void PolicyImpl::clear_evaluation_cache() {
+    m_evaluation_caches = std::make_shared<EvaluationCaches>(m_boolean_features.size(), m_numerical_features.size());
+}
+
 }
