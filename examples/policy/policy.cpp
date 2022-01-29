@@ -38,12 +38,9 @@ int main() {
     std::shared_ptr<dlplan::core::InstanceInfo> instance_info = std::make_shared<dlplan::core::InstanceInfo>(vocabulary_info);
     const auto a0 = instance_info->add_atom("unary", {"A"});
     const auto a1 = instance_info->add_atom("unary", {"B"});
-    dlplan::core::State s0(instance_info, std::vector<dlplan::core::Atom>());
-    s0.set_index(0);
-    dlplan::core::State s1(instance_info, {a0});
-    s1.set_index(1);
-    dlplan::core::State s2(instance_info, {a0, a1});
-    s2.set_index(2);
+    dlplan::core::State s0(instance_info, std::vector<dlplan::core::Atom>(), 0);
+    dlplan::core::State s1(instance_info, {a0}, 1);
+    dlplan::core::State s2(instance_info, {a0, a1}, 2);
 
     // Evaluate the policy.
     assert(policy.evaluate(s2, s1).second);

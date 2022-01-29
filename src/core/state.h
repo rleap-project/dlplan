@@ -21,7 +21,9 @@ private:
 
 public:
     StateImpl(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms);
+    StateImpl(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms, int index);
     StateImpl(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs);
+    StateImpl(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs, int index);
     ~StateImpl() = default;
 
     /**

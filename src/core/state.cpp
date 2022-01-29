@@ -46,10 +46,16 @@ static Index_Vec convert_atoms(const InstanceInfo& instance_info, const Index_Ve
 }
 
 StateImpl::StateImpl(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms)
-    : m_index(-1), m_instance_info(instance_info), m_atom_idxs(convert_atoms(*instance_info, atoms)) { }
+    : StateImpl(instance_info, atoms, -1) { }
+
+StateImpl::StateImpl(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms, int index)
+    : m_index(index), m_instance_info(instance_info), m_atom_idxs(convert_atoms(*instance_info, atoms)) { }
 
 StateImpl::StateImpl(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs)
-    : m_index(-1), m_instance_info(instance_info), m_atom_idxs(convert_atoms(*instance_info, atom_idxs)) { }
+    : StateImpl(instance_info, atom_idxs, -1) { }
+
+StateImpl::StateImpl(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs, int index)
+    : m_index(index), m_instance_info(instance_info), m_atom_idxs(convert_atoms(*instance_info, atom_idxs)) { }
 
 
 std::shared_ptr<const InstanceInfo> StateImpl::get_instance_info() const {
