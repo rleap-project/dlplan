@@ -6,7 +6,7 @@
 
 using namespace std;
 
-namespace dlplan::policy {
+namespace dlplan::utils {
 
 int BitsetMath::compute_num_blocks(size_t num_bits) {
     return (num_bits + bits_per_block - 1) / bits_per_block;
@@ -84,8 +84,8 @@ PerStateBitset::PerStateBitset(const vector<bool> &default_bits)
       data(pack_bit_vector(default_bits)) {
 }
 
-BitsetView PerStateBitset::operator[](const core::State& state) {
-    return BitsetView(data[state], num_bits_per_entry);
+BitsetView PerStateBitset::operator[](int index) {
+    return BitsetView(data[index], num_bits_per_entry);
 }
 
 }

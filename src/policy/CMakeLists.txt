@@ -3,7 +3,6 @@ target_sources(dlplanpolicy
     PRIVATE
         condition.cpp
         effect.cpp
-        per_state_bitset.cpp
         policy_builder.cpp
         policy_impl.cpp
         policy.cpp
@@ -14,7 +13,7 @@ target_sources(dlplanpolicy
         parser/parser.cpp
         parser/tokenizer.cpp
         parser/utils.cpp)
-target_link_libraries(dlplanpolicy dlplancore)
+target_link_libraries(dlplanpolicy dlplancore dlplanevaluator)
 
 set(PUBLIC_HEADERS_FILES
     include/dlplan/policy.h

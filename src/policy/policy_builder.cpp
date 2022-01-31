@@ -3,20 +3,25 @@
 #include "condition.h"
 #include "effect.h"
 
-//#include "../include/dlplan/core.h"
 #include "../include/dlplan/policy.h"
 
 
 namespace dlplan::policy {
 
 std::shared_ptr<const BooleanFeature> PolicyBuilderImpl::add_boolean_feature(core::Boolean boolean) {
-    m_boolean_features.push_back(std::make_shared<BooleanFeature>(BooleanFeature(m_root, m_boolean_features.size(), std::move(boolean))));
-    return m_boolean_features.back();
+    auto result = m_caches.m_boolean_cache->insert(std::make_unique<BooleanFeature>(BooleanFeature(m_root, m_boolean_features.size(), std::move(boolean))));
+    if (result.second) {
+        m_boolean_features.push_back(result.first);
+    }
+    return result.first;
 }
 
 std::shared_ptr<const NumericalFeature> PolicyBuilderImpl::add_numerical_feature(core::Numerical numerical) {
-    m_numerical_features.push_back(std::make_shared<NumericalFeature>(NumericalFeature(m_root, m_numerical_features.size(), std::move(numerical))));
-    return m_numerical_features.back();
+    auto result = m_caches.m_numerical_cache->insert(std::make_unique<NumericalFeature>(NumericalFeature(m_root, m_numerical_features.size(), std::move(numerical))));
+    if (result.second) {
+        m_numerical_features.push_back(result.first);
+    }
+    return result.first;
 }
 
 std::shared_ptr<const BaseCondition> PolicyBuilderImpl::add_b_pos_condition(std::shared_ptr<const BooleanFeature> b) {

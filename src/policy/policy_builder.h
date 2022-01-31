@@ -30,6 +30,7 @@ private:
 
     std::vector<std::shared_ptr<const BooleanFeature>> m_boolean_features;
     std::vector<std::shared_ptr<const NumericalFeature>> m_numerical_features;
+
     std::vector<std::shared_ptr<const Rule>> m_rules;
 
 public:

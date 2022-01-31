@@ -17,7 +17,7 @@ template<typename KEY, typename VALUE>
 class ReferenceCountedObjectCache : public std::enable_shared_from_this<ReferenceCountedObjectCache<KEY, VALUE>> {
 private:
     std::unordered_map<KEY, std::weak_ptr<VALUE>> m_cache;
-    std::mutex m_mutex;
+    mutable std::mutex m_mutex;
 
 public:
     /**
@@ -58,6 +58,11 @@ public:
             element.release();
         }
         return std::make_pair(sp, new_insertion);
+    }
+
+    size_t size() const {
+        std::lock_guard<std::mutex> hold(m_mutex);
+        return m_cache.size();
     }
 };
 

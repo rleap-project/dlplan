@@ -25,13 +25,13 @@ void init_policy(py::module_ &m) {
     py::class_<policy::BooleanFeature, std::shared_ptr<policy::BooleanFeature>>(m, "BooleanFeature")
         .def("get_index", &policy::BooleanFeature::get_index)
         .def("get_root", &policy::BooleanFeature::get_root)
-        .def("BooleanFeature", &policy::BooleanFeature::compute_repr)
+        .def("compute_repr", &policy::BooleanFeature::compute_repr)
     ;
 
     py::class_<policy::NumericalFeature, std::shared_ptr<policy::NumericalFeature>>(m, "NumericalFeature")
         .def("get_index", &policy::NumericalFeature::get_index)
         .def("get_root", &policy::NumericalFeature::get_root)
-        .def("BooleanFeature", &policy::NumericalFeature::compute_repr)
+        .def("compute_repr", &policy::NumericalFeature::compute_repr)
     ;
 
     py::class_<policy::BaseCondition, std::shared_ptr<policy::BaseCondition>>(m, "BaseCondition")

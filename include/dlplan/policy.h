@@ -50,7 +50,7 @@ protected:
 public:
     virtual ~Feature();
 
-    virtual T evaluate(const core::State& state, EvaluationCaches& evaluation_caches) const = 0;
+    virtual T evaluate(int state_index, const core::State& state, EvaluationCaches& evaluation_caches) const = 0;
 
     virtual std::string compute_repr() const = 0;
 
@@ -68,7 +68,7 @@ private:
     friend class PolicyBuilderImpl;
 
 public:
-    bool evaluate(const core::State& state, EvaluationCaches& evaluation_caches) const override;
+    bool evaluate(int state_index, const core::State& state, EvaluationCaches& evaluation_caches) const override;
 
     std::string compute_repr() const override;
 
@@ -84,7 +84,7 @@ private:
     friend class PolicyBuilderImpl;
 
 public:
-    int evaluate(const core::State& state, EvaluationCaches& evaluation_caches) const override;
+    int evaluate(int state_index, const core::State& state, EvaluationCaches& evaluation_caches) const override;
 
     std::string compute_repr() const override;
 
@@ -109,7 +109,7 @@ public:
 
     //virtual bool operator<(const BaseCondition& other) const = 0;
 
-    virtual bool evaluate(const core::State& state, EvaluationCaches& evaluation_caches) const = 0;
+    virtual bool evaluate(int source_index, const core::State& state, EvaluationCaches& evaluation_caches) const = 0;
 
     virtual std::string compute_repr() const = 0;
 
@@ -134,7 +134,7 @@ protected:
 public:
     virtual ~BaseEffect() = default;
 
-    virtual bool evaluate(const core::State& source, const core::State& target, EvaluationCaches& evaluation_caches) const = 0;
+    virtual bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const = 0;
 
     virtual std::string compute_repr() const = 0;
 
@@ -164,8 +164,8 @@ public:
     Rule& operator=(const Rule& other);
     ~Rule();
 
-    bool evaluate_conditions(const core::State& source, EvaluationCaches& evaluation_caches) const;
-    bool evaluate_effects(const core::State& source, const core::State& target, EvaluationCaches& evaluation_caches) const;
+    bool evaluate_conditions(int source_index, const core::State& source, EvaluationCaches& evaluation_caches) const;
+    bool evaluate_effects(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const;
 
     std::string compute_repr() const;
 
@@ -194,9 +194,8 @@ public:
 
     /**
      * Lazily evaluate the state pair.
-     * Optimized to compute fewest features of smallest runtime complexity.
      */
-    std::pair<std::shared_ptr<const Rule>, bool> evaluate(const core::State& source, const core::State& target);
+    std::pair<std::shared_ptr<const Rule>, bool> evaluate(int source_index, const core::State& source, int target_index, const core::State& target);
 
     std::string compute_repr() const;
 
@@ -218,7 +217,6 @@ public:
 
     /**
      * Uniquely adds features.
-     * TODO: must use cache here as well.
      */
     std::shared_ptr<const BooleanFeature> add_boolean_feature(core::Boolean b);
     std::shared_ptr<const NumericalFeature> add_numerical_feature(core::Numerical n);
@@ -244,6 +242,11 @@ public:
         std::unordered_set<std::shared_ptr<const BaseCondition>>&& conditions,
         std::unordered_set<std::shared_ptr<const BaseEffect>>&& effects);
 
+    /**
+     * TODO: - sort features by their runtime complexity.
+     *       - sort rules by sum of runtime complexities of underlieing features.
+     *       - compute invariants
+     */
     Policy get_result();
 };
 

@@ -1,5 +1,5 @@
-#ifndef DLPLAN_SRC_POLICY_PER_STATE_ARRAY_H_
-#define DLPLAN_SRC_POLICY_PER_STATE_ARRAY_H_
+#ifndef DLPLAN_SRC_EVALUATOR_PER_STATE_ARRAY_H_
+#define DLPLAN_SRC_EVALUATOR_PER_STATE_ARRAY_H_
 
 /**
  * Taken from fast-downward.org
@@ -7,11 +7,10 @@
 
 #include <vector>
 
-#include "../utils/segmented_array_vector.h"
-#include "../../include/dlplan/policy.h"
+#include "segmented_array_vector.h"
 
 
-namespace dlplan::policy {
+namespace dlplan::utils {
 
 template<class T>
 class ArrayView {
@@ -51,13 +50,12 @@ public:
       : m_default_array(default_array),
         m_entries(default_array.size()) { }
 
-    ArrayView<Element> operator[](const core::State& state) {
-        size_t state_id = state.get_index();
+    ArrayView<Element> operator[](int index) {
         // state_id does not fit anymore so we must resize
-        if (m_entries.size() <= state_id) {
-            m_entries.resize(state_id + 1, m_default_array.data());
+        if (static_cast<int>(m_entries.size()) <= index) {
+            m_entries.resize(index + 1, m_default_array.data());
         }
-        return ArrayView<Element>(m_entries[state_id], m_default_array.size());
+        return ArrayView<Element>(m_entries[index], m_default_array.size());
     }
 };
 

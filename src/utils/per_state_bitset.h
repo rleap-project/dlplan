@@ -1,5 +1,5 @@
-#ifndef DLPLAN_SRC_POLICY_PER_STATE_BITSET_H
-#define DLPLAN_SRC_POLICY_PER_STATE_BITSET_H
+#ifndef DLPLAN_SRC_EVALUATOR_PER_STATE_BITSET_H
+#define DLPLAN_SRC_EVALUATOR_PER_STATE_BITSET_H
 
 /**
  * Taken from fast-downward.org
@@ -7,10 +7,11 @@
 
 #include "per_state_array.h"
 
+#include <limits>
 #include <vector>
 
 
-namespace dlplan::policy {
+namespace dlplan::utils {
 
 
 class BitsetMath {
@@ -59,7 +60,7 @@ public:
     PerStateBitset(const PerStateBitset &) = delete;
     PerStateBitset &operator=(const PerStateBitset &) = delete;
 
-    BitsetView operator[](const core::State& state);
+    BitsetView operator[](int index);
 };
 
 }

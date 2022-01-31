@@ -18,12 +18,16 @@ namespace dlplan::policy {
  * One cache for each template instantiated element.
  */
 struct Caches {
+    std::shared_ptr<utils::cache::ReferenceCountedObjectCache<std::string, BooleanFeature>> m_boolean_cache;
+    std::shared_ptr<utils::cache::ReferenceCountedObjectCache<std::string, NumericalFeature>> m_numerical_cache;
     std::shared_ptr<utils::cache::ReferenceCountedObjectCache<std::string, BaseCondition>> m_condition_cache;
     std::shared_ptr<utils::cache::ReferenceCountedObjectCache<std::string, BaseEffect>> m_effect_cache;
     std::shared_ptr<utils::cache::ReferenceCountedObjectCache<std::string, Rule>> m_rule_cache;
 
     Caches()
-        : m_condition_cache(std::make_shared<utils::cache::ReferenceCountedObjectCache<std::string, BaseCondition>>()),
+        : m_boolean_cache(std::make_shared<utils::cache::ReferenceCountedObjectCache<std::string, BooleanFeature>>()),
+          m_numerical_cache(std::make_shared<utils::cache::ReferenceCountedObjectCache<std::string, NumericalFeature>>()),
+          m_condition_cache(std::make_shared<utils::cache::ReferenceCountedObjectCache<std::string, BaseCondition>>()),
           m_effect_cache(std::make_shared<utils::cache::ReferenceCountedObjectCache<std::string, BaseEffect>>()),
           m_rule_cache(std::make_shared<utils::cache::ReferenceCountedObjectCache<std::string, Rule>>()) { }
 };

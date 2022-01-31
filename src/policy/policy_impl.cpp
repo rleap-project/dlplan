@@ -22,12 +22,12 @@ PolicyImpl::PolicyImpl(
       m_rules(std::move(rules)),
       m_evaluation_caches(std::make_shared<EvaluationCaches>(m_boolean_features.size(), m_numerical_features.size())) { }
 
-std::pair<std::shared_ptr<const Rule>, bool> PolicyImpl::evaluate(const core::State& source, const core::State& target) {
-    if (source.get_index() == -1 || target.get_index() == -1) {
-        throw std::runtime_error("PolicyImpl::evaluate: source or target index is uninitialized (-1).");
+std::pair<std::shared_ptr<const Rule>, bool> PolicyImpl::evaluate(int source_index, const core::State& source, int target_index, const core::State& target) {
+    if (source_index < 0 || target_index < 0) {
+        throw std::runtime_error("PolicyImpl::evaluate: source or target index cannot be negative.");
     }
     for (auto& r : m_rules) {
-        if (r->evaluate_conditions(source, *m_evaluation_caches) && r->evaluate_effects(source, target, *m_evaluation_caches))
+        if (r->evaluate_conditions(source_index, source, *m_evaluation_caches) && r->evaluate_effects(source_index, source, target_index, target, *m_evaluation_caches))
             return std::make_pair(r, true);
     }
     return std::make_pair(nullptr, false);

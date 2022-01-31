@@ -192,9 +192,7 @@ private:
 
 public:
     State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms);
-    State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms, int index);
     State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs);
-    State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs, int index);
     State(const State& other);
     State& operator=(const State& other);
     ~State();
@@ -211,9 +209,6 @@ public:
      */
     std::shared_ptr<const InstanceInfo> get_instance_info() const;
     const Index_Vec& get_atom_idxs() const;
-
-    int get_index() const;
-    void set_index(int index);
 
     size_t compute_hash() const;
 };

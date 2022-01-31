@@ -15,8 +15,8 @@ std::unique_ptr<BaseCondition> PositiveBooleanCondition::clone_impl() const {
 PositiveBooleanCondition::PositiveBooleanCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature)
     : Condition<bool>(root, boolean_feature) { }
 
-bool PositiveBooleanCondition::evaluate(const core::State& state, EvaluationCaches& evaluation_caches) const {
-    return get_feature()->evaluate(state, evaluation_caches);
+bool PositiveBooleanCondition::evaluate(int source_index, const core::State& state, EvaluationCaches& evaluation_caches) const {
+    return get_feature()->evaluate(source_index, state, evaluation_caches);
 }
 
 std::string PositiveBooleanCondition::compute_repr() const {
@@ -31,8 +31,8 @@ std::unique_ptr<BaseCondition> NegativeBooleanCondition::clone_impl() const {
 NegativeBooleanCondition::NegativeBooleanCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature)
     : Condition<bool>(root, boolean_feature) { }
 
-bool NegativeBooleanCondition::evaluate(const core::State& state, EvaluationCaches& evaluation_caches) const {
-    return !get_feature()->evaluate(state, evaluation_caches);
+bool NegativeBooleanCondition::evaluate(int source_index, const core::State& state, EvaluationCaches& evaluation_caches) const {
+    return !get_feature()->evaluate(source_index, state, evaluation_caches);
 }
 
 std::string NegativeBooleanCondition::compute_repr() const {
@@ -47,8 +47,8 @@ std::unique_ptr<BaseCondition> EqualNumericalCondition::clone_impl() const {
 EqualNumericalCondition::EqualNumericalCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature)
     : Condition<int>(root, numerical_feature) { }
 
-bool EqualNumericalCondition::evaluate(const core::State& state, EvaluationCaches& evaluation_caches) const {
-    return get_feature()->evaluate(state, evaluation_caches) == 0;
+bool EqualNumericalCondition::evaluate(int source_index, const core::State& state, EvaluationCaches& evaluation_caches) const {
+    return get_feature()->evaluate(source_index, state, evaluation_caches) == 0;
 }
 
 std::string EqualNumericalCondition::compute_repr() const {
@@ -63,8 +63,8 @@ std::unique_ptr<BaseCondition> GreaterNumericalCondition::clone_impl() const {
 GreaterNumericalCondition::GreaterNumericalCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature)
     : Condition<int>(root, numerical_feature) { }
 
-bool GreaterNumericalCondition::evaluate(const core::State& state, EvaluationCaches& evaluation_caches) const {
-    return get_feature()->evaluate(state, evaluation_caches) > 0;
+bool GreaterNumericalCondition::evaluate(int source_index, const core::State& state, EvaluationCaches& evaluation_caches) const {
+    return get_feature()->evaluate(source_index, state, evaluation_caches) > 0;
 }
 
 std::string GreaterNumericalCondition::compute_repr() const {

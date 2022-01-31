@@ -25,14 +25,14 @@ def main():
     a0 = instance_info.add_atom("unary", ["A"])
     a1 = instance_info.add_atom("unary", ["B"])
 
-    s0 = dlplan.State(instance_info, [], 0)
-    s1 = dlplan.State(instance_info, [a0], 1)
-    s2 = dlplan.State(instance_info, [a0, a1], 2)
+    s0 = dlplan.State(instance_info, [])
+    s1 = dlplan.State(instance_info, [a0])
+    s2 = dlplan.State(instance_info, [a0, a1])
 
-    assert policy.evaluate(s2, s1)[1]
-    assert not policy.evaluate(s2, s0)[1]
-    assert not policy.evaluate(s1, s2)[1]
-    assert not policy.evaluate(s0, s2)[1]
+    assert policy.evaluate(2, s2, 1, s1)[1]
+    assert not policy.evaluate(2, s2, 0, s0)[1]
+    assert not policy.evaluate(1, s1, 2, s2)[1]
+    assert not policy.evaluate(0, s0, 2, s2)[1]
 
     print("Write policy:")
     print(policy.compute_repr())
