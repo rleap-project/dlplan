@@ -1,6 +1,8 @@
 #ifndef DLPLAN_SRC_GENERATOR_FEATURE_GENERATOR_RULES_ROLE_H_
 #define DLPLAN_SRC_GENERATOR_FEATURE_GENERATOR_RULES_ROLE_H_
 
+#include <functional>
+
 #include "rule.h"
 
 
