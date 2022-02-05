@@ -5,6 +5,10 @@ target_sources(dlplangenerator
         feature_generator.cpp
         hash_table.cpp
         generator.cpp
+        rules/boolean.cpp
+        rules/numerical.cpp
+        rules/concept.cpp
+        rules/role.cpp
         ../utils/logging.cpp
         ../utils/countdown_timer.cpp
         ../utils/sha-256.c

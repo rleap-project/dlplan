@@ -12,10 +12,7 @@ class Boolean : public Rule {
 protected:
     std::deque<utils::threadpool::ThreadPool::TaskFuture<std::pair<core::Boolean,std::array<u_int32_t, 4>>>> m_tasks;
 
-    inline static std::function<std::pair<dlplan::core::Boolean, std::array<uint32_t, 4>>(const States, const core::Boolean&)> m_task =
-        [](const States& states, const core::Boolean& element) {
-        return std::make_pair(element, compute_hash(bool_vec_to_num_vec(evaluate<bool>(element, states))));
-    };
+    static std::function<std::pair<dlplan::core::Boolean, std::array<uint32_t, 4>>(const States, const core::Boolean&)> m_task;
 
 protected:
     virtual void parse_results_of_tasks_impl(int iteration, GeneratorData& data) override {

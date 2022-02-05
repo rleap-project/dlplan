@@ -12,10 +12,7 @@ class Concept : public Rule {
 protected:
     std::deque<utils::threadpool::ThreadPool::TaskFuture<std::pair<core::Concept,std::array<u_int32_t, 4>>>> m_tasks;
 
-    inline static std::function<std::pair<dlplan::core::Concept, std::array<uint32_t, 4>>(const States, const core::Concept&)> m_task =
-        [](const States& states, const core::Concept& element) {
-        return std::make_pair(std::move(element),compute_hash(bitset_to_num_vec(evaluate<core::ConceptDenotation>(element, states))));
-    };
+    static std::function<std::pair<dlplan::core::Concept, std::array<uint32_t, 4>>(const States, const core::Concept&)> m_task;
 
 protected:
     virtual void parse_results_of_tasks_impl(int iteration, GeneratorData& data) override {

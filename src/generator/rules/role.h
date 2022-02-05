@@ -12,10 +12,7 @@ class Role : public Rule {
 protected:
     std::deque<utils::threadpool::ThreadPool::TaskFuture<std::pair<core::Role,std::array<u_int32_t, 4>>>> m_tasks;
 
-    inline static std::function<std::pair<dlplan::core::Role, std::array<uint32_t, 4>>(const States, const core::Role&)> m_task =
-        [](const States& states, const core::Role& element) {
-        return std::make_pair(std::move(element),compute_hash(bitset_to_num_vec(evaluate<core::RoleDenotation>(element, states))));
-    };
+    static std::function<std::pair<dlplan::core::Role, std::array<uint32_t, 4>>(const States, const core::Role&)> m_task;
 
 protected:
     virtual void parse_results_of_tasks_impl(int iteration, GeneratorData& data) override {
