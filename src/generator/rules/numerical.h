@@ -10,7 +10,10 @@ class Numerical : public Rule {
 protected:
     std::deque<utils::threadpool::ThreadPool::TaskFuture<std::pair<core::Numerical,std::array<u_int32_t, 4>>>> m_tasks;
 
-    static std::function<std::pair<dlplan::core::Numerical, std::array<uint32_t, 4>>(const States, const core::Numerical&)> m_task;
+    inline static std::function<std::pair<dlplan::core::Numerical, std::array<uint32_t, 4>>(const States, const core::Numerical&)> m_task =
+        [](const States& states, const core::Numerical& element) {
+        return std::make_pair(element, compute_hash(evaluate<int>(element, states)));
+    };
 
 protected:
     virtual void parse_results_of_tasks_impl(int iteration, GeneratorData& data) override {
@@ -33,11 +36,6 @@ public:
     virtual void cleanup() override {
         m_tasks.clear();
     }
-};
-
-inline std::function<std::pair<dlplan::core::Numerical, std::array<uint32_t, 4>>(const States, const core::Numerical&)> Numerical::m_task =
-[](const States& states, const core::Numerical& element) {
-    return std::make_pair(element, compute_hash(evaluate<int>(element, states)));
 };
 
 }
