@@ -11,29 +11,12 @@ public:
     EmptyBoolean() : Boolean("b_empty") { }
 
     virtual void submit_tasks_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
-        for (const auto& c : data.m_concepts_by_iteration[iteration]) {
-            m_tasks.push_back(
-                th.submit([&](const core::Concept& c, core::SyntacticElementFactory& factory){
-                    auto element = factory.make_empty_boolean(c);
-                    auto denotation = evaluate<bool>(element, states);
-                    auto hash = compute_hash(bool_vec_to_num_vec(denotation));
-                    return std::make_pair(std::move(element),std::move(hash));
-                },
-                std::cref(c),
-                std::ref(*data.m_factory))
-            );
+        core::SyntacticElementFactory factory = *data.m_factory;
+        for (const auto& concept : data.m_concepts_by_iteration[iteration]) {
+            m_tasks.push_back(th.submit(m_task, std::cref(states), factory.make_empty_boolean(concept)));
         }
-        for (const auto& r : data.m_roles_by_iteration[iteration]) {
-            m_tasks.push_back(
-                th.submit([&](const core::Role& r, core::SyntacticElementFactory& factory){
-                    auto element = factory.make_empty_boolean(r);
-                    auto denotation = evaluate<bool>(element, states);
-                    auto hash = compute_hash(bool_vec_to_num_vec(denotation));
-                    return std::make_pair(std::move(element),std::move(hash));
-                },
-                std::cref(r),
-                std::ref(*data.m_factory))
-            );
+        for (const auto& role : data.m_roles_by_iteration[iteration]) {
+            m_tasks.push_back(th.submit(m_task, std::cref(states), factory.make_empty_boolean(role)));
         }
     }
 };

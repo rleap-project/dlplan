@@ -11,20 +11,10 @@ public:
     ProjectionConcept() : Concept("c_projection") { }
 
     virtual void submit_tasks_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+        core::SyntacticElementFactory factory = *data.m_factory;
         for (const auto& r : data.m_roles_by_iteration[iteration]) {
             for (int pos = 0; pos < 2; ++pos) {
-                m_tasks.push_back(
-                    th.submit([](const States& states, const core::Role& r, int pos, core::SyntacticElementFactory& factory) {
-                            auto element = factory.make_projection_concept(r, pos);
-                            auto denotation = evaluate<core::ConceptDenotation>(element, states);
-                            auto hash = compute_hash(bitset_to_num_vec(denotation));
-                            return std::make_pair(std::move(element),std::move(hash));
-                        },
-                        std::cref(states),
-                        std::cref(r),
-                        pos,
-                        std::ref(*data.m_factory))
-                );
+                m_tasks.push_back(th.submit(m_task, std::cref(states),factory.make_projection_concept(r, pos)));
             }
         }
     }

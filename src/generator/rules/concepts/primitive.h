@@ -11,18 +11,10 @@ public:
     PrimitiveConcept() : Concept("c_primitive") { }
 
     virtual void submit_tasks_impl(const States& states, int, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+        core::SyntacticElementFactory factory = *data.m_factory;
         for (const auto& predicate : data.m_factory->get_vocabulary_info()->get_predicates()) {
             for (int pos = 0; pos < predicate.get_arity(); ++pos) {
-                m_tasks.push_back(th.submit([](const States& states, const core::Predicate& predicate, int pos, core::SyntacticElementFactory& factory){
-                    auto element = factory.make_primitive_concept(predicate, pos);
-                    auto denotation = evaluate<core::ConceptDenotation>(element, states);
-                    auto hash = compute_hash(bitset_to_num_vec(denotation));
-                    return std::make_pair(std::move(element),std::move(hash));
-                },
-                std::cref(states),
-                std::cref(predicate),
-                pos,
-                std::ref(*data.m_factory)));
+                m_tasks.push_back(th.submit(m_task, std::cref(states),factory.make_primitive_concept(predicate, pos)));
             }
         }
     }

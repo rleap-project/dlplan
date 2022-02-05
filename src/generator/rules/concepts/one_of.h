@@ -11,18 +11,9 @@ public:
     OneOfConcept() : Concept("c_one_of") { }
 
     virtual void submit_tasks_impl(const States& states, int, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+        core::SyntacticElementFactory factory = *data.m_factory;
         for (const auto& constant : data.m_factory->get_vocabulary_info()->get_constants()) {
-            m_tasks.push_back(
-                th.submit([](const States& states, const core::Constant& constant, core::SyntacticElementFactory& factory) {
-                        auto element = factory.make_one_of_concept(constant);
-                        auto denotation = evaluate<core::ConceptDenotation>(element, states);
-                        auto hash = compute_hash(bitset_to_num_vec(denotation));
-                        return std::make_pair(std::move(element),std::move(hash));
-                    },
-                    std::cref(states),
-                    std::cref(constant),
-                    std::ref(*data.m_factory))
-            );
+            m_tasks.push_back(th.submit(m_task, std::cref(states),factory.make_one_of_concept(constant)));
         }
     }
 };
