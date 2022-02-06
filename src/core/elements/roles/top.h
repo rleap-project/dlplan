@@ -20,8 +20,8 @@ public:
         return 1;
     }
 
-    std::string compute_repr() const override {
-        return m_name;
+    void compute_repr(std::stringstream& out) const override {
+        out << m_name;
     }
 };
 

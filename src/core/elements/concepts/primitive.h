@@ -42,10 +42,8 @@ public:
     }
 
 
-    std::string compute_repr() const override {
-        std::stringstream ss;
-        ss << m_name << "(" << m_predicate.get_name() << "," << std::to_string(m_pos) << ")";
-        return ss.str();
+    void compute_repr(std::stringstream& out) const override {
+        out << m_name << "(" << m_predicate.get_name() << "," << std::to_string(m_pos) << ")";
     }
 };
 

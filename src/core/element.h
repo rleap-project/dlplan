@@ -1,6 +1,8 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENT_H_
 #define DLPLAN_SRC_CORE_ELEMENT_H_
 
+#include <sstream>
+
 #include "elements/element.h"
 
 

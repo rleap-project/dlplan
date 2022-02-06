@@ -8,17 +8,22 @@ namespace dlplan::core::element {
 
 class AndConcept : public Concept {
 protected:
-    const Concept_Ptr m_concept_left;
-    const Concept_Ptr m_concept_right;
+    Concept_Ptr m_concept_left;
+    Concept_Ptr m_concept_right;
 
 public:
     AndConcept(const VocabularyInfo& vocabulary, Concept_Ptr concept_1, Concept_Ptr concept_2)
     : Concept(vocabulary, "c_and"),
-      m_concept_left(concept_1->compute_repr() < concept_2->compute_repr() ? concept_1 : concept_2),
-      m_concept_right(concept_1->compute_repr() < concept_2->compute_repr() ? concept_2 : concept_1) {
+      m_concept_left(concept_1),
+      m_concept_right(concept_2) {
         if (!(concept_1 && concept_2)) {
             throw std::runtime_error("AndConcept::AndConcept - at least one child is a nullptr.");
         }
+        std::stringstream ss1;
+        m_concept_left->compute_repr(ss1);
+        std::stringstream ss2;
+        m_concept_right->compute_repr(ss2);
+        if (ss1.str() > ss2.str()) swap(m_concept_left, m_concept_right);
     }
 
     ConceptDenotation evaluate(const State& state) const override {
@@ -32,10 +37,12 @@ public:
         return m_concept_left->compute_complexity() + m_concept_right->compute_complexity() + 1;
     }
 
-    std::string compute_repr() const override {
-        std::stringstream ss;
-        ss << m_name << "(" << m_concept_left->compute_repr() << "," << m_concept_right->compute_repr() << ")";
-        return ss.str();
+    void compute_repr(std::stringstream& out) const override {
+        out << m_name << "(";
+        m_concept_left->compute_repr(out);
+        out << ",";
+        m_concept_right->compute_repr(out);
+        out << ")";
     }
 };
 

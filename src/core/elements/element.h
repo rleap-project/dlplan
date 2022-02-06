@@ -7,8 +7,9 @@
 #include "../vocabulary_info.h"
 #include "../cache.h"
 
-
 #include <iostream>
+#include <sstream>
+
 
 namespace dlplan::core::element {
 
@@ -27,7 +28,13 @@ public:
 
     virtual int compute_complexity() const = 0;
 
-    virtual std::string compute_repr() const = 0;
+    virtual void compute_repr(std::stringstream& out) const = 0;
+
+    virtual std::string compute_repr() const {
+        std::stringstream ss;
+        compute_repr(ss);
+        return ss.str();
+    }
 };
 
 }

@@ -8,33 +8,25 @@
 
 namespace dlplan::generator::rules {
 
+struct ConceptTaskResult {
+    dlplan::core::Concept concept;
+    std::string repr;
+    std::array<uint32_t, 4> hash;
+};
+
 class Concept : public Rule {
 protected:
-    std::deque<utils::threadpool::ThreadPool::TaskFuture<std::pair<core::Concept,std::array<u_int32_t, 4>>>> m_tasks;
+    std::deque<utils::threadpool::ThreadPool::TaskFuture<ConceptTaskResult>> m_tasks;
 
-    static std::function<std::pair<dlplan::core::Concept, std::array<uint32_t, 4>>(const States, const core::Concept&)> m_task;
+    static std::function<ConceptTaskResult(const States, const core::Concept&)> m_task;
 
 protected:
-    virtual void parse_results_of_tasks_impl(int iteration, GeneratorData& data) override {
-        /* Wait for the result and add it. */
-        while (!m_tasks.empty()) {
-            if (data.reached_resource_limit()) return;
-            auto result = m_tasks.front().get();
-            m_tasks.pop_front();
-            if (data.m_concept_hash_table.insert(std::move(result.second))) {
-                data.m_reprs.push_back(result.first.compute_repr());
-                data.m_concepts_by_iteration[iteration+1].push_back(std::move(result.first));
-                ++m_count;
-            }
-        }
-    }
+    void parse_results_of_tasks_impl(int iteration, GeneratorData& data) override;
 
 public:
     Concept(const std::string& name) : Rule(name) { }
 
-    virtual void cleanup() override {
-        m_tasks.clear();
-    }
+    void cleanup() override;
 };
 
 }

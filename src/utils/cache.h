@@ -29,7 +29,7 @@ public:
     }
 
     /**
-     * Inserts a new element and returns a shared reference.
+     * Inserts a new value and derives the key from it.
      */
     std::pair<std::shared_ptr<VALUE>, bool> insert(std::unique_ptr<VALUE>&& element) {
         KEY key = element->compute_repr();
@@ -49,6 +49,38 @@ public:
                     {
                         std::lock_guard<std::mutex> hold(parent->m_mutex);
                         parent->m_cache.erase(x->compute_repr());
+                    }
+                    /* After cache removal, we can call the objects destructor
+                       and recursively call the deleter of children if their ref count goes to 0 */
+                    original_deleter(x);
+                }
+            );
+            element.release();
+        }
+        return std::make_pair(sp, new_insertion);
+    }
+
+    /**
+     * Inserts a new (key, value) pair
+     */
+    std::pair<std::shared_ptr<VALUE>, bool> insert(KEY&& key, std::unique_ptr<VALUE>&& element) {
+        /* we must declare sp before locking the mutex
+           s.t. the deleter is called after the mutex was released in case of stack unwinding. */
+        std::shared_ptr<VALUE> sp;
+        std::lock_guard<std::mutex> hold(m_mutex);
+        auto& cached = m_cache[key];
+        sp = cached.lock();
+        bool new_insertion = false;
+        if (!sp) {
+            new_insertion = true;
+            cached = sp = std::shared_ptr<VALUE>(
+                element.get(),
+                // the key is stored in the field adding extra overhead.
+                [key, parent=this->shared_from_this(), original_deleter=element.get_deleter()](VALUE* x)
+                {
+                    {
+                        std::lock_guard<std::mutex> hold(parent->m_mutex);
+                        parent->m_cache.erase(key);
                     }
                     /* After cache removal, we can call the objects destructor
                        and recursively call the deleter of children if their ref count goes to 0 */

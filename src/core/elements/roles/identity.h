@@ -37,10 +37,10 @@ public:
         return m_concept->compute_complexity() + 1;
     }
 
-    std::string compute_repr() const override {
-        std::stringstream ss;
-        ss << m_name << "(" << m_concept->compute_repr() << ")";
-        return ss.str();
+    void compute_repr(std::stringstream& out) const override {
+        out << m_name << "(";
+        m_concept->compute_repr(out);
+        out << ")";
     }
 };
 
