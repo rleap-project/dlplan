@@ -12,13 +12,16 @@ struct RoleTaskResult {
     dlplan::core::Role role;
     std::string repr;
     std::array<uint32_t, 4> hash;
+
+    RoleTaskResult(dlplan::core::Role&& _role, std::string&& _repr, std::array<uint32_t, 4>&& _hash)
+    : role(std::move(_role)), repr(std::move(_repr)), hash(std::move(_hash)) { }
 };
 
 class Role : public Rule {
 protected:
     std::deque<utils::threadpool::ThreadPool::TaskFuture<RoleTaskResult>> m_tasks;
 
-    static std::function<RoleTaskResult(const States, const core::Role&)> m_task;
+    static std::function<RoleTaskResult(const States&, const core::Role&)> m_task;
 
 protected:
     void parse_results_of_tasks_impl(int iteration, GeneratorData& data) override;

@@ -17,7 +17,7 @@ public:
                 for (const auto& c1 : data.m_concepts_by_iteration[i]) {
                     for (const auto& r : data.m_roles_by_iteration[j]) {
                         for (const auto& c2 : data.m_concepts_by_iteration[k]) {
-                            m_tasks.push_back(th.submit(m_task, std::cref(states),factory.make_sum_concept_distance(c1, r, c2)));
+                            m_tasks.push_back(th.submit(std::cref(m_task), std::cref(states), std::move(factory.make_sum_concept_distance(c1, r, c2))));
                         }
                     }
                 }

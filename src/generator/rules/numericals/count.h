@@ -16,7 +16,7 @@ public:
             m_tasks.push_back(th.submit(m_task, std::cref(states),factory.make_count(c)));
         }
         for (const auto& r : data.m_roles_by_iteration[iteration]) {
-            m_tasks.push_back(th.submit(m_task, std::cref(states),factory.make_count(r)));
+            m_tasks.push_back(th.submit(std::cref(m_task), std::cref(states), std::move(factory.make_count(r))));
         }
     }
 };

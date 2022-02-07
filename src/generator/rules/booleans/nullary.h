@@ -14,7 +14,7 @@ public:
         core::SyntacticElementFactory factory = *data.m_factory;
         for (const auto& predicate : data.m_factory->get_vocabulary_info()->get_predicates()) {
             if (predicate.get_arity() == 0) {
-                m_tasks.push_back(th.submit(m_task, std::cref(states), factory.make_nullary_boolean(predicate)));
+                m_tasks.push_back(th.submit(std::cref(m_task), std::cref(states), std::move(factory.make_nullary_boolean(predicate))));
             }
         }
     }

@@ -15,7 +15,7 @@ public:
             int j = iteration - i;
             for (const auto& r1 : data.m_roles_by_iteration[i]) {
                 for (const auto& r2 : data.m_roles_by_iteration[j]) {
-                    m_tasks.push_back(th.submit(m_task, std::cref(states),factory.make_compose_role(r1, r2)));
+                    m_tasks.push_back(th.submit(std::cref(m_task), std::cref(states), std::move(factory.make_compose_role(r1, r2))));
                 }
             }
         }

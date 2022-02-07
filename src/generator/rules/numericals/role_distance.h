@@ -17,7 +17,7 @@ public:
                 for (const auto& r1 : data.m_roles_by_iteration[i]) {
                     for (const auto& r2 : data.m_roles_by_iteration[j]) {
                         for (const auto& r3 : data.m_roles_by_iteration[k]) {
-                            m_tasks.push_back(th.submit(m_task, std::cref(states),factory.make_role_distance(r1, r2, r3)));
+                            m_tasks.push_back(th.submit(std::cref(m_task), std::cref(states), std::move(factory.make_role_distance(r1, r2, r3))));
                         }
                     }
                 }

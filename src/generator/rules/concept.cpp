@@ -3,13 +3,12 @@
 
 namespace dlplan::generator::rules {
 
-std::function<ConceptTaskResult(const States, const core::Concept&)> Concept::m_task =
+std::function<ConceptTaskResult(const States&, const core::Concept&)> Concept::m_task =
 [](const States& states, const core::Concept& element) {
-    return ConceptTaskResult{
-        element,
+    return ConceptTaskResult(
+        core::Concept(element),
         element.compute_repr(),
-        compute_hash(bitset_to_num_vec(evaluate<core::ConceptDenotation>(element, states)))
-    };
+        compute_hash(bitset_to_num_vec(evaluate<core::ConceptDenotation>(element, states))));
 };
 
 void Concept::parse_results_of_tasks_impl(int iteration, GeneratorData& data) {

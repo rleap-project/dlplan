@@ -3,13 +3,12 @@
 
 namespace dlplan::generator::rules {
 
-std::function<BooleanTaskResult(const States, const core::Boolean&)> Boolean::m_task =
+std::function<BooleanTaskResult(const States&, const core::Boolean&)> Boolean::m_task =
 [](const States& states, const core::Boolean& element) {
-    return BooleanTaskResult{
-        element,
+    return BooleanTaskResult(
+        core::Boolean(element),
         element.compute_repr(),
-        compute_hash(bool_vec_to_num_vec(evaluate<bool>(element, states)))
-    };
+        compute_hash(bool_vec_to_num_vec(evaluate<bool>(element, states))));
 };
 
 void Boolean::parse_results_of_tasks_impl(int iteration, GeneratorData& data) {

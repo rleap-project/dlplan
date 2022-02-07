@@ -3,13 +3,12 @@
 
 namespace dlplan::generator::rules {
 
-std::function<RoleTaskResult(const States, const core::Role&)> Role::m_task =
+std::function<RoleTaskResult(const States&, const core::Role&)> Role::m_task =
 [](const States& states, const core::Role& element) {
-    return RoleTaskResult{
-        element,
+    return RoleTaskResult(
+        core::Role(element),
         element.compute_repr(),
-        compute_hash(bitset_to_num_vec(evaluate<core::RoleDenotation>(element, states)))
-    };
+        compute_hash(bitset_to_num_vec(evaluate<core::RoleDenotation>(element, states))));
 };
 
 void Role::parse_results_of_tasks_impl(int iteration, GeneratorData& data) {

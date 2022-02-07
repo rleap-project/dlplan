@@ -17,7 +17,7 @@ public:
             int j = iteration - i;
             for (const auto& r : data.m_roles_by_iteration[i]) {
                 for (const auto& c : data.m_concepts_by_iteration[j]) {
-                    m_tasks.push_back(th.submit(m_task, std::cref(states),factory.make_some_concept(r, c)));
+                    m_tasks.push_back(th.submit(std::cref(m_task), std::cref(states), std::move(factory.make_some_concept(r, c))));
                 }
             }
         }

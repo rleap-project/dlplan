@@ -14,7 +14,7 @@ public:
         core::SyntacticElementFactory factory = *data.m_factory;
         for (const auto& r : data.m_roles_by_iteration[iteration]) {
             for (int pos = 0; pos < 2; ++pos) {
-                m_tasks.push_back(th.submit(m_task, std::cref(states),factory.make_projection_concept(r, pos)));
+                m_tasks.push_back(th.submit(std::cref(m_task), std::cref(states), std::move(factory.make_projection_concept(r, pos))));
             }
         }
     }
