@@ -14,10 +14,10 @@ class Role;
 class Numerical;
 class Boolean;
 
-using Concept_Ptr = std::shared_ptr<Concept>;
-using Role_Ptr = std::shared_ptr<Role>;
-using Numerical_Ptr = std::shared_ptr<Numerical>;
-using Boolean_Ptr = std::shared_ptr<Boolean>;
+using Concept_Ptr = std::shared_ptr<const Concept>;
+using Role_Ptr = std::shared_ptr<const Role>;
+using Numerical_Ptr = std::shared_ptr<const Numerical>;
+using Boolean_Ptr = std::shared_ptr<const Boolean>;
 
 }
 

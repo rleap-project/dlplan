@@ -1,23 +1,18 @@
 #ifndef DLPLAN_SRC_CORE_CONCEPT_H_
 #define DLPLAN_SRC_CORE_CONCEPT_H_
 
-#include <algorithm>
-
-#include "element.h"
-
 
 namespace dlplan::core {
 
-class ConceptImpl : public ElementImpl<ConceptDenotation> {
+class ConceptImpl {
 public:
-    ConceptImpl(const std::shared_ptr<element::Element<ConceptDenotation>>& element) {
+    ConceptImpl(std::shared_ptr<const element::Concept>& element) {
         if (!element) {
             throw std::runtime_error("ConceptImpl::ConceptImpl - tried to construct Concept from nullptr");
         }
     }
-    ~ConceptImpl() override = default;
 
-    ConceptDenotation evaluate(const Element<ConceptDenotation>* parent, const State& state) const override {
+    ConceptDenotation evaluate(const Concept* parent, const State& state) const {
         if (state.get_instance_info()->get_vocabulary_info() != parent->get_vocabulary_info()) {
             throw std::runtime_error("ConceptImpl::evaluate - mismatched vocabularies of Concept and State.");
         }

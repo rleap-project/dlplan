@@ -423,15 +423,16 @@ size_t State::compute_hash() const {
 }
 
 
-Concept::Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, element::Concept_Ptr&& concept)
-    : Element<ConceptDenotation>(vocabulary_info, concept), m_pImpl(ConceptImpl(concept)) { }
+Concept::Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Concept>&& concept)
+    : Element<ConceptDenotation>(vocabulary_info), m_element(concept), m_pImpl(ConceptImpl(concept)) { }
 
 Concept::Concept(const Concept& other)
-    : Element<ConceptDenotation>(other.get_vocabulary_info(), other.get_element()), m_pImpl(ConceptImpl(*other.m_pImpl)) { }
+    : Element<ConceptDenotation>(other.get_vocabulary_info()), m_element(other.get_element()), m_pImpl(ConceptImpl(*other.m_pImpl)) { }
 
 Concept& Concept::operator=(const Concept& other) {
     if (this != &other) {
         Element<ConceptDenotation>::operator=(other);
+        m_element = other.get_element();
         m_pImpl = other.m_pImpl;
     }
     return *this;
@@ -451,15 +452,21 @@ std::string Concept::compute_repr() const {
     return m_element->compute_repr();
 }
 
-Role::Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, element::Role_Ptr&& role)
-    : Element<RoleDenotation>(vocabulary_info, role), m_pImpl(RoleImpl(role)) { }
+std::shared_ptr<const element::Concept> Concept::get_element() const {
+    return m_element;
+}
+
+
+Role::Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Role>&& role)
+    : Element<RoleDenotation>(vocabulary_info), m_element(role), m_pImpl(RoleImpl(role)) { }
 
 Role::Role(const Role& other)
-    : Element<RoleDenotation>(other.get_vocabulary_info(), other.get_element()), m_pImpl(RoleImpl(*other.m_pImpl)) { }
+    : Element<RoleDenotation>(other.get_vocabulary_info()), m_element(other.get_element()), m_pImpl(RoleImpl(*other.m_pImpl)) { }
 
 Role& Role::operator=(const Role& other) {
     if (this != &other) {
         Element<RoleDenotation>::operator=(other);
+        m_element = other.get_element();
         m_pImpl = other.m_pImpl;
     }
     return *this;
@@ -479,16 +486,22 @@ std::string Role::compute_repr() const {
     return m_element->compute_repr();
 }
 
+std::shared_ptr<const element::Role> Role::get_element() const {
+    return m_element;
+}
 
-Numerical::Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, element::Numerical_Ptr&& numerical)
-    : Element<int>(vocabulary_info, numerical), m_pImpl(NumericalImpl(numerical)) { }
+
+
+Numerical::Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Numerical>&& numerical)
+    : Element<int>(vocabulary_info), m_element(numerical), m_pImpl(NumericalImpl(numerical)) { }
 
 Numerical::Numerical(const Numerical& other)
-    : Element<int>(other.get_vocabulary_info(), other.get_element()), m_pImpl(NumericalImpl(*other.m_pImpl)) { }
+    : Element<int>(other.get_vocabulary_info()), m_element(other.get_element()), m_pImpl(NumericalImpl(*other.m_pImpl)) { }
 
 Numerical& Numerical::operator=(const Numerical& other) {
     if (this != &other) {
         Element<int>::operator=(other);
+        m_element = other.get_element();
         m_pImpl = other.m_pImpl;
     }
     return *this;
@@ -508,16 +521,21 @@ std::string Numerical::compute_repr() const {
     return m_element->compute_repr();
 }
 
+std::shared_ptr<const element::Numerical> Numerical::get_element() const {
+    return m_element;
+}
 
-Boolean::Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, element::Boolean_Ptr&& boolean)
-    : Element<bool>(vocabulary_info, boolean), m_pImpl(BooleanImpl(boolean)) { }
+
+Boolean::Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Boolean>&& boolean)
+    : Element<bool>(vocabulary_info), m_element(boolean), m_pImpl(BooleanImpl(boolean)) { }
 
 Boolean::Boolean(const Boolean& other)
-    : Element<bool>(other.get_vocabulary_info(), other.get_element()), m_pImpl(BooleanImpl(*other.m_pImpl)) { }
+    : Element<bool>(other.get_vocabulary_info()), m_element(other.get_element()), m_pImpl(BooleanImpl(*other.m_pImpl)) { }
 
 Boolean& Boolean::operator=(const Boolean& other) {
     if (this != &other) {
         Element<bool>::operator=(other);
+        m_element = other.get_element();
         m_pImpl = other.m_pImpl;
     }
     return *this;
@@ -535,6 +553,10 @@ int Boolean::compute_complexity() const {
 
 std::string Boolean::compute_repr() const {
     return m_element->compute_repr();
+}
+
+std::shared_ptr<const element::Boolean> Boolean::get_element() const {
+    return m_element;
 }
 
 

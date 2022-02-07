@@ -298,12 +298,9 @@ template<typename T>
 class Element {
 protected:
     std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
-    std::shared_ptr<const element::Element<T>> m_element;
 
 protected:
-    Element(
-        std::shared_ptr<const VocabularyInfo> vocabulary_info,
-        std::shared_ptr<const element::Element<T>> element);
+    Element(std::shared_ptr<const VocabularyInfo> vocabulary_info);
 
 public:
     Element(const Element& other);
@@ -330,7 +327,6 @@ public:
      * Getters.
      */
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
-    std::shared_ptr<const element::Element<T>> get_element() const;
 };
 
 
@@ -340,8 +336,9 @@ public:
 class Concept : public Element<ConceptDenotation> {
 private:
     pimpl<ConceptImpl> m_pImpl;
+    std::shared_ptr<const element::Concept> m_element;
 
-    Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<element::Concept>&& concept);
+    Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Concept>&& concept);
     friend class SyntacticElementFactoryImpl;
 
 public:
@@ -354,6 +351,8 @@ public:
     int compute_complexity() const override;
 
     std::string compute_repr() const override;
+
+    std::shared_ptr<const element::Concept> get_element() const;
 };
 
 
@@ -363,8 +362,9 @@ public:
 class Role : public Element<RoleDenotation> {
 private:
     pimpl<RoleImpl> m_pImpl;
+    std::shared_ptr<const element::Role> m_element;
 
-    Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<element::Role>&& role);
+    Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Role>&& role);
     friend class SyntacticElementFactoryImpl;
 
 public:
@@ -377,6 +377,8 @@ public:
     int compute_complexity() const override;
 
     std::string compute_repr() const override;
+
+    std::shared_ptr<const element::Role> get_element() const;
 };
 
 
@@ -386,8 +388,9 @@ public:
 class Numerical : public Element<int> {
 private:
     pimpl<NumericalImpl> m_pImpl;
+    std::shared_ptr<const element::Numerical> m_element;
 
-    Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<element::Numerical>&& numerical);
+    Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Numerical>&& numerical);
     friend class SyntacticElementFactoryImpl;
 
 public:
@@ -400,6 +403,8 @@ public:
     int compute_complexity() const override;
 
     std::string compute_repr() const override;
+
+    std::shared_ptr<const element::Numerical> get_element() const;
 };
 
 
@@ -409,8 +414,9 @@ public:
 class Boolean : public Element<bool> {
 private:
     pimpl<BooleanImpl> m_pImpl;
+    std::shared_ptr<const element::Boolean> m_element;
 
-    Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<element::Boolean>&& boolean);
+    Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Boolean>&& boolean);
     friend class SyntacticElementFactoryImpl;
 
 public:
@@ -423,6 +429,8 @@ public:
     int compute_complexity() const override;
 
     std::string compute_repr() const override;
+
+    std::shared_ptr<const element::Boolean> get_element() const;
 };
 
 
