@@ -193,9 +193,15 @@ public:
     ~Policy();
 
     /**
-     * Lazily evaluate the state pair.
+     * Approach 1: naive approach to evaluate (s,s')
      */
-    std::pair<std::shared_ptr<const Rule>, bool> evaluate(int source_index, const core::State& source, int target_index, const core::State& target);
+    std::shared_ptr<const Rule> evaluate_lazy(int source_index, const core::State& source, int target_index, const core::State& target);
+
+    /**
+     * Approach 2: optimized approach for evaluating pairs with similar source state s, i.e., (s,s1), (s,s2), ..., (s,sn)
+     */
+    std::vector<std::shared_ptr<const Rule>> evaluate_conditions_eager(int source_index, const core::State& source);
+    std::shared_ptr<const Rule> evaluate_effects_lazy(int source_index, const core::State& source, int target_index, const core::State& target, const std::vector<std::shared_ptr<const Rule>>& rules);
 
     std::string compute_repr() const;
 

@@ -39,7 +39,10 @@ public:
         std::vector<std::shared_ptr<const NumericalFeature>>&& numerical_features,
         std::vector<std::shared_ptr<const Rule>>&& rules);
 
-    std::pair<std::shared_ptr<const Rule>, bool> evaluate(int source_index, const core::State& source, int target_index, const core::State& target);
+    std::shared_ptr<const Rule> evaluate_lazy(int source_index, const core::State& source, int target_index, const core::State& target);
+
+    std::vector<std::shared_ptr<const Rule>> evaluate_conditions_eager(int source_index, const core::State& source);
+    std::shared_ptr<const Rule> evaluate_effects_lazy(int source_index, const core::State& source, int target_index, const core::State& target, const std::vector<std::shared_ptr<const Rule>>& rules);
 
     std::string compute_repr() const;
 

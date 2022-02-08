@@ -20,79 +20,79 @@ protected:
     Effect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<T>> feature);
 
 public:
-    virtual std::shared_ptr<const Feature<T>> get_feature() const;
+    std::shared_ptr<const Feature<T>> get_feature() const;
 };
 
 class PositiveBooleanEffect : public Effect<bool> {
 protected:
-    virtual std::unique_ptr<BaseEffect> clone_impl() const override;
+    std::unique_ptr<BaseEffect> clone_impl() const override;
 
 public:
     PositiveBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature);
 
-    virtual bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const override;
+    bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const override;
 
-    virtual std::string compute_repr() const override;
+    std::string compute_repr() const override;
 };
 
 class NegativeBooleanEffect : public Effect<bool> {
 protected:
-    virtual std::unique_ptr<BaseEffect> clone_impl() const override;
+    std::unique_ptr<BaseEffect> clone_impl() const override;
 
 public:
     NegativeBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature);
 
-    virtual bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const override;
+    bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const override;
 
-    virtual std::string compute_repr() const override;
+    std::string compute_repr() const override;
 };
 
 class UnchangedBooleanEffect : public Effect<bool> {
 protected:
-    virtual std::unique_ptr<BaseEffect> clone_impl() const override;
+    std::unique_ptr<BaseEffect> clone_impl() const override;
 
 public:
     UnchangedBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature);
 
-    virtual bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const override;
+    bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const override;
 
-    virtual std::string compute_repr() const override;
+    std::string compute_repr() const override;
 };
 
 class IncrementNumericalEffect : public Effect<int> {
 protected:
-    virtual std::unique_ptr<BaseEffect> clone_impl() const override;
+    std::unique_ptr<BaseEffect> clone_impl() const override;
 
 public:
     IncrementNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature);
 
-    virtual bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const override;
+    bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const override;
 
-    virtual std::string compute_repr() const override;
+    std::string compute_repr() const override;
 };
 
 class DecrementNumericalEffect : public Effect<int> {
 protected:
-    virtual std::unique_ptr<BaseEffect> clone_impl() const override;
+    std::unique_ptr<BaseEffect> clone_impl() const override;
 
 public:
     DecrementNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature);
 
-    virtual bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const override;
+    bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const override;
 
-    virtual std::string compute_repr() const override;
+    std::string compute_repr() const override;
 };
 
 class UnchangedNumericalEffect : public Effect<int> {
 protected:
-    virtual std::unique_ptr<BaseEffect> clone_impl() const override;
+    std::unique_ptr<BaseEffect> clone_impl() const override;
 
 public:
     UnchangedNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature);
 
-    virtual bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const override;
+    bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const override;
 
-    virtual std::string compute_repr() const override;
+    std::string compute_repr() const override;
 };
 
 }

@@ -22,16 +22,43 @@ PolicyImpl::PolicyImpl(
       m_rules(std::move(rules)),
       m_evaluation_caches(std::make_shared<EvaluationCaches>(m_boolean_features.size(), m_numerical_features.size())) { }
 
-std::pair<std::shared_ptr<const Rule>, bool> PolicyImpl::evaluate(int source_index, const core::State& source, int target_index, const core::State& target) {
+std::shared_ptr<const Rule> PolicyImpl::evaluate_lazy(int source_index, const core::State& source, int target_index, const core::State& target) {
     if (source_index < 0 || target_index < 0) {
-        throw std::runtime_error("PolicyImpl::evaluate: source or target index cannot be negative.");
+        throw std::runtime_error("PolicyImpl::evaluate_lazy: source or target index cannot be negative.");
     }
-    for (auto& r : m_rules) {
-        if (r->evaluate_conditions(source_index, source, *m_evaluation_caches) && r->evaluate_effects(source_index, source, target_index, target, *m_evaluation_caches))
-            return std::make_pair(r, true);
+    for (const auto& r : m_rules) {
+        if (r->evaluate_conditions(source_index, source, *m_evaluation_caches) && r->evaluate_effects(source_index, source, target_index, target, *m_evaluation_caches)) {
+            return r;
+        }
     }
-    return std::make_pair(nullptr, false);
+    return nullptr;
 }
+
+std::vector<std::shared_ptr<const Rule>> PolicyImpl::evaluate_conditions_eager(int source_index, const core::State& source) {
+    if (source_index < 0) {
+        throw std::runtime_error("PolicyImpl::evaluate_conditions_eager: source index cannot be negative.");
+    }
+    std::vector<std::shared_ptr<const Rule>> result;
+    for (const auto& r : m_rules) {
+        if (r->evaluate_conditions(source_index, source, *m_evaluation_caches)) {
+            result.push_back(r);
+        }
+    }
+    return result;
+}
+
+std::shared_ptr<const Rule> PolicyImpl::evaluate_effects_lazy(int source_index, const core::State& source, int target_index, const core::State& target, const std::vector<std::shared_ptr<const Rule>>& rules) {
+    if (source_index < 0 || target_index < 0) {
+        throw std::runtime_error("PolicyImpl::evaluate_effects_lazy: source or target index cannot be negative.");
+    }
+    for (const auto& r : rules) {
+        if (r->evaluate_conditions(source_index, source, *m_evaluation_caches) && r->evaluate_effects(source_index, source, target_index, target, *m_evaluation_caches)) {
+            return r;
+        }
+    }
+    return nullptr;
+}
+
 
 std::string PolicyImpl::compute_repr() const {
     std::stringstream ss;

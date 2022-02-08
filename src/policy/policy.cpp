@@ -174,8 +174,16 @@ Policy& Policy::operator=(const Policy& other) {
 
 Policy::~Policy() { }
 
-std::pair<std::shared_ptr<const Rule>, bool> Policy::evaluate(int source_index, const core::State& source, int target_index, const core::State& target) {
-    return m_pImpl->evaluate(source_index, source, target_index, target);
+std::shared_ptr<const Rule> Policy::evaluate_lazy(int source_index, const core::State& source, int target_index, const core::State& target) {
+    return m_pImpl->evaluate_lazy(source_index, source, target_index, target);
+}
+
+std::vector<std::shared_ptr<const Rule>> Policy::evaluate_conditions_eager(int source_index, const core::State& source) {
+    return m_pImpl->evaluate_conditions_eager(source_index, source);
+}
+
+std::shared_ptr<const Rule> Policy::evaluate_effects_lazy(int source_index, const core::State& source, int target_index, const core::State& target, const std::vector<std::shared_ptr<const Rule>>& rules) {
+    return m_pImpl->evaluate_effects_lazy(source_index, source, target_index, target, rules);
 }
 
 std::string Policy::compute_repr() const {

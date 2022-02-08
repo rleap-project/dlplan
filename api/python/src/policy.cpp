@@ -37,14 +37,14 @@ void init_policy(py::module_ &m) {
     py::class_<policy::BaseCondition, std::shared_ptr<policy::BaseCondition>>(m, "BaseCondition")
         .def("evaluate", &policy::BaseCondition::evaluate)
         .def("clone", &policy::BaseCondition::clone)
-        //.def("get_root", &policy::BaseCondition::get_root)
+        .def("get_root", &policy::BaseCondition::get_root)
         .def("compute_repr", &policy::BaseCondition::compute_repr)
     ;
 
     py::class_<policy::BaseEffect, std::shared_ptr<policy::BaseEffect>>(m, "BaseEffect")
         .def("evaluate", &policy::BaseEffect::evaluate)
         .def("clone", &policy::BaseEffect::clone)
-        //.def("get_root", &policy::BaseEffect::get_root)
+        .def("get_root", &policy::BaseEffect::get_root)
         .def("compute_repr", &policy::BaseEffect::compute_repr)
     ;
 
@@ -56,7 +56,9 @@ void init_policy(py::module_ &m) {
     ;
 
     py::class_<policy::Policy>(m, "Policy")
-        .def("evaluate", &policy::Policy::evaluate)
+        .def("evaluate_lazy", &policy::Policy::evaluate_lazy)
+        .def("evaluate_conditions_eager", &policy::Policy::evaluate_conditions_eager)
+        .def("evaluate_effects_lazy", &policy::Policy::evaluate_effects_lazy)
         .def("get_boolean_features", &policy::Policy::get_boolean_features)
         .def("get_numerical_features", &policy::Policy::get_numerical_features)
         .def("get_root", &policy::Policy::get_root)
