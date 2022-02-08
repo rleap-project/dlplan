@@ -53,10 +53,18 @@ std::unique_ptr<BaseCondition> BaseCondition::clone() const {
     return clone_impl();
 }
 
+std::shared_ptr<const PolicyRoot> BaseCondition::get_root() const {
+    return m_root;
+}
 
 std::unique_ptr<BaseEffect> BaseEffect::clone() const {
     return clone_impl();
 }
+
+std::shared_ptr<const PolicyRoot> BaseEffect::get_root() const {
+    return m_root;
+}
+
 
 Rule::Rule(
     std::shared_ptr<const PolicyRoot> root,

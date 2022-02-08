@@ -29,10 +29,10 @@ def main():
     s1 = dlplan.State(instance_info, [a0])
     s2 = dlplan.State(instance_info, [a0, a1])
 
-    assert policy.evaluate(2, s2, 1, s1)[1]
-    assert not policy.evaluate(2, s2, 0, s0)[1]
-    assert not policy.evaluate(1, s1, 2, s2)[1]
-    assert not policy.evaluate(0, s0, 2, s2)[1]
+    assert policy.evaluate_lazy(2, s2, 1, s1)
+    assert not policy.evaluate_lazy(2, s2, 0, s0)
+    assert not policy.evaluate_lazy(1, s1, 2, s2)
+    assert not policy.evaluate_lazy(0, s0, 2, s2)
 
     print("Write policy:")
     print(policy.compute_repr())
