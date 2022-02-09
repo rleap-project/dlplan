@@ -27,6 +27,9 @@ class BooleanImpl;
 class SyntacticElementFactory;
 class InstanceInfo;
 class VocabularyInfo;
+class ConceptDenotation;
+class RoleDenotation;
+class State;
 namespace element {
     template<typename T>
     class Element;
@@ -35,6 +38,31 @@ namespace element {
     class Numerical;
     class Boolean;
 }
+
+/**
+ * EvaluationCache caches the result of the evaluation of elements for a single state.
+ * It also keeps the memory block allocated for reuse.
+ */
+class EvaluationCaches {
+private:
+public:
+    /**
+     * num_object defines the size of ConceptDenotation and RoleDenotation.
+     */
+    EvaluationCaches(int num_objects);
+    ~EvaluationCaches();
+
+    /**
+     * Retrieves or computes the result of evaluating an Element for a given State.
+     * Some considerations are:
+    *   1. The underlying datastructure will be `unordered_map<int, ConceptDenotation>`
+    *      where `int` is a number indentifying the feature
+    *      and `ConceptDenotation` is the assigned memory block for storing the result.
+    *   2. We need ownership of State to check whether a newly given state differs from a previous state.
+     */
+    const ConceptDenotation& evaluate_or_retrieve(const element::Concept& concept, std::shared_ptr<const State> state);
+    const RoleDenotation& evaluate_or_retrieve(const element::Role& role, std::shared_ptr<const State> state);
+};
 
 /**
  * Proxy to underlying Bitset with additional functionality.
@@ -311,6 +339,17 @@ public:
      * Evaluates the element for a state given as a vector of atom indices.
      */
     virtual T evaluate(const State& state) const = 0;
+
+    /**
+     * Evaluates the element with the new caching strategy.
+     * Some considerations:
+     *   1. In the root of each Element, we return a copy from the result
+     *      in the cache for a less error prone public interface.
+     *   2. EvaluationCaches must be passed because we want to be able
+     *      to evaluate features from multiple threads without locks
+     *      by having different EvaluationCaches for each thread.
+     */
+    // virtual T evaluate(std::shared_ptr<const State> state, EvaluationCaches& caches);
 
     /**
      * Returns the complexity of the element

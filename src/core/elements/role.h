@@ -8,7 +8,8 @@ namespace dlplan::core::element {
 
 class Role : public Element<RoleDenotation> {
 public:
-    Role(const VocabularyInfo& vocabulary, const std::string& name) : Element<RoleDenotation>(vocabulary, name) { }
+    Role(const VocabularyInfo& vocabulary, const std::string& name)
+    : Element<RoleDenotation>(vocabulary, name) { }
     ~Role() override = default;
 };
 

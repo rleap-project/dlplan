@@ -12,7 +12,8 @@ protected:
     const T m_element;
 
 public:
-    CountNumerical(const VocabularyInfo& vocabulary, T element) : Numerical(vocabulary, "n_count"), m_element(element) { }
+    CountNumerical(const VocabularyInfo& vocabulary, T element)
+    : Numerical(vocabulary, "n_count"), m_element(element) { }
 
     int evaluate(const State& state) const override {
         return m_element->evaluate(state).get_const_data().count();
