@@ -5,7 +5,7 @@
 #include "../state.h"
 #include "../instance_info.h"
 #include "../vocabulary_info.h"
-#include "../cache.h"
+#include "../evaluation_caches.h"
 
 #include <iostream>
 #include <sstream>
@@ -28,9 +28,10 @@ public:
     Element(const VocabularyInfo&, const std::string& name) : m_name(name), m_index(-1) { }
     virtual ~Element() = default;
 
-    virtual T evaluate(const State& state) const = 0;
-
-    //virtual void evaluate(const State& state, EvaluationCaches& cache) const = 0;
+    /**
+     * In place evaluation.
+     */
+    T evaluate(const State& state, EvaluationCaches& caches) const;
 
     virtual int compute_complexity() const = 0;
 

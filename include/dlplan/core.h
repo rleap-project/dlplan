@@ -9,6 +9,7 @@
 #include "pimpl.h"
 #include "types.h"
 #include "dynamic_bitset.h"
+#include "per_index_bitset.h"
 
 
 namespace dlplan::core {
@@ -27,6 +28,7 @@ class BooleanImpl;
 class SyntacticElementFactory;
 class InstanceInfo;
 class VocabularyInfo;
+class EvaluationCachesImpl;
 class ConceptDenotation;
 class RoleDenotation;
 class State;
@@ -40,11 +42,48 @@ namespace element {
 }
 
 /**
+ * Proxy to underlying Bitset with additional functionality
+ * to convert to vector representation.
+ * No private implementation to save a heap allocation.
+ */
+class ConceptDenotation {
+private:
+    int m_num_objects;
+    BitsetView m_data;
+
+public:
+    ConceptDenotation(int num_objects, BitsetView data);
+    ~ConceptDenotation();
+
+    std::vector<int> to_vector() const;
+
+    int get_num_objects() const;
+    BitsetView get_data();
+};
+
+class RoleDenotation {
+private:
+    int m_num_objects;
+    BitsetView m_data;
+
+public:
+    RoleDenotation(int num_objects, BitsetView data);
+    ~RoleDenotation();
+
+    std::vector<std::pair<int, int>> to_vector() const;
+
+    int get_num_objects() const;
+    BitsetView get_data();
+};
+
+/**
  * EvaluationCache caches the result of the evaluation of elements for a single state.
  * It also keeps the memory block allocated for reuse.
  */
 class EvaluationCaches {
 private:
+    pimpl<EvaluationCachesImpl> m_pImpl;
+
 public:
     /**
      * num_object defines the size of ConceptDenotation and RoleDenotation.
@@ -53,57 +92,11 @@ public:
     ~EvaluationCaches();
 
     /**
-     * Retrieves or computes the result of evaluating an Element for a given State.
-     * Some considerations are:
-    *   1. The underlying datastructure will be `unordered_map<int, ConceptDenotation>`
-    *      where `int` is a number indentifying the feature
-    *      and `ConceptDenotation` is the assigned memory block for storing the result.
-    *   2. We need ownership of State to check whether a newly given state differs from a previous state.
+     * The current implementation does not really cache
+     * but allocated memory to store the result.
      */
-    const ConceptDenotation& evaluate_or_retrieve(const element::Concept& concept, std::shared_ptr<const State> state);
-    const RoleDenotation& evaluate_or_retrieve(const element::Role& role, std::shared_ptr<const State> state);
-};
-
-/**
- * Proxy to underlying Bitset with additional functionality.
- */
-class ConceptDenotation {
-private:
-    // no pimpl to save indirection.
-    int m_num_objects;
-    dynamic_bitset::DynamicBitset<unsigned> m_data;
-
-public:
-    explicit ConceptDenotation(int num_objects);
-    ConceptDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data);
-    ~ConceptDenotation();
-
-    std::vector<int> to_vector() const;
-
-    int get_num_objects() const;
-    dynamic_bitset::DynamicBitset<unsigned>& get_data();
-    const dynamic_bitset::DynamicBitset<unsigned>& get_const_data() const;
-};
-
-/**
- * Proxy to underlying Bitset with additional functionality.
- */
-class RoleDenotation {
-private:
-    // no pimpl to save indirection.
-    int m_num_objects;
-    dynamic_bitset::DynamicBitset<unsigned> m_data;
-
-public:
-    explicit RoleDenotation(int num_objects);
-    RoleDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data);
-    ~RoleDenotation();
-
-    std::vector<std::pair<int, int>> to_vector() const;
-
-    int get_num_objects() const;
-    dynamic_bitset::DynamicBitset<unsigned>& get_data();
-    const dynamic_bitset::DynamicBitset<unsigned>& get_const_data() const;
+    ConceptDenotation get_concept_denotation(const element::Concept& concept);
+    RoleDenotation get_role_denotation(const element::Role& role);
 };
 
 

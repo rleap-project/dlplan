@@ -20,13 +20,15 @@ public:
         }
     }
 
-    ConceptDenotation evaluate(const State& state) const override {
-        const auto r = m_role->evaluate(state);
-        const auto& r_data = r.get_const_data();
-        const auto c = m_concept->evaluate(state);
-        const auto& c_data = c.get_const_data();
+    ConceptDenotation evaluate(const State& state, EvaluationCaches& caches) const override {
+        ConceptDenotation result = caches.get_concept_denotation(*this);
+        BitsetView result_data = result.get_data();
+        RoleDenotation r = m_role->evaluate(state, caches);
+        BitsetView r_data = r.get_data();
+        ConceptDenotation c = m_concept->evaluate(state, caches);
+        BitsetView c_data = c.get_data();
+        result_data.set();
         ConceptDenotation result = state.get_instance_info()->get_top_concept();
-        auto& result_data = result.get_data();
         // find counterexamples b : exists b . (a,b) in R and b notin C
         int num_objects = state.get_instance_info()->get_num_objects();
         for (int i = 0; i < num_objects; ++i) {
@@ -41,6 +43,8 @@ public:
         }
         return result;
     }
+
+    virtual void evaluate(const State& state, BitsetView& out) const = 0;
 
     int compute_complexity() const override {
         return m_role->compute_complexity() + m_concept->compute_complexity() + 1;

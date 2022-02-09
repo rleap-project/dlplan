@@ -12,11 +12,11 @@ public:
         }
     }
 
-    int evaluate(const Numerical* parent, const State& state) const {
+    int evaluate(const Numerical* parent, const State& state, EvaluationCaches& caches) const {
         if (state.get_instance_info()->get_vocabulary_info() != parent->get_vocabulary_info()) {
             throw std::runtime_error("NumericalImpl::evaluate - mismatched vocabularies of Numerical and State.");
         }
-        return parent->get_element()->evaluate(state);
+        return parent->get_element()->evaluate(state, caches);
     }
 };
 

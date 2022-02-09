@@ -9,6 +9,7 @@ target_sources(dlplancore
         element_factory.cpp
         instance_info.cpp
         vocabulary_info.cpp
+        per_state_bitset.cpp
         predicate.cpp
         object.cpp
         parser/parser.cpp
@@ -24,5 +25,6 @@ set(PUBLIC_HEADERS_FILES
     include/dlplan/core.tpp
     include/dlplan/pimpl.h
     include/dlplan/types.h
-    include/dlplan/dynamic_bitset.h)
+    include/dlplan/dynamic_bitset.h
+    include/dlplan/per_index_bitset.h)
 set_target_properties(dlplancore PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS_FILES}")

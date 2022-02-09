@@ -20,15 +20,13 @@
 #include "role.h"
 #include "numerical.h"
 #include "boolean.h"
+#include "evaluation_caches.h"
 #include "elements/types.h"
 
 
 namespace dlplan::core {
 
-ConceptDenotation::ConceptDenotation(int num_objects)
-    : m_num_objects(num_objects), m_data(dynamic_bitset::DynamicBitset<unsigned>(num_objects)) { }
-
-ConceptDenotation::ConceptDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data)
+ConceptDenotation::ConceptDenotation(int num_objects, BitsetView data)
     : m_num_objects(num_objects), m_data(std::move(data)) { }
 
 ConceptDenotation::~ConceptDenotation() { }
@@ -47,20 +45,13 @@ int ConceptDenotation::get_num_objects() const {
     return m_num_objects;
 }
 
-dynamic_bitset::DynamicBitset<unsigned>& ConceptDenotation::get_data() {
-    return m_data;
-}
-
-const dynamic_bitset::DynamicBitset<unsigned>& ConceptDenotation::get_const_data() const {
+BitsetView ConceptDenotation::get_data() {
     return m_data;
 }
 
 
-RoleDenotation::RoleDenotation(int num_objects)
-    : m_num_objects(num_objects), m_data(dynamic_bitset::DynamicBitset<unsigned>(num_objects * num_objects)) { }
-
-RoleDenotation::RoleDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data)
-    : m_num_objects(num_objects), m_data(std::move(data)) { }
+RoleDenotation::RoleDenotation(int num_objects, BitsetView data)
+    : m_num_objects(num_objects), m_data(data) { }
 
 RoleDenotation::~RoleDenotation() { }
 
@@ -82,12 +73,22 @@ int RoleDenotation::get_num_objects() const {
     return m_num_objects;
 }
 
-dynamic_bitset::DynamicBitset<unsigned>& RoleDenotation::get_data() {
+BitsetView RoleDenotation::get_data() {
     return m_data;
 }
 
-const dynamic_bitset::DynamicBitset<unsigned>& RoleDenotation::get_const_data() const {
-    return m_data;
+
+EvaluationCaches::EvaluationCaches(int num_objects)
+    : m_pImpl(EvaluationCachesImpl(num_objects)) { }
+
+EvaluationCaches::~EvaluationCaches() { }
+
+ConceptDenotation EvaluationCaches::get_concept_denotation(const element::Concept& concept) {
+    return m_pImpl->get_concept_denotation(concept);
+}
+
+RoleDenotation EvaluationCaches::get_role_denotation(const element::Role& role) {
+    return m_pImpl->get_role_denotation(role);
 }
 
 
