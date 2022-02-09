@@ -28,10 +28,7 @@ public:
     Element(const VocabularyInfo&, const std::string& name) : m_name(name), m_index(-1) { }
     virtual ~Element() = default;
 
-    /**
-     * In place evaluation.
-     */
-    T evaluate(const State& state, EvaluationCaches& caches) const;
+    virtual T evaluate(const State& state, EvaluationCaches& caches) const = 0;
 
     virtual int compute_complexity() const = 0;
 

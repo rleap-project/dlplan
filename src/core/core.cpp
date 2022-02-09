@@ -83,11 +83,11 @@ EvaluationCaches::EvaluationCaches(int num_objects)
 
 EvaluationCaches::~EvaluationCaches() { }
 
-ConceptDenotation EvaluationCaches::get_concept_denotation(const element::Concept& concept) {
+std::pair<ConceptDenotation, bool> EvaluationCaches::get_concept_denotation(const element::Concept& concept) {
     return m_pImpl->get_concept_denotation(concept);
 }
 
-RoleDenotation EvaluationCaches::get_role_denotation(const element::Role& role) {
+std::pair<RoleDenotation, bool> EvaluationCaches::get_role_denotation(const element::Role& role) {
     return m_pImpl->get_role_denotation(role);
 }
 

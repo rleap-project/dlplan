@@ -95,8 +95,10 @@ public:
      * The current implementation does not really cache
      * but allocated memory to store the result.
      */
-    ConceptDenotation get_concept_denotation(const element::Concept& concept);
-    RoleDenotation get_role_denotation(const element::Role& role);
+    std::pair<ConceptDenotation, bool> get_concept_denotation(const element::Concept& concept);
+    std::pair<RoleDenotation, bool> get_role_denotation(const element::Role& role);
+
+    void clear();
 };
 
 

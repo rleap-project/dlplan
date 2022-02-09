@@ -20,8 +20,7 @@ public:
         }
     }
 
-    ConceptDenotation evaluate(const State& state, EvaluationCaches& caches) const override {
-        ConceptDenotation result = caches.get_concept_denotation(*this);
+    ConceptDenotation evaluate(const State& state, EvaluationCaches& caches, ConceptDenotation result) const override {
         BitsetView result_data = result.get_data();
         RoleDenotation r = m_role->evaluate(state, caches);
         BitsetView r_data = r.get_data();
@@ -43,8 +42,6 @@ public:
         }
         return result;
     }
-
-    virtual void evaluate(const State& state, BitsetView& out) const = 0;
 
     int compute_complexity() const override {
         return m_role->compute_complexity() + m_concept->compute_complexity() + 1;
