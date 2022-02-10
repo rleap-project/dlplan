@@ -75,7 +75,8 @@ std::string StateImpl::str() const {
 size_t StateImpl::compute_hash() const {
     std::size_t seed = 0;
     utils::hashing::hash_combine(seed, std::hash<std::vector<int>>()(m_atom_idxs));
-    utils::hashing::hash_combine(seed, m_instance_info->compute_hash());
+    // TODO: can we simply pass the pointer of the instance?
+    utils::hashing::hash_combine(seed, m_instance_info.get());
     return seed;
 }
 

@@ -1,7 +1,7 @@
 #ifndef DLPLAN_SRC_EVALUATOR_NUMERICAL_EVALUATOR_H_
 #define DLPLAN_SRC_EVALUATOR_NUMERICAL_EVALUATOR_H_
 
-#include "../utils/per_state_array.h"
+#include "../utils/per_index_bitset.h"
 
 #include "../../include/dlplan/core.h"
 
@@ -10,7 +10,7 @@ namespace dlplan::evaluator {
 
 class NumericalEvaluatorImpl {
 private:
-    utils::PerStateArray<int> m_data;
+    utils::PerIndexArray<int> m_data;
 
 public:
     explicit NumericalEvaluatorImpl(int num_features)

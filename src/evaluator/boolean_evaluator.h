@@ -1,7 +1,7 @@
 #ifndef DLPLAN_SRC_EVALUATOR_BOOLEAN_EVALUATOR_H_
 #define DLPLAN_SRC_EVALUATOR_BOOLEAN_EVALUATOR_H_
 
-#include "../utils/per_state_bitset.h"
+#include "../utils/per_index_bitset.h"
 
 #include "../../include/dlplan/core.h"
 
@@ -10,7 +10,7 @@ namespace dlplan::evaluator {
 
 class BooleanEvaluatorImpl {
 private:
-    utils::PerStateBitset m_data;
+    utils::PerIndexBitset m_data;
 
 public:
     explicit BooleanEvaluatorImpl(int num_features) : m_data(std::vector<bool>(2 * std::max(1, num_features), false)) { }

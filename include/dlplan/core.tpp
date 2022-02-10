@@ -26,7 +26,7 @@ std::shared_ptr<const VocabularyInfo> Element<T>::get_vocabulary_info() const {
     return m_vocabulary_info;
 }
 
-template class Element<dynamic_bitset::DynamicBitset<unsigned int>>;
+template class Element<ConceptDenotation>;
 template class Element<int>;
 template class Element<bool>;
 

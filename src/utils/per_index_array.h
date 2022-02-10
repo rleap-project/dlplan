@@ -39,11 +39,11 @@ public:
     }
 
     iterator end() {
-        return p + _size - 1;
+        return p + size_ - 1;
     }
 
     const_iterator end() const {
-        return p + _size - 1;
+        return p + size_ - 1;
     }
 
     const T &back() const {
@@ -72,14 +72,14 @@ public:
 
 
 template<class Element>
-class PerStateArray {
+class PerIndexArray {
 private:
     const std::vector<Element> m_default_array;
 
     mutable utils::SegmentedArrayVector<Element> m_entries;
 
 public:
-    explicit PerStateArray(const std::vector<Element>& default_array)
+    explicit PerIndexArray(const std::vector<Element>& default_array)
       : m_default_array(default_array),
         m_entries(default_array.size()) { }
 

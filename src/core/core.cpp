@@ -26,7 +26,7 @@
 
 namespace dlplan::core {
 
-ConceptDenotation::ConceptDenotation(int num_objects, BitsetView data)
+ConceptDenotation::ConceptDenotation(int num_objects, utils::BitsetView data)
     : m_num_objects(num_objects), m_data(std::move(data)) { }
 
 ConceptDenotation::~ConceptDenotation() { }
@@ -45,12 +45,12 @@ int ConceptDenotation::get_num_objects() const {
     return m_num_objects;
 }
 
-BitsetView ConceptDenotation::get_data() {
+utils::BitsetView ConceptDenotation::get_data() {
     return m_data;
 }
 
 
-RoleDenotation::RoleDenotation(int num_objects, BitsetView data)
+RoleDenotation::RoleDenotation(int num_objects, utils::BitsetView data)
     : m_num_objects(num_objects), m_data(data) { }
 
 RoleDenotation::~RoleDenotation() { }
@@ -73,13 +73,13 @@ int RoleDenotation::get_num_objects() const {
     return m_num_objects;
 }
 
-BitsetView RoleDenotation::get_data() {
+utils::BitsetView RoleDenotation::get_data() {
     return m_data;
 }
 
 
-EvaluationCaches::EvaluationCaches(int num_objects)
-    : m_pImpl(EvaluationCachesImpl(num_objects)) { }
+EvaluationCaches::EvaluationCaches(std::shared_ptr<const InstanceInfo> instance_info)
+    : m_pImpl(EvaluationCachesImpl(instance_info)) { }
 
 EvaluationCaches::~EvaluationCaches() { }
 
@@ -89,6 +89,10 @@ std::pair<ConceptDenotation, bool> EvaluationCaches::get_concept_denotation(cons
 
 std::pair<RoleDenotation, bool> EvaluationCaches::get_role_denotation(const element::Role& role) {
     return m_pImpl->get_role_denotation(role);
+}
+
+std::shared_ptr<const InstanceInfo> EvaluationCaches::get_instance_info() const {
+    return m_pImpl->get_instance_info();
 }
 
 
@@ -158,19 +162,6 @@ std::shared_ptr<const VocabularyInfo> InstanceInfo::get_vocabulary_info() const 
 const Index_Vec& InstanceInfo::get_static_atom_idxs() const {
     return m_pImpl->get_static_atom_idxs();
 }
-
-const ConceptDenotation& InstanceInfo::get_top_concept() const {
-    return m_pImpl->get_top_concept();
-}
-
-const RoleDenotation& InstanceInfo::get_top_role() const {
-    return m_pImpl->get_top_role();
-}
-
-size_t InstanceInfo::compute_hash() const {
-    return m_pImpl->compute_hash();
-}
-
 
 
 VocabularyInfo::VocabularyInfo() : m_pImpl(VocabularyInfoImpl()) { }
@@ -441,8 +432,8 @@ Concept& Concept::operator=(const Concept& other) {
 
 Concept::~Concept() = default;
 
-ConceptDenotation Concept::evaluate(const State& state) const {
-    return m_pImpl->evaluate(this, state);
+ConceptDenotation Concept::evaluate(const State& state, EvaluationCaches& caches) const {
+    return m_pImpl->evaluate(this, state, caches);
 }
 
 int Concept::compute_complexity() const {
@@ -475,8 +466,8 @@ Role& Role::operator=(const Role& other) {
 
 Role::~Role() = default;
 
-RoleDenotation Role::evaluate(const State& state) const {
-    return m_pImpl->evaluate(this, state);
+RoleDenotation Role::evaluate(const State& state, EvaluationCaches& caches) const {
+    return m_pImpl->evaluate(this, state, caches);
 }
 
 int Role::compute_complexity() const {
@@ -510,8 +501,8 @@ Numerical& Numerical::operator=(const Numerical& other) {
 
 Numerical::~Numerical() = default;
 
-int Numerical::evaluate(const State& state) const {
-    return m_pImpl->evaluate(this, state);
+int Numerical::evaluate(const State& state, EvaluationCaches& caches) const {
+    return m_pImpl->evaluate(this, state, caches);
 }
 
 int Numerical::compute_complexity() const {
@@ -544,8 +535,8 @@ Boolean& Boolean::operator=(const Boolean& other) {
 
 Boolean::~Boolean() = default;
 
-bool Boolean::evaluate(const State& state) const {
-    return m_pImpl->evaluate(this, state);
+bool Boolean::evaluate(const State& state, EvaluationCaches& caches) const {
+    return m_pImpl->evaluate(this, state, caches);
 }
 
 int Boolean::compute_complexity() const {

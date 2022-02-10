@@ -8,8 +8,7 @@
 
 #include "pimpl.h"
 #include "types.h"
-#include "dynamic_bitset.h"
-#include "per_index_bitset.h"
+#include "../../src/utils/per_index_bitset.h"
 
 
 namespace dlplan::core {
@@ -42,43 +41,46 @@ namespace element {
 }
 
 /**
- * Proxy to underlying BitsetView with additional functionality
- * to convert to vector representation.
- * No private implementation to save a heap allocation.
+ * A Denotation is just a pointer to some memory block in the EvaluationCache.
+ * This means that a denotation is lightweight and easy to copy.
+ * We omit a private implementation (pimpl) to save an extra heap allocation.
+ *
+ * The object becomes invalid, if the EvaluationCache goes out of scope.
+ * We could fix this by storing a shared_ptr to the EvaluationCache.
  */
 class ConceptDenotation {
 private:
     int m_num_objects;
-    BitsetView m_data;
+    utils::BitsetView m_data;
 
 public:
-    ConceptDenotation(int num_objects, BitsetView data);
+    ConceptDenotation(int num_objects, utils::BitsetView data);
     ~ConceptDenotation();
 
     std::vector<int> to_vector() const;
 
     int get_num_objects() const;
-    BitsetView get_data();
+    utils::BitsetView get_data();
 };
 
 class RoleDenotation {
 private:
     int m_num_objects;
-    BitsetView m_data;
+    utils::BitsetView m_data;
 
 public:
-    RoleDenotation(int num_objects, BitsetView data);
+    RoleDenotation(int num_objects, utils::BitsetView data);
     ~RoleDenotation();
 
     std::vector<std::pair<int, int>> to_vector() const;
 
     int get_num_objects() const;
-    BitsetView get_data();
+    utils::BitsetView get_data();
 };
 
 /**
- * EvaluationCache caches the result of the evaluation of elements for a single state.
- * It also keeps the memory block allocated for reuse.
+ * EvaluationCache caches the result of the evaluation of elements.
+ * It keeps the memory block allocated for reuse.
  */
 class EvaluationCaches {
 private:
@@ -88,17 +90,25 @@ public:
     /**
      * num_object defines the size of ConceptDenotation and RoleDenotation.
      */
-    EvaluationCaches(int num_objects);
+    EvaluationCaches(std::shared_ptr<const InstanceInfo> instance_info);
     ~EvaluationCaches();
 
     /**
-     * The current implementation does not really cache
-     * but allocated memory to store the result.
+     * Returns a Denotation with an additional flag indicating
+     * whether an entry already exists in the cache.
      */
     std::pair<ConceptDenotation, bool> get_concept_denotation(const element::Concept& concept);
     std::pair<RoleDenotation, bool> get_role_denotation(const element::Role& role);
 
+    /**
+     * Clears the cache but keeps memory allocated.
+     */
     void clear();
+
+    /**
+     * Getters.
+     */
+    std::shared_ptr<const InstanceInfo> get_instance_info() const;
 };
 
 
@@ -307,10 +317,6 @@ public:
     int get_num_objects() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
     const Index_Vec& get_static_atom_idxs() const;
-    const ConceptDenotation& get_top_concept() const;
-    const RoleDenotation& get_top_role() const;
-
-    size_t compute_hash() const;
 };
 
 
@@ -331,20 +337,16 @@ public:
     virtual ~Element();
 
     /**
-     * Evaluates the element for a state given as a vector of atom indices.
-     */
-    virtual T evaluate(const State& state) const = 0;
-
-    /**
      * Evaluates the element with the new caching strategy.
      * Some considerations:
-     *   1. In the root of each Element, we return a copy from the result
-     *      in the cache for a less error prone public interface.
-     *   2. EvaluationCaches must be passed because we want to be able
+     *   1. EvaluationCaches must be passed because we want to be able
      *      to evaluate features from multiple threads without locks
-     *      by having different EvaluationCaches for each thread.
+     *      by having different EvaluationCaches for each thread
+     *   2. The convention we use is that T is a lightweight object.
+     *      In the case of Concept and Roles it only contains
+     *      a pointer to some memory block in the cache.
      */
-    // virtual T evaluate(std::shared_ptr<const State> state, EvaluationCaches& caches);
+    virtual T evaluate(const State& state, EvaluationCaches& caches) const = 0;
 
     /**
      * Returns the complexity of the element
@@ -380,7 +382,7 @@ public:
     Concept& operator=(const Concept& other);
     ~Concept() override;
 
-    ConceptDenotation evaluate(const State& state) const override;
+    ConceptDenotation evaluate(const State& state, EvaluationCaches& caches) const override;
 
     int compute_complexity() const override;
 
@@ -406,7 +408,7 @@ public:
     Role& operator=(const Role& other);
     ~Role() override;
 
-    RoleDenotation evaluate(const State& state) const override;
+    RoleDenotation evaluate(const State& state, EvaluationCaches& caches) const override;
 
     int compute_complexity() const override;
 
@@ -432,7 +434,7 @@ public:
     Numerical& operator=(const Numerical& other);
     ~Numerical() override;
 
-    int evaluate(const State& state) const override;
+    int evaluate(const State& state, EvaluationCaches& caches) const override;
 
     int compute_complexity() const override;
 
@@ -458,7 +460,7 @@ public:
     Boolean& operator=(const Boolean& other);
     ~Boolean() override;
 
-    bool evaluate(const State& state) const override;
+    bool evaluate(const State& state, EvaluationCaches& caches) const override;
 
     int compute_complexity() const override;
 

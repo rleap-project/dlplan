@@ -9,24 +9,19 @@
  * An extended version with vector transformation and hashing.
  */
 
-#include "../../src/utils/per_state_array.h"
+#include "per_index_array.h"
 
 #include <cassert>
 #include <limits>
 #include <vector>
 
 
-namespace dlplan::core {
+namespace dlplan::utils {
 
 
 class BitsetMath {
 public:
     using Block = unsigned int;
-
-    static const Block zeros;
-    static const Block ones;
-
-    static const int bits_per_block = std::numeric_limits<Block>::digits;
 
     static_assert(
         !std::numeric_limits<Block>::is_signed,
@@ -75,14 +70,14 @@ public:
 };
 
 
-class PerStateBitset {
+class PerIndexBitset {
     int num_bits_per_entry;
-    utils::PerStateArray<BitsetMath::Block> data;
+    utils::PerIndexArray<BitsetMath::Block> data;
 public:
-    explicit PerStateBitset(const std::vector<bool> &default_bits);
+    explicit PerIndexBitset(const std::vector<bool> &default_bits);
 
-    PerStateBitset(const PerStateBitset &) = delete;
-    PerStateBitset &operator=(const PerStateBitset &) = delete;
+    PerIndexBitset(const PerIndexBitset &) = delete;
+    PerIndexBitset &operator=(const PerIndexBitset &) = delete;
 
     BitsetView operator[](int index);
 };
