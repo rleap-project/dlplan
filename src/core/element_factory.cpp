@@ -61,6 +61,9 @@ Boolean SyntacticElementFactoryImpl::parse_boolean(const std::string &descriptio
 
 // TODO: add checks whether the VocabularyInfo matches.
 Boolean SyntacticElementFactoryImpl::make_empty_boolean(const Concept& concept) {
+    if (concept.get_vocabulary_info() != m_vocabulary_info) {
+        throw std::runtime_error("SyntacticElementFactoryImpl::make_empty_boolean - mismatched vocabularies of SyntacticElementFactory and Concept");
+    }
     return Boolean(m_vocabulary_info, m_caches.m_boolean_cache->insert(
         std::make_unique<element::EmptyBoolean<element::Concept_Ptr>>(*m_vocabulary_info, concept.get_element())).first);
 }

@@ -1,6 +1,12 @@
 #ifndef DLPLAN_SRC_CORE_CONCEPT_H_
 #define DLPLAN_SRC_CORE_CONCEPT_H_
 
+#include <memory>
+
+#include "elements/concept.h"
+
+#include "../../include/dlplan/core.h"
+
 
 namespace dlplan::core {
 
@@ -15,6 +21,9 @@ public:
     ConceptDenotation evaluate(const Concept* parent, const State& state, EvaluationCaches& caches) const {
         if (state.get_instance_info()->get_vocabulary_info() != parent->get_vocabulary_info()) {
             throw std::runtime_error("ConceptImpl::evaluate - mismatched vocabularies of Concept and State.");
+        }
+        if (state.get_instance_info() != caches.get_instance_info()) {
+            throw std::runtime_error("ConceptImpl::evaluate - mismatches instances of State and EvaluationCaches.");
         }
         return parent->get_element()->evaluate(state, caches);
     }

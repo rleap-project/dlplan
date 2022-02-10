@@ -12,6 +12,7 @@ namespace dlplan {
 namespace core {
     class State;
     class EvaluationCaches;
+    class InstanceInfo;
 }
 namespace policy {
 class Rule;

@@ -1,10 +1,11 @@
-#ifndef DLPLAN_SRC_UTILS_PER_STATE_ARRAY_H_
-#define DLPLAN_SRC_UTILS_PER_STATE_ARRAY_H_
+#ifndef DLPLAN_INCLUDE_DLPLAN_PER_STATE_ARRAY_H_
+#define DLPLAN_INCLUDE_DLPLAN_PER_STATE_ARRAY_H_
 
 /**
  * Taken from fast-downward.org
  */
 
+#include <cassert>
 #include <vector>
 
 #include "segmented_array_vector.h"
@@ -26,7 +27,7 @@ public:
     ArrayView<T> &operator=(const ArrayView<T> &other) = default;
 
     T &operator[](int index) {
-        assert(index >= 0 && index < size_);
+        assert(index >= 0 && index < static_cast<int>(size()));
         return p[index];
     }
 
@@ -47,17 +48,17 @@ public:
     }
 
     const T &back() const {
-        assert(size > 0);
+        assert(size_ > 0);
         return p[size_];
     }
 
     T &back() {
-        assert(size > 0);
+        assert(size_ > 0);
         return p[size_];
     }
 
     const T &operator[](int index) const {
-        assert(index >= 0 && index < size_);
+        assert(index >= 0 && index < static_cast<int>(size()));
         return p[index];
     }
 

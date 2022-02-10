@@ -77,19 +77,19 @@ void BitsetView::set(const BitsetView& other) {
 }
 
 void BitsetView::set(int index) {
-    assert(index >= 0 && index < num_bits);
+    assert(index >= 0 && index < static_cast<int>(num_bits));
     int block_index = BitsetMath::block_index(index);
     data[block_index] |= BitsetMath::bit_mask(index);
 }
 
 void BitsetView::reset(int index) {
-    assert(index >= 0 && index < num_bits);
+    assert(index >= 0 && index < static_cast<int>(num_bits));
     int block_index = BitsetMath::block_index(index);
     data[block_index] &= ~BitsetMath::bit_mask(index);
 }
 
 bool BitsetView::test(int index) const {
-    assert(index >= 0 && index < num_bits);
+    assert(index >= 0 && index < static_cast<int>(num_bits));
     int block_index = BitsetMath::block_index(index);
     return (data[block_index] & BitsetMath::bit_mask(index)) != 0;
 }

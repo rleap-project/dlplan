@@ -1,6 +1,12 @@
 #ifndef DLPLAN_SRC_CORE_NUMERICAL_H_
 #define DLPLAN_SRC_CORE_NUMERICAL_H_
 
+#include <memory>
+
+#include "elements/numerical.h"
+
+#include "../../include/dlplan/core.h"
+
 
 namespace dlplan::core {
 
@@ -15,6 +21,9 @@ public:
     int evaluate(const Numerical* parent, const State& state, EvaluationCaches& caches) const {
         if (state.get_instance_info()->get_vocabulary_info() != parent->get_vocabulary_info()) {
             throw std::runtime_error("NumericalImpl::evaluate - mismatched vocabularies of Numerical and State.");
+        }
+        if (state.get_instance_info() != caches.get_instance_info()) {
+            throw std::runtime_error("NumericalImpl::evaluate - mismatches instances of State and EvaluationCaches.");
         }
         return parent->get_element()->evaluate(state, caches);
     }
