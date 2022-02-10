@@ -26,11 +26,12 @@ public:
         if (ss1.str() > ss2.str()) swap(m_concept_left, m_concept_right);
     }
 
-    ConceptDenotation evaluate(const State& state) const override {
-        auto l = m_concept_left->evaluate(state);
-        const auto r = m_concept_right->evaluate(state);
-        l.get_data() &= r.get_const_data();
-        return l;
+    ConceptDenotation evaluate(const State& state, EvaluationCaches& caches, ConceptDenotation result) const override {
+        ConceptDenotation l = m_concept_left->evaluate(state, caches);
+        ConceptDenotation r = m_concept_right->evaluate(state, caches);
+        result.get_data().set(l.get_data());
+        result.get_data() &= r.get_data();
+        return result;
     }
 
     int compute_complexity() const override {

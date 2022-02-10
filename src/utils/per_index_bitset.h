@@ -41,7 +41,7 @@ public:
 
 class BitsetView {
     utils::ArrayView<BitsetMath::Block> data;
-    int num_bits;
+    size_t num_bits;
 
 private:
     int count_bits_in_last_block() const;
@@ -49,7 +49,7 @@ private:
     void zero_unused_bits();
 
 public:
-    BitsetView(utils::ArrayView<BitsetMath::Block> data, int num_bits);
+    BitsetView(utils::ArrayView<BitsetMath::Block> data, size_t num_bits);
 
     BitsetView(const BitsetView &other) = default;
     BitsetView &operator=(const BitsetView &other) = default;
@@ -60,11 +60,24 @@ public:
     void set();
     void reset();
 
+    void set(const BitsetView& other);
+
     void set(int index);
     void reset(int index);
     bool test(int index) const;
-    void intersect(const BitsetView &other);
-    int size() const;
+    size_t size() const;
+
+    BitsetView& operator&=(const BitsetView& other);
+
+    BitsetView& operator|=(const BitsetView& other);
+
+    BitsetView& operator-=(const BitsetView& other);
+
+    BitsetView& operator~();
+
+    bool intersects(const BitsetView &other) const;
+
+    bool is_subset_of(const BitsetView &other) const;
 
     std::size_t compute_hash() const;
 };

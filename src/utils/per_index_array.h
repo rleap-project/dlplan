@@ -15,12 +15,12 @@ namespace dlplan::utils {
 template<class T>
 class ArrayView {
     T *p;
-    int size_;
+    size_t size_;
 public:
     typedef T* iterator;
     typedef const T* const_iterator;
 
-    ArrayView(T *p, int size) : p(p), size_(size) {}
+    ArrayView(T *p, size_t size) : p(p), size_(size) {}
     ArrayView(const ArrayView<T> &other) = default;
 
     ArrayView<T> &operator=(const ArrayView<T> &other) = default;
@@ -61,7 +61,7 @@ public:
         return p[index];
     }
 
-    int size() const {
+    size_t size() const {
         return size_;
     }
 

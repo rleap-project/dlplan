@@ -94,11 +94,10 @@ public:
     ~EvaluationCaches();
 
     /**
-     * Returns a Denotation with an additional flag indicating
-     * whether an entry already exists in the cache.
+     * Retrieves a Denotation if cached and otherwise additionally evaluates the Element.
      */
-    std::pair<ConceptDenotation, bool> get_concept_denotation(const element::Concept& concept);
-    std::pair<RoleDenotation, bool> get_role_denotation(const element::Role& role);
+    ConceptDenotation try_retrieve_or_evaluate(const State& state, const element::Concept& concept);
+    RoleDenotation try_retrieve_or_evaluate(const State& state, const element::Role& role);
 
     /**
      * Clears the cache but keeps memory allocated.

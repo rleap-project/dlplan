@@ -23,23 +23,23 @@ public:
         }
     }
 
-    int evaluate(const State& state) const override {
-        const ConceptDenotation c = m_concept_from->evaluate(state);
-        const auto& c_data = c.get_const_data();
+    int evaluate(const State& state, EvaluationCaches& caches) const override {
+        ConceptDenotation c = m_concept_from->evaluate(state, caches);
+        dlplan::utils::BitsetView c_data = c.get_data();
         if (c_data.none()) {
             return INF;
         }
-        const ConceptDenotation d = m_concept_to->evaluate(state);
-        const auto& d_data = d.get_const_data();
+        ConceptDenotation d = m_concept_to->evaluate(state, caches);
+        dlplan::utils::BitsetView d_data = d.get_data();
         if (d_data.none()) {
             return INF;
         }
         if (c_data.intersects(d_data)) {
             return 0;
         }
-        const RoleDenotation r = m_role->evaluate(state);
+        RoleDenotation r = m_role->evaluate(state, caches);
         const utils::AdjList adj_list = utils::compute_adjacency_list(r);
-        return utils::compute_multi_source_multi_target_shortest_distance(adj_list, c_data, d_data);
+        return utils::compute_multi_source_multi_target_shortest_distance(adj_list, c, d);
     }
 
     int compute_complexity() const override {

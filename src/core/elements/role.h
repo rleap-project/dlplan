@@ -15,14 +15,7 @@ public:
     virtual RoleDenotation evaluate(const State& state, EvaluationCaches& caches, RoleDenotation out) const = 0;
 
     RoleDenotation evaluate(const State& state, EvaluationCaches& caches) const override {
-        auto cache_result = caches.get_role_denotation(*this);
-        RoleDenotation result = cache_result.first;
-        bool cache_status = cache_result.second;
-        if (cache_status) {
-            return result;
-        } else {
-            return evaluate(state, caches, result);
-        }
+       return caches.try_retrieve_or_evaluate(state, *this);
     }
 };
 

@@ -13,20 +13,28 @@ EvaluationCachesImpl::EvaluationCachesImpl(std::shared_ptr<const InstanceInfo> i
      m_role_denotation_cache(std::vector<bool>(m_num_objects * m_num_objects, false)) {
 }
 
-std::pair<ConceptDenotation, bool> EvaluationCachesImpl::get_concept_denotation(const element::Concept& concept) {
+ConceptDenotation EvaluationCachesImpl::try_retrieve_or_evaluate(EvaluationCaches* parent, const State& state, const element::Concept& concept) {
     int concept_index = concept.get_index();
     auto insert_result = m_concept_index_to_cache_index.emplace(concept_index, m_concept_index_to_cache_index.size());
     int cache_index = insert_result.first->second;
     bool cache_status = insert_result.second;
-    return std::make_pair(ConceptDenotation(m_num_objects, m_concept_denotation_cache[cache_index]), cache_status);
+    ConceptDenotation result(m_num_objects, m_concept_denotation_cache[cache_index]);
+    if (!cache_status) {
+        concept.evaluate(state, *parent, result);
+    }
+    return result;
 }
 
-std::pair<RoleDenotation, bool> EvaluationCachesImpl::get_role_denotation(const element::Role& role) {
+RoleDenotation EvaluationCachesImpl::try_retrieve_or_evaluate(EvaluationCaches* parent, const State& state, const element::Role& role) {
     int role_index = role.get_index();
     auto insert_result = m_role_index_to_cache_index.emplace(role_index, m_role_index_to_cache_index.size());
     int cache_index = insert_result.first->second;
     bool cache_status = insert_result.second;
-    return std::make_pair(RoleDenotation(m_num_objects, m_role_denotation_cache[cache_index]), cache_status);
+    RoleDenotation result(m_num_objects, m_role_denotation_cache[cache_index]);
+    if (!cache_status) {
+        role.evaluate(state, *parent, result);
+    }
+    return result;
 }
 
 void EvaluationCachesImpl::clear() {

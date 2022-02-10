@@ -23,35 +23,31 @@ public:
         }
     }
 
-    int evaluate(const State& state) const override {
-        const ConceptDenotation c = m_concept_from->evaluate(state);
-        const auto& c_data = c.get_const_data();
+    int evaluate(const State& state, EvaluationCaches& caches) const override {
+        ConceptDenotation c = m_concept_from->evaluate(state, caches);
+        dlplan::utils::BitsetView c_data = c.get_data();
         if (c_data.none()) {
             return INF;
         }
-        const ConceptDenotation d = m_concept_to->evaluate(state);
-        const auto& d_data = d.get_const_data();
+        ConceptDenotation d = m_concept_to->evaluate(state, caches);
+        dlplan::utils::BitsetView d_data = d.get_data();
         if (d_data.none()) {
             return INF;
         }
-        const RoleDenotation r = m_role->evaluate(state);
-
-        int num_c = c.get_const_data().count();
-        int num_d = d.get_const_data().count();
-        const ConceptDenotation a = (num_c <= num_d) ? c : d;
-        const ConceptDenotation b = (num_c <= num_d) ? d : c;
-        const utils::AdjList adj_list = (num_c <= num_d) ? utils::compute_adjacency_list(r) : utils::compute_adjacency_list(r, true);
-
+        if (c_data.intersects(d_data)) {
+            return 0;
+        }
+        RoleDenotation r = m_role->evaluate(state, caches);
         int num_objects = state.get_instance_info()->get_num_objects();
+        utils::AdjList adj_list = utils::compute_adjacency_list(r);
+        utils::PairwiseDistances pairwise_distances = utils::compute_floyd_warshall(adj_list, true);
         int result = 0;
         for (int i = 0; i < num_objects; ++i) {  // source
-            if (a.get_const_data().test(i)) {
-                // TODO: stop the BFS as soon as we find a node in c_to_vec?
-                utils::Distances distances = utils::compute_distances_from_state(adj_list, i);
+            if (c_data.test(i)) {
                 int min_distance = INF;
                 for (int j = 0; j < num_objects; ++j) {  // target
-                    if (b.get_const_data().test(j)) {
-                        min_distance = std::min<int>(min_distance, distances[j]);
+                    if (d_data.test(j)) {
+                        min_distance = std::min<int>(min_distance, pairwise_distances[i][j]);
                     }
                 }
                 result = utils::path_addition(result, min_distance);

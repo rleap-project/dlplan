@@ -23,18 +23,18 @@ public:
         }
     }
 
-    int evaluate(const State& state) const override {
-        const RoleDenotation& r = m_role_from->evaluate(state);
-        const auto& r_data = r.get_const_data();
+    int evaluate(const State& state, EvaluationCaches& caches) const override {
+        RoleDenotation r = m_role_from->evaluate(state, caches);
+        dlplan::utils::BitsetView r_data = r.get_data();
         if (r_data.none()) {
             return INF;
         }
-        const RoleDenotation t = m_role_to->evaluate(state);
-        const auto& t_data = t.get_const_data();
+        RoleDenotation t = m_role_to->evaluate(state, caches);
+        dlplan::utils::BitsetView t_data = t.get_data();
         if (t_data.none()) {
             return INF;
         }
-        const RoleDenotation s = m_role->evaluate(state);
+        RoleDenotation s = m_role->evaluate(state, caches);
         int num_objects = state.get_instance_info()->get_num_objects();
         utils::AdjList adj_list = utils::compute_adjacency_list(s);
         // 3. Compute pairwise distances using a sequence of bfs calls.

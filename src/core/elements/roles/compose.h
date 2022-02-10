@@ -20,14 +20,14 @@ public:
         }
     }
 
-    RoleDenotation evaluate(const State& state) const override {
-        const auto l = m_role_left->evaluate(state);
-        const auto& l_data = l.get_const_data();
-        const auto r = m_role_right->evaluate(state);
-        const auto& r_data = r.get_const_data();
+    RoleDenotation evaluate(const State& state, EvaluationCaches& caches, RoleDenotation result) const override {
+        RoleDenotation l = m_role_left->evaluate(state, caches);
+        dlplan::utils::BitsetView l_data = l.get_data();
+        RoleDenotation r = m_role_right->evaluate(state, caches);
+        dlplan::utils::BitsetView r_data = r.get_data();
         int num_objects = state.get_instance_info()->get_num_objects();
-        RoleDenotation result(num_objects);
-        auto& result_data = result.get_data();
+        dlplan::utils::BitsetView result_data = result.get_data();
+        result_data.reset();
         for (int i = 0; i < num_objects; ++i) {  // source
             for (int j = 0; j < num_objects; ++j) {  // target
                 int ij = i * num_objects + j;

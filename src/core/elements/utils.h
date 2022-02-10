@@ -3,6 +3,8 @@
 
 #include "types.h"
 
+#include "../../../include/dlplan/core.h"
+
 
 namespace dlplan {
 namespace dynamic_bitset {
@@ -25,14 +27,14 @@ extern int path_addition(int a, int b);
 /**
  * Computes an adjacency list from a given role.
  */
-extern AdjList compute_adjacency_list(const RoleDenotation& r, bool inverse=false);
+extern AdjList compute_adjacency_list(RoleDenotation r, bool inverse=false);
 
 /**
  * Compute distances from a given state in a graph defined by an adjacency list.
  */
 extern Distances compute_distances_from_state(const AdjList& adj_list, int source);
 
-extern int compute_multi_source_multi_target_shortest_distance(const AdjList& adj_list, const dynamic_bitset::DynamicBitset<unsigned>& sources, const dynamic_bitset::DynamicBitset<unsigned>& targets);
+extern int compute_multi_source_multi_target_shortest_distance(const AdjList& adj_list, ConceptDenotation sources, ConceptDenotation targets);
 
 /**
  * Compute pairwise distances with floyd warshall algorithm.
@@ -42,7 +44,7 @@ extern PairwiseDistances compute_floyd_warshall(const AdjList& adj_list, bool re
 /**
  * Compute the transitive (reflexive) closure over the role denotation
  */
-extern RoleDenotation compute_transitive_closure(const PairwiseDistances& distances, int num_objects);
+extern void compute_transitive_closure(const PairwiseDistances& distances, RoleDenotation result);
 
 }
 }

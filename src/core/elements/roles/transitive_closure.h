@@ -20,9 +20,10 @@ public:
         }
     }
 
-    RoleDenotation evaluate(const State& state) const override {
-        auto r = m_role->evaluate(state);
-        auto& r_data = r.get_data();
+    RoleDenotation evaluate(const State& state, EvaluationCaches& caches, RoleDenotation result) const override {
+        RoleDenotation r = m_role->evaluate(state, caches);
+        dlplan::utils::BitsetView result_data = result.get_data();
+        result_data.set(r.get_data());
         int num_objects = state.get_instance_info()->get_num_objects();
         for (int k = 0; k < num_objects; ++k) {
             for (int i = 0; i < num_objects; ++i) {
@@ -30,13 +31,13 @@ public:
                 for (int j = 0; j < num_objects; ++j) {
                     int ij = i * num_objects + j;
                     int kj = k * num_objects + j;
-                    if (r_data.test(ik) && r_data.test(kj)) {
-                        r_data.set(ij);
+                    if (result_data.test(ik) && result_data.test(kj)) {
+                        result_data.set(ij);
                     }
                 }
             }
         }
-        return r;
+        return result;
     }
 
     int compute_complexity() const override {

@@ -12,8 +12,9 @@ public:
     : Role(vocabulary, "r_top") {
     }
 
-    RoleDenotation evaluate(const State& state) const override {
-        return state.get_instance_info()->get_top_role();
+    RoleDenotation evaluate(const State&, EvaluationCaches&, RoleDenotation result) const override {
+        result.get_data().set();
+        return result;
     }
 
     int compute_complexity() const override {

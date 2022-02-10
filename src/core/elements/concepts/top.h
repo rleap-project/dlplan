@@ -9,11 +9,11 @@ namespace dlplan::core::element {
 class TopConcept : public Concept {
 public:
     TopConcept(const VocabularyInfo& vocabulary)
-    : Concept(vocabulary, "c_top") {
-    }
+    : Concept(vocabulary, "c_top") { }
 
-    ConceptDenotation evaluate(const State& state) const override {
-        return state.get_instance_info()->get_top_concept();
+    ConceptDenotation evaluate(const State&, EvaluationCaches&, ConceptDenotation result) const override {
+        result.get_data().set();
+        return result;
     }
 
     int compute_complexity() const override {

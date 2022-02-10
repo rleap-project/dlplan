@@ -28,7 +28,7 @@ BitsetMath::Block BitsetMath::bit_mask(size_t pos) {
 }
 
 
-BitsetView::BitsetView(utils::ArrayView<BitsetMath::Block> data, int num_bits) :
+BitsetView::BitsetView(utils::ArrayView<BitsetMath::Block> data, size_t num_bits) :
     data(data), num_bits(num_bits) {}
 
 int BitsetView::count_bits_in_last_block() const {
@@ -67,6 +67,13 @@ void BitsetView::reset() {
     std::fill(data.begin(), data.end(), BitsetMath::zeros);
 }
 
+void BitsetView::set(const BitsetView& other) {
+    assert(num_bits == other.num_bits);
+    for (std::size_t i = 0; i < data.size(); ++i) {
+        data[i] = other.data[i];
+    }
+}
+
 void BitsetView::set(int index) {
     assert(index >= 0 && index < num_bits);
     int block_index = BitsetMath::block_index(index);
@@ -85,20 +92,63 @@ bool BitsetView::test(int index) const {
     return (data[block_index] & BitsetMath::bit_mask(index)) != 0;
 }
 
-void BitsetView::intersect(const BitsetView &other) {
-    assert(num_bits == other.num_bits);
-    for (int i = 0; i < data.size(); ++i) {
-        data[i] &= other.data[i];
-    }
+size_t BitsetView::size() const {
+    return num_bits;
 }
 
-int BitsetView::size() const {
-    return num_bits;
+BitsetView& BitsetView::operator&=(const BitsetView& other) {
+    assert(size() == other.size());
+    for (std::size_t i = 0; i < data.size(); ++i) {
+        data[i] &= other.data[i];
+    }
+    return *this;
+}
+
+BitsetView& BitsetView::operator|=(const BitsetView& other) {
+    assert(size() == other.size());
+    for (std::size_t i = 0; i < data.size(); ++i) {
+        data[i] |= other.data[i];
+    }
+    return *this;
+}
+
+BitsetView& BitsetView::operator-=(const BitsetView& other) {
+    assert(size() == other.size());
+    for (std::size_t i = 0; i < data.size(); ++i) {
+        data[i] = data[i] & ~other.data[i];
+    }
+    return *this;
+}
+
+BitsetView& BitsetView::operator~() {
+    for (std::size_t i = 0; i < data.size(); ++i) {
+        data[i] = ~data[i];
+    }
+    zero_unused_bits();
+    return *this;
+}
+
+bool BitsetView::intersects(const BitsetView &other) const {
+    assert(size() == other.size());
+    for (std::size_t i = 0; i < data.size(); ++i) {
+        if (data[i] & other.data[i])
+            return true;
+    }
+    return false;
+}
+
+bool BitsetView::is_subset_of(const BitsetView &other) const {
+    assert(size() == other.size());
+    for (std::size_t i = 0; i < data.size(); ++i) {
+        if (data[i] & ~other.data[i])
+            return false;
+    }
+    return true;
 }
 
 std::size_t BitsetView::compute_hash() const {
     size_t seed = num_bits;
-    for (int i = 0; i < data.size(); ++i) {
+    for (std::size_t i = 0; i < data.size(); ++i) {
         utils::hashing::hash_combine(seed, data[i]);
     }
     return seed;

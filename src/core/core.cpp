@@ -79,16 +79,16 @@ utils::BitsetView RoleDenotation::get_data() {
 
 
 EvaluationCaches::EvaluationCaches(std::shared_ptr<const InstanceInfo> instance_info)
-    : m_pImpl(EvaluationCachesImpl(instance_info)) { }
+    : m_pImpl(instance_info) { }
 
 EvaluationCaches::~EvaluationCaches() { }
 
-std::pair<ConceptDenotation, bool> EvaluationCaches::get_concept_denotation(const element::Concept& concept) {
-    return m_pImpl->get_concept_denotation(concept);
+ConceptDenotation EvaluationCaches::try_retrieve_or_evaluate(const State& state, const element::Concept& concept) {
+    return m_pImpl->try_retrieve_or_evaluate(this, state, concept);
 }
 
-std::pair<RoleDenotation, bool> EvaluationCaches::get_role_denotation(const element::Role& role) {
-    return m_pImpl->get_role_denotation(role);
+RoleDenotation EvaluationCaches::try_retrieve_or_evaluate(const State& state, const element::Role& role) {
+    return m_pImpl->try_retrieve_or_evaluate(this, state, role);
 }
 
 std::shared_ptr<const InstanceInfo> EvaluationCaches::get_instance_info() const {

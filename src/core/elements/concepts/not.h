@@ -18,10 +18,11 @@ public:
         }
     }
 
-    ConceptDenotation evaluate(const State& state) const override {
-        const auto c = m_concept->evaluate(state);
-        ConceptDenotation result = state.get_instance_info()->get_top_concept();
-        result.get_data() &= ~c.get_const_data();
+    ConceptDenotation evaluate(const State& state, EvaluationCaches& caches, ConceptDenotation result) const override {
+        ConceptDenotation c = m_concept->evaluate(state, caches);
+        dlplan::utils::BitsetView result_data = result.get_data();
+        result_data.set(c.get_data());
+        ~result_data;
         return result;
     }
 

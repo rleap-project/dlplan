@@ -20,15 +20,15 @@ public:
         }
     }
 
-    ConceptDenotation evaluate(const State& state) const override {
-        const auto r = m_role->evaluate(state);
-        const auto& r_data = r.get_const_data();
-        const auto c = m_concept->evaluate(state);
-        const auto& c_data = c.get_const_data();
-        int num_objects = state.get_instance_info()->get_num_objects();
-        ConceptDenotation result(num_objects);
-        auto& result_data = result.get_data();
+    ConceptDenotation evaluate(const State& state, EvaluationCaches& caches, ConceptDenotation result) const override {
+        RoleDenotation r = m_role->evaluate(state, caches);
+        dlplan::utils::BitsetView r_data = r.get_data();
+        ConceptDenotation c = m_concept->evaluate(state, caches);
+        dlplan::utils::BitsetView c_data = c.get_data();
+        dlplan::utils::BitsetView result_data = result.get_data();
+        result_data.set();
         // find examples a : exists b . (a,b) in R and b in C
+        int num_objects = state.get_instance_info()->get_num_objects();
         for (int i = 0; i < num_objects; ++i) {
             for (int j = 0; j < num_objects; ++j) {
                 if (c_data.test(j)) {

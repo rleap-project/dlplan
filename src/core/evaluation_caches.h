@@ -28,9 +28,9 @@ private:
 public:
     explicit EvaluationCachesImpl(std::shared_ptr<const InstanceInfo> instance_info);
 
-    std::pair<ConceptDenotation, bool> get_concept_denotation(const element::Concept& concept);
+    ConceptDenotation try_retrieve_or_evaluate(EvaluationCaches* parent, const State& state, const element::Concept& concept);
 
-    std::pair<RoleDenotation, bool> get_role_denotation(const element::Role& role);
+    RoleDenotation try_retrieve_or_evaluate(EvaluationCaches* parent, const State& state, const element::Role& role);
 
     void clear();
 

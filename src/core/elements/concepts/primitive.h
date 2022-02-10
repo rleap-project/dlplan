@@ -23,11 +23,10 @@ public:
         }
     }
 
-    ConceptDenotation evaluate(const State& state) const override {
+    ConceptDenotation evaluate(const State& state, EvaluationCaches&, ConceptDenotation result) const override {
         const InstanceInfo& info = *state.get_instance_info();
-        int num_objects = info.get_num_objects();
-        ConceptDenotation result(num_objects);
-        auto& result_data = result.get_data();
+        dlplan::utils::BitsetView result_data = result.get_data();
+        result_data.reset();
         for (int atom_idx : state.get_atom_idxs()) {
             const Atom& atom = info.get_atom(atom_idx);
             if (atom.get_predicate().get_index() == m_predicate.get_index()) {

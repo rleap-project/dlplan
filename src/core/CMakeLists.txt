@@ -9,7 +9,6 @@ target_sources(dlplancore
         element_factory.cpp
         instance_info.cpp
         vocabulary_info.cpp
-        per_index_bitset.cpp
         predicate.cpp
         object.cpp
         parser/parser.cpp
@@ -17,6 +16,7 @@ target_sources(dlplancore
         parser/ast_factory.cpp
         elements/utils.cpp
         ../utils/logging.cpp
+        ../utils/per_index_bitset.cpp
         ../utils/system.cpp
         ../utils/timer.cpp)
 

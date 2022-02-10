@@ -21,11 +21,11 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state, EvaluationCaches& caches, ConceptDenotation result) const override {
-        dlplan::utils::BitsetView result_data = result.get_data();
         RoleDenotation r = m_role->evaluate(state, caches);
         dlplan::utils::BitsetView r_data = r.get_data();
         ConceptDenotation c = m_concept->evaluate(state, caches);
         dlplan::utils::BitsetView c_data = c.get_data();
+        dlplan::utils::BitsetView result_data = result.get_data();
         result_data.set();
         // find counterexamples b : exists b . (a,b) in R and b notin C
         int num_objects = state.get_instance_info()->get_num_objects();

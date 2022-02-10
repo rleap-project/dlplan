@@ -20,14 +20,14 @@ public:
         }
     }
 
-    ConceptDenotation evaluate(const State& state) const override {
-        const auto r = m_role_left->evaluate(state);
-        const auto& r_data = r.get_const_data();
-        const auto s = m_role_right->evaluate(state);
-        const auto& s_data = s.get_const_data();
+    ConceptDenotation evaluate(const State& state, EvaluationCaches& caches, ConceptDenotation result) const override {
+        RoleDenotation r = m_role_left->evaluate(state, caches);
+        dlplan::utils::BitsetView r_data = r.get_data();
+        RoleDenotation s = m_role_right->evaluate(state, caches);
+        dlplan::utils::BitsetView s_data = s.get_data();
         int num_objects = state.get_instance_info()->get_num_objects();
-        ConceptDenotation result = state.get_instance_info()->get_top_concept();
-        auto& result_data = result.get_data();
+        dlplan::utils::BitsetView result_data = result.get_data();
+        result_data.set();
         // find counterexample [(a,b) in R and (a,b) not in S] or [(a,b) not in R and (a,b) in S]
         for (int i = 0; i < num_objects; ++i) {
             for (int j = 0; j < num_objects; ++j) {
