@@ -8,7 +8,7 @@
 
 #include "pimpl.h"
 #include "types.h"
-#include "../../src/utils/per_index_bitset.h"
+#include "per_index_bitset.h"
 
 
 namespace dlplan::core {

@@ -1,8 +1,6 @@
 #ifndef DLPLAN_SRC_EVALUATOR_NUMERICAL_EVALUATOR_H_
 #define DLPLAN_SRC_EVALUATOR_NUMERICAL_EVALUATOR_H_
 
-#include "../utils/per_index_bitset.h"
-
 #include "../../include/dlplan/core.h"
 
 

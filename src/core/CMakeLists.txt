@@ -24,6 +24,10 @@ target_sources(dlplancore
 set(PUBLIC_HEADERS_FILES
     include/dlplan/core.h
     include/dlplan/core.tpp
+    include/dlplan/per_index_array.h
+    include/dlplan/per_index_bitset.h
     include/dlplan/pimpl.h
-    include/dlplan/types.h)
+    include/dlplan/segmented_array_vector.h
+    include/dlplan/types.h
+    )
 set_target_properties(dlplancore PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS_FILES}")
