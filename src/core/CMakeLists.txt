@@ -9,7 +9,7 @@ target_sources(dlplancore
         element_factory.cpp
         instance_info.cpp
         vocabulary_info.cpp
-        per_state_bitset.cpp
+        per_index_bitset.cpp
         predicate.cpp
         object.cpp
         parser/parser.cpp

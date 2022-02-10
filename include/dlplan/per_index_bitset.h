@@ -11,6 +11,7 @@
 
 #include "../../src/utils/per_state_array.h"
 
+#include <cassert>
 #include <limits>
 #include <vector>
 
@@ -21,6 +22,12 @@ namespace dlplan::core {
 class BitsetMath {
 public:
     using Block = unsigned int;
+
+    static const Block zeros;
+    static const Block ones;
+
+    static const int bits_per_block = std::numeric_limits<Block>::digits;
+
     static_assert(
         !std::numeric_limits<Block>::is_signed,
         "Block type must be unsigned");
@@ -40,18 +47,31 @@ public:
 class BitsetView {
     utils::ArrayView<BitsetMath::Block> data;
     int num_bits;
+
+private:
+    int count_bits_in_last_block() const;
+
+    void zero_unused_bits();
+
 public:
     BitsetView(utils::ArrayView<BitsetMath::Block> data, int num_bits);
 
     BitsetView(const BitsetView &other) = default;
     BitsetView &operator=(const BitsetView &other) = default;
 
+    int count() const;
+    bool none() const;
+
+    void set();
+    void reset();
+
     void set(int index);
     void reset(int index);
-    void reset();
     bool test(int index) const;
     void intersect(const BitsetView &other);
     int size() const;
+
+    std::size_t compute_hash() const;
 };
 
 

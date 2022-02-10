@@ -17,6 +17,9 @@ class ArrayView {
     T *p;
     int size_;
 public:
+    typedef T* iterator;
+    typedef const T* const_iterator;
+
     ArrayView(T *p, int size) : p(p), size_(size) {}
     ArrayView(const ArrayView<T> &other) = default;
 
@@ -27,6 +30,32 @@ public:
         return p[index];
     }
 
+    iterator begin() {
+        return p;
+    }
+
+    const_iterator begin() const {
+        return p;
+    }
+
+    iterator end() {
+        return p + _size - 1;
+    }
+
+    const_iterator end() const {
+        return p + _size - 1;
+    }
+
+    const T &back() const {
+        assert(size > 0);
+        return p[size_ - 1];
+    }
+
+    T &back() {
+        assert(size > 0);
+        return p[size_ - 1];
+    }
+
     const T &operator[](int index) const {
         assert(index >= 0 && index < size_);
         return p[index];
@@ -34,6 +63,10 @@ public:
 
     int size() const {
         return size_;
+    }
+
+    bool empty() const {
+        return (size_ == 0);
     }
 };
 

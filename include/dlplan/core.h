@@ -42,7 +42,7 @@ namespace element {
 }
 
 /**
- * Proxy to underlying Bitset with additional functionality
+ * Proxy to underlying BitsetView with additional functionality
  * to convert to vector representation.
  * No private implementation to save a heap allocation.
  */
