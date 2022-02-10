@@ -21,15 +21,17 @@ TEST(DLPTests, BooleanEmpty) {
 
     SyntacticElementFactory factory(vocabulary);
 
+    EvaluationCaches caches(instance);
+
     Boolean boolean1 = factory.parse_boolean("b_empty(c_primitive(concept_0,0))");
-    EXPECT_EQ(boolean1.evaluate(state), false);
+    EXPECT_EQ(boolean1.evaluate(state, caches), false);
 
     Boolean boolean2 = factory.parse_boolean("b_empty(c_primitive(concept_1,0))");
-    EXPECT_EQ(boolean2.evaluate(state), true);
+    EXPECT_EQ(boolean2.evaluate(state, caches), true);
 
     Boolean boolean3 = factory.parse_boolean("b_empty(r_primitive(role_0,0,1))");
-    EXPECT_EQ(boolean3.evaluate(state), false);
+    EXPECT_EQ(boolean3.evaluate(state, caches), false);
 
     Boolean boolean4 = factory.parse_boolean("b_empty(r_primitive(role_1,0,1))");
-    EXPECT_EQ(boolean4.evaluate(state), true);
+    EXPECT_EQ(boolean4.evaluate(state, caches), true);
 }

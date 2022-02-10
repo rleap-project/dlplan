@@ -11,6 +11,7 @@
 namespace dlplan {
 namespace core {
     class State;
+    class EvaluationCaches;
 }
 namespace policy {
 class Rule;
@@ -23,6 +24,8 @@ class PolicyImpl {
 private:
     const std::shared_ptr<const PolicyRoot> m_root;
 
+    const std::shared_ptr<const core::InstanceInfo> m_instance_info;
+
     std::vector<std::shared_ptr<const BooleanFeature>> m_boolean_features;
     std::vector<std::shared_ptr<const NumericalFeature>> m_numerical_features;
     std::vector<std::shared_ptr<const Rule>> m_rules;
@@ -32,9 +35,12 @@ private:
     // since we return it from the PolicyBuilder.
     std::shared_ptr<EvaluationCaches> m_evaluation_caches;
 
+    std::shared_ptr<core::EvaluationCaches> m_denotation_caches;
+
 public:
     PolicyImpl(
         std::shared_ptr<const PolicyRoot> root,
+        std::shared_ptr<const core::InstanceInfo> instance_info,
         std::vector<std::shared_ptr<const BooleanFeature>>&& boolean_features,
         std::vector<std::shared_ptr<const NumericalFeature>>&& numerical_features,
         std::vector<std::shared_ptr<const Rule>>&& rules);

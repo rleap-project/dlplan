@@ -8,7 +8,7 @@ namespace dlplan::core {
 
 EvaluationCachesImpl::EvaluationCachesImpl(std::shared_ptr<const InstanceInfo> instance_info)
    : m_instance_info(instance_info),
-     m_num_objects(instance_info->get_num_objects()),
+     m_num_objects(std::max(1, instance_info->get_num_objects())),  // HACK: Using Bitset of size 0 causes Floating Point Exception probably due to division by 0.
      m_concept_denotation_cache(std::vector<bool>(m_num_objects, false)),
      m_role_denotation_cache(std::vector<bool>(m_num_objects * m_num_objects, false)) {
 }
@@ -17,9 +17,10 @@ ConceptDenotation EvaluationCachesImpl::try_retrieve_or_evaluate(EvaluationCache
     int concept_index = concept.get_index();
     auto insert_result = m_concept_index_to_cache_index.emplace(concept_index, m_concept_index_to_cache_index.size());
     int cache_index = insert_result.first->second;
-    bool cache_status = insert_result.second;
+    bool cache_miss = insert_result.second;
+    // std::cout << "EvaluationCache: " << concept_index << " " << cache_miss << std::endl;
     ConceptDenotation result(m_num_objects, m_concept_denotation_cache[cache_index]);
-    if (!cache_status) {
+    if (cache_miss) {
         concept.evaluate(state, *parent, result);
     }
     return result;
@@ -29,9 +30,9 @@ RoleDenotation EvaluationCachesImpl::try_retrieve_or_evaluate(EvaluationCaches* 
     int role_index = role.get_index();
     auto insert_result = m_role_index_to_cache_index.emplace(role_index, m_role_index_to_cache_index.size());
     int cache_index = insert_result.first->second;
-    bool cache_status = insert_result.second;
+    bool cache_miss = insert_result.second;
     RoleDenotation result(m_num_objects, m_role_denotation_cache[cache_index]);
-    if (!cache_status) {
+    if (cache_miss) {
         role.evaluate(state, *parent, result);
     }
     return result;

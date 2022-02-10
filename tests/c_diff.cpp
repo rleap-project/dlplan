@@ -22,6 +22,8 @@ TEST(DLPTests, ConceptDiff) {
 
     SyntacticElementFactory factory(vocabulary);
 
+    EvaluationCaches caches(instance);
+
     Concept concept = factory.parse_concept("c_diff(c_primitive(concept_1,0),c_primitive(concept_2,0))");
-    EXPECT_EQ(concept.evaluate(state).to_vector(), Index_Vec({0}));
+    EXPECT_EQ(concept.evaluate(state, caches).to_vector(), Index_Vec({0}));
 }

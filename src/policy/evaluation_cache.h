@@ -12,7 +12,6 @@ private:
     evaluator::NumericalEvaluator m_numerical_evaluator;
 
 public:
-    // HACK: we set minimum size to 1 because of division by zero
     EvaluationCaches(int num_boolean_features, int num_numerical_features) :
       m_boolean_evaluator(num_boolean_features),
       m_numerical_evaluator(num_numerical_features) { }

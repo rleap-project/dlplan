@@ -34,6 +34,11 @@ if(DLPLAN_PYTHON)
   add_subdirectory(api/python)
 endif()
 
-INSTALL(TARGETS dlplancore dlplanevaluator dlplangenerator dlplanpolicy DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/dlplan
+INSTALL(TARGETS dlplancore DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/dlplan
         PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/include/dlplan
 )
+
+#INSTALL(TARGETS dlplancore dlplanevaluator dlplangenerator dlplanpolicy DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/dlplan
+#        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/include/dlplan
+#)
+

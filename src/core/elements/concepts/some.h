@@ -26,7 +26,7 @@ public:
         ConceptDenotation c = m_concept->evaluate(state, caches);
         dlplan::utils::BitsetView c_data = c.get_data();
         dlplan::utils::BitsetView result_data = result.get_data();
-        result_data.set();
+        result_data.reset();
         // find examples a : exists b . (a,b) in R and b in C
         int num_objects = state.get_instance_info()->get_num_objects();
         for (int i = 0; i < num_objects; ++i) {

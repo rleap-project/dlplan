@@ -19,12 +19,14 @@ TEST(DLPTests, ConceptPrimitive) {
 
     SyntacticElementFactory factory(vocabulary);
 
+    EvaluationCaches caches(instance);
+
     Concept concept1 = factory.parse_concept("c_primitive(predicate,0)");
-    EXPECT_EQ(concept1.evaluate(state).to_vector(), Index_Vec({0, 3}));
+    EXPECT_EQ(concept1.evaluate(state, caches).to_vector(), Index_Vec({0, 3}));
 
     Concept concept2 = factory.parse_concept("c_primitive(predicate,1)");
-    EXPECT_EQ(concept2.evaluate(state).to_vector(), Index_Vec({1, 4}));
+    EXPECT_EQ(concept2.evaluate(state, caches).to_vector(), Index_Vec({1, 4}));
 
     Concept concept3 = factory.parse_concept("c_primitive(predicate,2)");
-    EXPECT_EQ(concept3.evaluate(state).to_vector(), Index_Vec({2, 5}));
+    EXPECT_EQ(concept3.evaluate(state, caches).to_vector(), Index_Vec({2, 5}));
 }

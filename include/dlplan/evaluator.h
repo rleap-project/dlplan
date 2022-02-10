@@ -11,6 +11,7 @@ namespace core {
     class Boolean;
     class Numerical;
     class State;
+    class EvaluationCaches;
 }
 namespace evaluator {
 class BooleanEvaluatorImpl;
@@ -30,7 +31,7 @@ public:
     BooleanEvaluator(int num_booleans);
     ~BooleanEvaluator();
 
-    bool evaluate(int boolean_index, const core::Boolean& boolean, int state_index, const core::State& state);
+    bool evaluate(int boolean_index, const core::Boolean& boolean, int state_index, const core::State& state, core::EvaluationCaches& caches);
 };
 
 
@@ -42,7 +43,7 @@ public:
     NumericalEvaluator(int num_numericals);
     ~NumericalEvaluator();
 
-    int evaluate(int numerical_index, const core::Numerical& numerical, int state_index, const core::State& state);
+    int evaluate(int numerical_index, const core::Numerical& numerical, int state_index, const core::State& state, core::EvaluationCaches& caches);
 };
 
 }

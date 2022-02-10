@@ -1,8 +1,10 @@
 #ifndef DLPLAN_SRC_CORE_EVALUATION_CACHES_H_
 #define DLPLAN_SRC_CORE_EVALUATION_CACHES_H_
 
+#include <memory>
+#include <unordered_map>
 
-#include "../utils/per_index_bitset.h"
+#include "../../include/dlplan/core.h"
 
 
 namespace dlplan::core {

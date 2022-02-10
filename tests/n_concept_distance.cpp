@@ -35,13 +35,15 @@ TEST(DLPTests, NumericalConceptDistance) {
 
     SyntacticElementFactory factory(vocabulary);
 
+    EvaluationCaches caches(instance);
+
     Numerical numerical = factory.parse_numerical("n_concept_distance(c_primitive(start,0),r_primitive(conn,0,1),c_primitive(end,0))");
-    EXPECT_EQ(numerical.evaluate(state), 2);
+    EXPECT_EQ(numerical.evaluate(state, caches), 2);
 
     Numerical numerical2 = factory.parse_numerical("n_concept_distance(c_primitive(start2,0),r_primitive(conn,0,1),c_primitive(end2,0))");
-    EXPECT_EQ(numerical2.evaluate(state), std::numeric_limits<int>::max());
+    EXPECT_EQ(numerical2.evaluate(state, caches), std::numeric_limits<int>::max());
 
     // SumConceptDistance with no sources is defined as 0
     Numerical numerical3 = factory.parse_numerical("n_concept_distance(c_primitive(start3,0),r_primitive(conn,0,1),c_primitive(end2,0))");
-    EXPECT_EQ(numerical3.evaluate(state), std::numeric_limits<int>::max());
+    EXPECT_EQ(numerical3.evaluate(state, caches), std::numeric_limits<int>::max());
 }

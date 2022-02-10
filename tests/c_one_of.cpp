@@ -19,6 +19,8 @@ TEST(DLPTests, ConceptOneOf) {
 
     SyntacticElementFactory factory(vocabulary);
 
+    EvaluationCaches caches(instance);
+
     Concept concept = factory.parse_concept("c_one_of(A)");
-    EXPECT_EQ(concept.evaluate(state).to_vector(), Index_Vec({0}));
+    EXPECT_EQ(concept.evaluate(state, caches).to_vector(), Index_Vec({0}));
 }

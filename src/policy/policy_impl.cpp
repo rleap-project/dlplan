@@ -14,14 +14,17 @@ namespace dlplan::policy {
 
 PolicyImpl::PolicyImpl(
     std::shared_ptr<const PolicyRoot> root,
+    std::shared_ptr<const core::InstanceInfo> instance_info,
     std::vector<std::shared_ptr<const BooleanFeature>>&& boolean_features,
     std::vector<std::shared_ptr<const NumericalFeature>>&& numerical_features,
     std::vector<std::shared_ptr<const Rule>>&& rules)
     : m_root(root),
+      m_instance_info(instance_info),
       m_boolean_features(std::move(boolean_features)),
       m_numerical_features(std::move(numerical_features)),
       m_rules(std::move(rules)),
-      m_evaluation_caches(std::make_shared<EvaluationCaches>(m_boolean_features.size(), m_numerical_features.size())) { }
+      m_evaluation_caches(std::make_shared<EvaluationCaches>(m_boolean_features.size(), m_numerical_features.size())),
+      m_denotation_caches(std::make_shared<core::EvaluationCaches>(instance_info->get_num_objects())) { }
 
 std::shared_ptr<const Rule> PolicyImpl::evaluate_lazy(int source_index, const core::State& source, int target_index, const core::State& target) {
     if (source_index < 0 || target_index < 0) {

@@ -39,21 +39,21 @@ public:
     }
 
     iterator end() {
-        return p + size_ - 1;
+        return p + size_;
     }
 
     const_iterator end() const {
-        return p + size_ - 1;
+        return p + size_;
     }
 
     const T &back() const {
         assert(size > 0);
-        return p[size_ - 1];
+        return p[size_];
     }
 
     T &back() {
         assert(size > 0);
-        return p[size_ - 1];
+        return p[size_];
     }
 
     const T &operator[](int index) const {

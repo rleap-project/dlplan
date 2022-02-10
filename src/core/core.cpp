@@ -91,10 +91,13 @@ RoleDenotation EvaluationCaches::try_retrieve_or_evaluate(const State& state, co
     return m_pImpl->try_retrieve_or_evaluate(this, state, role);
 }
 
+void EvaluationCaches::clear() {
+    m_pImpl->clear();
+}
+
 std::shared_ptr<const InstanceInfo> EvaluationCaches::get_instance_info() const {
     return m_pImpl->get_instance_info();
 }
-
 
 InstanceInfo::InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info) : m_pImpl(InstanceInfoImpl(vocabulary_info)) { }
 

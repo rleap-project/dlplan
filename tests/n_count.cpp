@@ -21,15 +21,17 @@ TEST(DLPTests, NumericalCount) {
 
     SyntacticElementFactory factory(vocabulary);
 
+    EvaluationCaches caches(instance);
+
     Numerical numerical1 = factory.parse_numerical("n_count(c_primitive(concept_0,0))");
-    EXPECT_EQ(numerical1.evaluate(state), 1);
+    EXPECT_EQ(numerical1.evaluate(state, caches), 1);
 
     Numerical numerical2 = factory.parse_numerical("n_count(c_primitive(concept_1,0))");
-    EXPECT_EQ(numerical2.evaluate(state), 0);
+    EXPECT_EQ(numerical2.evaluate(state, caches), 0);
 
     Numerical numerical3 = factory.parse_numerical("n_count(r_primitive(role_0,0,1))");
-    EXPECT_EQ(numerical3.evaluate(state), 1);
+    EXPECT_EQ(numerical3.evaluate(state, caches), 1);
 
     Numerical numerical4 = factory.parse_numerical("n_count(r_primitive(role_1,0,1))");
-    EXPECT_EQ(numerical4.evaluate(state), 0);
+    EXPECT_EQ(numerical4.evaluate(state, caches), 0);
 }

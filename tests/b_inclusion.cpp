@@ -22,10 +22,13 @@ TEST(DLPTests, ConceptInclusion) {
     State s1(instance, {a1, a2, a3});  // {B} subseteq {B, C}
     State s2(instance, {a0, a1, a2, a3});  // {A, B} not subseteq {B, C}
 
-
     SyntacticElementFactory factory(vocabulary);
 
+    EvaluationCaches caches(instance);
+
     Boolean boolean = factory.parse_boolean("b_inclusion(c_primitive(concept_1,0),c_primitive(concept_2,0))");
-    EXPECT_EQ(boolean.evaluate(s1), true);
-    EXPECT_EQ(boolean.evaluate(s2), false);
+    EXPECT_EQ(boolean.evaluate(s1, caches), true);
+    caches.clear();
+    EXPECT_EQ(boolean.evaluate(s2, caches), false);
+    caches.clear();
 }
