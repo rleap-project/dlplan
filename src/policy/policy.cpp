@@ -21,8 +21,13 @@ PolicyRoot::~PolicyRoot() { }
 BooleanFeature::BooleanFeature(std::shared_ptr<const PolicyRoot> root, int index, core::Boolean&& boolean)
     : Feature<bool>(root, index), m_boolean(std::move(boolean)) { }
 
-bool BooleanFeature::evaluate(int state_index, const core::State& state, EvaluationCache& evaluation_caches) const {
-    return evaluation_caches.get_boolean_evaluator().evaluate(get_index(), get_boolean(), state_index, state, evaluation_caches.get_element_cache());
+bool BooleanFeature::evaluate(int state_index, const core::State& state, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const {
+    // TODO: there are better places to clear caches
+    element_cache.clear();
+    //std::cout << state.str() << std::endl;
+    //std::cout << evaluation_cache.get_boolean_evaluator().evaluate(get_index(), get_boolean(), state_index, state, element_cache)
+    //<< " " << get_boolean().compute_repr() << std::endl << std::endl;
+    return evaluation_cache.get_boolean_evaluator().evaluate(get_index(), get_boolean(), state_index, state, element_cache);
 }
 
 std::string BooleanFeature::compute_repr() const {
@@ -36,8 +41,13 @@ const core::Boolean& BooleanFeature::get_boolean() const {
 NumericalFeature::NumericalFeature(std::shared_ptr<const PolicyRoot> root, int index, core::Numerical&& numerical)
     : Feature<int>(root, index), m_numerical(std::move(numerical)) { }
 
-int NumericalFeature::evaluate(int state_index, const core::State& state, EvaluationCache& evaluation_caches) const {
-    return evaluation_caches.get_numerical_cache().evaluate(get_index(), get_numerical(), state_index, state, evaluation_caches.get_element_cache());
+int NumericalFeature::evaluate(int state_index, const core::State& state, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const {
+    // TODO: there are better places to clear caches
+    //std::cout << state.str() << std::endl;
+    //std::cout << evaluation_cache.get_numerical_cache().evaluate(get_index(), get_numerical(), state_index, state, element_cache)
+    //<< " " << get_numerical().compute_repr() << std::endl << std::endl;
+    element_cache.clear();
+    return evaluation_cache.get_numerical_cache().evaluate(get_index(), get_numerical(), state_index, state, element_cache);
 }
 
 std::string NumericalFeature::compute_repr() const {
@@ -84,12 +94,12 @@ Rule& Rule::operator=(const Rule& other) {
 
 Rule::~Rule() { }
 
-bool Rule::evaluate_conditions(int source_index, const core::State& source, EvaluationCache& evaluation_caches) const {
-    return m_pImpl->evaluate_conditions(source_index, source, evaluation_caches);
+bool Rule::evaluate_conditions(int source_index, const core::State& source, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const {
+    return m_pImpl->evaluate_conditions(source_index, source, evaluation_cache, element_cache);
 }
 
-bool Rule::evaluate_effects(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCache& evaluation_caches) const {
-    return m_pImpl->evaluate_effects(source_index, source, target_index, target, evaluation_caches);
+bool Rule::evaluate_effects(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const {
+    return m_pImpl->evaluate_effects(source_index, source, target_index, target, evaluation_cache, element_cache);
 }
 
 std::string Rule::compute_repr() const {
@@ -182,16 +192,16 @@ Policy& Policy::operator=(const Policy& other) {
 
 Policy::~Policy() { }
 
-std::shared_ptr<const Rule> Policy::evaluate_lazy(int source_index, const core::State& source, int target_index, const core::State& target) {
-    return m_pImpl->evaluate_lazy(source_index, source, target_index, target);
+std::shared_ptr<const Rule> Policy::evaluate_lazy(int source_index, const core::State& source, int target_index, const core::State& target, core::PerElementEvaluationCache& element_cache) {
+    return m_pImpl->evaluate_lazy(source_index, source, target_index, target, element_cache);
 }
 
-std::vector<std::shared_ptr<const Rule>> Policy::evaluate_conditions_eager(int source_index, const core::State& source) {
-    return m_pImpl->evaluate_conditions_eager(source_index, source);
+std::vector<std::shared_ptr<const Rule>> Policy::evaluate_conditions_eager(int source_index, const core::State& source, core::PerElementEvaluationCache& element_cache) {
+    return m_pImpl->evaluate_conditions_eager(source_index, source, element_cache);
 }
 
-std::shared_ptr<const Rule> Policy::evaluate_effects_lazy(int source_index, const core::State& source, int target_index, const core::State& target, const std::vector<std::shared_ptr<const Rule>>& rules) {
-    return m_pImpl->evaluate_effects_lazy(source_index, source, target_index, target, rules);
+std::shared_ptr<const Rule> Policy::evaluate_effects_lazy(int source_index, const core::State& source, int target_index, const core::State& target, core::PerElementEvaluationCache& element_cache, const std::vector<std::shared_ptr<const Rule>>& rules) {
+    return m_pImpl->evaluate_effects_lazy(source_index, source, target_index, target, element_cache, rules);
 }
 
 std::string Policy::compute_repr() const {
@@ -219,7 +229,7 @@ PolicyReader::PolicyReader() { }
 
 PolicyReader::~PolicyReader() { }
 
-Policy PolicyReader::read(const std::string& data, core::SyntacticElementFactory factory) const {
+Policy PolicyReader::read(const std::string& data, core::SyntacticElementFactory& factory) const {
     return m_pImpl->read(data, factory);
 }
 

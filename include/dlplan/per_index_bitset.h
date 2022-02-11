@@ -91,9 +91,6 @@ class PerIndexBitset {
 public:
     explicit PerIndexBitset(const std::vector<bool> &default_bits);
 
-    PerIndexBitset(const PerIndexBitset &) = delete;
-    PerIndexBitset &operator=(const PerIndexBitset &) = delete;
-
     BitsetView operator[](int index);
 
     void clear();

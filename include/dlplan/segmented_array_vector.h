@@ -8,6 +8,7 @@
 #include <vector>
 #include <cassert>
 #include <cstddef>
+#include <iostream>
 
 
 namespace dlplan::utils {
@@ -155,7 +156,7 @@ template<class Element, class Allocator = std::allocator<Element>>
 class SegmentedArrayVector {
     typedef typename Allocator::template rebind<Element>::other ElementAllocator;
     // TODO: Try to find a good value for SEGMENT_BYTES.
-    static const size_t SEGMENT_BYTES = 8192;
+    static const size_t SEGMENT_BYTES = 819200;
 
     const size_t elements_per_array;
     const size_t arrays_per_segment;
@@ -175,13 +176,11 @@ class SegmentedArrayVector {
     }
 
     void add_segment() {
+        std::cout << "add_segment" << std::endl;
         Element *new_segment = element_allocator.allocate(elements_per_segment);
         segments.push_back(new_segment);
     }
 
-    // No implementation to forbid copies and assignment
-    SegmentedArrayVector(const SegmentedArrayVector<Element> &);
-    SegmentedArrayVector &operator=(const SegmentedArrayVector<Element> &);
 public:
     SegmentedArrayVector(size_t elements_per_array_)
         : elements_per_array(elements_per_array_),
@@ -191,7 +190,6 @@ public:
           the_size(0) {
     }
 
-
     SegmentedArrayVector(size_t elements_per_array_, const ElementAllocator &allocator_)
         : element_allocator(allocator_),
           elements_per_array(elements_per_array_),
@@ -199,6 +197,30 @@ public:
               std::max(SEGMENT_BYTES / (elements_per_array * sizeof(Element)), size_t(1))),
           elements_per_segment(elements_per_array * arrays_per_segment),
           the_size(0) {
+    }
+
+    SegmentedArrayVector(const SegmentedArrayVector<Element> &other)
+        : elements_per_array(other.elements_per_array),
+          arrays_per_segment(other.arrays_per_segment),
+          elements_per_segment(other.elements_per_segment),
+          element_allocator(other.element_allocator),
+          the_size(other.the_size) {
+            for (const Element* element : other.segments) {
+                push_back(element);
+            }
+    }
+
+    SegmentedArrayVector &operator=(const SegmentedArrayVector<Element> &other) {
+        if (this != &other) {
+            elements_per_array = other.elements_per_array;
+            arrays_per_segment = other.arrays_per_segment;
+            elements_per_segment = other.elements_per_segment;
+            element_allocator = other.element_allocator;
+            for (const Element* element : other.segments) {
+                push_back(element);
+            }
+        }
+        return *this;
     }
 
     ~SegmentedArrayVector() {
@@ -234,6 +256,7 @@ public:
     }
 
     void push_back(const Element *entry) {
+        std::cout << "push_back" << std::endl;
         size_t segment = get_segment(the_size);
         size_t offset = get_offset(the_size);
         if (segment == segments.size()) {

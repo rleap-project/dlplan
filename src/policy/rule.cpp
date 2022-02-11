@@ -33,16 +33,16 @@ RuleImpl::RuleImpl(
     std::unordered_set<std::shared_ptr<const BaseEffect>>&& effects)
     : m_root(root), m_conditions(sort(std::move(conditions))), m_effects(sort(std::move(effects))) { }
 
-bool RuleImpl::evaluate_conditions(int source_index, const core::State& source, EvaluationCache& evaluation_caches) const {
+bool RuleImpl::evaluate_conditions(int source_index, const core::State& source, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const {
     for (const auto& condition : m_conditions) {
-        if (!condition->evaluate(source_index, source, evaluation_caches)) return false;
+        if (!condition->evaluate(source_index, source, evaluation_cache, element_cache)) return false;
     }
     return true;
 }
 
-bool RuleImpl::evaluate_effects(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCache& evaluation_caches) const {
+bool RuleImpl::evaluate_effects(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const {
     for (const auto& effect : m_effects) {
-        if (!effect->evaluate(source_index, source, target_index, target, evaluation_caches)) return false;
+        if (!effect->evaluate(source_index, source, target_index, target, evaluation_cache, element_cache)) return false;
     }
     return true;
 }

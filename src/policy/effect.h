@@ -30,7 +30,7 @@ protected:
 public:
     PositiveBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature);
 
-    bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCache& evaluation_caches) const override;
+    bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const override;
 
     std::string compute_repr() const override;
 };
@@ -42,7 +42,7 @@ protected:
 public:
     NegativeBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature);
 
-    bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCache& evaluation_caches) const override;
+    bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const override;
 
     std::string compute_repr() const override;
 };
@@ -54,7 +54,7 @@ protected:
 public:
     UnchangedBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature);
 
-    bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCache& evaluation_caches) const override;
+    bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const override;
 
     std::string compute_repr() const override;
 };
@@ -66,7 +66,7 @@ protected:
 public:
     IncrementNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature);
 
-    bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCache& evaluation_caches) const override;
+    bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const override;
 
     std::string compute_repr() const override;
 };
@@ -78,7 +78,7 @@ protected:
 public:
     DecrementNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature);
 
-    bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCache& evaluation_caches) const override;
+    bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const override;
 
     std::string compute_repr() const override;
 };
@@ -90,7 +90,7 @@ protected:
 public:
     UnchangedNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature);
 
-    bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCache& evaluation_caches) const override;
+    bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const override;
 
     std::string compute_repr() const override;
 };

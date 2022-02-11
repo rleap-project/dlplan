@@ -89,6 +89,8 @@ private:
 
 public:
     PerElementEvaluationCache(std::shared_ptr<const InstanceInfo> instance_info);
+    PerElementEvaluationCache(const PerElementEvaluationCache& other);
+    PerElementEvaluationCache& operator=(const PerElementEvaluationCache& other);
     ~PerElementEvaluationCache();
 
     /**

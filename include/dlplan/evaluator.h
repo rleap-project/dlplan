@@ -29,6 +29,8 @@ private:
 
 public:
     BooleanEvaluator(int num_booleans);
+    BooleanEvaluator(const BooleanEvaluator& other);
+    BooleanEvaluator& operator=(const BooleanEvaluator& other);
     ~BooleanEvaluator();
 
     bool evaluate(int boolean_index, const core::Boolean& boolean, int state_index, const core::State& state, core::PerElementEvaluationCache& caches);
@@ -43,6 +45,8 @@ private:
 
 public:
     NumericalEvaluator(int num_numericals);
+    NumericalEvaluator(const NumericalEvaluator& other);
+    NumericalEvaluator& operator=(const NumericalEvaluator& other);
     ~NumericalEvaluator();
 
     int evaluate(int numerical_index, const core::Numerical& numerical, int state_index, const core::State& state, core::PerElementEvaluationCache& caches);

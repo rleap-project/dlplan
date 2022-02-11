@@ -14,49 +14,47 @@ namespace dlplan::policy {
 
 PolicyImpl::PolicyImpl(
     std::shared_ptr<const PolicyRoot> root,
-    std::shared_ptr<const core::InstanceInfo> instance_info,
     std::vector<std::shared_ptr<const BooleanFeature>>&& boolean_features,
     std::vector<std::shared_ptr<const NumericalFeature>>&& numerical_features,
     std::vector<std::shared_ptr<const Rule>>&& rules)
     : m_root(root),
-      m_instance_info(instance_info),
       m_boolean_features(std::move(boolean_features)),
       m_numerical_features(std::move(numerical_features)),
       m_rules(std::move(rules)),
-      m_evaluation_cache(std::make_shared<EvaluationCache>(instance_info, m_boolean_features.size(), m_numerical_features.size())) { }
+      m_evaluation_cache(m_boolean_features.size(), m_numerical_features.size()) { }
 
-std::shared_ptr<const Rule> PolicyImpl::evaluate_lazy(int source_index, const core::State& source, int target_index, const core::State& target) {
+std::shared_ptr<const Rule> PolicyImpl::evaluate_lazy(int source_index, const core::State& source, int target_index, const core::State& target, core::PerElementEvaluationCache& element_cache) {
     if (source_index < 0 || target_index < 0) {
         throw std::runtime_error("PolicyImpl::evaluate_lazy: source or target index cannot be negative.");
     }
     for (const auto& r : m_rules) {
-        if (r->evaluate_conditions(source_index, source, *m_evaluation_cache) && r->evaluate_effects(source_index, source, target_index, target, *m_evaluation_cache)) {
+        if (r->evaluate_conditions(source_index, source, m_evaluation_cache, element_cache) && r->evaluate_effects(source_index, source, target_index, target, m_evaluation_cache, element_cache)) {
             return r;
         }
     }
     return nullptr;
 }
 
-std::vector<std::shared_ptr<const Rule>> PolicyImpl::evaluate_conditions_eager(int source_index, const core::State& source) {
+std::vector<std::shared_ptr<const Rule>> PolicyImpl::evaluate_conditions_eager(int source_index, const core::State& source, core::PerElementEvaluationCache& element_cache) {
     if (source_index < 0) {
         throw std::runtime_error("PolicyImpl::evaluate_conditions_eager: source index cannot be negative.");
     }
     std::vector<std::shared_ptr<const Rule>> result;
     for (const auto& r : m_rules) {
-        if (r->evaluate_conditions(source_index, source, *m_evaluation_cache)) {
+        if (r->evaluate_conditions(source_index, source, m_evaluation_cache, element_cache)) {
             result.push_back(r);
         }
     }
     return result;
 }
 
-std::shared_ptr<const Rule> PolicyImpl::evaluate_effects_lazy(int source_index, const core::State& source, int target_index, const core::State& target, const std::vector<std::shared_ptr<const Rule>>& rules) {
+std::shared_ptr<const Rule> PolicyImpl::evaluate_effects_lazy(int source_index, const core::State& source, int target_index, const core::State& target, core::PerElementEvaluationCache& element_cache, const std::vector<std::shared_ptr<const Rule>>& rules) {
     if (source_index < 0 || target_index < 0) {
         throw std::runtime_error("PolicyImpl::evaluate_effects_lazy: source or target index cannot be negative.");
     }
-    assert(std::all_of(rules.begin(), rules.end(), [&, source_index](const auto& r){ r->evaluate_conditions(source_index, source); }));
+    // assert(std::all_of(rules.begin(), rules.end(), [&, source_index](const auto& r){ r->evaluate_conditions(source_index, source); }));
     for (const auto& r : rules) {
-        if (r->evaluate_effects(source_index, source, target_index, target, *m_evaluation_cache)) {
+        if (r->evaluate_effects(source_index, source, target_index, target, m_evaluation_cache, element_cache)) {
             return r;
         }
     }
@@ -102,7 +100,7 @@ std::vector<std::shared_ptr<const NumericalFeature>> PolicyImpl::get_numerical_f
 }
 
 void PolicyImpl::clear_evaluation_cache() {
-    m_evaluation_cache = std::make_shared<EvaluationCache>(m_boolean_features.size(), m_numerical_features.size());
+    m_evaluation_cache = EvaluationCache(m_boolean_features.size(), m_numerical_features.size());
 }
 
 }

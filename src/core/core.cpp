@@ -81,6 +81,16 @@ utils::BitsetView RoleDenotation::get_data() {
 PerElementEvaluationCache::PerElementEvaluationCache(std::shared_ptr<const InstanceInfo> instance_info)
     : m_pImpl(instance_info) { }
 
+PerElementEvaluationCache::PerElementEvaluationCache(const PerElementEvaluationCache& other)
+    : m_pImpl(*other.m_pImpl) { }
+
+PerElementEvaluationCache& PerElementEvaluationCache::operator=(const PerElementEvaluationCache& other) {
+    if (this != &other) {
+        m_pImpl = *other.m_pImpl;
+    }
+    return *this;
+}
+
 PerElementEvaluationCache::~PerElementEvaluationCache() { }
 
 ConceptDenotation PerElementEvaluationCache::retrieve_or_evaluate(const State& state, const element::Concept& concept) {

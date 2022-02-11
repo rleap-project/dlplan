@@ -42,11 +42,13 @@ int main() {
     dlplan::core::State s1(instance_info, {a0});
     dlplan::core::State s2(instance_info, {a0, a1});
 
+    dlplan::core::PerElementEvaluationCache caches(instance_info);
+
     // Evaluate the policy.
-    assert(policy.evaluate_lazy(2, s2, 1, s1));
-    assert(!policy.evaluate_lazy(2, s2, 0, s0));
-    assert(!policy.evaluate_lazy(1, s1, 2, s2));
-    assert(!policy.evaluate_lazy(0, s0, 2, s2));
+    assert(policy.evaluate_lazy(2, s2, 1, s1, caches));
+    assert(!policy.evaluate_lazy(2, s2, 0, s0, caches));
+    assert(!policy.evaluate_lazy(1, s1, 2, s2, caches));
+    assert(!policy.evaluate_lazy(0, s0, 2, s2, caches));
 
     // Write policy to file.
     std::cout << "Write policy:" << std::endl;

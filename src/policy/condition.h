@@ -34,7 +34,7 @@ protected:
 public:
     PositiveBooleanCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature);
 
-    bool evaluate(int source_index, const core::State& state, EvaluationCache& evaluation_caches) const override;
+    bool evaluate(int source_index, const core::State& state, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const override;
 
     std::string compute_repr() const override;
 };
@@ -46,7 +46,7 @@ protected:
 public:
     NegativeBooleanCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature);
 
-    bool evaluate(int source_index, const core::State& state, EvaluationCache& evaluation_caches) const override;
+    bool evaluate(int source_index, const core::State& state, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const override;
 
     std::string compute_repr() const override;
 };
@@ -58,7 +58,7 @@ protected:
 public:
     EqualNumericalCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature);
 
-    bool evaluate(int source_index, const core::State& state, EvaluationCache& evaluation_caches) const override;
+    bool evaluate(int source_index, const core::State& state, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const override;
 
     std::string compute_repr() const override;
 };
@@ -70,7 +70,7 @@ protected:
 public:
     GreaterNumericalCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature);
 
-    bool evaluate(int source_index, const core::State& state, EvaluationCache& evaluation_caches) const override;
+    bool evaluate(int source_index, const core::State& state, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const override;
 
     std::string compute_repr() const override;
 };

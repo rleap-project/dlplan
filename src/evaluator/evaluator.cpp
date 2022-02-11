@@ -3,9 +3,20 @@
 #include "boolean_evaluator.h"
 #include "numerical_evaluator.h"
 
+
 namespace dlplan::evaluator {
 
 BooleanEvaluator::BooleanEvaluator(int num_booleans) : m_pImpl(num_booleans) { }
+
+BooleanEvaluator::BooleanEvaluator(const BooleanEvaluator& other)
+    : m_pImpl(BooleanEvaluatorImpl(*other.m_pImpl)) { }
+
+BooleanEvaluator& BooleanEvaluator::operator=(const BooleanEvaluator& other) {
+    if (this != &other) {
+        m_pImpl = other.m_pImpl;
+    }
+    return *this;
+}
 
 BooleanEvaluator::~BooleanEvaluator() { }
 
@@ -15,6 +26,16 @@ bool BooleanEvaluator::evaluate(int boolean_index, const core::Boolean& boolean,
 
 
 NumericalEvaluator::NumericalEvaluator(int num_numericals) : m_pImpl(num_numericals) { }
+
+NumericalEvaluator::NumericalEvaluator(const NumericalEvaluator& other)
+    : m_pImpl(NumericalEvaluatorImpl(*other.m_pImpl)) { }
+
+NumericalEvaluator& NumericalEvaluator::operator=(const NumericalEvaluator& other) {
+    if (this != &other) {
+        m_pImpl = other.m_pImpl;
+    }
+    return *this;
+}
 
 NumericalEvaluator::~NumericalEvaluator() { }
 

@@ -16,6 +16,7 @@ namespace core {
     template<typename T>
     class Element;
     class State;
+    class PerElementEvaluationCache;
 }
 namespace policy {
 class RuleImpl;
@@ -23,8 +24,6 @@ class PolicyImpl;
 class PolicyBuilderImpl;
 class PolicyReaderImpl;
 class PolicyWriterImpl;
-class BooleanEvaluationCache;
-class NumericalEvaluationCache;
 class EvaluationCache;
 
 
@@ -32,34 +31,6 @@ class PolicyRoot {
 public:
     PolicyRoot();
     ~PolicyRoot();
-};
-
-/**
- * EvaluationCache stores caches used to speedup evaluation.
- */
-class EvaluationCache {
-private:
-    evaluator::BooleanEvaluator m_boolean_evaluator;
-    evaluator::NumericalEvaluator m_numerical_evaluator;
-
-    core::PerElementEvaluationCache m_element_cache;
-
-public:
-    EvaluationCache(
-        std::shared_ptr<const core::InstanceInfo> instance_info,
-        int num_boolean_features, int num_numerical_features);
-
-    evaluator::BooleanEvaluator& get_boolean_evaluator();
-
-    const evaluator::BooleanEvaluator& get_boolean_evaluator() const;
-
-    evaluator::NumericalEvaluator& get_numerical_cache();
-
-    const evaluator::NumericalEvaluator& get_numerical_cache() const;
-
-    core::PerElementEvaluationCache& get_element_cache();
-
-    const core::PerElementEvaluationCache& get_element_cache() const;
 };
 
 /**
@@ -77,7 +48,7 @@ protected:
 public:
     virtual ~Feature();
 
-    virtual T evaluate(int state_index, const core::State& state, EvaluationCache& evaluation_cache) const = 0;
+    virtual T evaluate(int state_index, const core::State& state, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const = 0;
 
     virtual std::string compute_repr() const = 0;
 
@@ -95,7 +66,7 @@ private:
     friend class PolicyBuilderImpl;
 
 public:
-    bool evaluate(int state_index, const core::State& state, EvaluationCache& evaluation_cache) const override;
+    bool evaluate(int state_index, const core::State& state, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const override;
 
     std::string compute_repr() const override;
 
@@ -111,7 +82,7 @@ private:
     friend class PolicyBuilderImpl;
 
 public:
-    int evaluate(int state_index, const core::State& state, EvaluationCache& evaluation_cache) const override;
+    int evaluate(int state_index, const core::State& state, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const override;
 
     std::string compute_repr() const override;
 
@@ -134,9 +105,7 @@ protected:
 public:
     virtual ~BaseCondition() = default;
 
-    //virtual bool operator<(const BaseCondition& other) const = 0;
-
-    virtual bool evaluate(int source_index, const core::State& state, EvaluationCache& evaluation_cache) const = 0;
+    virtual bool evaluate(int source_index, const core::State& state, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const = 0;
 
     virtual std::string compute_repr() const = 0;
 
@@ -161,7 +130,7 @@ protected:
 public:
     virtual ~BaseEffect() = default;
 
-    virtual bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCache& evaluation_cache) const = 0;
+    virtual bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const = 0;
 
     virtual std::string compute_repr() const = 0;
 
@@ -191,9 +160,9 @@ public:
     Rule& operator=(const Rule& other);
     ~Rule();
 
-    bool evaluate_conditions(int source_index, const core::State& source, EvaluationCache& evaluation_cache) const;
+    bool evaluate_conditions(int source_index, const core::State& source, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const;
 
-    bool evaluate_effects(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCache& evaluation_cache) const;
+    bool evaluate_effects(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const;
 
     std::string compute_repr() const;
 
@@ -223,13 +192,13 @@ public:
     /**
      * Approach 1: naive approach to evaluate (s,s')
      */
-    std::shared_ptr<const Rule> evaluate_lazy(int source_index, const core::State& source, int target_index, const core::State& target);
+    std::shared_ptr<const Rule> evaluate_lazy(int source_index, const core::State& source, int target_index, const core::State& target, core::PerElementEvaluationCache& element_cache);
 
     /**
      * Approach 2: optimized approach for evaluating pairs with similar source state s, i.e., (s,s1), (s,s2), ..., (s,sn)
      */
-    std::vector<std::shared_ptr<const Rule>> evaluate_conditions_eager(int source_index, const core::State& source);
-    std::shared_ptr<const Rule> evaluate_effects_lazy(int source_index, const core::State& source, int target_index, const core::State& target, const std::vector<std::shared_ptr<const Rule>>& rules);
+    std::vector<std::shared_ptr<const Rule>> evaluate_conditions_eager(int source_index, const core::State& source, core::PerElementEvaluationCache& element_cache);
+    std::shared_ptr<const Rule> evaluate_effects_lazy(int source_index, const core::State& source, int target_index, const core::State& target, core::PerElementEvaluationCache& element_cache, const std::vector<std::shared_ptr<const Rule>>& rules);
 
     std::string compute_repr() const;
 
