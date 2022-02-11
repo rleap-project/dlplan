@@ -109,13 +109,6 @@ public:
     std::shared_ptr<const InstanceInfo> get_instance_info() const;
 };
 
-/**
- * PerElementAndStateEvaluationCache adds additional caching per State.
- */
-class PerIndexAndElementEvaluationCache {
-
-};
-
 
 class Constant {
 private:
