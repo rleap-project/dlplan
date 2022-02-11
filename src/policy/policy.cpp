@@ -22,11 +22,7 @@ BooleanFeature::BooleanFeature(std::shared_ptr<const PolicyRoot> root, int index
     : Feature<bool>(root, index), m_boolean(std::move(boolean)) { }
 
 bool BooleanFeature::evaluate(int state_index, const core::State& state, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const {
-    // TODO: there are better places to clear caches
     element_cache.clear();
-    //std::cout << state.str() << std::endl;
-    //std::cout << evaluation_cache.get_boolean_evaluator().evaluate(get_index(), get_boolean(), state_index, state, element_cache)
-    //<< " " << get_boolean().compute_repr() << std::endl << std::endl;
     return evaluation_cache.get_boolean_evaluator().evaluate(get_index(), get_boolean(), state_index, state, element_cache);
 }
 
@@ -42,10 +38,6 @@ NumericalFeature::NumericalFeature(std::shared_ptr<const PolicyRoot> root, int i
     : Feature<int>(root, index), m_numerical(std::move(numerical)) { }
 
 int NumericalFeature::evaluate(int state_index, const core::State& state, EvaluationCache& evaluation_cache, core::PerElementEvaluationCache& element_cache) const {
-    // TODO: there are better places to clear caches
-    //std::cout << state.str() << std::endl;
-    //std::cout << evaluation_cache.get_numerical_cache().evaluate(get_index(), get_numerical(), state_index, state, element_cache)
-    //<< " " << get_numerical().compute_repr() << std::endl << std::endl;
     element_cache.clear();
     return evaluation_cache.get_numerical_cache().evaluate(get_index(), get_numerical(), state_index, state, element_cache);
 }

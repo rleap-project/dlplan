@@ -52,12 +52,13 @@ std::shared_ptr<const Rule> PolicyImpl::evaluate_effects_lazy(int source_index, 
     if (source_index < 0 || target_index < 0) {
         throw std::runtime_error("PolicyImpl::evaluate_effects_lazy: source or target index cannot be negative.");
     }
-    // assert(std::all_of(rules.begin(), rules.end(), [&, source_index](const auto& r){ r->evaluate_conditions(source_index, source); }));
+    //std::cout << source_index << " " << target_index << std::endl;
     for (const auto& r : rules) {
         if (r->evaluate_effects(source_index, source, target_index, target, m_evaluation_cache, element_cache)) {
             return r;
         }
     }
+    //std::cout << std::endl;
     return nullptr;
 }
 

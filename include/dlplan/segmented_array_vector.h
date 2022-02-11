@@ -156,7 +156,7 @@ template<class Element, class Allocator = std::allocator<Element>>
 class SegmentedArrayVector {
     typedef typename Allocator::template rebind<Element>::other ElementAllocator;
     // TODO: Try to find a good value for SEGMENT_BYTES.
-    static const size_t SEGMENT_BYTES = 819200;
+    static const size_t SEGMENT_BYTES = 8192;
 
     const size_t elements_per_array;
     const size_t arrays_per_segment;
@@ -176,7 +176,6 @@ class SegmentedArrayVector {
     }
 
     void add_segment() {
-        std::cout << "add_segment" << std::endl;
         Element *new_segment = element_allocator.allocate(elements_per_segment);
         segments.push_back(new_segment);
     }
@@ -256,7 +255,6 @@ public:
     }
 
     void push_back(const Element *entry) {
-        std::cout << "push_back" << std::endl;
         size_t segment = get_segment(the_size);
         size_t offset = get_offset(the_size);
         if (segment == segments.size()) {

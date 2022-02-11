@@ -70,7 +70,7 @@ void BitsetView::reset() {
 }
 
 void BitsetView::set(const BitsetView& other) {
-    assert(num_bits == other.num_bits);
+    assert(size() == other.size());
     for (std::size_t i = 0; i < data.size(); ++i) {
         data[i] = other.data[i];
     }
@@ -117,7 +117,7 @@ BitsetView& BitsetView::operator|=(const BitsetView& other) {
 BitsetView& BitsetView::operator-=(const BitsetView& other) {
     assert(size() == other.size());
     for (std::size_t i = 0; i < data.size(); ++i) {
-        data[i] = data[i] & ~other.data[i];
+        data[i] &= ~other.data[i];
     }
     return *this;
 }
