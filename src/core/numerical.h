@@ -23,7 +23,7 @@ public:
             throw std::runtime_error("NumericalImpl::evaluate - mismatched vocabularies of Numerical and State.");
         }
         if (state.get_instance_info() != caches.get_instance_info()) {
-            throw std::runtime_error("NumericalImpl::evaluate - mismatches instances of State and EvaluationCaches.");
+            throw std::runtime_error("NumericalImpl::evaluate - mismatches instances of State and EvaluationCache.");
         }
         return parent->get_element()->evaluate(state, caches);
     }

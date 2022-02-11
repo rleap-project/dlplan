@@ -32,6 +32,8 @@ public:
     ~BooleanEvaluator();
 
     bool evaluate(int boolean_index, const core::Boolean& boolean, int state_index, const core::State& state, core::PerElementEvaluationCache& caches);
+
+    void clear();
 };
 
 
@@ -44,6 +46,8 @@ public:
     ~NumericalEvaluator();
 
     int evaluate(int numerical_index, const core::Numerical& numerical, int state_index, const core::State& state, core::PerElementEvaluationCache& caches);
+
+    void clear();
 };
 
 }

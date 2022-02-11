@@ -25,7 +25,7 @@ class Policy;
 
 class PolicyReaderImpl {
 public:
-    Policy read(const std::string& data, core::SyntacticElementFactory factory) const;
+    Policy read(const std::string& data, core::SyntacticElementFactory& factory) const;
 };
 
 }

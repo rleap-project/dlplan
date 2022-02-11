@@ -3,37 +3,41 @@
 
 #include "../../include/dlplan/evaluator.h"
 
+#include "../../include/dlplan/core.h"
 
-namespace dlplan::policy {
 
-class EvaluationCaches {
+namespace dlplan {
+namespace core {
+    class InstanceInfo;
+}
+namespace policy {
+
+class EvaluationCache {
 private:
     evaluator::BooleanEvaluator m_boolean_evaluator;
     evaluator::NumericalEvaluator m_numerical_evaluator;
 
+    core::PerElementEvaluationCache m_element_cache;
+
 public:
-    EvaluationCaches(int num_boolean_features, int num_numerical_features) :
-      m_boolean_evaluator(num_boolean_features),
-      m_numerical_evaluator(num_numerical_features) { }
+    EvaluationCache(
+        std::shared_ptr<const core::InstanceInfo> instance_info,
+        int num_boolean_features, int num_numerical_features);
 
+    evaluator::BooleanEvaluator& get_boolean_evaluator();
 
-    evaluator::BooleanEvaluator& get_boolean_evaluator() {
-        return m_boolean_evaluator;
-    }
+    const evaluator::BooleanEvaluator& get_boolean_evaluator() const;
 
-    const evaluator::BooleanEvaluator& get_boolean_evaluator() const {
-        return m_boolean_evaluator;
-    }
+    evaluator::NumericalEvaluator& get_numerical_cache();
 
-    evaluator::NumericalEvaluator& get_numerical_cache() {
-        return m_numerical_evaluator;
-    }
+    const evaluator::NumericalEvaluator& get_numerical_cache() const;
 
-    const evaluator::NumericalEvaluator& get_numerical_cache() const {
-        return m_numerical_evaluator;
-    }
+    core::PerElementEvaluationCache& get_element_cache();
+
+    const core::PerElementEvaluationCache& get_element_cache() const;
 };
 
+}
 }
 
 #endif

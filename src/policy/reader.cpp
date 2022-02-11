@@ -10,7 +10,7 @@
 
 namespace dlplan::policy {
 
-Policy PolicyReaderImpl::read(const std::string& data, core::SyntacticElementFactory factory) const {
+Policy PolicyReaderImpl::read(const std::string& data, core::SyntacticElementFactory& factory) const {
     return parser::Parser().parse(data)->parse_general_policy(factory);
 }
 

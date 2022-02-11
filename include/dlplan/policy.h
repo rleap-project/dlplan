@@ -25,7 +25,7 @@ class PolicyReaderImpl;
 class PolicyWriterImpl;
 class BooleanEvaluationCache;
 class NumericalEvaluationCache;
-class EvaluationCaches;
+class EvaluationCache;
 
 
 class PolicyRoot {
@@ -34,6 +34,33 @@ public:
     ~PolicyRoot();
 };
 
+/**
+ * EvaluationCache stores caches used to speedup evaluation.
+ */
+class EvaluationCache {
+private:
+    evaluator::BooleanEvaluator m_boolean_evaluator;
+    evaluator::NumericalEvaluator m_numerical_evaluator;
+
+    core::PerElementEvaluationCache m_element_cache;
+
+public:
+    EvaluationCache(
+        std::shared_ptr<const core::InstanceInfo> instance_info,
+        int num_boolean_features, int num_numerical_features);
+
+    evaluator::BooleanEvaluator& get_boolean_evaluator();
+
+    const evaluator::BooleanEvaluator& get_boolean_evaluator() const;
+
+    evaluator::NumericalEvaluator& get_numerical_cache();
+
+    const evaluator::NumericalEvaluator& get_numerical_cache() const;
+
+    core::PerElementEvaluationCache& get_element_cache();
+
+    const core::PerElementEvaluationCache& get_element_cache() const;
+};
 
 /**
  * A Feature is shared across all conditions and effects that use it.
@@ -50,7 +77,7 @@ protected:
 public:
     virtual ~Feature();
 
-    virtual T evaluate(int state_index, const core::State& state, EvaluationCaches& evaluation_caches) const = 0;
+    virtual T evaluate(int state_index, const core::State& state, EvaluationCache& evaluation_cache) const = 0;
 
     virtual std::string compute_repr() const = 0;
 
@@ -68,7 +95,7 @@ private:
     friend class PolicyBuilderImpl;
 
 public:
-    bool evaluate(int state_index, const core::State& state, EvaluationCaches& evaluation_caches) const override;
+    bool evaluate(int state_index, const core::State& state, EvaluationCache& evaluation_cache) const override;
 
     std::string compute_repr() const override;
 
@@ -84,7 +111,7 @@ private:
     friend class PolicyBuilderImpl;
 
 public:
-    int evaluate(int state_index, const core::State& state, EvaluationCaches& evaluation_caches) const override;
+    int evaluate(int state_index, const core::State& state, EvaluationCache& evaluation_cache) const override;
 
     std::string compute_repr() const override;
 
@@ -109,7 +136,7 @@ public:
 
     //virtual bool operator<(const BaseCondition& other) const = 0;
 
-    virtual bool evaluate(int source_index, const core::State& state, EvaluationCaches& evaluation_caches) const = 0;
+    virtual bool evaluate(int source_index, const core::State& state, EvaluationCache& evaluation_cache) const = 0;
 
     virtual std::string compute_repr() const = 0;
 
@@ -134,7 +161,7 @@ protected:
 public:
     virtual ~BaseEffect() = default;
 
-    virtual bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const = 0;
+    virtual bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCache& evaluation_cache) const = 0;
 
     virtual std::string compute_repr() const = 0;
 
@@ -164,8 +191,9 @@ public:
     Rule& operator=(const Rule& other);
     ~Rule();
 
-    bool evaluate_conditions(int source_index, const core::State& source, EvaluationCaches& evaluation_caches) const;
-    bool evaluate_effects(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const;
+    bool evaluate_conditions(int source_index, const core::State& source, EvaluationCache& evaluation_cache) const;
+
+    bool evaluate_effects(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCache& evaluation_cache) const;
 
     std::string compute_repr() const;
 
@@ -268,7 +296,7 @@ public:
     PolicyReader();
     ~PolicyReader();
 
-    Policy read(const std::string& data, core::SyntacticElementFactory factory) const;
+    Policy read(const std::string& data, core::SyntacticElementFactory& factory) const;
 };
 
 /**

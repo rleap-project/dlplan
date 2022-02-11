@@ -3,6 +3,7 @@ target_sources(dlplanpolicy
     PRIVATE
         condition.cpp
         effect.cpp
+        evaluation_cache.cpp
         policy_builder.cpp
         policy_impl.cpp
         policy.cpp

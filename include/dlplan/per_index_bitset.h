@@ -95,6 +95,8 @@ public:
     PerIndexBitset &operator=(const PerIndexBitset &) = delete;
 
     BitsetView operator[](int index);
+
+    void clear();
 };
 
 }

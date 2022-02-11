@@ -14,7 +14,7 @@ namespace policy {
 class PolicyRoot;
 class BaseCondition;
 class BaseEffect;
-class EvaluationCaches;
+class EvaluationCache;
 
 
 class RuleImpl {
@@ -32,8 +32,8 @@ public:
         std::unordered_set<std::shared_ptr<const BaseCondition>>&& conditions,
         std::unordered_set<std::shared_ptr<const BaseEffect>>&& effects);
 
-    bool evaluate_conditions(int source_index, const core::State& source, EvaluationCaches& evaluation_caches) const;
-    bool evaluate_effects(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const;
+    bool evaluate_conditions(int source_index, const core::State& source, EvaluationCache& evaluation_caches) const;
+    bool evaluate_effects(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCache& evaluation_caches) const;
 
     std::string compute_repr() const;
 
