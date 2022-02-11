@@ -18,7 +18,7 @@ TEST(DLPTests, ConceptBot) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    EvaluationCaches caches(instance);
+    PerElementEvaluationCache caches(instance);
 
     Concept concept = factory.parse_concept("c_bot");
     EXPECT_EQ(concept.evaluate(state, caches).to_vector(), Index_Vec({}));

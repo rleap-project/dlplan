@@ -12,9 +12,9 @@ public:
     : Element<RoleDenotation>(vocabulary, name) { }
     ~Role() override = default;
 
-    virtual RoleDenotation evaluate(const State& state, EvaluationCaches& caches, RoleDenotation out) const = 0;
+    virtual RoleDenotation evaluate(const State& state, PerElementEvaluationCache& caches, RoleDenotation out) const = 0;
 
-    RoleDenotation evaluate(const State& state, EvaluationCaches& caches) const override {
+    RoleDenotation evaluate(const State& state, PerElementEvaluationCache& caches) const override {
        return caches.retrieve_or_evaluate(state, *this);
     }
 };

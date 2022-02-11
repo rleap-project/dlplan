@@ -19,7 +19,7 @@ TEST(DLPTests, ConceptPrimitive) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    EvaluationCaches caches(instance);
+    PerElementEvaluationCache caches(instance);
 
     Concept concept1 = factory.parse_concept("c_primitive(predicate,0)");
     EXPECT_EQ(concept1.evaluate(state, caches).to_vector(), Index_Vec({0, 3}));

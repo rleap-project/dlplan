@@ -21,7 +21,7 @@ TEST(DLPTests, BooleanEmpty) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    EvaluationCaches caches(instance);
+    PerElementEvaluationCache caches(instance);
 
     Boolean boolean1 = factory.parse_boolean("b_empty(c_primitive(concept_0,0))");
     EXPECT_EQ(boolean1.evaluate(state, caches), false);

@@ -18,7 +18,7 @@ TEST(DLPTests, BooleanNullary) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    EvaluationCaches caches(instance);
+    PerElementEvaluationCache caches(instance);
 
     Boolean boolean = factory.parse_boolean("b_nullary(predicate)");
     EXPECT_EQ(boolean.evaluate(s0, caches), true);

@@ -25,7 +25,7 @@ TEST(DLPTests, ConceptAll) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    EvaluationCaches caches(instance);
+    PerElementEvaluationCache caches(instance);
 
     Concept concept = factory.parse_concept("c_all(r_primitive(role,0,1),c_primitive(concept,0))");
     EXPECT_EQ(concept.evaluate(state, caches).to_vector(), Index_Vec({0, 2, 3}));
@@ -49,7 +49,7 @@ TEST(DLPTests, ConceptAll2) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    EvaluationCaches caches(instance);
+    PerElementEvaluationCache caches(instance);
 
     Concept concept = factory.parse_concept("c_all(r_primitive(at,1,0),c_primitive(man,0))");
     EXPECT_EQ(concept.evaluate(state_1, caches).to_vector(), Index_Vec({0, 2, 4}));

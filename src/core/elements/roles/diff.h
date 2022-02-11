@@ -19,7 +19,7 @@ public:
         }
     }
 
-    RoleDenotation evaluate(const State& state, EvaluationCaches& caches, RoleDenotation result) const override {
+    RoleDenotation evaluate(const State& state, PerElementEvaluationCache& caches, RoleDenotation result) const override {
         RoleDenotation l = m_role_left->evaluate(state, caches);
         RoleDenotation r = m_role_right->evaluate(state, caches);
         result.get_data().set(l.get_data());

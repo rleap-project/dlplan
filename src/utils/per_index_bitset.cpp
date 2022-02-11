@@ -106,10 +106,6 @@ BitsetView& BitsetView::operator&=(const BitsetView& other) {
     return *this;
 }
 
-BitsetView& BitsetView::operator&=(const ConstBitsetView& other) {
-
-}
-
 BitsetView& BitsetView::operator|=(const BitsetView& other) {
     assert(size() == other.size());
     for (std::size_t i = 0; i < data.size(); ++i) {

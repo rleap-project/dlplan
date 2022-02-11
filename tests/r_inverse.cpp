@@ -18,7 +18,7 @@ TEST(DLPTests, RoleInverse) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    EvaluationCaches caches(instance);
+    PerElementEvaluationCache caches(instance);
 
     Role role = factory.parse_role("r_inverse(r_primitive(role,0,1))");
     EXPECT_EQ(role.evaluate(state, caches).to_vector(), IndexPair_Vec({{1,0},{3,2}}));

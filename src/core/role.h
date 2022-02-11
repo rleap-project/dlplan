@@ -18,7 +18,7 @@ public:
         }
     }
 
-    RoleDenotation evaluate(const Role* parent, const State& state, EvaluationCaches& caches) const {
+    RoleDenotation evaluate(const Role* parent, const State& state, PerElementEvaluationCache& caches) const {
         if (state.get_instance_info()->get_vocabulary_info() != parent->get_vocabulary_info()) {
             throw std::runtime_error("RoleImpl::evaluate - mismatched vocabularies of Role and State.");
         }

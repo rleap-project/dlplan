@@ -18,7 +18,7 @@ public:
         }
     }
 
-    ConceptDenotation evaluate(const Concept* parent, const State& state, EvaluationCaches& caches) const {
+    ConceptDenotation evaluate(const Concept* parent, const State& state, PerElementEvaluationCache& caches) const {
         if (state.get_instance_info()->get_vocabulary_info() != parent->get_vocabulary_info()) {
             throw std::runtime_error("ConceptImpl::evaluate - mismatched vocabularies of Concept and State.");
         }

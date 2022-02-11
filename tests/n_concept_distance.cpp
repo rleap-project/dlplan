@@ -35,7 +35,7 @@ TEST(DLPTests, NumericalConceptDistance) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    EvaluationCaches caches(instance);
+    PerElementEvaluationCache caches(instance);
 
     Numerical numerical = factory.parse_numerical("n_concept_distance(c_primitive(start,0),r_primitive(conn,0,1),c_primitive(end,0))");
     EXPECT_EQ(numerical.evaluate(state, caches), 2);

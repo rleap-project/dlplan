@@ -15,7 +15,7 @@ public:
     EmptyBoolean(const VocabularyInfo& vocabulary, T element)
     : Boolean(vocabulary, "b_empty"), m_element(element) { }
 
-    bool evaluate(const State& state, EvaluationCaches& caches) const override {
+    bool evaluate(const State& state, PerElementEvaluationCache& caches) const override {
         return m_element->evaluate(state, caches).get_data().none();
     }
 

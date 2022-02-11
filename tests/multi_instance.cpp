@@ -22,7 +22,7 @@ TEST(DLPTests, MultiInstance) {
     Atom a1_3 = instance1->add_atom("start", {"A"});
     Atom a1_4 = instance1->add_atom("end", {"D"});
     State state1(instance1, {a1_3, a1_4});
-    EvaluationCaches caches1(instance1);
+    PerElementEvaluationCache caches1(instance1);
 
     // Instance with graph consisting of nodes A,B,C,D and edges A->B,B->C,C->D
     std::shared_ptr<InstanceInfo> instance2 = std::make_shared<InstanceInfo>(vocabulary);
@@ -32,7 +32,7 @@ TEST(DLPTests, MultiInstance) {
     Atom a2_3 = instance2->add_atom("start", {"A"});
     Atom a2_4 = instance2->add_atom("end", {"D"});
     State state2(instance2, {a2_3, a2_4});
-    EvaluationCaches caches2(instance2);
+    PerElementEvaluationCache caches2(instance2);
 
     // Instance where all atoms of instance1 and instance2 are added
     std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary);
@@ -45,7 +45,7 @@ TEST(DLPTests, MultiInstance) {
     Atom a6 = instance->add_atom("start", {"A"});
     Atom a7 = instance->add_atom("end", {"D"});
     State state(instance, {a6, a7});
-    EvaluationCaches caches(instance);
+    PerElementEvaluationCache caches(instance);
 
     SyntacticElementFactory factory(vocabulary);
 

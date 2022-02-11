@@ -19,7 +19,7 @@ public:
         }
     }
 
-    ConceptDenotation evaluate(const State& state, EvaluationCaches& caches, ConceptDenotation result) const override {
+    ConceptDenotation evaluate(const State& state, PerElementEvaluationCache& caches, ConceptDenotation result) const override {
         ConceptDenotation l = m_concept_left->evaluate(state, caches);
         ConceptDenotation r = m_concept_right->evaluate(state, caches);
         result.get_data().set(l.get_data());

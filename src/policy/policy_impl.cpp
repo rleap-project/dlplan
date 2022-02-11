@@ -24,7 +24,7 @@ PolicyImpl::PolicyImpl(
       m_numerical_features(std::move(numerical_features)),
       m_rules(std::move(rules)),
       m_evaluation_caches(std::make_shared<EvaluationCaches>(m_boolean_features.size(), m_numerical_features.size())),
-      m_denotation_caches(std::make_shared<core::EvaluationCaches>(instance_info->get_num_objects())) { }
+      m_denotation_caches(std::make_shared<core::PerElementEvaluationCache>(instance_info->get_num_objects())) { }
 
 std::shared_ptr<const Rule> PolicyImpl::evaluate_lazy(int source_index, const core::State& source, int target_index, const core::State& target) {
     if (source_index < 0 || target_index < 0) {

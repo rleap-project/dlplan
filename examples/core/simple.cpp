@@ -56,7 +56,7 @@ int main() {
     State state(instance_info, {a0, a3, a6});
 
     // 5. Construct cache where memory for evaluations is allocated.
-    EvaluationCaches caches(instance_info);
+    PerElementEvaluationCache caches(instance_info);
 
     // 6. Parse and evaluate elements.
     Numerical numerical = factory.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))");

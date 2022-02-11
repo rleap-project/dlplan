@@ -23,7 +23,7 @@ public:
         }
     }
 
-    ConceptDenotation evaluate(const State& state, EvaluationCaches&, ConceptDenotation result) const override {
+    ConceptDenotation evaluate(const State& state, PerElementEvaluationCache&, ConceptDenotation result) const override {
         const InstanceInfo& info = *state.get_instance_info();
         dlplan::utils::BitsetView result_data = result.get_data();
         result_data.reset();

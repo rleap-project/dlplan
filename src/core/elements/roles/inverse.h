@@ -18,7 +18,7 @@ public:
         }
     }
 
-    RoleDenotation evaluate(const State& state, EvaluationCaches& caches, RoleDenotation result) const override {
+    RoleDenotation evaluate(const State& state, PerElementEvaluationCache& caches, RoleDenotation result) const override {
         RoleDenotation r = m_role->evaluate(state, caches);
         dlplan::utils::BitsetView r_data = r.get_data();
         int num_objects = state.get_instance_info()->get_num_objects();

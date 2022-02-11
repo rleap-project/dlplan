@@ -20,7 +20,7 @@ public:
         }
     }
 
-    bool evaluate(const State& state, EvaluationCaches&) const override {
+    bool evaluate(const State& state, PerElementEvaluationCache&) const override {
         const InstanceInfo& info = *state.get_instance_info();
         for (int atom_idx : state.get_atom_idxs()) {
             const Atom& atom = info.get_atom(atom_idx);

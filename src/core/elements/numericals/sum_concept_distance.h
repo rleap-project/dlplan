@@ -23,7 +23,7 @@ public:
         }
     }
 
-    int evaluate(const State& state, EvaluationCaches& caches) const override {
+    int evaluate(const State& state, PerElementEvaluationCache& caches) const override {
         ConceptDenotation c = m_concept_from->evaluate(state, caches);
         dlplan::utils::BitsetView c_data = c.get_data();
         if (c_data.none()) {

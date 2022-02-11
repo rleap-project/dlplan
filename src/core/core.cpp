@@ -20,7 +20,7 @@
 #include "role.h"
 #include "numerical.h"
 #include "boolean.h"
-#include "evaluation_cache.h"
+#include "per_element_evaluation_cache.h"
 #include "elements/types.h"
 
 
@@ -78,24 +78,24 @@ utils::BitsetView RoleDenotation::get_data() {
 }
 
 
-EvaluationCaches::EvaluationCaches(std::shared_ptr<const InstanceInfo> instance_info)
+PerElementEvaluationCache::PerElementEvaluationCache(std::shared_ptr<const InstanceInfo> instance_info)
     : m_pImpl(instance_info) { }
 
-EvaluationCaches::~EvaluationCaches() { }
+PerElementEvaluationCache::~PerElementEvaluationCache() { }
 
-ConceptDenotation EvaluationCaches::retrieve_or_evaluate(const State& state, const element::Concept& concept) {
+ConceptDenotation PerElementEvaluationCache::retrieve_or_evaluate(const State& state, const element::Concept& concept) {
     return m_pImpl->retrieve_or_evaluate(this, state, concept);
 }
 
-RoleDenotation EvaluationCaches::retrieve_or_evaluate(const State& state, const element::Role& role) {
+RoleDenotation PerElementEvaluationCache::retrieve_or_evaluate(const State& state, const element::Role& role) {
     return m_pImpl->retrieve_or_evaluate(this, state, role);
 }
 
-void EvaluationCaches::clear() {
+void PerElementEvaluationCache::clear() {
     m_pImpl->clear();
 }
 
-std::shared_ptr<const InstanceInfo> EvaluationCaches::get_instance_info() const {
+std::shared_ptr<const InstanceInfo> PerElementEvaluationCache::get_instance_info() const {
     return m_pImpl->get_instance_info();
 }
 
@@ -435,7 +435,7 @@ Concept& Concept::operator=(const Concept& other) {
 
 Concept::~Concept() = default;
 
-ConceptDenotation Concept::evaluate(const State& state, EvaluationCaches& caches) const {
+ConceptDenotation Concept::evaluate(const State& state, PerElementEvaluationCache& caches) const {
     return m_pImpl->evaluate(this, state, caches);
 }
 
@@ -469,7 +469,7 @@ Role& Role::operator=(const Role& other) {
 
 Role::~Role() = default;
 
-RoleDenotation Role::evaluate(const State& state, EvaluationCaches& caches) const {
+RoleDenotation Role::evaluate(const State& state, PerElementEvaluationCache& caches) const {
     return m_pImpl->evaluate(this, state, caches);
 }
 
@@ -504,7 +504,7 @@ Numerical& Numerical::operator=(const Numerical& other) {
 
 Numerical::~Numerical() = default;
 
-int Numerical::evaluate(const State& state, EvaluationCaches& caches) const {
+int Numerical::evaluate(const State& state, PerElementEvaluationCache& caches) const {
     return m_pImpl->evaluate(this, state, caches);
 }
 
@@ -538,7 +538,7 @@ Boolean& Boolean::operator=(const Boolean& other) {
 
 Boolean::~Boolean() = default;
 
-bool Boolean::evaluate(const State& state, EvaluationCaches& caches) const {
+bool Boolean::evaluate(const State& state, PerElementEvaluationCache& caches) const {
     return m_pImpl->evaluate(this, state, caches);
 }
 

@@ -35,7 +35,7 @@ TEST(DLPTests, NumericalRoleDistance) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    EvaluationCaches caches(instance);
+    PerElementEvaluationCache caches(instance);
 
     // All distances are finite
     Numerical numerical = factory.parse_numerical("n_role_distance(r_primitive(start,0,1),r_primitive(conn,0,1),r_primitive(end,0,1))");

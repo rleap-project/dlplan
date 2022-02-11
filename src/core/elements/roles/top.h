@@ -12,7 +12,7 @@ public:
     : Role(vocabulary, "r_top") {
     }
 
-    RoleDenotation evaluate(const State&, EvaluationCaches&, RoleDenotation result) const override {
+    RoleDenotation evaluate(const State&, PerElementEvaluationCache&, RoleDenotation result) const override {
         result.get_data().set();
         return result;
     }

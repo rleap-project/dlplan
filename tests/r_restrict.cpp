@@ -21,7 +21,7 @@ TEST(DLPTests, RoleRestrict) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    EvaluationCaches caches(instance);
+    PerElementEvaluationCache caches(instance);
 
     Role role = factory.parse_role("r_restrict(r_primitive(role,0,1),c_primitive(concept,0))");
     EXPECT_EQ(role.evaluate(state, caches).to_vector(), IndexPair_Vec({{0, 1}}));

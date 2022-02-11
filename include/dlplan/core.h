@@ -27,7 +27,7 @@ class BooleanImpl;
 class SyntacticElementFactory;
 class InstanceInfo;
 class VocabularyInfo;
-class EvaluationCacheImpl;
+class PerElementEvaluationCacheImpl;
 class ConceptDenotation;
 class RoleDenotation;
 class State;
@@ -79,16 +79,17 @@ public:
 };
 
 /**
- * EvaluationCache caches the result of the evaluation of elements.
- * It keeps the memory block allocated for reuse.
+ * PerElementEvaluationCache keeps the memory block allocated for reuse.
+ * We omit caching for Numerical and Boolean because they are cheap to compute
+ * and do not require any heap allocations.
  */
-class EvaluationCaches {
+class PerElementEvaluationCache {
 private:
-    pimpl<EvaluationCacheImpl> m_pImpl;
+    pimpl<PerElementEvaluationCacheImpl> m_pImpl;
 
 public:
-    EvaluationCaches(std::shared_ptr<const InstanceInfo> instance_info);
-    ~EvaluationCaches();
+    PerElementEvaluationCache(std::shared_ptr<const InstanceInfo> instance_info);
+    ~PerElementEvaluationCache();
 
     /**
      * Retrieves a Denotation if cached and otherwise additionally evaluates the Element.
@@ -98,6 +99,7 @@ public:
 
     /**
      * Clears the cache but keeps memory allocated.
+     * ATTENTION: to keep memory usage small it is necessary to call clear after each evaluation.
      */
     void clear();
 
@@ -105,6 +107,13 @@ public:
      * Getters.
      */
     std::shared_ptr<const InstanceInfo> get_instance_info() const;
+};
+
+/**
+ * PerElementAndStateEvaluationCache adds additional caching per State.
+ */
+class PerIndexAndElementEvaluationCache {
+
 };
 
 
@@ -335,14 +344,14 @@ public:
     /**
      * Evaluates the element with the new caching strategy.
      * Some considerations:
-     *   1. EvaluationCaches must be passed because we want to be able
+     *   1. PerElementEvaluationCache must be passed because we want to be able
      *      to evaluate features from multiple threads without locks
-     *      by having different EvaluationCaches for each thread
+     *      by having different PerElementEvaluationCache for each thread
      *   2. The convention we use is that T is a lightweight object.
      *      In the case of Concept and Roles it only contains
      *      a pointer to some memory block in the cache.
      */
-    virtual T evaluate(const State& state, EvaluationCaches& caches) const = 0;
+    virtual T evaluate(const State& state, PerElementEvaluationCache& caches) const = 0;
 
     /**
      * Returns the complexity of the element
@@ -378,7 +387,7 @@ public:
     Concept& operator=(const Concept& other);
     ~Concept() override;
 
-    ConceptDenotation evaluate(const State& state, EvaluationCaches& caches) const override;
+    ConceptDenotation evaluate(const State& state, PerElementEvaluationCache& caches) const override;
 
     int compute_complexity() const override;
 
@@ -404,7 +413,7 @@ public:
     Role& operator=(const Role& other);
     ~Role() override;
 
-    RoleDenotation evaluate(const State& state, EvaluationCaches& caches) const override;
+    RoleDenotation evaluate(const State& state, PerElementEvaluationCache& caches) const override;
 
     int compute_complexity() const override;
 
@@ -430,7 +439,7 @@ public:
     Numerical& operator=(const Numerical& other);
     ~Numerical() override;
 
-    int evaluate(const State& state, EvaluationCaches& caches) const override;
+    int evaluate(const State& state, PerElementEvaluationCache& caches) const override;
 
     int compute_complexity() const override;
 
@@ -456,7 +465,7 @@ public:
     Boolean& operator=(const Boolean& other);
     ~Boolean() override;
 
-    bool evaluate(const State& state, EvaluationCaches& caches) const override;
+    bool evaluate(const State& state, PerElementEvaluationCache& caches) const override;
 
     int compute_complexity() const override;
 

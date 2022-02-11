@@ -25,7 +25,7 @@ public:
         }
     }
 
-    ConceptDenotation evaluate(const State& state, EvaluationCaches& caches, ConceptDenotation result) const override {
+    ConceptDenotation evaluate(const State& state, PerElementEvaluationCache& caches, ConceptDenotation result) const override {
         RoleDenotation r = m_role->evaluate(state, caches);
         dlplan::utils::BitsetView r_data = r.get_data();
         int num_objects = state.get_instance_info()->get_num_objects();

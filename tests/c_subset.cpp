@@ -24,7 +24,7 @@ TEST(DLPTests, ConceptSubset) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    EvaluationCaches caches(instance);
+    PerElementEvaluationCache caches(instance);
 
     Concept concept1 = factory.parse_concept("c_subset(r_primitive(role_1,0,1),r_primitive(role_2,0,1))");
     EXPECT_EQ(concept1.evaluate(state, caches).to_vector(), Index_Vec({0, 2, 3}));

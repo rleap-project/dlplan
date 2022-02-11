@@ -11,7 +11,7 @@
 namespace dlplan {
 namespace core {
     class State;
-    class EvaluationCaches;
+    class EvaluationCache;
     class InstanceInfo;
 }
 namespace policy {
@@ -34,9 +34,9 @@ private:
     // We have to store this in a shared_ptr
     // because Policy must be copieable
     // since we return it from the PolicyBuilder.
-    std::shared_ptr<EvaluationCaches> m_evaluation_caches;
+    std::shared_ptr<EvaluationCache> m_evaluation_caches;
 
-    std::shared_ptr<core::EvaluationCaches> m_denotation_caches;
+    std::shared_ptr<core::EvaluationCache> m_denotation_caches;
 
 public:
     PolicyImpl(

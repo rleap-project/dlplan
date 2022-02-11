@@ -22,7 +22,7 @@ TEST(DLPTests, RoleAnd) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    EvaluationCaches caches(instance);
+    PerElementEvaluationCache caches(instance);
 
     Role role = factory.parse_role("r_and(r_primitive(role_1,0,1),r_primitive(role_2,0,1))");
     EXPECT_EQ(role.evaluate(state, caches).to_vector(), IndexPair_Vec({{2,3}}));

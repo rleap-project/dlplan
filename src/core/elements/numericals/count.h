@@ -15,7 +15,7 @@ public:
     CountNumerical(const VocabularyInfo& vocabulary, T element)
     : Numerical(vocabulary, "n_count"), m_element(element) { }
 
-    int evaluate(const State& state, EvaluationCaches& caches) const override {
+    int evaluate(const State& state, PerElementEvaluationCache& caches) const override {
         return m_element->evaluate(state, caches).get_data().count();
     }
 

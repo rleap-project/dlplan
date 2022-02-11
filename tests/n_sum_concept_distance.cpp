@@ -37,7 +37,7 @@ TEST(DLPTests, NumericalSumConceptDistance) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    EvaluationCaches caches(instance);
+    PerElementEvaluationCache caches(instance);
 
     // All distances are finite
     Numerical numerical = factory.parse_numerical("n_sum_concept_distance(c_primitive(start,0),r_primitive(conn,0,1),c_primitive(end,0))");

@@ -13,7 +13,7 @@ private:
 public:
     explicit BooleanEvaluatorImpl(int num_features) : m_data(std::vector<bool>(2 * std::max(1, num_features), false)) { }
 
-    bool evaluate(int boolean_index, const core::Boolean& boolean, int state_index, const core::State& state, core::EvaluationCaches& caches) {
+    bool evaluate(int boolean_index, const core::Boolean& boolean, int state_index, const core::State& state, core::PerElementEvaluationCache& caches) {
         auto view = m_data[state_index];
         int start = 2 * boolean_index;
         if (!view.test(start)) {

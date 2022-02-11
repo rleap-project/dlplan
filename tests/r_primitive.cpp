@@ -18,7 +18,7 @@ TEST(DLPTests, RolePrimitive) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    EvaluationCaches caches(instance);
+    PerElementEvaluationCache caches(instance);
 
     Role role1 = factory.parse_role("r_primitive(predicate,0,1)");
     EXPECT_EQ(role1.evaluate(state, caches).to_vector(), IndexPair_Vec({{0, 1}, {3, 4}}));

@@ -24,7 +24,7 @@ TEST(DLPTests, ConceptInclusion) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    EvaluationCaches caches(instance);
+    PerElementEvaluationCache caches(instance);
 
     Boolean boolean = factory.parse_boolean("b_inclusion(c_primitive(concept_1,0),c_primitive(concept_2,0))");
     EXPECT_EQ(boolean.evaluate(s1, caches), true);

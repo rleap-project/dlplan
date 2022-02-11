@@ -51,7 +51,7 @@ TEST(DLPTests, InstanceCreation) {
     Numerical numerical = factory.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))");
     EXPECT_EQ(numerical.compute_complexity(), 4);
 
-    EvaluationCaches caches(instance);
+    PerElementEvaluationCache caches(instance);
 
     State state1(instance, {a0, a3});
     State state2(instance, {0, 3});
