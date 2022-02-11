@@ -20,7 +20,7 @@
 #include "role.h"
 #include "numerical.h"
 #include "boolean.h"
-#include "evaluation_caches.h"
+#include "evaluation_cache.h"
 #include "elements/types.h"
 
 
@@ -83,12 +83,12 @@ EvaluationCaches::EvaluationCaches(std::shared_ptr<const InstanceInfo> instance_
 
 EvaluationCaches::~EvaluationCaches() { }
 
-ConceptDenotation EvaluationCaches::try_retrieve_or_evaluate(const State& state, const element::Concept& concept) {
-    return m_pImpl->try_retrieve_or_evaluate(this, state, concept);
+ConceptDenotation EvaluationCaches::retrieve_or_evaluate(const State& state, const element::Concept& concept) {
+    return m_pImpl->retrieve_or_evaluate(this, state, concept);
 }
 
-RoleDenotation EvaluationCaches::try_retrieve_or_evaluate(const State& state, const element::Role& role) {
-    return m_pImpl->try_retrieve_or_evaluate(this, state, role);
+RoleDenotation EvaluationCaches::retrieve_or_evaluate(const State& state, const element::Role& role) {
+    return m_pImpl->retrieve_or_evaluate(this, state, role);
 }
 
 void EvaluationCaches::clear() {

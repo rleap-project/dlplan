@@ -5,7 +5,7 @@
 #include "../state.h"
 #include "../instance_info.h"
 #include "../vocabulary_info.h"
-#include "../evaluation_caches.h"
+#include "../evaluation_cache.h"
 
 #include <iostream>
 #include <sstream>

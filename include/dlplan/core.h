@@ -27,7 +27,7 @@ class BooleanImpl;
 class SyntacticElementFactory;
 class InstanceInfo;
 class VocabularyInfo;
-class EvaluationCachesImpl;
+class EvaluationCacheImpl;
 class ConceptDenotation;
 class RoleDenotation;
 class State;
@@ -84,20 +84,17 @@ public:
  */
 class EvaluationCaches {
 private:
-    pimpl<EvaluationCachesImpl> m_pImpl;
+    pimpl<EvaluationCacheImpl> m_pImpl;
 
 public:
-    /**
-     * num_object defines the size of ConceptDenotation and RoleDenotation.
-     */
     EvaluationCaches(std::shared_ptr<const InstanceInfo> instance_info);
     ~EvaluationCaches();
 
     /**
      * Retrieves a Denotation if cached and otherwise additionally evaluates the Element.
      */
-    ConceptDenotation try_retrieve_or_evaluate(const State& state, const element::Concept& concept);
-    RoleDenotation try_retrieve_or_evaluate(const State& state, const element::Role& role);
+    ConceptDenotation retrieve_or_evaluate(const State& state, const element::Concept& concept);
+    RoleDenotation retrieve_or_evaluate(const State& state, const element::Role& role);
 
     /**
      * Clears the cache but keeps memory allocated.

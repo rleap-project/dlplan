@@ -7,7 +7,7 @@ target_sources(dlplancore
         constant.cpp
         core.cpp
         element_factory.cpp
-        evaluation_caches.cpp
+        evaluation_cache.cpp
         instance_info.cpp
         vocabulary_info.cpp
         predicate.cpp
