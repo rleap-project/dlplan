@@ -20,7 +20,6 @@ ConceptDenotation PerElementEvaluationCacheImpl::retrieve_or_evaluate(PerElement
     bool cache_miss = insert_result.second;
     //std::cout << "EvaluationCache: " << concept_index << " " << cache_miss << std::endl;
     ConceptDenotation result(m_num_objects, m_concept_denotation_cache[cache_index]);
-    cache_miss = true;
     if (cache_miss) {
         concept.evaluate(state, *parent, result);
     }
@@ -34,7 +33,6 @@ RoleDenotation PerElementEvaluationCacheImpl::retrieve_or_evaluate(PerElementEva
     bool cache_miss = insert_result.second;
     //std::cout << "EvaluationCache: " << role_index << " " << cache_miss << std::endl;
     RoleDenotation result(m_num_objects, m_role_denotation_cache[cache_index]);
-    cache_miss = true;
     if (cache_miss) {
         role.evaluate(state, *parent, result);
     }

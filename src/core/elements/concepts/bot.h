@@ -12,9 +12,8 @@ public:
     : Concept(vocabulary, "c_bot") {
     }
 
-    ConceptDenotation evaluate(const State&, PerElementEvaluationCache&, ConceptDenotation result) const override {
+    void evaluate(const State&, PerElementEvaluationCache&, ConceptDenotation& result) const override {
         result.get_data().reset();
-        return result;
     }
 
     int compute_complexity() const override {

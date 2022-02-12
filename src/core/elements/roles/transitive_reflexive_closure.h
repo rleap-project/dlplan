@@ -19,9 +19,9 @@ public:
         }
     }
 
-    RoleDenotation evaluate(const State& state, PerElementEvaluationCache& caches, RoleDenotation result) const override {
-        RoleDenotation r = m_role->evaluate(state, caches);
-        dlplan::utils::BitsetView result_data = result.get_data();
+    void evaluate(const State& state, PerElementEvaluationCache& caches, RoleDenotation& result) const override {
+        const RoleDenotation r = m_role->evaluate(state, caches);
+        dlplan::utils::BitsetView& result_data = result.get_data();
         result_data.set(r.get_data());
         int num_objects = state.get_instance_info()->get_num_objects();
         for (int k = 0; k < num_objects; ++k) {
@@ -38,7 +38,6 @@ public:
             // reflexive
             result_data.set(k * num_objects + k);
         }
-        return result;
     }
 
     int compute_complexity() const override {

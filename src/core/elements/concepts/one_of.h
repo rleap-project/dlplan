@@ -15,10 +15,9 @@ public:
     : Concept(vocabulary, "c_one_of"), m_constant(constant) {
     }
 
-    ConceptDenotation evaluate(const State& state, PerElementEvaluationCache&, ConceptDenotation result) const override {
+    void evaluate(const State& state, PerElementEvaluationCache&, ConceptDenotation& result) const override {
         result.get_data().reset();
         result.get_data().set(state.get_instance_info()->get_object_idx(m_constant.get_name()));
-        return result;
     }
 
     int compute_complexity() const override {

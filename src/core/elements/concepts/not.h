@@ -18,12 +18,11 @@ public:
         }
     }
 
-    ConceptDenotation evaluate(const State& state, PerElementEvaluationCache& caches, ConceptDenotation result) const override {
-        ConceptDenotation c = m_concept->evaluate(state, caches);
-        dlplan::utils::BitsetView result_data = result.get_data();
+    void evaluate(const State& state, PerElementEvaluationCache& caches, ConceptDenotation& result) const override {
+        const ConceptDenotation c = m_concept->evaluate(state, caches);
+        dlplan::utils::BitsetView& result_data = result.get_data();
         result_data.set(c.get_data());
         ~result_data;
-        return result;
     }
 
     int compute_complexity() const override {

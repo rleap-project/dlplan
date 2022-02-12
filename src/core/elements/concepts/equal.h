@@ -20,12 +20,12 @@ public:
         }
     }
 
-    ConceptDenotation evaluate(const State& state, PerElementEvaluationCache& caches, ConceptDenotation result) const override {
-        RoleDenotation r = m_role_left->evaluate(state, caches);
-        dlplan::utils::BitsetView r_data = r.get_data();
-        RoleDenotation s = m_role_right->evaluate(state, caches);
-        dlplan::utils::BitsetView s_data = s.get_data();
-        int num_objects = state.get_instance_info()->get_num_objects();
+    void evaluate(const State& state, PerElementEvaluationCache& caches, ConceptDenotation& result) const override {
+        const RoleDenotation r = m_role_left->evaluate(state, caches);
+        const dlplan::utils::BitsetView& r_data = r.get_data();
+        const RoleDenotation s = m_role_right->evaluate(state, caches);
+        const dlplan::utils::BitsetView& s_data = s.get_data();
+        int num_objects = result.get_num_objects();
         dlplan::utils::BitsetView result_data = result.get_data();
         result_data.set();
         // find counterexample [(a,b) in R and (a,b) not in S] or [(a,b) not in R and (a,b) in S]
@@ -38,7 +38,6 @@ public:
                 }
             }
         }
-        return result;
     }
 
     int compute_complexity() const override {

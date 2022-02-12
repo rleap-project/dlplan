@@ -45,7 +45,11 @@ int ConceptDenotation::get_num_objects() const {
     return m_num_objects;
 }
 
-utils::BitsetView ConceptDenotation::get_data() {
+utils::BitsetView& ConceptDenotation::get_data() {
+    return m_data;
+}
+
+const utils::BitsetView& ConceptDenotation::get_data() const {
     return m_data;
 }
 
@@ -73,7 +77,11 @@ int RoleDenotation::get_num_objects() const {
     return m_num_objects;
 }
 
-utils::BitsetView RoleDenotation::get_data() {
+utils::BitsetView& RoleDenotation::get_data() {
+    return m_data;
+}
+
+const utils::BitsetView& RoleDenotation::get_data() const {
     return m_data;
 }
 

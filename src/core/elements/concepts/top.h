@@ -11,9 +11,8 @@ public:
     TopConcept(const VocabularyInfo& vocabulary)
     : Concept(vocabulary, "c_top") { }
 
-    ConceptDenotation evaluate(const State&, PerElementEvaluationCache&, ConceptDenotation result) const override {
+    void evaluate(const State&, PerElementEvaluationCache&, ConceptDenotation& result) const override {
         result.get_data().set();
-        return result;
     }
 
     int compute_complexity() const override {

@@ -19,12 +19,11 @@ public:
         }
     }
 
-    RoleDenotation evaluate(const State& state, PerElementEvaluationCache& caches, RoleDenotation result) const override {
-        RoleDenotation l = m_role_left->evaluate(state, caches);
-        RoleDenotation r = m_role_right->evaluate(state, caches);
+    void evaluate(const State& state, PerElementEvaluationCache& caches, RoleDenotation& result) const override {
+        const RoleDenotation l = m_role_left->evaluate(state, caches);
+        const RoleDenotation r = m_role_right->evaluate(state, caches);
         result.get_data().set(l.get_data());
         result.get_data() -= r.get_data();
-        return result;
     }
 
     int compute_complexity() const override {

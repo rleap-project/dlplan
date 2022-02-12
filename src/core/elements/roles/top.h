@@ -12,9 +12,8 @@ public:
     : Role(vocabulary, "r_top") {
     }
 
-    RoleDenotation evaluate(const State&, PerElementEvaluationCache&, RoleDenotation result) const override {
+    void evaluate(const State&, PerElementEvaluationCache&, RoleDenotation& result) const override {
         result.get_data().set();
-        return result;
     }
 
     int compute_complexity() const override {

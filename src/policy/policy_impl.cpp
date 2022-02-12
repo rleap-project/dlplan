@@ -39,6 +39,16 @@ std::vector<std::shared_ptr<const Rule>> PolicyImpl::evaluate_conditions_eager(i
     if (source_index < 0) {
         throw std::runtime_error("PolicyImpl::evaluate_conditions_eager: source index cannot be negative.");
     }
+    // Prepare the cache for source evaluation.
+    element_cache.clear();
+    // Evaluate all features for improved caching in the effect evaluation.
+    for (const auto& boolean : m_boolean_features) {
+        boolean->evaluate(source_index, source, m_evaluation_cache, element_cache);
+    }
+    for (const auto& numerical : m_numerical_features) {
+        numerical->evaluate(source_index, source, m_evaluation_cache, element_cache);
+    }
+    // No more evaluations are required for this state.
     std::vector<std::shared_ptr<const Rule>> result;
     for (const auto& r : m_rules) {
         if (r->evaluate_conditions(source_index, source, m_evaluation_cache, element_cache)) {
@@ -52,13 +62,13 @@ std::shared_ptr<const Rule> PolicyImpl::evaluate_effects_lazy(int source_index, 
     if (source_index < 0 || target_index < 0) {
         throw std::runtime_error("PolicyImpl::evaluate_effects_lazy: source or target index cannot be negative.");
     }
-    //std::cout << source_index << " " << target_index << std::endl;
+    // Prepare the cache for target evaluations (We assume that source is still cached).
+    element_cache.clear();
     for (const auto& r : rules) {
         if (r->evaluate_effects(source_index, source, target_index, target, m_evaluation_cache, element_cache)) {
             return r;
         }
     }
-    //std::cout << std::endl;
     return nullptr;
 }
 

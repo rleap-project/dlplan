@@ -23,10 +23,10 @@ public:
         }
     }
 
-    RoleDenotation evaluate(const State& state, PerElementEvaluationCache&, RoleDenotation result) const override {
+    void evaluate(const State& state, PerElementEvaluationCache&, RoleDenotation& result) const override {
         const InstanceInfo& info = *state.get_instance_info();
         int num_objects = info.get_num_objects();
-        dlplan::utils::BitsetView result_data = result.get_data();
+        dlplan::utils::BitsetView& result_data = result.get_data();
         result_data.reset();
         for (int atom_idx : state.get_atom_idxs()) {
             const Atom& atom = info.get_atom(atom_idx);
@@ -34,7 +34,6 @@ public:
                 result_data.set(atom.get_object(m_pos_1).get_index() * num_objects + atom.get_object(m_pos_2).get_index());
             }
         }
-        return result;
     }
 
     int compute_complexity() const override {

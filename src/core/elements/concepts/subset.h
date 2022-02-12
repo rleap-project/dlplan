@@ -20,15 +20,15 @@ public:
         }
     }
 
-    ConceptDenotation evaluate(const State& state, PerElementEvaluationCache& caches, ConceptDenotation result) const override {
-        RoleDenotation r = m_role_left->evaluate(state, caches);
-        dlplan::utils::BitsetView r_data = r.get_data();
-        RoleDenotation s = m_role_right->evaluate(state, caches);
-        dlplan::utils::BitsetView s_data = s.get_data();
-        int num_objects = state.get_instance_info()->get_num_objects();
-        dlplan::utils::BitsetView result_data = result.get_data();
+    void evaluate(const State& state, PerElementEvaluationCache& caches, ConceptDenotation& result) const override {
+        const RoleDenotation r = m_role_left->evaluate(state, caches);
+        const dlplan::utils::BitsetView& r_data = r.get_data();
+        const RoleDenotation s = m_role_right->evaluate(state, caches);
+        const dlplan::utils::BitsetView& s_data = s.get_data();
+        dlplan::utils::BitsetView& result_data = result.get_data();
         result_data.set();
         // find counterexamples a : exists b . (a,b) in R and (a,b) notin S
+        int num_objects = result.get_num_objects();
         for (int i = 0; i < num_objects; ++i) {
             for (int j = 0; j < num_objects; ++j) {
                 int index = i * num_objects + j;
@@ -38,7 +38,6 @@ public:
                 }
             }
         }
-        return result;
     }
 
     int compute_complexity() const override {

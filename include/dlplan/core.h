@@ -60,7 +60,8 @@ public:
     std::vector<int> to_vector() const;
 
     int get_num_objects() const;
-    utils::BitsetView get_data();
+    utils::BitsetView& get_data();
+    const utils::BitsetView& get_data() const;
 };
 
 class RoleDenotation {
@@ -75,7 +76,8 @@ public:
     std::vector<std::pair<int, int>> to_vector() const;
 
     int get_num_objects() const;
-    utils::BitsetView get_data();
+    utils::BitsetView& get_data();
+    const utils::BitsetView& get_data() const;
 };
 
 /**

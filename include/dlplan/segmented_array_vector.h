@@ -43,115 +43,6 @@ namespace dlplan::utils {
   where the size of the stored data is only known at runtime, not at compile
   time.
 */
-
-// TODO: Get rid of the code duplication here. How to do it without
-// paying a performance penalty? issue388.
-
-// For documentation on classes relevant to storing and working with registered
-// states see the file state_registry.h.
-
-template<class Entry, class Allocator = std::allocator<Entry>>
-class SegmentedVector {
-    typedef typename Allocator::template rebind<Entry>::other EntryAllocator;
-    // TODO: Try to find a good value for SEGMENT_BYTES.
-    static const size_t SEGMENT_BYTES = 8192;
-
-    static const size_t SEGMENT_ELEMENTS =
-        (SEGMENT_BYTES / sizeof(Entry)) >= 1 ?
-        (SEGMENT_BYTES / sizeof(Entry)) : 1;
-
-    EntryAllocator entry_allocator;
-
-    std::vector<Entry *> segments;
-    size_t the_size;
-
-    size_t get_segment(size_t index) const {
-        return index / SEGMENT_ELEMENTS;
-    }
-
-    size_t get_offset(size_t index) const {
-        return index % SEGMENT_ELEMENTS;
-    }
-
-    void add_segment() {
-        Entry *new_segment = entry_allocator.allocate(SEGMENT_ELEMENTS);
-        segments.push_back(new_segment);
-    }
-
-    // No implementation to forbid copies and assignment
-    SegmentedVector(const SegmentedVector<Entry> &);
-    SegmentedVector &operator=(const SegmentedVector<Entry> &);
-public:
-    SegmentedVector()
-        : the_size(0) {
-    }
-
-    SegmentedVector(const EntryAllocator &allocator_)
-        : entry_allocator(allocator_),
-          the_size(0) {
-    }
-
-    ~SegmentedVector() {
-        for (size_t i = 0; i < the_size; ++i) {
-            entry_allocator.destroy(&operator[](i));
-        }
-        for (size_t segment = 0; segment < segments.size(); ++segment) {
-            entry_allocator.deallocate(segments[segment], SEGMENT_ELEMENTS);
-        }
-    }
-
-    Entry &operator[](size_t index) {
-        assert(index < the_size);
-        size_t segment = get_segment(index);
-        size_t offset = get_offset(index);
-        return segments[segment][offset];
-    }
-
-    const Entry &operator[](size_t index) const {
-        assert(index < the_size);
-        size_t segment = get_segment(index);
-        size_t offset = get_offset(index);
-        return segments[segment][offset];
-    }
-
-    size_t size() const {
-        return the_size;
-    }
-
-    void push_back(const Entry &entry) {
-        size_t segment = get_segment(the_size);
-        size_t offset = get_offset(the_size);
-        if (segment == segments.size()) {
-            assert(offset == 0);
-            // Must add a new segment.
-            add_segment();
-        }
-        entry_allocator.construct(segments[segment] + offset, entry);
-        ++the_size;
-    }
-
-    void pop_back() {
-        entry_allocator.destroy(&operator[](the_size - 1));
-        --the_size;
-        // If the removed element was the last in its segment, the segment
-        // is not removed (memory is not deallocated). This way a subsequent
-        // push_back does not have to allocate the memory again.
-    }
-
-    void resize(size_t new_size, Entry entry = Entry()) {
-        // NOTE: We currently grow/shrink one element at a time.
-        //       Revision 6ee5ff7b8873 contains an implementation that can
-        //       handle other resizes more efficiently.
-        while (new_size < the_size) {
-            pop_back();
-        }
-        while (new_size > the_size) {
-            push_back(entry);
-        }
-    }
-};
-
-
 template<class Element, class Allocator = std::allocator<Element>>
 class SegmentedArrayVector {
     typedef typename Allocator::template rebind<Element>::other ElementAllocator;
@@ -255,6 +146,7 @@ public:
     }
 
     void push_back(const Element *entry) {
+        //std::cout << "push_back" << std::endl;
         size_t segment = get_segment(the_size);
         size_t offset = get_offset(the_size);
         if (segment == segments.size()) {

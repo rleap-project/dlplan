@@ -12,7 +12,7 @@ public:
     : Element<ConceptDenotation>(vocabulary, name) { }
     ~Concept() override = default;
 
-    virtual ConceptDenotation evaluate(const State& state, PerElementEvaluationCache& caches, ConceptDenotation out) const = 0;
+    virtual void evaluate(const State& state, PerElementEvaluationCache& caches, ConceptDenotation& out) const = 0;
 
     ConceptDenotation evaluate(const State& state, PerElementEvaluationCache& caches) const override {
         return caches.retrieve_or_evaluate(state, *this);
