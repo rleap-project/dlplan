@@ -162,10 +162,6 @@ const RoleDenotation& InstanceInfo::get_top_role() const {
     return m_pImpl->get_top_role();
 }
 
-size_t InstanceInfo::compute_hash() const {
-    return m_pImpl->compute_hash();
-}
-
 
 VocabularyInfo::VocabularyInfo() : m_pImpl(VocabularyInfoImpl()) { }
 

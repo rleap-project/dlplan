@@ -8,17 +8,6 @@ Element<T>::Element(
     : m_vocabulary_info(vocabulary_info) { }
 
 template<typename T>
-Element<T>::Element(const Element<T>& other) : m_vocabulary_info(other.m_vocabulary_info) { }
-
-template<typename T>
-Element<T>& Element<T>::operator=(const Element<T>& other) {
-    if (this != &other) {
-        m_vocabulary_info = other.m_vocabulary_info;
-    }
-    return *this;
-}
-
-template<typename T>
 Element<T>::~Element() { }
 
 template<typename T>

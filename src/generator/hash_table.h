@@ -24,8 +24,6 @@ private:
 
     std::unordered_set<std::array<uint32_t, 4>> m_hash_cache;
 
-    mutable std::mutex m_mutex;
-
 public:
     HashTable() : m_cache_hits(0), m_cache_misses(0) { }
     virtual ~HashTable() = default;

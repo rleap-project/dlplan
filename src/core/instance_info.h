@@ -72,8 +72,6 @@ public:
     const Index_Vec& get_static_atom_idxs() const;
     const ConceptDenotation& get_top_concept() const;
     const RoleDenotation& get_top_role() const;
-
-    size_t compute_hash() const;
 };
 
 }

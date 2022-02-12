@@ -291,8 +291,6 @@ public:
     const Index_Vec& get_static_atom_idxs() const;
     const ConceptDenotation& get_top_concept() const;
     const RoleDenotation& get_top_role() const;
-
-    size_t compute_hash() const;
 };
 
 
@@ -302,14 +300,12 @@ public:
 template<typename T>
 class Element {
 protected:
-    std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
+    const std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
 
 protected:
     Element(std::shared_ptr<const VocabularyInfo> vocabulary_info);
 
 public:
-    Element(const Element& other);
-    Element& operator=(const Element& other);
     virtual ~Element();
 
     /**
@@ -340,7 +336,7 @@ public:
  */
 class Concept : public Element<ConceptDenotation> {
 private:
-    std::shared_ptr<const element::Concept> m_element;
+    const std::shared_ptr<const element::Concept> m_element;
 
     Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Concept>&& concept);
     friend class SyntacticElementFactoryImpl;
@@ -363,7 +359,7 @@ public:
  */
 class Role : public Element<RoleDenotation> {
 private:
-    std::shared_ptr<const element::Role> m_element;
+    const std::shared_ptr<const element::Role> m_element;
 
     Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Role>&& role);
     friend class SyntacticElementFactoryImpl;
@@ -386,7 +382,7 @@ public:
  */
 class Numerical : public Element<int> {
 private:
-    std::shared_ptr<const element::Numerical> m_element;
+    const std::shared_ptr<const element::Numerical> m_element;
 
     Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Numerical>&& numerical);
     friend class SyntacticElementFactoryImpl;
@@ -409,7 +405,7 @@ public:
  */
 class Boolean : public Element<bool> {
 private:
-    std::shared_ptr<const element::Boolean> m_element;
+    const std::shared_ptr<const element::Boolean> m_element;
 
     Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Boolean>&& boolean);
     friend class SyntacticElementFactoryImpl;
