@@ -147,23 +147,17 @@ const Index_Vec& InstanceInfoImpl::get_static_atom_idxs() const {
 }
 
 const ConceptDenotation& InstanceInfoImpl::get_top_concept() const {
-    if (static_cast<int>(m_top_concept.get_const_data().size()) != get_num_objects()) {
+    if (static_cast<int>(m_top_concept.get_data().size()) != get_num_objects()) {
         m_top_concept = ConceptDenotation(get_num_objects());
-        // for hashing, we want to ensure that the bits outside the range remain 0.
-        for (int i = 0; i < get_num_objects(); ++i) {
-            m_top_concept.get_data().set(i);
-        }
+        m_top_concept.get_data().set();
     }
     return m_top_concept;
 }
 
 const RoleDenotation& InstanceInfoImpl::get_top_role() const {
-    if (static_cast<int>(m_top_role.get_const_data().size()) != get_num_objects() * get_num_objects()) {
+    if (static_cast<int>(m_top_role.get_data().size()) != get_num_objects() * get_num_objects()) {
         m_top_role = RoleDenotation(get_num_objects());
-        // for hashing, we want to ensure that the bits outside the range remain 0.
-        for (int i = 0; i < get_num_objects() * get_num_objects(); ++i) {
-            m_top_role.get_data().set(i);
-        }
+        m_top_role.get_data().set();
     }
     return m_top_role;
 }

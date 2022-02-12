@@ -15,11 +15,11 @@ protected:
         // 1. Parse children
         element::Concept_Ptr concept_element = m_children[0]->parse_concept(vocabulary, cache);
         if (concept_element) {
-            return std::make_unique<element::EmptyBoolean<element::Concept_Ptr>>(vocabulary, concept_element);
+            return std::make_unique<element::EmptyBoolean<element::Concept>>(vocabulary, concept_element);
         }
         element::Role_Ptr role_element = m_children[0]->parse_role(vocabulary, cache);
         if (role_element) {
-            return std::make_unique<element::EmptyBoolean<element::Role_Ptr>>(vocabulary, role_element);
+            return std::make_unique<element::EmptyBoolean<element::Role>>(vocabulary, role_element);
         }
         // 2. Construct element
         throw std::runtime_error("EmptyBoolean::parse_boolean_impl - unable to construct children elements.");

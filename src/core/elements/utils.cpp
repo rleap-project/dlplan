@@ -24,7 +24,7 @@ extern int path_addition(int a, int b) {
 
 AdjList compute_adjacency_list(const RoleDenotation& r, bool inverse) {
     int num_objects = r.get_num_objects();
-    const auto& r_data = r.get_const_data();
+    const auto& r_data = r.get_data();
     AdjList adjacency_list(num_objects);
     for (int i = 0; i < num_objects; ++i) {
         for (int j = 0; j < num_objects; ++j) {

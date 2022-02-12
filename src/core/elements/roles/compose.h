@@ -22,9 +22,9 @@ public:
 
     RoleDenotation evaluate(const State& state) const override {
         const auto l = m_role_left->evaluate(state);
-        const auto& l_data = l.get_const_data();
+        const auto& l_data = l.get_data();
         const auto r = m_role_right->evaluate(state);
-        const auto& r_data = r.get_const_data();
+        const auto& r_data = r.get_data();
         int num_objects = state.get_instance_info()->get_num_objects();
         RoleDenotation result(num_objects);
         auto& result_data = result.get_data();

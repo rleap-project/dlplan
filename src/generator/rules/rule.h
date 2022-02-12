@@ -126,12 +126,12 @@ inline std::vector<int> bitset_to_num_vec(const std::vector<T>& denotation) {
     static_assert(sizeof(int) == sizeof(unsigned));
     size_t size = 0;
     for (const auto& b : denotation) {
-        size += b.get_const_data().get_blocks().size();
+        size += b.get_data().get_blocks().size();
     }
     std::vector<int> result;
     result.reserve(size);
     for (const auto& b : denotation) {
-        result.insert(result.end(), b.get_const_data().get_blocks().begin(), b.get_const_data().get_blocks().end());
+        result.insert(result.end(), b.get_data().get_blocks().begin(), b.get_data().get_blocks().end());
     }
     return result;
 }

@@ -24,7 +24,7 @@ public:
         auto r = m_role->evaluate(state);
         auto& r_data = r.get_data();
         const auto c = m_concept->evaluate(state);
-        const auto& c_data = c.get_const_data();
+        const auto& c_data = c.get_data();
         int num_objects = state.get_instance_info()->get_num_objects();
         for (int i = 0; i < num_objects; ++i) {
             for (int j = 0; j < num_objects; ++j) {

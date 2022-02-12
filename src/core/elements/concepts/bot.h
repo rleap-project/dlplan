@@ -9,8 +9,7 @@ namespace dlplan::core::element {
 class BotConcept : public Concept {
 public:
     BotConcept(const VocabularyInfo& vocabulary)
-    : Concept(vocabulary, "c_bot") {
-    }
+    : Concept(vocabulary, "c_bot") { }
 
     ConceptDenotation evaluate(const State& state) const override {
         return ConceptDenotation(state.get_instance_info()->get_num_objects());

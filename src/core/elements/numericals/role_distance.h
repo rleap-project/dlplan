@@ -26,12 +26,12 @@ public:
 
     int evaluate(const State& state) const override {
         const RoleDenotation& r = m_role_from->evaluate(state);
-        const auto& r_data = r.get_const_data();
+        const auto& r_data = r.get_data();
         if (r_data.none()) {
             return INF;
         }
         const RoleDenotation t = m_role_to->evaluate(state);
-        const auto& t_data = t.get_const_data();
+        const auto& t_data = t.get_data();
         if (t_data.none()) {
             return INF;
         }

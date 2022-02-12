@@ -50,11 +50,16 @@ public:
     ConceptDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data);
     ~ConceptDenotation();
 
+    /**
+     * TODO: must ensure that elements are in some canonical representation.
+     * This function is not intended to be called by the user due to the
+     * additional overhead but it is useful for testing.
+     */
     std::vector<int> to_vector() const;
 
     int get_num_objects() const;
     dynamic_bitset::DynamicBitset<unsigned>& get_data();
-    const dynamic_bitset::DynamicBitset<unsigned>& get_const_data() const;
+    const dynamic_bitset::DynamicBitset<unsigned>& get_data() const;
 };
 
 /**
@@ -75,7 +80,7 @@ public:
 
     int get_num_objects() const;
     dynamic_bitset::DynamicBitset<unsigned>& get_data();
-    const dynamic_bitset::DynamicBitset<unsigned>& get_const_data() const;
+    const dynamic_bitset::DynamicBitset<unsigned>& get_data() const;
 };
 
 
@@ -335,15 +340,12 @@ public:
  */
 class Concept : public Element<ConceptDenotation> {
 private:
-    pimpl<ConceptImpl> m_pImpl;
     std::shared_ptr<const element::Concept> m_element;
 
     Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Concept>&& concept);
     friend class SyntacticElementFactoryImpl;
 
 public:
-    Concept(const Concept& other);
-    Concept& operator=(const Concept& other);
     ~Concept() override;
 
     ConceptDenotation evaluate(const State& state) const override;
@@ -361,15 +363,12 @@ public:
  */
 class Role : public Element<RoleDenotation> {
 private:
-    pimpl<RoleImpl> m_pImpl;
     std::shared_ptr<const element::Role> m_element;
 
     Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Role>&& role);
     friend class SyntacticElementFactoryImpl;
 
 public:
-    Role(const Role& other);
-    Role& operator=(const Role& other);
     ~Role() override;
 
     RoleDenotation evaluate(const State& state) const override;
@@ -387,15 +386,12 @@ public:
  */
 class Numerical : public Element<int> {
 private:
-    pimpl<NumericalImpl> m_pImpl;
     std::shared_ptr<const element::Numerical> m_element;
 
     Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Numerical>&& numerical);
     friend class SyntacticElementFactoryImpl;
 
 public:
-    Numerical(const Numerical& other);
-    Numerical& operator=(const Numerical& other);
     ~Numerical() override;
 
     int evaluate(const State& state) const override;
@@ -413,15 +409,12 @@ public:
  */
 class Boolean : public Element<bool> {
 private:
-    pimpl<BooleanImpl> m_pImpl;
     std::shared_ptr<const element::Boolean> m_element;
 
     Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Boolean>&& boolean);
     friend class SyntacticElementFactoryImpl;
 
 public:
-    Boolean(const Boolean& other);
-    Boolean& operator=(const Boolean& other);
     ~Boolean() override;
 
     bool evaluate(const State& state) const override;

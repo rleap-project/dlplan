@@ -21,7 +21,7 @@ public:
     RoleDenotation evaluate(const State& state) const override {
         const auto r = m_role->evaluate(state);
         RoleDenotation result = state.get_instance_info()->get_top_role();
-        result.get_data() &= ~r.get_const_data();
+        result.get_data() &= ~r.get_data();
         return result;
     }
 

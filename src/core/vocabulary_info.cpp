@@ -33,7 +33,6 @@ bool VocabularyInfoImpl::exists_predicate(const Predicate& predicate) const {
     if (!utils::in_bounds(predicate.get_index(), m_predicates)) {
         throw std::runtime_error("VocabularyInfoImpl::exists_predicate: predicate index out of range.");
     }
-    // we only need to check the position with the corresponding index.
     return (m_predicates[predicate.get_index()] == predicate) ? true : false;
 }
 

@@ -16,12 +16,12 @@ protected:
         element::Concept_Ptr concept_left = m_children[0]->parse_concept(vocabulary, cache);
         element::Concept_Ptr concept_right = m_children[1]->parse_concept(vocabulary, cache);
         if (concept_left && concept_right) {
-            return std::make_unique<element::ConceptInclusionBoolean>(vocabulary, concept_left, concept_right);
+            return std::make_unique<element::InclusionBoolean<element::Concept>>(vocabulary, concept_left, concept_right);
         }
         element::Role_Ptr role_left = m_children[0]->parse_role(vocabulary, cache);
         element::Role_Ptr role_right = m_children[1]->parse_role(vocabulary, cache);
         if (role_left && role_right) {
-            return std::make_unique<element::RoleInclusionBoolean>(vocabulary, role_left, role_right);
+            return std::make_unique<element::InclusionBoolean<element::Role>>(vocabulary, role_left, role_right);
         }
         // 2. If unsuccessful then throw a runtime error.
         throw std::runtime_error("EmptyBoolean::parse_boolean_impl - unable to construct children elements.");

@@ -16,10 +16,6 @@
 #include "object.h"
 #include "state.h"
 #include "predicate.h"
-#include "concept.h"
-#include "role.h"
-#include "numerical.h"
-#include "boolean.h"
 #include "elements/types.h"
 
 
@@ -51,7 +47,7 @@ dynamic_bitset::DynamicBitset<unsigned>& ConceptDenotation::get_data() {
     return m_data;
 }
 
-const dynamic_bitset::DynamicBitset<unsigned>& ConceptDenotation::get_const_data() const {
+const dynamic_bitset::DynamicBitset<unsigned>& ConceptDenotation::get_data() const {
     return m_data;
 }
 
@@ -86,7 +82,7 @@ dynamic_bitset::DynamicBitset<unsigned>& RoleDenotation::get_data() {
     return m_data;
 }
 
-const dynamic_bitset::DynamicBitset<unsigned>& RoleDenotation::get_const_data() const {
+const dynamic_bitset::DynamicBitset<unsigned>& RoleDenotation::get_data() const {
     return m_data;
 }
 
@@ -169,7 +165,6 @@ const RoleDenotation& InstanceInfo::get_top_role() const {
 size_t InstanceInfo::compute_hash() const {
     return m_pImpl->compute_hash();
 }
-
 
 
 VocabularyInfo::VocabularyInfo() : m_pImpl(VocabularyInfoImpl()) { }
@@ -424,24 +419,19 @@ size_t State::compute_hash() const {
 
 
 Concept::Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Concept>&& concept)
-    : Element<ConceptDenotation>(vocabulary_info), m_pImpl(ConceptImpl(concept)), m_element(concept) { }
-
-Concept::Concept(const Concept& other)
-    : Element<ConceptDenotation>(other.get_vocabulary_info()), m_pImpl(ConceptImpl(*other.m_pImpl)), m_element(other.get_element()) { }
-
-Concept& Concept::operator=(const Concept& other) {
-    if (this != &other) {
-        Element<ConceptDenotation>::operator=(other);
-        m_pImpl = other.m_pImpl;
-        m_element = other.get_element();
+    : Element<ConceptDenotation>(vocabulary_info), m_element(concept) {
+    if (!m_element) {
+        throw std::runtime_error("Concept::Concept - tried to construct Concept from nullptr");
     }
-    return *this;
 }
 
 Concept::~Concept() = default;
 
 ConceptDenotation Concept::evaluate(const State& state) const {
-    return m_pImpl->evaluate(this, state);
+    if (state.get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
+        throw std::runtime_error("Concept::evaluate - mismatched vocabularies of Concept and State.");
+    }
+    return m_element->evaluate(state);
 }
 
 int Concept::compute_complexity() const {
@@ -458,24 +448,19 @@ std::shared_ptr<const element::Concept> Concept::get_element() const {
 
 
 Role::Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Role>&& role)
-    : Element<RoleDenotation>(vocabulary_info), m_pImpl(RoleImpl(role)), m_element(role) { }
-
-Role::Role(const Role& other)
-    : Element<RoleDenotation>(other.get_vocabulary_info()), m_pImpl(RoleImpl(*other.m_pImpl)), m_element(other.get_element()) { }
-
-Role& Role::operator=(const Role& other) {
-    if (this != &other) {
-        Element<RoleDenotation>::operator=(other);
-        m_pImpl = other.m_pImpl;
-        m_element = other.get_element();
+    : Element<RoleDenotation>(vocabulary_info), m_element(role) {
+    if (!m_element) {
+        throw std::runtime_error("Role::Role - tried to construct Role from nullptr");
     }
-    return *this;
 }
 
 Role::~Role() = default;
 
 RoleDenotation Role::evaluate(const State& state) const {
-    return m_pImpl->evaluate(this, state);
+    if (state.get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
+        throw std::runtime_error("Role::evaluate - mismatched vocabularies of Role and State.");
+    }
+    return m_element->evaluate(state);
 }
 
 int Role::compute_complexity() const {
@@ -491,26 +476,20 @@ std::shared_ptr<const element::Role> Role::get_element() const {
 }
 
 
-
 Numerical::Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Numerical>&& numerical)
-    : Element<int>(vocabulary_info), m_pImpl(NumericalImpl(numerical)), m_element(numerical) { }
-
-Numerical::Numerical(const Numerical& other)
-    : Element<int>(other.get_vocabulary_info()), m_pImpl(NumericalImpl(*other.m_pImpl)), m_element(other.get_element()) { }
-
-Numerical& Numerical::operator=(const Numerical& other) {
-    if (this != &other) {
-        Element<int>::operator=(other);
-        m_pImpl = other.m_pImpl;
-        m_element = other.get_element();
+    : Element<int>(vocabulary_info), m_element(numerical) {
+    if (!m_element) {
+        throw std::runtime_error("Numerical::Numerical - tried to construct Numerical from nullptr");
     }
-    return *this;
 }
 
 Numerical::~Numerical() = default;
 
 int Numerical::evaluate(const State& state) const {
-    return m_pImpl->evaluate(this, state);
+    if (state.get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
+        throw std::runtime_error("Numerical::evaluate - mismatched vocabularies of Numerical and State.");
+    }
+    return m_element->evaluate(state);
 }
 
 int Numerical::compute_complexity() const {
@@ -527,24 +506,19 @@ std::shared_ptr<const element::Numerical> Numerical::get_element() const {
 
 
 Boolean::Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Boolean>&& boolean)
-    : Element<bool>(vocabulary_info), m_pImpl(BooleanImpl(boolean)), m_element(boolean) { }
-
-Boolean::Boolean(const Boolean& other)
-    : Element<bool>(other.get_vocabulary_info()), m_pImpl(BooleanImpl(*other.m_pImpl)), m_element(other.get_element()) { }
-
-Boolean& Boolean::operator=(const Boolean& other) {
-    if (this != &other) {
-        Element<bool>::operator=(other);
-        m_pImpl = other.m_pImpl;
-        m_element = other.get_element();
+    : Element<bool>(vocabulary_info), m_element(boolean) {
+    if (!m_element) {
+        throw std::runtime_error("Boolean::Boolean - tried to construct Boolean from nullptr");
     }
-    return *this;
 }
 
 Boolean::~Boolean() = default;
 
 bool Boolean::evaluate(const State& state) const {
-    return m_pImpl->evaluate(this, state);
+    if (state.get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
+        throw std::runtime_error("Boolean::evaluate - mismatched vocabularies of Boolean and State.");
+    }
+    return m_element->evaluate(state);
 }
 
 int Boolean::compute_complexity() const {

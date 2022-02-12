@@ -59,25 +59,24 @@ Boolean SyntacticElementFactoryImpl::parse_boolean(const std::string &descriptio
     return Boolean(m_vocabulary_info, parser::Parser().parse(*m_vocabulary_info, description)->parse_boolean(*m_vocabulary_info, m_caches));
 }
 
-// TODO: add checks whether the VocabularyInfo matches.
 Boolean SyntacticElementFactoryImpl::make_empty_boolean(const Concept& concept) {
     return Boolean(m_vocabulary_info, m_caches.m_boolean_cache->insert(
-        std::make_unique<element::EmptyBoolean<element::Concept_Ptr>>(*m_vocabulary_info, concept.get_element())).first);
+        std::make_unique<element::EmptyBoolean<element::Concept>>(*m_vocabulary_info, concept.get_element())).first);
 }
 
 Boolean SyntacticElementFactoryImpl::make_empty_boolean(const Role& role) {
     return Boolean(m_vocabulary_info, m_caches.m_boolean_cache->insert(
-        std::make_unique<element::EmptyBoolean<element::Role_Ptr>>(*m_vocabulary_info, role.get_element())).first);
+        std::make_unique<element::EmptyBoolean<element::Role>>(*m_vocabulary_info, role.get_element())).first);
 }
 
 Boolean SyntacticElementFactoryImpl::make_concept_inclusion_boolean(const Concept& concept_left, const Concept& concept_right) {
     return Boolean(m_vocabulary_info, m_caches.m_boolean_cache->insert(
-        std::make_unique<element::ConceptInclusionBoolean>(*m_vocabulary_info, concept_left.get_element(), concept_right.get_element())).first);
+        std::make_unique<element::InclusionBoolean<element::Concept>>(*m_vocabulary_info, concept_left.get_element(), concept_right.get_element())).first);
 }
 
 Boolean SyntacticElementFactoryImpl::make_role_inclusion_boolean(const Role& role_left, const Role& role_right) {
     return Boolean(m_vocabulary_info, m_caches.m_boolean_cache->insert(
-        std::make_unique<element::RoleInclusionBoolean>(*m_vocabulary_info, role_left.get_element(), role_right.get_element())).first);
+        std::make_unique<element::InclusionBoolean<element::Role>>(*m_vocabulary_info, role_left.get_element(), role_right.get_element())).first);
 }
 
 Boolean SyntacticElementFactoryImpl::make_nullary_boolean(const Predicate& predicate) {

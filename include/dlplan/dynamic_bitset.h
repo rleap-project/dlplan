@@ -5,6 +5,8 @@
 #include <limits>
 #include <vector>
 
+#include "../../src/utils/hash_utils.h"
+
 
 /*
   Poor man's version of boost::dynamic_bitset, mostly copied from there.
@@ -142,10 +144,7 @@ public:
         for (std::size_t i = 0; i < blocks.size(); ++i) {
             result.blocks[i] = ~blocks[i];
         }
-        // we must reset bits outside of the range num_bits for correct hashing.
-        for (std::size_t pos = num_bits; pos < blocks.size() * bits_per_block; ++pos) {
-            result.blocks[block_index(pos)] &= ~bit_mask(pos);
-        }
+        result.zero_unused_bits();
         return result;
     }
 
@@ -165,15 +164,6 @@ public:
                 return false;
         }
         return true;
-    }
-
-    std::size_t compute_hash() const {
-        size_t seed = blocks.size();
-        for (const Block b : blocks) {
-
-        }
-        throw std::runtime_error("Not implemented");
-        return seed;
     }
 
     /**

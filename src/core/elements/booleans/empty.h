@@ -9,13 +9,15 @@ namespace dlplan::core::element {
 template<typename T>
 class EmptyBoolean : public Boolean {
 protected:
-    const T m_element;
+    const std::shared_ptr<const T> m_element;
 
 public:
-    EmptyBoolean(const VocabularyInfo& vocabulary, T element) : Boolean(vocabulary, "b_empty"), m_element(element) { }
+    EmptyBoolean(const VocabularyInfo& vocabulary, std::shared_ptr<const T> element)
+        : Boolean(vocabulary, "b_empty"), m_element(element) {
+    }
 
     bool evaluate(const State& state) const override {
-        return m_element->evaluate(state).get_const_data().none();
+        return m_element->evaluate(state).get_data().none();
     }
 
     int compute_complexity() const override {

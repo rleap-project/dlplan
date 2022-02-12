@@ -21,7 +21,7 @@ public:
     ConceptDenotation evaluate(const State& state) const override {
         const auto c = m_concept->evaluate(state);
         ConceptDenotation result = state.get_instance_info()->get_top_concept();
-        result.get_data() &= ~c.get_const_data();
+        result.get_data() &= ~c.get_data();
         return result;
     }
 
