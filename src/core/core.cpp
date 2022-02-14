@@ -251,6 +251,10 @@ bool Constant::operator!=(const Constant& other) const {
     return !(*this == other);
 }
 
+std::string Constant::str() const {
+    return m_pImpl->str();
+}
+
 int Constant::get_index() const {
     return m_pImpl->get_index();
 }
@@ -280,6 +284,10 @@ bool Predicate::operator==(const Predicate& other) const {
 
 bool Predicate::operator!=(const Predicate& other) const {
     return !(*this == other);
+}
+
+std::string Predicate::str() const {
+    return m_pImpl->str();
 }
 
 int Predicate::get_index() const {
@@ -317,6 +325,10 @@ bool Object::operator!=(const Object& other) const {
     return !(*this == other);
 }
 
+std::string Object::str() const {
+    return m_pImpl->str();
+}
+
 const std::string& Object::get_name() const {
     return m_pImpl->get_name();
 }
@@ -349,6 +361,10 @@ bool Atom::operator==(const Atom& other) const {
 
 bool Atom::operator!=(const Atom& other) const {
     return !(*this == other);
+}
+
+std::string Atom::str() const {
+    return m_pImpl->str();
 }
 
 const std::string& Atom::get_name() const {

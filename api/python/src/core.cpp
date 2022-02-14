@@ -23,6 +23,7 @@ void init_core(py::module_ &m) {
     py::class_<core::Constant>(m, "Constant")
         .def("__eq__", &core::Constant::operator==)
         .def("__neq__", &core::Constant::operator!=)
+        .def("__repr__", &core::Constant::str)
         .def("get_index", &core::Constant::get_index)
         .def("get_name", &core::Constant::get_name)
     ;
@@ -30,6 +31,7 @@ void init_core(py::module_ &m) {
     py::class_<core::Object>(m, "Object")
         .def("__eq__", &core::Object::operator==)
         .def("__neq__", &core::Object::operator!=)
+        .def("__repr__", &core::Object::str)
         .def("get_index", &core::Object::get_index)
         .def("get_name", &core::Object::get_name)
     ;
@@ -37,6 +39,7 @@ void init_core(py::module_ &m) {
     py::class_<core::Predicate>(m, "Predicate")
         .def("__eq__", &core::Predicate::operator==)
         .def("__neq__", &core::Predicate::operator!=)
+        .def("__repr__", &core::Predicate::str)
         .def("get_name", &core::Predicate::get_name)
         .def("get_arity", &core::Predicate::get_arity)
         .def("get_index", &core::Predicate::get_index)
@@ -45,6 +48,7 @@ void init_core(py::module_ &m) {
     py::class_<core::Atom>(m, "Atom")
         .def("__eq__", &core::Atom::operator==)
         .def("__neq__", &core::Atom::operator!=)
+        .def("__repr__", &core::Atom::str)
         .def("get_name", &core::Atom::get_name)
         .def("get_index", &core::Atom::get_index)
         .def("get_predicate", &core::Atom::get_predicate)
@@ -66,10 +70,16 @@ void init_core(py::module_ &m) {
         .def(py::init<>())
         .def("add_predicate", &core::VocabularyInfo::add_predicate)
         .def("add_constant", &core::VocabularyInfo::add_constant)
+        .def("exists_predicate", &core::VocabularyInfo::exists_predicate)
         .def("exists_predicate_name", &core::VocabularyInfo::exists_predicate_name)
         .def("get_predicates", &core::VocabularyInfo::get_predicates)
         .def("get_predicate_idx", &core::VocabularyInfo::get_predicate_idx)
         .def("get_predicate", &core::VocabularyInfo::get_predicate)
+        .def("exists_constant", &core::VocabularyInfo::exists_constant)
+        .def("exists_constant_name", &core::VocabularyInfo::exists_constant_name)
+        .def("get_constants", &core::VocabularyInfo::get_constants)
+        .def("get_constant_idx", &core::VocabularyInfo::get_constant_idx)
+        .def("get_constant", &core::VocabularyInfo::get_constant)
     ;
 
     py::class_<core::InstanceInfo, std::shared_ptr<core::InstanceInfo>>(m, "InstanceInfo")

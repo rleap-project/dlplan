@@ -15,5 +15,9 @@ const std::string& ConstantImpl::get_name() const {
     return m_name;
 }
 
+std::string ConstantImpl::str() const {
+    return m_name;
+}
+
 }
 }

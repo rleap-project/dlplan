@@ -25,6 +25,21 @@ if __name__ == "__main__":
     instance_data = InstanceData(args.instance, domain_data, args.max_num_states)
     dlplan_states = [state.dlplan_state for state in instance_data.states]
 
+    # print vocabulary and instance information for easy re-parsing from the cpp code.
+    print("\nPredicates:")
+    print("\n".join([str(predicate) for predicate in domain_data.vocabulary_info.get_predicates()]))
+    print("\nConstants:")
+    print("\n".join([str(constant) for constant in domain_data.vocabulary_info.get_constants()]))
+    print("\nObjects:")
+    print("\n".join([str(obj) for obj in instance_data.instance_info.get_objects()]))
+    print("\nAtoms:")
+    print("\n".join([str(obj) for obj in instance_data.instance_info.get_atoms()]))
+    print("\nStatic atom indices:")
+    print("\n".join([str(idx) for idx in instance_data.instance_info.get_static_atom_idxs()]))
+    print("\nStates:")
+    print("\n".join([str(state) for state in dlplan_states]))
+    print()
+
     print("Instance information:")
     print(f"Number of states: {len(dlplan_states)}")
     print(f"Number of dynamic atoms: {len(instance_data.dynamic_atoms)}")

@@ -18,4 +18,8 @@ int PredicateImpl::get_arity() const {
     return m_arity;
 }
 
+std::string PredicateImpl::str() const {
+    return m_name + " " + std::to_string(m_arity);
+}
+
 }

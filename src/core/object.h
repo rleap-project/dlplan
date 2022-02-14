@@ -18,6 +18,8 @@ public:
 
     const std::string& get_name() const;
     int get_index() const;
+
+    std::string str() const;
 };
 
 }

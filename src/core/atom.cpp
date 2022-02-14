@@ -47,15 +47,7 @@ bool AtomImpl::get_is_static() const {
 }
 
 std::string AtomImpl::str() const {
-    std::stringstream ss;
-    ss << "<"
-       << m_name << ","
-       << m_index << ","
-       << m_predicate.get_name() << ","
-       << m_predicate.get_arity() << ","
-       << m_objects.size() << ","
-       << ">";
-    return ss.str();
+    return get_name();
 }
 
 }

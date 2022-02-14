@@ -21,6 +21,8 @@ public:
     const std::string& get_name() const;
     int get_index() const;
     int get_arity() const;
+
+    std::string str() const;
 };
 
 }

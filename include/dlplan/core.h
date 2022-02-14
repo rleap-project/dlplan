@@ -99,6 +99,8 @@ public:
     bool operator==(const Constant& other) const;
     bool operator!=(const Constant& other) const;
 
+    std::string str() const;
+
     int get_index() const;
     const std::string& get_name() const;
 };
@@ -121,6 +123,8 @@ public:
 
     bool operator==(const Predicate& other) const;
     bool operator!=(const Predicate& other) const;
+
+    std::string str() const;
 
     /**
      * Getters.
@@ -149,6 +153,8 @@ public:
     bool operator==(const Object& other) const;
     bool operator!=(const Object& other) const;
 
+    std::string str() const;
+
     int get_index() const;
     const std::string& get_name() const;
 };
@@ -175,6 +181,8 @@ public:
 
     bool operator==(const Atom& other) const;
     bool operator!=(const Atom& other) const;
+
+    std::string str() const;
 
     /**
      * Getters.

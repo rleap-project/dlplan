@@ -14,5 +14,8 @@ int ObjectImpl::get_index() const {
     return m_index;
 }
 
+std::string ObjectImpl::str() const {
+    return m_name;
+}
 
 }
