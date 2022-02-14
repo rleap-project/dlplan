@@ -5,6 +5,7 @@
 import argparse
 import logging
 import time
+import sys
 
 from domain_data import DomainData
 from instance_data import InstanceData
@@ -26,7 +27,7 @@ if __name__ == "__main__":
     dlplan_states = [state.dlplan_state for state in instance_data.states]
 
     # print vocabulary and instance information for easy re-parsing from the cpp code.
-    print("\nPredicates:")
+    print("Predicates:")
     print("\n".join([str(predicate) for predicate in domain_data.vocabulary_info.get_predicates()]))
     print("\nConstants:")
     print("\n".join([str(constant) for constant in domain_data.vocabulary_info.get_constants()]))
@@ -45,6 +46,8 @@ if __name__ == "__main__":
     print(f"Number of dynamic atoms: {len(instance_data.dynamic_atoms)}")
     print(f"Number of static atoms: {len(instance_data.static_atoms)}")
     print(f"Number of objects: {instance_data.instance_info.get_num_objects()}")
+
+    sys.stdout.flush()
 
     feature_reprs = domain_data.feature_generator.generate(domain_data.syntactic_element_factory, args.c, args.t, args.f, args.n, dlplan_states)
     start = time.time()

@@ -63,9 +63,12 @@ const Index_Vec& StateImpl::get_atom_idxs() const {
 
 std::string StateImpl::str() const {
     std::string res("{");
-    for (const auto& atom_idx : m_atom_idxs) {
-        const auto& atom = m_instance_info->get_atom(atom_idx);
-        res += atom.str() + ", ";
+    for (int i = 0; i < static_cast<int>(m_atom_idxs.size()); ++i) {
+        const auto& atom = m_instance_info->get_atom(m_atom_idxs[i]);
+        res += atom.str();
+        if (i < static_cast<int>(m_atom_idxs.size()) - 1) {
+            res += ", ";
+        }
     }
     res += "}";
     return res;
