@@ -1,0 +1,2 @@
+add_executable(experiment_core main.cpp)
+target_link_libraries(experiment_core dlplancore)
