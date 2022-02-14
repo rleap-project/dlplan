@@ -15,7 +15,7 @@ class Atom;
 class StateImpl {
 private:
     const std::shared_ptr<const InstanceInfo> m_instance_info;
-    // The underlying implementation currently is a vector of atoms.
+    // TODO: partition into dynamic and static portion to improve performance
     const Index_Vec m_atom_idxs;
 
 public:

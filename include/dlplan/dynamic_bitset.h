@@ -5,8 +5,6 @@
 #include <limits>
 #include <vector>
 
-#include "../../src/utils/hash_utils.h"
-
 
 /*
   Poor man's version of boost::dynamic_bitset, mostly copied from there.
