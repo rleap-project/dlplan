@@ -51,7 +51,15 @@ State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vecto
 State::State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs)
     : m_instance_info(instance_info), m_atom_idxs(convert_atoms(*instance_info, atom_idxs)) { }
 
-State::~State() { }
+State::State(const State&) = default;
+
+State& State::operator=(const State&) = default;
+
+State::~State() = default;
+
+State::State(State&& other) = default;
+
+State& State::operator=(State&& other) = default;
 
 bool State::operator==(const State& other) const {
     return (get_atom_idxs() == other.get_atom_idxs()) && (get_instance_info() == other.get_instance_info());

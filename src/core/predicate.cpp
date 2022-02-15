@@ -6,7 +6,11 @@ namespace dlplan::core {
 Predicate::Predicate(const std::string& name, int index, int arity)
     : m_name(name), m_index(index), m_arity(arity) { }
 
-Predicate::~Predicate() { }
+Predicate::Predicate(const Predicate& other) = default;
+
+Predicate& Predicate::operator=(const Predicate& other) = default;
+
+Predicate::~Predicate() = default;
 
 bool Predicate::operator==(const Predicate& other) const {
     return (get_index() == other.get_index()) && (get_name() == other.get_name() && get_arity() == other.get_arity());

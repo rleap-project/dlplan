@@ -11,7 +11,6 @@
 #include "element_factory.h"
 #include "instance_info.h"
 #include "vocabulary_info.h"
-#include "constant.h"
 #include "elements/types.h"
 
 
@@ -84,6 +83,9 @@ const dynamic_bitset::DynamicBitset<unsigned>& RoleDenotation::get_data() const 
 
 
 InstanceInfo::InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info) : m_pImpl(InstanceInfoImpl(vocabulary_info)) { }
+
+InstanceInfo::InstanceInfo(const InstanceInfo& other)
+    : m_pImpl(*other.m_pImpl) {}
 
 InstanceInfo& InstanceInfo::operator=(const InstanceInfo& other) {
     if (this != &other) {
@@ -222,41 +224,6 @@ const std::vector<Constant>& VocabularyInfo::get_constants() const {
 
 size_t VocabularyInfo::compute_hash() const {
     return m_pImpl->compute_hash();
-}
-
-
-Constant::Constant(const std::string& name, int index)
-    : m_pImpl(ConstantImpl(name, index)) { }
-
-Constant::Constant(const Constant& other) : m_pImpl(*other.m_pImpl) { }
-
-Constant& Constant::operator=(const Constant& other) {
-    if (this != &other) {
-        m_pImpl = other.m_pImpl;
-    }
-    return *this;
-}
-
-Constant::~Constant() { }
-
-bool Constant::operator==(const Constant& other) const {
-    return (get_index() == other.get_index() && (get_name() == other.get_name()));
-}
-
-bool Constant::operator!=(const Constant& other) const {
-    return !(*this == other);
-}
-
-std::string Constant::str() const {
-    return m_pImpl->str();
-}
-
-int Constant::get_index() const {
-    return m_pImpl->get_index();
-}
-
-const std::string& Constant::get_name() const {
-    return m_pImpl->get_name();
 }
 
 

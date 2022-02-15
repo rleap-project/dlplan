@@ -15,15 +15,6 @@ namespace dlplan::core {
 class SyntacticElementFactoryImpl;
 class InstanceInfoImpl;
 class VocabularyInfoImpl;
-class PredicateImpl;
-class ConstantImpl;
-class ObjectImpl;
-class AtomImpl;
-class StateImpl;
-class ConceptImpl;
-class RoleImpl;
-class NumericalImpl;
-class BooleanImpl;
 class SyntacticElementFactory;
 class InstanceInfo;
 class VocabularyInfo;
@@ -86,15 +77,13 @@ public:
 
 class Constant {
 private:
-    pimpl<ConstantImpl> m_pImpl;
+    const std::string m_name;
+    const int m_index;
 
     Constant(const std::string& name, int index);
     friend class VocabularyInfoImpl;
 
 public:
-    Constant(const Constant& other);
-    Constant& operator=(const Constant& other);
-    ~Constant();
 
     bool operator==(const Constant& other) const;
     bool operator!=(const Constant& other) const;
@@ -111,14 +100,17 @@ public:
  */
 class Predicate {
 private:
-    const std::string m_name;
-    const int m_index;
-    const int m_arity;
+    std::string m_name;
+    int m_index;
+    int m_arity;
 
     Predicate(const std::string& name, int index, int arity);
     friend class VocabularyInfoImpl;
 
 public:
+    Predicate() = delete;
+    Predicate(const Predicate& other);
+    Predicate& operator=(const Predicate& other);
     ~Predicate();
 
     bool operator==(const Predicate& other) const;
@@ -140,13 +132,16 @@ public:
  */
 class Object {
 private:
-    const std::string m_name;
-    const int m_index;
+    std::string m_name;
+    int m_index;
 
     Object(const std::string& name, int index);
     friend class InstanceInfoImpl;
 
 public:
+    Object() = delete;
+    Object(const Object& other);
+    Object& operator=(const Object& other);
     ~Object();
 
     bool operator==(const Object& other) const;
@@ -164,11 +159,11 @@ public:
  */
 class Atom {
 private:
-    const std::string m_name;
-    const int m_index;
-    const Predicate m_predicate;
-    const std::vector<Object> m_objects;
-    const bool m_is_static;
+    std::string m_name;
+    int m_index;
+    Predicate m_predicate;
+    std::vector<Object> m_objects;
+    bool m_is_static;
 
     Atom(const std::string& name,
         int index,
@@ -178,6 +173,9 @@ private:
     friend class InstanceInfoImpl;
 
 public:
+    Atom() = delete;
+    Atom(const Atom& other);
+    Atom& operator=(const Atom& other);
     ~Atom();
 
     bool operator==(const Atom& other) const;
@@ -202,13 +200,21 @@ public:
  */
 class State {
 private:
-    const std::shared_ptr<const InstanceInfo> m_instance_info;
-    const Index_Vec m_atom_idxs;
+    std::shared_ptr<const InstanceInfo> m_instance_info;
+    Index_Vec m_atom_idxs;
+
+    // std::unordered_map<int, std::vector<int>> m_per_predicate_atoms;
 
 public:
+    State() = delete;
     State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms);
     State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs);
+    State(const State& other);
+    State& operator=(const State& other);
     ~State();
+    State(State&& other);
+    State& operator=(State&& other);
+
 
     bool operator==(const State& other) const;
     bool operator!=(const State& other) const;
@@ -267,9 +273,10 @@ private:
     pimpl<InstanceInfoImpl> m_pImpl;
 
 public:
-    InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info);
-    InstanceInfo& operator=(const InstanceInfo& other);
     InstanceInfo() = delete;
+    InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info);
+    InstanceInfo(const InstanceInfo& other);
+    InstanceInfo& operator=(const InstanceInfo& other);
     ~InstanceInfo();
 
     /**
