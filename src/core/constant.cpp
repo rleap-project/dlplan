@@ -5,6 +5,12 @@ namespace dlplan::core {
 
 Constant::Constant(const std::string& name, int index) : m_name(name), m_index(index) { }
 
+Constant::Constant(const Constant& other) = default;
+
+Constant& Constant::operator=(const Constant& other) = default;
+
+Constant::~Constant() = default;
+
 bool Constant::operator==(const Constant& other) const {
     return (get_index() == other.get_index() && (get_name() == other.get_name()));
 }

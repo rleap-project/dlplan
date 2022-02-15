@@ -77,13 +77,17 @@ public:
 
 class Constant {
 private:
-    const std::string m_name;
-    const int m_index;
+    std::string m_name;
+    int m_index;
 
     Constant(const std::string& name, int index);
     friend class VocabularyInfoImpl;
 
 public:
+    Constant() = delete;
+    Constant(const Constant& other);
+    Constant& operator=(const Constant& other);
+    ~Constant();
 
     bool operator==(const Constant& other) const;
     bool operator!=(const Constant& other) const;
@@ -212,9 +216,6 @@ public:
     State(const State& other);
     State& operator=(const State& other);
     ~State();
-    State(State&& other);
-    State& operator=(State&& other);
-
 
     bool operator==(const State& other) const;
     bool operator!=(const State& other) const;

@@ -57,10 +57,6 @@ State& State::operator=(const State&) = default;
 
 State::~State() = default;
 
-State::State(State&& other) = default;
-
-State& State::operator=(State&& other) = default;
-
 bool State::operator==(const State& other) const {
     return (get_atom_idxs() == other.get_atom_idxs()) && (get_instance_info() == other.get_instance_info());
 }
