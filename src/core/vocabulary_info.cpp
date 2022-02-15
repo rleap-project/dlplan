@@ -1,6 +1,5 @@
 #include "vocabulary_info.h"
 
-#include "predicate.h"
 #include "instance_info.h"
 #include "element_factory.h"
 

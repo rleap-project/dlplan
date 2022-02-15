@@ -1,0 +1,9 @@
+Boolean features:
+b_empty(c_and(c_primitive(at_kitchen_sandwich,0), c_primitive(no_gluten_sandwich,0)))
+b_empty(c_primitive(at_kitchen_sandwich,0))
+b_empty(c_and(c_primitive(ontray,0),c_primitive(no_gluten_sandwich,0)))
+b_empty(c_primitive(ontray,0))
+
+Numerical features:
+n_count(c_and(c_primitive(allergic_gluten,0),c_diff(c_primitive(served_g,0), c_primitive(served,0))))
+n_count(c_and(c_primitive(not_allergic_gluten,0),c_diff(c_primitive(served_g,0), c_primitive(served,0))))

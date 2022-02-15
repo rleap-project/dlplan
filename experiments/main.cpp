@@ -5,6 +5,8 @@
 #include <memory>
 #include <regex>
 #include <unordered_set>
+#include <chrono>
+#include <unistd.h>
 
 #include <dlplan/core.h>
 
@@ -30,13 +32,15 @@ std::vector<std::string> read_lines_until_empty_line(std::ifstream& file) {
 void parse_predicate_line(dlplan::core::VocabularyInfo& vocabulary_info, const std::string& line) {
     std::smatch match;
     std::regex_search(line, match, std::regex("(.*) (.*)"));
-    vocabulary_info.add_predicate(match[1], std::atoi(match[2].str().c_str()));
+    const auto& predicate = vocabulary_info.add_predicate(match[1], std::atoi(match[2].str().c_str()));
+    std::cout << "Added predicate: " << predicate.str() << std::endl;
 }
 
 void parse_constant_line(dlplan::core::VocabularyInfo& vocabulary_info, const std::string& line) {
     std::smatch match;
     std::regex_search(line, match, std::regex("(.*)"));
-    vocabulary_info.add_constant(match[1]);
+    const auto& constant = vocabulary_info.add_constant(match[1]);
+    std::cout << "Added constant: " << constant.str() << std::endl;
 }
 
 std::shared_ptr<const dlplan::core::VocabularyInfo> construct_vocabulary_info(
@@ -74,7 +78,7 @@ static const std::vector<std::pair<AtomTokenType, std::regex>> atom_token_type_e
     { AtomTokenType::COMMA, build_regex(",") },
     { AtomTokenType::OPENING_PARENTHESIS, build_regex("\\(") },
     { AtomTokenType::CLOSING_PARENTHESIS, build_regex("\\)") },
-    { AtomTokenType::IDENTIFIER, build_regex("[a-zA-Z_-]\\w*") },
+    { AtomTokenType::IDENTIFIER, build_regex("[a-zA-Z_\\-]\\w*") },
 };
 
 void parse_atom_line(dlplan::core::InstanceInfo& instance_info, const std::string& line, int idx, const std::unordered_set<int>& static_atom_idxs) {
@@ -104,10 +108,12 @@ void parse_atom_line(dlplan::core::InstanceInfo& instance_info, const std::strin
         if (tokens[i].first != AtomTokenType::IDENTIFIER) throw std::runtime_error("parse_atom_line - expected identifier at position " + std::to_string(i) + ".");
         object_names.push_back(tokens[i].second);
     }
-    if (static_atom_idxs.find(idx) == static_atom_idxs.end()) {
-        instance_info.add_static_atom(predicate_name, object_names);
+    if (static_atom_idxs.find(idx) != static_atom_idxs.end()) {
+        const auto& atom = instance_info.add_static_atom(predicate_name, object_names);
+        std::cout << "Added static atom: " << atom.str() << std::endl;
     } else {
-        instance_info.add_atom(predicate_name, object_names);
+        const auto& atom = instance_info.add_atom(predicate_name, object_names);
+        std::cout << "Added dynamic atom: " << atom.str() << std::endl;
     }
 }
 
@@ -145,7 +151,7 @@ static const std::vector<std::pair<StateTokenType, std::regex>> state_token_type
     { StateTokenType::COMMA, build_regex(",") },
     { StateTokenType::OPENING_BRACE, build_regex("\\{") },
     { StateTokenType::CLOSING_BRACE, build_regex("\\}") },
-    { StateTokenType::IDENTIFIER, build_regex("[a-zA-Z_\\-\\(\\)]\\w*") },
+    { StateTokenType::IDENTIFIER, build_regex("(\\S*)[,}]") },
 };
 
 dlplan::core::State parse_state_line(
@@ -160,7 +166,7 @@ dlplan::core::State parse_state_line(
         for (const auto& pair : state_token_type_expressions) {
             std::regex regex = pair.second;
             if (std::regex_search(start, end, match, regex)) {
-                tokens.emplace_back(pair.first, match[1].str());
+                tokens.emplace_back(pair.first, match[2].str());
                 start += match[0].str().size();
                 has_match = true;
             }
@@ -169,11 +175,13 @@ dlplan::core::State parse_state_line(
             throw std::runtime_error("parse_state_line - cannot parse line into state. Line is: " + line);
         }
     }
-    //for (const auto& pair : tokens) {
-    //    std::cout << pair.second << " ";
-    //}
-    //std::cout << std::endl;
-    return dlplan::core::State(instance_info, std::vector<int>());
+    std::vector<int> atom_idxs;
+    for (int i = 1; i < tokens.size(); ++i) {
+        if (tokens[i].first != StateTokenType::IDENTIFIER) std::runtime_error("parse_state_line - expected identifier at position " + std::to_string(i) + ".");
+        const auto& atom = instance_info->get_atom(instance_info->get_atom_idx(tokens[i].second));
+        if (!atom.get_is_static()) atom_idxs.push_back(atom.get_index());
+    }
+    return dlplan::core::State(instance_info, atom_idxs);
 }
 
 std::vector<dlplan::core::State> construct_states(
@@ -186,13 +194,33 @@ std::vector<dlplan::core::State> construct_states(
     return states;
 }
 
+std::vector<dlplan::core::Boolean> parse_boolean_features(
+    dlplan::core::SyntacticElementFactory& factory,
+    std::vector<std::string> boolean_feature_lines) {
+    std::vector<dlplan::core::Boolean> result;
+    for (const auto& line : boolean_feature_lines) {
+        result.push_back(factory.parse_boolean(line));
+    }
+    return result;
+}
+
+std::vector<dlplan::core::Numerical> parse_numerical_features(
+    dlplan::core::SyntacticElementFactory& factory,
+    std::vector<std::string> numerical_feature_lines) {
+    std::vector<dlplan::core::Numerical> result;
+    for (const auto& line : numerical_feature_lines) {
+        result.push_back(factory.parse_numerical(line));
+    }
+    return result;
+}
+
 int main(int argc, char** argv) {
     std::cout << argc << std::endl;
     for (int i = 0; i < argc; ++i) {
         std::cout << argv[i] << std::endl;
     }
-    if (argc != 3) {
-        std::cout << "User error. Expected: ./experiment_core <states.txt> <features.txt>" << std::endl;
+    if (argc != 4) {
+        std::cout << "User error. Expected: ./experiment_core <str:states.txt> <str:features.txt> <int:num_iterations>" << std::endl;
         return 1;
     }
     std::ifstream file1(argv[1]);
@@ -221,16 +249,38 @@ int main(int argc, char** argv) {
 
     std::ifstream file2;
     file2.open(argv[2]);
+    std::vector<std::string> boolean_features_lines;
+    std::vector<std::string> numerical_features_lines;
     if (file2.is_open()) {
         read_and_verify_line(file2, "Boolean features:");
-        std::vector<std::string> boolean_features_lines = read_lines_until_empty_line(file2);
+        boolean_features_lines = read_lines_until_empty_line(file2);
         read_and_verify_line(file2, "Numerical features:");
-        std::vector<std::string> numerical_features_lines = read_lines_until_empty_line(file2);
+        numerical_features_lines = read_lines_until_empty_line(file2);
         file2.close();
     }
 
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary_info = construct_vocabulary_info(predicates_lines, constants_lines);
     std::shared_ptr<const dlplan::core::InstanceInfo> instance_info = construct_instance_info(vocabulary_info, objects_lines, atoms_lines, static_atom_indices_lines);
     std::vector<dlplan::core::State> states = construct_states(instance_info, states_lines);
+    dlplan::core::SyntacticElementFactory factory = construct_factory(vocabulary_info);
+    std::vector<dlplan::core::Boolean> boolean_features = parse_boolean_features(factory, boolean_features_lines);
+    std::vector<dlplan::core::Numerical> numerical_features = parse_numerical_features(factory, numerical_features_lines);
+
+    std::cout << "Started feature evaluation" << std::endl;
+    auto start = std::chrono::steady_clock::now();
+    for (int i = 0; i < std::atoi(argv[3]); ++i) {
+        for (const auto& state : states) {
+            for (const auto& boolean : boolean_features) {
+                boolean.evaluate(state);
+            }
+            for (const auto& numerical : numerical_features) {
+                numerical.evaluate(state);
+            }
+        }
+    }
+    auto end = std::chrono::steady_clock::now();
+    std::cout << "Elapsed time in milliseconds: "
+        << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
+        << " ms" << std::endl;
     return 0;
 }

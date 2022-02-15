@@ -1,4 +1,4 @@
-#include "state.h"
+#include "../../include/dlplan/core.h"
 
 #include <algorithm>
 #include <stdexcept>
@@ -28,7 +28,6 @@ static Index_Vec convert_atoms(const InstanceInfo& instance_info, const std::vec
 }
 
 
-
 static Index_Vec convert_atoms(const InstanceInfo& instance_info, const Index_Vec& atom_idxs) {
     if (!std::all_of(atom_idxs.begin(), atom_idxs.end(), [&](int atom_idx){ return utils::in_bounds(atom_idx, instance_info.get_atoms()); })) {
         throw std::runtime_error("State::convert_atoms - atom index out of range.");
@@ -45,23 +44,33 @@ static Index_Vec convert_atoms(const InstanceInfo& instance_info, const Index_Ve
     return atom_indices;
 }
 
-StateImpl::StateImpl(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms)
+
+State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms)
     : m_instance_info(instance_info), m_atom_idxs(convert_atoms(*instance_info, atoms)) { }
 
-StateImpl::StateImpl(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs)
+State::State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs)
     : m_instance_info(instance_info), m_atom_idxs(convert_atoms(*instance_info, atom_idxs)) { }
 
+State::~State() { }
 
-std::shared_ptr<const InstanceInfo> StateImpl::get_instance_info() const {
+bool State::operator==(const State& other) const {
+    return (get_atom_idxs() == other.get_atom_idxs()) && (get_instance_info() == other.get_instance_info());
+}
+
+bool State::operator!=(const State& other) const {
+    return !(*this == other);
+}
+
+std::shared_ptr<const InstanceInfo> State::get_instance_info() const {
     return m_instance_info;
 }
 
-const Index_Vec& StateImpl::get_atom_idxs() const {
+const Index_Vec& State::get_atom_idxs() const {
     return m_atom_idxs;
 }
 
 
-std::string StateImpl::str() const {
+std::string State::str() const {
     std::string res("{");
     for (int i = 0; i < static_cast<int>(m_atom_idxs.size()); ++i) {
         const auto& atom = m_instance_info->get_atom(m_atom_idxs[i]);
@@ -74,7 +83,7 @@ std::string StateImpl::str() const {
     return res;
 }
 
-size_t StateImpl::compute_hash() const {
+size_t State::compute_hash() const {
     std::size_t seed = 0;
     utils::hashing::hash_combine(seed, std::hash<std::vector<int>>()(m_atom_idxs));
     utils::hashing::hash_combine(seed, m_instance_info);

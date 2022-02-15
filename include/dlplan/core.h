@@ -111,14 +111,14 @@ public:
  */
 class Predicate {
 private:
-    pimpl<PredicateImpl> m_pImpl;
+    const std::string m_name;
+    const int m_index;
+    const int m_arity;
 
     Predicate(const std::string& name, int index, int arity);
     friend class VocabularyInfoImpl;
 
 public:
-    Predicate(const Predicate& other);
-    Predicate& operator=(const Predicate& other);
     ~Predicate();
 
     bool operator==(const Predicate& other) const;
@@ -140,14 +140,13 @@ public:
  */
 class Object {
 private:
-    pimpl<ObjectImpl> m_pImpl;
+    const std::string m_name;
+    const int m_index;
 
     Object(const std::string& name, int index);
     friend class InstanceInfoImpl;
 
 public:
-    Object(const Object& other);
-    Object& operator=(const Object& other);
     ~Object();
 
     bool operator==(const Object& other) const;
@@ -165,7 +164,11 @@ public:
  */
 class Atom {
 private:
-    pimpl<AtomImpl> m_pImpl;
+    const std::string m_name;
+    const int m_index;
+    const Predicate m_predicate;
+    const std::vector<Object> m_objects;
+    const bool m_is_static;
 
     Atom(const std::string& name,
         int index,
@@ -175,8 +178,6 @@ private:
     friend class InstanceInfoImpl;
 
 public:
-    Atom(const Atom& other);
-    Atom& operator=(const Atom& other);
     ~Atom();
 
     bool operator==(const Atom& other) const;
@@ -201,13 +202,12 @@ public:
  */
 class State {
 private:
-    pimpl<StateImpl> m_pImpl;
+    const std::shared_ptr<const InstanceInfo> m_instance_info;
+    const Index_Vec m_atom_idxs;
 
 public:
     State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms);
     State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs);
-    State(const State& other);
-    State& operator=(const State& other);
     ~State();
 
     bool operator==(const State& other) const;
