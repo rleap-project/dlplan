@@ -10,6 +10,8 @@
 #include "pimpl.h"
 #include "types.h"
 #include "dynamic_bitset.h"
+#include "per_index_array.h"
+#include "per_index_bitset.h"
 #include "phmap.h"
 
 
@@ -20,6 +22,9 @@ class VocabularyInfoImpl;
 class SyntacticElementFactory;
 class InstanceInfo;
 class VocabularyInfo;
+class Boolean;
+class Numerical;
+class State;
 namespace element {
     template<typename T>
     class Element;
@@ -74,6 +79,88 @@ public:
     int get_num_objects() const;
     dynamic_bitset::DynamicBitset<unsigned>& get_data();
     const dynamic_bitset::DynamicBitset<unsigned>& get_data() const;
+};
+
+
+/**
+ * Provides a cache entry for the result of evaluating an element.
+ *
+ * This cache is useful when evaluating a set of elements
+ * that use the same sub-elements on the same state.
+ */
+class PerElementEvaluationCache {
+private:
+    /**
+     * Fragmented indexing scheme to indexing scheme
+     * and existing entries indicate that the result is cached.
+     * Element indices can be fragmented because we allow deletion.
+     */
+    phmap::flat_hash_map<int, int> m_concept_index_to_cache_index;
+    phmap::flat_hash_map<int, int> m_role_index_to_cache_index;
+
+    utils::PerIndexBitset m_concept_denot_cache;
+    utils::PerIndexBitset m_role_denot_cache;
+    // Booleans and numericals are not interesting for caching
+    // because they can be computed quickly from cached concept
+    // and role denotations.
+
+public:
+    PerElementEvaluationCache(int num_objects) { }
+
+    struct PerElementEvaluationContext {
+        PerElementEvaluationCache& cache;
+        std::shared_ptr<State> state;
+    };
+
+    /**
+     * Passing a different state will automatically clear the cache.
+     * Ownership is passed because we need to check whether
+     * the state has changed in comparison to previous evaluation.
+     */
+    ConceptDenotation retrieve_or_evaluate(const Concept& concept, std::shared_ptr<State> state);
+    RoleDenotation retrieve_or_evaluate(const Role& role, std::shared_ptr<State> state);
+};
+
+/**
+ * Provides a cache entry for the result of evaluating an element on a given state.
+ *
+ * This cache is useful if one wants to evaluate Boolean and Numericals
+ * with the same state multiple times but PerElementEvaluationCache
+ * fails to cache the result because different states are evaluated in between.
+ *
+ * An example usage is a Policy where a target state
+ * becomes the new source state if a transition is classified as good.
+ */
+class PerElementAndStateEvaluationCache {
+private:
+    utils::PerIndexBitset m_boolean_denots_cache;
+    utils::PerIndexArray<int> m_numerical_denots_cache;
+    // Concepts and roles are not interesting for caching because
+    // we usually do not refer to them during search.
+
+public:
+    PerElementAndStateEvaluationCache(int num_booleans, int num_numericals) { }
+
+    struct PerElementAndStateEvaluationContext {
+        PerElementEvaluationCache& element_cache;
+        PerElementAndStateEvaluationCache& element_and_state_cache;
+        // TODO: think of saving the index directly in the state.
+        int state_idx;
+        std::shared_ptr<State> state;
+    };
+
+    bool retrieve_or_evaluate(const Boolean& boolean, const State& state);
+    int retrieve_or_evaluate(const Numerical& numerical, const State& state);
+
+    /**
+     * User can manually clear the cache or free memory.
+     * This functionality is useful when running
+     * a sequence of search algorithms,
+     * where each search generates different sets of states.
+     * A concrete example is Serialized Iterated Width.
+     */
+    void clear();
+    void free();
 };
 
 

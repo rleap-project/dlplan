@@ -172,6 +172,15 @@ public:
     std::shared_ptr<const PolicyRoot> get_root() const;
 };
 
+/**
+ * Packaged information necessary for evaluation.
+ */
+struct EvaluationContext{
+    int state_index;
+    core::State& state;
+    core::PerElementEvaluationCache& per_element_cache;
+    core::PerElementAndStateEvaluationCache& per_element_and_state_cache;
+};
 
 /**
  * A policy is a set of rules over Boolean and numerical features.
