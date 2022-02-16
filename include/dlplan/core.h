@@ -123,6 +123,10 @@ public:
     ConceptDenotation retrieve_or_evaluate(const element::Concept& concept, PerElementEvaluationContext& context);
     RoleDenotation retrieve_or_evaluate(const element::Role& role, PerElementEvaluationContext& context);
 
+    /**
+     * We have to clear the cache if we identify in the root element
+     * that the state has changed in comparison to the previous evaluation.
+     */
     void clear_if_state_changed(std::shared_ptr<State> state);
 };
 

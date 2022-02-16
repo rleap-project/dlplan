@@ -3,6 +3,7 @@
 
 #include "../include/dlplan/core.h"
 
+
 using namespace dlplan::core;
 
 
@@ -51,15 +52,22 @@ TEST(DLPTests, InstanceCreation) {
     Numerical numerical = factory.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))");
     EXPECT_EQ(numerical.compute_complexity(), 4);
 
-    State state1(instance, {a0, a3});
-    State state2(instance, {0, 3});
-    EXPECT_EQ(state1, state2);
-    EXPECT_EQ(numerical.evaluate(state1), 1);
-    EXPECT_EQ(numerical.evaluate(state2), 1);
+    PerElementEvaluationCache cache(instance->get_num_objects());
 
-    State state3(instance, {a2, a3});
-    State state4(instance, {2, 3});
-    EXPECT_EQ(state3, state4);
-    EXPECT_EQ(numerical.evaluate(state3), 0);
-    EXPECT_EQ(numerical.evaluate(state4), 0);
+    pState state1 = std::make_shared<State>(State(instance, {a0, a3}));
+    pState state2 = std::make_shared<State>(State(instance, {0, 3}));
+    PerElementEvaluationContext context1(cache, state1);
+    PerElementEvaluationContext context2(cache, state2);
+
+    EXPECT_EQ(*context1.state, *context2.state);
+    EXPECT_EQ(numerical.evaluate(context1), 1);
+    EXPECT_EQ(numerical.evaluate(context2), 1);
+
+    pState state3 = std::make_shared<State>(State(instance, {a2, a3}));
+    pState state4 = std::make_shared<State>(State(instance, {2, 3}));
+    PerElementEvaluationContext context3(cache, state3);
+    PerElementEvaluationContext context4(cache, state4);
+    EXPECT_EQ(*context3.state, *context4.state);
+    EXPECT_EQ(numerical.evaluate(context3), 0);
+    EXPECT_EQ(numerical.evaluate(context4), 0);
 }

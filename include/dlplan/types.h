@@ -8,6 +8,9 @@
 
 
 namespace dlplan::core {
+class State;
+
+using pState = std::shared_ptr<State>;
 
 using Name_Vec = std::vector<std::string>;
 using Index_Vec = std::vector<int>;
