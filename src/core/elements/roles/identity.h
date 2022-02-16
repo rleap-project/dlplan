@@ -19,18 +19,17 @@ public:
         }
     }
 
-    RoleDenotation evaluate(const State& state) const override {
-        const auto c = m_concept->evaluate(state);
-        const auto& c_data = c.get_data();
-        int num_objects = state.get_instance_info()->get_num_objects();
-        RoleDenotation result(num_objects);
-        auto& result_data = result.get_data();
+    void evaluate(PerElementEvaluationContext& context, RoleDenotation& result) const override {
+        const ConceptDenotation c = m_concept->evaluate(context);
+        const dlplan::utils::BitsetView& c_data = c.get_data();
+        dlplan::utils::BitsetView& result_data = result.get_data();
+        result_data.reset();
+        int num_objects = result.get_num_objects();
         for (int i = 0; i < num_objects; ++i) {
             if (c_data.test(i)) {
                 result_data.set(i * num_objects + i);
             }
         }
-        return result;
     }
 
     int compute_complexity() const override {

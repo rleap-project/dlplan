@@ -23,11 +23,12 @@ public:
         }
     }
 
-    ConceptDenotation evaluate(const State& state) const override {
+    void evaluate(PerElementEvaluationContext& context, ConceptDenotation& result) const override {
+        const auto& state = *context.state;
         const InstanceInfo& info = *state.get_instance_info();
         int num_objects = info.get_num_objects();
-        ConceptDenotation result(num_objects);
         auto& result_data = result.get_data();
+        result_data.reset();
         const auto& atoms = info.get_atoms();
         const auto& per_predicate_idx_static_atom_idxs = state.get_per_predicate_idx_static_atom_idxs();
         auto it = per_predicate_idx_static_atom_idxs.find(m_predicate.get_index());
@@ -37,7 +38,6 @@ public:
                 result_data.set(atom.get_object(m_pos).get_index());
             }
         }
-        return result;
     }
 
     int compute_complexity() const override {

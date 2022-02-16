@@ -14,6 +14,7 @@ target_sources(dlplancore
         parser/parser.cpp
         parser/tokenizer.cpp
         parser/ast_factory.cpp
+        per_element_evaluation_cache.cpp
         elements/utils.cpp
         ../utils/logging.cpp
         ../utils/per_index_bitset.cpp

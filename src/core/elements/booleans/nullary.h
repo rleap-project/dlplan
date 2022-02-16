@@ -20,7 +20,8 @@ public:
         }
     }
 
-    bool evaluate(const State& state) const override {
+    bool evaluate(PerElementEvaluationContext& context) const override {
+        const auto& state = *context.state;
         const auto& per_predicate_idx_static_atom_idxs = state.get_per_predicate_idx_static_atom_idxs();
         auto it = per_predicate_idx_static_atom_idxs.find(m_predicate.get_index());
         if (it != per_predicate_idx_static_atom_idxs.end() && !it->second.empty()) {

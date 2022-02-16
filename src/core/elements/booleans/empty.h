@@ -16,8 +16,8 @@ public:
         : Boolean(vocabulary, "b_empty"), m_element(element) {
     }
 
-    bool evaluate(const State& state) const override {
-        return m_element->evaluate(state).get_data().none();
+    bool evaluate(PerElementEvaluationContext& context) const override {
+        return m_element->evaluate(context).get_data().none();
     }
 
     int compute_complexity() const override {

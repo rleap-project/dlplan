@@ -24,7 +24,11 @@ class InstanceInfo;
 class VocabularyInfo;
 class Boolean;
 class Numerical;
+class Concept;
+class Role;
 class State;
+struct PerElementEvaluationContext;
+struct PerElementAndStateEvaluationContext;
 namespace element {
     template<typename T>
     class Element;
@@ -41,11 +45,10 @@ class ConceptDenotation {
 private:
     // no pimpl to save indirection.
     int m_num_objects;
-    dynamic_bitset::DynamicBitset<unsigned> m_data;
+    utils::BitsetView m_data;
 
 public:
-    explicit ConceptDenotation(int num_objects);
-    ConceptDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data);
+    ConceptDenotation(int num_objects, utils::BitsetView data);
     ~ConceptDenotation();
 
     /**
@@ -56,8 +59,8 @@ public:
     std::vector<int> to_vector() const;
 
     int get_num_objects() const;
-    dynamic_bitset::DynamicBitset<unsigned>& get_data();
-    const dynamic_bitset::DynamicBitset<unsigned>& get_data() const;
+    utils::BitsetView& get_data();
+    const utils::BitsetView& get_data() const;
 };
 
 /**
@@ -67,20 +70,18 @@ class RoleDenotation {
 private:
     // no pimpl to save indirection.
     int m_num_objects;
-    dynamic_bitset::DynamicBitset<unsigned> m_data;
+    utils::BitsetView m_data;
 
 public:
-    explicit RoleDenotation(int num_objects);
-    RoleDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data);
+    RoleDenotation(int num_objects, utils::BitsetView data);
     ~RoleDenotation();
 
     std::vector<std::pair<int, int>> to_vector() const;
 
     int get_num_objects() const;
-    dynamic_bitset::DynamicBitset<unsigned>& get_data();
-    const dynamic_bitset::DynamicBitset<unsigned>& get_data() const;
+    utils::BitsetView& get_data();
+    const utils::BitsetView& get_data() const;
 };
-
 
 /**
  * Provides a cache entry for the result of evaluating an element.
@@ -98,27 +99,41 @@ private:
     phmap::flat_hash_map<int, int> m_concept_index_to_cache_index;
     phmap::flat_hash_map<int, int> m_role_index_to_cache_index;
 
+    int m_num_objects;
+
     utils::PerIndexBitset m_concept_denot_cache;
     utils::PerIndexBitset m_role_denot_cache;
     // Booleans and numericals are not interesting for caching
     // because they can be computed quickly from cached concept
     // and role denotations.
 
-public:
-    PerElementEvaluationCache(int num_objects) { }
+    std::shared_ptr<State> m_cached_state;
 
-    struct PerElementEvaluationContext {
-        PerElementEvaluationCache& cache;
-        std::shared_ptr<State> state;
-    };
+public:
+    PerElementEvaluationCache(int num_objects);
+    PerElementEvaluationCache(const PerElementEvaluationCache& other) = delete;
+    PerElementEvaluationCache& operator=(const PerElementEvaluationCache& other) = delete;
+    ~PerElementEvaluationCache();
 
     /**
      * Passing a different state will automatically clear the cache.
      * Ownership is passed because we need to check whether
      * the state has changed in comparison to previous evaluation.
      */
-    ConceptDenotation retrieve_or_evaluate(const Concept& concept, std::shared_ptr<State> state);
-    RoleDenotation retrieve_or_evaluate(const Role& role, std::shared_ptr<State> state);
+    ConceptDenotation retrieve_or_evaluate(const element::Concept& concept, PerElementEvaluationContext& context);
+    RoleDenotation retrieve_or_evaluate(const element::Role& role, PerElementEvaluationContext& context);
+
+    void clear_if_state_changed(std::shared_ptr<State> state);
+};
+
+struct PerElementEvaluationContext {
+    PerElementEvaluationCache& cache;
+    std::shared_ptr<State> state;
+
+    PerElementEvaluationContext(PerElementEvaluationCache& cache, std::shared_ptr<State> state)
+        : cache(cache), state(state) {
+        // TODO: error checking cache and state must have same instance_info
+    }
 };
 
 /**
@@ -131,37 +146,37 @@ public:
  * An example usage is a Policy where a target state
  * becomes the new source state if a transition is classified as good.
  */
-class PerElementAndStateEvaluationCache {
-private:
-    utils::PerIndexBitset m_boolean_denots_cache;
-    utils::PerIndexArray<int> m_numerical_denots_cache;
-    // Concepts and roles are not interesting for caching because
-    // we usually do not refer to them during search.
-
-public:
-    PerElementAndStateEvaluationCache(int num_booleans, int num_numericals) { }
-
-    struct PerElementAndStateEvaluationContext {
-        PerElementEvaluationCache& element_cache;
-        PerElementAndStateEvaluationCache& element_and_state_cache;
-        // TODO: think of saving the index directly in the state.
-        int state_idx;
-        std::shared_ptr<State> state;
-    };
-
-    bool retrieve_or_evaluate(const Boolean& boolean, const State& state);
-    int retrieve_or_evaluate(const Numerical& numerical, const State& state);
-
-    /**
-     * User can manually clear the cache or free memory.
-     * This functionality is useful when running
-     * a sequence of search algorithms,
-     * where each search generates different sets of states.
-     * A concrete example is Serialized Iterated Width.
-     */
-    void clear();
-    void free();
-};
+//class PerElementAndStateEvaluationCache {
+//private:
+//    utils::PerIndexBitset m_boolean_denots_cache;
+//    utils::PerIndexArray<int> m_numerical_denots_cache;
+//    // Concepts and roles are not interesting for caching because
+//    // we usually do not refer to them during search.
+//
+//public:
+//    PerElementAndStateEvaluationCache(int num_booleans, int num_numericals) { }
+//
+//    bool retrieve_or_evaluate(const element::Boolean& boolean, PerElementAndStateEvaluationContext& context);
+//    int retrieve_or_evaluate(const element::Numerical& numerical, PerElementAndStateEvaluationContext& context);
+//
+//    /**
+//     * User can manually clear the cache or free memory.
+//     * This functionality is useful when running
+//     * a sequence of search algorithms,
+//     * where each search generates different sets of states.
+//     * A concrete example is Serialized Iterated Width.
+//     */
+//    void clear();
+//    void free();
+//};
+//
+//struct PerElementAndStateEvaluationContext {
+//    PerElementEvaluationCache& element_cache;
+//    PerElementAndStateEvaluationCache& element_and_state_cache;
+//    // TODO: think of saving the index directly in the state.
+//    int state_idx;
+//    std::shared_ptr<State> state;
+//};
 
 
 class Constant {
@@ -396,8 +411,6 @@ public:
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
     const Index_Vec& get_static_atom_idxs() const;
     const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs() const;
-    const ConceptDenotation& get_top_concept() const;
-    const RoleDenotation& get_top_role() const;
 };
 
 
@@ -418,7 +431,7 @@ public:
     /**
      * Evaluates the element for a state given as a vector of atom indices.
      */
-    virtual T evaluate(const State& state) const = 0;
+    virtual T evaluate(PerElementEvaluationContext& context) const = 0;
 
     /**
      * Returns the complexity of the element
@@ -451,7 +464,7 @@ private:
 public:
     ~Concept() override;
 
-    ConceptDenotation evaluate(const State& state) const override;
+    ConceptDenotation evaluate(PerElementEvaluationContext& context) const override;
 
     int compute_complexity() const override;
 
@@ -474,7 +487,7 @@ private:
 public:
     ~Role() override;
 
-    RoleDenotation evaluate(const State& state) const override;
+    RoleDenotation evaluate(PerElementEvaluationContext& context) const override;
 
     int compute_complexity() const override;
 
@@ -497,7 +510,7 @@ private:
 public:
     ~Numerical() override;
 
-    int evaluate(const State& state) const override;
+    int evaluate(PerElementEvaluationContext& context) const override;
 
     int compute_complexity() const override;
 
@@ -520,7 +533,7 @@ private:
 public:
     ~Boolean() override;
 
-    bool evaluate(const State& state) const override;
+    bool evaluate(PerElementEvaluationContext& context) const override;
 
     int compute_complexity() const override;
 

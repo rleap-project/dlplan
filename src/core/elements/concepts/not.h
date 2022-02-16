@@ -18,11 +18,11 @@ public:
         }
     }
 
-    ConceptDenotation evaluate(const State& state) const override {
-        const auto c = m_concept->evaluate(state);
-        ConceptDenotation result = state.get_instance_info()->get_top_concept();
-        result.get_data() &= ~c.get_data();
-        return result;
+    void evaluate(PerElementEvaluationContext& context, ConceptDenotation& result) const override {
+        const ConceptDenotation c = m_concept->evaluate(context);
+        dlplan::utils::BitsetView& result_data = result.get_data();
+        result_data.set(c.get_data());
+        ~result_data;
     }
 
     int compute_complexity() const override {

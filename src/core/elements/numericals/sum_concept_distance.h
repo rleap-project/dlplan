@@ -23,18 +23,18 @@ public:
         }
     }
 
-    int evaluate(const State& state) const override {
-        const ConceptDenotation c = m_concept_from->evaluate(state);
+    int evaluate(PerElementEvaluationContext& context) const override {
+        const ConceptDenotation c = m_concept_from->evaluate(context);
         const auto& c_data = c.get_data();
         if (c_data.none()) {
             return INF;
         }
-        const ConceptDenotation d = m_concept_to->evaluate(state);
+        const ConceptDenotation d = m_concept_to->evaluate(context);
         const auto& d_data = d.get_data();
         if (d_data.none()) {
             return INF;
         }
-        const RoleDenotation r = m_role->evaluate(state);
+        const RoleDenotation r = m_role->evaluate(context);
 
         int num_c = c.get_data().count();
         int num_d = d.get_data().count();
@@ -42,7 +42,7 @@ public:
         const ConceptDenotation b = (num_c <= num_d) ? d : c;
         const utils::AdjList adj_list = (num_c <= num_d) ? utils::compute_adjacency_list(r) : utils::compute_adjacency_list(r, true);
 
-        int num_objects = state.get_instance_info()->get_num_objects();
+        int num_objects = context.state->get_instance_info()->get_num_objects();
         int result = 0;
         for (int i = 0; i < num_objects; ++i) {  // source
             if (a.get_data().test(i)) {

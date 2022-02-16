@@ -25,12 +25,12 @@ public:
         }
     }
 
-    ConceptDenotation evaluate(const State& state) const override {
-        const auto r = m_role->evaluate(state);
-        const auto& r_data = r.get_data();
-        int num_objects = state.get_instance_info()->get_num_objects();
-        ConceptDenotation result(num_objects);
-        auto& result_data = result.get_data();
+    void evaluate(PerElementEvaluationContext& context, ConceptDenotation& result) const override {
+        const RoleDenotation r = m_role->evaluate(context);
+        const dlplan::utils::BitsetView& r_data = r.get_data();
+        dlplan::utils::BitsetView& result_data = result.get_data();
+        result_data.reset();
+        int num_objects = result.get_num_objects();
         if (m_pos == 0) {
             for (int i = 0; i < num_objects; ++i) {
                 for (int j = 0; j < num_objects; ++j) {
@@ -52,7 +52,6 @@ public:
                 }
             }
         }
-        return result;
     }
 
     int compute_complexity() const override {

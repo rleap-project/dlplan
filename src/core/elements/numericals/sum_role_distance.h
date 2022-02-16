@@ -23,19 +23,19 @@ public:
         }
     }
 
-    int evaluate(const State& state) const override {
-        const RoleDenotation& r = m_role_from->evaluate(state);
+    int evaluate(PerElementEvaluationContext& context) const override {
+        const RoleDenotation& r = m_role_from->evaluate(context);
         const auto& r_data = r.get_data();
         if (r_data.none()) {
             return INF;
         }
-        const RoleDenotation t = m_role_to->evaluate(state);
+        const RoleDenotation t = m_role_to->evaluate(context);
         const auto& t_data = t.get_data();
         if (t_data.none()) {
             return INF;
         }
-        const RoleDenotation s = m_role->evaluate(state);
-        int num_objects = state.get_instance_info()->get_num_objects();
+        const RoleDenotation s = m_role->evaluate(context);
+        int num_objects = context.state->get_instance_info()->get_num_objects();
         utils::AdjList adj_list = utils::compute_adjacency_list(s);
         // 3. Compute pairwise distances using a sequence of bfs calls.
         utils::PairwiseDistances pairwise_distances = utils::compute_floyd_warshall(adj_list, true);

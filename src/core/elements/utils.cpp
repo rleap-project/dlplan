@@ -58,11 +58,13 @@ Distances compute_distances_from_state(const AdjList& adj_list, int source) {
 }
 
 
-int compute_multi_source_multi_target_shortest_distance(const AdjList& adj_list, const dynamic_bitset::DynamicBitset<unsigned>& sources, const dynamic_bitset::DynamicBitset<unsigned>& targets) {
+int compute_multi_source_multi_target_shortest_distance(const AdjList& adj_list, const ConceptDenotation& sources, const ConceptDenotation& targets) {
+    dlplan::utils::BitsetView sources_data = sources.get_data();
+    dlplan::utils::BitsetView targets_data = targets.get_data();
     Distances distances(adj_list.size(), INF);
     std::deque<int> queue;
     for (int i = 0; i < static_cast<int>(adj_list.size()); ++i) {
-        if (sources.test(i)) {
+        if (sources_data.test(i)) {
             distances[i] = 0;
             queue.push_back(i);
         }
@@ -73,7 +75,7 @@ int compute_multi_source_multi_target_shortest_distance(const AdjList& adj_list,
         for (int t : adj_list[s]) {
             int alt = distances[s] + 1;
             if (distances[t] > alt) {
-                if (targets.test(t)) {
+                if (targets_data.test(t)) {
                     return alt;
                 }
                 queue.push_back(t);
@@ -114,6 +116,7 @@ PairwiseDistances compute_floyd_warshall(const AdjList& adj_list, bool reflexive
 }
 
 
+/*
 RoleDenotation compute_transitive_closure(const PairwiseDistances& distances, int num_objects) {
     RoleDenotation result(num_objects * num_objects);
     auto& result_data = result.get_data();
@@ -125,6 +128,6 @@ RoleDenotation compute_transitive_closure(const PairwiseDistances& distances, in
         }
     }
     return result;
-}
+}*/
 
 }

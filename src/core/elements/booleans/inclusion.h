@@ -20,9 +20,9 @@ public:
     : Boolean(vocabulary, "b_inclusion"), m_element_left(element_left), m_element_right(element_right) {
     }
 
-    bool evaluate(const State& state) const override {
-        const auto l = m_element_left->evaluate(state);
-        const auto r = m_element_right->evaluate(state);
+    bool evaluate(PerElementEvaluationContext& context) const override {
+        const auto l = m_element_left->evaluate(context);
+        const auto r = m_element_right->evaluate(context);
         return l.get_data().is_subset_of(r.get_data());
     }
 

@@ -4,12 +4,8 @@
 #include "types.h"
 
 
-namespace dlplan {
-namespace dynamic_bitset {
-template<typename T>
-class DynamicBitset;
-}
-namespace core {
+namespace dlplan::core {
+class ConceptDenotation;
 class RoleDenotation;
 namespace element::utils {
 
@@ -32,7 +28,7 @@ extern AdjList compute_adjacency_list(const RoleDenotation& r, bool inverse=fals
  */
 extern Distances compute_distances_from_state(const AdjList& adj_list, int source);
 
-extern int compute_multi_source_multi_target_shortest_distance(const AdjList& adj_list, const dynamic_bitset::DynamicBitset<unsigned>& sources, const dynamic_bitset::DynamicBitset<unsigned>& targets);
+extern int compute_multi_source_multi_target_shortest_distance(const AdjList& adj_list, const ConceptDenotation& sources, const ConceptDenotation& targets);
 
 /**
  * Compute pairwise distances with floyd warshall algorithm.
@@ -42,9 +38,8 @@ extern PairwiseDistances compute_floyd_warshall(const AdjList& adj_list, bool re
 /**
  * Compute the transitive (reflexive) closure over the role denotation
  */
-extern RoleDenotation compute_transitive_closure(const PairwiseDistances& distances, int num_objects);
+//extern RoleDenotation compute_transitive_closure(const PairwiseDistances& distances, int num_objects);
 
-}
 }
 }
 

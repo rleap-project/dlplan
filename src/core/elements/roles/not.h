@@ -18,11 +18,11 @@ public:
         }
     }
 
-    RoleDenotation evaluate(const State& state) const override {
-        const auto r = m_role->evaluate(state);
-        RoleDenotation result = state.get_instance_info()->get_top_role();
-        result.get_data() &= ~r.get_data();
-        return result;
+    void evaluate(PerElementEvaluationContext& context, RoleDenotation& result) const override {
+        const RoleDenotation r = m_role->evaluate(context);
+        dlplan::utils::BitsetView& result_data = result.get_data();
+        result_data.set(r.get_data());
+        ~result_data;
     }
 
     int compute_complexity() const override {

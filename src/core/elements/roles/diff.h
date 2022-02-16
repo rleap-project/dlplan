@@ -19,11 +19,11 @@ public:
         }
     }
 
-    RoleDenotation evaluate(const State& state) const override {
-        auto l = m_role_left->evaluate(state);
-        const auto r = m_role_right->evaluate(state);
-        l.get_data() -= r.get_data();
-        return l;
+    void evaluate(PerElementEvaluationContext& context, RoleDenotation& result) const override {
+        const RoleDenotation l = m_role_left->evaluate(context);
+        const RoleDenotation r = m_role_right->evaluate(context);
+        result.get_data().set(l.get_data());
+        result.get_data() -= r.get_data();
     }
 
     int compute_complexity() const override {

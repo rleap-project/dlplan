@@ -16,10 +16,7 @@
 
 namespace dlplan::core {
 
-ConceptDenotation::ConceptDenotation(int num_objects)
-    : m_num_objects(num_objects), m_data(dynamic_bitset::DynamicBitset<unsigned>(num_objects)) { }
-
-ConceptDenotation::ConceptDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data)
+ConceptDenotation::ConceptDenotation(int num_objects, utils::BitsetView data)
     : m_num_objects(num_objects), m_data(std::move(data)) { }
 
 ConceptDenotation::~ConceptDenotation() { }
@@ -38,19 +35,15 @@ int ConceptDenotation::get_num_objects() const {
     return m_num_objects;
 }
 
-dynamic_bitset::DynamicBitset<unsigned>& ConceptDenotation::get_data() {
+utils::BitsetView& ConceptDenotation::get_data() {
     return m_data;
 }
 
-const dynamic_bitset::DynamicBitset<unsigned>& ConceptDenotation::get_data() const {
+const utils::BitsetView& ConceptDenotation::get_data() const {
     return m_data;
 }
 
-
-RoleDenotation::RoleDenotation(int num_objects)
-    : m_num_objects(num_objects), m_data(dynamic_bitset::DynamicBitset<unsigned>(num_objects * num_objects)) { }
-
-RoleDenotation::RoleDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data)
+RoleDenotation::RoleDenotation(int num_objects, utils::BitsetView data)
     : m_num_objects(num_objects), m_data(std::move(data)) { }
 
 RoleDenotation::~RoleDenotation() { }
@@ -73,11 +66,11 @@ int RoleDenotation::get_num_objects() const {
     return m_num_objects;
 }
 
-dynamic_bitset::DynamicBitset<unsigned>& RoleDenotation::get_data() {
+utils::BitsetView& RoleDenotation::get_data() {
     return m_data;
 }
 
-const dynamic_bitset::DynamicBitset<unsigned>& RoleDenotation::get_data() const {
+const utils::BitsetView& RoleDenotation::get_data() const {
     return m_data;
 }
 
@@ -156,14 +149,6 @@ const phmap::flat_hash_map<int, std::vector<int>>& InstanceInfo::get_per_predica
     return m_pImpl->get_per_predicate_idx_static_atom_idxs();
 }
 
-const ConceptDenotation& InstanceInfo::get_top_concept() const {
-    return m_pImpl->get_top_concept();
-}
-
-const RoleDenotation& InstanceInfo::get_top_role() const {
-    return m_pImpl->get_top_role();
-}
-
 
 VocabularyInfo::VocabularyInfo() : m_pImpl(VocabularyInfoImpl()) { }
 
@@ -240,11 +225,13 @@ Concept::Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::sha
 
 Concept::~Concept() = default;
 
-ConceptDenotation Concept::evaluate(const State& state) const {
-    if (state.get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
+ConceptDenotation Concept::evaluate(PerElementEvaluationContext& context) const {
+    // TODO: move duplicate code into element.evaluate?
+    if (context.state->get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
         throw std::runtime_error("Concept::evaluate - mismatched vocabularies of Concept and State.");
     }
-    return m_element->evaluate(state);
+    context.cache.clear_if_state_changed(context.state);
+    return m_element->evaluate(context);
 }
 
 int Concept::compute_complexity() const {
@@ -269,11 +256,12 @@ Role::Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_pt
 
 Role::~Role() = default;
 
-RoleDenotation Role::evaluate(const State& state) const {
-    if (state.get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
+RoleDenotation Role::evaluate(PerElementEvaluationContext& context) const {
+    if (context.state->get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
         throw std::runtime_error("Role::evaluate - mismatched vocabularies of Role and State.");
     }
-    return m_element->evaluate(state);
+    context.cache.clear_if_state_changed(context.state);
+    return m_element->evaluate(context);
 }
 
 int Role::compute_complexity() const {
@@ -298,11 +286,12 @@ Numerical::Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std:
 
 Numerical::~Numerical() = default;
 
-int Numerical::evaluate(const State& state) const {
-    if (state.get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
+int Numerical::evaluate(PerElementEvaluationContext& context) const {
+    if (context.state->get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
         throw std::runtime_error("Numerical::evaluate - mismatched vocabularies of Numerical and State.");
     }
-    return m_element->evaluate(state);
+    context.cache.clear_if_state_changed(context.state);
+    return m_element->evaluate(context);
 }
 
 int Numerical::compute_complexity() const {
@@ -327,11 +316,12 @@ Boolean::Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::sha
 
 Boolean::~Boolean() = default;
 
-bool Boolean::evaluate(const State& state) const {
-    if (state.get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
+bool Boolean::evaluate(PerElementEvaluationContext& context) const {
+    if (context.state->get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
         throw std::runtime_error("Boolean::evaluate - mismatched vocabularies of Boolean and State.");
     }
-    return m_element->evaluate(state);
+    context.cache.clear_if_state_changed(context.state);
+    return m_element->evaluate(context);
 }
 
 int Boolean::compute_complexity() const {
