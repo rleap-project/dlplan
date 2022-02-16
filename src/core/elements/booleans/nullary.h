@@ -21,12 +21,10 @@ public:
     }
 
     bool evaluate(const State& state) const override {
-        const InstanceInfo& info = *state.get_instance_info();
-        for (int atom_idx : state.get_atom_idxs()) {
-            const Atom& atom = info.get_atom(atom_idx);
-            if (atom.get_predicate().get_index() == m_predicate.get_index()) {
-                return true;
-            }
+        const auto& per_predicate_idx_static_atom_idxs = state.get_per_predicate_idx_static_atom_idxs();
+        auto it = per_predicate_idx_static_atom_idxs.find(m_predicate.get_index());
+        if (it != per_predicate_idx_static_atom_idxs.end() && !it->second.empty()) {
+            return true;
         }
         return false;
     }
