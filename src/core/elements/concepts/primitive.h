@@ -29,9 +29,11 @@ public:
         ConceptDenotation result(num_objects);
         auto& result_data = result.get_data();
         const auto& atoms = info.get_atoms();
-        for (int atom_idx : state.get_atom_idxs()) {
-            const Atom& atom = atoms[atom_idx];
-            if (atom.get_predicate().get_index() == m_predicate.get_index()) {
+        const auto& per_predicate_idx_static_atom_idxs = state.get_per_predicate_idx_static_atom_idxs();
+        auto it = per_predicate_idx_static_atom_idxs.find(m_predicate.get_index());
+        if (it != per_predicate_idx_static_atom_idxs.end()) {
+            for (int atom_idx : it->second) {
+                const auto& atom = atoms[atom_idx];
                 result_data.set(atom.get_object(m_pos).get_index());
             }
         }

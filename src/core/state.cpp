@@ -10,46 +10,44 @@
 
 namespace dlplan::core {
 
-static Index_Vec convert_atoms(const InstanceInfo& instance_info, const std::vector<Atom>& atoms) {
-    for (const Atom& atom : atoms) {
-        if (!instance_info.exists_atom(atom)) {
-            throw std::runtime_error("State::convert_atoms - atom (" + atom.get_name() + ") does not exist in InstanceInfo.");
-        }
-    }
-    Index_Vec atom_indices;
-    atom_indices.reserve(atoms.size() + instance_info.get_static_atom_idxs().size());
-    for (const auto& atom : atoms) {
-        if (!atom.get_is_static()) {
-            atom_indices.push_back(atom.get_index());
-        }
-    }
-    atom_indices.insert(atom_indices.end(), instance_info.get_static_atom_idxs().begin(), instance_info.get_static_atom_idxs().end());
-    return atom_indices;
-}
-
-
-static Index_Vec convert_atoms(const InstanceInfo& instance_info, const Index_Vec& atom_idxs) {
-    if (!std::all_of(atom_idxs.begin(), atom_idxs.end(), [&](int atom_idx){ return utils::in_bounds(atom_idx, instance_info.get_atoms()); })) {
-        throw std::runtime_error("State::convert_atoms - atom index out of range.");
-    }
-    Index_Vec atom_indices;
-    atom_indices.reserve(atom_idxs.size() + instance_info.get_static_atom_idxs().size());
-    const auto& atoms = instance_info.get_atoms();
-    for (int atom_idx : atom_idxs) {
-        if (!atoms[atom_idx].get_is_static()) {
-            atom_indices.push_back(atom_idx);
-        }
-    }
-    atom_indices.insert(atom_indices.end(), instance_info.get_static_atom_idxs().begin(), instance_info.get_static_atom_idxs().end());
-    return atom_indices;
-}
-
-
 State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms)
-    : m_instance_info(instance_info), m_atom_idxs(convert_atoms(*instance_info, atoms)) { }
+    : m_instance_info(instance_info) {
+    if (!std::all_of(atoms.begin(), atoms.end(), [&](const auto& atom){ return instance_info->exists_atom(atom); })) {
+        throw std::runtime_error("State::State - atom does not exist in InstanceInfo.");
+    }
+    if (!std::all_of(atoms.begin(), atoms.end(), [&](const auto& atom){ return !atom.get_is_static(); })) {
+        throw std::runtime_error("State::State - not allowed to pass static atoms because they are added automatically.");
+    }
+    m_per_predicate_idx_static_atom_idxs = instance_info->get_per_predicate_idx_static_atom_idxs();
+    m_atom_idxs.reserve(atoms.size() + instance_info->get_static_atom_idxs().size());
+    for (const auto& atom : atoms) {
+        int atom_idx = atom.get_index();
+        int predicate_idx = atom.get_predicate().get_index();
+        m_atom_idxs.push_back(atom_idx);
+        m_per_predicate_idx_static_atom_idxs[predicate_idx].push_back(atom_idx);
+    }
+    m_atom_idxs.insert(m_atom_idxs.end(), instance_info->get_static_atom_idxs().begin(), instance_info->get_static_atom_idxs().end());
+}
 
 State::State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs)
-    : m_instance_info(instance_info), m_atom_idxs(convert_atoms(*instance_info, atom_idxs)) { }
+    : m_instance_info(instance_info) {
+    const auto& atoms = instance_info->get_atoms();
+    if (!std::all_of(atom_idxs.begin(), atom_idxs.end(), [&](int atom_idx){ return utils::in_bounds(atom_idx, atoms); })) {
+        throw std::runtime_error("State::State - atom index out of range.");
+    }
+    if (!std::all_of(atom_idxs.begin(), atom_idxs.end(), [&](int atom_idx){ return !atoms[atom_idx].get_is_static(); })) {
+        throw std::runtime_error("State::State - not allowed to pass static atoms because they are added automatically.");
+    }
+    m_per_predicate_idx_static_atom_idxs = instance_info->get_per_predicate_idx_static_atom_idxs();
+    m_atom_idxs.reserve(atoms.size() + instance_info->get_static_atom_idxs().size());
+    for (int atom_idx : atom_idxs) {
+        const auto& atom = atoms[atom_idx];
+        int predicate_idx = atom.get_predicate().get_index();
+        m_atom_idxs.push_back(atom_idx);
+        m_per_predicate_idx_static_atom_idxs[predicate_idx].push_back(atom_idx);
+    }
+    m_atom_idxs.insert(m_atom_idxs.end(), instance_info->get_static_atom_idxs().begin(), instance_info->get_static_atom_idxs().end());
+}
 
 State::State(const State&) = default;
 
@@ -71,6 +69,10 @@ std::shared_ptr<const InstanceInfo> State::get_instance_info() const {
 
 const Index_Vec& State::get_atom_idxs() const {
     return m_atom_idxs;
+}
+
+const phmap::flat_hash_map<int, std::vector<int>>& State::get_per_predicate_idx_static_atom_idxs() const {
+    return m_per_predicate_idx_static_atom_idxs;
 }
 
 

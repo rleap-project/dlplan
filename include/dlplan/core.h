@@ -5,10 +5,12 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
+#include <unordered_map>
 
 #include "pimpl.h"
 #include "types.h"
 #include "dynamic_bitset.h"
+#include "phmap.h"
 
 
 namespace dlplan::core {
@@ -207,7 +209,7 @@ private:
     std::shared_ptr<const InstanceInfo> m_instance_info;
     Index_Vec m_atom_idxs;
 
-    // std::unordered_map<int, std::vector<int>> m_per_predicate_atoms;
+    phmap::flat_hash_map<int, std::vector<int>> m_per_predicate_idx_static_atom_idxs;
 
 public:
     State() = delete;
@@ -229,6 +231,7 @@ public:
      */
     std::shared_ptr<const InstanceInfo> get_instance_info() const;
     const Index_Vec& get_atom_idxs() const;
+    const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs() const;
 
     size_t compute_hash() const;
 };
@@ -305,6 +308,7 @@ public:
     int get_num_objects() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
     const Index_Vec& get_static_atom_idxs() const;
+    const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs() const;
     const ConceptDenotation& get_top_concept() const;
     const RoleDenotation& get_top_role() const;
 };

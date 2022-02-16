@@ -152,6 +152,10 @@ const Index_Vec& InstanceInfo::get_static_atom_idxs() const {
     return m_pImpl->get_static_atom_idxs();
 }
 
+const phmap::flat_hash_map<int, std::vector<int>>& InstanceInfo::get_per_predicate_idx_static_atom_idxs() const {
+    return m_pImpl->get_per_predicate_idx_static_atom_idxs();
+}
+
 const ConceptDenotation& InstanceInfo::get_top_concept() const {
     return m_pImpl->get_top_concept();
 }
