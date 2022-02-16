@@ -20,7 +20,6 @@ endif()
 
 
 include_directories(include)
-include_directories(include/phmap)
 
 # Build the library
 add_subdirectory(src)
