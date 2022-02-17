@@ -19,7 +19,11 @@ Atom::Atom(
     : m_name(name), m_index(index),
       m_predicate(predicate), m_objects(objects), m_is_static(is_static) { }
 
-Atom::~Atom() { }
+Atom::Atom(const Atom& other) = default;
+
+Atom& Atom::operator=(const Atom& other) = default;
+
+Atom::~Atom() = default;
 
 bool Atom::operator==(const Atom& other) const {
     return (get_index() == other.get_index()) && (get_name() == other.get_name());

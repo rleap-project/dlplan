@@ -225,41 +225,6 @@ size_t VocabularyInfo::compute_hash() const {
 }
 
 
-Constant::Constant(const std::string& name, int index)
-    : m_pImpl(ConstantImpl(name, index)) { }
-
-Constant::Constant(const Constant& other) : m_pImpl(*other.m_pImpl) { }
-
-Constant& Constant::operator=(const Constant& other) {
-    if (this != &other) {
-        m_pImpl = other.m_pImpl;
-    }
-    return *this;
-}
-
-Constant::~Constant() { }
-
-bool Constant::operator==(const Constant& other) const {
-    return (get_index() == other.get_index() && (get_name() == other.get_name()));
-}
-
-bool Constant::operator!=(const Constant& other) const {
-    return !(*this == other);
-}
-
-std::string Constant::str() const {
-    return m_pImpl->str();
-}
-
-int Constant::get_index() const {
-    return m_pImpl->get_index();
-}
-
-const std::string& Constant::get_name() const {
-    return m_pImpl->get_name();
-}
-
-
 Concept::Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Concept>&& concept)
     : Element<ConceptDenotation>(vocabulary_info), m_element(concept) {
     if (!m_element) {
