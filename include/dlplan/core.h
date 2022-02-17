@@ -110,7 +110,7 @@ private:
     std::shared_ptr<State> m_cached_state;
 
 public:
-    PerElementEvaluationCache(int num_objects);
+    explicit PerElementEvaluationCache(int num_objects);
     PerElementEvaluationCache(const PerElementEvaluationCache& other) = delete;
     PerElementEvaluationCache& operator=(const PerElementEvaluationCache& other) = delete;
     ~PerElementEvaluationCache();

@@ -154,7 +154,7 @@ static const std::vector<std::pair<StateTokenType, std::regex>> state_token_type
     { StateTokenType::IDENTIFIER, build_regex("(\\S*)[,}]") },
 };
 
-dlplan::core::State parse_state_line(
+dlplan::core::pState parse_state_line(
     std::shared_ptr<const dlplan::core::InstanceInfo> instance_info,
     const std::string& line) {
     auto start = line.begin();
@@ -181,13 +181,13 @@ dlplan::core::State parse_state_line(
         const auto& atom = instance_info->get_atom(instance_info->get_atom_idx(tokens[i].second));
         if (!atom.get_is_static()) atom_idxs.push_back(atom.get_index());
     }
-    return dlplan::core::State(instance_info, atom_idxs);
+    return std::make_shared<dlplan::core::State>(dlplan::core::State(instance_info, atom_idxs));
 }
 
-std::vector<dlplan::core::State> construct_states(
+std::vector<dlplan::core::pState> construct_states(
     std::shared_ptr<const dlplan::core::InstanceInfo> instance_info,
     std::vector<std::string> states_lines) {
-    std::vector<dlplan::core::State> states;
+    std::vector<dlplan::core::pState> states;
     for (const auto& line : states_lines) {
         states.push_back(parse_state_line(instance_info, line));
     }
@@ -261,20 +261,23 @@ int main(int argc, char** argv) {
 
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary_info = construct_vocabulary_info(predicates_lines, constants_lines);
     std::shared_ptr<const dlplan::core::InstanceInfo> instance_info = construct_instance_info(vocabulary_info, objects_lines, atoms_lines, static_atom_indices_lines);
-    std::vector<dlplan::core::State> states = construct_states(instance_info, states_lines);
+    std::vector<dlplan::core::pState> states = construct_states(instance_info, states_lines);
     dlplan::core::SyntacticElementFactory factory = construct_factory(vocabulary_info);
     std::vector<dlplan::core::Boolean> boolean_features = parse_boolean_features(factory, boolean_features_lines);
     std::vector<dlplan::core::Numerical> numerical_features = parse_numerical_features(factory, numerical_features_lines);
+
+    dlplan::core::PerElementEvaluationCache cache(instance_info->get_num_objects());
 
     std::cout << "Started feature evaluation" << std::endl;
     auto start = std::chrono::steady_clock::now();
     for (int i = 0; i < std::atoi(argv[3]); ++i) {
         for (const auto& state : states) {
+            dlplan::core::PerElementEvaluationContext context(cache, state);
             for (const auto& boolean : boolean_features) {
-                boolean.evaluate(state);
+                boolean.evaluate(context);
             }
             for (const auto& numerical : numerical_features) {
-                numerical.evaluate(state);
+                numerical.evaluate(context);
             }
         }
     }

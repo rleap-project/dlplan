@@ -26,7 +26,7 @@ add_subdirectory(src)
 # Build the examples
 add_subdirectory(examples)
 
-# add_subdirectory(experiments)
+add_subdirectory(experiments)
 
 enable_testing()  # This needs to be here before calling add_subdirectory
 add_subdirectory(tests)
