@@ -8,8 +8,6 @@
 #include "../../../include/dlplan/policy.h"
 #include "../../../include/dlplan/core.h"
 
-#include "../../../src/policy/evaluation_cache.h"
-
 
 namespace py = pybind11;
 
@@ -17,9 +15,6 @@ using namespace dlplan;
 
 void init_policy(py::module_ &m) {
         py::class_<policy::PolicyRoot, std::shared_ptr<policy::PolicyRoot>>(m, "PolicyRoot")
-    ;
-
-    py::class_<policy::EvaluationCaches>(m, "EvaluationCaches")
     ;
 
     py::class_<policy::BooleanFeature, std::shared_ptr<policy::BooleanFeature>>(m, "BooleanFeature")
@@ -63,7 +58,6 @@ void init_policy(py::module_ &m) {
         .def("get_numerical_features", &policy::Policy::get_numerical_features)
         .def("get_root", &policy::Policy::get_root)
         .def("compute_repr", &policy::Policy::compute_repr)
-        .def("clear_evaluation_cache", &policy::Policy::clear_evaluation_cache)
     ;
 
     py::class_<policy::PolicyBuilder>(m, "PolicyBuilder")
