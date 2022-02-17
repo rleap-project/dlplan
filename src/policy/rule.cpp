@@ -1,12 +1,10 @@
-#include "rule.h"
+#include "../include/dlplan/policy.h"
 
 #include <sstream>
 
 #include "algorithm"
 #include "condition.h"
 #include "effect.h"
-
-#include "../include/dlplan/policy.h"
 
 
 namespace dlplan::policy {
@@ -27,27 +25,33 @@ static std::vector<std::shared_ptr<const T>> sort(
     return result;
 }
 
-RuleImpl::RuleImpl(
+Rule::Rule(
     std::shared_ptr<const PolicyRoot> root,
-    std::unordered_set<std::shared_ptr<const BaseCondition>>&& conditions,
-    std::unordered_set<std::shared_ptr<const BaseEffect>>&& effects)
-    : m_root(root), m_conditions(sort(std::move(conditions))), m_effects(sort(std::move(effects))) { }
+    std::vector<std::shared_ptr<const BaseCondition>>&& conditions,
+    std::vector<std::shared_ptr<const BaseEffect>>&& effects)
+    : m_root(root), m_conditions(std::move(conditions)), m_effects(std::move(effects)) { }
 
-bool RuleImpl::evaluate_conditions(int source_index, const core::State& source, EvaluationCaches& evaluation_caches) const {
+Rule::Rule(Rule&& other) = default;
+
+Rule& Rule::operator=(Rule&& other) = default;
+
+Rule::~Rule() = default;
+
+bool Rule::evaluate_conditions(evaluator::EvaluationContext& source_context) const {
     for (const auto& condition : m_conditions) {
-        if (!condition->evaluate(source_index, source, evaluation_caches)) return false;
+        if (!condition->evaluate(source_context)) return false;
     }
     return true;
 }
 
-bool RuleImpl::evaluate_effects(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const {
+bool Rule::evaluate_effects(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const {
     for (const auto& effect : m_effects) {
-        if (!effect->evaluate(source_index, source, target_index, target, evaluation_caches)) return false;
+        if (!effect->evaluate(source_context, target_context)) return false;
     }
     return true;
 }
 
-std::string RuleImpl::compute_repr() const {
+std::string Rule::compute_repr() const {
     std::stringstream ss;
     ss << "(:rule (:conditions ";
     for (const auto& c : m_conditions) {
@@ -67,7 +71,7 @@ std::string RuleImpl::compute_repr() const {
     return ss.str();
 }
 
-std::shared_ptr<const PolicyRoot> RuleImpl::get_root() const {
+std::shared_ptr<const PolicyRoot> Rule::get_root() const {
     return m_root;
 }
 

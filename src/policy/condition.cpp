@@ -1,22 +1,20 @@
 #include "condition.h"
 
-
-#include "evaluation_cache.h"
 #include "../include/dlplan/policy.h"
 
 
 namespace dlplan::policy {
 
 
-std::unique_ptr<BaseCondition> PositiveBooleanCondition::clone_impl() const {
+std::unique_ptr<const BaseCondition> PositiveBooleanCondition::clone_impl() const {
     return std::make_unique<PositiveBooleanCondition>(*this);
 }
 
 PositiveBooleanCondition::PositiveBooleanCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature)
     : Condition<bool>(root, boolean_feature) { }
 
-bool PositiveBooleanCondition::evaluate(int source_index, const core::State& state, EvaluationCaches& evaluation_caches) const {
-    return get_feature()->evaluate(source_index, state, evaluation_caches);
+bool PositiveBooleanCondition::evaluate(evaluator::EvaluationContext& source_context) const {
+    return get_feature()->evaluate(source_context);
 }
 
 std::string PositiveBooleanCondition::compute_repr() const {
@@ -24,15 +22,15 @@ std::string PositiveBooleanCondition::compute_repr() const {
 }
 
 
-std::unique_ptr<BaseCondition> NegativeBooleanCondition::clone_impl() const {
+std::unique_ptr<const BaseCondition> NegativeBooleanCondition::clone_impl() const {
     return std::make_unique<NegativeBooleanCondition>(*this);
 }
 
 NegativeBooleanCondition::NegativeBooleanCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature)
     : Condition<bool>(root, boolean_feature) { }
 
-bool NegativeBooleanCondition::evaluate(int source_index, const core::State& state, EvaluationCaches& evaluation_caches) const {
-    return !get_feature()->evaluate(source_index, state, evaluation_caches);
+bool NegativeBooleanCondition::evaluate(evaluator::EvaluationContext& source_context) const {
+    return !get_feature()->evaluate(source_context);
 }
 
 std::string NegativeBooleanCondition::compute_repr() const {
@@ -40,15 +38,15 @@ std::string NegativeBooleanCondition::compute_repr() const {
 }
 
 
-std::unique_ptr<BaseCondition> EqualNumericalCondition::clone_impl() const {
+std::unique_ptr<const BaseCondition> EqualNumericalCondition::clone_impl() const {
     return std::make_unique<EqualNumericalCondition>(*this);
 }
 
 EqualNumericalCondition::EqualNumericalCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature)
     : Condition<int>(root, numerical_feature) { }
 
-bool EqualNumericalCondition::evaluate(int source_index, const core::State& state, EvaluationCaches& evaluation_caches) const {
-    return get_feature()->evaluate(source_index, state, evaluation_caches) == 0;
+bool EqualNumericalCondition::evaluate(evaluator::EvaluationContext& source_context) const {
+    return get_feature()->evaluate(source_context) == 0;
 }
 
 std::string EqualNumericalCondition::compute_repr() const {
@@ -56,15 +54,15 @@ std::string EqualNumericalCondition::compute_repr() const {
 }
 
 
-std::unique_ptr<BaseCondition> GreaterNumericalCondition::clone_impl() const {
+std::unique_ptr<const BaseCondition> GreaterNumericalCondition::clone_impl() const {
     return std::make_unique<GreaterNumericalCondition>(*this);
 }
 
 GreaterNumericalCondition::GreaterNumericalCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature)
     : Condition<int>(root, numerical_feature) { }
 
-bool GreaterNumericalCondition::evaluate(int source_index, const core::State& state, EvaluationCaches& evaluation_caches) const {
-    return get_feature()->evaluate(source_index, state, evaluation_caches) > 0;
+bool GreaterNumericalCondition::evaluate(evaluator::EvaluationContext& source_context) const {
+    return get_feature()->evaluate(source_context) > 0;
 }
 
 std::string GreaterNumericalCondition::compute_repr() const {

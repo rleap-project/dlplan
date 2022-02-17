@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string>
 
+#include "evaluator.h"
 #include "core.h"
 #include "pimpl.h"
 
@@ -23,10 +24,7 @@ class PolicyImpl;
 class PolicyBuilderImpl;
 class PolicyReaderImpl;
 class PolicyWriterImpl;
-class BooleanEvaluationCache;
-class NumericalEvaluationCache;
-class EvaluationCaches;
-
+class EvaluationContext;
 
 class PolicyRoot {
 public:
@@ -50,7 +48,7 @@ protected:
 public:
     virtual ~Feature();
 
-    virtual T evaluate(int state_index, const core::State& state, EvaluationCaches& evaluation_caches) const = 0;
+    virtual T evaluate(evaluator::EvaluationContext& context) const = 0;
 
     virtual std::string compute_repr() const = 0;
 
@@ -68,7 +66,7 @@ private:
     friend class PolicyBuilderImpl;
 
 public:
-    bool evaluate(int state_index, const core::State& state, EvaluationCaches& evaluation_caches) const override;
+    bool evaluate(evaluator::EvaluationContext& context) const override;
 
     std::string compute_repr() const override;
 
@@ -84,7 +82,7 @@ private:
     friend class PolicyBuilderImpl;
 
 public:
-    int evaluate(int state_index, const core::State& state, EvaluationCaches& evaluation_caches) const override;
+    int evaluate(evaluator::EvaluationContext& context) const override;
 
     std::string compute_repr() const override;
 
@@ -100,20 +98,18 @@ private:
     const std::shared_ptr<const PolicyRoot> m_root;
 
 protected:
-    virtual std::unique_ptr<BaseCondition> clone_impl() const = 0;
+    virtual std::unique_ptr<const BaseCondition> clone_impl() const = 0;
 
     BaseCondition(std::shared_ptr<const PolicyRoot> root) : m_root(root) { }
 
 public:
     virtual ~BaseCondition() = default;
 
-    //virtual bool operator<(const BaseCondition& other) const = 0;
-
-    virtual bool evaluate(int source_index, const core::State& state, EvaluationCaches& evaluation_caches) const = 0;
+    virtual bool evaluate(evaluator::EvaluationContext& source_context) const = 0;
 
     virtual std::string compute_repr() const = 0;
 
-    virtual std::unique_ptr<BaseCondition> clone() const;
+    virtual std::unique_ptr<const BaseCondition> clone() const;
 
     std::shared_ptr<const PolicyRoot> get_root() const;
 };
@@ -127,18 +123,18 @@ private:
     const std::shared_ptr<const PolicyRoot> m_root;
 
 protected:
-    virtual std::unique_ptr<BaseEffect> clone_impl() const = 0;
+    virtual std::unique_ptr<const BaseEffect> clone_impl() const = 0;
 
     BaseEffect(std::shared_ptr<const PolicyRoot> root) : m_root(root) { }
 
 public:
     virtual ~BaseEffect() = default;
 
-    virtual bool evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const = 0;
+    virtual bool evaluate(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const = 0;
 
     virtual std::string compute_repr() const = 0;
 
-    virtual std::unique_ptr<BaseEffect> clone() const;
+    virtual std::unique_ptr<const BaseEffect> clone() const;
 
     std::shared_ptr<const PolicyRoot> get_root() const;
 };
@@ -150,22 +146,27 @@ public:
  */
 class Rule {
 private:
-    pimpl<RuleImpl> m_pImpl;
+    std::shared_ptr<const PolicyRoot> m_root;
+
+    std::vector<std::shared_ptr<const BaseCondition>> m_conditions;
+    std::vector<std::shared_ptr<const BaseEffect>> m_effects;
 
 private:
-    explicit Rule(
-        std::shared_ptr<const PolicyRoot> root,
-        std::unordered_set<std::shared_ptr<const BaseCondition>>&& conditions,
-        std::unordered_set<std::shared_ptr<const BaseEffect>>&& effects);
+    Rule(std::shared_ptr<const PolicyRoot> root,
+        std::vector<std::shared_ptr<const BaseCondition>>&& conditions,
+        std::vector<std::shared_ptr<const BaseEffect>>&& effects);
     friend class PolicyBuilderImpl;
 
 public:
-    Rule(const Rule& other);
-    Rule& operator=(const Rule& other);
+    // rules should not be copieable because they must live in the cache.
+    Rule(const Rule& other) = delete;
+    Rule& operator=(const Rule& other) = delete;
+    Rule(Rule&& other);
+    Rule& operator=(Rule&& other);
     ~Rule();
 
-    bool evaluate_conditions(int source_index, const core::State& source, EvaluationCaches& evaluation_caches) const;
-    bool evaluate_effects(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const;
+    bool evaluate_conditions(evaluator::EvaluationContext& source_context) const;
+    bool evaluate_effects(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const;
 
     std::string compute_repr() const;
 
@@ -178,7 +179,13 @@ public:
  */
 class Policy {
 private:
-    pimpl<PolicyImpl> m_pImpl;
+    std::shared_ptr<const PolicyRoot> m_root;
+
+    std::vector<std::shared_ptr<const BooleanFeature>> m_boolean_features;
+    std::vector<std::shared_ptr<const NumericalFeature>> m_numerical_features;
+    std::vector<std::shared_ptr<const Rule>> m_rules;
+
+    evaluator::EvaluationCache m_cache;
 
 private:
     Policy(std::shared_ptr<const PolicyRoot> root,
@@ -190,26 +197,31 @@ private:
 public:
     Policy(const Policy& other);
     Policy& operator=(const Policy& other);
+    Policy(Policy&& other);
+    Policy& operator=(Policy&& other);
     ~Policy();
 
     /**
      * Approach 1: naive approach to evaluate (s,s')
      */
-    std::shared_ptr<const Rule> evaluate_lazy(int source_index, const core::State& source, int target_index, const core::State& target);
+    std::shared_ptr<const Rule> evaluate_lazy(int source_idx, const core::State& source_state, int target_idx, const core::State& target_state);
 
     /**
      * Approach 2: optimized approach for evaluating pairs with similar source state s, i.e., (s,s1), (s,s2), ..., (s,sn)
      */
-    std::vector<std::shared_ptr<const Rule>> evaluate_conditions_eager(int source_index, const core::State& source);
-    std::shared_ptr<const Rule> evaluate_effects_lazy(int source_index, const core::State& source, int target_index, const core::State& target, const std::vector<std::shared_ptr<const Rule>>& rules);
+    std::vector<std::shared_ptr<const Rule>> evaluate_conditions_eager(int source_idx, const core::State& source_state);
+    std::shared_ptr<const Rule> evaluate_effects_lazy(int source_idx, const core::State& source_state, int target_idx, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules);
 
+    // TODO: we want to distinguish repr and str.
+    // repr is canonical representations
+    // str is actual representation, might differ from repr for efficiency reasons in the evaluation.
     std::string compute_repr() const;
+
+    std::string str() const;
 
     std::shared_ptr<const PolicyRoot> get_root() const;
     std::vector<std::shared_ptr<const BooleanFeature>> get_boolean_features() const;
     std::vector<std::shared_ptr<const NumericalFeature>> get_numerical_features() const;
-
-    void clear_evaluation_cache();
 };
 
 
@@ -245,8 +257,8 @@ public:
      * Uniquely adds a rule to the policy and returns it.
      */
     std::shared_ptr<const Rule> add_rule(
-        std::unordered_set<std::shared_ptr<const BaseCondition>>&& conditions,
-        std::unordered_set<std::shared_ptr<const BaseEffect>>&& effects);
+        std::vector<std::shared_ptr<const BaseCondition>>&& conditions,
+        std::vector<std::shared_ptr<const BaseEffect>>&& effects);
 
     /**
      * TODO: - sort features by their runtime complexity.

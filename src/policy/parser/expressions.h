@@ -63,11 +63,11 @@ public:
         throw std::runtime_error("Expression::parse_rule - cannot parse expression into rule.");
     }
 
-    virtual std::unordered_set<std::shared_ptr<const BaseCondition>> parse_conditions(PolicyBuilder&, const std::vector<std::shared_ptr<const BooleanFeature>>&, const std::vector<std::shared_ptr<const NumericalFeature>>&) const {
+    virtual std::vector<std::shared_ptr<const BaseCondition>> parse_conditions(PolicyBuilder&, const std::vector<std::shared_ptr<const BooleanFeature>>&, const std::vector<std::shared_ptr<const NumericalFeature>>&) const {
         throw std::runtime_error("Expression::parse_conditions - cannot parse expression into conditions.");
     }
 
-    virtual std::unordered_set<std::shared_ptr<const BaseEffect>> parse_effects(PolicyBuilder&, const std::vector<std::shared_ptr<const BooleanFeature>>&, const std::vector<std::shared_ptr<const NumericalFeature>>&) const {
+    virtual std::vector<std::shared_ptr<const BaseEffect>> parse_effects(PolicyBuilder&, const std::vector<std::shared_ptr<const BooleanFeature>>&, const std::vector<std::shared_ptr<const NumericalFeature>>&) const {
         throw std::runtime_error("Expression::parse_effects - cannot parse expression into effects.");
     }
 
@@ -167,8 +167,8 @@ public:
         if (m_children.size() != 3) {
             throw std::runtime_error("RuleExpression::parse_rule - incorrect number of children. Should be 3.");
         }
-        std::unordered_set<std::shared_ptr<const BaseCondition>> conditions = m_children.at(1)->parse_conditions(builder, boolean_features, numerical_features);
-        std::unordered_set<std::shared_ptr<const BaseEffect>> effects = m_children.at(2)->parse_effects(builder, boolean_features, numerical_features);
+        std::vector<std::shared_ptr<const BaseCondition>> conditions = m_children.at(1)->parse_conditions(builder, boolean_features, numerical_features);
+        std::vector<std::shared_ptr<const BaseEffect>> effects = m_children.at(2)->parse_effects(builder, boolean_features, numerical_features);
         return builder.add_rule(std::move(conditions), std::move(effects));
     }
 };
@@ -183,7 +183,7 @@ public:
     ConditionsExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : Expression(name, std::move(children)) { }
 
-    std::unordered_set<std::shared_ptr<const BaseCondition>> parse_conditions(PolicyBuilder& builder, const std::vector<std::shared_ptr<const BooleanFeature>>& boolean_features, const std::vector<std::shared_ptr<const NumericalFeature>>& numerical_features) const override {
+    std::vector<std::shared_ptr<const BaseCondition>> parse_conditions(PolicyBuilder& builder, const std::vector<std::shared_ptr<const BooleanFeature>>& boolean_features, const std::vector<std::shared_ptr<const NumericalFeature>>& numerical_features) const override {
         if (m_children.size() < 1) {
             throw std::runtime_error("RuleExpression::parse_conditions - incorrect number of children. Should be greater than 0.");
         }
@@ -191,7 +191,7 @@ public:
         for (size_t i = 1; i < m_children.size(); ++i) {
             conditions.insert(m_children.at(i)->parse_condition(builder, boolean_features, numerical_features));
         }
-        return conditions;
+        return std::vector<std::shared_ptr<const BaseCondition>>(conditions.begin(), conditions.end());
     }
 };
 
@@ -205,7 +205,7 @@ public:
     EffectsExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : Expression(name, std::move(children)) { }
 
-    std::unordered_set<std::shared_ptr<const BaseEffect>> parse_effects(PolicyBuilder& builder, const std::vector<std::shared_ptr<const BooleanFeature>>& boolean_features, const std::vector<std::shared_ptr<const NumericalFeature>>& numerical_features) const override {
+    std::vector<std::shared_ptr<const BaseEffect>> parse_effects(PolicyBuilder& builder, const std::vector<std::shared_ptr<const BooleanFeature>>& boolean_features, const std::vector<std::shared_ptr<const NumericalFeature>>& numerical_features) const override {
         if (m_children.size() < 1) {
             throw std::runtime_error("RuleExpression::parse_effects - incorrect number of children. Should be greater than 0.");
         }
@@ -213,7 +213,7 @@ public:
         for (size_t i = 1; i < m_children.size(); ++i) {
             effects.insert(m_children.at(i)->parse_effect(builder, boolean_features, numerical_features));
         }
-        return effects;
+        return std::vector<std::shared_ptr<const BaseEffect>>(effects.begin(), effects.end());
     }
 };
 

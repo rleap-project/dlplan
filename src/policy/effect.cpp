@@ -1,20 +1,19 @@
 #include "effect.h"
 
-#include "evaluation_cache.h"
 #include "../include/dlplan/policy.h"
 
 
 namespace dlplan::policy {
 
-std::unique_ptr<BaseEffect> PositiveBooleanEffect::clone_impl() const {
-    return std::make_unique<PositiveBooleanEffect>(*this);
+std::unique_ptr<const BaseEffect> PositiveBooleanEffect::clone_impl() const {
+    return std::make_unique<const PositiveBooleanEffect>(*this);
 }
 
 PositiveBooleanEffect::PositiveBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature)
     : Effect<bool>(root, boolean_feature) {}
 
-bool PositiveBooleanEffect::evaluate(int, const core::State&, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const{
-    return get_feature()->evaluate(target_index, target, evaluation_caches);
+bool PositiveBooleanEffect::evaluate(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const{
+    return get_feature()->evaluate(target_context);
 }
 
 std::string PositiveBooleanEffect::compute_repr() const{
@@ -22,15 +21,15 @@ std::string PositiveBooleanEffect::compute_repr() const{
 }
 
 
-std::unique_ptr<BaseEffect> NegativeBooleanEffect::clone_impl() const{
-    return std::make_unique<NegativeBooleanEffect>(*this);
+std::unique_ptr<const BaseEffect> NegativeBooleanEffect::clone_impl() const{
+    return std::make_unique<const NegativeBooleanEffect>(*this);
 }
 
 NegativeBooleanEffect::NegativeBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature)
     : Effect<bool>(root, boolean_feature) {}
 
-bool NegativeBooleanEffect::evaluate(int, const core::State&, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const{
-    return !get_feature()->evaluate(target_index, target, evaluation_caches);
+bool NegativeBooleanEffect::evaluate(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const{
+    return !get_feature()->evaluate(target_context);
 }
 
 std::string NegativeBooleanEffect::compute_repr() const{
@@ -38,15 +37,15 @@ std::string NegativeBooleanEffect::compute_repr() const{
 }
 
 
-std::unique_ptr<BaseEffect> UnchangedBooleanEffect::clone_impl() const{
-    return std::make_unique<UnchangedBooleanEffect>(*this);
+std::unique_ptr<const BaseEffect> UnchangedBooleanEffect::clone_impl() const{
+    return std::make_unique<const UnchangedBooleanEffect>(*this);
 }
 
 UnchangedBooleanEffect::UnchangedBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature)
     : Effect<bool>(root, boolean_feature) {}
 
-bool UnchangedBooleanEffect::evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const{
-    return get_feature()->evaluate(source_index, source, evaluation_caches) == get_feature()->evaluate(target_index, target, evaluation_caches);
+bool UnchangedBooleanEffect::evaluate(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const{
+    return get_feature()->evaluate(source_context) == get_feature()->evaluate(target_context);
 }
 
 std::string UnchangedBooleanEffect::compute_repr() const{
@@ -54,15 +53,15 @@ std::string UnchangedBooleanEffect::compute_repr() const{
 }
 
 
-std::unique_ptr<BaseEffect> IncrementNumericalEffect::clone_impl() const{
-    return std::make_unique<IncrementNumericalEffect>(*this);
+std::unique_ptr<const BaseEffect> IncrementNumericalEffect::clone_impl() const{
+    return std::make_unique<const IncrementNumericalEffect>(*this);
 }
 
 IncrementNumericalEffect::IncrementNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature)
     : Effect<int>(root, numerical_feature) {}
 
-bool IncrementNumericalEffect::evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const{
-    return get_feature()->evaluate(source_index, source, evaluation_caches) < get_feature()->evaluate(target_index, target, evaluation_caches);
+bool IncrementNumericalEffect::evaluate(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const{
+    return get_feature()->evaluate(source_context) < get_feature()->evaluate(target_context);
 }
 
 std::string IncrementNumericalEffect::compute_repr() const{
@@ -70,15 +69,15 @@ std::string IncrementNumericalEffect::compute_repr() const{
 }
 
 
-std::unique_ptr<BaseEffect> DecrementNumericalEffect::clone_impl() const{
-    return std::make_unique<DecrementNumericalEffect>(*this);
+std::unique_ptr<const BaseEffect> DecrementNumericalEffect::clone_impl() const{
+    return std::make_unique<const DecrementNumericalEffect>(*this);
 }
 
 DecrementNumericalEffect::DecrementNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature)
     : Effect<int>(root, numerical_feature) {}
 
-bool DecrementNumericalEffect::evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const{
-    return get_feature()->evaluate(source_index, source, evaluation_caches) > get_feature()->evaluate(target_index, target, evaluation_caches);
+bool DecrementNumericalEffect::evaluate(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const{
+    return get_feature()->evaluate(source_context) > get_feature()->evaluate(target_context);
 }
 
 std::string DecrementNumericalEffect::compute_repr() const{
@@ -86,15 +85,15 @@ std::string DecrementNumericalEffect::compute_repr() const{
 }
 
 
-std::unique_ptr<BaseEffect> UnchangedNumericalEffect::clone_impl() const{
-    return std::make_unique<UnchangedNumericalEffect>(*this);
+std::unique_ptr<const BaseEffect> UnchangedNumericalEffect::clone_impl() const{
+    return std::make_unique<const UnchangedNumericalEffect>(*this);
 }
 
 UnchangedNumericalEffect::UnchangedNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature)
     : Effect<int>(root, numerical_feature) {}
 
-bool UnchangedNumericalEffect::evaluate(int source_index, const core::State& source, int target_index, const core::State& target, EvaluationCaches& evaluation_caches) const{
-    return get_feature()->evaluate(source_index, source, evaluation_caches) == get_feature()->evaluate(target_index, target, evaluation_caches);
+bool UnchangedNumericalEffect::evaluate(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const{
+    return get_feature()->evaluate(source_context) == get_feature()->evaluate(target_context);
 }
 
 std::string UnchangedNumericalEffect::compute_repr() const{

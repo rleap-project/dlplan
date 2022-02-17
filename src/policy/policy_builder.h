@@ -49,8 +49,8 @@ public:
     std::shared_ptr<const BaseEffect> add_n_bot_effect(std::shared_ptr<const NumericalFeature> n);
 
     std::shared_ptr<const Rule> add_rule(
-        std::unordered_set<std::shared_ptr<const BaseCondition>>&& conditions,
-        std::unordered_set<std::shared_ptr<const BaseEffect>>&& effects);
+        std::vector<std::shared_ptr<const BaseCondition>>&& conditions,
+        std::vector<std::shared_ptr<const BaseEffect>>&& effects);
 
     Policy get_result();
 };

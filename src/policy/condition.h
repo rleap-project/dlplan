@@ -21,56 +21,54 @@ protected:
     Condition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<T>> feature);
 
 public:
-   //virtual bool operator<(const BaseCondition& other) const override;
-
     std::shared_ptr<const Feature<T>> get_feature() const;
 };
 
 
 class PositiveBooleanCondition : public Condition<bool> {
 protected:
-    std::unique_ptr<BaseCondition> clone_impl() const override;
+    std::unique_ptr<const BaseCondition> clone_impl() const override;
 
 public:
     PositiveBooleanCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature);
 
-    bool evaluate(int source_index, const core::State& state, EvaluationCaches& evaluation_caches) const override;
+    bool evaluate(evaluator::EvaluationContext& source_context) const override;
 
     std::string compute_repr() const override;
 };
 
 class NegativeBooleanCondition : public Condition<bool> {
 protected:
-    std::unique_ptr<BaseCondition> clone_impl() const override;
+    std::unique_ptr<const BaseCondition> clone_impl() const override;
 
 public:
     NegativeBooleanCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature);
 
-    bool evaluate(int source_index, const core::State& state, EvaluationCaches& evaluation_caches) const override;
+    bool evaluate(evaluator::EvaluationContext& source_context) const override;
 
     std::string compute_repr() const override;
 };
 
 class EqualNumericalCondition : public Condition<int> {
 protected:
-    std::unique_ptr<BaseCondition> clone_impl() const override;
+    std::unique_ptr<const BaseCondition> clone_impl() const override;
 
 public:
     EqualNumericalCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature);
 
-    bool evaluate(int source_index, const core::State& state, EvaluationCaches& evaluation_caches) const override;
+    bool evaluate(evaluator::EvaluationContext& source_context) const override;
 
     std::string compute_repr() const override;
 };
 
 class GreaterNumericalCondition : public Condition<int> {
 protected:
-    std::unique_ptr<BaseCondition> clone_impl() const override;
+    std::unique_ptr<const BaseCondition> clone_impl() const override;
 
 public:
     GreaterNumericalCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature);
 
-    bool evaluate(int source_index, const core::State& state, EvaluationCaches& evaluation_caches) const override;
+    bool evaluate(evaluator::EvaluationContext& source_context) const override;
 
     std::string compute_repr() const override;
 };

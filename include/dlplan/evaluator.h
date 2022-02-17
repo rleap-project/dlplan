@@ -1,9 +1,8 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_EVALUATOR_H_
 #define DLPLAN_INCLUDE_DLPLAN_EVALUATOR_H_
 
-#include <vector>
-
-#include "pimpl.h"
+#include "per_index_array.h"
+#include "per_index_bitset.h"
 
 
 namespace dlplan {
@@ -13,37 +12,51 @@ namespace core {
     class State;
 }
 namespace evaluator {
-class BooleanEvaluatorImpl;
-class NumericalEvaluatorImpl;
+class EvaluationContext;
 
 /**
- * An Evaluator caches feature evaluations to speed up subsequent lookups.
+ * Provides a cache entry for the result of evaluating an element on a given state.
  *
- * Indices for Element and State are needed because evaluations
- * are stored in a continuous memory block for improved cache locality.
+ * This cache is useful if one wants to evaluate Boolean and Numericals
+ * with the same state multiple times but PerElementEvaluationCache
+ * fails to cache the result because different states are evaluated in between.
+ *
+ * An example usage is a Policy where a target state
+ * becomes the new source state if a transition is classified as good.
  */
-class BooleanEvaluator {
+class EvaluationCache {
 private:
-    pimpl<BooleanEvaluatorImpl> m_pImpl;
+    utils::PerIndexBitset m_boolean_denots_cache;
+    utils::PerIndexArray<int> m_numerical_denots_cache;
+    // Concepts and roles are not interesting for caching because
+    // we usually do not refer to them during search.
 
 public:
-    BooleanEvaluator(int num_booleans);
-    ~BooleanEvaluator();
+    EvaluationCache(int num_booleans, int num_numericals);
+    EvaluationCache(const EvaluationCache& other);
+    EvaluationCache& operator=(const EvaluationCache& other);
+    EvaluationCache(EvaluationCache&& other);
+    EvaluationCache& operator=(EvaluationCache&& other);
 
-    bool evaluate(int boolean_index, const core::Boolean& boolean, int state_index, const core::State& state);
+    bool retrieve_or_evaluate(int boolean_idx, const core::Boolean& boolean, EvaluationContext& context);
+    int retrieve_or_evaluate(int numerical_idx, const core::Numerical& numerical, EvaluationContext& context);
 };
 
 
-class NumericalEvaluator {
-private:
-    pimpl<NumericalEvaluatorImpl> m_pImpl;
+struct EvaluationContext {
+    // The position in the result of the state is stored.
+    const int state_idx;
+    const core::State& state;
+    EvaluationCache& cache;
 
-public:
-    NumericalEvaluator(int num_numericals);
-    ~NumericalEvaluator();
-
-    int evaluate(int numerical_index, const core::Numerical& numerical, int state_index, const core::State& state);
+    EvaluationContext(int state_idx, const core::State& state, EvaluationCache& cache);
+    // we must delete copy and move constructors and assignments because state is always const.
+    EvaluationContext(const EvaluationContext& other) = delete;
+    EvaluationContext& operator=(const EvaluationContext& other) = delete;
+    EvaluationContext(EvaluationContext&& other) = delete;
+    EvaluationContext& operator=(EvaluationContext&& other) = delete;
 };
+
 
 }
 }
