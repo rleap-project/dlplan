@@ -23,10 +23,7 @@ public:
     bool evaluate(const State& state) const override {
         const auto& per_predicate_idx_static_atom_idxs = state.get_per_predicate_idx_static_atom_idxs();
         auto it = per_predicate_idx_static_atom_idxs.find(m_predicate.get_index());
-        if (it != per_predicate_idx_static_atom_idxs.end() && !it->second.empty()) {
-            return true;
-        }
-        return false;
+        return (it != per_predicate_idx_static_atom_idxs.end() && !it->second.empty());
     }
 
     int compute_complexity() const override {
