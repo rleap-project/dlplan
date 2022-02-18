@@ -102,6 +102,31 @@ std::string Policy::compute_repr() const {
     return ss.str();
 }
 
+std::string Policy::str() const {
+    std::stringstream ss;
+    ss << "(:policy\n";
+    // boolean features
+    ss << "(:boolean_features ";
+    for (const auto& b : m_boolean_features) {
+        ss << "\"" << b->compute_repr() << "\"";
+        if (b != m_boolean_features.back()) ss << " ";
+    }
+    ss << ")\n";
+    // numerical_features
+    ss << "(:numerical_features ";
+    for (const auto& n : m_numerical_features) {
+        ss << "\"" << n->compute_repr() << "\"";
+        if (n != m_numerical_features.back()) ss << " ";
+    }
+    ss << ")\n";
+    // rules
+    for (const auto& r : m_rules) {
+        ss << r->str() << "\n";
+    }
+    ss << ")";
+    return ss.str();
+}
+
 std::shared_ptr<const PolicyRoot> Policy::get_root() const {
     return m_root;
 }

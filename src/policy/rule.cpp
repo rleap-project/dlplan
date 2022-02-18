@@ -12,10 +12,9 @@ namespace dlplan::policy {
 /**
  * For sorting conditions and effects according to their unique representation.
  */
-template<typename T>
-static std::vector<std::shared_ptr<const T>> sort(
-    std::unordered_set<std::shared_ptr<const T>>&& set) {
-    std::vector<std::shared_ptr<const T>> result(set.begin(), set.end());
+template<typename pT>
+static std::vector<pT> sort(const std::vector<pT>& set) {
+    std::vector<pT> result(set.begin(), set.end());
     std::sort(
         result.begin(),
         result.end(),
@@ -54,18 +53,40 @@ bool Rule::evaluate_effects(evaluator::EvaluationContext& source_context, evalua
 std::string Rule::compute_repr() const {
     std::stringstream ss;
     ss << "(:rule (:conditions ";
-    for (const auto& c : m_conditions) {
-        if (c != m_conditions.front()) {
+    const auto sorted_conditions = sort(m_conditions);
+    for (const auto& c : sorted_conditions) {
+        ss << c->compute_repr();
+        if (c != sorted_conditions.back()) {
             ss << " ";
         }
-        ss << c->compute_repr();
+    }
+    ss << ") (:effects ";
+    auto sorted_effects = sort(m_effects);
+    for (const auto& e : sorted_effects) {
+        ss << e->compute_repr();
+        if (e != sorted_effects.back()) {
+            ss << " ";
+        }
+    }
+    ss << "))";
+    return ss.str();
+}
+
+std::string Rule::str() const {
+    std::stringstream ss;
+    ss << "(:rule (:conditions ";
+    for (const auto& c : m_conditions) {
+        ss << c->str();
+        if (c != m_conditions.back()) {
+            ss << " ";
+        }
     }
     ss << ") (:effects ";
     for (const auto& e : m_effects) {
-        if (e != m_effects.front()) {
+        ss << e->str();
+        if (e != m_effects.back()) {
             ss << " ";
         }
-        ss << e->compute_repr();
     }
     ss << "))";
     return ss.str();

@@ -70,6 +70,8 @@ public:
 
     std::string compute_repr() const override;
 
+    std::string str() const;
+
     const core::Boolean& get_boolean() const;
 };
 
@@ -85,6 +87,8 @@ public:
     int evaluate(evaluator::EvaluationContext& context) const override;
 
     std::string compute_repr() const override;
+
+    std::string str() const;
 
     const core::Numerical& get_numerical() const;
 };
@@ -108,6 +112,8 @@ public:
     virtual bool evaluate(evaluator::EvaluationContext& source_context) const = 0;
 
     virtual std::string compute_repr() const = 0;
+
+    std::string str() const;
 
     virtual std::unique_ptr<const BaseCondition> clone() const;
 
@@ -133,6 +139,8 @@ public:
     virtual bool evaluate(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const = 0;
 
     virtual std::string compute_repr() const = 0;
+
+    std::string str() const;
 
     virtual std::unique_ptr<const BaseEffect> clone() const;
 
@@ -169,6 +177,8 @@ public:
     bool evaluate_effects(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const;
 
     std::string compute_repr() const;
+
+    std::string str() const;
 
     std::shared_ptr<const PolicyRoot> get_root() const;
 };

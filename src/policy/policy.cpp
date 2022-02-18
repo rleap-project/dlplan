@@ -27,6 +27,10 @@ std::string BooleanFeature::compute_repr() const {
     return m_boolean.compute_repr();
 }
 
+std::string BooleanFeature::str() const {
+    return compute_repr();
+}
+
 const core::Boolean& BooleanFeature::get_boolean() const {
     return m_boolean;
 }
@@ -42,6 +46,10 @@ std::string NumericalFeature::compute_repr() const {
     return m_numerical.compute_repr();
 }
 
+std::string NumericalFeature::str() const {
+    return compute_repr();
+}
+
 const core::Numerical& NumericalFeature::get_numerical() const {
     return m_numerical;
 }
@@ -55,12 +63,21 @@ std::shared_ptr<const PolicyRoot> BaseCondition::get_root() const {
     return m_root;
 }
 
+std::string BaseCondition::str() const {
+    return compute_repr();
+}
+
+
 std::unique_ptr<const BaseEffect> BaseEffect::clone() const {
     return clone_impl();
 }
 
 std::shared_ptr<const PolicyRoot> BaseEffect::get_root() const {
     return m_root;
+}
+
+std::string BaseEffect::str() const {
+    return compute_repr();
 }
 
 
