@@ -16,7 +16,7 @@ class VocabularyInfoImpl;
 
 class SyntacticElementFactoryImpl {
 private:
-    const std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
+    std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
 
     Caches m_caches;
 

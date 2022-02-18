@@ -16,7 +16,7 @@ class VocabularyInfoImpl;
 
 class InstanceInfoImpl {
 private:
-    const std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
+    std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
 
     /**
      * Indices of static atoms, i.e., atoms that do not change and remain true forever.
@@ -45,7 +45,7 @@ private:
     const Atom& add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool negated, bool is_static);
 
 public:
-    InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info);
+    explicit InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info);
     ~InstanceInfoImpl() = default;
 
     /**

@@ -20,7 +20,12 @@ protected:
     const std::string m_name;
 
 public:
+    // Elements are not copieable because they must live in the cache.
     Element(const VocabularyInfo&, const std::string& name) : m_name(name) { }
+    Element(const Element& other) = delete;
+    Element& operator=(const Element& other) = delete;
+    Element(Element&& other) = delete;
+    Element& operator=(Element&& other) = delete;
     virtual ~Element() = default;
 
     virtual T evaluate(const State& state) const = 0;

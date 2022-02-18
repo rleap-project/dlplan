@@ -7,7 +7,7 @@ Feature<T>::Feature(std::shared_ptr<const PolicyRoot> root, int index)
   : m_root(root), m_index(index) { }
 
 template <typename T>
-Feature<T>::~Feature() { }
+Feature<T>::~Feature() = default;
 
 template <typename T>
 int Feature<T>::get_index() const { return m_index; }

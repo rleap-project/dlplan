@@ -39,13 +39,14 @@ public:
 template<typename T>
 class Feature {
 private:
-    const std::shared_ptr<const PolicyRoot> m_root;
-    const int m_index;
+    std::shared_ptr<const PolicyRoot> m_root;
+    int m_index;
 
 protected:
     Feature(std::shared_ptr<const PolicyRoot> root, int index);
 
 public:
+    // TODO: how to define copy move semantics in templated abstract base class?
     virtual ~Feature();
 
     virtual T evaluate(evaluator::EvaluationContext& context) const = 0;
@@ -59,13 +60,22 @@ public:
 
 class BooleanFeature : public Feature<bool> {
 private:
-    const core::Boolean m_boolean;
+    core::Boolean m_boolean;
 
 private:
     BooleanFeature(std::shared_ptr<const PolicyRoot> root, int index, core::Boolean&& boolean);
     friend class PolicyBuilderImpl;
 
 public:
+    // BooleanFeatures are not copieable because they must live in the cache.
+    // For construction we need them to be moveable.
+    // However, moving cannot be abused because Features are always const
+    BooleanFeature(const BooleanFeature& other) = delete;
+    BooleanFeature& operator=(const BooleanFeature& other) = delete;
+    BooleanFeature(BooleanFeature&& other);
+    BooleanFeature& operator=(BooleanFeature&& other);
+    ~BooleanFeature() override;
+
     bool evaluate(evaluator::EvaluationContext& context) const override;
 
     std::string compute_repr() const override;
@@ -77,13 +87,22 @@ public:
 
 class NumericalFeature : public Feature<int> {
 private:
-    const core::Numerical m_numerical;
+    core::Numerical m_numerical;
 
 private:
     NumericalFeature(std::shared_ptr<const PolicyRoot> root, int index, core::Numerical&& numerical);
     friend class PolicyBuilderImpl;
 
 public:
+    // NumericalFeatures are not copieable because they must live in the cache.
+    // For construction we need them to be moveable.
+    // However, moving cannot be abused because Features are always const
+    NumericalFeature(const NumericalFeature& other) = delete;
+    NumericalFeature& operator=(const NumericalFeature& other) = delete;
+    NumericalFeature(NumericalFeature&& other);
+    NumericalFeature& operator=(NumericalFeature&& other);
+    ~NumericalFeature() override;
+
     int evaluate(evaluator::EvaluationContext& context) const override;
 
     std::string compute_repr() const override;
@@ -99,23 +118,26 @@ public:
  */
 class BaseCondition {
 private:
-    const std::shared_ptr<const PolicyRoot> m_root;
+    std::shared_ptr<const PolicyRoot> m_root;
 
 protected:
-    virtual std::unique_ptr<const BaseCondition> clone_impl() const = 0;
-
-    BaseCondition(std::shared_ptr<const PolicyRoot> root) : m_root(root) { }
+    explicit BaseCondition(std::shared_ptr<const PolicyRoot> root) : m_root(root) { }
 
 public:
-    virtual ~BaseCondition() = default;
+    // Conditions are not copieable because they must live in the cache.
+    // For construction we need them to be moveable.
+    // However, moving cannot be abused because Features are always const
+    BaseCondition(const BaseCondition& other) = delete;
+    BaseCondition& operator=(const BaseCondition& other) = delete;
+    BaseCondition(BaseCondition&& other);
+    BaseCondition& operator=(BaseCondition&& other);
+    virtual ~BaseCondition();
 
     virtual bool evaluate(evaluator::EvaluationContext& source_context) const = 0;
 
     virtual std::string compute_repr() const = 0;
 
     std::string str() const;
-
-    virtual std::unique_ptr<const BaseCondition> clone() const;
 
     std::shared_ptr<const PolicyRoot> get_root() const;
 };
@@ -126,15 +148,20 @@ public:
  */
 class BaseEffect {
 private:
-    const std::shared_ptr<const PolicyRoot> m_root;
+    std::shared_ptr<const PolicyRoot> m_root;
 
 protected:
-    virtual std::unique_ptr<const BaseEffect> clone_impl() const = 0;
-
-    BaseEffect(std::shared_ptr<const PolicyRoot> root) : m_root(root) { }
+    explicit BaseEffect(std::shared_ptr<const PolicyRoot> root) : m_root(root) { }
 
 public:
-    virtual ~BaseEffect() = default;
+    // Effects are not copieable because they must live in the cache.
+    // For construction we need them to be moveable.
+    // However, moving cannot be abused because Features are always const
+    BaseEffect(const BaseEffect& other) = delete;
+    BaseEffect& operator=(const BaseEffect& other) = delete;
+    BaseEffect(BaseEffect&& other);
+    BaseEffect& operator=(BaseEffect&& other);
+    virtual ~BaseEffect();
 
     virtual bool evaluate(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const = 0;
 
@@ -142,7 +169,6 @@ public:
 
     std::string str() const;
 
-    virtual std::unique_ptr<const BaseEffect> clone() const;
 
     std::shared_ptr<const PolicyRoot> get_root() const;
 };
@@ -166,7 +192,9 @@ private:
     friend class PolicyBuilderImpl;
 
 public:
-    // rules should not be copieable because they must live in the cache.
+    // Rules are not copieable because they must live in the cache.
+    // For construction we need them to be moveable.
+    // However, moving cannot be abused because Features are always const
     Rule(const Rule& other) = delete;
     Rule& operator=(const Rule& other) = delete;
     Rule(Rule&& other);
@@ -241,6 +269,10 @@ private:
 
 public:
     PolicyBuilder();
+    PolicyBuilder(const PolicyBuilder& other);
+    PolicyBuilder& operator=(const PolicyBuilder& other);
+    PolicyBuilder(PolicyBuilder&& other);
+    PolicyBuilder& operator=(PolicyBuilder&& other);
     ~PolicyBuilder();
 
     /**
@@ -288,6 +320,10 @@ private:
 
 public:
     PolicyReader();
+    PolicyReader(const PolicyReader& other);
+    PolicyReader& operator=(const PolicyReader& other);
+    PolicyReader(PolicyReader&& other);
+    PolicyReader& operator=(PolicyReader&& other);
     ~PolicyReader();
 
     Policy read(const std::string& data, core::SyntacticElementFactory factory) const;
@@ -301,6 +337,10 @@ class PolicyWriter {
 
 public:
     PolicyWriter();
+    PolicyWriter(const PolicyWriter& other);
+    PolicyWriter& operator=(const PolicyWriter& other);
+    PolicyWriter(PolicyWriter&& other);
+    PolicyWriter& operator=(PolicyWriter&& other);
     ~PolicyWriter();
 
     std::string write(const Policy& policy) const;

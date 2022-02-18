@@ -53,6 +53,10 @@ State::State(const State&) = default;
 
 State& State::operator=(const State&) = default;
 
+State::State(State&& other) = default;
+
+State& State::operator=(State&& other) = default;
+
 State::~State() = default;
 
 bool State::operator==(const State& other) const {

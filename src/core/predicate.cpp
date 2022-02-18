@@ -10,6 +10,10 @@ Predicate::Predicate(const Predicate& other) = default;
 
 Predicate& Predicate::operator=(const Predicate& other) = default;
 
+Predicate::Predicate(Predicate&& other) = default;
+
+Predicate& Predicate::operator=(Predicate&& other) = default;
+
 Predicate::~Predicate() = default;
 
 bool Predicate::operator==(const Predicate& other) const {

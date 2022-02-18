@@ -13,6 +13,7 @@ int main() {
     // Construct SyntacticElementFactory
     std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary_info = std::make_shared<dlplan::core::VocabularyInfo>();
     vocabulary_info->add_predicate("unary", 1);
+
     dlplan::core::SyntacticElementFactory factory(vocabulary_info);
     dlplan::core::Boolean boolean = factory.parse_boolean("b_empty(c_primitive(unary,0))");
     dlplan::core::Numerical numerical = factory.parse_numerical("n_count(c_primitive(unary,0))");

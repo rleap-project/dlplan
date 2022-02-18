@@ -20,7 +20,7 @@ protected:
         if (!(concept_from && role && concept_to)) {
             throw std::runtime_error("SumConceptDistanceNumerical::parse_numerical_impl - child is not of type Concept, Role, Concept.");
         }
-        return std::make_unique<element::SumConceptDistanceNumerical>(element::SumConceptDistanceNumerical(vocabulary, concept_from, role, concept_to));
+        return std::make_unique<element::SumConceptDistanceNumerical>(vocabulary, concept_from, role, concept_to);
     }
 
 public:

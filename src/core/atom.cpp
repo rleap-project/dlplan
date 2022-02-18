@@ -23,6 +23,10 @@ Atom::Atom(const Atom& other) = default;
 
 Atom& Atom::operator=(const Atom& other) = default;
 
+Atom::Atom(Atom&& other) = default;
+
+Atom& Atom::operator=(Atom&& other) = default;
+
 Atom::~Atom() = default;
 
 bool Atom::operator==(const Atom& other) const {

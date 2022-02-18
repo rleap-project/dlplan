@@ -26,9 +26,6 @@ public:
 };
 
 class PositiveBooleanEffect : public Effect<bool> {
-protected:
-    std::unique_ptr<const BaseEffect> clone_impl() const override;
-
 public:
     PositiveBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature);
 
@@ -38,9 +35,6 @@ public:
 };
 
 class NegativeBooleanEffect : public Effect<bool> {
-protected:
-    std::unique_ptr<const BaseEffect> clone_impl() const override;
-
 public:
     NegativeBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature);
 
@@ -50,9 +44,6 @@ public:
 };
 
 class UnchangedBooleanEffect : public Effect<bool> {
-protected:
-    std::unique_ptr<const BaseEffect> clone_impl() const override;
-
 public:
     UnchangedBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature);
 
@@ -62,9 +53,6 @@ public:
 };
 
 class IncrementNumericalEffect : public Effect<int> {
-protected:
-    std::unique_ptr<const BaseEffect> clone_impl() const override;
-
 public:
     IncrementNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature);
 
@@ -74,9 +62,6 @@ public:
 };
 
 class DecrementNumericalEffect : public Effect<int> {
-protected:
-    std::unique_ptr<const BaseEffect> clone_impl() const override;
-
 public:
     DecrementNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature);
 
@@ -86,9 +71,6 @@ public:
 };
 
 class UnchangedNumericalEffect : public Effect<int> {
-protected:
-    std::unique_ptr<const BaseEffect> clone_impl() const override;
-
 public:
     UnchangedNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature);
 

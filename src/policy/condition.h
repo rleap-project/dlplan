@@ -26,9 +26,6 @@ public:
 
 
 class PositiveBooleanCondition : public Condition<bool> {
-protected:
-    std::unique_ptr<const BaseCondition> clone_impl() const override;
-
 public:
     PositiveBooleanCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature);
 
@@ -38,9 +35,6 @@ public:
 };
 
 class NegativeBooleanCondition : public Condition<bool> {
-protected:
-    std::unique_ptr<const BaseCondition> clone_impl() const override;
-
 public:
     NegativeBooleanCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature);
 
@@ -50,9 +44,6 @@ public:
 };
 
 class EqualNumericalCondition : public Condition<int> {
-protected:
-    std::unique_ptr<const BaseCondition> clone_impl() const override;
-
 public:
     EqualNumericalCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature);
 
@@ -62,9 +53,6 @@ public:
 };
 
 class GreaterNumericalCondition : public Condition<int> {
-protected:
-    std::unique_ptr<const BaseCondition> clone_impl() const override;
-
 public:
     GreaterNumericalCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature);
 

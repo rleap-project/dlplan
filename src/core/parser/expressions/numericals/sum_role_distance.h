@@ -19,7 +19,7 @@ protected:
         if (!(role_from && role && role_to)) {
             throw std::runtime_error("SumRoleDistanceNumerical::parse_numerical_impl - child is not of type Role, Role, Role.");
         }
-        return std::make_unique<element::SumRoleDistanceNumerical>(element::SumRoleDistanceNumerical(vocabulary, role_from, role, role_to));
+        return std::make_unique<element::SumRoleDistanceNumerical>(vocabulary, role_from, role, role_to);
     }
 
 public:

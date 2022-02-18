@@ -65,7 +65,6 @@ std::shared_ptr<const Rule> Policy::evaluate_effects_lazy(int source_index, cons
     if (source_index < 0 || target_index < 0) {
         throw std::runtime_error("Policy::evaluate_effects_lazy: source or target index cannot be negative.");
     }
-    // assert(std::all_of(rules.begin(), rules.end(), [&, source_index](const auto& r){ r->evaluate_conditions(source_index, source); }));
     evaluator::EvaluationContext source_context(source_index, source, m_cache);
     evaluator::EvaluationContext target_context(target_index, target, m_cache);
     for (const auto& r : rules) {

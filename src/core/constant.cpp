@@ -9,6 +9,10 @@ Constant::Constant(const Constant& other) = default;
 
 Constant& Constant::operator=(const Constant& other) = default;
 
+Constant::Constant(Constant&& other) = default;
+
+Constant& Constant::operator=(Constant&& other) = default;
+
 Constant::~Constant() = default;
 
 bool Constant::operator==(const Constant& other) const {
