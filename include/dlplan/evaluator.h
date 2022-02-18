@@ -1,17 +1,12 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_EVALUATOR_H_
 #define DLPLAN_INCLUDE_DLPLAN_EVALUATOR_H_
 
+#include "core.h"
 #include "per_index_array.h"
 #include "per_index_bitset.h"
 
 
-namespace dlplan {
-namespace core {
-    class Boolean;
-    class Numerical;
-    class State;
-}
-namespace evaluator {
+namespace dlplan::evaluator {
 class EvaluationContext;
 
 /**
@@ -58,7 +53,6 @@ struct EvaluationContext {
 };
 
 
-}
 }
 
 #endif

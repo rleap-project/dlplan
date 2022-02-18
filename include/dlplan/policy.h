@@ -12,13 +12,7 @@
 #include "pimpl.h"
 
 
-namespace dlplan {
-namespace core {
-    template<typename T>
-    class Element;
-    class State;
-}
-namespace policy {
+namespace dlplan::policy {
 class RuleImpl;
 class PolicyImpl;
 class PolicyBuilderImpl;
@@ -346,7 +340,6 @@ public:
     std::string write(const Policy& policy) const;
 };
 
-}
 }
 
 #include "policy.tpp"
