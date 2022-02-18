@@ -18,34 +18,16 @@ protected:
     std::string m_name;
     std::vector<Expression_Ptr> m_children;
 
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<Expression>(*this);
-    }
-
 public:
     Expression(const std::string &name,
         std::vector<Expression_Ptr> &&children)
         : m_name(name), m_children(std::move(children)) {
     }
-    Expression(const Expression& other) {
-        m_name = other.m_name;
-        for (const auto& child : other.m_children) {
-            m_children.push_back(child->clone());
-        }
-    }
-    Expression& operator=(const Expression& other) {
-        if (this != &other) {
-            m_name = other.m_name;
-            m_children.clear();
-            for (const auto& child : other.m_children) {
-                m_children.push_back(child->clone());
-            }
-            m_children.shrink_to_fit();
-        }
-        return *this;
-    }
-    virtual ~Expression() { }
+    Expression(const Expression& other) = delete;
+    Expression& operator=(const Expression& other) = delete;
+    Expression(Expression&& other) = default;
+    Expression& operator=(Expression&& other) = default;
+    virtual ~Expression() = default;
 
     virtual Policy parse_general_policy(core::SyntacticElementFactory&) const {
         throw std::runtime_error("Expression::parse_general_policy - cannot parse expression into general policy.");
@@ -81,18 +63,9 @@ public:
 
     const std::string& get_name() const { return m_name; }
     const std::vector<Expression_Ptr>& get_children() const { return m_children; }
-
-    Expression_Ptr clone() const {
-        return clone_impl();
-    }
 };
 
 class PolicyExpression : public Expression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<PolicyExpression>(*this);
-    }
-
 public:
     PolicyExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : Expression(name, std::move(children)) { }
@@ -116,11 +89,6 @@ public:
 };
 
 class BooleanFeaturesExpression : public Expression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<BooleanFeaturesExpression>(*this);
-    }
-
 public:
     BooleanFeaturesExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : Expression(name, std::move(children)) { }
@@ -135,11 +103,6 @@ public:
 };
 
 class NumericalFeaturesExpression : public Expression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<NumericalFeaturesExpression>(*this);
-    }
-
 public:
     NumericalFeaturesExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : Expression(name, std::move(children)) { }
@@ -154,11 +117,6 @@ public:
 };
 
 class RuleExpression : public Expression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<RuleExpression>(*this);
-    }
-
 public:
     RuleExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : Expression(name, std::move(children)) { }
@@ -174,11 +132,6 @@ public:
 };
 
 class ConditionsExpression : public Expression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<ConditionsExpression>(*this);
-    }
-
 public:
     ConditionsExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : Expression(name, std::move(children)) { }
@@ -196,11 +149,6 @@ public:
 };
 
 class EffectsExpression : public Expression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<EffectsExpression>(*this);
-    }
-
 public:
     EffectsExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : Expression(name, std::move(children)) { }
@@ -298,11 +246,6 @@ public:
 };
 
 class PositiveBooleanConditionExpression : public BooleanConditionExpression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<PositiveBooleanConditionExpression>(*this);
-    }
-
 public:
     PositiveBooleanConditionExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : BooleanConditionExpression(name, std::move(children)) { }
@@ -313,11 +256,6 @@ public:
 };
 
 class NegativeBooleanConditionExpression : public BooleanConditionExpression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<NegativeBooleanConditionExpression>(*this);
-    }
-
 public:
     NegativeBooleanConditionExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : BooleanConditionExpression(name, std::move(children)) { }
@@ -328,11 +266,6 @@ public:
 };
 
 class EqualNumericalConditionExpression : public NumericalConditionExpression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<EqualNumericalConditionExpression>(*this);
-    }
-
 public:
     EqualNumericalConditionExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : NumericalConditionExpression(name, std::move(children)) { }
@@ -343,11 +276,6 @@ public:
 };
 
 class GreaterNumericalConditionExpression : public NumericalConditionExpression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<GreaterNumericalConditionExpression>(*this);
-    }
-
 public:
     GreaterNumericalConditionExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : NumericalConditionExpression(name, std::move(children)) { }
@@ -358,11 +286,6 @@ public:
 };
 
 class PositiveBooleanEffectExpression : public BooleanEffectExpression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<PositiveBooleanEffectExpression>(*this);
-    }
-
 public:
     PositiveBooleanEffectExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : BooleanEffectExpression(name, std::move(children)) { }
@@ -373,11 +296,6 @@ public:
 };
 
 class NegativeBooleanEffectExpression : public BooleanEffectExpression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<NegativeBooleanEffectExpression>(*this);
-    }
-
 public:
     NegativeBooleanEffectExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : BooleanEffectExpression(name, std::move(children)) { }
@@ -388,11 +306,6 @@ public:
 };
 
 class UnchangedBooleanEffectExpression : public BooleanEffectExpression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<UnchangedBooleanEffectExpression>(*this);
-    }
-
 public:
     UnchangedBooleanEffectExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : BooleanEffectExpression(name, std::move(children)) { }
@@ -403,11 +316,6 @@ public:
 };
 
 class IncrementNumericalEffectExpression : public NumericalEffectExpression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<IncrementNumericalEffectExpression>(*this);
-    }
-
 public:
     IncrementNumericalEffectExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : NumericalEffectExpression(name, std::move(children)) { }
@@ -418,11 +326,6 @@ public:
 };
 
 class DecrementNumericalEffectExpression : public NumericalEffectExpression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<DecrementNumericalEffectExpression>(*this);
-    }
-
 public:
     DecrementNumericalEffectExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : NumericalEffectExpression(name, std::move(children)) { }
@@ -433,11 +336,6 @@ public:
 };
 
 class UnchangedNumericalEffectExpression : public NumericalEffectExpression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<UnchangedNumericalEffectExpression>(*this);
-    }
-
 public:
     UnchangedNumericalEffectExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : NumericalEffectExpression(name, std::move(children)) { }

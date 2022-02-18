@@ -35,10 +35,11 @@ int EvaluationCache::retrieve_or_evaluate(int numerical_idx, const core::Numeric
     assert(this == &context.cache);
     auto view = m_numerical_denots_cache[context.state_idx];
     // -1 represents that the value is not cached.
-    if (view[numerical_idx] == -1) {
-        view[numerical_idx] = numerical.evaluate(context.state);
+    int& value = view[numerical_idx];
+    if (value == -1) {
+        value = numerical.evaluate(context.state);
     }
-    return view[numerical_idx];
+    return value;
 }
 
 EvaluationContext::EvaluationContext(int state_idx, const core::State& state, EvaluationCache& cache)
