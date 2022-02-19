@@ -10,6 +10,10 @@ Object::Object(const Object& other) = default;
 
 Object& Object::operator=(const Object& other) = default;
 
+Object::Object(Object&& other) = default;
+
+Object& Object::operator=(Object&& other) = default;
+
 Object::~Object() = default;
 
 bool Object::operator==(const Object& other) const {
@@ -33,4 +37,3 @@ std::string Object::str() const {
 }
 
 }
-

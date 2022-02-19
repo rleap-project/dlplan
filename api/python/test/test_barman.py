@@ -46,7 +46,7 @@ def test_core_instance():
     vocabulary = generate_barman_vocabulary()
     instance = generate_barman_instance(vocabulary)
     factory = SyntacticElementFactory(vocabulary)
-    state = State(instance, instance.get_atoms())
+    state = State(instance, [atom for atom in instance.get_atoms() if not atom.get_is_static()])
     concept = factory.parse_concept("c_primitive(shaker-level,0)")
     result = concept.evaluate(state).to_vector()
     assert result == [0]

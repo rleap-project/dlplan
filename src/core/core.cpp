@@ -11,7 +11,6 @@
 #include "element_factory.h"
 #include "instance_info.h"
 #include "vocabulary_info.h"
-#include "constant.h"
 #include "elements/types.h"
 
 
@@ -23,7 +22,15 @@ ConceptDenotation::ConceptDenotation(int num_objects)
 ConceptDenotation::ConceptDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data)
     : m_num_objects(num_objects), m_data(std::move(data)) { }
 
-ConceptDenotation::~ConceptDenotation() { }
+ConceptDenotation::ConceptDenotation(const ConceptDenotation& other) = default;
+
+ConceptDenotation& ConceptDenotation::operator=(const ConceptDenotation& other) = default;
+
+ConceptDenotation::ConceptDenotation(ConceptDenotation&& other) = default;
+
+ConceptDenotation& ConceptDenotation::operator=(ConceptDenotation&& other) = default;
+
+ConceptDenotation::~ConceptDenotation() = default;
 
 std::vector<int> ConceptDenotation::to_vector() const {
     std::vector<int> result;
@@ -54,7 +61,15 @@ RoleDenotation::RoleDenotation(int num_objects)
 RoleDenotation::RoleDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data)
     : m_num_objects(num_objects), m_data(std::move(data)) { }
 
-RoleDenotation::~RoleDenotation() { }
+RoleDenotation::RoleDenotation(const RoleDenotation& other) = default;
+
+RoleDenotation& RoleDenotation::operator=(const RoleDenotation& other) = default;
+
+RoleDenotation::RoleDenotation(RoleDenotation&& other) = default;
+
+RoleDenotation& RoleDenotation::operator=(RoleDenotation&& other) = default;
+
+RoleDenotation::~RoleDenotation() = default;
 
 std::vector<std::pair<int, int>> RoleDenotation::to_vector() const {
     std::vector<std::pair<int, int>> result;
@@ -85,9 +100,22 @@ const dynamic_bitset::DynamicBitset<unsigned>& RoleDenotation::get_data() const 
 
 InstanceInfo::InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info) : m_pImpl(InstanceInfoImpl(vocabulary_info)) { }
 
+InstanceInfo::InstanceInfo(const InstanceInfo& other)
+    : m_pImpl(other.m_pImpl) {}
+
 InstanceInfo& InstanceInfo::operator=(const InstanceInfo& other) {
     if (this != &other) {
         m_pImpl = other.m_pImpl;
+    }
+    return *this;
+}
+
+InstanceInfo::InstanceInfo(InstanceInfo&& other)
+    : m_pImpl(std::move(*other.m_pImpl)) { }
+
+InstanceInfo& InstanceInfo::operator=(InstanceInfo&& other) {
+    if (this != &other) {
+        std::swap(*m_pImpl, *other.m_pImpl);
     }
     return *this;
 }
@@ -150,6 +178,10 @@ const Index_Vec& InstanceInfo::get_static_atom_idxs() const {
     return m_pImpl->get_static_atom_idxs();
 }
 
+const phmap::flat_hash_map<int, std::vector<int>>& InstanceInfo::get_per_predicate_idx_static_atom_idxs() const {
+    return m_pImpl->get_per_predicate_idx_static_atom_idxs();
+}
+
 const ConceptDenotation& InstanceInfo::get_top_concept() const {
     return m_pImpl->get_top_concept();
 }
@@ -166,6 +198,16 @@ VocabularyInfo::VocabularyInfo(const VocabularyInfo& other) : m_pImpl(*other.m_p
 VocabularyInfo& VocabularyInfo::operator=(const VocabularyInfo& other) {
     if (this != &other) {
         m_pImpl = other.m_pImpl;
+    }
+    return *this;
+}
+
+VocabularyInfo::VocabularyInfo(VocabularyInfo&& other)
+    : m_pImpl(std::move(*other.m_pImpl)) { }
+
+VocabularyInfo& VocabularyInfo::operator=(VocabularyInfo&& other) {
+    if (this != &other) {
+        std::swap(*m_pImpl, *other.m_pImpl);
     }
     return *this;
 }
@@ -232,6 +274,14 @@ Concept::Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::sha
     }
 }
 
+Concept::Concept(const Concept& other) = default;
+
+Concept& Concept::operator=(const Concept& other) = default;
+
+Concept::Concept(Concept&& other) = default;
+
+Concept& Concept::operator=(Concept&& other) = default;
+
 Concept::~Concept() = default;
 
 ConceptDenotation Concept::evaluate(const State& state) const {
@@ -260,6 +310,14 @@ Role::Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_pt
         throw std::runtime_error("Role::Role - tried to construct Role from nullptr");
     }
 }
+
+Role::Role(const Role& other) = default;
+
+Role& Role::operator=(const Role& other) = default;
+
+Role::Role(Role&& other) = default;
+
+Role& Role::operator=(Role&& other) = default;
 
 Role::~Role() = default;
 
@@ -290,6 +348,14 @@ Numerical::Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std:
     }
 }
 
+Numerical::Numerical(const Numerical& other) = default;
+
+Numerical& Numerical::operator=(const Numerical& other) = default;
+
+Numerical::Numerical(Numerical&& other) = default;
+
+Numerical& Numerical::operator=(Numerical&& other) = default;
+
 Numerical::~Numerical() = default;
 
 int Numerical::evaluate(const State& state) const {
@@ -318,6 +384,14 @@ Boolean::Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::sha
         throw std::runtime_error("Boolean::Boolean - tried to construct Boolean from nullptr");
     }
 }
+
+Boolean::Boolean(const Boolean& other) = default;
+
+Boolean& Boolean::operator=(const Boolean& other) = default;
+
+Boolean::Boolean(Boolean&& other) = default;
+
+Boolean& Boolean::operator=(Boolean&& other) = default;
 
 Boolean::~Boolean() = default;
 
@@ -348,6 +422,16 @@ SyntacticElementFactory::SyntacticElementFactory(const SyntacticElementFactory& 
 SyntacticElementFactory& SyntacticElementFactory::operator=(const SyntacticElementFactory& other) {
     if (this != &other) {
         m_pImpl = other.m_pImpl;
+    }
+    return *this;
+}
+
+SyntacticElementFactory::SyntacticElementFactory(SyntacticElementFactory&& other)
+    : m_pImpl(std::move(*other.m_pImpl)) { }
+
+SyntacticElementFactory& SyntacticElementFactory::operator=(SyntacticElementFactory&& other) {
+    if (this != &other) {
+        std::swap(*m_pImpl, *other.m_pImpl);
     }
     return *this;
 }

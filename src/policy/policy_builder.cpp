@@ -65,8 +65,8 @@ std::shared_ptr<const BaseEffect> PolicyBuilderImpl::add_n_bot_effect(std::share
 }
 
 std::shared_ptr<const Rule> PolicyBuilderImpl::add_rule(
-    std::unordered_set<std::shared_ptr<const BaseCondition>>&& conditions,
-    std::unordered_set<std::shared_ptr<const BaseEffect>>&& effects) {
+    std::vector<std::shared_ptr<const BaseCondition>>&& conditions,
+    std::vector<std::shared_ptr<const BaseEffect>>&& effects) {
     auto result = m_caches.m_rule_cache->insert(std::make_unique<Rule>(Rule(m_root, std::move(conditions), std::move(effects))));
     if (result.second) {
         m_rules.push_back(result.first);

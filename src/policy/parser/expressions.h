@@ -18,34 +18,16 @@ protected:
     std::string m_name;
     std::vector<Expression_Ptr> m_children;
 
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<Expression>(*this);
-    }
-
 public:
     Expression(const std::string &name,
         std::vector<Expression_Ptr> &&children)
         : m_name(name), m_children(std::move(children)) {
     }
-    Expression(const Expression& other) {
-        m_name = other.m_name;
-        for (const auto& child : other.m_children) {
-            m_children.push_back(child->clone());
-        }
-    }
-    Expression& operator=(const Expression& other) {
-        if (this != &other) {
-            m_name = other.m_name;
-            m_children.clear();
-            for (const auto& child : other.m_children) {
-                m_children.push_back(child->clone());
-            }
-            m_children.shrink_to_fit();
-        }
-        return *this;
-    }
-    virtual ~Expression() { }
+    Expression(const Expression& other) = delete;
+    Expression& operator=(const Expression& other) = delete;
+    Expression(Expression&& other) = default;
+    Expression& operator=(Expression&& other) = default;
+    virtual ~Expression() = default;
 
     virtual Policy parse_general_policy(core::SyntacticElementFactory&) const {
         throw std::runtime_error("Expression::parse_general_policy - cannot parse expression into general policy.");
@@ -63,11 +45,11 @@ public:
         throw std::runtime_error("Expression::parse_rule - cannot parse expression into rule.");
     }
 
-    virtual std::unordered_set<std::shared_ptr<const BaseCondition>> parse_conditions(PolicyBuilder&, const std::vector<std::shared_ptr<const BooleanFeature>>&, const std::vector<std::shared_ptr<const NumericalFeature>>&) const {
+    virtual std::vector<std::shared_ptr<const BaseCondition>> parse_conditions(PolicyBuilder&, const std::vector<std::shared_ptr<const BooleanFeature>>&, const std::vector<std::shared_ptr<const NumericalFeature>>&) const {
         throw std::runtime_error("Expression::parse_conditions - cannot parse expression into conditions.");
     }
 
-    virtual std::unordered_set<std::shared_ptr<const BaseEffect>> parse_effects(PolicyBuilder&, const std::vector<std::shared_ptr<const BooleanFeature>>&, const std::vector<std::shared_ptr<const NumericalFeature>>&) const {
+    virtual std::vector<std::shared_ptr<const BaseEffect>> parse_effects(PolicyBuilder&, const std::vector<std::shared_ptr<const BooleanFeature>>&, const std::vector<std::shared_ptr<const NumericalFeature>>&) const {
         throw std::runtime_error("Expression::parse_effects - cannot parse expression into effects.");
     }
 
@@ -81,18 +63,9 @@ public:
 
     const std::string& get_name() const { return m_name; }
     const std::vector<Expression_Ptr>& get_children() const { return m_children; }
-
-    Expression_Ptr clone() const {
-        return clone_impl();
-    }
 };
 
 class PolicyExpression : public Expression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<PolicyExpression>(*this);
-    }
-
 public:
     PolicyExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : Expression(name, std::move(children)) { }
@@ -116,11 +89,6 @@ public:
 };
 
 class BooleanFeaturesExpression : public Expression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<BooleanFeaturesExpression>(*this);
-    }
-
 public:
     BooleanFeaturesExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : Expression(name, std::move(children)) { }
@@ -135,11 +103,6 @@ public:
 };
 
 class NumericalFeaturesExpression : public Expression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<NumericalFeaturesExpression>(*this);
-    }
-
 public:
     NumericalFeaturesExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : Expression(name, std::move(children)) { }
@@ -154,11 +117,6 @@ public:
 };
 
 class RuleExpression : public Expression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<RuleExpression>(*this);
-    }
-
 public:
     RuleExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : Expression(name, std::move(children)) { }
@@ -167,23 +125,18 @@ public:
         if (m_children.size() != 3) {
             throw std::runtime_error("RuleExpression::parse_rule - incorrect number of children. Should be 3.");
         }
-        std::unordered_set<std::shared_ptr<const BaseCondition>> conditions = m_children.at(1)->parse_conditions(builder, boolean_features, numerical_features);
-        std::unordered_set<std::shared_ptr<const BaseEffect>> effects = m_children.at(2)->parse_effects(builder, boolean_features, numerical_features);
+        std::vector<std::shared_ptr<const BaseCondition>> conditions = m_children.at(1)->parse_conditions(builder, boolean_features, numerical_features);
+        std::vector<std::shared_ptr<const BaseEffect>> effects = m_children.at(2)->parse_effects(builder, boolean_features, numerical_features);
         return builder.add_rule(std::move(conditions), std::move(effects));
     }
 };
 
 class ConditionsExpression : public Expression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<ConditionsExpression>(*this);
-    }
-
 public:
     ConditionsExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : Expression(name, std::move(children)) { }
 
-    std::unordered_set<std::shared_ptr<const BaseCondition>> parse_conditions(PolicyBuilder& builder, const std::vector<std::shared_ptr<const BooleanFeature>>& boolean_features, const std::vector<std::shared_ptr<const NumericalFeature>>& numerical_features) const override {
+    std::vector<std::shared_ptr<const BaseCondition>> parse_conditions(PolicyBuilder& builder, const std::vector<std::shared_ptr<const BooleanFeature>>& boolean_features, const std::vector<std::shared_ptr<const NumericalFeature>>& numerical_features) const override {
         if (m_children.size() < 1) {
             throw std::runtime_error("RuleExpression::parse_conditions - incorrect number of children. Should be greater than 0.");
         }
@@ -191,21 +144,16 @@ public:
         for (size_t i = 1; i < m_children.size(); ++i) {
             conditions.insert(m_children.at(i)->parse_condition(builder, boolean_features, numerical_features));
         }
-        return conditions;
+        return std::vector<std::shared_ptr<const BaseCondition>>(conditions.begin(), conditions.end());
     }
 };
 
 class EffectsExpression : public Expression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<EffectsExpression>(*this);
-    }
-
 public:
     EffectsExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : Expression(name, std::move(children)) { }
 
-    std::unordered_set<std::shared_ptr<const BaseEffect>> parse_effects(PolicyBuilder& builder, const std::vector<std::shared_ptr<const BooleanFeature>>& boolean_features, const std::vector<std::shared_ptr<const NumericalFeature>>& numerical_features) const override {
+    std::vector<std::shared_ptr<const BaseEffect>> parse_effects(PolicyBuilder& builder, const std::vector<std::shared_ptr<const BooleanFeature>>& boolean_features, const std::vector<std::shared_ptr<const NumericalFeature>>& numerical_features) const override {
         if (m_children.size() < 1) {
             throw std::runtime_error("RuleExpression::parse_effects - incorrect number of children. Should be greater than 0.");
         }
@@ -213,7 +161,7 @@ public:
         for (size_t i = 1; i < m_children.size(); ++i) {
             effects.insert(m_children.at(i)->parse_effect(builder, boolean_features, numerical_features));
         }
-        return effects;
+        return std::vector<std::shared_ptr<const BaseEffect>>(effects.begin(), effects.end());
     }
 };
 
@@ -298,11 +246,6 @@ public:
 };
 
 class PositiveBooleanConditionExpression : public BooleanConditionExpression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<PositiveBooleanConditionExpression>(*this);
-    }
-
 public:
     PositiveBooleanConditionExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : BooleanConditionExpression(name, std::move(children)) { }
@@ -313,11 +256,6 @@ public:
 };
 
 class NegativeBooleanConditionExpression : public BooleanConditionExpression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<NegativeBooleanConditionExpression>(*this);
-    }
-
 public:
     NegativeBooleanConditionExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : BooleanConditionExpression(name, std::move(children)) { }
@@ -328,11 +266,6 @@ public:
 };
 
 class EqualNumericalConditionExpression : public NumericalConditionExpression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<EqualNumericalConditionExpression>(*this);
-    }
-
 public:
     EqualNumericalConditionExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : NumericalConditionExpression(name, std::move(children)) { }
@@ -343,11 +276,6 @@ public:
 };
 
 class GreaterNumericalConditionExpression : public NumericalConditionExpression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<GreaterNumericalConditionExpression>(*this);
-    }
-
 public:
     GreaterNumericalConditionExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : NumericalConditionExpression(name, std::move(children)) { }
@@ -358,11 +286,6 @@ public:
 };
 
 class PositiveBooleanEffectExpression : public BooleanEffectExpression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<PositiveBooleanEffectExpression>(*this);
-    }
-
 public:
     PositiveBooleanEffectExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : BooleanEffectExpression(name, std::move(children)) { }
@@ -373,11 +296,6 @@ public:
 };
 
 class NegativeBooleanEffectExpression : public BooleanEffectExpression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<NegativeBooleanEffectExpression>(*this);
-    }
-
 public:
     NegativeBooleanEffectExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : BooleanEffectExpression(name, std::move(children)) { }
@@ -388,11 +306,6 @@ public:
 };
 
 class UnchangedBooleanEffectExpression : public BooleanEffectExpression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<UnchangedBooleanEffectExpression>(*this);
-    }
-
 public:
     UnchangedBooleanEffectExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : BooleanEffectExpression(name, std::move(children)) { }
@@ -403,11 +316,6 @@ public:
 };
 
 class IncrementNumericalEffectExpression : public NumericalEffectExpression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<IncrementNumericalEffectExpression>(*this);
-    }
-
 public:
     IncrementNumericalEffectExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : NumericalEffectExpression(name, std::move(children)) { }
@@ -418,11 +326,6 @@ public:
 };
 
 class DecrementNumericalEffectExpression : public NumericalEffectExpression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<DecrementNumericalEffectExpression>(*this);
-    }
-
 public:
     DecrementNumericalEffectExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : NumericalEffectExpression(name, std::move(children)) { }
@@ -433,11 +336,6 @@ public:
 };
 
 class UnchangedNumericalEffectExpression : public NumericalEffectExpression {
-protected:
-    virtual Expression_Ptr clone_impl() const {
-        return std::make_unique<UnchangedNumericalEffectExpression>(*this);
-    }
-
 public:
     UnchangedNumericalEffectExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : NumericalEffectExpression(name, std::move(children)) { }

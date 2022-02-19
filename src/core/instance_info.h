@@ -16,18 +16,21 @@ class VocabularyInfoImpl;
 
 class InstanceInfoImpl {
 private:
-    const std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
+    std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
 
     /**
      * Indices of static atoms, i.e., atoms that do not change and remain true forever.
      */
     Index_Vec m_static_atom_idxs;
+    phmap::flat_hash_map<int, std::vector<int>> m_per_predicate_idx_static_atom_idxs;
+
     /**
      * All atoms.
      * TODO(dominik): sorted atoms by predicate can lead to more efficient evaluation of primitive role and concept.
      */
     std::unordered_map<std::string, unsigned> m_atom_name_to_atom_idx;
     std::vector<Atom> m_atoms;
+
     /**
      * All objects.
      */
@@ -42,7 +45,7 @@ private:
     const Atom& add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool negated, bool is_static);
 
 public:
-    InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info);
+    explicit InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info);
     ~InstanceInfoImpl() = default;
 
     /**
@@ -70,6 +73,7 @@ public:
     int get_num_objects() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
     const Index_Vec& get_static_atom_idxs() const;
+    const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs() const;
     const ConceptDenotation& get_top_concept() const;
     const RoleDenotation& get_top_role() const;
 };

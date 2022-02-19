@@ -8,8 +8,6 @@
 #include "../../../include/dlplan/policy.h"
 #include "../../../include/dlplan/core.h"
 
-#include "../../../src/policy/evaluation_cache.h"
-
 
 namespace py = pybind11;
 
@@ -19,33 +17,32 @@ void init_policy(py::module_ &m) {
         py::class_<policy::PolicyRoot, std::shared_ptr<policy::PolicyRoot>>(m, "PolicyRoot")
     ;
 
-    py::class_<policy::EvaluationCaches>(m, "EvaluationCaches")
-    ;
-
     py::class_<policy::BooleanFeature, std::shared_ptr<policy::BooleanFeature>>(m, "BooleanFeature")
         .def("get_index", &policy::BooleanFeature::get_index)
         .def("get_root", &policy::BooleanFeature::get_root)
         .def("compute_repr", &policy::BooleanFeature::compute_repr)
+        .def("str", &policy::BooleanFeature::str)
     ;
 
     py::class_<policy::NumericalFeature, std::shared_ptr<policy::NumericalFeature>>(m, "NumericalFeature")
         .def("get_index", &policy::NumericalFeature::get_index)
         .def("get_root", &policy::NumericalFeature::get_root)
         .def("compute_repr", &policy::NumericalFeature::compute_repr)
+        .def("str", &policy::NumericalFeature::str)
     ;
 
     py::class_<policy::BaseCondition, std::shared_ptr<policy::BaseCondition>>(m, "BaseCondition")
         .def("evaluate", &policy::BaseCondition::evaluate)
-        .def("clone", &policy::BaseCondition::clone)
         .def("get_root", &policy::BaseCondition::get_root)
         .def("compute_repr", &policy::BaseCondition::compute_repr)
+        .def("str", &policy::BaseCondition::str)
     ;
 
     py::class_<policy::BaseEffect, std::shared_ptr<policy::BaseEffect>>(m, "BaseEffect")
         .def("evaluate", &policy::BaseEffect::evaluate)
-        .def("clone", &policy::BaseEffect::clone)
         .def("get_root", &policy::BaseEffect::get_root)
         .def("compute_repr", &policy::BaseEffect::compute_repr)
+        .def("str", &policy::BaseEffect::str)
     ;
 
     py::class_<policy::Rule, std::shared_ptr<policy::Rule>>(m, "Rule")
@@ -53,6 +50,7 @@ void init_policy(py::module_ &m) {
         .def("evaluate_effects", &policy::Rule::evaluate_effects)
         .def("get_root", &policy::Rule::get_root)
         .def("compute_repr", &policy::Rule::compute_repr)
+        .def("str", &policy::Rule::str)
     ;
 
     py::class_<policy::Policy>(m, "Policy")
@@ -63,7 +61,7 @@ void init_policy(py::module_ &m) {
         .def("get_numerical_features", &policy::Policy::get_numerical_features)
         .def("get_root", &policy::Policy::get_root)
         .def("compute_repr", &policy::Policy::compute_repr)
-        .def("clear_evaluation_cache", &policy::Policy::clear_evaluation_cache)
+        .def("str", &policy::Policy::str)
     ;
 
     py::class_<policy::PolicyBuilder>(m, "PolicyBuilder")

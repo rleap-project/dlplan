@@ -19,7 +19,7 @@ protected:
         if (!(role_from && role && role_to)) {
             throw std::runtime_error("RoleDistanceNumerical::parse_numerical_impl - child is not of type Role, Role, Role.");
         }
-        return std::make_unique<element::RoleDistanceNumerical>(element::RoleDistanceNumerical(vocabulary, role_from, role, role_to));
+        return std::make_unique<element::RoleDistanceNumerical>(vocabulary, role_from, role, role_to);
     }
 
 public:

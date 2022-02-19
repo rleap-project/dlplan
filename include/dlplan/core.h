@@ -5,25 +5,18 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
+#include <unordered_map>
 
 #include "pimpl.h"
 #include "types.h"
 #include "dynamic_bitset.h"
+#include "phmap.h"
 
 
 namespace dlplan::core {
 class SyntacticElementFactoryImpl;
 class InstanceInfoImpl;
 class VocabularyInfoImpl;
-class PredicateImpl;
-class ConstantImpl;
-class ObjectImpl;
-class AtomImpl;
-class StateImpl;
-class ConceptImpl;
-class RoleImpl;
-class NumericalImpl;
-class BooleanImpl;
 class SyntacticElementFactory;
 class InstanceInfo;
 class VocabularyInfo;
@@ -48,6 +41,10 @@ private:
 public:
     explicit ConceptDenotation(int num_objects);
     ConceptDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data);
+    ConceptDenotation(const ConceptDenotation& other);
+    ConceptDenotation& operator=(const ConceptDenotation& other);
+    ConceptDenotation(ConceptDenotation&& other);
+    ConceptDenotation& operator=(ConceptDenotation&& other);
     ~ConceptDenotation();
 
     /**
@@ -74,6 +71,10 @@ private:
 public:
     explicit RoleDenotation(int num_objects);
     RoleDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data);
+    RoleDenotation(const RoleDenotation& other);
+    RoleDenotation& operator=(const RoleDenotation& other);
+    RoleDenotation(RoleDenotation&& other);
+    RoleDenotation& operator=(RoleDenotation&& other);
     ~RoleDenotation();
 
     std::vector<std::pair<int, int>> to_vector() const;
@@ -96,6 +97,8 @@ public:
     Constant() = delete;
     Constant(const Constant& other);
     Constant& operator=(const Constant& other);
+    Constant(Constant&& other);
+    Constant& operator=(Constant&& other);
     ~Constant();
 
     bool operator==(const Constant& other) const;
@@ -121,9 +124,10 @@ private:
     friend class VocabularyInfoImpl;
 
 public:
-    Predicate() = delete;
     Predicate(const Predicate& other);
     Predicate& operator=(const Predicate& other);
+    Predicate(Predicate&& other);
+    Predicate& operator=(Predicate&& other);
     ~Predicate();
 
     bool operator==(const Predicate& other) const;
@@ -152,9 +156,10 @@ private:
     friend class InstanceInfoImpl;
 
 public:
-    Object() = delete;
     Object(const Object& other);
     Object& operator=(const Object& other);
+    Object(Object&& other);
+    Object& operator=(Object&& other);
     ~Object();
 
     bool operator==(const Object& other) const;
@@ -186,9 +191,10 @@ private:
     friend class InstanceInfoImpl;
 
 public:
-    Atom() = delete;
     Atom(const Atom& other);
     Atom& operator=(const Atom& other);
+    Atom(Atom&& other);
+    Atom& operator=(Atom&& other);
     ~Atom();
 
     bool operator==(const Atom& other) const;
@@ -216,11 +222,15 @@ private:
     std::shared_ptr<const InstanceInfo> m_instance_info;
     Index_Vec m_atom_idxs;
 
+    phmap::flat_hash_map<int, std::vector<int>> m_per_predicate_idx_static_atom_idxs;
+
 public:
     State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms);
     State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs);
     State(const State& other);
     State& operator=(const State& other);
+    State(State&& other);
+    State& operator=(State&& other);
     ~State();
 
     bool operator==(const State& other) const;
@@ -235,6 +245,7 @@ public:
      */
     std::shared_ptr<const InstanceInfo> get_instance_info() const;
     const Index_Vec& get_atom_idxs() const;
+    const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs() const;
 
     size_t compute_hash() const;
 };
@@ -251,6 +262,8 @@ public:
     VocabularyInfo();
     VocabularyInfo(const VocabularyInfo& other);
     VocabularyInfo& operator=(const VocabularyInfo& other);
+    VocabularyInfo(VocabularyInfo&& other);
+    VocabularyInfo& operator=(VocabularyInfo&& other);
     ~VocabularyInfo();
 
     const Predicate& add_predicate(const std::string &name, int arity);
@@ -280,9 +293,12 @@ private:
     pimpl<InstanceInfoImpl> m_pImpl;
 
 public:
-    InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info);
-    InstanceInfo& operator=(const InstanceInfo& other);
     InstanceInfo() = delete;
+    InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info);
+    InstanceInfo(const InstanceInfo& other);
+    InstanceInfo& operator=(const InstanceInfo& other);
+    InstanceInfo(InstanceInfo&& other);
+    InstanceInfo& operator=(InstanceInfo&& other);
     ~InstanceInfo();
 
     /**
@@ -310,6 +326,7 @@ public:
     int get_num_objects() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
     const Index_Vec& get_static_atom_idxs() const;
+    const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs() const;
     const ConceptDenotation& get_top_concept() const;
     const RoleDenotation& get_top_role() const;
 };
@@ -321,7 +338,7 @@ public:
 template<typename T>
 class Element {
 protected:
-    const std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
+    std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
 
 protected:
     Element(std::shared_ptr<const VocabularyInfo> vocabulary_info);
@@ -357,12 +374,16 @@ public:
  */
 class Concept : public Element<ConceptDenotation> {
 private:
-    const std::shared_ptr<const element::Concept> m_element;
+    std::shared_ptr<const element::Concept> m_element;
 
     Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Concept>&& concept);
     friend class SyntacticElementFactoryImpl;
 
 public:
+    Concept(const Concept& other);
+    Concept& operator=(const Concept& other);
+    Concept(Concept&& other);
+    Concept& operator=(Concept&& other);
     ~Concept() override;
 
     ConceptDenotation evaluate(const State& state) const override;
@@ -380,12 +401,16 @@ public:
  */
 class Role : public Element<RoleDenotation> {
 private:
-    const std::shared_ptr<const element::Role> m_element;
+    std::shared_ptr<const element::Role> m_element;
 
     Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Role>&& role);
     friend class SyntacticElementFactoryImpl;
 
 public:
+    Role(const Role& other);
+    Role& operator=(const Role& other);
+    Role(Role&& other);
+    Role& operator=(Role&& other);
     ~Role() override;
 
     RoleDenotation evaluate(const State& state) const override;
@@ -403,12 +428,16 @@ public:
  */
 class Numerical : public Element<int> {
 private:
-    const std::shared_ptr<const element::Numerical> m_element;
+    std::shared_ptr<const element::Numerical> m_element;
 
     Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Numerical>&& numerical);
     friend class SyntacticElementFactoryImpl;
 
 public:
+    Numerical(const Numerical& other);
+    Numerical& operator=(const Numerical& other);
+    Numerical(Numerical&& other);
+    Numerical& operator=(Numerical&& other);
     ~Numerical() override;
 
     int evaluate(const State& state) const override;
@@ -426,12 +455,16 @@ public:
  */
 class Boolean : public Element<bool> {
 private:
-    const std::shared_ptr<const element::Boolean> m_element;
+    std::shared_ptr<const element::Boolean> m_element;
 
     Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Boolean>&& boolean);
     friend class SyntacticElementFactoryImpl;
 
 public:
+    Boolean(const Boolean& other);
+    Boolean& operator=(const Boolean& other);
+    Boolean(Boolean&& other);
+    Boolean& operator=(Boolean&& other);
     ~Boolean() override;
 
     bool evaluate(const State& state) const override;
@@ -455,6 +488,8 @@ public:
     SyntacticElementFactory(std::shared_ptr<const VocabularyInfo> vocabulary_info);
     SyntacticElementFactory(const SyntacticElementFactory& other);
     SyntacticElementFactory& operator=(const SyntacticElementFactory& other);
+    SyntacticElementFactory(SyntacticElementFactory&& other);
+    SyntacticElementFactory& operator=(SyntacticElementFactory&& other);
     ~SyntacticElementFactory();
 
     const VocabularyInfo* get_vocabulary_info() const;

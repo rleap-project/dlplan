@@ -1,25 +1,48 @@
 #include "../../include/dlplan/evaluator.h"
+#include "../../include/dlplan/core.h"
 
-#include "boolean_evaluator.h"
-#include "numerical_evaluator.h"
 
 namespace dlplan::evaluator {
 
-BooleanEvaluator::BooleanEvaluator(int num_booleans) : m_pImpl(num_booleans) { }
+EvaluationCache::EvaluationCache(int num_booleans, int num_numericals)
+  : m_boolean_denots_cache(std::vector<bool>(2 * std::max(1, num_booleans), false)),
+    m_numerical_denots_cache(std::vector<int>(std::max(1, num_numericals), -1)) { }
 
-BooleanEvaluator::~BooleanEvaluator() { }
+EvaluationCache::EvaluationCache(const EvaluationCache& other) = default;
 
-bool BooleanEvaluator::evaluate(int boolean_index, const core::Boolean& boolean, int state_index, const core::State& state) {
-    return m_pImpl->evaluate(boolean_index, boolean, state_index, state);
+EvaluationCache& EvaluationCache::operator=(const EvaluationCache& other) = default;
+
+EvaluationCache::EvaluationCache(EvaluationCache&& other) = default;
+
+EvaluationCache& EvaluationCache::operator=(EvaluationCache&& other) = default;
+
+bool EvaluationCache::retrieve_or_evaluate(int boolean_idx, const core::Boolean& boolean, EvaluationContext& context) {
+    assert(this == &context.cache);
+    auto view = m_boolean_denots_cache[context.state_idx];
+    int start = 2 * boolean_idx;
+    if (!view.test(start)) {
+        // Since evaluation is initialized to false,
+        // we must only set if the element evaluates to true.
+        // If it evaluates to false then marking as cached is sufficient.
+        if (boolean.evaluate(context.state))
+            view.set(start + 1);
+        view.set(start);
+    }
+    return view.test(start + 1);
 }
 
-
-NumericalEvaluator::NumericalEvaluator(int num_numericals) : m_pImpl(num_numericals) { }
-
-NumericalEvaluator::~NumericalEvaluator() { }
-
-int NumericalEvaluator::evaluate(int numerical_index, const core::Numerical& numerical, int state_index, const core::State& state) {
-    return m_pImpl->evaluate(numerical_index, numerical, state_index, state);
+int EvaluationCache::retrieve_or_evaluate(int numerical_idx, const core::Numerical& numerical, EvaluationContext& context) {
+    assert(this == &context.cache);
+    auto view = m_numerical_denots_cache[context.state_idx];
+    // -1 represents that the value is not cached.
+    int& value = view[numerical_idx];
+    if (value == -1) {
+        value = numerical.evaluate(context.state);
+    }
+    return value;
 }
+
+EvaluationContext::EvaluationContext(int state_idx, const core::State& state, EvaluationCache& cache)
+    : state_idx(state_idx), state(state), cache(cache) {}
 
 }

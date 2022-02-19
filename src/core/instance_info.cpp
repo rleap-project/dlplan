@@ -61,6 +61,7 @@ const Atom& InstanceInfoImpl::add_atom(const std::string &predicate_name, const 
     m_atom_name_to_atom_idx.emplace(atom_name, m_atoms.size());
     if (is_static) {
         m_static_atom_idxs.push_back(atom_idx);
+        m_per_predicate_idx_static_atom_idxs[predicate_idx].push_back(atom_idx);
     }
 
     m_atoms.push_back(Atom(atom_name, atom_idx, predicate, objects, is_static));
@@ -141,6 +142,10 @@ std::shared_ptr<const VocabularyInfo> InstanceInfoImpl::get_vocabulary_info() co
 
 const Index_Vec& InstanceInfoImpl::get_static_atom_idxs() const {
     return m_static_atom_idxs;
+}
+
+const phmap::flat_hash_map<int, std::vector<int>>& InstanceInfoImpl::get_per_predicate_idx_static_atom_idxs() const {
+    return m_per_predicate_idx_static_atom_idxs;
 }
 
 const ConceptDenotation& InstanceInfoImpl::get_top_concept() const {
