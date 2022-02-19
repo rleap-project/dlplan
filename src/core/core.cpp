@@ -39,8 +39,8 @@ void ConceptDenotation::const_iterator::seek_next() {
 }
 
 ConceptDenotation::const_iterator::const_iterator(ConceptDenotation::const_iterator::const_reference data, int num_objects, bool end)
-    : m_data(data), m_num_objects(num_objects), m_index(end ? data.size() : static_cast<size_t>(-1)) {
-    seek_next();
+    : m_data(data), m_num_objects(num_objects), m_index(end ? num_objects : static_cast<size_t>(-1)) {
+    if (!end) seek_next();
 }
 
 bool ConceptDenotation::const_iterator::operator!=(const const_iterator& other) const {
@@ -68,6 +68,21 @@ ConceptDenotation::const_iterator& ConceptDenotation::const_iterator::operator++
 
 ConceptDenotation& ConceptDenotation::operator&=(const ConceptDenotation& other) {
     m_data &= other.m_data;
+    return *this;
+}
+
+ConceptDenotation& ConceptDenotation::operator|=(const ConceptDenotation& other) {
+    m_data |= other.m_data;
+    return *this;
+}
+
+ConceptDenotation& ConceptDenotation::operator-=(const ConceptDenotation& other) {
+    m_data -= other.m_data;
+    return *this;
+}
+
+ConceptDenotation& ConceptDenotation::operator~() {
+    ~m_data;
     return *this;
 }
 
@@ -162,7 +177,7 @@ void RoleDenotation::const_iterator::seek_next() {
 
 RoleDenotation::const_iterator::const_iterator(const_reference data, size_t num_objects, bool end)
     : m_data(data), m_num_objects(num_objects), m_indices(end ? std::pair<size_t, size_t>(num_objects, 0) : std::pair<size_t, size_t>(0, static_cast<size_t>(-1))) {
-    seek_next();
+    if (!end) seek_next();
 }
 
 bool RoleDenotation::const_iterator::operator!=(const const_iterator& other) const {
@@ -185,6 +200,26 @@ RoleDenotation::const_iterator RoleDenotation::const_iterator::operator++(int) {
 
 RoleDenotation::const_iterator& RoleDenotation::const_iterator::operator++() {
     seek_next();
+    return *this;
+}
+
+RoleDenotation& RoleDenotation::operator&=(const RoleDenotation& other) {
+    m_data &= other.m_data;
+    return *this;
+}
+
+RoleDenotation& RoleDenotation::operator|=(const RoleDenotation& other) {
+    m_data |= other.m_data;
+    return *this;
+}
+
+RoleDenotation& RoleDenotation::operator-=(const RoleDenotation& other) {
+    m_data -= other.m_data;
+    return *this;
+}
+
+RoleDenotation& RoleDenotation::operator~() {
+    ~m_data;
     return *this;
 }
 

@@ -27,10 +27,7 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        auto l = m_role_left->evaluate(state);
-        const auto r = m_role_right->evaluate(state);
-        l.get_data() |= r.get_data();
-        return l;
+        return m_role_left->evaluate(state) |= m_role_right->evaluate(state);
     }
 
     int compute_complexity() const override {

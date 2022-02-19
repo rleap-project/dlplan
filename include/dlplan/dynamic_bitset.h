@@ -137,13 +137,12 @@ public:
         return *this;
     }
 
-    DynamicBitset operator~() const {
-        DynamicBitset result(num_bits);
+    DynamicBitset& operator~() {
         for (std::size_t i = 0; i < blocks.size(); ++i) {
-            result.blocks[i] = ~blocks[i];
+            blocks[i] = ~blocks[i];
         }
-        result.zero_unused_bits();
-        return result;
+        zero_unused_bits();
+        return *this;
     }
 
     bool intersects(const DynamicBitset &other) const {

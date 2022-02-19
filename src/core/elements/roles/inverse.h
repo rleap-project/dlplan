@@ -19,17 +19,10 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        const auto r = m_role->evaluate(state);
-        const auto& r_data = r.get_data();
-        int num_objects = state.get_instance_info()->get_num_objects();
-        RoleDenotation result(num_objects);
-        auto& result_data = result.get_data();
-        for (int i = 0; i < num_objects; ++i) {
-            for (int j = 0; j < num_objects; ++j) {
-                if (r_data.test(i * num_objects + j)) {
-                    result_data.set(j * num_objects + i);
-                }
-            }
+        const auto role_denot = m_role->evaluate(state);
+        RoleDenotation result(state.get_instance_info()->get_num_objects());
+        for (const auto& pair : role_denot) {
+            result.insert(std::make_pair(pair.second, pair.first));
         }
         return result;
     }

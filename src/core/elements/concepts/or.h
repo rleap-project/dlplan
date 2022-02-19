@@ -27,10 +27,7 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        auto l = m_concept_left->evaluate(state);
-        const auto r = m_concept_right->evaluate(state);
-        l.get_data() |= r.get_data();
-        return l;
+        return m_concept_left->evaluate(state) |= m_concept_right->evaluate(state);
     }
 
     int compute_complexity() const override {

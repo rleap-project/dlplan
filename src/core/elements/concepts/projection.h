@@ -26,31 +26,11 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        const auto r = m_role->evaluate(state);
-        const auto& r_data = r.get_data();
-        int num_objects = state.get_instance_info()->get_num_objects();
-        ConceptDenotation result(num_objects);
-        auto& result_data = result.get_data();
-        if (m_pos == 0) {
-            for (int i = 0; i < num_objects; ++i) {
-                for (int j = 0; j < num_objects; ++j) {
-                    int index = i * num_objects + j;
-                    if (r_data.test(index)) {
-                        result_data.set(i);
-                        break;
-                    }
-                }
-            }
-        } else if (m_pos == 1) {
-            for (int j = 0; j < num_objects; ++j) {
-                for (int i = 0; i < num_objects; ++i) {
-                    int index = i * num_objects + j;
-                    if (r_data.test(index)) {
-                        result_data.set(j);
-                        break;
-                    }
-                }
-            }
+        const auto role_denot = m_role->evaluate(state);
+        ConceptDenotation result(state.get_instance_info()->get_num_objects());
+        for (const auto pair : role_denot) {
+            if (m_pos == 0) result.insert(pair.first);
+            else if (m_pos == 1) result.insert(pair.second);
         }
         return result;
     }

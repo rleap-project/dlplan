@@ -76,6 +76,9 @@ public:
     ~ConceptDenotation();
 
     ConceptDenotation& operator&=(const ConceptDenotation& other);
+    ConceptDenotation& operator|=(const ConceptDenotation& other);
+    ConceptDenotation& operator-=(const ConceptDenotation& other);
+    ConceptDenotation& operator~();
 
     const_iterator begin() const;
     const_iterator end() const;
@@ -145,6 +148,11 @@ public:
     RoleDenotation(RoleDenotation&& other);
     RoleDenotation& operator=(RoleDenotation&& other);
     ~RoleDenotation();
+
+    RoleDenotation& operator&=(const RoleDenotation& other);
+    RoleDenotation& operator|=(const RoleDenotation& other);
+    RoleDenotation& operator-=(const RoleDenotation& other);
+    RoleDenotation& operator~();
 
     const_iterator begin() const;
     const_iterator end() const;
