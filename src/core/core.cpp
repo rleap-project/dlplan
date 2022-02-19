@@ -116,6 +116,111 @@ int ConceptDenotationFlatSet::get_num_objects() const {
     return m_num_objects;
 }
 
+
+RoleDenotationFlatSet::RoleDenotationFlatSet(int num_objects) : m_num_objects(num_objects) { }
+
+RoleDenotationFlatSet::RoleDenotationFlatSet(const RoleDenotationFlatSet& other) = default;
+
+RoleDenotationFlatSet& RoleDenotationFlatSet::operator=(const RoleDenotationFlatSet& other) = default;
+
+RoleDenotationFlatSet::RoleDenotationFlatSet(RoleDenotationFlatSet&& other) = default;
+
+RoleDenotationFlatSet& RoleDenotationFlatSet::operator=(RoleDenotationFlatSet&& other) = default;
+
+RoleDenotationFlatSet::~RoleDenotationFlatSet() = default;
+
+RoleDenotationFlatSet& RoleDenotationFlatSet::operator&=(const RoleDenotationFlatSet& other) {
+    for (auto it = m_data.begin(); it != m_data.end();) {
+        if (other.count(*it) == 0) {
+            it = m_data.erase(it);
+        } else {
+            ++it;
+        }
+    }
+    return *this;
+}
+
+RoleDenotationFlatSet& RoleDenotationFlatSet::operator|=(const RoleDenotationFlatSet& other) {
+    for (const auto single : other.m_data) {
+        m_data.insert(single);
+    }
+    return *this;
+}
+
+RoleDenotationFlatSet& RoleDenotationFlatSet::operator-=(const RoleDenotationFlatSet& other) {
+    for (const auto single : other.m_data) {
+        m_data.erase(single);
+    }
+    return *this;
+}
+
+RoleDenotationFlatSet& RoleDenotationFlatSet::operator~() {
+    phmap::flat_hash_set<std::pair<int, int>> result;
+    for (int i = 0; i < m_num_objects; ++i) {
+        for (int j = 0; j < m_num_objects; ++j) {
+            std::pair<int, int> pair(i, j);
+            if (m_data.count(pair) == 0) {
+                result.insert(pair);
+            }
+        }
+    }
+    m_data = result;
+    return *this;
+}
+
+phmap::flat_hash_set<std::pair<int, int>>::const_iterator RoleDenotationFlatSet::begin() const {
+    return m_data.begin();
+}
+
+phmap::flat_hash_set<std::pair<int, int>>::const_iterator RoleDenotationFlatSet::end() const {
+    return m_data.end();
+}
+
+size_t RoleDenotationFlatSet::count(const std::pair<size_t, size_t>& value) const {
+    return m_data.count(value);
+}
+
+void RoleDenotationFlatSet::insert(const std::pair<size_t, size_t>& value) {
+    m_data.insert(value);
+}
+
+void RoleDenotationFlatSet::erase(const std::pair<size_t, size_t>& value) {
+    m_data.erase(value);
+}
+
+size_t RoleDenotationFlatSet::size() const {
+    return m_data.size();
+}
+
+bool RoleDenotationFlatSet::empty() const {
+    return m_data.empty();
+}
+
+bool RoleDenotationFlatSet::intersects(const RoleDenotationFlatSet& other) const {
+    for (const auto single : m_data) {
+        if (other.count(single)) return true;
+    }
+    return false;
+}
+
+bool RoleDenotationFlatSet::is_subset_of(const RoleDenotationFlatSet& other) const {
+    for (const auto single : m_data) {
+        if (other.count(single) == 0) return false;
+    }
+    return true;
+}
+
+std::vector<std::pair<int, int>> RoleDenotationFlatSet::to_vector() const {
+    std::vector<std::pair<int, int>> result(m_data.begin(), m_data.end());
+    std::sort(result.begin(), result.end());
+    return result;
+}
+
+int RoleDenotationFlatSet::get_num_objects() const {
+    return m_num_objects;
+}
+
+
 ConceptDenotationBitset::ConceptDenotationBitset(int num_objects)
     : m_num_objects(num_objects), m_data(dynamic_bitset::DynamicBitset<unsigned>(num_objects)) { }
 

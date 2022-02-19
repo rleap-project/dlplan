@@ -65,6 +65,43 @@ public:
     int get_num_objects() const;
 };
 
+
+class RoleDenotationFlatSet {
+private:
+    int m_num_objects;
+    phmap::flat_hash_set<std::pair<int, int>> m_data;
+
+public:
+    explicit RoleDenotationFlatSet(int num_objects);
+    RoleDenotationFlatSet(const RoleDenotationFlatSet& other);
+    RoleDenotationFlatSet& operator=(const RoleDenotationFlatSet& other);
+    RoleDenotationFlatSet(RoleDenotationFlatSet&& other);
+    RoleDenotationFlatSet& operator=(RoleDenotationFlatSet&& other);
+    ~RoleDenotationFlatSet();
+
+    RoleDenotationFlatSet& operator&=(const RoleDenotationFlatSet& other);
+    RoleDenotationFlatSet& operator|=(const RoleDenotationFlatSet& other);
+    RoleDenotationFlatSet& operator-=(const RoleDenotationFlatSet& other);
+    RoleDenotationFlatSet& operator~();
+
+    phmap::flat_hash_set<std::pair<int, int>>::const_iterator begin() const;
+    phmap::flat_hash_set<std::pair<int, int>>::const_iterator end() const;
+
+    size_t count(const std::pair<size_t, size_t>& value) const;
+
+    void insert(const std::pair<size_t, size_t>& value);
+    void erase(const std::pair<size_t, size_t>& value);
+
+    size_t size() const;
+    bool empty() const;
+    bool intersects(const RoleDenotationFlatSet& other) const;
+    bool is_subset_of(const RoleDenotationFlatSet& other) const;
+
+    std::vector<std::pair<int, int>> to_vector() const;
+
+    int get_num_objects() const;
+};
+
 class ConceptDenotationBitset {
 private:
     int m_num_objects;
@@ -191,7 +228,7 @@ public:
 
     int get_num_objects() const;
 };
-using RoleDenotation = RoleDenotationBitset;
+using RoleDenotation = RoleDenotationFlatSet;
 
 
 class Constant {
