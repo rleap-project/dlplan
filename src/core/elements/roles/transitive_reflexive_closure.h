@@ -21,8 +21,7 @@ public:
 
     RoleDenotation evaluate(const State& state) const override {
         int num_objects = state.get_instance_info()->get_num_objects();
-        auto role_denot = m_role->evaluate(state);
-        dynamic_bitset::DynamicBitset role_bitset = utils::role_denot_to_bitset(role_denot);
+        auto role_bitset = utils::role_denot_to_bitset(m_role->evaluate(state));
         for (int k = 0; k < num_objects; ++k) {
             for (int i = 0; i < num_objects; ++i) {
                 for (int j = 0; j < num_objects; ++j) {
