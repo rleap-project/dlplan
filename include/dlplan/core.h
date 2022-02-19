@@ -29,16 +29,49 @@ namespace element {
     class Boolean;
 }
 
-/**
- * Proxy to underlying Bitset with additional functionality.
- */
+class ConceptDenotationFlatSet {
+private:
+    int m_num_objects;
+    phmap::flat_hash_set<int> m_data;
+
+public:
+    explicit ConceptDenotationFlatSet(int num_objects);
+    ConceptDenotationFlatSet(const ConceptDenotationFlatSet& other);
+    ConceptDenotationFlatSet& operator=(const ConceptDenotationFlatSet& other);
+    ConceptDenotationFlatSet(ConceptDenotationFlatSet&& other);
+    ConceptDenotationFlatSet& operator=(ConceptDenotationFlatSet&& other);
+    ~ConceptDenotationFlatSet();
+
+    ConceptDenotationFlatSet& operator&=(const ConceptDenotationFlatSet& other);
+    ConceptDenotationFlatSet& operator|=(const ConceptDenotationFlatSet& other);
+    ConceptDenotationFlatSet& operator-=(const ConceptDenotationFlatSet& other);
+    ConceptDenotationFlatSet& operator~();
+
+    phmap::flat_hash_set<int>::const_iterator begin() const;
+    phmap::flat_hash_set<int>::const_iterator end() const;
+
+    size_t count(size_t value) const;
+
+    void insert(size_t value);
+    void erase(size_t value);
+
+    size_t size() const;
+    bool empty() const;
+    bool intersects(const ConceptDenotationFlatSet& other) const;
+    bool is_subset_of(const ConceptDenotationFlatSet& other) const;
+
+    std::vector<int> to_vector() const;
+
+    int get_num_objects() const;
+};
+
 class ConceptDenotationBitset {
 private:
-    // no pimpl to save indirection.
     int m_num_objects;
     dynamic_bitset::DynamicBitset<unsigned> m_data;
 
 public:
+    // Special iterator for bitset representing set of integers
     class const_iterator {
         public:
             using iterator_category = std::forward_iterator_tag;
@@ -57,8 +90,6 @@ public:
             const_iterator& operator++();
 
         private:
-            // We cant return a ptr or reference to the element in the bitset.
-            // Hence, we return the index instead.
             const_reference m_data;
             size_t m_num_objects;
             size_t m_index;
@@ -68,7 +99,6 @@ public:
     };
 
     explicit ConceptDenotationBitset(int num_objects);
-    ConceptDenotationBitset(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data);
     ConceptDenotationBitset(const ConceptDenotationBitset& other);
     ConceptDenotationBitset& operator=(const ConceptDenotationBitset& other);
     ConceptDenotationBitset(ConceptDenotationBitset&& other);
@@ -87,34 +117,25 @@ public:
 
     void insert(size_t value);
     void erase(size_t value);
-    void erase(const_iterator position);
 
     size_t size() const;
     bool empty() const;
     bool intersects(const ConceptDenotationBitset& other) const;
     bool is_subset_of(const ConceptDenotationBitset& other) const;
 
-    /**
-     * TODO: must ensure that elements are in some canonical representation.
-     * This function is not intended to be called by the user due to the
-     * additional overhead but it is useful for testing.
-     */
     std::vector<int> to_vector() const;
 
     int get_num_objects() const;
 };
-using ConceptDenotation = ConceptDenotationBitset;
+using ConceptDenotation = ConceptDenotationFlatSet;
 
-/**
- * Proxy to underlying Bitset with additional functionality.
- */
 class RoleDenotationBitset {
 private:
-    // no pimpl to save indirection.
     int m_num_objects;
     dynamic_bitset::DynamicBitset<unsigned> m_data;
 
 public:
+    // Special iterator for bitset representing set of pairs of ints.
     class const_iterator {
         public:
             using iterator_category = std::forward_iterator_tag;
@@ -133,8 +154,6 @@ public:
             const_iterator& operator++();
 
         private:
-            // We cant return a ptr or reference to the element in the bitset.
-            // Hence, we return the index instead.
             const_reference m_data;
             size_t m_num_objects;
             std::pair<size_t, size_t> m_indices;
@@ -144,7 +163,6 @@ public:
     };
 
     explicit RoleDenotationBitset(int num_objects);
-    RoleDenotationBitset(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data);
     RoleDenotationBitset(const RoleDenotationBitset& other);
     RoleDenotationBitset& operator=(const RoleDenotationBitset& other);
     RoleDenotationBitset(RoleDenotationBitset&& other);
@@ -163,7 +181,6 @@ public:
 
     void insert(const std::pair<size_t, size_t>& value);
     void erase(const std::pair<size_t, size_t>& value);
-    void erase(const_iterator position);
 
     size_t size() const;
     bool empty() const;

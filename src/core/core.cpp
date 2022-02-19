@@ -16,11 +16,106 @@
 
 namespace dlplan::core {
 
+ConceptDenotationFlatSet::ConceptDenotationFlatSet(int num_objects) : m_num_objects(num_objects) { }
+
+ConceptDenotationFlatSet::ConceptDenotationFlatSet(const ConceptDenotationFlatSet& other) = default;
+
+ConceptDenotationFlatSet& ConceptDenotationFlatSet::operator=(const ConceptDenotationFlatSet& other) = default;
+
+ConceptDenotationFlatSet::ConceptDenotationFlatSet(ConceptDenotationFlatSet&& other) = default;
+
+ConceptDenotationFlatSet& ConceptDenotationFlatSet::operator=(ConceptDenotationFlatSet&& other) = default;
+
+ConceptDenotationFlatSet::~ConceptDenotationFlatSet() = default;
+
+ConceptDenotationFlatSet& ConceptDenotationFlatSet::operator&=(const ConceptDenotationFlatSet& other) {
+    for (auto it = m_data.begin(); it != m_data.end(); ++it) {
+        if (other.count(*it) == 0) {
+            it = m_data.erase(it);
+        }
+    }
+    return *this;
+}
+
+ConceptDenotationFlatSet& ConceptDenotationFlatSet::operator|=(const ConceptDenotationFlatSet& other) {
+    for (const auto single : other.m_data) {
+        m_data.insert(single);
+    }
+    return *this;
+}
+
+ConceptDenotationFlatSet& ConceptDenotationFlatSet::operator-=(const ConceptDenotationFlatSet& other) {
+    for (const auto single : other.m_data) {
+        m_data.erase(single);
+    }
+    return *this;
+}
+
+ConceptDenotationFlatSet& ConceptDenotationFlatSet::operator~() {
+    phmap::flat_hash_set<int> result;
+    for (int i = 0; i < m_num_objects; ++i) {
+        if (!m_data.count(i)) {
+            result.insert(i);
+        }
+    }
+    m_data = result;
+    return *this;
+}
+
+phmap::flat_hash_set<int>::const_iterator ConceptDenotationFlatSet::begin() const {
+    return m_data.begin();
+}
+
+phmap::flat_hash_set<int>::const_iterator ConceptDenotationFlatSet::end() const {
+    return m_data.end();
+}
+
+size_t ConceptDenotationFlatSet::count(size_t value) const {
+    return m_data.count(value);
+}
+
+void ConceptDenotationFlatSet::insert(size_t value) {
+    m_data.insert(value);
+}
+
+void ConceptDenotationFlatSet::erase(size_t value) {
+    m_data.erase(value);
+}
+
+size_t ConceptDenotationFlatSet::size() const {
+    return m_data.size();
+}
+
+bool ConceptDenotationFlatSet::empty() const {
+    return m_data.empty();
+}
+
+bool ConceptDenotationFlatSet::intersects(const ConceptDenotationFlatSet& other) const {
+    for (const auto single : m_data) {
+        if (other.count(single)) return true;
+    }
+    return false;
+}
+
+bool ConceptDenotationFlatSet::is_subset_of(const ConceptDenotationFlatSet& other) const {
+    for (const auto single : m_data) {
+        if (other.count(single) == 0) return false;
+    }
+    return true;
+}
+
+std::vector<int> ConceptDenotationFlatSet::to_vector() const {
+    std::vector<int> result(m_data.begin(), m_data.end());
+    std::sort(result.begin(), result.end());
+    return result;
+}
+
+int ConceptDenotationFlatSet::get_num_objects() const {
+    return m_num_objects;
+}
+
 ConceptDenotationBitset::ConceptDenotationBitset(int num_objects)
     : m_num_objects(num_objects), m_data(dynamic_bitset::DynamicBitset<unsigned>(num_objects)) { }
-
-ConceptDenotationBitset::ConceptDenotationBitset(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data)
-    : m_num_objects(num_objects), m_data(std::move(data)) { }
 
 ConceptDenotationBitset::ConceptDenotationBitset(const ConceptDenotationBitset& other) = default;
 
@@ -109,12 +204,6 @@ void ConceptDenotationBitset::erase(size_t value) {
     m_data.reset(value);
 }
 
-void ConceptDenotationBitset::erase(const_iterator position) {
-    if (position != end()) {
-        m_data.reset(*position);
-    }
-}
-
 size_t ConceptDenotationBitset::size() const {
     return m_data.count();
 }
@@ -148,9 +237,6 @@ int ConceptDenotationBitset::get_num_objects() const {
 
 RoleDenotationBitset::RoleDenotationBitset(int num_objects)
     : m_num_objects(num_objects), m_data(dynamic_bitset::DynamicBitset<unsigned>(num_objects * num_objects)) { }
-
-RoleDenotationBitset::RoleDenotationBitset(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data)
-    : m_num_objects(num_objects), m_data(std::move(data)) { }
 
 RoleDenotationBitset::RoleDenotationBitset(const RoleDenotationBitset& other) = default;
 
@@ -245,12 +331,6 @@ void RoleDenotationBitset::insert(const std::pair<size_t, size_t>& value) {
 
 void RoleDenotationBitset::erase(const std::pair<size_t, size_t>& value) {
     return m_data.reset(value.first * m_num_objects + value.second);
-}
-
-void RoleDenotationBitset::erase(const_iterator position) {
-    const auto& pair = *position;
-    // TODO assert
-    m_data.reset(pair.first * m_num_objects + pair.second);
 }
 
 size_t RoleDenotationBitset::size() const {
