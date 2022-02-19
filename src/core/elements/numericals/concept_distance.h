@@ -24,22 +24,19 @@ public:
     }
 
     int evaluate(const State& state) const override {
-        const ConceptDenotation c = m_concept_from->evaluate(state);
-        const auto& c_data = c.get_data();
-        if (c_data.none()) {
+        const auto concept_from_denot = m_concept_from->evaluate(state);
+        if (concept_from_denot.empty()) {
             return INF;
         }
-        const ConceptDenotation d = m_concept_to->evaluate(state);
-        const auto& d_data = d.get_data();
-        if (d_data.none()) {
+        const auto concept_to_denot = m_concept_to->evaluate(state);
+        if (concept_to_denot.empty()) {
             return INF;
         }
-        if (c_data.intersects(d_data)) {
+        if (concept_from_denot.intersects(concept_to_denot)) {
             return 0;
         }
-        const RoleDenotation r = m_role->evaluate(state);
-        const utils::AdjList adj_list = utils::compute_adjacency_list(r);
-        return utils::compute_multi_source_multi_target_shortest_distance(adj_list, c_data, d_data);
+        const auto role_denot = m_role->evaluate(state);
+        return utils::compute_multi_source_multi_target_shortest_distance(concept_from_denot, role_denot, concept_to_denot);
     }
 
     int compute_complexity() const override {

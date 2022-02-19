@@ -21,9 +21,7 @@ public:
     }
 
     bool evaluate(const State& state) const override {
-        const auto l = m_element_left->evaluate(state);
-        const auto r = m_element_right->evaluate(state);
-        return l.get_data().is_subset_of(r.get_data());
+        return m_element_left->evaluate(state).is_subset_of(m_element_right->evaluate(state));
     }
 
     int compute_complexity() const override {

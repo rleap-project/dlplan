@@ -149,7 +149,7 @@ const phmap::flat_hash_map<int, std::vector<int>>& InstanceInfoImpl::get_per_pre
 }
 
 const ConceptDenotation& InstanceInfoImpl::get_top_concept() const {
-    if (static_cast<int>(m_top_concept.get_data().size()) != get_num_objects()) {
+    if (static_cast<int>(m_top_concept.size()) != get_num_objects()) {
         m_top_concept = ConceptDenotation(get_num_objects());
         for (int i = 0; i < get_num_objects(); ++i) {
             m_top_concept.insert(i);
@@ -159,7 +159,7 @@ const ConceptDenotation& InstanceInfoImpl::get_top_concept() const {
 }
 
 const RoleDenotation& InstanceInfoImpl::get_top_role() const {
-    if (static_cast<int>(m_top_role.get_data().size()) != get_num_objects() * get_num_objects()) {
+    if (static_cast<int>(m_top_role.size()) != get_num_objects() * get_num_objects()) {
         m_top_role = RoleDenotation(get_num_objects());
         for (int i = 0; i < get_num_objects(); ++i) {
             for (int j = 0; j < get_num_objects(); ++j) {

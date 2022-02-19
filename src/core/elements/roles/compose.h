@@ -2,7 +2,8 @@
 #define DLPLAN_SRC_CORE_ELEMENTS_ROLES_COMPOSE_H_
 
 #include "../role.h"
-#include <algorithm>
+
+#include "../../../../include/dlplan/dynamic_bitset.h"
 
 
 namespace dlplan::core::element {
@@ -21,21 +22,15 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        const auto l = m_role_left->evaluate(state);
-        const auto& l_data = l.get_data();
-        const auto r = m_role_right->evaluate(state);
-        const auto& r_data = r.get_data();
         int num_objects = state.get_instance_info()->get_num_objects();
+        dynamic_bitset::DynamicBitset role_left_bitset = utils::role_denot_to_bitset(m_role_left->evaluate(state));
+        dynamic_bitset::DynamicBitset role_right_bitset = utils::role_denot_to_bitset(m_role_right->evaluate(state));
         RoleDenotation result(num_objects);
-        auto& result_data = result.get_data();
         for (int i = 0; i < num_objects; ++i) {  // source
             for (int j = 0; j < num_objects; ++j) {  // target
-                int ij = i * num_objects + j;
                 for (int k = 0; k < num_objects; ++k) {  // middle
-                    int ik = i * num_objects + k;
-                    int kj = k * num_objects + j;
-                    if (l_data.test(ik) && r_data.test(kj)) {
-                        result_data.set(ij);
+                    if (role_left_bitset.test(i * num_objects + k) && role_right_bitset.test(k * num_objects + j)) {
+                        result.insert(std::make_pair(i, j));
                         break;
                     }
                 }

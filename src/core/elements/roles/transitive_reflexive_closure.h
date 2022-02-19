@@ -20,24 +20,20 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        auto r = m_role->evaluate(state);
-        auto& r_data = r.get_data();
         int num_objects = state.get_instance_info()->get_num_objects();
+        auto role_denot = m_role->evaluate(state);
+        dynamic_bitset::DynamicBitset role_bitset = utils::role_denot_to_bitset(role_denot);
         for (int k = 0; k < num_objects; ++k) {
             for (int i = 0; i < num_objects; ++i) {
-                int ik = i * num_objects + k;
                 for (int j = 0; j < num_objects; ++j) {
-                    int ij = i * num_objects + j;
-                    int kj = k * num_objects + j;
-                    if (r_data.test(ik) && r_data.test(kj)) {
-                        r_data.set(ij);
+                    if (role_bitset.test(i * num_objects + k) && role_bitset.test(k * num_objects + j)) {
+                        role_bitset.set(i * num_objects + j);
                     }
                 }
             }
-            // reflexive
-            r_data.set(k * num_objects + k);
+            role_bitset.set(k * num_objects + k);
         }
-        return r;
+        return utils::bitset_to_role_denotation(role_bitset, num_objects);
     }
 
     int compute_complexity() const override {

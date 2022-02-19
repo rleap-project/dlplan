@@ -93,45 +93,47 @@ public:
 };
 
 /**
- * Evaluates an element on a collection of states.
+ * Evaluate each element on set of states.
+ * The result is hashable data.
  */
-template<typename D>
-std::vector<D> evaluate(const core::Element<D>& element, const States& states) {
-    std::vector<D> result;
+inline std::vector<int> evaluate_boolean(const core::Boolean& boolean, const States& states) {
+    std::vector<int> result;
     result.reserve(states.size());
     for (const auto& state : states) {
-        result.push_back(element.evaluate(state));
+        result.push_back(static_cast<int>(boolean.evaluate(state)));
     }
-    result.shrink_to_fit();
     return result;
 }
 
-/**
- * Transform vector<bool> to vector<int> for hashing
- */
-inline std::vector<int> bool_vec_to_num_vec(const std::vector<bool>& bool_vec) {
-    std::vector<int> num_vec;
-    num_vec.reserve(bool_vec.size());
-    for (size_t i = 0; i < bool_vec.size(); ++i) {
-        num_vec.push_back(bool_vec[i]);
+inline std::vector<int> evaluate_numerical(const core::Numerical& numerical, const States& states) {
+    std::vector<int> result;
+    result.reserve(states.size());
+    for (const auto& state : states) {
+        result.push_back(numerical.evaluate(state));
     }
-    return num_vec;
+    return result;
 }
 
-/**
- * Transform vector<bitset> to vector<int> for hashing
- */
-template<typename T>
-inline std::vector<int> bitset_to_num_vec(const std::vector<T>& denotation) {
-    static_assert(sizeof(int) == sizeof(unsigned));
-    size_t size = 0;
-    for (const auto& b : denotation) {
-        size += b.get_data().get_blocks().size();
-    }
+inline std::vector<int> evaluate_concept(const core::Concept& concept, const States& states) {
     std::vector<int> result;
-    result.reserve(size);
-    for (const auto& b : denotation) {
-        result.insert(result.end(), b.get_data().get_blocks().begin(), b.get_data().get_blocks().end());
+    result.reserve(states.size());
+    for (const auto& state : states) {
+        const auto concept_denot = concept.evaluate(state).to_vector();
+        result.push_back(concept_denot.size());
+        result.insert(result.end(), concept_denot.begin(), concept_denot.end());
+    }
+    return result;
+}
+
+inline std::vector<int> evaluate_role(const core::Role& role, const States& states) {
+    std::vector<int> result;
+    for (const auto& state : states) {
+        const auto role_denot = role.evaluate(state).to_vector();
+        result.push_back(role_denot.size());
+        for (const auto& pair : role_denot) {
+            result.push_back(pair.first);
+            result.push_back(pair.second);
+        }
     }
     return result;
 }

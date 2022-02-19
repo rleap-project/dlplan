@@ -8,7 +8,7 @@ std::function<ConceptTaskResult(const States&, const core::Concept&)> Concept::m
     return ConceptTaskResult(
         core::Concept(element),
         element.compute_repr(),
-        compute_hash(bitset_to_num_vec(evaluate<core::ConceptDenotation>(element, states))));
+        compute_hash(evaluate_concept(element, states)));
 };
 
 void Concept::parse_results_of_tasks_impl(int iteration, GeneratorData& data) {

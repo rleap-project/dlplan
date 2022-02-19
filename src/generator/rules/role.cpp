@@ -8,7 +8,7 @@ std::function<RoleTaskResult(const States&, const core::Role&)> Role::m_task =
     return RoleTaskResult(
         core::Role(element),
         element.compute_repr(),
-        compute_hash(bitset_to_num_vec(evaluate<core::RoleDenotation>(element, states))));
+        compute_hash(evaluate_role(element, states)));
 };
 
 void Role::parse_results_of_tasks_impl(int iteration, GeneratorData& data) {

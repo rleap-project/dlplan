@@ -8,7 +8,7 @@ std::function<BooleanTaskResult(const States&, const core::Boolean&)> Boolean::m
     return BooleanTaskResult(
         core::Boolean(element),
         element.compute_repr(),
-        compute_hash(bool_vec_to_num_vec(evaluate<bool>(element, states))));
+        compute_hash(evaluate_boolean(element, states)));
 };
 
 void Boolean::parse_results_of_tasks_impl(int iteration, GeneratorData& data) {

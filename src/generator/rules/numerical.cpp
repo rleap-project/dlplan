@@ -8,7 +8,7 @@ std::function<NumericalTaskResult(const States&, const core::Numerical&)> Numeri
     return NumericalTaskResult(
         core::Numerical(element),
         element.compute_repr(),
-        compute_hash(evaluate<int>(element, states)));
+        compute_hash(evaluate_numerical(element, states)));
 };
 
 void Numerical::parse_results_of_tasks_impl(int iteration, GeneratorData& data) {

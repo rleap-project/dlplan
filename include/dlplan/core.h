@@ -90,6 +90,9 @@ public:
     void erase(const_iterator position);
 
     size_t size() const;
+    bool empty() const;
+    bool intersects(const ConceptDenotation& other) const;
+    bool is_subset_of(const ConceptDenotation& other) const;
 
     /**
      * TODO: must ensure that elements are in some canonical representation.
@@ -99,8 +102,6 @@ public:
     std::vector<int> to_vector() const;
 
     int get_num_objects() const;
-    dynamic_bitset::DynamicBitset<unsigned>& get_data();
-    const dynamic_bitset::DynamicBitset<unsigned>& get_data() const;
 };
 
 /**
@@ -164,13 +165,13 @@ public:
     void erase(const_iterator position);
 
     size_t size() const;
-
+    bool empty() const;
+    bool intersects(const RoleDenotation& other) const;
+    bool is_subset_of(const RoleDenotation& other) const;
 
     std::vector<std::pair<int, int>> to_vector() const;
 
     int get_num_objects() const;
-    dynamic_bitset::DynamicBitset<unsigned>& get_data();
-    const dynamic_bitset::DynamicBitset<unsigned>& get_data() const;
 };
 
 

@@ -3,46 +3,30 @@
 
 #include "types.h"
 
+#include "../../../include/dlplan/core.h"
+
 
 namespace dlplan {
-namespace dynamic_bitset {
-template<typename T>
-class DynamicBitset;
-}
 namespace core {
 class RoleDenotation;
 namespace element::utils {
 
-using AdjList = std::vector<std::vector<int>>;
 using Distances = std::vector<int>;
 using PairwiseDistances = std::vector<Distances>;
 
-/**
- * Path addition evaluations to INF if any term is INF.
- */
 extern int path_addition(int a, int b);
 
-/**
- * Computes an adjacency list from a given role.
- */
-extern AdjList compute_adjacency_list(const RoleDenotation& r, bool inverse=false);
+extern int compute_multi_source_multi_target_shortest_distance(const ConceptDenotation& sources, const RoleDenotation& edges, const ConceptDenotation& targets);
 
-/**
- * Compute distances from a given state in a graph defined by an adjacency list.
- */
-extern Distances compute_distances_from_state(const AdjList& adj_list, int source);
+extern int compute_single_source_multi_target_shortest_distance(int source, const RoleDenotation& edges, const ConceptDenotation& targets);
 
-extern int compute_multi_source_multi_target_shortest_distance(const AdjList& adj_list, const dynamic_bitset::DynamicBitset<unsigned>& sources, const dynamic_bitset::DynamicBitset<unsigned>& targets);
+extern PairwiseDistances compute_floyd_warshall(const RoleDenotation& edges);
 
-/**
- * Compute pairwise distances with floyd warshall algorithm.
- */
-extern PairwiseDistances compute_floyd_warshall(const AdjList& adj_list, bool reflexive=true);
+extern dynamic_bitset::DynamicBitset<unsigned> concept_denot_to_bitset(const ConceptDenotation& denot);
 
-/**
- * Compute the transitive (reflexive) closure over the role denotation
- */
-extern RoleDenotation compute_transitive_closure(const PairwiseDistances& distances, int num_objects);
+extern dynamic_bitset::DynamicBitset<unsigned> role_denot_to_bitset(const RoleDenotation& denot);
+
+extern RoleDenotation bitset_to_role_denotation(dynamic_bitset::DynamicBitset<unsigned> bitset, int num_objects);
 
 }
 }

@@ -25,29 +25,23 @@ public:
     }
 
     int evaluate(const State& state) const override {
-        const RoleDenotation& r = m_role_from->evaluate(state);
-        const auto& r_data = r.get_data();
-        if (r_data.none()) {
+        const auto role_from_denot = m_role_from->evaluate(state);
+        if (role_from_denot.empty()) {
             return INF;
         }
-        const RoleDenotation t = m_role_to->evaluate(state);
-        const auto& t_data = t.get_data();
-        if (t_data.none()) {
+        const auto role_to_denot = m_role_to->evaluate(state);
+        if (role_to_denot.empty()) {
             return INF;
         }
-        const RoleDenotation s = m_role->evaluate(state);
-        int num_objects = state.get_instance_info()->get_num_objects();
-        utils::AdjList adj_list = utils::compute_adjacency_list(s);
-        // 3. Compute pairwise distances using a sequence of bfs calls.
-        utils::PairwiseDistances pairwise_distances = utils::compute_floyd_warshall(adj_list, true);
+        const auto role_denot = m_role->evaluate(state);
+        utils::PairwiseDistances pairwise_distances = utils::compute_floyd_warshall(role_denot);
         int result = INF;
+        int num_objects = role_denot.get_num_objects();
         for (int k = 0; k < num_objects; ++k) {  // property
             for (int i = 0; i < num_objects; ++i) {  // source
-                int ki = k * num_objects + i;
-                if (r_data.test(ki)) {
+                if (role_from_denot.count(std::make_pair(k, i))) {
                     for (int j = 0; j < num_objects; ++j) {  // target
-                        int kj = k * num_objects + j;
-                        if (t_data.test(kj)) {
+                        if (role_to_denot.count(std::make_pair(k, j))) {
                             result = std::min<int>(result, pairwise_distances[i][j]);
                         }
                     }

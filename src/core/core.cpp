@@ -119,6 +119,18 @@ size_t ConceptDenotation::size() const {
     return m_data.count();
 }
 
+bool ConceptDenotation::empty() const {
+    return m_data.none();
+}
+
+bool ConceptDenotation::intersects(const ConceptDenotation& other) const {
+    return m_data.intersects(other.m_data);
+}
+
+bool ConceptDenotation::is_subset_of(const ConceptDenotation& other) const {
+    return m_data.is_subset_of(other.m_data);
+}
+
 std::vector<int> ConceptDenotation::to_vector() const {
     std::vector<int> result;
     result.reserve(m_num_objects);
@@ -131,14 +143,6 @@ std::vector<int> ConceptDenotation::to_vector() const {
 
 int ConceptDenotation::get_num_objects() const {
     return m_num_objects;
-}
-
-dynamic_bitset::DynamicBitset<unsigned>& ConceptDenotation::get_data() {
-    return m_data;
-}
-
-const dynamic_bitset::DynamicBitset<unsigned>& ConceptDenotation::get_data() const {
-    return m_data;
 }
 
 
@@ -253,6 +257,17 @@ size_t RoleDenotation::size() const {
     return m_data.count();
 }
 
+bool RoleDenotation::empty() const {
+    return m_data.none();
+}
+
+bool RoleDenotation::intersects(const RoleDenotation& other) const {
+    return m_data.intersects(other.m_data);
+}
+
+bool RoleDenotation::is_subset_of(const RoleDenotation& other) const {
+    return m_data.is_subset_of(other.m_data);
+}
 
 std::vector<std::pair<int, int>> RoleDenotation::to_vector() const {
     std::vector<std::pair<int, int>> result;
@@ -270,14 +285,6 @@ std::vector<std::pair<int, int>> RoleDenotation::to_vector() const {
 
 int RoleDenotation::get_num_objects() const {
     return m_num_objects;
-}
-
-dynamic_bitset::DynamicBitset<unsigned>& RoleDenotation::get_data() {
-    return m_data;
-}
-
-const dynamic_bitset::DynamicBitset<unsigned>& RoleDenotation::get_data() const {
-    return m_data;
 }
 
 

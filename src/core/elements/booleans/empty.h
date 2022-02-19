@@ -17,7 +17,7 @@ public:
     }
 
     bool evaluate(const State& state) const override {
-        return m_element->evaluate(state).get_data().none();
+        return m_element->evaluate(state).empty();
     }
 
     int compute_complexity() const override {

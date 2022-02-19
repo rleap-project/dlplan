@@ -24,38 +24,22 @@ public:
     }
 
     int evaluate(const State& state) const override {
-        const ConceptDenotation c = m_concept_from->evaluate(state);
-        const auto& c_data = c.get_data();
-        if (c_data.none()) {
+        auto concept_from_denot = m_concept_from->evaluate(state);
+        if (concept_from_denot.empty()) {
             return INF;
         }
-        const ConceptDenotation d = m_concept_to->evaluate(state);
-        const auto& d_data = d.get_data();
-        if (d_data.none()) {
+        auto concept_to_denot = m_concept_to->evaluate(state);
+        if (concept_to_denot.empty()) {
             return INF;
         }
-        const RoleDenotation r = m_role->evaluate(state);
-
-        int num_c = c.get_data().count();
-        int num_d = d.get_data().count();
-        const ConceptDenotation a = (num_c <= num_d) ? c : d;
-        const ConceptDenotation b = (num_c <= num_d) ? d : c;
-        const utils::AdjList adj_list = (num_c <= num_d) ? utils::compute_adjacency_list(r) : utils::compute_adjacency_list(r, true);
-
-        int num_objects = state.get_instance_info()->get_num_objects();
+        const auto role_denot = m_role->evaluate(state);
+        if (concept_from_denot.size() > concept_to_denot.size()) {
+            std::swap(concept_from_denot, concept_to_denot);
+        }
         int result = 0;
-        for (int i = 0; i < num_objects; ++i) {  // source
-            if (a.get_data().test(i)) {
-                // TODO: stop the BFS as soon as we find a node in c_to_vec?
-                utils::Distances distances = utils::compute_distances_from_state(adj_list, i);
-                int min_distance = INF;
-                for (int j = 0; j < num_objects; ++j) {  // target
-                    if (b.get_data().test(j)) {
-                        min_distance = std::min<int>(min_distance, distances[j]);
-                    }
-                }
-                result = utils::path_addition(result, min_distance);
-            }
+        for (const auto single : concept_from_denot) {
+            int distance = utils::compute_single_source_multi_target_shortest_distance(single, role_denot, concept_to_denot);
+            result = utils::path_addition(result, distance);
         }
         return result;
     }
