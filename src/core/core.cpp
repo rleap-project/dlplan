@@ -29,9 +29,11 @@ ConceptDenotationFlatSet& ConceptDenotationFlatSet::operator=(ConceptDenotationF
 ConceptDenotationFlatSet::~ConceptDenotationFlatSet() = default;
 
 ConceptDenotationFlatSet& ConceptDenotationFlatSet::operator&=(const ConceptDenotationFlatSet& other) {
-    for (auto it = m_data.begin(); it != m_data.end(); ++it) {
+    for (auto it = m_data.begin(); it != m_data.end();) {
         if (other.count(*it) == 0) {
             it = m_data.erase(it);
+        } else {
+            ++it;
         }
     }
     return *this;
@@ -54,7 +56,7 @@ ConceptDenotationFlatSet& ConceptDenotationFlatSet::operator-=(const ConceptDeno
 ConceptDenotationFlatSet& ConceptDenotationFlatSet::operator~() {
     phmap::flat_hash_set<int> result;
     for (int i = 0; i < m_num_objects; ++i) {
-        if (!m_data.count(i)) {
+        if (m_data.count(i) == 0) {
             result.insert(i);
         }
     }
