@@ -6,10 +6,7 @@
 #include "../../../include/dlplan/core.h"
 
 
-namespace dlplan {
-namespace core {
-class RoleDenotation;
-namespace element::utils {
+namespace dlplan::core::element::utils {
 
 using Distances = std::vector<int>;
 using PairwiseDistances = std::vector<Distances>;
@@ -28,8 +25,6 @@ extern dynamic_bitset::DynamicBitset<unsigned> role_denot_to_bitset(const RoleDe
 
 extern RoleDenotation bitset_to_role_denotation(dynamic_bitset::DynamicBitset<unsigned> bitset, int num_objects);
 
-}
-}
 }
 
 #endif

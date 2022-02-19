@@ -16,122 +16,122 @@
 
 namespace dlplan::core {
 
-ConceptDenotation::ConceptDenotation(int num_objects)
+ConceptDenotationBitset::ConceptDenotationBitset(int num_objects)
     : m_num_objects(num_objects), m_data(dynamic_bitset::DynamicBitset<unsigned>(num_objects)) { }
 
-ConceptDenotation::ConceptDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data)
+ConceptDenotationBitset::ConceptDenotationBitset(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data)
     : m_num_objects(num_objects), m_data(std::move(data)) { }
 
-ConceptDenotation::ConceptDenotation(const ConceptDenotation& other) = default;
+ConceptDenotationBitset::ConceptDenotationBitset(const ConceptDenotationBitset& other) = default;
 
-ConceptDenotation& ConceptDenotation::operator=(const ConceptDenotation& other) = default;
+ConceptDenotationBitset& ConceptDenotationBitset::operator=(const ConceptDenotationBitset& other) = default;
 
-ConceptDenotation::ConceptDenotation(ConceptDenotation&& other) = default;
+ConceptDenotationBitset::ConceptDenotationBitset(ConceptDenotationBitset&& other) = default;
 
-ConceptDenotation& ConceptDenotation::operator=(ConceptDenotation&& other) = default;
+ConceptDenotationBitset& ConceptDenotationBitset::operator=(ConceptDenotationBitset&& other) = default;
 
-ConceptDenotation::~ConceptDenotation() = default;
+ConceptDenotationBitset::~ConceptDenotationBitset() = default;
 
-void ConceptDenotation::const_iterator::seek_next() {
+void ConceptDenotationBitset::const_iterator::seek_next() {
     while (++m_index < m_num_objects) {
         if (m_data.test(m_index)) break;
     }
 }
 
-ConceptDenotation::const_iterator::const_iterator(ConceptDenotation::const_iterator::const_reference data, int num_objects, bool end)
+ConceptDenotationBitset::const_iterator::const_iterator(ConceptDenotationBitset::const_iterator::const_reference data, int num_objects, bool end)
     : m_data(data), m_num_objects(num_objects), m_index(end ? num_objects : static_cast<size_t>(-1)) {
     if (!end) seek_next();
 }
 
-bool ConceptDenotation::const_iterator::operator!=(const const_iterator& other) const {
+bool ConceptDenotationBitset::const_iterator::operator!=(const const_iterator& other) const {
     return !(*this == other);
 }
 
-bool ConceptDenotation::const_iterator::operator==(const const_iterator& other) const {
+bool ConceptDenotationBitset::const_iterator::operator==(const const_iterator& other) const {
     return ((m_index == other.m_index) && (&m_data == &other.m_data));
 }
 
-const std::size_t& ConceptDenotation::const_iterator::operator*() const {
+const std::size_t& ConceptDenotationBitset::const_iterator::operator*() const {
     return m_index;
 }
 
-ConceptDenotation::const_iterator ConceptDenotation::const_iterator::operator++(int) {
-    ConceptDenotation::const_iterator prev = *this;
+ConceptDenotationBitset::const_iterator ConceptDenotationBitset::const_iterator::operator++(int) {
+    ConceptDenotationBitset::const_iterator prev = *this;
     seek_next();
     return prev;
 }
 
-ConceptDenotation::const_iterator& ConceptDenotation::const_iterator::operator++() {
+ConceptDenotationBitset::const_iterator& ConceptDenotationBitset::const_iterator::operator++() {
     seek_next();
     return *this;
 }
 
-ConceptDenotation& ConceptDenotation::operator&=(const ConceptDenotation& other) {
+ConceptDenotationBitset& ConceptDenotationBitset::operator&=(const ConceptDenotationBitset& other) {
     m_data &= other.m_data;
     return *this;
 }
 
-ConceptDenotation& ConceptDenotation::operator|=(const ConceptDenotation& other) {
+ConceptDenotationBitset& ConceptDenotationBitset::operator|=(const ConceptDenotationBitset& other) {
     m_data |= other.m_data;
     return *this;
 }
 
-ConceptDenotation& ConceptDenotation::operator-=(const ConceptDenotation& other) {
+ConceptDenotationBitset& ConceptDenotationBitset::operator-=(const ConceptDenotationBitset& other) {
     m_data -= other.m_data;
     return *this;
 }
 
-ConceptDenotation& ConceptDenotation::operator~() {
+ConceptDenotationBitset& ConceptDenotationBitset::operator~() {
     ~m_data;
     return *this;
 }
 
-ConceptDenotation::const_iterator ConceptDenotation::begin() const {
-    return ConceptDenotation::const_iterator(m_data, m_num_objects);
+ConceptDenotationBitset::const_iterator ConceptDenotationBitset::begin() const {
+    return ConceptDenotationBitset::const_iterator(m_data, m_num_objects);
 }
 
-ConceptDenotation::const_iterator ConceptDenotation::end() const {
-    return ConceptDenotation::const_iterator(m_data, m_num_objects, true);
+ConceptDenotationBitset::const_iterator ConceptDenotationBitset::end() const {
+    return ConceptDenotationBitset::const_iterator(m_data, m_num_objects, true);
 }
 
-size_t ConceptDenotation::count(size_t value) const {
+size_t ConceptDenotationBitset::count(size_t value) const {
     assert(value >= 0 && value < m_num_objects);
     return static_cast<int>(m_data.test(value));
 }
 
-void ConceptDenotation::insert(size_t value) {
+void ConceptDenotationBitset::insert(size_t value) {
     assert(value >= 0 && value < m_num_objects);
     m_data.set(value);
 }
 
-void ConceptDenotation::erase(size_t value) {
+void ConceptDenotationBitset::erase(size_t value) {
     assert(value >= 0 && value < m_num_objects);
     m_data.reset(value);
 }
 
-void ConceptDenotation::erase(const_iterator position) {
+void ConceptDenotationBitset::erase(const_iterator position) {
     if (position != end()) {
         m_data.reset(*position);
     }
 }
 
-size_t ConceptDenotation::size() const {
+size_t ConceptDenotationBitset::size() const {
     return m_data.count();
 }
 
-bool ConceptDenotation::empty() const {
+bool ConceptDenotationBitset::empty() const {
     return m_data.none();
 }
 
-bool ConceptDenotation::intersects(const ConceptDenotation& other) const {
+bool ConceptDenotationBitset::intersects(const ConceptDenotationBitset& other) const {
     return m_data.intersects(other.m_data);
 }
 
-bool ConceptDenotation::is_subset_of(const ConceptDenotation& other) const {
+bool ConceptDenotationBitset::is_subset_of(const ConceptDenotationBitset& other) const {
     return m_data.is_subset_of(other.m_data);
 }
 
-std::vector<int> ConceptDenotation::to_vector() const {
+std::vector<int> ConceptDenotationBitset::to_vector() const {
     std::vector<int> result;
     result.reserve(m_num_objects);
     for (int i = 0; i < m_num_objects; ++i) {
@@ -141,28 +141,28 @@ std::vector<int> ConceptDenotation::to_vector() const {
     return result;
 }
 
-int ConceptDenotation::get_num_objects() const {
+int ConceptDenotationBitset::get_num_objects() const {
     return m_num_objects;
 }
 
 
-RoleDenotation::RoleDenotation(int num_objects)
+RoleDenotationBitset::RoleDenotationBitset(int num_objects)
     : m_num_objects(num_objects), m_data(dynamic_bitset::DynamicBitset<unsigned>(num_objects * num_objects)) { }
 
-RoleDenotation::RoleDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data)
+RoleDenotationBitset::RoleDenotationBitset(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data)
     : m_num_objects(num_objects), m_data(std::move(data)) { }
 
-RoleDenotation::RoleDenotation(const RoleDenotation& other) = default;
+RoleDenotationBitset::RoleDenotationBitset(const RoleDenotationBitset& other) = default;
 
-RoleDenotation& RoleDenotation::operator=(const RoleDenotation& other) = default;
+RoleDenotationBitset& RoleDenotationBitset::operator=(const RoleDenotationBitset& other) = default;
 
-RoleDenotation::RoleDenotation(RoleDenotation&& other) = default;
+RoleDenotationBitset::RoleDenotationBitset(RoleDenotationBitset&& other) = default;
 
-RoleDenotation& RoleDenotation::operator=(RoleDenotation&& other) = default;
+RoleDenotationBitset& RoleDenotationBitset::operator=(RoleDenotationBitset&& other) = default;
 
-RoleDenotation::~RoleDenotation() = default;
+RoleDenotationBitset::~RoleDenotationBitset() = default;
 
-void RoleDenotation::const_iterator::seek_next() {
+void RoleDenotationBitset::const_iterator::seek_next() {
     size_t& i = m_indices.first;
     size_t& j = m_indices.second;
     int offset = i * m_num_objects;
@@ -179,97 +179,97 @@ void RoleDenotation::const_iterator::seek_next() {
     assert(offset + j <= m_data.size());
 }
 
-RoleDenotation::const_iterator::const_iterator(const_reference data, size_t num_objects, bool end)
+RoleDenotationBitset::const_iterator::const_iterator(const_reference data, size_t num_objects, bool end)
     : m_data(data), m_num_objects(num_objects), m_indices(end ? std::pair<size_t, size_t>(num_objects, 0) : std::pair<size_t, size_t>(0, static_cast<size_t>(-1))) {
     if (!end) seek_next();
 }
 
-bool RoleDenotation::const_iterator::operator!=(const const_iterator& other) const {
+bool RoleDenotationBitset::const_iterator::operator!=(const const_iterator& other) const {
     return !(*this == other);
 }
 
-bool RoleDenotation::const_iterator::operator==(const const_iterator& other) const {
+bool RoleDenotationBitset::const_iterator::operator==(const const_iterator& other) const {
     return ((m_indices == other.m_indices) && (&m_data == &other.m_data));
 }
 
-const std::pair<size_t, size_t>& RoleDenotation::const_iterator::operator*() const {
+const std::pair<size_t, size_t>& RoleDenotationBitset::const_iterator::operator*() const {
     return m_indices;
 }
 
-RoleDenotation::const_iterator RoleDenotation::const_iterator::operator++(int) {
-    RoleDenotation::const_iterator prev = *this;
+RoleDenotationBitset::const_iterator RoleDenotationBitset::const_iterator::operator++(int) {
+    RoleDenotationBitset::const_iterator prev = *this;
     seek_next();
     return prev;
 }
 
-RoleDenotation::const_iterator& RoleDenotation::const_iterator::operator++() {
+RoleDenotationBitset::const_iterator& RoleDenotationBitset::const_iterator::operator++() {
     seek_next();
     return *this;
 }
 
-RoleDenotation& RoleDenotation::operator&=(const RoleDenotation& other) {
+RoleDenotationBitset& RoleDenotationBitset::operator&=(const RoleDenotationBitset& other) {
     m_data &= other.m_data;
     return *this;
 }
 
-RoleDenotation& RoleDenotation::operator|=(const RoleDenotation& other) {
+RoleDenotationBitset& RoleDenotationBitset::operator|=(const RoleDenotationBitset& other) {
     m_data |= other.m_data;
     return *this;
 }
 
-RoleDenotation& RoleDenotation::operator-=(const RoleDenotation& other) {
+RoleDenotationBitset& RoleDenotationBitset::operator-=(const RoleDenotationBitset& other) {
     m_data -= other.m_data;
     return *this;
 }
 
-RoleDenotation& RoleDenotation::operator~() {
+RoleDenotationBitset& RoleDenotationBitset::operator~() {
     ~m_data;
     return *this;
 }
 
-RoleDenotation::const_iterator RoleDenotation::begin() const {
-    return RoleDenotation::const_iterator(m_data, m_num_objects);
+RoleDenotationBitset::const_iterator RoleDenotationBitset::begin() const {
+    return RoleDenotationBitset::const_iterator(m_data, m_num_objects);
 }
 
-RoleDenotation::const_iterator RoleDenotation::end() const {
-    return RoleDenotation::const_iterator(m_data, m_num_objects, true);
+RoleDenotationBitset::const_iterator RoleDenotationBitset::end() const {
+    return RoleDenotationBitset::const_iterator(m_data, m_num_objects, true);
 }
 
-size_t RoleDenotation::count(const std::pair<size_t, size_t>& value) const {
+size_t RoleDenotationBitset::count(const std::pair<size_t, size_t>& value) const {
     return m_data.test(value.first * m_num_objects + value.second);
 }
 
-void RoleDenotation::insert(const std::pair<size_t, size_t>& value) {
+void RoleDenotationBitset::insert(const std::pair<size_t, size_t>& value) {
     return m_data.set(value.first * m_num_objects + value.second);
 }
 
-void RoleDenotation::erase(const std::pair<size_t, size_t>& value) {
+void RoleDenotationBitset::erase(const std::pair<size_t, size_t>& value) {
     return m_data.reset(value.first * m_num_objects + value.second);
 }
 
-void RoleDenotation::erase(const_iterator position) {
+void RoleDenotationBitset::erase(const_iterator position) {
     const auto& pair = *position;
     // TODO assert
     m_data.reset(pair.first * m_num_objects + pair.second);
 }
 
-size_t RoleDenotation::size() const {
+size_t RoleDenotationBitset::size() const {
     return m_data.count();
 }
 
-bool RoleDenotation::empty() const {
+bool RoleDenotationBitset::empty() const {
     return m_data.none();
 }
 
-bool RoleDenotation::intersects(const RoleDenotation& other) const {
+bool RoleDenotationBitset::intersects(const RoleDenotationBitset& other) const {
     return m_data.intersects(other.m_data);
 }
 
-bool RoleDenotation::is_subset_of(const RoleDenotation& other) const {
+bool RoleDenotationBitset::is_subset_of(const RoleDenotationBitset& other) const {
     return m_data.is_subset_of(other.m_data);
 }
 
-std::vector<std::pair<int, int>> RoleDenotation::to_vector() const {
+std::vector<std::pair<int, int>> RoleDenotationBitset::to_vector() const {
     std::vector<std::pair<int, int>> result;
     result.reserve(m_num_objects * m_num_objects);
     for (int i = 0; i < m_num_objects; ++i) {
@@ -283,7 +283,7 @@ std::vector<std::pair<int, int>> RoleDenotation::to_vector() const {
     return result;
 }
 
-int RoleDenotation::get_num_objects() const {
+int RoleDenotationBitset::get_num_objects() const {
     return m_num_objects;
 }
 

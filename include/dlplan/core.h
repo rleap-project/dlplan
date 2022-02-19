@@ -32,7 +32,7 @@ namespace element {
 /**
  * Proxy to underlying Bitset with additional functionality.
  */
-class ConceptDenotation {
+class ConceptDenotationBitset {
 private:
     // no pimpl to save indirection.
     int m_num_objects;
@@ -67,18 +67,18 @@ public:
             void seek_next();
     };
 
-    explicit ConceptDenotation(int num_objects);
-    ConceptDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data);
-    ConceptDenotation(const ConceptDenotation& other);
-    ConceptDenotation& operator=(const ConceptDenotation& other);
-    ConceptDenotation(ConceptDenotation&& other);
-    ConceptDenotation& operator=(ConceptDenotation&& other);
-    ~ConceptDenotation();
+    explicit ConceptDenotationBitset(int num_objects);
+    ConceptDenotationBitset(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data);
+    ConceptDenotationBitset(const ConceptDenotationBitset& other);
+    ConceptDenotationBitset& operator=(const ConceptDenotationBitset& other);
+    ConceptDenotationBitset(ConceptDenotationBitset&& other);
+    ConceptDenotationBitset& operator=(ConceptDenotationBitset&& other);
+    ~ConceptDenotationBitset();
 
-    ConceptDenotation& operator&=(const ConceptDenotation& other);
-    ConceptDenotation& operator|=(const ConceptDenotation& other);
-    ConceptDenotation& operator-=(const ConceptDenotation& other);
-    ConceptDenotation& operator~();
+    ConceptDenotationBitset& operator&=(const ConceptDenotationBitset& other);
+    ConceptDenotationBitset& operator|=(const ConceptDenotationBitset& other);
+    ConceptDenotationBitset& operator-=(const ConceptDenotationBitset& other);
+    ConceptDenotationBitset& operator~();
 
     const_iterator begin() const;
     const_iterator end() const;
@@ -91,8 +91,8 @@ public:
 
     size_t size() const;
     bool empty() const;
-    bool intersects(const ConceptDenotation& other) const;
-    bool is_subset_of(const ConceptDenotation& other) const;
+    bool intersects(const ConceptDenotationBitset& other) const;
+    bool is_subset_of(const ConceptDenotationBitset& other) const;
 
     /**
      * TODO: must ensure that elements are in some canonical representation.
@@ -103,11 +103,12 @@ public:
 
     int get_num_objects() const;
 };
+using ConceptDenotation = ConceptDenotationBitset;
 
 /**
  * Proxy to underlying Bitset with additional functionality.
  */
-class RoleDenotation {
+class RoleDenotationBitset {
 private:
     // no pimpl to save indirection.
     int m_num_objects;
@@ -142,18 +143,18 @@ public:
             void seek_next();
     };
 
-    explicit RoleDenotation(int num_objects);
-    RoleDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data);
-    RoleDenotation(const RoleDenotation& other);
-    RoleDenotation& operator=(const RoleDenotation& other);
-    RoleDenotation(RoleDenotation&& other);
-    RoleDenotation& operator=(RoleDenotation&& other);
-    ~RoleDenotation();
+    explicit RoleDenotationBitset(int num_objects);
+    RoleDenotationBitset(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data);
+    RoleDenotationBitset(const RoleDenotationBitset& other);
+    RoleDenotationBitset& operator=(const RoleDenotationBitset& other);
+    RoleDenotationBitset(RoleDenotationBitset&& other);
+    RoleDenotationBitset& operator=(RoleDenotationBitset&& other);
+    ~RoleDenotationBitset();
 
-    RoleDenotation& operator&=(const RoleDenotation& other);
-    RoleDenotation& operator|=(const RoleDenotation& other);
-    RoleDenotation& operator-=(const RoleDenotation& other);
-    RoleDenotation& operator~();
+    RoleDenotationBitset& operator&=(const RoleDenotationBitset& other);
+    RoleDenotationBitset& operator|=(const RoleDenotationBitset& other);
+    RoleDenotationBitset& operator-=(const RoleDenotationBitset& other);
+    RoleDenotationBitset& operator~();
 
     const_iterator begin() const;
     const_iterator end() const;
@@ -166,13 +167,14 @@ public:
 
     size_t size() const;
     bool empty() const;
-    bool intersects(const RoleDenotation& other) const;
-    bool is_subset_of(const RoleDenotation& other) const;
+    bool intersects(const RoleDenotationBitset& other) const;
+    bool is_subset_of(const RoleDenotationBitset& other) const;
 
     std::vector<std::pair<int, int>> to_vector() const;
 
     int get_num_objects() const;
 };
+using RoleDenotation = RoleDenotationBitset;
 
 
 class Constant {
