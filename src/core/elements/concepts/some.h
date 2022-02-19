@@ -21,22 +21,13 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        const auto r = m_role->evaluate(state);
-        const auto& r_data = r.get_data();
-        const auto c = m_concept->evaluate(state);
-        const auto& c_data = c.get_data();
-        int num_objects = state.get_instance_info()->get_num_objects();
-        ConceptDenotation result(num_objects);
-        auto& result_data = result.get_data();
+        const auto role_denot = m_role->evaluate(state);
+        const auto concept_denot = m_concept->evaluate(state);
+        ConceptDenotation result(state.get_instance_info()->get_num_objects());
         // find examples a : exists b . (a,b) in R and b in C
-        for (int i = 0; i < num_objects; ++i) {
-            for (int j = 0; j < num_objects; ++j) {
-                if (c_data.test(j)) {
-                    if (r_data.test(i * num_objects + j)) {
-                        result_data.set(i);
-                        break;
-                    }
-                }
+        for (const auto& pair : role_denot) {
+            if (concept_denot.count(pair.second) > 0) {
+                result.insert(pair.first);
             }
         }
         return result;

@@ -32,6 +32,78 @@ ConceptDenotation& ConceptDenotation::operator=(ConceptDenotation&& other) = def
 
 ConceptDenotation::~ConceptDenotation() = default;
 
+void ConceptDenotation::const_iterator::seek_next() {
+    while (++m_index < m_num_objects) {
+        if (m_data.test(m_index)) break;
+    }
+}
+
+ConceptDenotation::const_iterator::const_iterator(ConceptDenotation::const_iterator::const_reference data, int num_objects, bool end)
+    : m_data(data), m_num_objects(num_objects), m_index(end ? data.size() : static_cast<size_t>(-1)) {
+    seek_next();
+}
+
+bool ConceptDenotation::const_iterator::operator!=(const const_iterator& other) const {
+    return !(*this == other);
+}
+
+bool ConceptDenotation::const_iterator::operator==(const const_iterator& other) const {
+    return ((m_index == other.m_index) && (&m_data == &other.m_data));
+}
+
+const std::size_t& ConceptDenotation::const_iterator::operator*() const {
+    return m_index;
+}
+
+ConceptDenotation::const_iterator ConceptDenotation::const_iterator::operator++(int) {
+    ConceptDenotation::const_iterator prev = *this;
+    seek_next();
+    return prev;
+}
+
+ConceptDenotation::const_iterator& ConceptDenotation::const_iterator::operator++() {
+    seek_next();
+    return *this;
+}
+
+ConceptDenotation& ConceptDenotation::operator&=(const ConceptDenotation& other) {
+    m_data &= other.m_data;
+    return *this;
+}
+
+ConceptDenotation::const_iterator ConceptDenotation::begin() const {
+    return ConceptDenotation::const_iterator(m_data, m_num_objects);
+}
+
+ConceptDenotation::const_iterator ConceptDenotation::end() const {
+    return ConceptDenotation::const_iterator(m_data, m_num_objects, true);
+}
+
+size_t ConceptDenotation::count(size_t value) const {
+    assert(value >= 0 && value < m_num_objects);
+    return static_cast<int>(m_data.test(value));
+}
+
+void ConceptDenotation::insert(size_t value) {
+    assert(value >= 0 && value < m_num_objects);
+    m_data.set(value);
+}
+
+void ConceptDenotation::erase(size_t value) {
+    assert(value >= 0 && value < m_num_objects);
+    m_data.reset(value);
+}
+
+void ConceptDenotation::erase(const_iterator position) {
+    if (position != end()) {
+        m_data.reset(*position);
+    }
+}
+
+size_t ConceptDenotation::size() const {
+    return m_data.count();
+}
+
 std::vector<int> ConceptDenotation::to_vector() const {
     std::vector<int> result;
     result.reserve(m_num_objects);
@@ -70,6 +142,82 @@ RoleDenotation::RoleDenotation(RoleDenotation&& other) = default;
 RoleDenotation& RoleDenotation::operator=(RoleDenotation&& other) = default;
 
 RoleDenotation::~RoleDenotation() = default;
+
+void RoleDenotation::const_iterator::seek_next() {
+    size_t& i = m_indices.first;
+    size_t& j = m_indices.second;
+    int offset = i * m_num_objects;
+    while (i < m_num_objects) {
+        ++j;
+        if (j == m_num_objects) {  // end of row is reached
+            ++i;
+            offset += m_num_objects;
+            j = 0;
+            if (i == m_num_objects) break;  // reached last row
+        }
+        if (m_data.test(offset + j)) break;
+    }
+    assert(offset + j <= m_data.size());
+}
+
+RoleDenotation::const_iterator::const_iterator(const_reference data, size_t num_objects, bool end)
+    : m_data(data), m_num_objects(num_objects), m_indices(end ? std::pair<size_t, size_t>(num_objects, 0) : std::pair<size_t, size_t>(0, static_cast<size_t>(-1))) {
+    seek_next();
+}
+
+bool RoleDenotation::const_iterator::operator!=(const const_iterator& other) const {
+    return !(*this == other);
+}
+
+bool RoleDenotation::const_iterator::operator==(const const_iterator& other) const {
+    return ((m_indices == other.m_indices) && (&m_data == &other.m_data));
+}
+
+const std::pair<size_t, size_t>& RoleDenotation::const_iterator::operator*() const {
+    return m_indices;
+}
+
+RoleDenotation::const_iterator RoleDenotation::const_iterator::operator++(int) {
+    RoleDenotation::const_iterator prev = *this;
+    seek_next();
+    return prev;
+}
+
+RoleDenotation::const_iterator& RoleDenotation::const_iterator::operator++() {
+    seek_next();
+    return *this;
+}
+
+RoleDenotation::const_iterator RoleDenotation::begin() const {
+    return RoleDenotation::const_iterator(m_data, m_num_objects);
+}
+
+RoleDenotation::const_iterator RoleDenotation::end() const {
+    return RoleDenotation::const_iterator(m_data, m_num_objects, true);
+}
+
+size_t RoleDenotation::count(const std::pair<size_t, size_t>& value) const {
+    return m_data.test(value.first * m_num_objects + value.second);
+}
+
+void RoleDenotation::insert(const std::pair<size_t, size_t>& value) {
+    return m_data.set(value.first * m_num_objects + value.second);
+}
+
+void RoleDenotation::erase(const std::pair<size_t, size_t>& value) {
+    return m_data.reset(value.first * m_num_objects + value.second);
+}
+
+void RoleDenotation::erase(const_iterator position) {
+    const auto& pair = *position;
+    // TODO assert
+    m_data.reset(pair.first * m_num_objects + pair.second);
+}
+
+size_t RoleDenotation::size() const {
+    return m_data.count();
+}
+
 
 std::vector<std::pair<int, int>> RoleDenotation::to_vector() const {
     std::vector<std::pair<int, int>> result;

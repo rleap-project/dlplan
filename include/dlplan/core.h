@@ -39,6 +39,34 @@ private:
     dynamic_bitset::DynamicBitset<unsigned> m_data;
 
 public:
+    class const_iterator {
+        public:
+            using iterator_category = std::forward_iterator_tag;
+            using value_type        = dynamic_bitset::DynamicBitset<unsigned>;
+            using const_reference   = const value_type&;
+
+            const_iterator(const_reference data, int num_objects, bool end=false);
+
+            bool operator!=(const const_iterator& other) const;
+            bool operator==(const const_iterator& other) const;
+
+            const size_t& operator*() const;
+            // Postfix increment
+            const_iterator operator++(int);
+            // Prefix increment
+            const_iterator& operator++();
+
+        private:
+            // We cant return a ptr or reference to the element in the bitset.
+            // Hence, we return the index instead.
+            const_reference m_data;
+            size_t m_num_objects;
+            size_t m_index;
+
+        private:
+            void seek_next();
+    };
+
     explicit ConceptDenotation(int num_objects);
     ConceptDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data);
     ConceptDenotation(const ConceptDenotation& other);
@@ -46,6 +74,19 @@ public:
     ConceptDenotation(ConceptDenotation&& other);
     ConceptDenotation& operator=(ConceptDenotation&& other);
     ~ConceptDenotation();
+
+    ConceptDenotation& operator&=(const ConceptDenotation& other);
+
+    const_iterator begin() const;
+    const_iterator end() const;
+
+    size_t count(size_t value) const;
+
+    void insert(size_t value);
+    void erase(size_t value);
+    void erase(const_iterator position);
+
+    size_t size() const;
 
     /**
      * TODO: must ensure that elements are in some canonical representation.
@@ -69,6 +110,34 @@ private:
     dynamic_bitset::DynamicBitset<unsigned> m_data;
 
 public:
+    class const_iterator {
+        public:
+            using iterator_category = std::forward_iterator_tag;
+            using value_type        = dynamic_bitset::DynamicBitset<unsigned>;
+            using const_reference   = const value_type&;
+
+            const_iterator(const_reference data, size_t num_objects, bool end=false);
+
+            bool operator!=(const const_iterator& other) const;
+            bool operator==(const const_iterator& other) const;
+
+            const std::pair<size_t, size_t>& operator*() const;
+            // Postfix increment
+            const_iterator operator++(int);
+            // Prefix increment
+            const_iterator& operator++();
+
+        private:
+            // We cant return a ptr or reference to the element in the bitset.
+            // Hence, we return the index instead.
+            const_reference m_data;
+            size_t m_num_objects;
+            std::pair<size_t, size_t> m_indices;
+
+        private:
+            void seek_next();
+    };
+
     explicit RoleDenotation(int num_objects);
     RoleDenotation(int num_objects, dynamic_bitset::DynamicBitset<unsigned>&& data);
     RoleDenotation(const RoleDenotation& other);
@@ -76,6 +145,18 @@ public:
     RoleDenotation(RoleDenotation&& other);
     RoleDenotation& operator=(RoleDenotation&& other);
     ~RoleDenotation();
+
+    const_iterator begin() const;
+    const_iterator end() const;
+
+    size_t count(const std::pair<size_t, size_t>& value) const;
+
+    void insert(const std::pair<size_t, size_t>& value);
+    void erase(const std::pair<size_t, size_t>& value);
+    void erase(const_iterator position);
+
+    size_t size() const;
+
 
     std::vector<std::pair<int, int>> to_vector() const;
 
