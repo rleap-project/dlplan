@@ -16,6 +16,10 @@ target_sources(dlplangenerator
         ../utils/timer.cpp
         ../utils/system.cpp)
 target_link_libraries(dlplangenerator dlplancore pthread)
+target_include_directories(dlplangenerator
+    PUBLIC
+        ${PROJECT_SOURCE_DIR}/include
+)
 
 install(
     TARGETS

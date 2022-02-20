@@ -320,7 +320,7 @@ public:
     PolicyReader& operator=(PolicyReader&& other);
     ~PolicyReader();
 
-    Policy read(const std::string& data, core::SyntacticElementFactory factory) const;
+    Policy read(const std::string& data, core::SyntacticElementFactory& factory) const;
 };
 
 /**

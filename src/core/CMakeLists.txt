@@ -17,6 +17,10 @@ target_sources(dlplancore
         ../utils/logging.cpp
         ../utils/system.cpp
         ../utils/timer.cpp)
+target_include_directories(dlplancore
+    PUBLIC
+        ${PROJECT_SOURCE_DIR}/include
+)
 
 install(
     TARGETS

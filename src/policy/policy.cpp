@@ -202,7 +202,7 @@ PolicyReader& PolicyReader::operator=(PolicyReader&& other) {
 
 PolicyReader::~PolicyReader() = default;
 
-Policy PolicyReader::read(const std::string& data, core::SyntacticElementFactory factory) const {
+Policy PolicyReader::read(const std::string& data, core::SyntacticElementFactory& factory) const {
     return m_pImpl->read(data, factory);
 }
 
