@@ -164,7 +164,7 @@ public:
 
     int get_num_objects() const;
 };
-using ConceptDenotation = ConceptDenotationFlatSet;
+using ConceptDenotation = ConceptDenotationBitset;
 
 class RoleDenotationBitset {
 private:
@@ -228,7 +228,7 @@ public:
 
     int get_num_objects() const;
 };
-using RoleDenotation = RoleDenotationFlatSet;
+using RoleDenotation = RoleDenotationBitset;
 
 
 class Constant {

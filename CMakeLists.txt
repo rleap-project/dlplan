@@ -18,14 +18,8 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
         STRING "Choose the type of build." FORCE)
 endif()
 
-
-include_directories(include)
-
-# Build the library
 add_subdirectory(src)
-# Build the examples
 add_subdirectory(examples)
-
 add_subdirectory(experiments)
 
 enable_testing()  # This needs to be here before calling add_subdirectory
