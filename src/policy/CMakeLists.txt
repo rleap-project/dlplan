@@ -15,8 +15,14 @@ target_sources(dlplanpolicy
         parser/utils.cpp)
 target_link_libraries(dlplanpolicy dlplancore dlplanevaluator)
 
-set(PUBLIC_HEADERS_FILES
-    include/dlplan/policy.h
-    include/dlplan/pimpl.h
-    include/dlplan/policy.tpp)
-set_target_properties(dlplanpolicy PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS_FILES}")
+install(
+    TARGETS
+        dlplanpolicy
+    LIBRARY DESTINATION
+        ${CMAKE_INSTALL_PREFIX}/lib/dlplan)
+
+install(
+    DIRECTORY
+        ${PROJECT_SOURCE_DIR}/include
+    DESTINATION
+        ${CMAKE_INSTALL_PREFIX}/include)

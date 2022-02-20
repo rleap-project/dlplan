@@ -17,7 +17,14 @@ target_sources(dlplangenerator
         ../utils/system.cpp)
 target_link_libraries(dlplangenerator dlplancore pthread)
 
-set(PUBLIC_HEADER_FILES
-    include/dlplan/generator.h
-    include/dlplan/pimpl.h)
-set_target_properties(dlplangenerator PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADER_FILES}")
+install(
+    TARGETS
+        dlplangenerator
+    LIBRARY DESTINATION
+        ${CMAKE_INSTALL_PREFIX}/lib/dlplan)
+
+install(
+    DIRECTORY
+        ${PROJECT_SOURCE_DIR}/include
+    DESTINATION
+        ${CMAKE_INSTALL_PREFIX}/include)

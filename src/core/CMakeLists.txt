@@ -1,5 +1,4 @@
 add_library(dlplancore SHARED)
-
 target_sources(dlplancore
     PRIVATE
         atom.cpp
@@ -19,19 +18,14 @@ target_sources(dlplancore
         ../utils/system.cpp
         ../utils/timer.cpp)
 
-set(PUBLIC_HEADERS_FILES
-    include/dlplan/core.h
-    include/dlplan/core.tpp
-    include/dlplan/pimpl.h
-    include/dlplan/types.h
-    include/dlplan/dynamic_bitset.h
-    include/dlplan/btree.h
-    include/dlplan/meminfo.h
-    include/dlplan/phmap_base.h
-    include/dlplan/phmap_bits.h
-    include/dlplan/phmap_config.h
-    include/dlplan/phmap_dump.h
-    include/dlplan/phmap_fwd_decl.h
-    include/dlplan/phmap_utils.h
-    include/dlplan/phmap.h)
-set_target_properties(dlplancore PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS_FILES}")
+install(
+    TARGETS
+        dlplancore
+    LIBRARY DESTINATION
+        ${CMAKE_INSTALL_PREFIX}/lib/dlplan)
+
+install(
+    DIRECTORY
+        ${PROJECT_SOURCE_DIR}/include
+    DESTINATION
+        ${CMAKE_INSTALL_PREFIX}/include)

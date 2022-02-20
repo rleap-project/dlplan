@@ -29,7 +29,3 @@ if(DLPLAN_PYTHON)
   # For the dynamic library to be compatible with Python we need the -fPIC flags
   add_subdirectory(api/python)
 endif()
-
-INSTALL(TARGETS dlplancore dlplanevaluator dlplangenerator dlplanpolicy DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/dlplan
-        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/include/dlplan
-)
