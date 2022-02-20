@@ -4,7 +4,7 @@
 #include <string>
 #include <memory>
 
-#include "../include/dlplan/policy.h"
+#include "../../include/dlplan/policy.h"
 
 
 namespace dlplan::policy {
