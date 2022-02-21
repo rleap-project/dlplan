@@ -29,6 +29,6 @@ install(
 
 install(
     DIRECTORY
-        ${PROJECT_SOURCE_DIR}/include
+        ${PROJECT_SOURCE_DIR}/include/dlplan/
     DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include)
+        ${CMAKE_INSTALL_PREFIX}/include/dlplan)

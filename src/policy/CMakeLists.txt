@@ -16,17 +16,17 @@ target_sources(dlplanpolicy
 target_link_libraries(dlplanpolicy dlplancore dlplanevaluator)
 target_include_directories(dlplanpolicy
     PUBLIC
-        ${PROJECT_SOURCE_DIR}/include
+        ${PROJECT_SOURCE_DIR}/include/
 )
 
 install(
     TARGETS
         dlplanpolicy
     LIBRARY DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/lib/dlplan)
+        lib/dlplan)
 
 install(
     DIRECTORY
-        ${PROJECT_SOURCE_DIR}/include
+        ${PROJECT_SOURCE_DIR}/include/dlplan/
     DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include)
+        ${CMAKE_INSTALL_PREFIX}/include/dlplan)
