@@ -19,14 +19,14 @@ TEST(DLPTests, ConceptProjection) {
     SyntacticElementFactory factory(vocabulary);
 
     Concept concept1 = factory.parse_concept("c_projection(r_primitive(predicate,0,1),0)");
-    EXPECT_EQ(concept1.evaluate(state).to_vector(), Index_Vec({0, 2}));
+    EXPECT_EQ(concept1.evaluate(state).to_sorted_vector(), Index_Vec({0, 2}));
 
     Concept concept2 = factory.parse_concept("c_projection(r_primitive(predicate,1,0),0)");
-    EXPECT_EQ(concept2.evaluate(state).to_vector(), Index_Vec({1, 3}));
+    EXPECT_EQ(concept2.evaluate(state).to_sorted_vector(), Index_Vec({1, 3}));
 
     Concept concept3 = factory.parse_concept("c_projection(r_primitive(predicate,0,1),1)");
-    EXPECT_EQ(concept3.evaluate(state).to_vector(), Index_Vec({1, 3}));
+    EXPECT_EQ(concept3.evaluate(state).to_sorted_vector(), Index_Vec({1, 3}));
 
     Concept concept4 = factory.parse_concept("c_projection(r_primitive(predicate,1,0),1)");
-    EXPECT_EQ(concept4.evaluate(state).to_vector(), Index_Vec({0, 2}));
+    EXPECT_EQ(concept4.evaluate(state).to_sorted_vector(), Index_Vec({0, 2}));
 }

@@ -25,7 +25,7 @@ public:
         const auto concept_denot = m_concept->evaluate(state);
         RoleDenotation result = role_denot;
         for (const auto& pair : role_denot) {
-            if (concept_denot.count(pair.second) == 0) {
+            if (!concept_denot.contains(pair.second)) {
                 result.erase(pair);
             }
         }

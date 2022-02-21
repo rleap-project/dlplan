@@ -26,7 +26,7 @@ public:
         ConceptDenotation result = state.get_instance_info()->get_top_concept();
         // find counterexamples b : exists b . (a,b) in R and b notin C
         for (const auto& pair : role_denot) {
-            if (concept_denot.count(pair.second) == 0) {
+            if (!concept_denot.contains(pair.second)) {
                 result.erase(pair.first);
             }
         }

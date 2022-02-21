@@ -39,9 +39,9 @@ public:
         int num_objects = role_denot.get_num_objects();
         for (int k = 0; k < num_objects; ++k) {  // property
             for (int i = 0; i < num_objects; ++i) {  // source
-                if (role_from_denot.count(std::make_pair(k, i))) {
+                if (role_from_denot.contains(std::make_pair(k, i))) {
                     for (int j = 0; j < num_objects; ++j) {  // target
-                        if (role_to_denot.count(std::make_pair(k, j))) {
+                        if (role_to_denot.contains(std::make_pair(k, j))) {
                             result = std::min<int>(result, pairwise_distances[i][j]);
                         }
                     }

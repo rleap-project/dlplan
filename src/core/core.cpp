@@ -30,7 +30,7 @@ ConceptDenotationFlatSet::~ConceptDenotationFlatSet() = default;
 
 ConceptDenotationFlatSet& ConceptDenotationFlatSet::operator&=(const ConceptDenotationFlatSet& other) {
     for (auto it = m_data.begin(); it != m_data.end();) {
-        if (other.count(*it) == 0) {
+        if (!other.contains(*it)) {
             it = m_data.erase(it);
         } else {
             ++it;
@@ -72,19 +72,19 @@ phmap::flat_hash_set<int>::const_iterator ConceptDenotationFlatSet::end() const 
     return m_data.end();
 }
 
-size_t ConceptDenotationFlatSet::count(size_t value) const {
-    return m_data.count(value);
+bool ConceptDenotationFlatSet::contains(int value) const {
+    return static_cast<bool>(m_data.count(value));
 }
 
-void ConceptDenotationFlatSet::insert(size_t value) {
+void ConceptDenotationFlatSet::insert(int value) {
     m_data.insert(value);
 }
 
-void ConceptDenotationFlatSet::erase(size_t value) {
+void ConceptDenotationFlatSet::erase(int value) {
     m_data.erase(value);
 }
 
-size_t ConceptDenotationFlatSet::size() const {
+int ConceptDenotationFlatSet::size() const {
     return m_data.size();
 }
 
@@ -94,19 +94,19 @@ bool ConceptDenotationFlatSet::empty() const {
 
 bool ConceptDenotationFlatSet::intersects(const ConceptDenotationFlatSet& other) const {
     for (const auto single : m_data) {
-        if (other.count(single)) return true;
+        if (other.contains(single)) return true;
     }
     return false;
 }
 
 bool ConceptDenotationFlatSet::is_subset_of(const ConceptDenotationFlatSet& other) const {
     for (const auto single : m_data) {
-        if (other.count(single) == 0) return false;
+        if (!other.contains(single)) return false;
     }
     return true;
 }
 
-std::vector<int> ConceptDenotationFlatSet::to_vector() const {
+std::vector<int> ConceptDenotationFlatSet::to_sorted_vector() const {
     std::vector<int> result(m_data.begin(), m_data.end());
     std::sort(result.begin(), result.end());
     return result;
@@ -131,7 +131,7 @@ RoleDenotationFlatSet::~RoleDenotationFlatSet() = default;
 
 RoleDenotationFlatSet& RoleDenotationFlatSet::operator&=(const RoleDenotationFlatSet& other) {
     for (auto it = m_data.begin(); it != m_data.end();) {
-        if (other.count(*it) == 0) {
+        if (!other.contains(*it)) {
             it = m_data.erase(it);
         } else {
             ++it;
@@ -176,19 +176,19 @@ phmap::flat_hash_set<std::pair<int, int>>::const_iterator RoleDenotationFlatSet:
     return m_data.end();
 }
 
-size_t RoleDenotationFlatSet::count(const std::pair<size_t, size_t>& value) const {
-    return m_data.count(value);
+bool RoleDenotationFlatSet::contains(const std::pair<int, int>& value) const {
+    return static_cast<bool>(m_data.count(value));
 }
 
-void RoleDenotationFlatSet::insert(const std::pair<size_t, size_t>& value) {
+void RoleDenotationFlatSet::insert(const std::pair<int, int>& value) {
     m_data.insert(value);
 }
 
-void RoleDenotationFlatSet::erase(const std::pair<size_t, size_t>& value) {
+void RoleDenotationFlatSet::erase(const std::pair<int, int>& value) {
     m_data.erase(value);
 }
 
-size_t RoleDenotationFlatSet::size() const {
+int RoleDenotationFlatSet::size() const {
     return m_data.size();
 }
 
@@ -198,19 +198,19 @@ bool RoleDenotationFlatSet::empty() const {
 
 bool RoleDenotationFlatSet::intersects(const RoleDenotationFlatSet& other) const {
     for (const auto single : m_data) {
-        if (other.count(single)) return true;
+        if (other.contains(single)) return true;
     }
     return false;
 }
 
 bool RoleDenotationFlatSet::is_subset_of(const RoleDenotationFlatSet& other) const {
     for (const auto single : m_data) {
-        if (other.count(single) == 0) return false;
+        if (!other.contains(single)) return false;
     }
     return true;
 }
 
-std::vector<std::pair<int, int>> RoleDenotationFlatSet::to_vector() const {
+std::vector<std::pair<int, int>> RoleDenotationFlatSet::to_sorted_vector() const {
     std::vector<std::pair<int, int>> result(m_data.begin(), m_data.end());
     std::sort(result.begin(), result.end());
     return result;
@@ -240,8 +240,9 @@ void ConceptDenotationBitset::const_iterator::seek_next() {
     }
 }
 
-ConceptDenotationBitset::const_iterator::const_iterator(ConceptDenotationBitset::const_iterator::const_reference data, int num_objects, bool end)
-    : m_data(data), m_num_objects(num_objects), m_index(end ? num_objects : static_cast<size_t>(-1)) {
+ConceptDenotationBitset::const_iterator::const_iterator(
+    ConceptDenotationBitset::const_iterator::const_reference data, int num_objects, bool end)
+    : m_data(data), m_num_objects(num_objects), m_index(end ? num_objects : -1) {
     if (!end) seek_next();
 }
 
@@ -253,7 +254,7 @@ bool ConceptDenotationBitset::const_iterator::operator==(const const_iterator& o
     return ((m_index == other.m_index) && (&m_data == &other.m_data));
 }
 
-const std::size_t& ConceptDenotationBitset::const_iterator::operator*() const {
+const int& ConceptDenotationBitset::const_iterator::operator*() const {
     return m_index;
 }
 
@@ -296,22 +297,22 @@ ConceptDenotationBitset::const_iterator ConceptDenotationBitset::end() const {
     return ConceptDenotationBitset::const_iterator(m_data, m_num_objects, true);
 }
 
-size_t ConceptDenotationBitset::count(size_t value) const {
+bool ConceptDenotationBitset::contains(int value) const {
     assert(value >= 0 && value < m_num_objects);
-    return static_cast<int>(m_data.test(value));
+    return m_data.test(value);
 }
 
-void ConceptDenotationBitset::insert(size_t value) {
+void ConceptDenotationBitset::insert(int value) {
     assert(value >= 0 && value < m_num_objects);
     m_data.set(value);
 }
 
-void ConceptDenotationBitset::erase(size_t value) {
+void ConceptDenotationBitset::erase(int value) {
     assert(value >= 0 && value < m_num_objects);
     m_data.reset(value);
 }
 
-size_t ConceptDenotationBitset::size() const {
+int ConceptDenotationBitset::size() const {
     return m_data.count();
 }
 
@@ -327,7 +328,7 @@ bool ConceptDenotationBitset::is_subset_of(const ConceptDenotationBitset& other)
     return m_data.is_subset_of(other.m_data);
 }
 
-std::vector<int> ConceptDenotationBitset::to_vector() const {
+std::vector<int> ConceptDenotationBitset::to_sorted_vector() const {
     std::vector<int> result;
     result.reserve(m_num_objects);
     for (int i = 0; i < m_num_objects; ++i) {
@@ -356,8 +357,8 @@ RoleDenotationBitset& RoleDenotationBitset::operator=(RoleDenotationBitset&& oth
 RoleDenotationBitset::~RoleDenotationBitset() = default;
 
 void RoleDenotationBitset::const_iterator::seek_next() {
-    size_t& i = m_indices.first;
-    size_t& j = m_indices.second;
+    int& i = m_indices.first;
+    int& j = m_indices.second;
     int offset = i * m_num_objects;
     while (i < m_num_objects) {
         ++j;
@@ -372,8 +373,8 @@ void RoleDenotationBitset::const_iterator::seek_next() {
     assert(offset + j <= m_data.size());
 }
 
-RoleDenotationBitset::const_iterator::const_iterator(const_reference data, size_t num_objects, bool end)
-    : m_data(data), m_num_objects(num_objects), m_indices(end ? std::pair<size_t, size_t>(num_objects, 0) : std::pair<size_t, size_t>(0, static_cast<size_t>(-1))) {
+RoleDenotationBitset::const_iterator::const_iterator(const_reference data, int num_objects, bool end)
+    : m_data(data), m_num_objects(num_objects), m_indices(end ? std::pair<size_t, size_t>(num_objects, 0) : std::pair<size_t, size_t>(0, -1)) {
     if (!end) seek_next();
 }
 
@@ -385,7 +386,7 @@ bool RoleDenotationBitset::const_iterator::operator==(const const_iterator& othe
     return ((m_indices == other.m_indices) && (&m_data == &other.m_data));
 }
 
-const std::pair<size_t, size_t>& RoleDenotationBitset::const_iterator::operator*() const {
+const std::pair<int, int>& RoleDenotationBitset::const_iterator::operator*() const {
     return m_indices;
 }
 
@@ -428,19 +429,19 @@ RoleDenotationBitset::const_iterator RoleDenotationBitset::end() const {
     return RoleDenotationBitset::const_iterator(m_data, m_num_objects, true);
 }
 
-size_t RoleDenotationBitset::count(const std::pair<size_t, size_t>& value) const {
+bool RoleDenotationBitset::contains(const std::pair<int, int>& value) const {
     return m_data.test(value.first * m_num_objects + value.second);
 }
 
-void RoleDenotationBitset::insert(const std::pair<size_t, size_t>& value) {
+void RoleDenotationBitset::insert(const std::pair<int, int>& value) {
     return m_data.set(value.first * m_num_objects + value.second);
 }
 
-void RoleDenotationBitset::erase(const std::pair<size_t, size_t>& value) {
+void RoleDenotationBitset::erase(const std::pair<int, int>& value) {
     return m_data.reset(value.first * m_num_objects + value.second);
 }
 
-size_t RoleDenotationBitset::size() const {
+int RoleDenotationBitset::size() const {
     return m_data.count();
 }
 
@@ -456,7 +457,7 @@ bool RoleDenotationBitset::is_subset_of(const RoleDenotationBitset& other) const
     return m_data.is_subset_of(other.m_data);
 }
 
-std::vector<std::pair<int, int>> RoleDenotationBitset::to_vector() const {
+std::vector<std::pair<int, int>> RoleDenotationBitset::to_sorted_vector() const {
     std::vector<std::pair<int, int>> result;
     result.reserve(m_num_objects * m_num_objects);
     for (int i = 0; i < m_num_objects; ++i) {

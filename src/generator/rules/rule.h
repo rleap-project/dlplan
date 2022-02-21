@@ -118,7 +118,7 @@ inline std::vector<int> evaluate_concept(const core::Concept& concept, const Sta
     std::vector<int> result;
     result.reserve(states.size());
     for (const auto& state : states) {
-        const auto concept_denot = concept.evaluate(state).to_vector();
+        const auto concept_denot = concept.evaluate(state).to_sorted_vector();
         result.push_back(concept_denot.size());
         result.insert(result.end(), concept_denot.begin(), concept_denot.end());
     }
@@ -128,7 +128,7 @@ inline std::vector<int> evaluate_concept(const core::Concept& concept, const Sta
 inline std::vector<int> evaluate_role(const core::Role& role, const States& states) {
     std::vector<int> result;
     for (const auto& state : states) {
-        const auto role_denot = role.evaluate(state).to_vector();
+        const auto role_denot = role.evaluate(state).to_sorted_vector();
         result.push_back(role_denot.size());
         for (const auto& pair : role_denot) {
             result.push_back(pair.first);

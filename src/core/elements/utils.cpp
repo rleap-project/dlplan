@@ -60,7 +60,7 @@ int compute_multi_source_multi_target_shortest_distance(const ConceptDenotation&
     Distances distances(num_objects, INF);
     std::deque<int> queue;
     for (int i = 0; i < num_objects; ++i) {
-        if (sources.count(i)) {
+        if (sources.contains(i)) {
             distances[i] = 0;
             queue.push_back(i);
         }
@@ -71,7 +71,7 @@ int compute_multi_source_multi_target_shortest_distance(const ConceptDenotation&
         for (int t : adj_list[s]) {
             int alt = distances[s] + 1;
             if (distances[t] > alt) {
-                if (targets.count(t)) {
+                if (targets.contains(t)) {
                     return alt;
                 }
                 queue.push_back(t);

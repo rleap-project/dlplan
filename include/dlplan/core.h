@@ -50,17 +50,17 @@ public:
     phmap::flat_hash_set<int>::const_iterator begin() const;
     phmap::flat_hash_set<int>::const_iterator end() const;
 
-    size_t count(size_t value) const;
+    bool contains(int value) const;
 
-    void insert(size_t value);
-    void erase(size_t value);
+    void insert(int value);
+    void erase(int value);
 
-    size_t size() const;
+    int size() const;
     bool empty() const;
     bool intersects(const ConceptDenotationFlatSet& other) const;
     bool is_subset_of(const ConceptDenotationFlatSet& other) const;
 
-    std::vector<int> to_vector() const;
+    std::vector<int> to_sorted_vector() const;
 
     int get_num_objects() const;
 };
@@ -87,17 +87,16 @@ public:
     phmap::flat_hash_set<std::pair<int, int>>::const_iterator begin() const;
     phmap::flat_hash_set<std::pair<int, int>>::const_iterator end() const;
 
-    size_t count(const std::pair<size_t, size_t>& value) const;
+    bool contains(const std::pair<int, int>& value) const;
+    void insert(const std::pair<int, int>& value);
+    void erase(const std::pair<int, int>& value);
 
-    void insert(const std::pair<size_t, size_t>& value);
-    void erase(const std::pair<size_t, size_t>& value);
-
-    size_t size() const;
+    int size() const;
     bool empty() const;
     bool intersects(const RoleDenotationFlatSet& other) const;
     bool is_subset_of(const RoleDenotationFlatSet& other) const;
 
-    std::vector<std::pair<int, int>> to_vector() const;
+    std::vector<std::pair<int, int>> to_sorted_vector() const;
 
     int get_num_objects() const;
 };
@@ -120,7 +119,7 @@ public:
             bool operator!=(const const_iterator& other) const;
             bool operator==(const const_iterator& other) const;
 
-            const size_t& operator*() const;
+            const int& operator*() const;
             // Postfix increment
             const_iterator operator++(int);
             // Prefix increment
@@ -128,8 +127,8 @@ public:
 
         private:
             const_reference m_data;
-            size_t m_num_objects;
-            size_t m_index;
+            int m_num_objects;
+            int m_index;
 
         private:
             void seek_next();
@@ -150,17 +149,17 @@ public:
     const_iterator begin() const;
     const_iterator end() const;
 
-    size_t count(size_t value) const;
+    bool contains(int value) const;
 
-    void insert(size_t value);
-    void erase(size_t value);
+    void insert(int value);
+    void erase(int value);
 
-    size_t size() const;
+    int size() const;
     bool empty() const;
     bool intersects(const ConceptDenotationBitset& other) const;
     bool is_subset_of(const ConceptDenotationBitset& other) const;
 
-    std::vector<int> to_vector() const;
+    std::vector<int> to_sorted_vector() const;
 
     int get_num_objects() const;
 };
@@ -179,12 +178,12 @@ public:
             using value_type        = dynamic_bitset::DynamicBitset<unsigned>;
             using const_reference   = const value_type&;
 
-            const_iterator(const_reference data, size_t num_objects, bool end=false);
+            const_iterator(const_reference data, int num_objects, bool end=false);
 
             bool operator!=(const const_iterator& other) const;
             bool operator==(const const_iterator& other) const;
 
-            const std::pair<size_t, size_t>& operator*() const;
+            const std::pair<int, int>& operator*() const;
             // Postfix increment
             const_iterator operator++(int);
             // Prefix increment
@@ -192,8 +191,8 @@ public:
 
         private:
             const_reference m_data;
-            size_t m_num_objects;
-            std::pair<size_t, size_t> m_indices;
+            int m_num_objects;
+            std::pair<int, int> m_indices;
 
         private:
             void seek_next();
@@ -214,17 +213,17 @@ public:
     const_iterator begin() const;
     const_iterator end() const;
 
-    size_t count(const std::pair<size_t, size_t>& value) const;
+    bool contains(const std::pair<int, int>& value) const;
 
-    void insert(const std::pair<size_t, size_t>& value);
-    void erase(const std::pair<size_t, size_t>& value);
+    void insert(const std::pair<int, int>& value);
+    void erase(const std::pair<int, int>& value);
 
-    size_t size() const;
+    int size() const;
     bool empty() const;
     bool intersects(const RoleDenotationBitset& other) const;
     bool is_subset_of(const RoleDenotationBitset& other) const;
 
-    std::vector<std::pair<int, int>> to_vector() const;
+    std::vector<std::pair<int, int>> to_sorted_vector() const;
 
     int get_num_objects() const;
 };

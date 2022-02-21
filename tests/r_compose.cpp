@@ -25,5 +25,5 @@ TEST(DLPTests, RoleCompose) {
     SyntacticElementFactory factory(vocabulary);
 
     Role role1 = factory.parse_role("r_compose(r_primitive(conn_1,0,1),r_primitive(conn_2,0,1))");
-    EXPECT_EQ(role1.evaluate(state).to_vector(), IndexPair_Vec({{0, 2}, {0, 4}, {2, 2}, {2, 4}}));
+    EXPECT_EQ(role1.evaluate(state).to_sorted_vector(), IndexPair_Vec({{0, 2}, {0, 4}, {2, 2}, {2, 4}}));
 }

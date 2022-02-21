@@ -19,5 +19,5 @@ TEST(DLPTests, RoleTop) {
     SyntacticElementFactory factory(vocabulary);
 
     Role role = factory.parse_role("r_top");
-    EXPECT_EQ(role.evaluate(state).to_vector(), IndexPair_Vec({{0, 0},{0, 1},{1, 0},{1, 1}}));
+    EXPECT_EQ(role.evaluate(state).to_sorted_vector(), IndexPair_Vec({{0, 0},{0, 1},{1, 0},{1, 1}}));
 }

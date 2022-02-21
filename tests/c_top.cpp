@@ -19,5 +19,5 @@ TEST(DLPTests, ConceptTop) {
     SyntacticElementFactory factory(vocabulary);
 
     Concept concept = factory.parse_concept("c_top");
-    EXPECT_EQ(concept.evaluate(state).to_vector(), Index_Vec({0, 1}));
+    EXPECT_EQ(concept.evaluate(state).to_sorted_vector(), Index_Vec({0, 1}));
 }

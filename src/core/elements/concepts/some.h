@@ -26,7 +26,7 @@ public:
         ConceptDenotation result(state.get_instance_info()->get_num_objects());
         // find examples a : exists b . (a,b) in R and b in C
         for (const auto& pair : role_denot) {
-            if (concept_denot.count(pair.second) > 0) {
+            if (concept_denot.contains(pair.second)) {
                 result.insert(pair.first);
             }
         }

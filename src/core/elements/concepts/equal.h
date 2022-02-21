@@ -26,10 +26,10 @@ public:
         ConceptDenotation result = state.get_instance_info()->get_top_concept();
         // find counterexample [(a,b) in R and (a,b) not in S] or [(a,b) not in R and (a,b) in S]
         for (const auto& pair : role_left_denot) {
-            if (role_right_denot.count(pair) == 0) result.erase(pair.first);
+            if (!role_right_denot.contains(pair)) result.erase(pair.first);
         }
         for (const auto& pair : role_right_denot) {
-            if (role_left_denot.count(pair) == 0) result.erase(pair.first);
+            if (!role_left_denot.contains(pair)) result.erase(pair.first);
         }
         return result;
     }
