@@ -48,18 +48,18 @@ def test_core_instance():
     factory = SyntacticElementFactory(vocabulary)
     state = State(instance, [atom for atom in instance.get_atoms() if not atom.get_is_static()])
     concept = factory.parse_concept("c_primitive(shaker-level,0)")
-    result = concept.evaluate(state).to_vector()
+    result = concept.evaluate(state).to_sorted_vector()
     assert result == [0]
     assert instance.get_object(result[0]).get_name() == "shaker1"
     concept = factory.parse_concept("c_some(r_primitive(contains,1,0),c_primitive(shaker-level,0))")
-    result = concept.evaluate(state).to_vector()
+    result = concept.evaluate(state).to_sorted_vector()
     assert result == [2]
     assert instance.get_object(result[0]).get_name() == "ingredient2"
     role = factory.parse_role("r_primitive(cocktail-part1,0,1)")
-    result = role.evaluate(state).to_vector()
+    result = role.evaluate(state).to_sorted_vector()
     assert result == [(6,2)]
     concept = factory.parse_concept("c_some(r_primitive(cocktail-part1,0,1),c_some(r_primitive(contains,1,0),c_primitive(shaker-level,0)))")
-    result = concept.evaluate(state).to_vector()
+    result = concept.evaluate(state).to_sorted_vector()
     assert result == [6]
     assert instance.get_object(result[0]).get_name() == "cocktail1"
     numerical = factory.parse_numerical("n_count(c_and(c_some(r_primitive(cocktail-part1,0,1),c_some(r_primitive(contains,1,0),c_primitive(shaker-level,0))),c_projection(r_diff(r_primitive(contains_g,0,1),r_primitive(contains,0,1)),1)))")
