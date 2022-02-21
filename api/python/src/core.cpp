@@ -13,11 +13,11 @@ using namespace dlplan;
 
 void init_core(py::module_ &m) {
     py::class_<core::ConceptDenotation>(m, "ConceptDenotation")
-        .def("to_vector", &core::ConceptDenotation::to_vector)
+        .def("to_sorted_vector", &core::ConceptDenotation::to_sorted_vector)
     ;
 
     py::class_<core::RoleDenotation>(m, "RoleDenotation")
-        .def("to_vector", &core::RoleDenotation::to_vector)
+        .def("to_sorted_vector", &core::RoleDenotation::to_sorted_vector)
     ;
 
     py::class_<core::Constant>(m, "Constant")
