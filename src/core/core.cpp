@@ -500,8 +500,8 @@ InstanceInfo& InstanceInfo::operator=(InstanceInfo&& other) {
 
 InstanceInfo::~InstanceInfo() = default;
 
-const Atom& InstanceInfo::add_atom(const std::string &name, const Name_Vec &object_names, bool negated) {
-    return m_pImpl->add_atom(name, object_names, negated);
+const Atom& InstanceInfo::add_atom(const std::string &name, const Name_Vec &object_names) {
+    return m_pImpl->add_atom(name, object_names);
 }
 
 const Atom& InstanceInfo::add_static_atom(const std::string &name, const Name_Vec &object_names) {

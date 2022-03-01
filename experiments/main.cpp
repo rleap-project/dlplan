@@ -81,7 +81,7 @@ static const std::vector<std::pair<AtomTokenType, std::regex>> atom_token_type_e
     { AtomTokenType::IDENTIFIER, build_regex("[a-zA-Z_\\-]\\w*") },
 };
 
-void parse_atom_line(dlplan::core::InstanceInfo& instance_info, const std::string& line, int idx, const std::unordered_set<int>& static_atom_idxs) {
+void parse_atom_line(dlplan::core::InstanceInfo& instance_info, const std::string& line, int idx, const std::unordered_set<int>& static_atom_idxs, std::unordered_map<std::string, dlplan::core::Atom>& atom_name_to_atom) {
     auto start = line.begin();
     const auto end = line.end();
     std::smatch match;
@@ -108,20 +108,18 @@ void parse_atom_line(dlplan::core::InstanceInfo& instance_info, const std::strin
         if (tokens[i].first != AtomTokenType::IDENTIFIER) throw std::runtime_error("parse_atom_line - expected identifier at position " + std::to_string(i) + ".");
         object_names.push_back(tokens[i].second);
     }
-    if (static_atom_idxs.find(idx) != static_atom_idxs.end()) {
-        const auto& atom = instance_info.add_static_atom(predicate_name, object_names);
-        std::cout << "Added static atom: " << atom.str() << std::endl;
-    } else {
-        const auto& atom = instance_info.add_atom(predicate_name, object_names);
-        std::cout << "Added dynamic atom: " << atom.str() << std::endl;
-    }
+    const auto atom = (static_atom_idxs.find(idx) != static_atom_idxs.end())
+        ? instance_info.add_static_atom(predicate_name, object_names)
+        : instance_info.add_atom(predicate_name, object_names);
+    atom_name_to_atom.emplace(atom.get_name(), atom);
 }
 
 std::shared_ptr<const dlplan::core::InstanceInfo> construct_instance_info(
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary_info,
     const std::vector<std::string>& objects_lines,
     const std::vector<std::string>& atoms_lines,
-    const std::vector<std::string>& static_atom_indices_lines) {
+    const std::vector<std::string>& static_atom_indices_lines,
+    std::unordered_map<std::string, dlplan::core::Atom>& atom_name_to_atom) {
     std::shared_ptr<dlplan::core::InstanceInfo> instance_info = std::make_shared<dlplan::core::InstanceInfo>(vocabulary_info);
     std::unordered_set<int> static_atom_idxs;
     for (const auto& line : static_atom_indices_lines) {
@@ -129,7 +127,7 @@ std::shared_ptr<const dlplan::core::InstanceInfo> construct_instance_info(
     }
     int idx = 0;
     for (const auto& line : atoms_lines) {
-        parse_atom_line(*instance_info, line, idx, static_atom_idxs);
+        parse_atom_line(*instance_info, line, idx, static_atom_idxs, atom_name_to_atom);
         ++idx;
     }
     return instance_info;
@@ -156,6 +154,7 @@ static const std::vector<std::pair<StateTokenType, std::regex>> state_token_type
 
 dlplan::core::State parse_state_line(
     std::shared_ptr<const dlplan::core::InstanceInfo> instance_info,
+    const std::unordered_map<std::string, dlplan::core::Atom>& atom_name_to_atom,
     const std::string& line) {
     auto start = line.begin();
     const auto end = line.end();
@@ -178,7 +177,7 @@ dlplan::core::State parse_state_line(
     std::vector<int> atom_idxs;
     for (int i = 1; i < tokens.size(); ++i) {
         if (tokens[i].first != StateTokenType::IDENTIFIER) std::runtime_error("parse_state_line - expected identifier at position " + std::to_string(i) + ".");
-        const auto& atom = instance_info->get_atom(instance_info->get_atom_idx(tokens[i].second));
+        const auto& atom = atom_name_to_atom.at(tokens[i].second);
         if (!atom.get_is_static()) atom_idxs.push_back(atom.get_index());
     }
     return dlplan::core::State(instance_info, atom_idxs);
@@ -186,10 +185,11 @@ dlplan::core::State parse_state_line(
 
 std::vector<dlplan::core::State> construct_states(
     std::shared_ptr<const dlplan::core::InstanceInfo> instance_info,
+    const std::unordered_map<std::string, dlplan::core::Atom>& atom_name_to_atom,
     std::vector<std::string> states_lines) {
     std::vector<dlplan::core::State> states;
     for (const auto& line : states_lines) {
-        states.push_back(parse_state_line(instance_info, line));
+        states.push_back(parse_state_line(instance_info, atom_name_to_atom, line));
     }
     return states;
 }
@@ -259,9 +259,10 @@ int main(int argc, char** argv) {
         file2.close();
     }
 
+    std::unordered_map<std::string, dlplan::core::Atom> atom_name_to_atom;
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary_info = construct_vocabulary_info(predicates_lines, constants_lines);
-    std::shared_ptr<const dlplan::core::InstanceInfo> instance_info = construct_instance_info(vocabulary_info, objects_lines, atoms_lines, static_atom_indices_lines);
-    std::vector<dlplan::core::State> states = construct_states(instance_info, states_lines);
+    std::shared_ptr<const dlplan::core::InstanceInfo> instance_info = construct_instance_info(vocabulary_info, objects_lines, atoms_lines, static_atom_indices_lines, atom_name_to_atom);
+    std::vector<dlplan::core::State> states = construct_states(instance_info, atom_name_to_atom, states_lines);
     dlplan::core::SyntacticElementFactory factory = construct_factory(vocabulary_info);
     std::vector<dlplan::core::Boolean> boolean_features = parse_boolean_features(factory, boolean_features_lines);
     std::vector<dlplan::core::Numerical> numerical_features = parse_numerical_features(factory, numerical_features_lines);

@@ -449,7 +449,7 @@ public:
     /**
      * Adds an atom that may have varying evaluation depending on the state.
      */
-    const Atom& add_atom(const std::string& name, const Name_Vec& object_names, bool negated=false);
+    const Atom& add_atom(const std::string& name, const Name_Vec& object_names);
 
     /**
      * Adds an atom that remains true forever.

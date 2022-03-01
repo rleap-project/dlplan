@@ -42,7 +42,7 @@ private:
     mutable ConceptDenotation m_top_concept;
     mutable RoleDenotation m_top_role;
 
-    const Atom& add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool negated, bool is_static);
+    const Atom& add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static);
 
 public:
     explicit InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info);
@@ -51,7 +51,7 @@ public:
     /**
      * Adds an atom that may have varying evaluation depending on the state.
      */
-    const Atom& add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool negated);
+    const Atom& add_atom(const std::string &predicate_name, const Name_Vec &object_names);
 
     /**
      * Adds an atom that remains true forever.

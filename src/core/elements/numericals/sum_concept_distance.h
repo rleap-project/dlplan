@@ -37,9 +37,9 @@ public:
             std::swap(concept_from_denot, concept_to_denot);
         }
         int result = 0;
+        utils::Distances source_distances = utils::compute_multi_source_multi_target_shortest_distances(concept_from_denot, role_denot, concept_to_denot);
         for (const auto single : concept_from_denot) {
-            int distance = utils::compute_single_source_multi_target_shortest_distance(single, role_denot, concept_to_denot);
-            result = utils::path_addition(result, distance);
+            result = utils::path_addition(result, source_distances[single]);
         }
         return result;
     }
