@@ -15,7 +15,9 @@
 
 namespace dlplan::core {
 class SyntacticElementFactoryImpl;
+class InstanceInfoRoot;
 class InstanceInfoImpl;
+class VocabularyInfoRoot;
 class VocabularyInfoImpl;
 class SyntacticElementFactory;
 class InstanceInfo;
@@ -232,10 +234,11 @@ using RoleDenotation = RoleDenotationBitset;
 
 class Constant {
 private:
+    std::shared_ptr<const VocabularyInfoRoot> m_root;
     std::string m_name;
     int m_index;
 
-    Constant(const std::string& name, int index);
+    Constant(std::shared_ptr<const VocabularyInfoRoot> root, const std::string& name, int index);
     friend class VocabularyInfoImpl;
 
 public:
@@ -249,10 +252,9 @@ public:
     bool operator==(const Constant& other) const;
     bool operator!=(const Constant& other) const;
 
-    std::string str() const;
-
     int get_index() const;
     const std::string& get_name() const;
+    std::shared_ptr<const VocabularyInfoRoot> get_vocabulary_info_root() const;
 };
 
 
@@ -261,11 +263,12 @@ public:
  */
 class Predicate {
 private:
+    std::shared_ptr<const VocabularyInfoRoot> m_root;
     std::string m_name;
     int m_index;
     int m_arity;
 
-    Predicate(const std::string& name, int index, int arity);
+    Predicate(std::shared_ptr<const VocabularyInfoRoot> root, const std::string& name, int index, int arity);
     friend class VocabularyInfoImpl;
 
 public:
@@ -278,14 +281,13 @@ public:
     bool operator==(const Predicate& other) const;
     bool operator!=(const Predicate& other) const;
 
-    std::string str() const;
-
     /**
      * Getters.
      */
     int get_index() const;
     const std::string& get_name() const;
     int get_arity() const;
+    std::shared_ptr<const VocabularyInfoRoot> get_vocabulary_info_root() const;
 };
 
 
@@ -294,10 +296,11 @@ public:
  */
 class Object {
 private:
+    std::shared_ptr<const InstanceInfoRoot> m_root;
     std::string m_name;
     int m_index;
 
-    Object(const std::string& name, int index);
+    Object(std::shared_ptr<const InstanceInfoRoot> root, const std::string& name, int index);
     friend class InstanceInfoImpl;
 
 public:
@@ -310,10 +313,9 @@ public:
     bool operator==(const Object& other) const;
     bool operator!=(const Object& other) const;
 
-    std::string str() const;
-
     int get_index() const;
     const std::string& get_name() const;
+    std::shared_ptr<const InstanceInfoRoot> get_instance_info_root() const;
 };
 
 
@@ -322,13 +324,15 @@ public:
  */
 class Atom {
 private:
+    std::shared_ptr<const InstanceInfoRoot> m_root;
     std::string m_name;
     int m_index;
     Predicate m_predicate;
     std::vector<Object> m_objects;
     bool m_is_static;
 
-    Atom(const std::string& name,
+    Atom(std::shared_ptr<const InstanceInfoRoot> root,
+        const std::string& name,
         int index,
         const Predicate& predicate,
         const std::vector<Object> &objects,
@@ -345,17 +349,16 @@ public:
     bool operator==(const Atom& other) const;
     bool operator!=(const Atom& other) const;
 
-    std::string str() const;
-
     /**
      * Getters.
      */
-    const std::string& get_name() const;
+    std::string get_name() const;
     int get_index() const;
     const Predicate& get_predicate() const;
     const std::vector<Object>& get_objects() const;
     const Object& get_object(int pos) const;
     bool get_is_static() const;
+    std::shared_ptr<const InstanceInfoRoot> get_instance_info_root() const;
 };
 
 
@@ -371,6 +374,10 @@ private:
 
 public:
     State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms);
+    /**
+     * Expert interface to construct states without the overhead
+     * of copying Atoms but instead working on indices directly.
+     */
     State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs);
     State(const State& other);
     State& operator=(const State& other);
@@ -385,16 +392,21 @@ public:
      * Computes string-like representation of the state.
      */
     std::string str() const;
+
     /**
      * Getters.
      */
     std::shared_ptr<const InstanceInfo> get_instance_info() const;
     const Index_Vec& get_atom_idxs() const;
     const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs() const;
-
-    size_t compute_hash() const;
 };
 
+/**
+ * VocabularyInfoRoot is parent of VocabularyInfo
+ * and used to define parent-child relationship
+ * between VocabularyInfo and other objects.
+ */
+struct VocabularyInfoRoot { };
 
 /**
  * VocabularyInfo stores information related to the planning domain.
@@ -425,10 +437,15 @@ public:
     int get_constant_idx(const std::string& name) const;
     const Constant& get_constant(int index) const;
     const std::vector<Constant>& get_constants() const;
-
-    size_t compute_hash() const;
+    std::shared_ptr<const VocabularyInfoRoot> get_vocabulary_info_root() const;
 };
 
+/**
+ * InstanceInfoRoot is parent of InstanceInfo
+ * and used to define parent-child relationship
+ * between InstanceInfo and other objects.
+ */
+struct InstanceInfoRoot { };
 
 /**
  * InstanceInfo stores information related to the planning instance.
@@ -447,14 +464,17 @@ public:
     ~InstanceInfo();
 
     /**
-     * Adds an atom that may have varying evaluation depending on the state.
+     * Preferred version of adding Objects and Atoms.
      */
-    const Atom& add_atom(const std::string& name, const Name_Vec& object_names);
+    const Object& add_object(const std::string& object_name);
+    const Atom& add_atom(const Predicate& predicate, const std::vector<Object>& objects);
+    const Atom& add_static_atom(const Predicate& predicate, const std::vector<Object>& objects);
 
     /**
-     * Adds an atom that remains true forever.
+     * Deprecated version of adding atoms.
      */
-    const Atom& add_static_atom(const std::string& name, const Name_Vec& object_names);
+    const Atom& add_atom(const std::string& predicate_name, const Name_Vec& object_names);
+    const Atom& add_static_atom(const std::string& predicate_name, const Name_Vec& object_names);
 
     /**
      * Getters.
@@ -474,6 +494,7 @@ public:
     const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs() const;
     const ConceptDenotation& get_top_concept() const;
     const RoleDenotation& get_top_role() const;
+    std::shared_ptr<const InstanceInfoRoot> get_instance_info_root() const;
 };
 
 
@@ -708,14 +729,5 @@ public:
 }
 
 #include "core.tpp"
-
-namespace std {
-    template <>
-    struct hash<dlplan::core::State> {
-        std::size_t operator()(const dlplan::core::State& state) const {
-            return state.compute_hash();
-        }
-    };
-}
 
 #endif

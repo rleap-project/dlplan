@@ -16,6 +16,7 @@ class VocabularyInfoImpl;
 
 class InstanceInfoImpl {
 private:
+    std::shared_ptr<const InstanceInfoRoot> m_root;
     std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
 
     /**
@@ -43,19 +44,18 @@ private:
     mutable RoleDenotation m_top_role;
 
     const Atom& add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static);
+    const Atom& add_atom(const Predicate& predicate, const std::vector<Object>& objects, bool is_static);
 
 public:
     explicit InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info);
     ~InstanceInfoImpl() = default;
 
-    /**
-     * Adds an atom that may have varying evaluation depending on the state.
-     */
-    const Atom& add_atom(const std::string &predicate_name, const Name_Vec &object_names);
+    const Object& add_object(const std::string& object_name);
 
-    /**
-     * Adds an atom that remains true forever.
-     */
+    const Atom& add_atom(const Predicate& predicate, const std::vector<Object>& objects);
+    const Atom& add_static_atom(const Predicate& predicate, const std::vector<Object>& objects);
+
+    const Atom& add_atom(const std::string &predicate_name, const Name_Vec &object_names);
     const Atom& add_static_atom(const std::string& predicate_name, const Name_Vec& object_names);
 
     /**
@@ -76,6 +76,8 @@ public:
     const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs() const;
     const ConceptDenotation& get_top_concept() const;
     const RoleDenotation& get_top_role() const;
+
+    std::shared_ptr<const InstanceInfoRoot> get_instance_info_root() const;
 };
 
 }

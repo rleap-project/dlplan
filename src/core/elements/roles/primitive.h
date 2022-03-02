@@ -18,7 +18,7 @@ public:
         if (m_pos_1 >= predicate.get_arity() || m_pos_2 >= predicate.get_arity()) {
             throw std::runtime_error("PrimitiveRole::evaluate_impl - object index does not match predicate arity ("s + std::to_string(m_pos_1) + " or " + std::to_string(m_pos_2)  + " > " + std::to_string(predicate.get_arity()) + ").");
         }
-        if (!vocabulary.exists_predicate(predicate)) {
+        if (vocabulary.get_vocabulary_info_root() != predicate.get_vocabulary_info_root()) {
             throw std::runtime_error("PrimitiveRole::PrimitiveRole - predicate does not exist in VocabularyInfo.");
         }
     }

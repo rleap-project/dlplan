@@ -79,12 +79,11 @@ const phmap::flat_hash_map<int, std::vector<int>>& State::get_per_predicate_idx_
     return m_per_predicate_idx_static_atom_idxs;
 }
 
-
 std::string State::str() const {
     std::string res("{");
     for (int i = 0; i < static_cast<int>(m_atom_idxs.size()); ++i) {
         const auto& atom = m_instance_info->get_atom(m_atom_idxs[i]);
-        res += atom.str();
+        res += atom.get_name();
         if (i < static_cast<int>(m_atom_idxs.size()) - 1) {
             res += ", ";
         }
@@ -92,13 +91,5 @@ std::string State::str() const {
     res += "}";
     return res;
 }
-
-size_t State::compute_hash() const {
-    std::size_t seed = 0;
-    utils::hashing::hash_combine(seed, std::hash<std::vector<int>>()(m_atom_idxs));
-    utils::hashing::hash_combine(seed, m_instance_info);
-    return seed;
-}
-
 
 }

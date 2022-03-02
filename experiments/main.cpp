@@ -33,14 +33,12 @@ void parse_predicate_line(dlplan::core::VocabularyInfo& vocabulary_info, const s
     std::smatch match;
     std::regex_search(line, match, std::regex("(.*) (.*)"));
     const auto& predicate = vocabulary_info.add_predicate(match[1], std::atoi(match[2].str().c_str()));
-    std::cout << "Added predicate: " << predicate.str() << std::endl;
 }
 
 void parse_constant_line(dlplan::core::VocabularyInfo& vocabulary_info, const std::string& line) {
     std::smatch match;
     std::regex_search(line, match, std::regex("(.*)"));
     const auto& constant = vocabulary_info.add_constant(match[1]);
-    std::cout << "Added constant: " << constant.str() << std::endl;
 }
 
 std::shared_ptr<const dlplan::core::VocabularyInfo> construct_vocabulary_info(
@@ -111,7 +109,7 @@ void parse_atom_line(dlplan::core::InstanceInfo& instance_info, const std::strin
     const auto atom = (static_atom_idxs.find(idx) != static_atom_idxs.end())
         ? instance_info.add_static_atom(predicate_name, object_names)
         : instance_info.add_atom(predicate_name, object_names);
-    atom_name_to_atom.emplace(atom.get_name(), atom);
+    atom_name_to_atom.emplace(line, atom);
 }
 
 std::shared_ptr<const dlplan::core::InstanceInfo> construct_instance_info(

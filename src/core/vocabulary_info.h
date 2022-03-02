@@ -54,6 +54,8 @@ enum EXPRESSION_TYPE {
 
 class VocabularyInfoImpl {
 private:
+    std::shared_ptr<const VocabularyInfoRoot> m_root;
+
     /**
      * All predicates.
      */
@@ -71,7 +73,7 @@ private:
     static std::unordered_map<std::string, EXPRESSION_TYPE> m_element_name_to_expression_type;
 
 public:
-    VocabularyInfoImpl() = default;
+    VocabularyInfoImpl();
     ~VocabularyInfoImpl() = default;
 
     const Predicate& add_predicate(const std::string &name, int arity);
@@ -92,7 +94,7 @@ public:
     const Constant& get_constant(int constant_idx) const;
     const std::vector<Constant>& get_constants() const;
 
-    size_t compute_hash() const;
+    std::shared_ptr<const VocabularyInfoRoot> get_vocabulary_info_root() const;
 
     static bool exists_element_name(const std::string& name);
     static EXPRESSION_TYPE element_name_to_expression_type(const std::string &name);

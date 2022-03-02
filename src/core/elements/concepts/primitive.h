@@ -18,7 +18,7 @@ public:
         if (m_pos >= predicate.get_arity()) {
             throw std::runtime_error("PrimitiveConcept::PrimitiveConcept - object index does not match predicate arity ("s + std::to_string(m_pos) + " > " + std::to_string(predicate.get_arity()) + ").");
         }
-        if (!vocabulary.exists_predicate(predicate)) {
+        if (vocabulary.get_vocabulary_info_root() != predicate.get_vocabulary_info_root()) {
             throw std::runtime_error("PrimitiveConcept::PrimitiveConcept - predicate does not exist in VocabularyInfo.");
         }
     }

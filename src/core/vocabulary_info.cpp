@@ -8,23 +8,26 @@
 
 namespace dlplan::core {
 
+VocabularyInfoImpl::VocabularyInfoImpl()
+    : m_root(std::make_shared<VocabularyInfoRoot>()) { }
+
 const Predicate& VocabularyInfoImpl::add_predicate(const std::string &predicate_name, int arity) {
-    if (m_predicate_name_to_predicate_idx.find(predicate_name) != m_predicate_name_to_predicate_idx.end()) {
+    Predicate predicate = Predicate(m_root, predicate_name, m_predicates.size(), arity);
+    auto result = m_predicate_name_to_predicate_idx.emplace(predicate_name, m_predicates.size());
+    if (!result.second) {
         throw std::runtime_error("VocabularyInfoImpl::add_predicate - predicate with name ("s + predicate_name + ") already exists.");
     }
-    int predicate_idx = m_predicates.size();
-    m_predicates.push_back(Predicate(predicate_name, predicate_idx, arity));
-    m_predicate_name_to_predicate_idx.emplace(predicate_name, predicate_idx);
+    m_predicates.push_back(std::move(predicate));
     return m_predicates.back();
 }
 
 const Constant& VocabularyInfoImpl::add_constant(const std::string& constant_name) {
-    if (m_constant_name_to_constant_idx.find(constant_name) != m_constant_name_to_constant_idx.end()) {
+    Constant constant = Constant(m_root, constant_name, m_constants.size());
+    auto result = m_constant_name_to_constant_idx.emplace(constant_name, m_constants.size());
+    if (!result.second) {
         throw std::runtime_error("VocabularyInfoImpl::add_constant - constant with name ("s + constant_name + ") already exists.");
     }
-    int object_idx = m_constants.size();
-    m_constants.push_back(Constant(constant_name, object_idx));
-    m_constant_name_to_constant_idx.emplace(constant_name, object_idx);
+    m_constants.push_back(std::move(constant));
     return m_constants.back();
 }
 
@@ -87,8 +90,8 @@ const std::vector<Constant>& VocabularyInfoImpl::get_constants() const {
     return m_constants;
 }
 
-size_t VocabularyInfoImpl::compute_hash() const {
-    return (size_t)this;
+std::shared_ptr<const VocabularyInfoRoot> VocabularyInfoImpl::get_vocabulary_info_root() const {
+    return m_root;
 }
 
 std::unordered_map<std::string, EXPRESSION_TYPE> VocabularyInfoImpl::m_element_name_to_expression_type = {

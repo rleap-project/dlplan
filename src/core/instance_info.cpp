@@ -11,13 +11,20 @@
 
 namespace dlplan::core {
 
-static bool exists(const std::string& name, std::unordered_map<std::string, unsigned>& mapping) {
-    auto f = mapping.find(name);
-    return (f != mapping.end());
+static std::string compute_atom_name(const Predicate& predicate, const std::vector<Object>& objects) {
+    std::stringstream ss;
+    ss << predicate.get_name() << "(";
+    for (size_t i = 0; i < objects.size(); ++i) {
+        const auto& object = objects[i];
+        ss << object.get_name();
+        if (i < objects.size() - 1) ss << ",";
+    }
+    ss << ")";
+    return ss.str();
 }
 
 InstanceInfoImpl::InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info)
-    : m_vocabulary_info(vocabulary_info), m_top_concept(ConceptDenotation(0)), m_top_role(RoleDenotation(0)) {
+    : m_root(std::make_shared<InstanceInfoRoot>()), m_vocabulary_info(vocabulary_info), m_top_concept(ConceptDenotation(0)), m_top_role(RoleDenotation(0)) {
 }
 
 const Atom& InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
@@ -30,41 +37,59 @@ const Atom& InstanceInfoImpl::add_atom(const std::string &predicate_name, const 
     int predicate_idx = m_vocabulary_info->get_predicate_idx(predicate_name);
     const Predicate& predicate = m_vocabulary_info->get_predicate(predicate_idx);
     // object related
-    std::stringstream ss;
-    ss << predicate_name << "(";
     std::vector<Object> objects;
     for (int i = 0; i < static_cast<int>(object_names.size()); ++i) {
         const std::string& object_name = object_names[i];
-        bool object_exists = exists(object_name, m_object_name_to_object_idx);
-        int object_idx;
-        if (!object_exists) {
-            object_idx = m_objects.size();
-            m_objects.push_back(Object(object_name, object_idx));
-            m_object_name_to_object_idx.emplace(object_name, object_idx);
-        } else {
-            object_idx = m_object_name_to_object_idx.at(object_name);
+        auto result = m_object_name_to_object_idx.emplace(object_name, m_objects.size());
+        int object_idx = result.first->second;
+        bool newly_inserted = result.second;
+        if (newly_inserted) {
+            m_objects.push_back(Object(m_root, object_name, object_idx));
         }
-        objects.push_back(Object(object_name, object_idx));
-        ss << object_name;
-        if (i < static_cast<int>(object_names.size()) - 1) {
-            ss << ",";
-        }
-    }
-    ss << ")";
-    std::string atom_name = ss.str();
-    if (m_atom_name_to_atom_idx.find(atom_name) != m_atom_name_to_atom_idx.end()) {
-        throw std::runtime_error("InstanceInfoImpl::add_atom - adding duplicate atom with name ("s + atom_name + ") is not allowed.");
+        objects.push_back(m_objects[object_idx]);
     }
     // atom related
     int atom_idx = m_atoms.size();
-    m_atom_name_to_atom_idx.emplace(atom_name, m_atoms.size());
+    std::string atom_name = compute_atom_name(predicate, objects);
+    auto result = m_atom_name_to_atom_idx.emplace(atom_name, atom_idx);
+    bool newly_inserted = result.second;
+    if (!newly_inserted) {
+        throw std::runtime_error("InstanceInfoImpl::add_atom - atom with name ("s + atom_name + ") already exists.");
+    }
     if (is_static) {
         m_static_atom_idxs.push_back(atom_idx);
         m_per_predicate_idx_static_atom_idxs[predicate_idx].push_back(atom_idx);
     }
-
-    m_atoms.push_back(Atom(atom_name, atom_idx, predicate, objects, is_static));
+    m_atoms.push_back(Atom(m_root, atom_name, atom_idx, predicate, objects, is_static));
     return m_atoms.back();
+}
+
+const Atom& InstanceInfoImpl::add_atom(const Predicate& predicate, const std::vector<Object>& objects, bool is_static) {
+    Atom atom = Atom(m_root, compute_atom_name(predicate, objects), m_atoms.size(), predicate, objects, is_static);
+    auto result = m_atom_name_to_atom_idx.emplace(atom.get_name(), m_atoms.size());
+    if (!result.second) {
+        throw std::runtime_error("InstanceInfoImpl::add_atom - atom with name ("s + atom.get_name() + ") already exists.");
+    }
+    m_atoms.push_back(std::move(atom));
+    return m_atoms.back();
+}
+
+const Object& InstanceInfoImpl::add_object(const std::string& object_name) {
+    Object object = Object(m_root, object_name, m_objects.size());
+    auto result = m_object_name_to_object_idx.emplace(object.get_name(), m_objects.size());
+    if (!result.second) {
+        throw std::runtime_error("InstanceInfoImpl::add_object - object with name ("s + object.get_name() + ") already exists.");
+    }
+    m_objects.push_back(std::move(object));
+    return m_objects.back();
+}
+
+const Atom& InstanceInfoImpl::add_atom(const Predicate& predicate, const std::vector<Object>& objects) {
+    return add_atom(predicate, objects, false);
+}
+
+const Atom& InstanceInfoImpl::add_static_atom(const Predicate& predicate, const std::vector<Object>& objects) {
+    return add_atom(predicate, objects, true);
 }
 
 const Atom& InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names) {
@@ -167,6 +192,10 @@ const RoleDenotation& InstanceInfoImpl::get_top_role() const {
         }
     }
     return m_top_role;
+}
+
+std::shared_ptr<const InstanceInfoRoot> InstanceInfoImpl::get_instance_info_root() const {
+    return m_root;
 }
 
 }

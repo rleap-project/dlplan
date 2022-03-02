@@ -500,6 +500,18 @@ InstanceInfo& InstanceInfo::operator=(InstanceInfo&& other) {
 
 InstanceInfo::~InstanceInfo() = default;
 
+const Object& InstanceInfo::add_object(const std::string& object_name) {
+    return m_pImpl->add_object(object_name);
+}
+
+const Atom& InstanceInfo::add_atom(const Predicate& predicate, const std::vector<Object>& objects) {
+    return m_pImpl->add_atom(predicate, objects);
+}
+
+const Atom& InstanceInfo::add_static_atom(const Predicate& predicate, const std::vector<Object>& objects) {
+    return m_pImpl->add_static_atom(predicate, objects);
+}
+
 const Atom& InstanceInfo::add_atom(const std::string &name, const Name_Vec &object_names) {
     return m_pImpl->add_atom(name, object_names);
 }
@@ -640,8 +652,8 @@ const std::vector<Constant>& VocabularyInfo::get_constants() const {
     return m_pImpl->get_constants();
 }
 
-size_t VocabularyInfo::compute_hash() const {
-    return m_pImpl->compute_hash();
+std::shared_ptr<const VocabularyInfoRoot> VocabularyInfo::get_vocabulary_info_root() const {
+    return m_pImpl->get_vocabulary_info_root();
 }
 
 
