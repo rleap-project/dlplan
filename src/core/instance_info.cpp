@@ -48,27 +48,19 @@ const Atom& InstanceInfoImpl::add_atom(const std::string &predicate_name, const 
         }
         objects.push_back(m_objects[object_idx]);
     }
-    // atom related
-    int atom_idx = m_atoms.size();
-    std::string atom_name = compute_atom_name(predicate, objects);
-    auto result = m_atom_name_to_atom_idx.emplace(atom_name, atom_idx);
-    bool newly_inserted = result.second;
-    if (!newly_inserted) {
-        throw std::runtime_error("InstanceInfoImpl::add_atom - atom with name ("s + atom_name + ") already exists.");
-    }
-    if (is_static) {
-        m_static_atom_idxs.push_back(atom_idx);
-        m_per_predicate_idx_static_atom_idxs[predicate_idx].push_back(atom_idx);
-    }
-    m_atoms.push_back(Atom(m_root, atom_name, atom_idx, predicate, objects, is_static));
-    return m_atoms.back();
+    return add_atom(predicate, objects, is_static);
 }
 
 const Atom& InstanceInfoImpl::add_atom(const Predicate& predicate, const std::vector<Object>& objects, bool is_static) {
     Atom atom = Atom(m_root, compute_atom_name(predicate, objects), m_atoms.size(), predicate, objects, is_static);
     auto result = m_atom_name_to_atom_idx.emplace(atom.get_name(), m_atoms.size());
-    if (!result.second) {
+    bool newly_inserted = result.second;
+    if (!newly_inserted) {
         throw std::runtime_error("InstanceInfoImpl::add_atom - atom with name ("s + atom.get_name() + ") already exists.");
+    }
+    if (is_static) {
+        m_static_atom_idxs.push_back(atom.get_index());
+        m_per_predicate_idx_static_atom_idxs[predicate.get_index()].push_back(atom.get_index());
     }
     m_atoms.push_back(std::move(atom));
     return m_atoms.back();

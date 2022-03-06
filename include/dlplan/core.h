@@ -464,14 +464,14 @@ public:
     ~InstanceInfo();
 
     /**
-     * Preferred version of adding Objects and Atoms.
+     * Alternative 1 to add atoms.
      */
     const Object& add_object(const std::string& object_name);
     const Atom& add_atom(const Predicate& predicate, const std::vector<Object>& objects);
     const Atom& add_static_atom(const Predicate& predicate, const std::vector<Object>& objects);
 
     /**
-     * Deprecated version of adding atoms.
+     * Alternative 2 to add atoms.
      */
     const Atom& add_atom(const std::string& predicate_name, const Name_Vec& object_names);
     const Atom& add_static_atom(const std::string& predicate_name, const Name_Vec& object_names);
