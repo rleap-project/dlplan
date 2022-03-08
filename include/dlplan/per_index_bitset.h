@@ -92,8 +92,6 @@ public:
     explicit PerIndexBitset(const std::vector<bool> &default_bits);
 
     BitsetView operator[](int index);
-
-    void clear();
 };
 
 }

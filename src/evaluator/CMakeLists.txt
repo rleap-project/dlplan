@@ -2,7 +2,7 @@ add_library(dlplanevaluator SHARED)
 target_sources(dlplanevaluator
     PRIVATE
         evaluator.cpp
-        ../utils/per_state_bitset.cpp)
+        ../utils/per_index_bitset.cpp)
 target_link_libraries(dlplanevaluator dlplancore)
 target_include_directories(dlplanevaluator
     PUBLIC
