@@ -20,6 +20,8 @@ bool EvaluationCache::retrieve_or_evaluate(int boolean_idx, const core::Boolean&
     assert(this == &context.cache);
     auto view = m_boolean_denots_cache[context.state_idx];
     int start = 2 * boolean_idx;
+    //view.reset(start);
+    //view.reset(start+1);
     if (!view.test(start)) {
         // Since evaluation is initialized to false,
         // we must only set if the element evaluates to true.
@@ -36,6 +38,7 @@ int EvaluationCache::retrieve_or_evaluate(int numerical_idx, const core::Numeric
     auto view = m_numerical_denots_cache[context.state_idx];
     // -1 represents that the value is not cached.
     int& value = view[numerical_idx];
+    //value = -1;
     if (value == -1) {
         value = numerical.evaluate(context.state);
     }

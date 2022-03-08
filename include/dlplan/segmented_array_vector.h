@@ -102,6 +102,8 @@ public:
             arrays_per_segment = other.arrays_per_segment;
             elements_per_segment = other.elements_per_segment;
             element_allocator = other.element_allocator;
+            segments.clear();
+            the_size = 0;
             for (const Element* element : other.segments) {
                 push_back(element);
             }
