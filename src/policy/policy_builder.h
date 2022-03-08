@@ -37,16 +37,16 @@ public:
     std::shared_ptr<const BooleanFeature> add_boolean_feature(core::Boolean boolean);
     std::shared_ptr<const NumericalFeature> add_numerical_feature(core::Numerical numerical);
 
-    std::shared_ptr<const BaseCondition> add_b_pos_condition(std::shared_ptr<const BooleanFeature> b);
-    std::shared_ptr<const BaseCondition> add_b_neg_condition(std::shared_ptr<const BooleanFeature> b);
-    std::shared_ptr<const BaseCondition> add_n_gt_condition(std::shared_ptr<const NumericalFeature> n);
-    std::shared_ptr<const BaseCondition> add_n_eq_condition(std::shared_ptr<const NumericalFeature> n);
-    std::shared_ptr<const BaseEffect> add_b_pos_effect(std::shared_ptr<const BooleanFeature> b);
-    std::shared_ptr<const BaseEffect> add_b_neg_effect(std::shared_ptr<const BooleanFeature> b);
-    std::shared_ptr<const BaseEffect> add_b_bot_effect(std::shared_ptr<const BooleanFeature> b);
-    std::shared_ptr<const BaseEffect> add_n_inc_effect(std::shared_ptr<const NumericalFeature> n);
-    std::shared_ptr<const BaseEffect> add_n_dec_effect(std::shared_ptr<const NumericalFeature> n);
-    std::shared_ptr<const BaseEffect> add_n_bot_effect(std::shared_ptr<const NumericalFeature> n);
+    std::shared_ptr<const BaseCondition> add_pos_condition(std::shared_ptr<const BooleanFeature> b);
+    std::shared_ptr<const BaseCondition> add_neg_condition(std::shared_ptr<const BooleanFeature> b);
+    std::shared_ptr<const BaseCondition> add_gt_condition(std::shared_ptr<const NumericalFeature> n);
+    std::shared_ptr<const BaseCondition> add_eq_condition(std::shared_ptr<const NumericalFeature> n);
+    std::shared_ptr<const BaseEffect> add_pos_effect(std::shared_ptr<const BooleanFeature> b);
+    std::shared_ptr<const BaseEffect> add_neg_effect(std::shared_ptr<const BooleanFeature> b);
+    std::shared_ptr<const BaseEffect> add_bot_effect(std::shared_ptr<const BooleanFeature> b);
+    std::shared_ptr<const BaseEffect> add_inc_effect(std::shared_ptr<const NumericalFeature> n);
+    std::shared_ptr<const BaseEffect> add_dec_effect(std::shared_ptr<const NumericalFeature> n);
+    std::shared_ptr<const BaseEffect> add_bot_effect(std::shared_ptr<const NumericalFeature> n);
 
     std::shared_ptr<const Rule> add_rule(
         std::vector<std::shared_ptr<const BaseCondition>>&& conditions,

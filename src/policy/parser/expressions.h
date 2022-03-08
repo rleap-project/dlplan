@@ -251,7 +251,7 @@ public:
     : BooleanConditionExpression(name, std::move(children)) { }
 
     std::shared_ptr<const BaseCondition> parse_condition_impl(PolicyBuilder& builder, std::shared_ptr<const BooleanFeature> b) const override {
-        return builder.add_b_pos_condition(b);
+        return builder.add_pos_condition(b);
     }
 };
 
@@ -261,7 +261,7 @@ public:
     : BooleanConditionExpression(name, std::move(children)) { }
 
     std::shared_ptr<const BaseCondition> parse_condition_impl(PolicyBuilder& builder, std::shared_ptr<const BooleanFeature> b) const override {
-        return builder.add_b_neg_condition(b);
+        return builder.add_neg_condition(b);
     }
 };
 
@@ -271,7 +271,7 @@ public:
     : NumericalConditionExpression(name, std::move(children)) { }
 
     std::shared_ptr<const BaseCondition> parse_condition_impl(PolicyBuilder& builder, std::shared_ptr<const NumericalFeature> n) const override {
-        return builder.add_n_eq_condition(n);
+        return builder.add_eq_condition(n);
     }
 };
 
@@ -281,7 +281,7 @@ public:
     : NumericalConditionExpression(name, std::move(children)) { }
 
     std::shared_ptr<const BaseCondition> parse_condition_impl(PolicyBuilder& builder, std::shared_ptr<const NumericalFeature> n) const override {
-        return builder.add_n_gt_condition(n);
+        return builder.add_gt_condition(n);
     }
 };
 
@@ -291,7 +291,7 @@ public:
     : BooleanEffectExpression(name, std::move(children)) { }
 
     std::shared_ptr<const BaseEffect> parse_effect_impl(PolicyBuilder& builder, std::shared_ptr<const BooleanFeature> b) const override {
-        return builder.add_b_pos_effect(b);
+        return builder.add_pos_effect(b);
     }
 };
 
@@ -301,7 +301,7 @@ public:
     : BooleanEffectExpression(name, std::move(children)) { }
 
     std::shared_ptr<const BaseEffect> parse_effect_impl(PolicyBuilder& builder, std::shared_ptr<const BooleanFeature> b) const override {
-        return builder.add_b_neg_effect(b);
+        return builder.add_neg_effect(b);
     }
 };
 
@@ -311,7 +311,7 @@ public:
     : BooleanEffectExpression(name, std::move(children)) { }
 
     std::shared_ptr<const BaseEffect> parse_effect_impl(PolicyBuilder& builder, std::shared_ptr<const BooleanFeature> b) const override {
-        return builder.add_b_bot_effect(b);
+        return builder.add_bot_effect(b);
     }
 };
 
@@ -321,7 +321,7 @@ public:
     : NumericalEffectExpression(name, std::move(children)) { }
 
     std::shared_ptr<const BaseEffect> parse_effect_impl(PolicyBuilder& builder, std::shared_ptr<const NumericalFeature> n) const override {
-        return builder.add_n_inc_effect(n);
+        return builder.add_inc_effect(n);
     }
 };
 
@@ -331,7 +331,7 @@ public:
     : NumericalEffectExpression(name, std::move(children)) { }
 
     std::shared_ptr<const BaseEffect> parse_effect_impl(PolicyBuilder& builder, std::shared_ptr<const NumericalFeature> n) const override {
-        return builder.add_n_dec_effect(n);
+        return builder.add_dec_effect(n);
     }
 };
 
@@ -341,7 +341,7 @@ public:
     : NumericalEffectExpression(name, std::move(children)) { }
 
     std::shared_ptr<const BaseEffect> parse_effect_impl(PolicyBuilder& builder, std::shared_ptr<const NumericalFeature> n) const override {
-        return builder.add_n_bot_effect(n);
+        return builder.add_bot_effect(n);
     }
 };
 

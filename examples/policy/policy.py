@@ -11,13 +11,13 @@ def main():
     builder = dlplan.PolicyBuilder()
     b = builder.add_boolean_feature(boolean)
     n = builder.add_numerical_feature(numerical)
-    b_neg_condition_0 = builder.add_b_neg_condition(b)
-    b_bot_effect_0 = builder.add_b_bot_effect(b)
-    n_gt_condition_0 = builder.add_n_gt_condition(n)
-    n_dec_effect_0 = builder.add_n_dec_effect(n)
+    b_neg_condition_0 = builder.add_neg_condition(b)
+    b_bot_effect_0 = builder.add_bot_effect(b)
+    n_gt_condition_0 = builder.add_gt_condition(n)
+    n_dec_effect_0 = builder.add_dec_effect(n)
     r = builder.add_rule(
-        {b_neg_condition_0, n_gt_condition_0},
-        {b_bot_effect_0, n_dec_effect_0}
+        [b_neg_condition_0, n_gt_condition_0],
+        [b_bot_effect_0, n_dec_effect_0]
     )
     policy = builder.get_result()
 
