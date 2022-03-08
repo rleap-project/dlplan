@@ -251,6 +251,8 @@ public:
 
     std::string str() const;
 
+    void clear_cache();
+
     std::shared_ptr<const PolicyRoot> get_root() const;
     std::vector<std::shared_ptr<const BooleanFeature>> get_boolean_features() const;
     std::vector<std::shared_ptr<const NumericalFeature>> get_numerical_features() const;

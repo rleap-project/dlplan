@@ -59,6 +59,7 @@ void init_policy(py::module_ &m) {
         .def("evaluate_effects_lazy", &policy::Policy::evaluate_effects_lazy)
         .def("get_boolean_features", &policy::Policy::get_boolean_features)
         .def("get_numerical_features", &policy::Policy::get_numerical_features)
+        .def("clear_cache", &policy::Policy::clear_cache)
         .def("get_root", &policy::Policy::get_root)
         .def("compute_repr", &policy::Policy::compute_repr)
         .def("str", &policy::Policy::str)

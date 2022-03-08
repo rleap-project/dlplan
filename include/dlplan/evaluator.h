@@ -35,8 +35,6 @@ public:
 
     bool retrieve_or_evaluate(int boolean_idx, const core::Boolean& boolean, EvaluationContext& context);
     int retrieve_or_evaluate(int numerical_idx, const core::Numerical& numerical, EvaluationContext& context);
-
-    void clear();
 };
 
 

@@ -138,4 +138,8 @@ std::vector<std::shared_ptr<const NumericalFeature>> Policy::get_numerical_featu
     return m_numerical_features;
 }
 
+void Policy::clear_cache() {
+    m_cache = evaluator::EvaluationCache(m_boolean_features.size(), m_numerical_features.size());
+}
+
 }
