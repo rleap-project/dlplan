@@ -20,6 +20,7 @@ void init_policy(py::module_ &m) {
     py::class_<policy::BooleanFeature, std::shared_ptr<policy::BooleanFeature>>(m, "BooleanFeature")
         .def("get_index", &policy::BooleanFeature::get_index)
         .def("get_root", &policy::BooleanFeature::get_root)
+        .def("get_boolean", &policy::BooleanFeature::get_boolean)
         .def("compute_repr", &policy::BooleanFeature::compute_repr)
         .def("str", &policy::BooleanFeature::str)
     ;
@@ -27,6 +28,7 @@ void init_policy(py::module_ &m) {
     py::class_<policy::NumericalFeature, std::shared_ptr<policy::NumericalFeature>>(m, "NumericalFeature")
         .def("get_index", &policy::NumericalFeature::get_index)
         .def("get_root", &policy::NumericalFeature::get_root)
+        .def("get_numerical", &policy::NumericalFeature::get_numerical)
         .def("compute_repr", &policy::NumericalFeature::compute_repr)
         .def("str", &policy::NumericalFeature::str)
     ;
@@ -57,6 +59,7 @@ void init_policy(py::module_ &m) {
         .def("evaluate_lazy", &policy::Policy::evaluate_lazy)
         .def("evaluate_conditions_eager", &policy::Policy::evaluate_conditions_eager)
         .def("evaluate_effects_lazy", &policy::Policy::evaluate_effects_lazy)
+        .def("get_rules", &policy::Policy::get_rules)
         .def("get_boolean_features", &policy::Policy::get_boolean_features)
         .def("get_numerical_features", &policy::Policy::get_numerical_features)
         .def("clear_cache", &policy::Policy::clear_cache)

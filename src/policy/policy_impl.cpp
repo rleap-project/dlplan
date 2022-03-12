@@ -130,6 +130,10 @@ std::shared_ptr<const PolicyRoot> Policy::get_root() const {
     return m_root;
 }
 
+std::vector<std::shared_ptr<const Rule>> Policy::get_rules() const {
+    return m_rules;
+}
+
 std::vector<std::shared_ptr<const BooleanFeature>> Policy::get_boolean_features() const {
     return m_boolean_features;
 }
