@@ -33,7 +33,7 @@ Policy& Policy::operator=(Policy&& other) = default;
 Policy::~Policy() = default;
 
 
-std::shared_ptr<const Rule> Policy::evaluate_lazy(int source_index, const core::State& source, int target_index, const core::State& target) {
+std::pair<std::shared_ptr<const Rule>, bool> Policy::evaluate_lazy(int source_index, const core::State& source, int target_index, const core::State& target) {
     if (source_index < 0 || target_index < 0) {
         throw std::runtime_error("Policy::evaluate_lazy: source or target index cannot be negative.");
     }
@@ -41,10 +41,10 @@ std::shared_ptr<const Rule> Policy::evaluate_lazy(int source_index, const core::
     evaluator::EvaluationContext target_context(target_index, target, m_cache);
     for (const auto& r : m_rules) {
         if (r->evaluate_conditions(source_context) && r->evaluate_effects(source_context, target_context)) {
-            return r;
+            return std::make_pair(r, true);
         }
     }
-    return nullptr;
+    return std::make_pair(nullptr, false);
 }
 
 std::vector<std::shared_ptr<const Rule>> Policy::evaluate_conditions_eager(int source_index, const core::State& source) {
@@ -61,7 +61,7 @@ std::vector<std::shared_ptr<const Rule>> Policy::evaluate_conditions_eager(int s
     return result;
 }
 
-std::shared_ptr<const Rule> Policy::evaluate_effects_lazy(int source_index, const core::State& source, int target_index, const core::State& target, const std::vector<std::shared_ptr<const Rule>>& rules) {
+std::pair<std::shared_ptr<const Rule>, bool> Policy::evaluate_effects_lazy(int source_index, const core::State& source, int target_index, const core::State& target, const std::vector<std::shared_ptr<const Rule>>& rules) {
     if (source_index < 0 || target_index < 0) {
         throw std::runtime_error("Policy::evaluate_effects_lazy: source or target index cannot be negative.");
     }
@@ -69,10 +69,10 @@ std::shared_ptr<const Rule> Policy::evaluate_effects_lazy(int source_index, cons
     evaluator::EvaluationContext target_context(target_index, target, m_cache);
     for (const auto& r : rules) {
         if (r->evaluate_effects(source_context, target_context)) {
-            return r;
+            return std::make_pair(r, true);
         }
     }
-    return nullptr;
+    return std::make_pair(nullptr, false);
 }
 
 
