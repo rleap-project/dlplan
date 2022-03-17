@@ -43,8 +43,8 @@ if __name__ == "__main__":
 
     print("Instance information:")
     print(f"Number of states: {len(dlplan_states)}")
-    print(f"Number of dynamic atoms: {len(instance_data.dynamic_atoms)}")
-    print(f"Number of static atoms: {len(instance_data.static_atoms)}")
+    print(f"Number of dynamic atoms: {len(instance_data.tarski_dynamic_atoms)}")
+    print(f"Number of static atoms: {len(instance_data.tarski_static_atoms_textual)}")
     print(f"Number of objects: {instance_data.instance_info.get_num_objects()}")
 
     sys.stdout.flush()
