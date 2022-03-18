@@ -7,6 +7,21 @@
 
 namespace dlplan::core::element {
 
+static void collect_concepts(
+    const phmap::flat_hash_map<int, std::vector<int>>& per_predicate_idx_atom_idxs,
+    const std::vector<Atom>& atoms,
+    const Predicate& predicate,
+    int pos,
+    ConceptDenotation& result) {
+    auto it = per_predicate_idx_atom_idxs.find(predicate.get_index());
+    if (it != per_predicate_idx_atom_idxs.end()) {
+        for (int atom_idx : it->second) {
+            const auto& atom = atoms[atom_idx];
+            result.insert(atom.get_object(pos).get_index());
+        }
+    }
+}
+
 class PrimitiveConcept : public Concept {
 protected:
     const Predicate m_predicate;
@@ -28,14 +43,8 @@ public:
         int num_objects = info.get_num_objects();
         ConceptDenotation result(num_objects);
         const auto& atoms = info.get_atoms();
-        const auto& per_predicate_idx_static_atom_idxs = state.get_per_predicate_idx_static_atom_idxs();
-        auto it = per_predicate_idx_static_atom_idxs.find(m_predicate.get_index());
-        if (it != per_predicate_idx_static_atom_idxs.end()) {
-            for (int atom_idx : it->second) {
-                const auto& atom = atoms[atom_idx];
-                result.insert(atom.get_object(m_pos).get_index());
-            }
-        }
+        collect_concepts(state.get_per_predicate_idx_atom_idxs(), atoms, m_predicate, m_pos, result);
+        collect_concepts(info.get_per_predicate_idx_static_atom_idxs(), atoms, m_predicate, m_pos, result);
         return result;
     }
 

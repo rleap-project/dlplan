@@ -3,6 +3,8 @@
 
 #include "../boolean.h"
 
+
+
 namespace dlplan::core::element {
 
 class NullaryBoolean : public Boolean {
@@ -21,9 +23,17 @@ public:
     }
 
     bool evaluate(const State& state) const override {
-        const auto& per_predicate_idx_static_atom_idxs = state.get_per_predicate_idx_static_atom_idxs();
-        auto it = per_predicate_idx_static_atom_idxs.find(m_predicate.get_index());
-        return (it != per_predicate_idx_static_atom_idxs.end() && !it->second.empty());
+        const auto& per_predicate_idx_atom_idxs = state.get_per_predicate_idx_atom_idxs();
+        auto it = per_predicate_idx_atom_idxs.find(m_predicate.get_index());
+        if (it != per_predicate_idx_atom_idxs.end()) {
+            return !it->second.empty();
+        }
+        const auto& per_predicate_idx_static_atom_idxs = state.get_instance_info()->get_per_predicate_idx_static_atom_idxs();
+        it = per_predicate_idx_static_atom_idxs.find(m_predicate.get_index());
+        if (it != per_predicate_idx_static_atom_idxs.end()) {
+            return !it->second.empty();
+        }
+        return false;
     }
 
     int compute_complexity() const override {
