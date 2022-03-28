@@ -25,6 +25,7 @@ void init_core(py::module_ &m) {
         .def("__neq__", &core::Constant::operator!=)
         .def("get_index", &core::Constant::get_index)
         .def("get_name", &core::Constant::get_name)
+        .def("__str__", &core::Constant::get_name)
     ;
 
     py::class_<core::Object>(m, "Object")
@@ -32,6 +33,7 @@ void init_core(py::module_ &m) {
         .def("__neq__", &core::Object::operator!=)
         .def("get_index", &core::Object::get_index)
         .def("get_name", &core::Object::get_name)
+        .def("__str__", &core::Object::get_name)
     ;
 
     py::class_<core::Predicate>(m, "Predicate")
@@ -40,6 +42,7 @@ void init_core(py::module_ &m) {
         .def("get_name", &core::Predicate::get_name)
         .def("get_arity", &core::Predicate::get_arity)
         .def("get_index", &core::Predicate::get_index)
+        .def("__str__", &core::Predicate::get_name)
     ;
 
     py::class_<core::Atom>(m, "Atom")
@@ -51,6 +54,7 @@ void init_core(py::module_ &m) {
         .def("get_objects", &core::Atom::get_objects)
         .def("get_object", &core::Atom::get_object)
         .def("get_is_static", &core::Atom::get_is_static)
+        .def("__str__", &core::Atom::get_name)
     ;
 
     py::class_<core::State>(m, "State")
