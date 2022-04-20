@@ -51,6 +51,8 @@ void init_policy(py::module_ &m) {
         .def("evaluate_conditions", &policy::Rule::evaluate_conditions)
         .def("evaluate_effects", &policy::Rule::evaluate_effects)
         .def("get_root", &policy::Rule::get_root)
+        .def("get_conditions", &policy::Rule::get_conditions)
+        .def("get_effects", &policy::Rule::get_effects)
         .def("compute_repr", &policy::Rule::compute_repr)
         .def("str", &policy::Rule::str)
     ;

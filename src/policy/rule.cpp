@@ -96,4 +96,12 @@ std::shared_ptr<const PolicyRoot> Rule::get_root() const {
     return m_root;
 }
 
+std::vector<std::shared_ptr<const BaseCondition>> Rule::get_conditions() const {
+    return m_conditions;
+}
+
+std::vector<std::shared_ptr<const BaseEffect>> Rule::get_effects() const {
+    return m_effects;
+}
+
 }

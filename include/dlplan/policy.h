@@ -203,6 +203,8 @@ public:
     std::string str() const;
 
     std::shared_ptr<const PolicyRoot> get_root() const;
+    std::vector<std::shared_ptr<const BaseCondition>> get_conditions() const;
+    std::vector<std::shared_ptr<const BaseEffect>> get_effects() const;
 };
 
 
