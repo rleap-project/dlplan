@@ -4,11 +4,11 @@ Welcome to the dlplan-library.
 
 ## 1. Features of the Dlplan-library
 
-In this section, we start with defining some background and then describe the library components. Given a set of classical planning instances Q =  {P1, P2, ..., Pn} where each Pi with i=1,...,n consists of a state space S and each state s in S consists of ground atoms over a planning domain D. For example, Q can be a set of planning instances from the Delivery domain where there is a set of trucks, packages, and locations.
+In this section, we start with defining some background and then describe the library components. Given a set of classical planning instances Q =  {P1, P2, ..., Pn} where each Pi with i=1,...,n consists of a state space S_i and each state s in S_i consists of ground atoms over a common planning domain D. For example, Q can be a set of planning instances from the Delivery domain where there is a set of trucks, packages, and locations. Next, we describe the components in more detail and refer to the `include` subdirectory for the C++ interface, the `api/python` subdirectory for the Python interface, and the `examples` subdirectory on how to use them.
 
 ### 1.1. Core
 
-A numerical feature is n : S -> {0,1,...} and respectively, a Boolean feature b : S -> {0,1}. Such features are useful because they allow us to define abstract knowledge on top of each state. Furthermore, we are interested in defining features that can be evaluated on any given state and are semantically meaningful if the states come from planning instances of the domain D. For example, let n denote the numerical feature that counts the number of undelivered packages in any given Delivery instance.
+A numerical feature is n : S -> {0,1,...} and respectively, a Boolean feature is b : S -> {0,1}. Such features allow us to define abstract knowledge on top of each state. Furthermore, we are interested in features are meaningful for states coming from planning instances over the domain D. For example, let n denote the numerical feature that counts the number of undelivered packages in any given Delivery instance.
 
 We are specifically interested in features that are understandable. Hence, we make use of a description logics grammar that is a fraction of two variable first-order logic and has shown to be useful in several works. Description logic consists of two types of objects that are concepts and roles. Concepts correspond to derived unary predicates and Roles correspond to derived binary predicates. By iteratively applying the grammar rules one can derive numerical or Boolean features. We included `guide.pdf` in the `docs` folder with further information regarding the available elements with a description of their syntax and semantics.
 
@@ -16,7 +16,7 @@ The core component provides functionality for constructing and evaluating featur
 
 ### 1.2. Generator
 
-Consider the case where we want to automatically learn knowledge from the class of problems Q that makes use of numerical and Boolean features. The question then becomes: what are informative features for the learning task at hand?
+Consider the case where we want to automatically learn knowledge from the class of problems Q that makes use of numerical and Boolean features. The question then becomes: what are informative features for the learning task?
 
 The generator component provides functionality for automatically generating a set of features F with complexity at most k such that for each f,f' in F there exists a state s in Si such that f yields a different valuation on s than f'.
 
