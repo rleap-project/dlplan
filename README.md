@@ -1,8 +1,8 @@
-# Description Logics State Features for Planning Library (dlplan)
+# Description Logics State Features for Planning Library (DLPlan)
 
-Welcome to the dlplan-library.
+Welcome to the DLPlan-library.
 
-## 1. Features of the Dlplan-library
+## 1. Features of the DLPlan-library
 
 In this section, we start with defining some background and then describe the library components. Given a set of classical planning instances Q =  {P1, P2, ..., Pn} where each Pi with i=1,...,n consists of a state space S_i and each state s in S_i consists of ground atoms over a common planning domain D. For example, Q can be a set of planning instances from the Delivery domain where there is a set of trucks, packages, and locations. Next, we describe the components in more detail and refer to the `include` subdirectory for the C++ interface, the `api/python` subdirectory for the Python interface, and the `examples` subdirectory on how to use them.
 
@@ -98,7 +98,7 @@ pytest api/python/
 
 In the `experiments/` directory, we provide code to profile parts of the library. To run the experimental code, it is necessary to install the modified version of `tarski` that we provide in the respective submodule in the `submodules/tarski` directory.
 
-## 6. Citing dlplan
+## 6. Citing DLPlan
 
 We created a DOI on zenodo under this [link](https://zenodo.org/record/5826140#.YfK9E_so85k). A bibtex entry can look like this:
 
