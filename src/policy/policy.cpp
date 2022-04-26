@@ -102,7 +102,7 @@ PolicyBuilder::PolicyBuilder(const PolicyBuilder& other)
 
 PolicyBuilder& PolicyBuilder::operator=(const PolicyBuilder& other) {
     if (this != &other) {
-        m_pImpl = *other.m_pImpl;
+        *m_pImpl = *other.m_pImpl;
     }
     return *this;
 }
@@ -112,7 +112,7 @@ PolicyBuilder::PolicyBuilder(PolicyBuilder&& other)
 
 PolicyBuilder& PolicyBuilder::operator=(PolicyBuilder&& other) {
     if (this != &other) {
-        m_pImpl = std::move(*other.m_pImpl);
+        std::swap(*m_pImpl, *other.m_pImpl);
     }
     return *this;
 }
@@ -185,7 +185,7 @@ PolicyReader::PolicyReader(const PolicyReader& other)
 
 PolicyReader& PolicyReader::operator=(const PolicyReader& other) {
     if (this != &other) {
-        m_pImpl = *other.m_pImpl;
+        *m_pImpl = *other.m_pImpl;
     }
     return *this;
 }
@@ -195,7 +195,7 @@ PolicyReader::PolicyReader(PolicyReader&& other)
 
 PolicyReader& PolicyReader::operator=(PolicyReader&& other) {
     if (this != &other) {
-        m_pImpl = std::move(*other.m_pImpl);
+        std::swap(*m_pImpl, *other.m_pImpl);
     }
     return *this;
 }
@@ -214,7 +214,7 @@ PolicyWriter::PolicyWriter(const PolicyWriter& other)
 
 PolicyWriter& PolicyWriter::operator=(const PolicyWriter& other) {
     if (this != &other) {
-        m_pImpl = *other.m_pImpl;
+        *m_pImpl = *other.m_pImpl;
     }
     return *this;
 }
@@ -224,7 +224,7 @@ PolicyWriter::PolicyWriter(PolicyWriter&& other)
 
 PolicyWriter& PolicyWriter::operator=(PolicyWriter&& other) {
     if (this != &other) {
-        m_pImpl = std::move(*other.m_pImpl);
+        std::swap(*m_pImpl, *other.m_pImpl);
     }
     return *this;
 }

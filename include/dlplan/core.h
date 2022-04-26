@@ -10,7 +10,7 @@
 #include "pimpl.h"
 #include "types.h"
 #include "dynamic_bitset.h"
-#include "phmap.h"
+#include "phmap/phmap.h"
 
 
 namespace dlplan::core {

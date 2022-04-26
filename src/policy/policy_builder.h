@@ -24,7 +24,7 @@ class Policy;
 
 class PolicyBuilderImpl {
 private:
-    const std::shared_ptr<const PolicyRoot> m_root;
+    std::shared_ptr<const PolicyRoot> m_root;
 
     Caches m_caches;
 

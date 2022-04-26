@@ -246,9 +246,6 @@ public:
     std::vector<std::shared_ptr<const Rule>> evaluate_conditions_eager(int source_idx, const core::State& source_state);
     std::shared_ptr<const Rule> evaluate_effects_lazy(int source_idx, const core::State& source_state, int target_idx, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules);
 
-    // TODO: we want to distinguish repr and str.
-    // repr is canonical representations
-    // str is actual representation, might differ from repr for efficiency reasons in the evaluation.
     std::string compute_repr() const;
 
     std::string str() const;
@@ -303,7 +300,7 @@ public:
 
     /**
      * TODO: - sort features by their runtime complexity.
-     *       - sort rules by sum of runtime complexities of underlieing features.
+     *       - sort rules by sum of runtime complexities of underlying features.
      *       - compute invariants
      */
     Policy get_result();

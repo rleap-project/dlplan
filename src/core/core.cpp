@@ -479,11 +479,11 @@ int RoleDenotationBitset::get_num_objects() const {
 InstanceInfo::InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info) : m_pImpl(InstanceInfoImpl(vocabulary_info)) { }
 
 InstanceInfo::InstanceInfo(const InstanceInfo& other)
-    : m_pImpl(other.m_pImpl) {}
+    : m_pImpl(*other.m_pImpl) {}
 
 InstanceInfo& InstanceInfo::operator=(const InstanceInfo& other) {
     if (this != &other) {
-        m_pImpl = other.m_pImpl;
+        *m_pImpl = *other.m_pImpl;
     }
     return *this;
 }
@@ -587,7 +587,7 @@ VocabularyInfo::VocabularyInfo(const VocabularyInfo& other) : m_pImpl(*other.m_p
 
 VocabularyInfo& VocabularyInfo::operator=(const VocabularyInfo& other) {
     if (this != &other) {
-        m_pImpl = other.m_pImpl;
+        *m_pImpl = *other.m_pImpl;
     }
     return *this;
 }
@@ -811,7 +811,7 @@ SyntacticElementFactory::SyntacticElementFactory(const SyntacticElementFactory& 
 
 SyntacticElementFactory& SyntacticElementFactory::operator=(const SyntacticElementFactory& other) {
     if (this != &other) {
-        m_pImpl = other.m_pImpl;
+        *m_pImpl = *other.m_pImpl;
     }
     return *this;
 }
