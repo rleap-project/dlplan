@@ -29,8 +29,11 @@ class BaseReport(AbsoluteReport):
     ]
 
 NODE = platform.node()
+print(NODE)
 REMOTE = re.match(r"tetralith\d+.nsc.liu.se|n\d+", NODE)
+
 BENCHMARKS_DIR = "../benchmarks"
+print(REMOTE)
 if REMOTE:
     ENV = TetralithEnvironment(
         partition="tetralith",
@@ -40,19 +43,12 @@ if REMOTE:
         setup=TetralithEnvironment.DEFAULT_SETUP,
         extra_options="#SBATCH --account=snic2021-5-330")
     SUITE = ["barman", "blocksworld_3", "blocksworld_4", "childsnack", "delivery", "gripper", "miconic", "reward", "spanner", "visitall"]
-    SUITE = ["blocksworld_3:p-3-0.pddl", "childsnack:p-2-1.0-0.0-1-0.pddl", "delivery:instance_2_1_0.pddl", "delivery:instance_2_2_0.pddl", "gripper:p-1-0.pddl", "gripper:p-2-0.pddl", "miconic:p-2-2-0.pddl", "miconic:p-3-3-0.pddl", "reward", "visitall"]
-    SUITE = ["blocksworld_3:p-3-0.pddl", "childsnack:p-2-1.0-0.0-1-0.pddl", "delivery:instance_2_1_0.pddl", "delivery:instance_2_2_0.pddl", "gripper:p-1-0.pddl", "gripper:p-2-0.pddl", "miconic:p-2-2-0.pddl", "miconic:p-3-3-0.pddl", "reward", "visitall"]
     TIME_LIMIT = 3 * 3600
 else:
-    ENV = LocalEnvironment(processes=1)
-    SUITE = ["visitall:p-1-0.5-2-0.pddl"]
-    SUITE = ["blocksworld_3:p-3-0.pddl", "childsnack:p-2-1.0-0.0-1-0.pddl", "delivery:instance_2_1_0.pddl", "delivery:instance_2_2_0.pddl", "gripper:p-1-0.pddl", "gripper:p-2-0.pddl", "miconic:p-2-2-0.pddl", "miconic:p-3-3-0.pddl", "reward", "visitall"]
+    ENV = LocalEnvironment(processes=16)
+    SUITE = ["blocksworld_3:p-3-0.pddl", "childsnack:p-2-1.0-0.0-1-0.pddl", "delivery:instance_2_1_0.pddl", "gripper:p-1-0.pddl", "miconic:p-2-2-0.pddl", "reward:instance_2x2_0.pddl", "visitall:p-1-0.5-2-0.pddl"]
     TIME_LIMIT = 180
 ATTRIBUTES = [
-    #Attribute("generate_time_complexity_5", absolute=True, min_wins=True, scale="linear"),
-    #Attribute("generate_memory_complexity_5", absolute=True, min_wins=True, scale="linear"),
-    #Attribute("num_generated_features_complexity_5", absolute=True, min_wins=True, scale="linear"),
-    #Attribute("num_novel_features_complexity_5", absolute=True, min_wins=True, scale="linear"),
     Attribute("generate_time_complexity_10", absolute=True, min_wins=True, scale="linear"),
     Attribute("generate_memory_complexity_10", absolute=True, min_wins=True, scale="linear"),
     Attribute("num_generated_features_complexity_10", absolute=True, min_wins=True, scale="linear"),
