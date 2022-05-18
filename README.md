@@ -107,7 +107,7 @@ We created a DOI on zenodo under this [link](https://zenodo.org/record/5826140#.
 author = {Drexler, Dominik and
 Francès, Guillem and
 Seipp, Jendrik},
-title = {DLPlan-library},
+title = {{DLPlan}},
 year = 2022,
 publisher = {Zenodo},
 doi = {10.5281/zenodo.5826140},
