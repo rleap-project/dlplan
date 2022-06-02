@@ -10,7 +10,7 @@ We consider a set of classical planning instances Q =  {P_1, P_2, ..., P_n} wher
 
 ### 0.2. Description Logics
 
-There are two types of objects in description logics: concepts and roles. Concepts can be seen as derived unary predicates and Roles and derived binary predicates. There are several base grammar rules and inductive grammar rules. Their interpretation on the states yield sets of ground atoms coming over the derived unary (resp. binary) predicates. Counting the number of ground atoms yield the valuation for a numerical feature n : S -> {0,1,...} or checking whether there exists a least one ground atoms yields a Boolean feature b : S -> {0,1}
+There are two types of objects in description logics: concepts and roles. Concepts can be seen as derived unary predicates and Roles and derived binary predicates. There are several base grammar rules and inductive grammar rules. Their interpretation on the states yield sets of ground atoms over the derived unary (resp. binary) predicates. Counting the number of ground atoms yield the valuation for a numerical feature n : S -> {0,1,...} or checking whether there exists a least one ground atoms yields a Boolean feature b : S -> {0,1}
 
 ## 1. Features of the DLPlan-library
 
