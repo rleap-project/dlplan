@@ -2,33 +2,33 @@
 
 Welcome to the DLPlan-library.
 
+## 0. Background 
+
+### 0.1. Classical Planning
+
+We consider a set of classical planning instances Q =  {P_1, P_2, ..., P_n} where each P in Q consists of a state space S and each state s in S consists of ground atoms over a common planning domain D. The ground atoms have form p(o_1,...,o_k) where p is a predicate occuring in D and o_1,...,o_k are objects that occur in the instance specific part. For example, Q can be a set of planning instances from the Delivery domain where each planning instance consists of a set of packages, and a set of locations. Note that all those planning instance use the same state language allowing us to define domain general features by starting from primitives that correspond to the predicates and composing them to more complex features using description logics.
+
+### 0.2. Description Logics
+
+There are two types of objects in description logics: concepts and roles. Concepts can be seen as derived unary predicates and Roles and derived binary predicates. There are several base grammar rules and inductive grammar rules. Their interpretation on the states yield sets of ground atoms coming over the derived unary (resp. binary) predicates. Counting the number of ground atoms yield the valuation for a numerical feature n : S -> {0,1,...} or checking whether there exists a least one ground atoms yields a Boolean feature b : S -> {0,1}
+
 ## 1. Features of the DLPlan-library
 
-In this section, we start with defining some background and then describe the library components. Given a set of classical planning instances Q =  {P1, P2, ..., Pn} where each Pi with i=1,...,n consists of a state space S_i and each state s in S_i consists of ground atoms over a common planning domain D. For example, Q can be a set of planning instances from the Delivery domain where there is a set of trucks, packages, and locations. Next, we describe the components in more detail and refer to the `include` subdirectory for the C++ interface, the `api/python` subdirectory for the Python interface, and the `examples` subdirectory on how to use them.
+The library consists of four components. Each having its own public header file, examples, tests, and python bindings.
 
 ### 1.1. Core
 
-A numerical feature is n : S -> {0,1,...} and respectively, a Boolean feature is b : S -> {0,1}. Such features allow us to define abstract knowledge on top of each state. Furthermore, we are interested in features are meaningful for states coming from planning instances over the domain D. For example, let n denote the numerical feature that counts the number of undelivered packages in any given Delivery instance.
-
-We are specifically interested in features that are understandable. Hence, we make use of a description logics grammar that is a fraction of two variable first-order logic and has shown to be useful in several works. Description logic consists of two types of objects that are concepts and roles. Concepts correspond to derived unary predicates and Roles correspond to derived binary predicates. By iteratively applying the grammar rules one can derive numerical or Boolean features. We included `guide.pdf` in the `docs` folder with further information regarding the available elements with a description of their syntax and semantics.
-
-The core component provides functionality for constructing and evaluating features for the class of problems Q.
+The core component provides functionality for constructing and evaluating features for the class of problems Q. We included `guide.pdf` in the `docs` folder with further information regarding the available elements with a description of their syntax and semantics.
 
 ### 1.2. Generator
-
-Consider the case where we want to automatically learn knowledge from the class of problems Q that makes use of numerical and Boolean features. The question then becomes: what are informative features for the learning task?
 
 The generator component provides functionality for automatically generating a set of features F with complexity at most k such that for each f,f' in F there exists a state s in Si such that f yields a different valuation on s than f'.
 
 ### 1.3. Evaluator
 
-Consider the case where we want to build additional structures on top of the numerical and Boolean features and evaluate them during a state space search. In order to evaluate features only once for a given state, we want to cache the feature valuations.
-
 The evaluation component provides functionality for caching feature valuations per state and for a fixed set of features.
 
 ### 1.4. Policy
-
-Consider the case where we want to define rules of the form C -> E where C is a set of feature conditions and E is set of feature effects. For a given pair of states (s, s') we say that (s, s') is compatible with C -> E if s satisfies C and (s, s') satisfies E. Feature conditions are: n=0, n>0 for numerical feature n with expected semantics, and b, not b for Boolean feature b with expected semantics. Feature effects are numerical increments, i.e., f(s) < f(s'), decrements, and whether boolean feature becomes true or false.
 
 The policy component allows to construct a policy and evaluate state pairs (s, s') on it.
 
