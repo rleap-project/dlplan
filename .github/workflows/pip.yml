@@ -9,7 +9,7 @@ jobs:
       matrix:
         platform:
 #         Would be good to work on windows support at some point, but we're not there yet
-#          - windows-latest
+          - windows-latest
           - macos-latest
           - ubuntu-latest
         python-version: ["3.6", "3.8", "3.9"]
