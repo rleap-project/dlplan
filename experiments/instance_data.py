@@ -109,6 +109,6 @@ def parse_transition_line(line: str, forward_transitions: Dict[int, MutableSet[i
     """
     result = re.findall(r"T (.*) (.*)", line)
     assert len(result) == 1
-    source_idx = result[0][0]
-    target_idx = result[0][1]
+    source_idx = int(result[0][0])
+    target_idx = int(result[0][1])
     forward_transitions[source_idx].add(target_idx)
