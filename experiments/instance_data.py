@@ -4,20 +4,12 @@ import subprocess
 import re
 
 from typing import Dict, MutableSet
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 from pathlib import Path
 from utils import execute, read_file
 
 
 DIR = Path(__file__).resolve().parent
-
-class State:
-    def __init__(self, index, dlplan_state):
-        self.index = index
-        self.dlplan_state = dlplan_state
-
-    def __str__(self):
-        return str(self.dlplan_state)
 
 
 class InstanceData:
@@ -34,7 +26,7 @@ class InstanceData:
         self.instance_info = dlplan.InstanceInfo(domain_data.vocabulary_info)
         parse_static_atoms(self.instance_info, "static-atoms.txt")
         parse_goal_atoms(self.instance_info, "goal-atoms.txt")
-        self.states, _ = parse_state_space(self.instance_info, "state_space.txt")
+        self.dlplan_states, self.goals, self.transitions = parse_state_space(self.instance_info, "state_space.txt")
 
 
 def normalize_atom_name(name: str):
@@ -58,19 +50,20 @@ def parse_goal_atoms(instance_info: dlplan.InstanceInfo, filename: str):
 
 def parse_state_space(instance_info: dlplan.InstanceInfo, filename: str):
     atom_idx_to_dlplan_atom = dict()
-    states = OrderedDict()
+    dlplan_states = OrderedDict()
     goals = set()
+    forward_transitions = defaultdict(set)
     for line in read_file(filename):
         if line.startswith("F "):
             parse_fact_line(instance_info, line, atom_idx_to_dlplan_atom)
         elif line.startswith("G "):
-            parse_state_line(instance_info, line, atom_idx_to_dlplan_atom, states, goals)
+            parse_state_line(instance_info, line, atom_idx_to_dlplan_atom, dlplan_states, goals)
         elif line.startswith("N "):
-            parse_state_line(instance_info, line, atom_idx_to_dlplan_atom, states, goals)
+            parse_state_line(instance_info, line, atom_idx_to_dlplan_atom, dlplan_states, goals)
         elif line.startswith("T "):
-            pass
-    states = list(states.values())
-    return states, goals
+            parse_transition_line(line, forward_transitions)
+    dlplan_states = list(dlplan_states.values())
+    return dlplan_states, goals, forward_transitions
 
 
 def parse_fact_line(instance_info: dlplan.InstanceInfo, line: str, atom_idx_to_dlplan_atom: Dict[int, dlplan.Atom]):
@@ -103,6 +96,19 @@ def parse_state_line(instance_info: dlplan.InstanceInfo, line: str, atom_idx_to_
     atom_idxs = indices[1:]
     dlplan_atoms = [atom_idx_to_dlplan_atom[atom_idx] for atom_idx in atom_idxs if atom_idx in atom_idx_to_dlplan_atom]
     dlplan_state = dlplan.State(instance_info, dlplan_atoms)
-    states[state_idx] = State(state_idx, dlplan_state)
+    states[state_idx] = dlplan_state
     if line.startswith("G "):
         goals.add(state_idx)
+
+
+def parse_transition_line(line: str, forward_transitions: Dict[int, MutableSet[int]]):
+    """
+    E.g.
+    T 0 5
+    T 1 4
+    """
+    result = re.findall(r"T (.*) (.*)", line)
+    assert len(result) == 1
+    source_idx = result[0][0]
+    target_idx = result[0][1]
+    forward_transitions[source_idx].add(target_idx)

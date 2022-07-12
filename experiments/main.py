@@ -24,7 +24,6 @@ if __name__ == "__main__":
 
     domain_data = DomainData(args.domain)
     instance_data = InstanceData(args.instance, domain_data, args.time_limit)
-    dlplan_states = [state.dlplan_state for state in instance_data.states]
 
     # print vocabulary and instance information for easy re-parsing from the cpp code.
     print("Predicates:")
@@ -38,15 +37,15 @@ if __name__ == "__main__":
     print("\nStatic atom indices:")
     print("\n".join([str(idx) for idx in instance_data.instance_info.get_static_atom_idxs()]))
     print("\nStates:")
-    print("\n".join([str(state) for state in dlplan_states]))
+    print("\n".join([str(state) for state in instance_data.dlplan_states]))
     print()
 
     print("Instance information:")
-    print(f"Number of states: {len(dlplan_states)}")
+    print(f"Number of states: {len(instance_data.dlplan_states)}")
 
     sys.stdout.flush()
 
-    feature_reprs = domain_data.feature_generator.generate(domain_data.syntactic_element_factory, args.c, args.t, args.f, args.n, dlplan_states)
+    feature_reprs = domain_data.feature_generator.generate(domain_data.syntactic_element_factory, args.c, args.t, args.f, args.n, instance_data.dlplan_states)
     start = time.time()
     for feature_repr in feature_reprs:
         if feature_repr.startswith("n_"):
@@ -57,7 +56,7 @@ if __name__ == "__main__":
             f = domain_data.syntactic_element_factory.parse_concept(feature_repr)
         elif feature_repr.startswith("r_"):
             f = domain_data.syntactic_element_factory.parse_role(feature_repr)
-        for dlplan_state in dlplan_states:
+        for dlplan_state in instance_data.dlplan_states:
             f.evaluate(dlplan_state)
     end = time.time()
     print(f"Time to construct and evaluate features: {end - start}s")
