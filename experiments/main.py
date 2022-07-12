@@ -4,7 +4,6 @@
 """
 
 import argparse
-import logging
 import time
 import sys
 
@@ -16,7 +15,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generating features for a single PDDL instance.')
     parser.add_argument("--domain", type=str, required=True)
     parser.add_argument("--instance", type=str, required=True)
-    parser.add_argument("--max_num_states", type=int, required=False, default=float("inf"))
+    parser.add_argument("--time_limit", type=int, required=False, default=float("inf"))
     parser.add_argument("--c", type=int, required=False, default=5)
     parser.add_argument("--t", type=int, required=False, default=1800)
     parser.add_argument("--f", type=int, required=False, default=1000000)
@@ -24,7 +23,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     domain_data = DomainData(args.domain)
-    instance_data = InstanceData(args.instance, domain_data, args.max_num_states)
+    instance_data = InstanceData(args.instance, domain_data, args.time_limit)
     dlplan_states = [state.dlplan_state for state in instance_data.states]
 
     # print vocabulary and instance information for easy re-parsing from the cpp code.

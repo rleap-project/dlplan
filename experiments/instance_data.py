@@ -22,12 +22,12 @@ class State:
 
 class InstanceData:
     """ Store data related to a single instance. """
-    def __init__(self, instance_file, domain_data, max_num_states):
+    def __init__(self, instance_file, domain_data, time_limit):
         self.instance_file = instance_file
         self.domain_data = domain_data
 
         try:
-            execute([DIR / "scorpion/fast-downward.py", domain_data.domain_file, instance_file, "--translate-options", "--dump-static-atoms", "--dump-predicates", "--dump-goal-atoms", "--search-options", "--search", "dump_reachable_search_space()"], stdout="state_space.txt", timeout=10)
+            execute([DIR / "scorpion/fast-downward.py", domain_data.domain_file, instance_file, "--translate-options", "--dump-static-atoms", "--dump-predicates", "--dump-goal-atoms", "--search-options", "--search", "dump_reachable_search_space()"], stdout="state_space.txt", timeout=time_limit)
         except subprocess.TimeoutExpired:
             pass
 
