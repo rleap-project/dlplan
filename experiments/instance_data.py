@@ -1,16 +1,19 @@
-from os import stat
+from typing import OrderedDict
 import dlplan
-import tarski
-from tarski.io import PDDLReader
-from tarski.grounding import LPGroundingStrategy
-from tarski.grounding.lp_grounding import ground_problem_schemas_into_plain_operators
-from tarski.search import GroundForwardSearchModel
+import subprocess
+import re
 
+from typing import Dict, MutableSet
+from collections import OrderedDict
+from pathlib import Path
+from utils import execute, read_file
+
+
+DIR = Path(__file__).resolve().parent
 
 class State:
-    def __init__(self, index, tarski_state, dlplan_state):
+    def __init__(self, index, dlplan_state):
         self.index = index
-        self.tarski_state = tarski_state
         self.dlplan_state = dlplan_state
 
     def __str__(self):
@@ -23,82 +26,83 @@ class InstanceData:
         self.instance_file = instance_file
         self.domain_data = domain_data
 
-        self.problem = parse_instance_file(domain_data.domain_file, instance_file)
-        grounder = LPGroundingStrategy(self.problem)
-        self.tarski_dynamic_atoms, self.tarski_static_atoms_textual, self.tarski_sorts_textual = grounder.ground_atoms()
-        self.tarski_goal_atoms = parse_conjunctive_formula(self.problem.goal)
-        self.instance_info, self.tarski_atom_to_dlplan_atom = construct_instance_info(domain_data, self)
-        self.search_model = GroundForwardSearchModel(self.problem, ground_problem_schemas_into_plain_operators(self.problem))
-        self.states = [State(index, model.as_atoms(), self.map_tarski_atoms_to_dlplan_state(model.as_atoms())) for index, model in enumerate(state_space_exploration(self.problem, self.search_model, max_num_states))]
+        try:
+            execute([DIR / "scorpion/fast-downward.py", domain_data.domain_file, instance_file, "--translate-options", "--dump-static-atoms", "--dump-predicates", "--dump-goal-atoms", "--search-options", "--search", "dump_reachable_search_space()"], stdout="state_space.txt", timeout=10)
+        except subprocess.TimeoutExpired:
+            pass
 
-    def map_tarski_atoms_to_dlplan_state(self, tarski_atoms):
-        return dlplan.State(self.instance_info, [self.tarski_atom_to_dlplan_atom[tarski_atom]
-                                                 for tarski_atom in tarski_atoms if tarski_atom in self.tarski_dynamic_atoms])
+        self.instance_info = dlplan.InstanceInfo(domain_data.vocabulary_info)
+        parse_static_atoms(self.instance_info, "static-atoms.txt")
+        parse_goal_atoms(self.instance_info, "goal-atoms.txt")
+        self.states, _ = parse_state_space(self.instance_info, "state_space.txt")
 
 
-def parse_instance_file(domain_file, instance_file):
-    """ Parses the PDDL instance file using Tarski. """
-    reader = PDDLReader()
-    reader.parse_domain(domain_file)
-    reader.parse_instance(instance_file)
-    return reader.problem
+def normalize_atom_name(name: str):
+    tmp = name.replace('()', '').replace(')', '').replace('(', ',')
+    if "=" in tmp:  # We have a functional atom
+        tmp = tmp.replace("=", ',')
+    return tmp.split(',')
 
 
-def parse_conjunctive_formula(goal):
-    """ Compute all tarski Atoms from a tarski ComboundFormula. """
-    if isinstance(goal, tarski.syntax.formulas.CompoundFormula):
-        if goal.connective == tarski.syntax.formulas.Connective.And:
-            atom_names = []
-            for subformula in goal.subformulas:
-                atom_names.extend(parse_conjunctive_formula(subformula))
-            return atom_names
-        else:
-            raise Exception(f"Unsupported connective {goal.connective} in goal description.")
-    elif isinstance(goal, tarski.syntax.formulas.Atom):
-        return [goal]
+def parse_static_atoms(instance_info: dlplan.InstanceInfo, filename: str):
+    for line in read_file(filename):
+        normalized_atom = normalize_atom_name(line)
+        instance_info.add_static_atom(normalized_atom[0], normalized_atom[1:])
 
 
-def state_space_exploration(problem, search_model, max_num_states):
-    """ Run DFS to explore state space. """
-    frontier = []
-    frontier.append(problem.init)
-    generated = set()
-    generated.add(problem.init)
-    num_states = 0
-    while frontier:
-        cur = frontier.pop()
-        successors = search_model.successors(cur)
-        for action, succ in successors:
-            if succ in generated: continue
-            frontier.append(succ)
-            generated.add(succ)
-            num_states += 1
-            if num_states == max_num_states:
-                return generated
-    return generated
+def parse_goal_atoms(instance_info: dlplan.InstanceInfo, filename: str):
+    for line in read_file(filename):
+        normalized_atom = normalize_atom_name(line)
+        instance_info.add_static_atom(normalized_atom[0] + "_g", normalized_atom[1:])
 
 
-def construct_instance_info(domain_data, instance_data):
-    """ Constructs an InstanceInfo from a problem description. """
-    instance_info = dlplan.InstanceInfo(domain_data.vocabulary_info)
-    # Add dynamic atoms
-    tarski_atom_to_dlplan_atom = dict()
-    for tarski_atom in instance_data.tarski_dynamic_atoms:
-        dlplan_atom = instance_info.add_atom(tarski_atom.predicate.name, [obj.name for obj in tarski_atom.subterms])
-        assert tarski_atom not in tarski_atom_to_dlplan_atom
-        tarski_atom_to_dlplan_atom[tarski_atom] = dlplan_atom
-    # Add other static atoms
-    for static_atom in instance_data.tarski_static_atoms_textual:
-        instance_info.add_static_atom(static_atom[0], static_atom[1])
-    # Add sorts
-    for static_atom in instance_data.tarski_sorts_textual:
-        instance_info.add_static_atom(static_atom[0], static_atom[1])
-    # Add static goal atoms
-    for tarski_atom in instance_data.tarski_goal_atoms:
-        predicate_name = tarski_atom.predicate.name
-        object_names = []
-        for obj in tarski_atom.subterms:
-            object_names.append(obj.name)
-        # add atom as goal version of the predicate
-        instance_info.add_static_atom(predicate_name + "_g", object_names)
-    return instance_info, tarski_atom_to_dlplan_atom
+def parse_state_space(instance_info: dlplan.InstanceInfo, filename: str):
+    atom_idx_to_dlplan_atom = dict()
+    states = OrderedDict()
+    goals = set()
+    for line in read_file(filename):
+        if line.startswith("F "):
+            parse_fact_line(instance_info, line, atom_idx_to_dlplan_atom)
+        elif line.startswith("G "):
+            parse_state_line(instance_info, line, atom_idx_to_dlplan_atom, states, goals)
+        elif line.startswith("N "):
+            parse_state_line(instance_info, line, atom_idx_to_dlplan_atom, states, goals)
+        elif line.startswith("T "):
+            pass
+    states = list(states.values())
+    return states, goals
+
+
+def parse_fact_line(instance_info: dlplan.InstanceInfo, line: str, atom_idx_to_dlplan_atom: Dict[int, dlplan.Atom]):
+    """
+    E.g.
+    at-robby(roomb)
+    at(ball1, rooma)
+    """
+    result = re.findall(r"F (\d+) (.*)", line)
+    assert len(result) == 1 and len(result[0]) == 2
+    atom_idx = int(result[0][0])
+    atom_name = result[0][1]
+    normalized_atom = normalize_atom_name(atom_name)
+    if normalized_atom[0].startswith("dummy"):
+        return
+    dlplan_atom = instance_info.add_atom(normalized_atom[0], normalized_atom[1:])
+    atom_idx_to_dlplan_atom[atom_idx] = dlplan_atom
+
+
+def parse_state_line(instance_info: dlplan.InstanceInfo, line: str, atom_idx_to_dlplan_atom: Dict[int, dlplan.Atom], states: Dict[int, dlplan.State], goals: MutableSet[int]):
+    """
+    E.g.
+    N 127 0 2 8 10 12 17 18
+    G 129 0 2 8 10 11 17 19
+    """
+    result = re.findall(r"[NG] (.*)", line)
+    assert len(result) == 1
+    indices = [int(x) for x in result[0].split(" ")]
+    state_idx = indices[0]
+    atom_idxs = indices[1:]
+    dlplan_atoms = [atom_idx_to_dlplan_atom[atom_idx] for atom_idx in atom_idxs if atom_idx in atom_idx_to_dlplan_atom]
+    dlplan_state = dlplan.State(instance_info, dlplan_atoms)
+    states[state_idx] = State(state_idx, dlplan_state)
+    if line.startswith("G "):
+        goals.add(state_idx)

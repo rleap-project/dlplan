@@ -1,3 +1,6 @@
 [submodule "submodules/tarski"]
 	path = submodules/tarski
 	url = https://github.com/drexlerd/tarski.git
+[submodule "experiments/scorpion"]
+	path = experiments/scorpion
+	url = https://github.com/drexlerd/scorpion.git
