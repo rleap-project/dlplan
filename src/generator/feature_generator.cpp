@@ -144,6 +144,8 @@ FeatureRepresentations FeatureGeneratorImpl::generate(std::shared_ptr<core::Synt
     for (auto& r : m_primitive_rules) r->cleanup();
     for (auto& r : m_inductive_rules) r->cleanup();
     // Return just the representation that can be parsed again.
+    // TODO: we might want to add postprocessing where features are additionally pruned
+    // if they are not able to distinguish any two states.
     return data.m_reprs;
 }
 
