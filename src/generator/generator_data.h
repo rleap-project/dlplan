@@ -5,17 +5,21 @@
 #include <numeric>
 #include <vector>
 
-#include "hash_table.h"
 #include "../utils/countdown_timer.h"
+
+#include "hash_utils.h"
+#include "../utils/hash_utils.h"
+
+#include "../../include/dlplan/core.h"
 
 
 namespace dlplan::generator {
 
 struct GeneratorData {
     std::shared_ptr<core::SyntacticElementFactory> m_factory;
-    HashTable m_boolean_and_numerical_hash_table;
-    HashTable m_concept_hash_table;
-    HashTable m_role_hash_table;
+    std::unordered_set<std::array<uint32_t, 4>> m_boolean_and_numerical_hash_table;
+    std::unordered_set<std::array<uint32_t, 4>> m_concept_hash_table;
+    std::unordered_set<std::array<uint32_t, 4>> m_role_hash_table;
     std::vector<std::vector<core::Boolean>> m_booleans_by_iteration;
     std::vector<std::vector<core::Numerical>> m_numericals_by_iteration;
     std::vector<std::vector<core::Concept>> m_concepts_by_iteration;
@@ -27,6 +31,10 @@ struct GeneratorData {
     int m_time_limit;
     int m_feature_limit;
     utils::CountdownTimer m_timer;
+
+    // statistics
+    int m_num_generated_features;
+    int m_num_novel_features;
 
     GeneratorData(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit)
       : m_factory(factory),
@@ -40,8 +48,8 @@ struct GeneratorData {
         m_timer(time_limit) { }
 
     void print_statistics() const {
-        std::cout << "Total generated features: " << m_boolean_and_numerical_hash_table.get_cache_hits() + m_boolean_and_numerical_hash_table.get_cache_misses() + m_concept_hash_table.get_cache_hits() + m_concept_hash_table.get_cache_misses() + m_role_hash_table.get_cache_hits() + m_role_hash_table.get_cache_misses() << std::endl
-              << "Total novel features: " << m_boolean_and_numerical_hash_table.get_cache_misses() + m_concept_hash_table.get_cache_misses() + m_role_hash_table.get_cache_misses() << std::endl
+        std::cout << "Total generated features: " << m_num_generated_features << std::endl
+              << "Total novel features: " << m_num_novel_features << std::endl
               << "Total concept elements: " << std::accumulate(m_concepts_by_iteration.begin(), m_concepts_by_iteration.end(), 0, [&](int current_sum, const auto& e){ return current_sum + e.size(); }) << std::endl
               << "Total role elements: " << std::accumulate(m_roles_by_iteration.begin(), m_roles_by_iteration.end(), 0, [&](int current_sum, const auto& e){ return current_sum + e.size(); }) << std::endl
               << "Total numerical elements: " << std::accumulate(m_numericals_by_iteration.begin(), m_numericals_by_iteration.end(), 0, [&](int current_sum, const auto& e){ return current_sum + e.size(); }) << std::endl

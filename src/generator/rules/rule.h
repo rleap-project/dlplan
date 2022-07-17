@@ -23,11 +23,6 @@ namespace generator {
 class GeneratorData;
 namespace rules {
 
-enum class ReturnCode {
-    SUCCESS,
-    RESOURCE_LIMIT_REACHED,
-};
-
 class Rule {
 protected:
     /**

@@ -3,7 +3,6 @@ add_library(dlplangenerator SHARED)
 target_sources(dlplangenerator
     PRIVATE
         feature_generator.cpp
-        hash_table.cpp
         generator.cpp
         rules/boolean.cpp
         rules/numerical.cpp

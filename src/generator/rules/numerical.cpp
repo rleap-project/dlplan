@@ -17,10 +17,12 @@ void Numerical::parse_results_of_tasks_impl(int iteration, GeneratorData& data) 
         if (data.reached_resource_limit()) return;
         auto result = m_tasks.front().get();
         m_tasks.pop_front();
-        if (data.m_boolean_and_numerical_hash_table.insert(std::move(result.hash))) {
+        ++data.m_num_generated_features;
+        if (data.m_boolean_and_numerical_hash_table.insert(std::move(result.hash)).second) {
+            ++data.m_num_novel_features;
+            ++m_count;
             data.m_reprs.push_back(std::move(result.repr));
             data.m_numericals_by_iteration[iteration+1].push_back(std::move(result.numerical));
-            ++m_count;
         }
     }
 }

@@ -115,7 +115,7 @@ private:
     /**
      * Print some brief overview.
      */
-    void print_brief_statistics() const;
+    void print_statistics() const;
 
 public:
     FeatureGeneratorImpl();

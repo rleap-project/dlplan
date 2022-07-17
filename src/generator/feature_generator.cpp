@@ -43,7 +43,6 @@
 #include "rules/booleans/empty.h"
 #include "rules/booleans/nullary.h"
 
-#include "hash_table.h"
 #include "generator_data.h"
 
 #include "../../include/dlplan/generator.h"
@@ -160,7 +159,7 @@ void FeatureGeneratorImpl::generate_base(const States& states, GeneratorData& da
         rule->parse_results_of_tasks(0, data);
     }
     utils::g_log << "Complexity " << 1 << ":" << std::endl;
-    print_brief_statistics();
+    print_statistics();
     utils::g_log << "Finished generating base features." << std::endl;
 }
 
@@ -178,12 +177,12 @@ void FeatureGeneratorImpl::generate_inductively(int complexity, const States& st
         }
         utils::g_log << "Complexity " << iteration+1 << ":" << std::endl;
         data.print_statistics();
-        print_brief_statistics();
+        print_statistics();
     }
     utils::g_log << "Finished generating composite features." << std::endl;
 }
 
-void FeatureGeneratorImpl::print_brief_statistics() const {
+void FeatureGeneratorImpl::print_statistics() const {
     for (auto& r : m_primitive_rules) r->print_statistics();
     for (auto& r : m_inductive_rules) r->print_statistics();
 }
