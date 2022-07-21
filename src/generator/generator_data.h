@@ -45,7 +45,9 @@ struct GeneratorData {
         m_complexity(complexity),
         m_time_limit(time_limit),
         m_feature_limit(feature_limit),
-        m_timer(time_limit) { }
+        m_timer(time_limit),
+        m_num_generated_features(0),
+        m_num_novel_features(0) { }
 
     void print_statistics() const {
         std::cout << "Total generated features: " << m_num_generated_features << std::endl
