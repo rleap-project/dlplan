@@ -28,10 +28,8 @@ InstanceInfoImpl::InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabul
 }
 
 const Atom& InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
-    if (!m_vocabulary_info->exists_predicate_name(predicate_name)) {
-        throw std::runtime_error("InstanceInfoImpl::add_atom - name of predicate missing in vocabulary ("s + predicate_name + ")");
-    } else if (m_vocabulary_info->get_predicate(m_vocabulary_info->get_predicate_idx(predicate_name)).get_arity() != static_cast<int>(object_names.size())) {
-        throw std::runtime_error("InstanceInfoImpl::add_atom - arity of predicate in vocabulary does not match with atom ("s + std::to_string(m_vocabulary_info->get_predicate(m_vocabulary_info->get_predicate_idx(predicate_name)).get_arity()) + " != " + std::to_string(object_names.size()));
+    if (m_vocabulary_info->get_predicate(m_vocabulary_info->get_predicate_idx(predicate_name)).get_arity() != static_cast<int>(object_names.size())) {
+        throw std::runtime_error("InstanceInfoImpl::add_atom - predicate arity does not match the number of objects ("s + std::to_string(m_vocabulary_info->get_predicate(m_vocabulary_info->get_predicate_idx(predicate_name)).get_arity()) + " != " + std::to_string(object_names.size()));
     }
     // predicate related
     int predicate_idx = m_vocabulary_info->get_predicate_idx(predicate_name);
@@ -52,6 +50,9 @@ const Atom& InstanceInfoImpl::add_atom(const std::string &predicate_name, const 
 }
 
 const Atom& InstanceInfoImpl::add_atom(const Predicate& predicate, const std::vector<Object>& objects, bool is_static) {
+    if (predicate.get_arity() != static_cast<int>(objects.size())) {
+        throw std::runtime_error("InstanceInfoImpl::add_atom - predicate arity does not match the number of objects ("s + std::to_string(predicate.get_arity()) + " != " + std::to_string(objects.size()));
+    }
     Atom atom = Atom(m_root, compute_atom_name(predicate, objects), m_atoms.size(), predicate, objects, is_static);
     auto result = m_atom_name_to_atom_idx.emplace(atom.get_name(), m_atoms.size());
     bool newly_inserted = result.second;

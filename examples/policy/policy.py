@@ -29,10 +29,15 @@ def main():
     s1 = dlplan.State(instance_info, [a0])
     s2 = dlplan.State(instance_info, [a0, a1])
 
-    assert policy.evaluate_lazy(2, s2, 1, s1)
-    assert not policy.evaluate_lazy(2, s2, 0, s0)
-    assert not policy.evaluate_lazy(1, s1, 2, s2)
-    assert not policy.evaluate_lazy(0, s0, 2, s2)
+    evaluation_cache = dlplan.EvaluationCache(len(policy.get_boolean_features()), len(policy.get_numerical_features()))
+    s0_context = dlplan.EvaluationContext(0, s0, evaluation_cache)
+    s1_context = dlplan.EvaluationContext(1, s1, evaluation_cache)
+    s2_context = dlplan.EvaluationContext(2, s2, evaluation_cache)
+
+    assert policy.evaluate_lazy(s2_context, s1_context)
+    assert not policy.evaluate_lazy(s2_context, s0_context)
+    assert not policy.evaluate_lazy(s1_context, s2_context)
+    assert not policy.evaluate_lazy(s0_context, s2_context)
 
     print("Write policy:")
     print(policy.compute_repr())

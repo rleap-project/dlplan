@@ -46,6 +46,9 @@ int EvaluationCache::retrieve_or_evaluate(int numerical_idx, const core::Numeric
 }
 
 EvaluationContext::EvaluationContext(int state_idx, const core::State& state, EvaluationCache& cache)
-    : state_idx(state_idx), state(state), cache(cache) {}
-
+    : state_idx(state_idx), state(state), cache(cache) {
+        if (state_idx < 0 || state_idx < 0) {
+            throw std::runtime_error("EvaluationContext::EvaluationContext: state_idx index cannot be negative.");
+        }
+    }
 }

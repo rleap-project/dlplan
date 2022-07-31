@@ -13,8 +13,7 @@ class EvaluationContext;
  * Provides a cache entry for the result of evaluating an element on a given state.
  *
  * This cache is useful if one wants to evaluate Boolean and Numericals
- * with the same state multiple times but PerElementEvaluationCache
- * fails to cache the result because different states are evaluated in between.
+ * with the same state multiple times.
  *
  * An example usage is a Policy where a target state
  * becomes the new source state if a transition is classified as good.
@@ -23,8 +22,6 @@ class EvaluationCache {
 private:
     utils::PerIndexBitset m_boolean_denots_cache;
     utils::PerIndexArray<int> m_numerical_denots_cache;
-    // Concepts and roles are not interesting for caching because
-    // we usually do not refer to them during search.
 
 public:
     EvaluationCache(int num_booleans, int num_numericals);

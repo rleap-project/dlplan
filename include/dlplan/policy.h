@@ -219,8 +219,6 @@ private:
     std::vector<std::shared_ptr<const NumericalFeature>> m_numerical_features;
     std::vector<std::shared_ptr<const Rule>> m_rules;
 
-    evaluator::EvaluationCache m_cache;
-
 private:
     Policy(std::shared_ptr<const PolicyRoot> root,
            std::vector<std::shared_ptr<const BooleanFeature>>&& boolean_features,
@@ -238,19 +236,17 @@ public:
     /**
      * Approach 1: naive approach to evaluate (s,s')
      */
-    std::shared_ptr<const Rule> evaluate_lazy(int source_idx, const core::State& source_state, int target_idx, const core::State& target_state);
+    std::shared_ptr<const Rule> evaluate_lazy(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context);
 
     /**
      * Approach 2: optimized approach for evaluating pairs with similar source state s, i.e., (s,s1), (s,s2), ..., (s,sn)
      */
-    std::vector<std::shared_ptr<const Rule>> evaluate_conditions_eager(int source_idx, const core::State& source_state);
-    std::shared_ptr<const Rule> evaluate_effects_lazy(int source_idx, const core::State& source_state, int target_idx, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules);
+    std::vector<std::shared_ptr<const Rule>> evaluate_conditions_eager(evaluator::EvaluationContext& source_context);
+    std::shared_ptr<const Rule> evaluate_effects_lazy(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context, const std::vector<std::shared_ptr<const Rule>>& rules);
 
     std::string compute_repr() const;
 
     std::string str() const;
-
-    void clear_cache();
 
     std::shared_ptr<const PolicyRoot> get_root() const;
     std::vector<std::shared_ptr<const Rule>> get_rules() const;
