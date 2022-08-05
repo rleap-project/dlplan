@@ -18,6 +18,7 @@ void init_policy(py::module_ &m) {
     ;
 
     py::class_<policy::BooleanFeature, std::shared_ptr<policy::BooleanFeature>>(m, "BooleanFeature")
+        .def("evaluate", &policy::BooleanFeature::evaluate)
         .def("get_index", &policy::BooleanFeature::get_index)
         .def("get_root", &policy::BooleanFeature::get_root)
         .def("get_boolean", &policy::BooleanFeature::get_boolean)
@@ -26,6 +27,7 @@ void init_policy(py::module_ &m) {
     ;
 
     py::class_<policy::NumericalFeature, std::shared_ptr<policy::NumericalFeature>>(m, "NumericalFeature")
+        .def("evaluate", &policy::NumericalFeature::evaluate)
         .def("get_index", &policy::NumericalFeature::get_index)
         .def("get_root", &policy::NumericalFeature::get_root)
         .def("get_numerical", &policy::NumericalFeature::get_numerical)
