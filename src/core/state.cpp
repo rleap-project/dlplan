@@ -16,7 +16,7 @@ State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vecto
         throw std::runtime_error("State::State - atom does not exist in InstanceInfo.");
     }
     if (!std::all_of(atoms.begin(), atoms.end(), [&](const auto& atom){ return !atom.get_is_static(); })) {
-        throw std::runtime_error("State::State - not allowed to pass static atoms because they are added automatically.");
+        throw std::runtime_error("State::State - static atom is not allowed in State.");
     }
     m_atom_idxs.reserve(atoms.size());
     for (const auto& atom : atoms) {
@@ -34,7 +34,7 @@ State::State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec&
         throw std::runtime_error("State::State - atom index out of range.");
     }
     if (!std::all_of(atom_idxs.begin(), atom_idxs.end(), [&](int atom_idx){ return !atoms[atom_idx].get_is_static(); })) {
-        throw std::runtime_error("State::State - not allowed to pass static atoms because they are added automatically.");
+        throw std::runtime_error("State::State - static atom is not allowed in State.");
     }
     m_atom_idxs.reserve(atoms.size());
     for (int atom_idx : atom_idxs) {

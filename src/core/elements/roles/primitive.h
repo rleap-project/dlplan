@@ -44,8 +44,9 @@ public:
         int num_objects = info.get_num_objects();
         RoleDenotation result(num_objects);
         const auto& atoms = info.get_atoms();
+        const auto& static_atoms = info.get_static_atoms();
         collect_roles(state.get_per_predicate_idx_atom_idxs(), atoms, m_predicate, m_pos_1, m_pos_2, result);
-        collect_roles(info.get_per_predicate_idx_static_atom_idxs(), atoms, m_predicate, m_pos_1, m_pos_2, result);
+        collect_roles(info.get_per_predicate_idx_static_atom_idxs(), static_atoms, m_predicate, m_pos_1, m_pos_2, result);
         return result;
     }
 

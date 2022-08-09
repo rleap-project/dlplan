@@ -481,6 +481,7 @@ public:
      */
     bool exists_atom(const Atom& atom) const;
     const std::vector<Atom>& get_atoms() const;
+    const std::vector<Atom>& get_static_atoms() const;
     const Atom& get_atom(int index) const;
     int get_atom_idx(const std::string& name) const;
     bool exists_object(const Object& object) const;
@@ -490,7 +491,6 @@ public:
     int get_object_idx(const std::string& name) const;
     int get_num_objects() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
-    const Index_Vec& get_static_atom_idxs() const;
     const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs() const;
     const ConceptDenotation& get_top_concept() const;
     const RoleDenotation& get_top_role() const;

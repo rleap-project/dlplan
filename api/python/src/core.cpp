@@ -90,13 +90,13 @@ void init_core(py::module_ &m) {
         .def("add_static_atom", py::overload_cast<const core::Predicate&, const std::vector<core::Object>&>(&core::InstanceInfo::add_static_atom))
         .def("add_static_atom", py::overload_cast<const std::string&, const std::vector<std::string>&>(&core::InstanceInfo::add_static_atom))
         .def("get_atoms", &core::InstanceInfo::get_atoms)
+        .def("get_static_atoms", &core::InstanceInfo::get_static_atoms)
         .def("get_atom", &core::InstanceInfo::get_atom)
         .def("get_atom_idx", &core::InstanceInfo::get_atom_idx)
         .def("get_objects", &core::InstanceInfo::get_objects)
         .def("get_object", &core::InstanceInfo::get_object)
         .def("get_object_idx", &core::InstanceInfo::get_object_idx)
         .def("get_num_objects", &core::InstanceInfo::get_num_objects)
-        .def("get_static_atom_idxs", &core::InstanceInfo::get_static_atom_idxs)
     ;
 
     py::class_<core::Concept>(m, "Concept")

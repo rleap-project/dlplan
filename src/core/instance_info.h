@@ -20,17 +20,15 @@ private:
     std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
 
     /**
-     * Indices of static atoms, i.e., atoms that do not change and remain true forever.
-     */
-    Index_Vec m_static_atom_idxs;
-    phmap::flat_hash_map<int, std::vector<int>> m_per_predicate_idx_static_atom_idxs;
-
-    /**
      * All atoms.
      * TODO(dominik): sorted atoms by predicate can lead to more efficient evaluation of primitive role and concept.
      */
     std::unordered_map<std::string, unsigned> m_atom_name_to_atom_idx;
     std::vector<Atom> m_atoms;
+
+    std::unordered_map<std::string, unsigned> m_static_atom_name_to_static_atom_idx;
+    std::vector<Atom> m_static_atoms;
+    phmap::flat_hash_map<int, std::vector<int>> m_per_predicate_idx_static_atom_idxs;
 
     /**
      * All objects.
@@ -63,6 +61,7 @@ public:
      */
     bool exists_atom(const Atom& atom) const;
     const std::vector<Atom>& get_atoms() const;
+    const std::vector<Atom>& get_static_atoms() const;
     const Atom& get_atom(int atom_idx) const;
     int get_atom_idx(const std::string& name) const;
     bool exists_object(const Object& object) const;
@@ -72,7 +71,6 @@ public:
     int get_object_idx(const std::string& object_name) const;
     int get_num_objects() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
-    const Index_Vec& get_static_atom_idxs() const;
     const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs() const;
     const ConceptDenotation& get_top_concept() const;
     const RoleDenotation& get_top_role() const;

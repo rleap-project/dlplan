@@ -58,7 +58,7 @@ def test_instance():
     p0, p1, p2, p3, p4 = vocabulary.get_predicates()
     instance = generate_bw_instance(vocabulary)
 
-    a0, a1, a2, a3, a4, a5, a6, a7, a8 = instance.get_atoms()
+    a0, a1, a2, a3, a4, a5, a6, a7 = instance.get_atoms()
     o0, o1 = instance.get_objects()
 
     assert a0.get_name() == "on(a,b)"
@@ -91,7 +91,7 @@ def test_factory():
     factory = SyntacticElementFactory(vocabulary)
 
     p0, p1, p2, p3, p4 = vocabulary.get_predicates()
-    a0, a1, a2, a3, a4, a5, a6, a7, a8 = instance.get_atoms()
+    a0, a1, a2, a3, a4, a5, a6, a7 = instance.get_atoms()
     state = State(instance, [a0, a3, a6])
     assert str(state) == "{on(a,b), ontable(b), clear(a)}"
 

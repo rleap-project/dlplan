@@ -528,6 +528,10 @@ const std::vector<Atom>& InstanceInfo::get_atoms() const {
     return m_pImpl->get_atoms();
 }
 
+const std::vector<Atom>& InstanceInfo::get_static_atoms() const {
+    return m_pImpl->get_static_atoms();
+}
+
 const Atom& InstanceInfo::get_atom(int index) const {
     return m_pImpl->get_atom(index);
 }
@@ -562,10 +566,6 @@ int InstanceInfo::get_num_objects() const {
 
 std::shared_ptr<const VocabularyInfo> InstanceInfo::get_vocabulary_info() const {
     return m_pImpl->get_vocabulary_info();
-}
-
-const Index_Vec& InstanceInfo::get_static_atom_idxs() const {
-    return m_pImpl->get_static_atom_idxs();
 }
 
 const phmap::flat_hash_map<int, std::vector<int>>& InstanceInfo::get_per_predicate_idx_static_atom_idxs() const {

@@ -53,18 +53,26 @@ const Atom& InstanceInfoImpl::add_atom(const Predicate& predicate, const std::ve
     if (predicate.get_arity() != static_cast<int>(objects.size())) {
         throw std::runtime_error("InstanceInfoImpl::add_atom - predicate arity does not match the number of objects ("s + std::to_string(predicate.get_arity()) + " != " + std::to_string(objects.size()));
     }
-    Atom atom = Atom(m_root, compute_atom_name(predicate, objects), m_atoms.size(), predicate, objects, is_static);
-    auto result = m_atom_name_to_atom_idx.emplace(atom.get_name(), m_atoms.size());
-    bool newly_inserted = result.second;
-    if (!newly_inserted) {
-        throw std::runtime_error("InstanceInfoImpl::add_atom - atom with name ("s + atom.get_name() + ") already exists.");
-    }
     if (is_static) {
-        m_static_atom_idxs.push_back(atom.get_index());
+        Atom atom = Atom(m_root, compute_atom_name(predicate, objects), m_static_atoms.size(), predicate, objects, is_static);
+        auto result = m_static_atom_name_to_static_atom_idx.emplace(atom.get_name(), m_static_atoms.size());
+        bool newly_inserted = result.second;
+        if (!newly_inserted) {
+            throw std::runtime_error("InstanceInfoImpl::add_atom - atom with name ("s + atom.get_name() + ") already exists.");
+        }
         m_per_predicate_idx_static_atom_idxs[predicate.get_index()].push_back(atom.get_index());
+        m_static_atoms.push_back(std::move(atom));
+        return m_static_atoms.back();
+    } else {
+        Atom atom = Atom(m_root, compute_atom_name(predicate, objects), m_atoms.size(), predicate, objects, is_static);
+        auto result = m_atom_name_to_atom_idx.emplace(atom.get_name(), m_atoms.size());
+        bool newly_inserted = result.second;
+        if (!newly_inserted) {
+            throw std::runtime_error("InstanceInfoImpl::add_atom - atom with name ("s + atom.get_name() + ") already exists.");
+        }
+        m_atoms.push_back(std::move(atom));
+        return m_atoms.back();
     }
-    m_atoms.push_back(std::move(atom));
-    return m_atoms.back();
 }
 
 const Object& InstanceInfoImpl::add_object(const std::string& object_name) {
@@ -103,6 +111,10 @@ bool InstanceInfoImpl::exists_atom(const Atom& atom) const {
 
 const std::vector<Atom>& InstanceInfoImpl::get_atoms() const {
     return m_atoms;
+}
+
+const std::vector<Atom>& InstanceInfoImpl::get_static_atoms() const {
+    return m_static_atoms;
 }
 
 const Atom& InstanceInfoImpl::get_atom(int atom_idx) const {
@@ -155,10 +167,6 @@ int InstanceInfoImpl::get_num_objects() const {
 
 std::shared_ptr<const VocabularyInfo> InstanceInfoImpl::get_vocabulary_info() const {
     return m_vocabulary_info;
-}
-
-const Index_Vec& InstanceInfoImpl::get_static_atom_idxs() const {
-    return m_static_atom_idxs;
 }
 
 const phmap::flat_hash_map<int, std::vector<int>>& InstanceInfoImpl::get_per_predicate_idx_static_atom_idxs() const {

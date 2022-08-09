@@ -43,8 +43,9 @@ public:
         int num_objects = info.get_num_objects();
         ConceptDenotation result(num_objects);
         const auto& atoms = info.get_atoms();
+        const auto& static_atoms = info.get_static_atoms();
         collect_concepts(state.get_per_predicate_idx_atom_idxs(), atoms, m_predicate, m_pos, result);
-        collect_concepts(info.get_per_predicate_idx_static_atom_idxs(), atoms, m_predicate, m_pos, result);
+        collect_concepts(info.get_per_predicate_idx_static_atom_idxs(), static_atoms, m_predicate, m_pos, result);
         return result;
     }
 

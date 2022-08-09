@@ -32,7 +32,7 @@ def test_generate_exhaustively():
     factory = SyntacticElementFactory(vocabulary)
     generator = FeatureGenerator()
 
-    a0, a1, a2, a3, a4, a5, a6, a7, a8 = instance.get_atoms()
+    a0, a1, a2, a3, a4, a5, a6, a7 = instance.get_atoms()
     s0 = State(instance, [a0, a3])  # a on b
     s1 = State(instance, [a1, a2])  # b on a
     s2 = State(instance, [a2, a3])  # both on table
