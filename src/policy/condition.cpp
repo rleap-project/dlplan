@@ -3,7 +3,7 @@
 
 namespace dlplan::policy {
 
-PositiveBooleanCondition::PositiveBooleanCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature)
+PositiveBooleanCondition::PositiveBooleanCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const BooleanFeature> boolean_feature)
     : Condition<bool>(root, boolean_feature) { }
 
 bool PositiveBooleanCondition::evaluate(evaluator::EvaluationContext& source_context) const {
@@ -15,7 +15,7 @@ std::string PositiveBooleanCondition::compute_repr() const {
 }
 
 
-NegativeBooleanCondition::NegativeBooleanCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<bool>> boolean_feature)
+NegativeBooleanCondition::NegativeBooleanCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const BooleanFeature> boolean_feature)
     : Condition<bool>(root, boolean_feature) { }
 
 bool NegativeBooleanCondition::evaluate(evaluator::EvaluationContext& source_context) const {
@@ -27,7 +27,7 @@ std::string NegativeBooleanCondition::compute_repr() const {
 }
 
 
-EqualNumericalCondition::EqualNumericalCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature)
+EqualNumericalCondition::EqualNumericalCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const NumericalFeature> numerical_feature)
     : Condition<int>(root, numerical_feature) { }
 
 bool EqualNumericalCondition::evaluate(evaluator::EvaluationContext& source_context) const {
@@ -39,7 +39,7 @@ std::string EqualNumericalCondition::compute_repr() const {
 }
 
 
-GreaterNumericalCondition::GreaterNumericalCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<int>> numerical_feature)
+GreaterNumericalCondition::GreaterNumericalCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const NumericalFeature> numerical_feature)
     : Condition<int>(root, numerical_feature) { }
 
 bool GreaterNumericalCondition::evaluate(evaluator::EvaluationContext& source_context) const {

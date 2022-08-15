@@ -20,6 +20,7 @@ class PolicyReaderImpl;
 class PolicyWriterImpl;
 class EvaluationContext;
 
+
 class PolicyRoot {
 public:
     PolicyRoot();
@@ -28,22 +29,26 @@ public:
 
 
 /**
- * A Feature is shared across all conditions and effects that use it.
+ * A BaseFeature is shared across all conditions and effects that use it.
+ * The underlying type of feature is abstract.
  */
-template<typename T>
-class Feature {
+class BaseFeature {
 private:
     std::shared_ptr<const PolicyRoot> m_root;
     int m_index;
 
 protected:
-    Feature(std::shared_ptr<const PolicyRoot> root, int index);
+    BaseFeature(std::shared_ptr<const PolicyRoot> root, int index);
 
 public:
-    // TODO: how to define copy move semantics in templated abstract base class?
-    virtual ~Feature();
-
-    virtual T evaluate(evaluator::EvaluationContext& context) const = 0;
+    // BaseFeature is not copieable because it must live in the cache.
+    // For construction we need it to be moveable.
+    // However, moving cannot be abused because BaseFeature is always const
+    BaseFeature(const BaseFeature& other) = delete;
+    BaseFeature& operator=(const BaseFeature& other) = delete;
+    BaseFeature(BaseFeature&& other);
+    BaseFeature& operator=(BaseFeature&& other);
+    virtual ~BaseFeature();
 
     virtual std::string compute_repr() const = 0;
 
@@ -51,6 +56,23 @@ public:
 
     std::shared_ptr<const PolicyRoot> get_root() const;
 };
+
+
+template<typename T>
+class Feature : public BaseFeature {
+protected:
+    Feature(std::shared_ptr<const PolicyRoot> root, int index);
+
+public:
+    Feature(const Feature& other) = delete;
+    Feature& operator=(const Feature& other) = delete;
+    Feature(Feature&& other) = default;
+    Feature& operator=(Feature&& other) = default;
+    ~Feature() {}
+
+    virtual T evaluate(evaluator::EvaluationContext& context) const = 0;
+};
+
 
 class BooleanFeature : public Feature<bool> {
 private:
@@ -61,9 +83,9 @@ private:
     friend class PolicyBuilderImpl;
 
 public:
-    // BooleanFeatures are not copieable because they must live in the cache.
-    // For construction we need them to be moveable.
-    // However, moving cannot be abused because Features are always const
+    // BooleanFeature is not copieable because it must live in the cache.
+    // For construction we need it to be moveable.
+    // However, moving cannot be abused because BooleanFeatures is always const
     BooleanFeature(const BooleanFeature& other) = delete;
     BooleanFeature& operator=(const BooleanFeature& other) = delete;
     BooleanFeature(BooleanFeature&& other);
@@ -75,9 +97,8 @@ public:
     std::string compute_repr() const override;
 
     std::string str() const;
-
-    const core::Boolean& get_boolean() const;
 };
+
 
 class NumericalFeature : public Feature<int> {
 private:
@@ -88,9 +109,9 @@ private:
     friend class PolicyBuilderImpl;
 
 public:
-    // NumericalFeatures are not copieable because they must live in the cache.
-    // For construction we need them to be moveable.
-    // However, moving cannot be abused because Features are always const
+    // NumericalFeature is not copieable because it must live in the cache.
+    // For construction we need it to be moveable.
+    // However, moving cannot be abused because NumericalFeatures is always const
     NumericalFeature(const NumericalFeature& other) = delete;
     NumericalFeature& operator=(const NumericalFeature& other) = delete;
     NumericalFeature(NumericalFeature&& other);
@@ -102,8 +123,6 @@ public:
     std::string compute_repr() const override;
 
     std::string str() const;
-
-    const core::Numerical& get_numerical() const;
 };
 
 
@@ -113,14 +132,15 @@ public:
 class BaseCondition {
 private:
     std::shared_ptr<const PolicyRoot> m_root;
+    std::shared_ptr<const BaseFeature> m_base_feature;
 
 protected:
-    explicit BaseCondition(std::shared_ptr<const PolicyRoot> root) : m_root(root) { }
+    BaseCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const BaseFeature> base_feature);
 
 public:
-    // Conditions are not copieable because they must live in the cache.
-    // For construction we need them to be moveable.
-    // However, moving cannot be abused because Features are always const
+    // Condition is not copieable because it must live in the cache.
+    // For construction we need it to be moveable.
+    // However, moving cannot be abused because Condition is always const
     BaseCondition(const BaseCondition& other) = delete;
     BaseCondition& operator=(const BaseCondition& other) = delete;
     BaseCondition(BaseCondition&& other);
@@ -133,6 +153,8 @@ public:
 
     std::string str() const;
 
+    std::shared_ptr<const BaseFeature> get_base_feature() const;
+
     std::shared_ptr<const PolicyRoot> get_root() const;
 };
 
@@ -143,14 +165,15 @@ public:
 class BaseEffect {
 private:
     std::shared_ptr<const PolicyRoot> m_root;
+    std::shared_ptr<const BaseFeature> m_base_feature;
 
 protected:
-    explicit BaseEffect(std::shared_ptr<const PolicyRoot> root) : m_root(root) { }
+    BaseEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const BaseFeature> base_feature);
 
 public:
-    // Effects are not copieable because they must live in the cache.
-    // For construction we need them to be moveable.
-    // However, moving cannot be abused because Features are always const
+    // Effect is not copieable because it must live in the cache.
+    // For construction we need it to be moveable.
+    // However, moving cannot be abused because Effect is always const
     BaseEffect(const BaseEffect& other) = delete;
     BaseEffect& operator=(const BaseEffect& other) = delete;
     BaseEffect(BaseEffect&& other);
@@ -163,6 +186,7 @@ public:
 
     std::string str() const;
 
+    std::shared_ptr<const BaseFeature> get_base_feature() const;
 
     std::shared_ptr<const PolicyRoot> get_root() const;
 };
@@ -186,9 +210,9 @@ private:
     friend class PolicyBuilderImpl;
 
 public:
-    // Rules are not copieable because they must live in the cache.
-    // For construction we need them to be moveable.
-    // However, moving cannot be abused because Features are always const
+    // Rule is not copieable because it must live in the cache.
+    // For construction we need it to be moveable.
+    // However, moving cannot be abused because Rule is always const
     Rule(const Rule& other) = delete;
     Rule& operator=(const Rule& other) = delete;
     Rule(Rule&& other);

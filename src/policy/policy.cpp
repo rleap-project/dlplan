@@ -16,6 +16,25 @@ PolicyRoot::PolicyRoot() { }
 
 PolicyRoot::~PolicyRoot() { }
 
+
+BaseFeature::BaseFeature(std::shared_ptr<const PolicyRoot> root, int index)
+    : m_root(root), m_index(index) { }
+
+BaseFeature::BaseFeature(BaseFeature&& other) = default;
+
+BaseFeature& BaseFeature::operator=(BaseFeature&& other) = default;
+
+BaseFeature::~BaseFeature() = default;
+
+int BaseFeature::get_index() const {
+    return m_index;
+}
+
+std::shared_ptr<const PolicyRoot> BaseFeature::get_root() const {
+    return m_root;
+}
+
+
 BooleanFeature::BooleanFeature(std::shared_ptr<const PolicyRoot> root, int index, core::Boolean&& boolean)
     : Feature<bool>(root, index), m_boolean(std::move(boolean)) { }
 
@@ -26,7 +45,7 @@ BooleanFeature& BooleanFeature::operator=(BooleanFeature&& other) = default;
 BooleanFeature::~BooleanFeature() = default;
 
 bool BooleanFeature::evaluate(evaluator::EvaluationContext& context) const {
-    return context.cache.retrieve_or_evaluate(get_index(), get_boolean(), context);
+    return context.cache.retrieve_or_evaluate(get_index(), m_boolean, context);
 }
 
 std::string BooleanFeature::compute_repr() const {
@@ -37,9 +56,6 @@ std::string BooleanFeature::str() const {
     return compute_repr();
 }
 
-const core::Boolean& BooleanFeature::get_boolean() const {
-    return m_boolean;
-}
 
 NumericalFeature::NumericalFeature(NumericalFeature&& other) = default;
 
@@ -51,7 +67,7 @@ NumericalFeature::NumericalFeature(std::shared_ptr<const PolicyRoot> root, int i
     : Feature<int>(root, index), m_numerical(std::move(numerical)) { }
 
 int NumericalFeature::evaluate(evaluator::EvaluationContext& context) const {
-    return context.cache.retrieve_or_evaluate(get_index(), get_numerical(), context);
+    return context.cache.retrieve_or_evaluate(get_index(), m_numerical, context);
 }
 
 std::string NumericalFeature::compute_repr() const {
@@ -62,9 +78,9 @@ std::string NumericalFeature::str() const {
     return compute_repr();
 }
 
-const core::Numerical& NumericalFeature::get_numerical() const {
-    return m_numerical;
-}
+
+BaseCondition::BaseCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const BaseFeature> base_feature)
+    : m_root(root), m_base_feature(base_feature) { }
 
 BaseCondition::BaseCondition(BaseCondition&& other) = default;
 
@@ -76,9 +92,17 @@ std::shared_ptr<const PolicyRoot> BaseCondition::get_root() const {
     return m_root;
 }
 
+std::shared_ptr<const BaseFeature> BaseCondition::get_base_feature() const {
+    return m_base_feature;
+}
+
 std::string BaseCondition::str() const {
     return compute_repr();
 }
+
+
+BaseEffect::BaseEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const BaseFeature> base_feature)
+    : m_root(root), m_base_feature(base_feature) { }
 
 BaseEffect::BaseEffect(BaseEffect&& other) = default;
 
@@ -88,6 +112,10 @@ BaseEffect::~BaseEffect() = default;
 
 std::shared_ptr<const PolicyRoot> BaseEffect::get_root() const {
     return m_root;
+}
+
+std::shared_ptr<const BaseFeature> BaseEffect::get_base_feature() const {
+    return m_base_feature;
 }
 
 std::string BaseEffect::str() const {

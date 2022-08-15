@@ -19,6 +19,7 @@ static std::vector<pT> sort(const std::vector<pT>& set) {
         result.begin(),
         result.end(),
         [](const auto& l, const auto& r){
+            if (l->get_base_feature()->get_index() != r->get_base_feature()->get_index()) return l->get_base_feature()->get_index() < r->get_base_feature()->get_index();
             return l->compute_repr() < r->compute_repr();
         });
     return result;
