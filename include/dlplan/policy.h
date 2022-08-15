@@ -52,6 +52,8 @@ public:
 
     virtual std::string compute_repr() const = 0;
 
+    virtual std::string str() const = 0;
+
     int get_index() const;
 
     std::shared_ptr<const PolicyRoot> get_root() const;

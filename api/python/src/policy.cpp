@@ -17,6 +17,13 @@ void init_policy(py::module_ &m) {
         py::class_<policy::PolicyRoot, std::shared_ptr<policy::PolicyRoot>>(m, "PolicyRoot")
     ;
 
+    py::class_<policy::BaseFeature, std::shared_ptr<policy::BaseFeature>>(m, "BaseFeature")
+        .def("get_index", &policy::BaseFeature::get_index)
+        .def("get_root", &policy::BaseFeature::get_root)
+        .def("compute_repr", &policy::BaseFeature::compute_repr)
+        .def("str", &policy::BaseFeature::str)
+    ;
+
     py::class_<policy::BooleanFeature, std::shared_ptr<policy::BooleanFeature>>(m, "BooleanFeature")
         .def("evaluate", &policy::BooleanFeature::evaluate)
         .def("get_index", &policy::BooleanFeature::get_index)
@@ -36,6 +43,7 @@ void init_policy(py::module_ &m) {
     py::class_<policy::BaseCondition, std::shared_ptr<policy::BaseCondition>>(m, "BaseCondition")
         .def("evaluate", &policy::BaseCondition::evaluate)
         .def("get_root", &policy::BaseCondition::get_root)
+        .def("get_base_feature", &policy::BaseCondition::get_base_feature)
         .def("compute_repr", &policy::BaseCondition::compute_repr)
         .def("str", &policy::BaseCondition::str)
     ;
@@ -43,6 +51,7 @@ void init_policy(py::module_ &m) {
     py::class_<policy::BaseEffect, std::shared_ptr<policy::BaseEffect>>(m, "BaseEffect")
         .def("evaluate", &policy::BaseEffect::evaluate)
         .def("get_root", &policy::BaseEffect::get_root)
+        .def("get_base_feature", &policy::BaseEffect::get_base_feature)
         .def("compute_repr", &policy::BaseEffect::compute_repr)
         .def("str", &policy::BaseEffect::str)
     ;
