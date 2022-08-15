@@ -21,7 +21,6 @@ void init_policy(py::module_ &m) {
         .def("evaluate", &policy::BooleanFeature::evaluate)
         .def("get_index", &policy::BooleanFeature::get_index)
         .def("get_root", &policy::BooleanFeature::get_root)
-        .def("get_boolean", &policy::BooleanFeature::get_boolean)
         .def("compute_repr", &policy::BooleanFeature::compute_repr)
         .def("str", &policy::BooleanFeature::str)
     ;
@@ -30,7 +29,6 @@ void init_policy(py::module_ &m) {
         .def("evaluate", &policy::NumericalFeature::evaluate)
         .def("get_index", &policy::NumericalFeature::get_index)
         .def("get_root", &policy::NumericalFeature::get_root)
-        .def("get_numerical", &policy::NumericalFeature::get_numerical)
         .def("compute_repr", &policy::NumericalFeature::compute_repr)
         .def("str", &policy::NumericalFeature::str)
     ;
