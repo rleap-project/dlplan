@@ -30,6 +30,7 @@ void init_policy(py::module_ &m) {
         .def("get_root", &policy::BooleanFeature::get_root)
         .def("compute_repr", &policy::BooleanFeature::compute_repr)
         .def("str", &policy::BooleanFeature::str)
+        .def("get_boolean", &policy::BooleanFeature::get_boolean)
     ;
 
     py::class_<policy::NumericalFeature, std::shared_ptr<policy::NumericalFeature>>(m, "NumericalFeature")
@@ -38,6 +39,7 @@ void init_policy(py::module_ &m) {
         .def("get_root", &policy::NumericalFeature::get_root)
         .def("compute_repr", &policy::NumericalFeature::compute_repr)
         .def("str", &policy::NumericalFeature::str)
+        .def("get_numerical", &policy::NumericalFeature::get_numerical)
     ;
 
     py::class_<policy::BaseCondition, std::shared_ptr<policy::BaseCondition>>(m, "BaseCondition")

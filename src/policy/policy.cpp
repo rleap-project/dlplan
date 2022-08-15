@@ -56,6 +56,10 @@ std::string BooleanFeature::str() const {
     return compute_repr();
 }
 
+core::Boolean BooleanFeature::get_boolean() const {
+    return m_boolean;
+}
+
 
 NumericalFeature::NumericalFeature(NumericalFeature&& other) = default;
 
@@ -76,6 +80,10 @@ std::string NumericalFeature::compute_repr() const {
 
 std::string NumericalFeature::str() const {
     return compute_repr();
+}
+
+core::Numerical NumericalFeature::get_numerical() const {
+    return m_numerical;
 }
 
 

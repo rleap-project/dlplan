@@ -99,6 +99,8 @@ public:
     std::string compute_repr() const override;
 
     std::string str() const;
+
+    core::Boolean get_boolean() const;
 };
 
 
@@ -125,6 +127,8 @@ public:
     std::string compute_repr() const override;
 
     std::string str() const;
+
+    core::Numerical get_numerical() const;
 };
 
 
