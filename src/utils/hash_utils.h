@@ -40,8 +40,9 @@ namespace std {
     template<> struct hash<std::array<uint32_t, 4>> {
         std::size_t operator()(const std::array<uint32_t, 4>& h) const noexcept {
             std::size_t seed = 4;
-            for (int i = 0; i < 4; ++i) {
-                dlplan::utils::hashing::hash_combine(seed, h[i]);
+            for (int i = 0; i < 4; i += 2) {
+                const std::size_t combined = (static_cast<size_t>(h[0]) << 32) ^ static_cast<size_t>(h[1]);
+                dlplan::utils::hashing::hash_combine(seed, combined);
             }
             return seed;
         }
