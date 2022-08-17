@@ -61,6 +61,7 @@ void init_core(py::module_ &m) {
         .def(py::init<std::shared_ptr<const core::InstanceInfo>, const std::vector<core::Atom>&>())
         .def("__eq__", &core::State::operator==)
         .def("__neq__", &core::State::operator!=)
+        .def("__hash__", &core::State::compute_hash)
         .def("__str__", &core::State::str)
         .def("get_atom_idxs", &core::State::get_atom_idxs)
         .def("get_instance_info", &core::State::get_instance_info)

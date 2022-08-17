@@ -88,4 +88,23 @@ std::string State::str() const {
     return res;
 }
 
+size_t State::compute_hash() const {
+    std::array<uint32_t, 4> a;
+    int total_size = (sizeof(int) * m_atom_idxs.size() + sizeof(std::shared_ptr<InstanceInfo>));
+    char* data = new char[total_size];
+    // copy atom_idxs
+    char* cur_dest = data;
+    const char* src = static_cast<const char*>(static_cast<const void*>(m_atom_idxs.begin().base()));
+    size_t amount = sizeof(int) * m_atom_idxs.size();
+    memcpy(cur_dest, src, amount);
+    // copy instance_info ptr
+    cur_dest = cur_dest + amount;
+    src = static_cast<const char*>(static_cast<const void*>(m_instance_info.get()));
+    amount = sizeof(std::shared_ptr<InstanceInfo>);
+    memcpy(cur_dest, src, amount);
+    MurmurHash3_x64_128(data, total_size, m_atom_idxs.size(), a.begin());
+    delete[] data;
+    return std::hash<std::array<uint32_t, 4>>()(a);
+}
+
 }

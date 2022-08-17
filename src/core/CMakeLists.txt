@@ -15,6 +15,7 @@ target_sources(dlplancore
         parser/ast_factory.cpp
         elements/utils.cpp
         ../utils/logging.cpp
+        ../utils/MurmurHash3.cpp
         ../utils/system.cpp
         ../utils/timer.cpp)
 target_include_directories(dlplancore

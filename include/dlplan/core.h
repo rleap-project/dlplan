@@ -394,6 +394,11 @@ public:
     std::string str() const;
 
     /**
+     * Compute a 64-Bit hash value.
+     */
+    size_t compute_hash() const;
+
+    /**
      * Getters.
      */
     std::shared_ptr<const InstanceInfo> get_instance_info() const;
@@ -727,6 +732,20 @@ public:
 };
 
 }
+
+namespace std {
+    /**
+     * We provide custom specialization of std::hash that are injected in the namespace std
+     * to be able to use standard hash containers.
+     * https://en.cppreference.com/w/cpp/utility/hash
+     */
+    template<> struct hash<dlplan::core::State> {
+        std::size_t operator()(const dlplan::core::State& state) const noexcept {
+            return state.compute_hash();
+        }
+    };
+}
+
 
 #include "core.tpp"
 
