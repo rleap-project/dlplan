@@ -15,9 +15,7 @@
 
 namespace dlplan::core {
 class SyntacticElementFactoryImpl;
-class InstanceInfoRoot;
 class InstanceInfoImpl;
-class VocabularyInfoRoot;
 class VocabularyInfoImpl;
 class SyntacticElementFactory;
 class InstanceInfo;
@@ -234,11 +232,10 @@ using RoleDenotation = RoleDenotationBitset;
 
 class Constant {
 private:
-    std::shared_ptr<const VocabularyInfoRoot> m_root;
     std::string m_name;
     int m_index;
 
-    Constant(std::shared_ptr<const VocabularyInfoRoot> root, const std::string& name, int index);
+    Constant(const std::string& name, int index);
     friend class VocabularyInfoImpl;
 
 public:
@@ -254,7 +251,6 @@ public:
 
     int get_index() const;
     const std::string& get_name() const;
-    std::shared_ptr<const VocabularyInfoRoot> get_vocabulary_info_root() const;
 };
 
 
@@ -263,12 +259,11 @@ public:
  */
 class Predicate {
 private:
-    std::shared_ptr<const VocabularyInfoRoot> m_root;
     std::string m_name;
     int m_index;
     int m_arity;
 
-    Predicate(std::shared_ptr<const VocabularyInfoRoot> root, const std::string& name, int index, int arity);
+    Predicate(const std::string& name, int index, int arity);
     friend class VocabularyInfoImpl;
 
 public:
@@ -287,7 +282,6 @@ public:
     int get_index() const;
     const std::string& get_name() const;
     int get_arity() const;
-    std::shared_ptr<const VocabularyInfoRoot> get_vocabulary_info_root() const;
 };
 
 
@@ -296,11 +290,10 @@ public:
  */
 class Object {
 private:
-    std::shared_ptr<const InstanceInfoRoot> m_root;
     std::string m_name;
     int m_index;
 
-    Object(std::shared_ptr<const InstanceInfoRoot> root, const std::string& name, int index);
+    Object(const std::string& name, int index);
     friend class InstanceInfoImpl;
 
 public:
@@ -315,7 +308,6 @@ public:
 
     int get_index() const;
     const std::string& get_name() const;
-    std::shared_ptr<const InstanceInfoRoot> get_instance_info_root() const;
 };
 
 
@@ -324,15 +316,13 @@ public:
  */
 class Atom {
 private:
-    std::shared_ptr<const InstanceInfoRoot> m_root;
     std::string m_name;
     int m_index;
     Predicate m_predicate;
     std::vector<Object> m_objects;
     bool m_is_static;
 
-    Atom(std::shared_ptr<const InstanceInfoRoot> root,
-        const std::string& name,
+    Atom(const std::string& name,
         int index,
         const Predicate& predicate,
         const std::vector<Object> &objects,
@@ -358,7 +348,6 @@ public:
     const std::vector<Object>& get_objects() const;
     const Object& get_object(int pos) const;
     bool get_is_static() const;
-    std::shared_ptr<const InstanceInfoRoot> get_instance_info_root() const;
 };
 
 
@@ -406,12 +395,6 @@ public:
     const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_atom_idxs() const;
 };
 
-/**
- * VocabularyInfoRoot is parent of VocabularyInfo
- * and used to define parent-child relationship
- * between VocabularyInfo and other objects.
- */
-struct VocabularyInfoRoot { };
 
 /**
  * VocabularyInfo stores information related to the planning domain.
@@ -442,15 +425,8 @@ public:
     int get_constant_idx(const std::string& name) const;
     const Constant& get_constant(int index) const;
     const std::vector<Constant>& get_constants() const;
-    std::shared_ptr<const VocabularyInfoRoot> get_vocabulary_info_root() const;
 };
 
-/**
- * InstanceInfoRoot is parent of InstanceInfo
- * and used to define parent-child relationship
- * between InstanceInfo and other objects.
- */
-struct InstanceInfoRoot { };
 
 /**
  * InstanceInfo stores information related to the planning instance.
@@ -499,7 +475,6 @@ public:
     const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs() const;
     const ConceptDenotation& get_top_concept() const;
     const RoleDenotation& get_top_role() const;
-    std::shared_ptr<const InstanceInfoRoot> get_instance_info_root() const;
 };
 
 

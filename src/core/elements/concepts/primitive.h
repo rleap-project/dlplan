@@ -30,10 +30,10 @@ protected:
 public:
     PrimitiveConcept(const VocabularyInfo& vocabulary, const Predicate& predicate, int pos)
     : Concept(vocabulary, "c_primitive"), m_predicate(predicate), m_pos(pos) {
-        if (m_pos >= predicate.get_arity()) {
+        if (m_pos >= m_predicate.get_arity()) {
             throw std::runtime_error("PrimitiveConcept::PrimitiveConcept - object index does not match predicate arity ("s + std::to_string(m_pos) + " > " + std::to_string(predicate.get_arity()) + ").");
         }
-        if (vocabulary.get_vocabulary_info_root() != predicate.get_vocabulary_info_root()) {
+        if (!vocabulary.exists_predicate(m_predicate)) {
             throw std::runtime_error("PrimitiveConcept::PrimitiveConcept - predicate does not exist in VocabularyInfo.");
         }
     }

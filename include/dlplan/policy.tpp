@@ -3,8 +3,7 @@
 namespace dlplan::policy {
 
 template <typename T>
-Feature<T>::Feature(std::shared_ptr<const PolicyRoot> root, int index)
-  : BaseFeature(root, index) { }
+Feature<T>::Feature(int index) : BaseFeature(index) { }
 
 template class Feature<bool>;
 template class Feature<int>;

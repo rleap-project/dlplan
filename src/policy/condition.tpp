@@ -4,8 +4,8 @@
 namespace dlplan::policy {
 
 template <typename T>
-Condition<T>::Condition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<T>> feature)
-    : BaseCondition(root, feature), m_feature(feature) { }
+Condition<T>::Condition(std::shared_ptr<const Feature<T>> feature)
+    : BaseCondition(feature), m_feature(feature) { }
 
 template <typename T>
 std::shared_ptr<const Feature<T>> Condition<T>::get_feature() const { return m_feature; }

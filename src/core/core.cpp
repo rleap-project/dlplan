@@ -652,10 +652,6 @@ const std::vector<Constant>& VocabularyInfo::get_constants() const {
     return m_pImpl->get_constants();
 }
 
-std::shared_ptr<const VocabularyInfoRoot> VocabularyInfo::get_vocabulary_info_root() const {
-    return m_pImpl->get_vocabulary_info_root();
-}
-
 
 Concept::Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Concept>&& concept)
     : Element<ConceptDenotation>(vocabulary_info), m_element(concept) {

@@ -24,8 +24,6 @@ class Policy;
 
 class PolicyBuilderImpl {
 private:
-    std::shared_ptr<const PolicyRoot> m_root;
-
     Caches m_caches;
 
     std::vector<std::shared_ptr<const BooleanFeature>> m_boolean_features;

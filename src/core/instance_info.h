@@ -16,7 +16,6 @@ class VocabularyInfoImpl;
 
 class InstanceInfoImpl {
 private:
-    std::shared_ptr<const InstanceInfoRoot> m_root;
     std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
 
     /**
@@ -74,8 +73,6 @@ public:
     const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs() const;
     const ConceptDenotation& get_top_concept() const;
     const RoleDenotation& get_top_role() const;
-
-    std::shared_ptr<const InstanceInfoRoot> get_instance_info_root() const;
 };
 
 }

@@ -8,11 +8,10 @@
 
 namespace dlplan::core {
 
-VocabularyInfoImpl::VocabularyInfoImpl()
-    : m_root(std::make_shared<VocabularyInfoRoot>()) { }
+VocabularyInfoImpl::VocabularyInfoImpl() { }
 
 const Predicate& VocabularyInfoImpl::add_predicate(const std::string &predicate_name, int arity) {
-    Predicate predicate = Predicate(m_root, predicate_name, m_predicates.size(), arity);
+    Predicate predicate = Predicate(predicate_name, m_predicates.size(), arity);
     auto result = m_predicate_name_to_predicate_idx.emplace(predicate_name, m_predicates.size());
     if (!result.second) {
         throw std::runtime_error("VocabularyInfoImpl::add_predicate - predicate with name ("s + predicate_name + ") already exists.");
@@ -22,7 +21,7 @@ const Predicate& VocabularyInfoImpl::add_predicate(const std::string &predicate_
 }
 
 const Constant& VocabularyInfoImpl::add_constant(const std::string& constant_name) {
-    Constant constant = Constant(m_root, constant_name, m_constants.size());
+    Constant constant = Constant(constant_name, m_constants.size());
     auto result = m_constant_name_to_constant_idx.emplace(constant_name, m_constants.size());
     if (!result.second) {
         throw std::runtime_error("VocabularyInfoImpl::add_constant - constant with name ("s + constant_name + ") already exists.");
@@ -88,10 +87,6 @@ const Constant& VocabularyInfoImpl::get_constant(int constant_idx) const {
 
 const std::vector<Constant>& VocabularyInfoImpl::get_constants() const {
     return m_constants;
-}
-
-std::shared_ptr<const VocabularyInfoRoot> VocabularyInfoImpl::get_vocabulary_info_root() const {
-    return m_root;
 }
 
 std::unordered_map<std::string, EXPRESSION_TYPE> VocabularyInfoImpl::m_element_name_to_expression_type = {

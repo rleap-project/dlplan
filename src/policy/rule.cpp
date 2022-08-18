@@ -26,10 +26,9 @@ static std::vector<pT> sort(const std::vector<pT>& set) {
 }
 
 Rule::Rule(
-    std::shared_ptr<const PolicyRoot> root,
     std::vector<std::shared_ptr<const BaseCondition>>&& conditions,
     std::vector<std::shared_ptr<const BaseEffect>>&& effects)
-    : m_root(root), m_conditions(std::move(conditions)), m_effects(std::move(effects)) { }
+    : m_conditions(std::move(conditions)), m_effects(std::move(effects)) { }
 
 Rule::Rule(Rule&& other) = default;
 
@@ -91,10 +90,6 @@ std::string Rule::str() const {
     }
     ss << "))";
     return ss.str();
-}
-
-std::shared_ptr<const PolicyRoot> Rule::get_root() const {
-    return m_root;
 }
 
 std::vector<std::shared_ptr<const BaseCondition>> Rule::get_conditions() const {

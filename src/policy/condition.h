@@ -18,7 +18,7 @@ protected:
     const std::shared_ptr<const Feature<T>> m_feature;
 
 protected:
-    Condition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const Feature<T>> feature);
+    Condition(std::shared_ptr<const Feature<T>> feature);
 
     std::shared_ptr<const Feature<T>> get_feature() const;
 };
@@ -26,7 +26,7 @@ protected:
 
 class PositiveBooleanCondition : public Condition<bool> {
 public:
-    PositiveBooleanCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const BooleanFeature> boolean_feature);
+    PositiveBooleanCondition(std::shared_ptr<const BooleanFeature> boolean_feature);
 
     bool evaluate(evaluator::EvaluationContext& source_context) const override;
 
@@ -35,7 +35,7 @@ public:
 
 class NegativeBooleanCondition : public Condition<bool> {
 public:
-    NegativeBooleanCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const BooleanFeature> boolean_feature);
+    NegativeBooleanCondition(std::shared_ptr<const BooleanFeature> boolean_feature);
 
     bool evaluate(evaluator::EvaluationContext& source_context) const override;
 
@@ -44,7 +44,7 @@ public:
 
 class EqualNumericalCondition : public Condition<int> {
 public:
-    EqualNumericalCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const NumericalFeature> numerical_feature);
+    EqualNumericalCondition(std::shared_ptr<const NumericalFeature> numerical_feature);
 
     bool evaluate(evaluator::EvaluationContext& source_context) const override;
 
@@ -53,7 +53,7 @@ public:
 
 class GreaterNumericalCondition : public Condition<int> {
 public:
-    GreaterNumericalCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const NumericalFeature> numerical_feature);
+    GreaterNumericalCondition(std::shared_ptr<const NumericalFeature> numerical_feature);
 
     bool evaluate(evaluator::EvaluationContext& source_context) const override;
 

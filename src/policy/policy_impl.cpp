@@ -12,12 +12,10 @@
 namespace dlplan::policy {
 
 Policy::Policy(
-    std::shared_ptr<const PolicyRoot> root,
     std::vector<std::shared_ptr<const BooleanFeature>>&& boolean_features,
     std::vector<std::shared_ptr<const NumericalFeature>>&& numerical_features,
     std::vector<std::shared_ptr<const Rule>>&& rules)
-    : m_root(root),
-      m_boolean_features(std::move(boolean_features)),
+    : m_boolean_features(std::move(boolean_features)),
       m_numerical_features(std::move(numerical_features)),
       m_rules(std::move(rules)) { }
 
@@ -109,10 +107,6 @@ std::string Policy::str() const {
     }
     ss << ")";
     return ss.str();
-}
-
-std::shared_ptr<const PolicyRoot> Policy::get_root() const {
-    return m_root;
 }
 
 std::vector<std::shared_ptr<const Rule>> Policy::get_rules() const {

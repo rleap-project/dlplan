@@ -6,8 +6,8 @@
 
 namespace dlplan::core {
 
-Predicate::Predicate(std::shared_ptr<const VocabularyInfoRoot> root, const std::string& name, int index, int arity)
-    : m_root(root), m_name(name), m_index(index), m_arity(arity) { }
+Predicate::Predicate(const std::string& name, int index, int arity)
+    : m_name(name), m_index(index), m_arity(arity) { }
 
 Predicate::Predicate(const Predicate& other) = default;
 
@@ -37,10 +37,6 @@ int Predicate::get_index() const {
 
 int Predicate::get_arity() const {
     return m_arity;
-}
-
-std::shared_ptr<const VocabularyInfoRoot> Predicate::get_vocabulary_info_root() const {
-    return m_root;
 }
 
 }

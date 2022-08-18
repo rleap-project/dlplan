@@ -3,8 +3,8 @@
 
 namespace dlplan::policy {
 
-PositiveBooleanEffect::PositiveBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const BooleanFeature> boolean_feature)
-    : Effect<bool>(root, boolean_feature) {}
+PositiveBooleanEffect::PositiveBooleanEffect(std::shared_ptr<const BooleanFeature> boolean_feature)
+    : Effect<bool>(boolean_feature) {}
 
 bool PositiveBooleanEffect::evaluate(evaluator::EvaluationContext&, evaluator::EvaluationContext& target_context) const{
     return get_feature()->evaluate(target_context);
@@ -15,8 +15,8 @@ std::string PositiveBooleanEffect::compute_repr() const{
 }
 
 
-NegativeBooleanEffect::NegativeBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const BooleanFeature> boolean_feature)
-    : Effect<bool>(root, boolean_feature) {}
+NegativeBooleanEffect::NegativeBooleanEffect(std::shared_ptr<const BooleanFeature> boolean_feature)
+    : Effect<bool>(boolean_feature) {}
 
 bool NegativeBooleanEffect::evaluate(evaluator::EvaluationContext&, evaluator::EvaluationContext& target_context) const{
     return !get_feature()->evaluate(target_context);
@@ -27,8 +27,8 @@ std::string NegativeBooleanEffect::compute_repr() const{
 }
 
 
-UnchangedBooleanEffect::UnchangedBooleanEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const BooleanFeature> boolean_feature)
-    : Effect<bool>(root, boolean_feature) {}
+UnchangedBooleanEffect::UnchangedBooleanEffect(std::shared_ptr<const BooleanFeature> boolean_feature)
+    : Effect<bool>(boolean_feature) {}
 
 bool UnchangedBooleanEffect::evaluate(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const{
     return get_feature()->evaluate(source_context) == get_feature()->evaluate(target_context);
@@ -39,8 +39,8 @@ std::string UnchangedBooleanEffect::compute_repr() const{
 }
 
 
-IncrementNumericalEffect::IncrementNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const NumericalFeature> numerical_feature)
-    : Effect<int>(root, numerical_feature) {}
+IncrementNumericalEffect::IncrementNumericalEffect(std::shared_ptr<const NumericalFeature> numerical_feature)
+    : Effect<int>(numerical_feature) {}
 
 bool IncrementNumericalEffect::evaluate(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const{
     return get_feature()->evaluate(source_context) < get_feature()->evaluate(target_context);
@@ -51,8 +51,8 @@ std::string IncrementNumericalEffect::compute_repr() const{
 }
 
 
-DecrementNumericalEffect::DecrementNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const NumericalFeature> numerical_feature)
-    : Effect<int>(root, numerical_feature) {}
+DecrementNumericalEffect::DecrementNumericalEffect(std::shared_ptr<const NumericalFeature> numerical_feature)
+    : Effect<int>(numerical_feature) {}
 
 bool DecrementNumericalEffect::evaluate(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const{
     return get_feature()->evaluate(source_context) > get_feature()->evaluate(target_context);
@@ -63,8 +63,8 @@ std::string DecrementNumericalEffect::compute_repr() const{
 }
 
 
-UnchangedNumericalEffect::UnchangedNumericalEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const NumericalFeature> numerical_feature)
-    : Effect<int>(root, numerical_feature) {}
+UnchangedNumericalEffect::UnchangedNumericalEffect(std::shared_ptr<const NumericalFeature> numerical_feature)
+    : Effect<int>(numerical_feature) {}
 
 bool UnchangedNumericalEffect::evaluate(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const{
     return get_feature()->evaluate(source_context) == get_feature()->evaluate(target_context);

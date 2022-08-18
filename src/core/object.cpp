@@ -5,8 +5,8 @@
 
 namespace dlplan::core {
 
-Object::Object(std::shared_ptr<const InstanceInfoRoot> root, const std::string& name, int index)
-    : m_root(root), m_name(name), m_index(index) { }
+Object::Object(const std::string& name, int index)
+    : m_name(name), m_index(index) { }
 
 Object::Object(const Object& other) = default;
 
@@ -33,10 +33,6 @@ const std::string& Object::get_name() const {
 
 int Object::get_index() const {
     return m_index;
-}
-
-std::shared_ptr<const InstanceInfoRoot> Object::get_instance_info_root() const {
-    return m_root;
 }
 
 }

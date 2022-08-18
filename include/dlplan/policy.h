@@ -21,24 +21,16 @@ class PolicyWriterImpl;
 class EvaluationContext;
 
 
-class PolicyRoot {
-public:
-    PolicyRoot();
-    ~PolicyRoot();
-};
-
-
 /**
  * A BaseFeature is shared across all conditions and effects that use it.
  * The underlying type of feature is abstract.
  */
 class BaseFeature {
 private:
-    std::shared_ptr<const PolicyRoot> m_root;
     int m_index;
 
 protected:
-    BaseFeature(std::shared_ptr<const PolicyRoot> root, int index);
+    BaseFeature(int index);
 
 public:
     // BaseFeature is not copieable because it must live in the cache.
@@ -55,15 +47,13 @@ public:
     virtual std::string str() const = 0;
 
     int get_index() const;
-
-    std::shared_ptr<const PolicyRoot> get_root() const;
 };
 
 
 template<typename T>
 class Feature : public BaseFeature {
 protected:
-    Feature(std::shared_ptr<const PolicyRoot> root, int index);
+    Feature(int index);
 
 public:
     Feature(const Feature& other) = delete;
@@ -81,7 +71,7 @@ private:
     core::Boolean m_boolean;
 
 private:
-    BooleanFeature(std::shared_ptr<const PolicyRoot> root, int index, core::Boolean&& boolean);
+    BooleanFeature(int index, core::Boolean&& boolean);
     friend class PolicyBuilderImpl;
 
 public:
@@ -109,7 +99,7 @@ private:
     core::Numerical m_numerical;
 
 private:
-    NumericalFeature(std::shared_ptr<const PolicyRoot> root, int index, core::Numerical&& numerical);
+    NumericalFeature(int index, core::Numerical&& numerical);
     friend class PolicyBuilderImpl;
 
 public:
@@ -137,11 +127,10 @@ public:
  */
 class BaseCondition {
 private:
-    std::shared_ptr<const PolicyRoot> m_root;
     std::shared_ptr<const BaseFeature> m_base_feature;
 
 protected:
-    BaseCondition(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const BaseFeature> base_feature);
+    BaseCondition(std::shared_ptr<const BaseFeature> base_feature);
 
 public:
     // Condition is not copieable because it must live in the cache.
@@ -160,8 +149,6 @@ public:
     std::string str() const;
 
     std::shared_ptr<const BaseFeature> get_base_feature() const;
-
-    std::shared_ptr<const PolicyRoot> get_root() const;
 };
 
 
@@ -170,11 +157,10 @@ public:
  */
 class BaseEffect {
 private:
-    std::shared_ptr<const PolicyRoot> m_root;
     std::shared_ptr<const BaseFeature> m_base_feature;
 
 protected:
-    BaseEffect(std::shared_ptr<const PolicyRoot> root, std::shared_ptr<const BaseFeature> base_feature);
+    BaseEffect(std::shared_ptr<const BaseFeature> base_feature);
 
 public:
     // Effect is not copieable because it must live in the cache.
@@ -193,8 +179,6 @@ public:
     std::string str() const;
 
     std::shared_ptr<const BaseFeature> get_base_feature() const;
-
-    std::shared_ptr<const PolicyRoot> get_root() const;
 };
 
 
@@ -204,14 +188,11 @@ public:
  */
 class Rule {
 private:
-    std::shared_ptr<const PolicyRoot> m_root;
-
     std::vector<std::shared_ptr<const BaseCondition>> m_conditions;
     std::vector<std::shared_ptr<const BaseEffect>> m_effects;
 
 private:
-    Rule(std::shared_ptr<const PolicyRoot> root,
-        std::vector<std::shared_ptr<const BaseCondition>>&& conditions,
+    Rule(std::vector<std::shared_ptr<const BaseCondition>>&& conditions,
         std::vector<std::shared_ptr<const BaseEffect>>&& effects);
     friend class PolicyBuilderImpl;
 
@@ -232,7 +213,6 @@ public:
 
     std::string str() const;
 
-    std::shared_ptr<const PolicyRoot> get_root() const;
     std::vector<std::shared_ptr<const BaseCondition>> get_conditions() const;
     std::vector<std::shared_ptr<const BaseEffect>> get_effects() const;
 };
@@ -243,15 +223,12 @@ public:
  */
 class Policy {
 private:
-    std::shared_ptr<const PolicyRoot> m_root;
-
     std::vector<std::shared_ptr<const BooleanFeature>> m_boolean_features;
     std::vector<std::shared_ptr<const NumericalFeature>> m_numerical_features;
     std::vector<std::shared_ptr<const Rule>> m_rules;
 
 private:
-    Policy(std::shared_ptr<const PolicyRoot> root,
-           std::vector<std::shared_ptr<const BooleanFeature>>&& boolean_features,
+    Policy(std::vector<std::shared_ptr<const BooleanFeature>>&& boolean_features,
            std::vector<std::shared_ptr<const NumericalFeature>>&& numerical_features,
            std::vector<std::shared_ptr<const Rule>>&& rules);
     friend class PolicyBuilderImpl;
@@ -278,7 +255,6 @@ public:
 
     std::string str() const;
 
-    std::shared_ptr<const PolicyRoot> get_root() const;
     std::vector<std::shared_ptr<const Rule>> get_rules() const;
     std::vector<std::shared_ptr<const BooleanFeature>> get_boolean_features() const;
     std::vector<std::shared_ptr<const NumericalFeature>> get_numerical_features() const;

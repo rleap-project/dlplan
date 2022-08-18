@@ -24,7 +24,7 @@ static std::string compute_atom_name(const Predicate& predicate, const std::vect
 }
 
 InstanceInfoImpl::InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info)
-    : m_root(std::make_shared<InstanceInfoRoot>()), m_vocabulary_info(vocabulary_info), m_top_concept(ConceptDenotation(0)), m_top_role(RoleDenotation(0)) {
+    : m_vocabulary_info(vocabulary_info), m_top_concept(ConceptDenotation(0)), m_top_role(RoleDenotation(0)) {
 }
 
 const Atom& InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
@@ -42,7 +42,7 @@ const Atom& InstanceInfoImpl::add_atom(const std::string &predicate_name, const 
         int object_idx = result.first->second;
         bool newly_inserted = result.second;
         if (newly_inserted) {
-            m_objects.push_back(Object(m_root, object_name, object_idx));
+            m_objects.push_back(Object(object_name, object_idx));
         }
         objects.push_back(m_objects[object_idx]);
     }
@@ -54,7 +54,7 @@ const Atom& InstanceInfoImpl::add_atom(const Predicate& predicate, const std::ve
         throw std::runtime_error("InstanceInfoImpl::add_atom - predicate arity does not match the number of objects ("s + std::to_string(predicate.get_arity()) + " != " + std::to_string(objects.size()));
     }
     if (is_static) {
-        Atom atom = Atom(m_root, compute_atom_name(predicate, objects), m_static_atoms.size(), predicate, objects, is_static);
+        Atom atom = Atom(compute_atom_name(predicate, objects), m_static_atoms.size(), predicate, objects, is_static);
         auto result = m_static_atom_name_to_static_atom_idx.emplace(atom.get_name(), m_static_atoms.size());
         bool newly_inserted = result.second;
         if (!newly_inserted) {
@@ -64,7 +64,7 @@ const Atom& InstanceInfoImpl::add_atom(const Predicate& predicate, const std::ve
         m_static_atoms.push_back(std::move(atom));
         return m_static_atoms.back();
     } else {
-        Atom atom = Atom(m_root, compute_atom_name(predicate, objects), m_atoms.size(), predicate, objects, is_static);
+        Atom atom = Atom(compute_atom_name(predicate, objects), m_atoms.size(), predicate, objects, is_static);
         auto result = m_atom_name_to_atom_idx.emplace(atom.get_name(), m_atoms.size());
         bool newly_inserted = result.second;
         if (!newly_inserted) {
@@ -76,7 +76,7 @@ const Atom& InstanceInfoImpl::add_atom(const Predicate& predicate, const std::ve
 }
 
 const Object& InstanceInfoImpl::add_object(const std::string& object_name) {
-    Object object = Object(m_root, object_name, m_objects.size());
+    Object object = Object(object_name, m_objects.size());
     auto result = m_object_name_to_object_idx.emplace(object.get_name(), m_objects.size());
     if (!result.second) {
         throw std::runtime_error("InstanceInfoImpl::add_object - object with name ("s + object.get_name() + ") already exists.");
@@ -193,10 +193,6 @@ const RoleDenotation& InstanceInfoImpl::get_top_role() const {
         }
     }
     return m_top_role;
-}
-
-std::shared_ptr<const InstanceInfoRoot> InstanceInfoImpl::get_instance_info_root() const {
-    return m_root;
 }
 
 }
