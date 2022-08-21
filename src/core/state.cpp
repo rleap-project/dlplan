@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <stdexcept>
+#include <sstream>
 
 #include "instance_info.h"
 #include "../utils/collections.h"
@@ -89,21 +90,16 @@ std::string State::str() const {
 }
 
 size_t State::compute_hash() const {
+    std::string data;
+    data.reserve(sizeof(int) * m_atom_idxs.size() + sizeof(std::shared_ptr<InstanceInfo>) + 1);
+    for (int atom_idx : m_atom_idxs) {
+        data += atom_idx;
+    }
+    std::stringstream ss;
+    ss << m_instance_info.get();
+    data += ss.str();
     std::array<uint32_t, 4> a;
-    int total_size = (sizeof(int) * m_atom_idxs.size() + sizeof(std::shared_ptr<InstanceInfo>));
-    char* data = new char[total_size];
-    // copy atom_idxs
-    char* cur_dest = data;
-    const char* src = static_cast<const char*>(static_cast<const void*>(m_atom_idxs.begin().base()));
-    size_t amount = sizeof(int) * m_atom_idxs.size();
-    memcpy(cur_dest, src, amount);
-    // copy instance_info ptr
-    cur_dest = cur_dest + amount;
-    src = static_cast<const char*>(static_cast<const void*>(m_instance_info.get()));
-    amount = sizeof(std::shared_ptr<InstanceInfo>);
-    memcpy(cur_dest, src, amount);
-    MurmurHash3_x64_128(data, total_size, m_atom_idxs.size(), a.begin());
-    delete[] data;
+    MurmurHash3_x64_128(data.begin().base(), data.size(), m_atom_idxs.size(), a.begin());
     return std::hash<std::array<uint32_t, 4>>()(a);
 }
 
