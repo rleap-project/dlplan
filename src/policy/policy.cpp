@@ -196,6 +196,31 @@ Policy PolicyBuilder::get_result() {
 }
 
 
+PolicyMinimizer::PolicyMinimizer() { }
+
+PolicyMinimizer::PolicyMinimizer(const PolicyMinimizer& other) = default;
+
+PolicyMinimizer& PolicyMinimizer::operator=(const PolicyMinimizer& other) = default;
+
+PolicyMinimizer::PolicyMinimizer(PolicyMinimizer&& other) = default;
+
+PolicyMinimizer& PolicyMinimizer::operator=(PolicyMinimizer&& other) = default;
+
+PolicyMinimizer::~PolicyMinimizer() { }
+
+Policy PolicyMinimizer::minimize_greedy(const Policy& policy, const core::StatePairs& true_state_pairs, const core::StatePairs& false_state_pairs) const {
+    /*
+       Idea: A rule C -> E dominates a rules C' -> E' if C subseteq C', E subseteq E'
+             and substituting C' -> E' with C -> E in policy leads to consistent classification.
+    */
+    /* 1. try to remove conditions such that classification remains.
+    */
+    /* 2. try to remove effects such that classification remains.
+    */
+    throw std::runtime_error("Not implemented.");
+}
+
+
 PolicyReader::PolicyReader() = default;
 
 PolicyReader::PolicyReader(const PolicyReader& other)

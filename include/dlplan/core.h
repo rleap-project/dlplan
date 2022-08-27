@@ -20,6 +20,7 @@ class VocabularyInfoImpl;
 class SyntacticElementFactory;
 class InstanceInfo;
 class VocabularyInfo;
+class State;
 namespace element {
     template<typename T>
     class Element;
@@ -28,6 +29,8 @@ namespace element {
     class Numerical;
     class Boolean;
 }
+
+using StatePairs = std::vector<std::pair<State, State>>;
 
 class ConceptDenotationFlatSet {
 private:

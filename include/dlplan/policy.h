@@ -310,6 +310,24 @@ public:
 
 
 /**
+ * PolicyMinimizer provides methods to minimize the number of rules in a policy
+ * such that it distinguishes the same true and false state pairs.
+ */
+class PolicyMinimizer {
+private:
+public:
+    PolicyMinimizer();
+    PolicyMinimizer(const PolicyMinimizer& other);
+    PolicyMinimizer& operator=(const PolicyMinimizer& other);
+    PolicyMinimizer(PolicyMinimizer&& other);
+    PolicyMinimizer& operator=(PolicyMinimizer&& other);
+    ~PolicyMinimizer();
+
+    Policy minimize_greedy(const Policy& policy, const core::StatePairs& true_state_pairs, const core::StatePairs& false_state_pairs) const;
+};
+
+
+/**
  * PolicyReader for reading general policy from bytestream.
  */
 class PolicyReader {
