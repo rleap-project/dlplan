@@ -114,3 +114,8 @@ doi = {10.5281/zenodo.5826140},
 url = {https://doi.org/10.5281/zenodo.5826140}
 }
 ```
+
+## 7. Publications List
+
+- Learning and Exploiting Progress States in Greedy Best-First Search, Patrick Ferber, Liat Cohen, Jendrik Seipp, and Thomas Keller, International Joint Conference on Artificial Intelligence, 2022, Vienna, Austria
+- Learning Sketches for Decomposing Planning Problems into Subproblems of Bounded Width, Dominik Drexler, Jendrik Seipp, and Hector Geffner, International Conference on Automated Planning and Scheduling, 2022, Singapore, Singapore
