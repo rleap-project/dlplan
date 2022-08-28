@@ -13,11 +13,11 @@ using namespace dlplan;
 void init_evaluator(py::module_ &m) {
     py::class_<evaluator::EvaluationCache>(m, "EvaluationCache")
         .def(py::init<int, int>())
-        .def("retrieve_or_evaluate", py::overload_cast<int, const core::Boolean&, evaluator::EvaluationContext&>(&evaluator::EvaluationCache::retrieve_or_evaluate))
-        .def("retrieve_or_evaluate", py::overload_cast<int, const core::Numerical&, evaluator::EvaluationContext&>(&evaluator::EvaluationCache::retrieve_or_evaluate))
+        .def("retrieve_or_evaluate", py::overload_cast<const core::Boolean&, evaluator::EvaluationContext&>(&evaluator::EvaluationCache::retrieve_or_evaluate))
+        .def("retrieve_or_evaluate", py::overload_cast<const core::Numerical&, evaluator::EvaluationContext&>(&evaluator::EvaluationCache::retrieve_or_evaluate))
     ;
 
     py::class_<evaluator::EvaluationContext>(m, "EvaluationContext")
-        .def(py::init<int, const core::State&, evaluator::EvaluationCache&>())
+        .def(py::init<const core::State&, evaluator::EvaluationCache&>())
     ;
 }

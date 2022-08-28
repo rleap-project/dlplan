@@ -14,28 +14,6 @@ namespace py = pybind11;
 using namespace dlplan;
 
 void init_policy(py::module_ &m) {
-    py::class_<policy::core::BaseElement, std::shared_ptr<policy::core::BaseElement>>(m, "core::BaseElement")
-        .def("get_index", &policy::core::BaseElement::get_index)
-        .def("compute_repr", &policy::core::BaseElement::compute_repr)
-        .def("str", &policy::core::BaseElement::str)
-    ;
-
-    py::class_<policy::core::Boolean, std::shared_ptr<policy::core::Boolean>>(m, "core::Boolean")
-        .def("evaluate", &policy::core::Boolean::evaluate)
-        .def("get_index", &policy::core::Boolean::get_index)
-        .def("compute_repr", &policy::core::Boolean::compute_repr)
-        .def("str", &policy::core::Boolean::str)
-        .def("get_boolean", &policy::core::Boolean::get_boolean)
-    ;
-
-    py::class_<policy::core::Numerical, std::shared_ptr<policy::core::Numerical>>(m, "core::Numerical")
-        .def("evaluate", &policy::core::Numerical::evaluate)
-        .def("get_index", &policy::core::Numerical::get_index)
-        .def("compute_repr", &policy::core::Numerical::compute_repr)
-        .def("str", &policy::core::Numerical::str)
-        .def("get_numerical", &policy::core::Numerical::get_numerical)
-    ;
-
     py::class_<policy::BaseCondition, std::shared_ptr<policy::BaseCondition>>(m, "BaseCondition")
         .def("evaluate", &policy::BaseCondition::evaluate)
         .def("get_base_feature", &policy::BaseCondition::get_base_feature)
@@ -82,8 +60,8 @@ void init_policy(py::module_ &m) {
         .def("add_neg_effect", &policy::PolicyBuilder::add_neg_effect)
         .def("add_inc_effect", &policy::PolicyBuilder::add_inc_effect)
         .def("add_dec_effect", &policy::PolicyBuilder::add_dec_effect)
-        .def("add_bot_effect", py::overload_cast<std::shared_ptr<const policy::core::Boolean>>(&policy::PolicyBuilder::add_bot_effect))
-        .def("add_bot_effect", py::overload_cast<std::shared_ptr<const policy::core::Numerical>>(&policy::PolicyBuilder::add_bot_effect))
+        .def("add_bot_effect", py::overload_cast<std::shared_ptr<const core::Boolean>>(&policy::PolicyBuilder::add_bot_effect))
+        .def("add_bot_effect", py::overload_cast<std::shared_ptr<const core::Numerical>>(&policy::PolicyBuilder::add_bot_effect))
         .def("add_rule", &policy::PolicyBuilder::add_rule)
         .def("get_result", &policy::PolicyBuilder::get_result)
     ;
