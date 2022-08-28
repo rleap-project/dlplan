@@ -851,7 +851,7 @@ const VocabularyInfo* SyntacticElementFactory::get_vocabulary_info() const {
 }
 
 Concept SyntacticElementFactory::parse_concept(const std::string &description, int index) {
-    return m_pImpl->parse_concept(description);
+    return m_pImpl->parse_concept(description, index);
 }
 
 Role SyntacticElementFactory::parse_role(const std::string &description, int index) {
