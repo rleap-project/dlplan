@@ -17,6 +17,7 @@ class VocabularyInfoImpl;
 class InstanceInfoImpl {
 private:
     std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
+    int m_index;
 
     /**
      * All atoms.
@@ -44,7 +45,7 @@ private:
     const Atom& add_atom(const Predicate& predicate, const std::vector<Object>& objects, bool is_static);
 
 public:
-    explicit InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info);
+    explicit InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info, int index=-1);
     ~InstanceInfoImpl() = default;
 
     const Object& add_object(const std::string& object_name);
@@ -58,6 +59,7 @@ public:
     /**
      * Getters
      */
+    int get_index() const;
     bool exists_atom(const Atom& atom) const;
     const std::vector<Atom>& get_atoms() const;
     const std::vector<Atom>& get_static_atoms() const;

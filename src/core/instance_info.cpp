@@ -23,8 +23,8 @@ static std::string compute_atom_name(const Predicate& predicate, const std::vect
     return ss.str();
 }
 
-InstanceInfoImpl::InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info)
-    : m_vocabulary_info(vocabulary_info), m_top_concept(ConceptDenotation(0)), m_top_role(RoleDenotation(0)) {
+InstanceInfoImpl::InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info, int index)
+    : m_vocabulary_info(vocabulary_info), m_index(index), m_top_concept(ConceptDenotation(0)), m_top_role(RoleDenotation(0)) {
 }
 
 const Atom& InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
@@ -99,6 +99,10 @@ const Atom& InstanceInfoImpl::add_atom(const std::string &predicate_name, const 
 
 const Atom& InstanceInfoImpl::add_static_atom(const std::string& predicate_name, const Name_Vec& object_names) {
     return add_atom(predicate_name, object_names, true);
+}
+
+int InstanceInfoImpl::get_index() const {
+    return m_index;
 }
 
 bool InstanceInfoImpl::exists_atom(const Atom& atom) const {

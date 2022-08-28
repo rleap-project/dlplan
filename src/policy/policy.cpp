@@ -12,14 +12,22 @@
 namespace dlplan::policy {
 
 
-BaseCondition::BaseCondition(std::shared_ptr<const core::BaseElement> base_feature)
-    : m_base_feature(base_feature) { }
+BaseCondition::BaseCondition(std::shared_ptr<const core::BaseElement> base_feature, int index)
+    : m_base_feature(base_feature), m_index(index) { }
 
 BaseCondition::BaseCondition(BaseCondition&& other) = default;
 
 BaseCondition& BaseCondition::operator=(BaseCondition&& other) = default;
 
 BaseCondition::~BaseCondition() = default;
+
+void BaseCondition::set_index(int index) {
+    m_index = index;
+}
+
+int BaseCondition::get_index() const {
+    return m_index;
+}
 
 std::shared_ptr<const core::BaseElement> BaseCondition::get_base_feature() const {
     return m_base_feature;
@@ -30,14 +38,22 @@ std::string BaseCondition::str() const {
 }
 
 
-BaseEffect::BaseEffect(std::shared_ptr<const core::BaseElement> base_feature)
-    : m_base_feature(base_feature) { }
+BaseEffect::BaseEffect(std::shared_ptr<const core::BaseElement> base_feature, int index)
+    : m_base_feature(base_feature), m_index(index) { }
 
 BaseEffect::BaseEffect(BaseEffect&& other) = default;
 
 BaseEffect& BaseEffect::operator=(BaseEffect&& other) = default;
 
 BaseEffect::~BaseEffect() = default;
+
+void BaseEffect::set_index(int index) {
+    m_index = index;
+}
+
+int BaseEffect::get_index() const {
+    return m_index;
+}
 
 std::shared_ptr<const core::BaseElement> BaseEffect::get_base_feature() const {
     return m_base_feature;

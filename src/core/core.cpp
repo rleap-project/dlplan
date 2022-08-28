@@ -476,7 +476,7 @@ int RoleDenotationBitset::get_num_objects() const {
 }
 
 
-InstanceInfo::InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info) : m_pImpl(InstanceInfoImpl(vocabulary_info)) { }
+InstanceInfo::InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info, int index) : m_pImpl(InstanceInfoImpl(vocabulary_info, index)) { }
 
 InstanceInfo::InstanceInfo(const InstanceInfo& other)
     : m_pImpl(*other.m_pImpl) {}
@@ -518,6 +518,10 @@ const Atom& InstanceInfo::add_atom(const std::string &name, const Name_Vec &obje
 
 const Atom& InstanceInfo::add_static_atom(const std::string &name, const Name_Vec &object_names) {
     return m_pImpl->add_static_atom(name, object_names);
+}
+
+int InstanceInfo::get_index() const {
+    return m_pImpl->get_index();
 }
 
 bool InstanceInfo::exists_atom(const Atom& atom) const {
@@ -657,6 +661,10 @@ BaseElement::BaseElement(std::shared_ptr<const VocabularyInfo> vocabulary_info, 
     : m_vocabulary_info(vocabulary_info), m_index(index) { }
 
 BaseElement::~BaseElement() { }
+
+void BaseElement::set_index(int index) {
+    m_index = index;
+}
 
 int BaseElement::get_index() const {
     return m_index;

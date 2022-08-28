@@ -18,7 +18,7 @@ EvaluationCache& EvaluationCache::operator=(EvaluationCache&& other) = default;
 
 bool EvaluationCache::retrieve_or_evaluate(const core::Boolean& boolean, EvaluationContext& context) {
     assert(this == &context.cache);
-    auto view = m_boolean_denots_cache[context.state_idx];
+    auto view = m_boolean_denots_cache[context.state.get_index()];
     int start = 2 * boolean.get_index();
     //view.reset(start);
     //view.reset(start+1);
@@ -35,7 +35,7 @@ bool EvaluationCache::retrieve_or_evaluate(const core::Boolean& boolean, Evaluat
 
 int EvaluationCache::retrieve_or_evaluate(const core::Numerical& numerical, EvaluationContext& context) {
     assert(this == &context.cache);
-    auto view = m_numerical_denots_cache[context.state_idx];
+    auto view = m_numerical_denots_cache[context.state.get_index()];
     // -1 represents that the value is not cached.
     int& value = view[numerical.get_index()];
     //value = -1;
@@ -45,9 +45,9 @@ int EvaluationCache::retrieve_or_evaluate(const core::Numerical& numerical, Eval
     return value;
 }
 
-EvaluationContext::EvaluationContext(int state_idx, const core::State& state, EvaluationCache& cache)
-    : state_idx(state_idx), state(state), cache(cache) {
-        if (state_idx < 0 || state_idx < 0) {
+EvaluationContext::EvaluationContext(const core::State& state, EvaluationCache& cache)
+    : state(state), cache(cache) {
+        if (state.get_index() < 0 || state.get_index() < 0) {
             throw std::runtime_error("EvaluationContext::EvaluationContext: state_idx index cannot be negative.");
         }
     }

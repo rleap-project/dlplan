@@ -24,12 +24,13 @@ class EvaluationContext;
 /**
  * All different kinds of conditions.
  */
-class BaseCondition {
+class BaseCondition : public utils::cache::Cachable {
 private:
     std::shared_ptr<const core::BaseElement> m_base_feature;
+    int m_index;
 
 protected:
-    BaseCondition(std::shared_ptr<const core::BaseElement> base_feature);
+    BaseCondition(std::shared_ptr<const core::BaseElement> base_feature, int index=-1);
 
 public:
     // Condition is not copieable because it must live in the cache.
@@ -47,6 +48,15 @@ public:
 
     std::string str() const;
 
+    /**
+     * Setters.
+     */
+    void set_index(int index);
+
+    /**
+     * Getters.
+     */
+    int get_index() const;
     std::shared_ptr<const core::BaseElement> get_base_feature() const;
 };
 
@@ -54,12 +64,13 @@ public:
 /**
  * All different kinds of effects.
  */
-class BaseEffect {
+class BaseEffect : public utils::cache::Cachable {
 private:
     std::shared_ptr<const core::BaseElement> m_base_feature;
+    int m_index;
 
 protected:
-    BaseEffect(std::shared_ptr<const core::BaseElement> base_feature);
+    BaseEffect(std::shared_ptr<const core::BaseElement> base_feature, int index=-1);
 
 public:
     // Effect is not copieable because it must live in the cache.
@@ -77,6 +88,15 @@ public:
 
     std::string str() const;
 
+    /**
+     * Setters.
+     */
+    void set_index(int index);
+
+    /**
+     * Getters.
+     */
+    int get_index() const;
     std::shared_ptr<const core::BaseElement> get_base_feature() const;
 };
 
@@ -89,10 +109,12 @@ class Rule {
 private:
     std::vector<std::shared_ptr<const BaseCondition>> m_conditions;
     std::vector<std::shared_ptr<const BaseEffect>> m_effects;
+    int m_index;
 
 private:
     Rule(std::vector<std::shared_ptr<const BaseCondition>>&& conditions,
-        std::vector<std::shared_ptr<const BaseEffect>>&& effects);
+        std::vector<std::shared_ptr<const BaseEffect>>&& effects,
+        int index=-1);
     friend class PolicyBuilderImpl;
 
 public:
@@ -112,6 +134,15 @@ public:
 
     std::string str() const;
 
+    /**
+     * Setters.
+     */
+    void set_index(int index);
+
+    /**
+     * Getters.
+     */
+    int get_index() const;
     std::vector<std::shared_ptr<const BaseCondition>> get_conditions() const;
     std::vector<std::shared_ptr<const BaseEffect>> get_effects() const;
 };

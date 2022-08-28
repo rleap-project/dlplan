@@ -37,11 +37,10 @@ public:
 
 struct EvaluationContext {
     // The position in the result of the state is stored.
-    const int state_idx;
     const core::State& state;
     EvaluationCache& cache;
 
-    EvaluationContext(int state_idx, const core::State& state, EvaluationCache& cache);
+    EvaluationContext(const core::State& state, EvaluationCache& cache);
     // we must delete copy and move constructors and assignments because state is always const.
     EvaluationContext(const EvaluationContext& other) = delete;
     EvaluationContext& operator=(const EvaluationContext& other) = delete;

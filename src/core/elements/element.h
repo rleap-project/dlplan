@@ -14,7 +14,7 @@ namespace dlplan::core::element {
 
 
 template<typename T>
-class Element {
+class Element : public utils::cache::Cachable {
 protected:
     /**
      * Index can be used for internal caching.

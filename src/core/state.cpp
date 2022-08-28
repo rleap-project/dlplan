@@ -11,8 +11,8 @@
 
 namespace dlplan::core {
 
-State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms)
-    : m_instance_info(instance_info) {
+State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms, int index)
+    : m_instance_info(instance_info), m_index(index) {
     if (!std::all_of(atoms.begin(), atoms.end(), [&](const auto& atom){ return instance_info->exists_atom(atom); })) {
         throw std::runtime_error("State::State - atom does not exist in InstanceInfo.");
     }
@@ -28,8 +28,8 @@ State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vecto
     }
 }
 
-State::State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs)
-    : m_instance_info(instance_info) {
+State::State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs, int index)
+    : m_instance_info(instance_info), m_index(index) {
     const auto& atoms = instance_info->get_atoms();
     if (!std::all_of(atom_idxs.begin(), atom_idxs.end(), [&](int atom_idx){ return utils::in_bounds(atom_idx, atoms); })) {
         throw std::runtime_error("State::State - atom index out of range.");
@@ -70,6 +70,10 @@ std::shared_ptr<const InstanceInfo> State::get_instance_info() const {
 
 const Index_Vec& State::get_atom_idxs() const {
     return m_atom_idxs;
+}
+
+int State::get_index() const {
+    return m_index;
 }
 
 const phmap::flat_hash_map<int, std::vector<int>>& State::get_per_predicate_idx_atom_idxs() const {

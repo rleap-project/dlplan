@@ -8,6 +8,7 @@
 
 
 using namespace dlplan::policy;
+using namespace dlplan::core;
 
 int main() {
     // Construct SyntacticElementFactory
@@ -21,8 +22,8 @@ int main() {
     // Construct the empty policy.
     PolicyBuilder builder;
     // Add features.
-    std::shared_ptr<const core::Boolean> b = builder.add_boolean_feature(boolean);
-    std::shared_ptr<const core::Numerical> n = builder.add_numerical_feature(numerical);
+    std::shared_ptr<const Boolean> b = builder.add_boolean_feature(boolean);
+    std::shared_ptr<const Numerical> n = builder.add_numerical_feature(numerical);
     // Add conditions and effects the rule.
     std::shared_ptr<const BaseCondition> b_neg_condition_0 = builder.add_neg_condition(b);
     std::shared_ptr<const BaseEffect> b_bot_effect_0 = builder.add_bot_effect(b);
@@ -39,15 +40,15 @@ int main() {
     std::shared_ptr<dlplan::core::InstanceInfo> instance_info = std::make_shared<dlplan::core::InstanceInfo>(vocabulary_info);
     const auto a0 = instance_info->add_atom("unary", {"A"});
     const auto a1 = instance_info->add_atom("unary", {"B"});
-    dlplan::core::State s0(instance_info, std::vector<dlplan::core::Atom>());
-    dlplan::core::State s1(instance_info, {a0});
-    dlplan::core::State s2(instance_info, {a0, a1});
+    dlplan::core::State s0(instance_info, std::vector<dlplan::core::Atom>(), 0);
+    dlplan::core::State s1(instance_info, {a0}, 1);
+    dlplan::core::State s2(instance_info, {a0, a1}, 2);
 
     // Construt a cache and evaluation contexts to avoid redudant reevaluations
     dlplan::evaluator::EvaluationCache evaluation_cache(policy.get_boolean_features().size(), policy.get_numerical_features().size());
-    dlplan::evaluator::EvaluationContext s0_context(0, s0, evaluation_cache);
-    dlplan::evaluator::EvaluationContext s1_context(1, s1, evaluation_cache);
-    dlplan::evaluator::EvaluationContext s2_context(2, s2, evaluation_cache);
+    dlplan::evaluator::EvaluationContext s0_context(s0, evaluation_cache);
+    dlplan::evaluator::EvaluationContext s1_context(s1, evaluation_cache);
+    dlplan::evaluator::EvaluationContext s2_context(s2, evaluation_cache);
 
     // Evaluate the policy.
     assert(policy.evaluate_lazy(s2_context, s1_context));

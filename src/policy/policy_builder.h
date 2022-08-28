@@ -15,8 +15,6 @@ namespace core {
 }
 namespace policy {
 class PolicyRoot;
-class core::Boolean;
-class core::Numerical;
 class BaseCondition;
 class BaseEffect;
 class Rule;

@@ -12,6 +12,8 @@
 #include "dynamic_bitset.h"
 #include "phmap/phmap.h"
 
+#include "../../src/utils/cache.h"
+
 
 namespace dlplan::core {
 class SyntacticElementFactoryImpl;
@@ -361,16 +363,17 @@ class State {
 private:
     std::shared_ptr<const InstanceInfo> m_instance_info;
     Index_Vec m_atom_idxs;
+    int m_index;
 
     phmap::flat_hash_map<int, std::vector<int>> m_per_predicate_idx_atom_idxs;
 
 public:
-    State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms);
+    State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms, int index=-1);
     /**
      * Expert interface to construct states without the overhead
      * of copying Atoms but instead working on indices directly.
      */
-    State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs);
+    State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs, int index=-1);
     State(const State& other);
     State& operator=(const State& other);
     State(State&& other);
@@ -395,6 +398,7 @@ public:
      */
     std::shared_ptr<const InstanceInfo> get_instance_info() const;
     const Index_Vec& get_atom_idxs() const;
+    int get_index() const;
     const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_atom_idxs() const;
 };
 
@@ -440,7 +444,7 @@ private:
 
 public:
     InstanceInfo() = delete;
-    InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info);
+    InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info, int index=-1);
     InstanceInfo(const InstanceInfo& other);
     InstanceInfo& operator=(const InstanceInfo& other);
     InstanceInfo(InstanceInfo&& other);
@@ -463,6 +467,7 @@ public:
     /**
      * Getters.
      */
+    int get_index() const;
     bool exists_atom(const Atom& atom) const;
     const std::vector<Atom>& get_atoms() const;
     const std::vector<Atom>& get_static_atoms() const;
@@ -481,7 +486,7 @@ public:
 };
 
 
-class BaseElement {
+class BaseElement : public utils::cache::Cachable {
 protected:
 protected:
     std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
@@ -506,6 +511,11 @@ public:
      * Returns a canonical string representation.
      */
     virtual std::string compute_repr() const = 0;
+
+    /**
+     * Setters.
+     */
+    void set_index(int index);
 
     /**
      * Getters.
