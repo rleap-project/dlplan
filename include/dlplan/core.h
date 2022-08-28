@@ -481,24 +481,20 @@ public:
 };
 
 
-/**
- * Abstract base class of any Element.
- */
-template<typename T>
-class Element {
+class BaseElement {
+protected:
 protected:
     std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
+    /**
+     * Index can be used for external caching.
+     */
+    int m_index;
 
 protected:
-    Element(std::shared_ptr<const VocabularyInfo> vocabulary_info);
+    BaseElement(std::shared_ptr<const VocabularyInfo> vocabulary_info, int index=-1);
 
 public:
-    virtual ~Element();
-
-    /**
-     * Evaluates the element for a state given as a vector of atom indices.
-     */
-    virtual T evaluate(const State& state) const = 0;
+    virtual ~BaseElement();
 
     /**
      * Returns the complexity of the element
@@ -514,7 +510,25 @@ public:
     /**
      * Getters.
      */
+    int get_index() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
+};
+
+/**
+ * Abstract base class of any Element.
+ */
+template<typename T>
+class Element : public BaseElement {
+protected:
+    Element(std::shared_ptr<const VocabularyInfo> vocabulary_info, int index=-1);
+
+public:
+    ~Element() override;
+
+    /**
+     * Evaluates the element for a state given as a vector of atom indices.
+     */
+    virtual T evaluate(const State& state) const = 0;
 };
 
 
@@ -525,7 +539,7 @@ class Concept : public Element<ConceptDenotation> {
 private:
     std::shared_ptr<const element::Concept> m_element;
 
-    Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Concept>&& concept);
+    Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Concept>&& concept, int index=-1);
     friend class SyntacticElementFactoryImpl;
 
 public:
@@ -552,7 +566,7 @@ class Role : public Element<RoleDenotation> {
 private:
     std::shared_ptr<const element::Role> m_element;
 
-    Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Role>&& role);
+    Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Role>&& role, int index=-1);
     friend class SyntacticElementFactoryImpl;
 
 public:
@@ -579,7 +593,7 @@ class Numerical : public Element<int> {
 private:
     std::shared_ptr<const element::Numerical> m_element;
 
-    Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Numerical>&& numerical);
+    Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Numerical>&& numerical, int index=-1);
     friend class SyntacticElementFactoryImpl;
 
 public:
@@ -606,7 +620,7 @@ class Boolean : public Element<bool> {
 private:
     std::shared_ptr<const element::Boolean> m_element;
 
-    Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Boolean>&& boolean);
+    Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Boolean>&& boolean, int index=-1);
     friend class SyntacticElementFactoryImpl;
 
 public:
@@ -647,66 +661,66 @@ public:
      * Returns a Concept if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    Concept parse_concept(const std::string &description);
+    Concept parse_concept(const std::string &description, int index=-1);
 
     /**
      * Returns a Role if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    Role parse_role(const std::string &description);
+    Role parse_role(const std::string &description, int index=-1);
 
     /**
      * Returns a Numerical if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    Numerical parse_numerical(const std::string &description);
+    Numerical parse_numerical(const std::string &description, int index=-1);
 
     /**
      * Returns a Boolean if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    Boolean parse_boolean(const std::string &description);
+    Boolean parse_boolean(const std::string &description, int index=-1);
 
 
-    Boolean make_empty_boolean(const Concept& concept);
-    Boolean make_empty_boolean(const Role& role);
-    Boolean make_concept_inclusion_boolean(const Concept& concept_left, const Concept& concept_right);
-    Boolean make_role_inclusion_boolean(const Role& role_left, const Role& role_right);
-    Boolean make_nullary_boolean(const Predicate& predicate);
+    Boolean make_empty_boolean(const Concept& concept, int index=-1);
+    Boolean make_empty_boolean(const Role& role, int index=-1);
+    Boolean make_concept_inclusion_boolean(const Concept& concept_left, const Concept& concept_right, int index=-1);
+    Boolean make_role_inclusion_boolean(const Role& role_left, const Role& role_right, int index=-1);
+    Boolean make_nullary_boolean(const Predicate& predicate, int index=-1);
 
-    Concept make_all_concept(const Role& role, const Concept& concept);
-    Concept make_and_concept(const Concept& concept_left, const Concept& concept_right);
-    Concept make_bot_concept();
-    Concept make_diff_concept(const Concept& concept_left, const Concept& concept_right);
-    Concept make_equal_concept(const Role& role_left, const Role& role_right);
-    Concept make_not_concept(const Concept& concept);
-    Concept make_one_of_concept(const Constant& constant);
-    Concept make_or_concept(const Concept& concept_left, const Concept& concept_right);
-    Concept make_projection_concept(const Role& role, int pos);
-    Concept make_primitive_concept(const Predicate& predicate, int pos);
-    Concept make_some_concept(const Role& role, const Concept& concept);
-    Concept make_subset_concept(const Role& role_left, const Role& role_right);
-    Concept make_top_concept();
+    Concept make_all_concept(const Role& role, const Concept& concept, int index=-1);
+    Concept make_and_concept(const Concept& concept_left, const Concept& concept_right, int index=-1);
+    Concept make_bot_concept(int index=-1);
+    Concept make_diff_concept(const Concept& concept_left, const Concept& concept_right, int index=-1);
+    Concept make_equal_concept(const Role& role_left, const Role& role_right, int index=-1);
+    Concept make_not_concept(const Concept& concept, int index=-1);
+    Concept make_one_of_concept(const Constant& constant, int index=-1);
+    Concept make_or_concept(const Concept& concept_left, const Concept& concept_right, int index=-1);
+    Concept make_projection_concept(const Role& role, int pos, int index=-1);
+    Concept make_primitive_concept(const Predicate& predicate, int pos, int index=-1);
+    Concept make_some_concept(const Role& role, const Concept& concept, int index=-1);
+    Concept make_subset_concept(const Role& role_left, const Role& role_right, int index=-1);
+    Concept make_top_concept(int index=-1);
 
-    Numerical make_concept_distance(const Concept& concept_from, const Role& role, const Concept& concept_to);
-    Numerical make_count(const Concept& concept);
-    Numerical make_count(const Role& role);
-    Numerical make_role_distance(const Role& role_from, const Role& role, const Role& role_to);
-    Numerical make_sum_concept_distance(const Concept& concept_from, const Role& role, const Concept& concept_to);
-    Numerical make_sum_role_distance(const Role& role_from, const Role& role, const Role& role_to);
+    Numerical make_concept_distance(const Concept& concept_from, const Role& role, const Concept& concept_to, int index=-1);
+    Numerical make_count(const Concept& concept, int index=-1);
+    Numerical make_count(const Role& role, int index=-1);
+    Numerical make_role_distance(const Role& role_from, const Role& role, const Role& role_to, int index=-1);
+    Numerical make_sum_concept_distance(const Concept& concept_from, const Role& role, const Concept& concept_to, int index=-1);
+    Numerical make_sum_role_distance(const Role& role_from, const Role& role, const Role& role_to, int index=-1);
 
-    Role make_and_role(const Role& role_left, const Role& role_right);
-    Role make_compose_role(const Role& role_left, const Role& role_right);
-    Role make_diff_role(const Role& role_left, const Role& role_right);
-    Role make_identity_role(const Concept& concept);
-    Role make_inverse_role(const Role& role);
-    Role make_not_role(const Role& role);
-    Role make_or_role(const Role& role_left, const Role& role_right);
-    Role make_primitive_role(const Predicate& predicate, int pos_1, int pos_2);
-    Role make_restrict_role(const Role& role, const Concept& concept);
-    Role make_top_role();
-    Role make_transitive_closure(const Role& role);
-    Role make_transitive_reflexive_closure(const Role& role);
+    Role make_and_role(const Role& role_left, const Role& role_right, int index=-1);
+    Role make_compose_role(const Role& role_left, const Role& role_right, int index=-1);
+    Role make_diff_role(const Role& role_left, const Role& role_right, int index=-1);
+    Role make_identity_role(const Concept& concept, int index=-1);
+    Role make_inverse_role(const Role& role, int index=-1);
+    Role make_not_role(const Role& role, int index=-1);
+    Role make_or_role(const Role& role_left, const Role& role_right, int index=-1);
+    Role make_primitive_role(const Predicate& predicate, int pos_1, int pos_2, int index=-1);
+    Role make_restrict_role(const Role& role, const Concept& concept, int index=-1);
+    Role make_top_role(int index=-1);
+    Role make_transitive_closure(const Role& role, int index=-1);
+    Role make_transitive_reflexive_closure(const Role& role, int index=-1);
 };
 
 }

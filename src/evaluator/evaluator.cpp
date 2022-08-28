@@ -16,10 +16,10 @@ EvaluationCache::EvaluationCache(EvaluationCache&& other) = default;
 
 EvaluationCache& EvaluationCache::operator=(EvaluationCache&& other) = default;
 
-bool EvaluationCache::retrieve_or_evaluate(int boolean_idx, const core::Boolean& boolean, EvaluationContext& context) {
+bool EvaluationCache::retrieve_or_evaluate(const core::Boolean& boolean, EvaluationContext& context) {
     assert(this == &context.cache);
     auto view = m_boolean_denots_cache[context.state_idx];
-    int start = 2 * boolean_idx;
+    int start = 2 * boolean.get_index();
     //view.reset(start);
     //view.reset(start+1);
     if (!view.test(start)) {
@@ -33,11 +33,11 @@ bool EvaluationCache::retrieve_or_evaluate(int boolean_idx, const core::Boolean&
     return view.test(start + 1);
 }
 
-int EvaluationCache::retrieve_or_evaluate(int numerical_idx, const core::Numerical& numerical, EvaluationContext& context) {
+int EvaluationCache::retrieve_or_evaluate(const core::Numerical& numerical, EvaluationContext& context) {
     assert(this == &context.cache);
     auto view = m_numerical_denots_cache[context.state_idx];
     // -1 represents that the value is not cached.
-    int& value = view[numerical_idx];
+    int& value = view[numerical.get_index()];
     //value = -1;
     if (value == -1) {
         value = numerical.evaluate(context.state);

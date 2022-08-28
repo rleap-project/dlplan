@@ -58,10 +58,10 @@ Expression_Ptr ExpressionFactory::make_ast(const std::string &name, std::vector<
                 return std::make_unique<EffectsExpression>(EffectsExpression(name, std::move(children)));
             }
             case BOOLEAN_FEATURES: {
-                return std::make_unique<BooleanFeaturesExpression>(BooleanFeaturesExpression(name, std::move(children)));
+                return std::make_unique<BooleansExpression>(BooleansExpression(name, std::move(children)));
             }
             case NUMERICAL_FEATURES: {
-                return std::make_unique<NumericalFeaturesExpression>(NumericalFeaturesExpression(name, std::move(children)));
+                return std::make_unique<NumericalsExpression>(NumericalsExpression(name, std::move(children)));
             }
             case C_B_POS: {
                 return std::make_unique<PositiveBooleanConditionExpression>(PositiveBooleanConditionExpression(name, std::move(children)));

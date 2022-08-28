@@ -8,52 +8,55 @@
 
 
 namespace dlplan::policy {
-template<typename T>
-class Feature;
 
-
-template<typename T>
-class Condition : public BaseCondition {
+class BooleanCondition : public BaseCondition {
 protected:
-    const std::shared_ptr<const Feature<T>> m_feature;
+    const std::shared_ptr<const core::Boolean> m_boolean;
 
 protected:
-    Condition(std::shared_ptr<const Feature<T>> feature);
-
-    std::shared_ptr<const Feature<T>> get_feature() const;
+    BooleanCondition(std::shared_ptr<const core::Boolean> boolean);
 };
 
 
-class PositiveBooleanCondition : public Condition<bool> {
+class NumericalCondition : public BaseCondition {
+protected:
+    const std::shared_ptr<const core::Numerical> m_numerical;
+
+protected:
+    NumericalCondition(std::shared_ptr<const core::Numerical> numerical);
+};
+
+
+class PositiveBooleanCondition : public BooleanCondition {
 public:
-    PositiveBooleanCondition(std::shared_ptr<const BooleanFeature> boolean_feature);
+    PositiveBooleanCondition(std::shared_ptr<const core::Boolean> boolean_feature);
 
     bool evaluate(evaluator::EvaluationContext& source_context) const override;
 
     std::string compute_repr() const override;
 };
 
-class NegativeBooleanCondition : public Condition<bool> {
+class NegativeBooleanCondition : public BooleanCondition {
 public:
-    NegativeBooleanCondition(std::shared_ptr<const BooleanFeature> boolean_feature);
+    NegativeBooleanCondition(std::shared_ptr<const core::Boolean> boolean_feature);
 
     bool evaluate(evaluator::EvaluationContext& source_context) const override;
 
     std::string compute_repr() const override;
 };
 
-class EqualNumericalCondition : public Condition<int> {
+class EqualNumericalCondition : public NumericalCondition {
 public:
-    EqualNumericalCondition(std::shared_ptr<const NumericalFeature> numerical_feature);
+    EqualNumericalCondition(std::shared_ptr<const core::Numerical> numerical_feature);
 
     bool evaluate(evaluator::EvaluationContext& source_context) const override;
 
     std::string compute_repr() const override;
 };
 
-class GreaterNumericalCondition : public Condition<int> {
+class GreaterNumericalCondition : public NumericalCondition {
 public:
-    GreaterNumericalCondition(std::shared_ptr<const NumericalFeature> numerical_feature);
+    GreaterNumericalCondition(std::shared_ptr<const core::Numerical> numerical_feature);
 
     bool evaluate(evaluator::EvaluationContext& source_context) const override;
 
@@ -61,7 +64,5 @@ public:
 };
 
 }
-
-#include "condition.tpp"
 
 #endif

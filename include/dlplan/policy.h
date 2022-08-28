@@ -22,115 +22,14 @@ class EvaluationContext;
 
 
 /**
- * A BaseFeature is shared across all conditions and effects that use it.
- * The underlying type of feature is abstract.
- */
-class BaseFeature {
-private:
-    int m_index;
-
-protected:
-    BaseFeature(int index);
-
-public:
-    // BaseFeature is not copieable because it must live in the cache.
-    // For construction we need it to be moveable.
-    // However, moving cannot be abused because BaseFeature is always const
-    BaseFeature(const BaseFeature& other) = delete;
-    BaseFeature& operator=(const BaseFeature& other) = delete;
-    BaseFeature(BaseFeature&& other);
-    BaseFeature& operator=(BaseFeature&& other);
-    virtual ~BaseFeature();
-
-    virtual std::string compute_repr() const = 0;
-
-    virtual std::string str() const = 0;
-
-    int get_index() const;
-};
-
-
-template<typename T>
-class Feature : public BaseFeature {
-protected:
-    Feature(int index);
-
-public:
-    Feature(const Feature& other) = delete;
-    Feature& operator=(const Feature& other) = delete;
-    Feature(Feature&& other) = default;
-    Feature& operator=(Feature&& other) = default;
-    ~Feature() {}
-
-    virtual T evaluate(evaluator::EvaluationContext& context) const = 0;
-};
-
-
-class BooleanFeature : public Feature<bool> {
-private:
-    core::Boolean m_boolean;
-
-private:
-    BooleanFeature(int index, core::Boolean&& boolean);
-    friend class PolicyBuilderImpl;
-
-public:
-    // BooleanFeature is not copieable because it must live in the cache.
-    // For construction we need it to be moveable.
-    // However, moving cannot be abused because BooleanFeatures is always const
-    BooleanFeature(const BooleanFeature& other) = delete;
-    BooleanFeature& operator=(const BooleanFeature& other) = delete;
-    BooleanFeature(BooleanFeature&& other);
-    BooleanFeature& operator=(BooleanFeature&& other);
-    ~BooleanFeature() override;
-
-    bool evaluate(evaluator::EvaluationContext& context) const override;
-
-    std::string compute_repr() const override;
-
-    std::string str() const;
-
-    core::Boolean get_boolean() const;
-};
-
-
-class NumericalFeature : public Feature<int> {
-private:
-    core::Numerical m_numerical;
-
-private:
-    NumericalFeature(int index, core::Numerical&& numerical);
-    friend class PolicyBuilderImpl;
-
-public:
-    // NumericalFeature is not copieable because it must live in the cache.
-    // For construction we need it to be moveable.
-    // However, moving cannot be abused because NumericalFeatures is always const
-    NumericalFeature(const NumericalFeature& other) = delete;
-    NumericalFeature& operator=(const NumericalFeature& other) = delete;
-    NumericalFeature(NumericalFeature&& other);
-    NumericalFeature& operator=(NumericalFeature&& other);
-    ~NumericalFeature() override;
-
-    int evaluate(evaluator::EvaluationContext& context) const override;
-
-    std::string compute_repr() const override;
-
-    std::string str() const;
-
-    core::Numerical get_numerical() const;
-};
-
-
-/**
  * All different kinds of conditions.
  */
 class BaseCondition {
 private:
-    std::shared_ptr<const BaseFeature> m_base_feature;
+    std::shared_ptr<const core::BaseElement> m_base_feature;
 
 protected:
-    BaseCondition(std::shared_ptr<const BaseFeature> base_feature);
+    BaseCondition(std::shared_ptr<const core::BaseElement> base_feature);
 
 public:
     // Condition is not copieable because it must live in the cache.
@@ -148,7 +47,7 @@ public:
 
     std::string str() const;
 
-    std::shared_ptr<const BaseFeature> get_base_feature() const;
+    std::shared_ptr<const core::BaseElement> get_base_feature() const;
 };
 
 
@@ -157,10 +56,10 @@ public:
  */
 class BaseEffect {
 private:
-    std::shared_ptr<const BaseFeature> m_base_feature;
+    std::shared_ptr<const core::BaseElement> m_base_feature;
 
 protected:
-    BaseEffect(std::shared_ptr<const BaseFeature> base_feature);
+    BaseEffect(std::shared_ptr<const core::BaseElement> base_feature);
 
 public:
     // Effect is not copieable because it must live in the cache.
@@ -178,7 +77,7 @@ public:
 
     std::string str() const;
 
-    std::shared_ptr<const BaseFeature> get_base_feature() const;
+    std::shared_ptr<const core::BaseElement> get_base_feature() const;
 };
 
 
@@ -223,13 +122,13 @@ public:
  */
 class Policy {
 private:
-    std::vector<std::shared_ptr<const BooleanFeature>> m_boolean_features;
-    std::vector<std::shared_ptr<const NumericalFeature>> m_numerical_features;
+    std::vector<std::shared_ptr<const core::Boolean>> m_boolean_features;
+    std::vector<std::shared_ptr<const core::Numerical>> m_numerical_features;
     std::vector<std::shared_ptr<const Rule>> m_rules;
 
 private:
-    Policy(std::vector<std::shared_ptr<const BooleanFeature>>&& boolean_features,
-           std::vector<std::shared_ptr<const NumericalFeature>>&& numerical_features,
+    Policy(std::vector<std::shared_ptr<const core::Boolean>>&& boolean_features,
+           std::vector<std::shared_ptr<const core::Numerical>>&& numerical_features,
            std::vector<std::shared_ptr<const Rule>>&& rules);
     friend class PolicyBuilderImpl;
 
@@ -256,8 +155,8 @@ public:
     std::string str() const;
 
     std::vector<std::shared_ptr<const Rule>> get_rules() const;
-    std::vector<std::shared_ptr<const BooleanFeature>> get_boolean_features() const;
-    std::vector<std::shared_ptr<const NumericalFeature>> get_numerical_features() const;
+    std::vector<std::shared_ptr<const core::Boolean>> get_boolean_features() const;
+    std::vector<std::shared_ptr<const core::Numerical>> get_numerical_features() const;
 };
 
 
@@ -276,22 +175,22 @@ public:
     /**
      * Uniquely adds features.
      */
-    std::shared_ptr<const BooleanFeature> add_boolean_feature(core::Boolean b);
-    std::shared_ptr<const NumericalFeature> add_numerical_feature(core::Numerical n);
+    std::shared_ptr<const core::Boolean> add_boolean_feature(core::Boolean b);
+    std::shared_ptr<const core::Numerical> add_numerical_feature(core::Numerical n);
 
     /**
      * Uniquely adds a condition (resp. effect) to the policy and returns it.
      */
-    std::shared_ptr<const BaseCondition> add_pos_condition(std::shared_ptr<const BooleanFeature> b);
-    std::shared_ptr<const BaseCondition> add_neg_condition(std::shared_ptr<const BooleanFeature> b);
-    std::shared_ptr<const BaseCondition> add_gt_condition(std::shared_ptr<const NumericalFeature> n);
-    std::shared_ptr<const BaseCondition> add_eq_condition(std::shared_ptr<const NumericalFeature> n);
-    std::shared_ptr<const BaseEffect> add_pos_effect(std::shared_ptr<const BooleanFeature> b);
-    std::shared_ptr<const BaseEffect> add_neg_effect(std::shared_ptr<const BooleanFeature> b);
-    std::shared_ptr<const BaseEffect> add_bot_effect(std::shared_ptr<const BooleanFeature> b);
-    std::shared_ptr<const BaseEffect> add_inc_effect(std::shared_ptr<const NumericalFeature> n);
-    std::shared_ptr<const BaseEffect> add_dec_effect(std::shared_ptr<const NumericalFeature> n);
-    std::shared_ptr<const BaseEffect> add_bot_effect(std::shared_ptr<const NumericalFeature> n);
+    std::shared_ptr<const BaseCondition> add_pos_condition(std::shared_ptr<const core::Boolean> b);
+    std::shared_ptr<const BaseCondition> add_neg_condition(std::shared_ptr<const core::Boolean> b);
+    std::shared_ptr<const BaseCondition> add_gt_condition(std::shared_ptr<const core::Numerical> n);
+    std::shared_ptr<const BaseCondition> add_eq_condition(std::shared_ptr<const core::Numerical> n);
+    std::shared_ptr<const BaseEffect> add_pos_effect(std::shared_ptr<const core::Boolean> b);
+    std::shared_ptr<const BaseEffect> add_neg_effect(std::shared_ptr<const core::Boolean> b);
+    std::shared_ptr<const BaseEffect> add_bot_effect(std::shared_ptr<const core::Boolean> b);
+    std::shared_ptr<const BaseEffect> add_inc_effect(std::shared_ptr<const core::Numerical> n);
+    std::shared_ptr<const BaseEffect> add_dec_effect(std::shared_ptr<const core::Numerical> n);
+    std::shared_ptr<const BaseEffect> add_bot_effect(std::shared_ptr<const core::Numerical> n);
 
     /**
      * Uniquely adds a rule to the policy and returns it.
@@ -363,7 +262,5 @@ public:
 };
 
 }
-
-#include "policy.tpp"
 
 #endif

@@ -21,8 +21,8 @@ int main() {
     // Construct the empty policy.
     PolicyBuilder builder;
     // Add features.
-    std::shared_ptr<const BooleanFeature> b = builder.add_boolean_feature(boolean);
-    std::shared_ptr<const NumericalFeature> n = builder.add_numerical_feature(numerical);
+    std::shared_ptr<const core::Boolean> b = builder.add_boolean_feature(boolean);
+    std::shared_ptr<const core::Numerical> n = builder.add_numerical_feature(numerical);
     // Add conditions and effects the rule.
     std::shared_ptr<const BaseCondition> b_neg_condition_0 = builder.add_neg_condition(b);
     std::shared_ptr<const BaseEffect> b_bot_effect_0 = builder.add_bot_effect(b);

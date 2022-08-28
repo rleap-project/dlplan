@@ -12,8 +12,8 @@
 namespace dlplan::policy {
 
 Policy::Policy(
-    std::vector<std::shared_ptr<const BooleanFeature>>&& boolean_features,
-    std::vector<std::shared_ptr<const NumericalFeature>>&& numerical_features,
+    std::vector<std::shared_ptr<const core::Boolean>>&& boolean_features,
+    std::vector<std::shared_ptr<const core::Numerical>>&& numerical_features,
     std::vector<std::shared_ptr<const Rule>>&& rules)
     : m_boolean_features(std::move(boolean_features)),
       m_numerical_features(std::move(numerical_features)),
@@ -113,11 +113,11 @@ std::vector<std::shared_ptr<const Rule>> Policy::get_rules() const {
     return m_rules;
 }
 
-std::vector<std::shared_ptr<const BooleanFeature>> Policy::get_boolean_features() const {
+std::vector<std::shared_ptr<const core::Boolean>> Policy::get_boolean_features() const {
     return m_boolean_features;
 }
 
-std::vector<std::shared_ptr<const NumericalFeature>> Policy::get_numerical_features() const {
+std::vector<std::shared_ptr<const core::Numerical>> Policy::get_numerical_features() const {
     return m_numerical_features;
 }
 

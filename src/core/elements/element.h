@@ -16,12 +16,15 @@ namespace dlplan::core::element {
 template<typename T>
 class Element {
 protected:
-    // The name.
+    /**
+     * Index can be used for internal caching.
+     */
+    int m_index;
     const std::string m_name;
 
 public:
     // Elements are not copieable because they must live in the cache.
-    Element(const VocabularyInfo&, const std::string& name) : m_name(name) { }
+    Element(const VocabularyInfo&, const std::string& name) : m_index(-1), m_name(name) { }
     Element(const Element& other) = delete;
     Element& operator=(const Element& other) = delete;
     Element(Element&& other) = delete;
@@ -33,6 +36,10 @@ public:
     virtual int compute_complexity() const = 0;
 
     virtual void compute_repr(std::stringstream& out) const = 0;
+
+    void set_index(int index) {
+        m_index = index;
+    }
 
     virtual std::string compute_repr() const {
         std::stringstream ss;

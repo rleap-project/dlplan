@@ -30,8 +30,8 @@ public:
     EvaluationCache(EvaluationCache&& other);
     EvaluationCache& operator=(EvaluationCache&& other);
 
-    bool retrieve_or_evaluate(int boolean_idx, const core::Boolean& boolean, EvaluationContext& context);
-    int retrieve_or_evaluate(int numerical_idx, const core::Numerical& numerical, EvaluationContext& context);
+    bool retrieve_or_evaluate(const core::Boolean& boolean, EvaluationContext& context);
+    int retrieve_or_evaluate(const core::Numerical& numerical, EvaluationContext& context);
 };
 
 
