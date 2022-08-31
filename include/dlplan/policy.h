@@ -158,9 +158,9 @@ private:
     std::vector<std::shared_ptr<const Rule>> m_rules;
 
 private:
-    Policy(std::vector<std::shared_ptr<const core::Boolean>>&& boolean_features,
-           std::vector<std::shared_ptr<const core::Numerical>>&& numerical_features,
-           std::vector<std::shared_ptr<const Rule>>&& rules);
+    Policy(const std::vector<std::shared_ptr<const core::Boolean>>& boolean_features,
+           const std::vector<std::shared_ptr<const core::Numerical>>& numerical_features,
+           const std::vector<std::shared_ptr<const Rule>>& rules);
     friend class PolicyBuilderImpl;
 
 public:

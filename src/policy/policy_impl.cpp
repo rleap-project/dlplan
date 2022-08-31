@@ -12,12 +12,12 @@
 namespace dlplan::policy {
 
 Policy::Policy(
-    std::vector<std::shared_ptr<const core::Boolean>>&& boolean_features,
-    std::vector<std::shared_ptr<const core::Numerical>>&& numerical_features,
-    std::vector<std::shared_ptr<const Rule>>&& rules)
-    : m_boolean_features(std::move(boolean_features)),
-      m_numerical_features(std::move(numerical_features)),
-      m_rules(std::move(rules)) { }
+    const std::vector<std::shared_ptr<const core::Boolean>>& boolean_features,
+    const std::vector<std::shared_ptr<const core::Numerical>>& numerical_features,
+    const std::vector<std::shared_ptr<const Rule>>& rules)
+    : m_boolean_features(boolean_features),
+      m_numerical_features(numerical_features),
+      m_rules(rules) { }
 
 Policy::Policy(const Policy& other) = default;
 
