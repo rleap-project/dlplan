@@ -2,8 +2,9 @@
 #define DLPLAN_INCLUDE_DLPLAN_EVALUATOR_H_
 
 #include "core.h"
-#include "per_index_array.h"
-#include "per_index_bitset.h"
+
+#include "utils/per_index_array.h"
+#include "utils/per_index_bitset.h"
 
 
 namespace dlplan::evaluator {

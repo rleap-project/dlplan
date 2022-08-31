@@ -2,13 +2,13 @@
 // We follow option 4 (10/10) described in https://herbsutter.com/gotw/_100/:
 //   * Put all private nonvirtual members into impl;
 
-#ifndef DLPLAN_INCLUDE_DLPLAN_PIMPL_H_
-#define DLPLAN_INCLUDE_DLPLAN_PIMPL_H_
+#ifndef DLPLAN_INCLUDE_DLPLAN_UTILS_PIMPL_H_
+#define DLPLAN_INCLUDE_DLPLAN_UTILS_PIMPL_H_
 
 #include <memory>
 
 
-namespace dlplan {
+namespace dlplan::utils {
 
 /**
  * Unique_ptr version without automatically generated copy constructor and copy assignment.

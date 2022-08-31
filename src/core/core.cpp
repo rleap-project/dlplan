@@ -222,7 +222,7 @@ int RoleDenotationFlatSet::get_num_objects() const {
 
 
 ConceptDenotationBitset::ConceptDenotationBitset(int num_objects)
-    : m_num_objects(num_objects), m_data(dynamic_bitset::DynamicBitset<unsigned>(num_objects)) { }
+    : m_num_objects(num_objects), m_data(utils::DynamicBitset<unsigned>(num_objects)) { }
 
 ConceptDenotationBitset::ConceptDenotationBitset(const ConceptDenotationBitset& other) = default;
 
@@ -344,7 +344,7 @@ int ConceptDenotationBitset::get_num_objects() const {
 
 
 RoleDenotationBitset::RoleDenotationBitset(int num_objects)
-    : m_num_objects(num_objects), m_data(dynamic_bitset::DynamicBitset<unsigned>(num_objects * num_objects)) { }
+    : m_num_objects(num_objects), m_data(utils::DynamicBitset<unsigned>(num_objects * num_objects)) { }
 
 RoleDenotationBitset::RoleDenotationBitset(const RoleDenotationBitset& other) = default;
 

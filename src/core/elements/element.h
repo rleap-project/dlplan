@@ -2,9 +2,9 @@
 #define DLPLAN_SRC_CORE_ELEMENTS_ELEMENT_H_
 
 #include "../../../include/dlplan/types.h"
+#include "../../../include/dlplan/utils/cache.h"
 #include "../instance_info.h"
 #include "../vocabulary_info.h"
-#include "../cache.h"
 
 #include <iostream>
 #include <sstream>
@@ -14,7 +14,7 @@ namespace dlplan::core::element {
 
 
 template<typename T>
-class Element : public utils::cache::Cachable {
+class Element : public utils::Cachable {
 protected:
     /**
      * Index can be used for internal caching.

@@ -2,7 +2,6 @@
 #define DLPLAN_INCLUDE_DLPLAN_GENERATOR_H_
 
 #include "core.h"
-#include "pimpl.h"
 
 
 namespace dlplan::generator {
@@ -22,7 +21,7 @@ using FeatureRepresentations = std::vector<std::string>;
  */
 class FeatureGenerator {
 private:
-    pimpl<FeatureGeneratorImpl> m_pImpl;
+    utils::pimpl<FeatureGeneratorImpl> m_pImpl;
 
 public:
     FeatureGenerator();

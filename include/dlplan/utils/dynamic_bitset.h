@@ -1,5 +1,5 @@
-#ifndef DLPLAN_INCLUDE_DLPLAN_DYNAMIC_BITSET_H
-#define DLPLAN_INCLUDE_DLPLAN_DYNAMIC_BITSET_H
+#ifndef DLPLAN_INCLUDE_DLPLAN_UTILS_DYNAMIC_BITSET_H
+#define DLPLAN_INCLUDE_DLPLAN_UTILS_DYNAMIC_BITSET_H
 
 #include <cassert>
 #include <limits>
@@ -9,7 +9,8 @@
 /*
   Poor man's version of boost::dynamic_bitset, mostly copied from there.
 */
-namespace dlplan::dynamic_bitset {
+namespace dlplan::utils {
+
 template<typename Block = unsigned int>
 class DynamicBitset {
     static_assert(

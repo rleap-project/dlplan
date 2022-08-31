@@ -7,12 +7,14 @@
 #include <unordered_set>
 #include <unordered_map>
 
-#include "pimpl.h"
 #include "types.h"
-#include "dynamic_bitset.h"
+
 #include "phmap/phmap.h"
 
-#include "../../src/utils/cache.h"
+#include "utils/pimpl.h"
+#include "utils/dynamic_bitset.h"
+#include "utils/cache.h"
+
 
 
 namespace dlplan::core {
@@ -109,14 +111,14 @@ public:
 class ConceptDenotationBitset {
 private:
     int m_num_objects;
-    dynamic_bitset::DynamicBitset<unsigned> m_data;
+    utils::DynamicBitset<unsigned> m_data;
 
 public:
     // Special iterator for bitset representing set of integers
     class const_iterator {
         public:
             using iterator_category = std::forward_iterator_tag;
-            using value_type        = dynamic_bitset::DynamicBitset<unsigned>;
+            using value_type        = utils::DynamicBitset<unsigned>;
             using const_reference   = const value_type&;
 
             const_iterator(const_reference data, int num_objects, bool end=false);
@@ -173,14 +175,14 @@ using ConceptDenotation = ConceptDenotationBitset;
 class RoleDenotationBitset {
 private:
     int m_num_objects;
-    dynamic_bitset::DynamicBitset<unsigned> m_data;
+    utils::DynamicBitset<unsigned> m_data;
 
 public:
     // Special iterator for bitset representing set of pairs of ints.
     class const_iterator {
         public:
             using iterator_category = std::forward_iterator_tag;
-            using value_type        = dynamic_bitset::DynamicBitset<unsigned>;
+            using value_type        = utils::DynamicBitset<unsigned>;
             using const_reference   = const value_type&;
 
             const_iterator(const_reference data, int num_objects, bool end=false);
@@ -408,7 +410,7 @@ public:
  */
 class VocabularyInfo {
 private:
-    pimpl<VocabularyInfoImpl> m_pImpl;
+    utils::pimpl<VocabularyInfoImpl> m_pImpl;
 
 public:
     VocabularyInfo();
@@ -440,7 +442,7 @@ public:
  */
 class InstanceInfo {
 private:
-    pimpl<InstanceInfoImpl> m_pImpl;
+    utils::pimpl<InstanceInfoImpl> m_pImpl;
 
 public:
     InstanceInfo() = delete;
@@ -486,7 +488,7 @@ public:
 };
 
 
-class BaseElement : public utils::cache::Cachable {
+class BaseElement : public utils::Cachable {
 protected:
 protected:
     std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
@@ -655,7 +657,7 @@ public:
  */
 class SyntacticElementFactory {
 private:
-    pimpl<SyntacticElementFactoryImpl> m_pImpl;
+    utils::pimpl<SyntacticElementFactoryImpl> m_pImpl;
 
 public:
     SyntacticElementFactory(std::shared_ptr<const VocabularyInfo> vocabulary_info);

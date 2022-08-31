@@ -1,12 +1,12 @@
-#ifndef DLPLAN_SRC_UTILS_CACHE_H_
-#define DLPLAN_SRC_UTILS_CACHE_H_
+#ifndef DLPLAN_INCLUDE_DLPLAN_UTILS_CACHE_H_
+#define DLPLAN_INCLUDE_DLPLAN_UTILS_CACHE_H_
 
 #include <unordered_map>
 #include <memory>
 #include <mutex>
 
 
-namespace dlplan::utils::cache {
+namespace dlplan::utils {
 
 /**
  * Interface for a cachable object.

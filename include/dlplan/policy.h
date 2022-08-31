@@ -9,7 +9,6 @@
 
 #include "evaluator.h"
 #include "core.h"
-#include "pimpl.h"
 
 
 namespace dlplan::policy {
@@ -24,7 +23,7 @@ class EvaluationContext;
 /**
  * All different kinds of conditions.
  */
-class BaseCondition : public utils::cache::Cachable {
+class BaseCondition : public utils::Cachable {
 private:
     std::shared_ptr<const core::BaseElement> m_base_feature;
     int m_index;
@@ -64,7 +63,7 @@ public:
 /**
  * All different kinds of effects.
  */
-class BaseEffect : public utils::cache::Cachable {
+class BaseEffect : public utils::Cachable {
 private:
     std::shared_ptr<const core::BaseElement> m_base_feature;
     int m_index;
@@ -105,7 +104,7 @@ public:
  * A rule over Boolean and numerical features has form C -> E
  * where C is set of feature conditions and E is set of feature effects
  */
-class Rule {
+class Rule : public utils::Cachable {
 private:
     std::vector<std::shared_ptr<const BaseCondition>> m_conditions;
     std::vector<std::shared_ptr<const BaseEffect>> m_effects;
@@ -193,7 +192,7 @@ public:
 
 class PolicyBuilder {
 private:
-    pimpl<PolicyBuilderImpl> m_pImpl;
+    utils::pimpl<PolicyBuilderImpl> m_pImpl;
 
 public:
     PolicyBuilder();
@@ -262,7 +261,7 @@ public:
  */
 class PolicyReader {
 private:
-    pimpl<PolicyReaderImpl> m_pImpl;
+    utils::pimpl<PolicyReaderImpl> m_pImpl;
 
 public:
     PolicyReader();
@@ -279,7 +278,7 @@ public:
  * PolicyWriter for writing general policy to bytestream.
  */
 class PolicyWriter {
-    pimpl<PolicyWriterImpl> m_pImpl;
+    utils::pimpl<PolicyWriterImpl> m_pImpl;
 
 public:
     PolicyWriter();

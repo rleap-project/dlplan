@@ -3,8 +3,6 @@
 
 #include "../role.h"
 
-#include "../../../../include/dlplan/dynamic_bitset.h"
-
 
 namespace dlplan::core::element {
 

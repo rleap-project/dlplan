@@ -10,7 +10,7 @@ Element<T>::Element(
 template<typename T>
 Element<T>::~Element() { }
 
-template class Element<dynamic_bitset::DynamicBitset<unsigned int>>;
+template class Element<utils::DynamicBitset<unsigned int>>;
 template class Element<int>;
 template class Element<bool>;
 

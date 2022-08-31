@@ -1,4 +1,4 @@
-#include "../../include/dlplan/per_index_bitset.h"
+#include "../../include/dlplan/utils/per_index_bitset.h"
 
 /**
  * Taken from fast-downward.org
