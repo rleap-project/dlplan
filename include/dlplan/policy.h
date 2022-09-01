@@ -14,6 +14,7 @@
 namespace dlplan::policy {
 class RuleImpl;
 class PolicyImpl;
+class PolicyBuilder;
 class PolicyBuilderImpl;
 class PolicyReaderImpl;
 class PolicyWriterImpl;
@@ -46,6 +47,11 @@ public:
     virtual std::string compute_repr() const = 0;
 
     std::string str() const;
+
+    /**
+     * Adds the condition to the policy builder and returns it
+     */
+    virtual std::shared_ptr<const BaseCondition> visit(PolicyBuilder& policy_builder) const = 0;
 
     /**
      * Setters.
@@ -86,6 +92,11 @@ public:
     virtual std::string compute_repr() const = 0;
 
     std::string str() const;
+
+    /**
+     * Adds the effect to the policy builder and returns it
+     */
+    virtual std::shared_ptr<const BaseEffect> visit(PolicyBuilder& policy_builder) const = 0;
 
     /**
      * Setters.
@@ -132,6 +143,11 @@ public:
     std::string compute_repr() const;
 
     std::string str() const;
+
+    /**
+     * Adds the rule to the policy builder and returns it
+     */
+    virtual std::shared_ptr<const Rule> visit(PolicyBuilder& policy_builder) const;
 
     /**
      * Setters.
@@ -252,6 +268,7 @@ public:
     PolicyMinimizer& operator=(PolicyMinimizer&& other);
     ~PolicyMinimizer();
 
+    Policy minimize_greedy(const Policy& policy) const;
     Policy minimize_greedy(const Policy& policy, const core::StatePairs& true_state_pairs, const core::StatePairs& false_state_pairs) const;
 };
 

@@ -34,6 +34,8 @@ public:
     bool evaluate(evaluator::EvaluationContext& source_context) const override;
 
     std::string compute_repr() const override;
+
+    std::shared_ptr<const BaseCondition> visit(PolicyBuilder& policy_builder) const override;
 };
 
 class NegativeBooleanCondition : public BooleanCondition {
@@ -43,6 +45,8 @@ public:
     bool evaluate(evaluator::EvaluationContext& source_context) const override;
 
     std::string compute_repr() const override;
+
+    std::shared_ptr<const BaseCondition> visit(PolicyBuilder& policy_builder) const override;
 };
 
 class EqualNumericalCondition : public NumericalCondition {
@@ -52,6 +56,8 @@ public:
     bool evaluate(evaluator::EvaluationContext& source_context) const override;
 
     std::string compute_repr() const override;
+
+    std::shared_ptr<const BaseCondition> visit(PolicyBuilder& policy_builder) const override;
 };
 
 class GreaterNumericalCondition : public NumericalCondition {
@@ -61,6 +67,8 @@ public:
     bool evaluate(evaluator::EvaluationContext& source_context) const override;
 
     std::string compute_repr() const override;
+
+    std::shared_ptr<const BaseCondition> visit(PolicyBuilder& policy_builder) const override;
 };
 
 }

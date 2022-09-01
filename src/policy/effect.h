@@ -38,6 +38,8 @@ public:
     bool evaluate(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const override;
 
     std::string compute_repr() const override;
+
+    std::shared_ptr<const BaseEffect> visit(PolicyBuilder& policy_builder) const override;
 };
 
 class NegativeBooleanEffect : public BooleanEffect {
@@ -47,6 +49,8 @@ public:
     bool evaluate(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const override;
 
     std::string compute_repr() const override;
+
+    std::shared_ptr<const BaseEffect> visit(PolicyBuilder& policy_builder) const override;
 };
 
 class UnchangedBooleanEffect : public BooleanEffect {
@@ -56,6 +60,8 @@ public:
     bool evaluate(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const override;
 
     std::string compute_repr() const override;
+
+    std::shared_ptr<const BaseEffect> visit(PolicyBuilder& policy_builder) const override;
 };
 
 class IncrementNumericalEffect : public NumericalEffect {
@@ -65,6 +71,8 @@ public:
     bool evaluate(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const override;
 
     std::string compute_repr() const override;
+
+    std::shared_ptr<const BaseEffect> visit(PolicyBuilder& policy_builder) const override;
 };
 
 class DecrementNumericalEffect : public NumericalEffect {
@@ -74,6 +82,8 @@ public:
     bool evaluate(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const override;
 
     std::string compute_repr() const override;
+
+    std::shared_ptr<const BaseEffect> visit(PolicyBuilder& policy_builder) const override;
 };
 
 class UnchangedNumericalEffect : public NumericalEffect {
@@ -83,6 +93,8 @@ public:
     bool evaluate(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const override;
 
     std::string compute_repr() const override;
+
+    std::shared_ptr<const BaseEffect> visit(PolicyBuilder& policy_builder) const override;
 };
 
 }

@@ -93,6 +93,20 @@ std::string Rule::str() const {
     return ss.str();
 }
 
+std::shared_ptr<const Rule> Rule::visit(PolicyBuilder& policy_builder) const {
+    std::vector<std::shared_ptr<const BaseCondition>> conditions;
+    conditions.reserve(m_conditions.size());
+    for (const auto& condition : m_conditions) {
+        conditions.push_back(condition->visit(policy_builder));
+    }
+    std::vector<std::shared_ptr<const BaseEffect>> effects;
+    effects.reserve(m_effects.size());
+    for (const auto& effect : m_effects) {
+        effects.push_back(effect->visit(policy_builder));
+    }
+    return policy_builder.add_rule(std::move(conditions), std::move(effects));
+}
+
 void Rule::set_index(int index) {
     m_index = index;
 }

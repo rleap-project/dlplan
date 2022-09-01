@@ -159,6 +159,10 @@ PolicyMinimizer& PolicyMinimizer::operator=(PolicyMinimizer&& other) = default;
 
 PolicyMinimizer::~PolicyMinimizer() { }
 
+Policy PolicyMinimizer::minimize_greedy(const Policy& policy) const {
+    throw std::runtime_error("Not implemented.");
+}
+
 Policy PolicyMinimizer::minimize_greedy(const Policy& policy, const core::StatePairs& true_state_pairs, const core::StatePairs& false_state_pairs) const {
     /*
        Idea: A rule C -> E dominates a rules C' -> E' if C subseteq C', E subseteq E'
