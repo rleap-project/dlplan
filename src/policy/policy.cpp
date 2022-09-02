@@ -159,7 +159,8 @@ PolicyMinimizer& PolicyMinimizer::operator=(PolicyMinimizer&& other) = default;
 
 PolicyMinimizer::~PolicyMinimizer() { }
 
-std::pair<std::shared_ptr<const Rule>, std::shared_ptr<const Rule>> PolicyMinimizer::try_merge_by_conditions(const Policy& policy, PolicyBuilder& builder) const {
+
+std::unordered_set<std::shared_ptr<const Rule>> PolicyMinimizer::try_merge_by_condition(const Policy& policy, PolicyBuilder& builder) const {
     for (const auto& rule_1 : policy.get_rules()) {
         auto rule_1_conditions = std::unordered_set<std::shared_ptr<const BaseCondition>>(rule_1->get_conditions().begin(), rule_1->get_conditions().end());
         for (const auto& rule_2 : policy.get_rules()) {
@@ -170,35 +171,102 @@ std::pair<std::shared_ptr<const Rule>, std::shared_ptr<const Rule>> PolicyMinimi
             if (rule_1->get_effects() != rule_2->get_effects()) {
                 continue;
             }
-            std::vector<std::shared_ptr<const BaseCondition>> diff;
-            std::set_symmetric_difference(rule_1_conditions.begin(), rule_1_conditions.end(), rule_2_conditions.begin(), rule_2_conditions.end(), diff.begin());
+            std::unordered_set<std::shared_ptr<const BaseCondition>> diff;
+            // TODO: make function from here
+            std::set_symmetric_difference(rule_1_conditions.begin(), rule_1_conditions.end(), rule_2_conditions.begin(), rule_2_conditions.end(), std::inserter(diff, diff.begin()));
             if (diff.size() != 2) {
                 continue;
             }
-            if (diff[0]->get_base_feature()->get_index() != diff[1]->get_base_feature()->get_index()) {
+            if (!check_feature_index_equality(diff)) {
                 continue;
             }
-            if (!(((std::dynamic_pointer_cast<const BooleanCondition>(diff[0]) != 0) &&
-                (std::dynamic_pointer_cast<const BooleanCondition>(diff[1]) != 0)) ||
-                ((std::dynamic_pointer_cast<const NumericalCondition>(diff[0]) != 0) &&
-                (std::dynamic_pointer_cast<const NumericalCondition>(diff[1]) != 0)))) {
+            if (!check_type_equality(diff)) {
                 continue;
             }
+            // TODO: make function till here
             // rule_1 and rule_2 can be merged
-            std::vector<std::shared_ptr<const BaseEffect>> effects;
-            for (const auto& effect : rule_1->get_effects()) {
-                effects.push_back(effect->visit(builder));
-            }
+            std::vector<std::shared_ptr<const BaseCondition>> conditions = compute_merged_values(rule_1->get_conditions(), diff, builder);
+            std::vector<std::shared_ptr<const BaseEffect>> effects = compute_merged_values(rule_1->get_effects(), {}, builder);
             // add new rule and return old rules.
-            builder.add_rule({}, std::move(effects));
-            return std::make_pair(rule_1, rule_2);
+            builder.add_rule(std::move(conditions), std::move(effects));
+            return std::unordered_set<std::shared_ptr<const Rule>>({rule_1, rule_2});
         }
     }
-    return std::make_pair(nullptr, nullptr);
+    return std::unordered_set<std::shared_ptr<const Rule>>();
+}
+
+std::unordered_set<std::shared_ptr<const Rule>> PolicyMinimizer::try_merge_by_effect(const Policy& policy, PolicyBuilder& builder) const {
+    for (const auto& rule_1 : policy.get_rules()) {
+        auto rule_1_effects = std::unordered_set<std::shared_ptr<const BaseEffect>>(rule_1->get_effects().begin(), rule_1->get_effects().end());
+        for (const auto& rule_2 : policy.get_rules()) {
+            if (rule_1->get_index() >= rule_2->get_index()) {
+                continue;
+            }
+            auto rule_2_effects = std::unordered_set<std::shared_ptr<const BaseEffect>>(rule_2->get_effects().begin(), rule_2->get_effects().end());
+            if (rule_1->get_conditions() != rule_2->get_conditions()) {
+                continue;
+            }
+            std::unordered_set<std::shared_ptr<const BaseEffect>> diff_1_2;
+            std::set_symmetric_difference(rule_1_effects.begin(), rule_1_effects.end(), rule_2_effects.begin(), rule_2_effects.end(), std::inserter(diff_1_2, diff_1_2.begin()));
+            if (diff_1_2.size() != 2) {
+                continue;
+            }
+            if (!check_feature_index_equality(diff_1_2)) {
+                continue;
+            }
+            if (!check_type_equality(diff_1_2)) {
+                continue;
+            }
+            for (const auto& rule_3 : policy.get_rules()) {
+                if (rule_2->get_index() >= rule_3->get_index()) {
+                    continue;
+                }
+                auto rule_3_effects = std::unordered_set<std::shared_ptr<const BaseEffect>>(rule_3->get_effects().begin(), rule_3->get_effects().end());
+                if (rule_2->get_conditions() != rule_3->get_conditions()) {
+                    continue;
+                }
+                std::unordered_set<std::shared_ptr<const BaseEffect>> diff_1_2_3;
+                std::set_symmetric_difference(diff_1_2.begin(), diff_1_2.end(), rule_3_effects.begin(), rule_3_effects.end(), std::inserter(diff_1_2_3, diff_1_2_3.begin()));
+                if (diff_1_2_3.size() != 3) {
+                    continue;
+                }
+                if (!check_feature_index_equality(diff_1_2_3)) {
+                    continue;
+                }
+                if (!check_type_equality(diff_1_2_3)) {
+                    continue;
+                }
+                // rule_1 and rule_2 can be merged
+                std::vector<std::shared_ptr<const BaseCondition>> conditions = compute_merged_values(rule_1->get_conditions(), {}, builder);
+                std::vector<std::shared_ptr<const BaseEffect>> effects = compute_merged_values(rule_1->get_effects(), diff_1_2_3, builder);
+                // add new rule and return old rules.
+                builder.add_rule(std::move(conditions), std::move(effects));
+                return std::unordered_set<std::shared_ptr<const Rule>>({rule_1, rule_2, rule_3});
+            }
+        }
+    }
+    return std::unordered_set<std::shared_ptr<const Rule>>();
 }
 
 Policy PolicyMinimizer::minimize_greedy(const Policy& policy) const {
+    Policy current_policy = policy;
+    std::unordered_set<std::shared_ptr<const Rule>> merged_rules;
+    do {
+        PolicyBuilder builder;
+        merged_rules = try_merge_by_condition(current_policy, builder);
+        if (merged_rules.empty()) {
+            merged_rules = try_merge_by_effect(current_policy, builder);
+        }
+        for (const auto& rule : current_policy.get_rules()) {
+            if (merged_rules.count(rule)) {
+                continue;
+            }
+            rule->visit(builder);
+        }
+        current_policy = builder.get_result();
+    } while (!merged_rules.empty());
 
+    return current_policy;
 }
 
 Policy PolicyMinimizer::minimize_greedy(const Policy& policy, const core::StatePairs& true_state_pairs, const core::StatePairs& false_state_pairs) const {

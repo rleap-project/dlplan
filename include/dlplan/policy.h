@@ -260,7 +260,33 @@ public:
  */
 class PolicyMinimizer {
 private:
-    std::pair<std::shared_ptr<const Rule>, std::shared_ptr<const Rule>> try_merge_by_conditions(const Policy& policy, PolicyBuilder& builder) const;
+    std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_condition(const Policy& policy, PolicyBuilder& builder) const;
+    std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_effect(const Policy& policy, PolicyBuilder& builder) const;
+
+    template<typename T>
+    bool check_type_equality(const std::unordered_set<std::shared_ptr<const T>>& values) const {
+        return (std::all_of(values.begin(), values.end(), [](const std::shared_ptr<const T>& value){ return std::dynamic_pointer_cast<const T>(value); }) ||
+                std::all_of(values.begin(), values.end(), [](const std::shared_ptr<const T>& value){ return std::dynamic_pointer_cast<const T>(value); }));
+    }
+
+    template<typename T>
+    bool check_feature_index_equality(const std::unordered_set<std::shared_ptr<const T>>& values) const {
+        if (values.empty()) return true;
+        return std::all_of(values.begin(), values.end(), [index=(*(values.begin()))->get_base_feature()->get_index()](const std::shared_ptr<const T>& value){ return value->get_base_feature()->get_index() == index; } );
+    }
+
+    template<typename T>
+    std::vector<std::shared_ptr<const T>> compute_merged_values(const std::vector<std::shared_ptr<const T>>& original_values, const std::unordered_set<std::shared_ptr<const T>>& removed_values, PolicyBuilder& builder) const {
+        std::vector<std::shared_ptr<const T>> values;
+        for (const auto& value : original_values) {
+            if (removed_values.count(value)) {
+                continue;
+            }
+            values.push_back(value->visit(builder));
+        }
+        return values;
+    }
+
 public:
     PolicyMinimizer();
     PolicyMinimizer(const PolicyMinimizer& other);

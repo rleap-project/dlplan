@@ -16,41 +16,41 @@ add_executable(
 target_sources(
     ${TEST_NAME}
     PRIVATE
-        core.cpp
-        b_empty.cpp
-        b_inclusion.cpp
-        b_nullary.cpp
-        c_all.cpp
-        c_some.cpp
-        c_and.cpp
-        c_or.cpp
-        c_diff.cpp
-        c_equal.cpp
-        c_not.cpp
-        c_primitive.cpp
-        c_projection.cpp
-        c_bot.cpp
-        c_top.cpp
-        multi_instance.cpp
-        c_one_of.cpp
-        c_subset.cpp
-        r_and.cpp
-        r_or.cpp
-        r_diff.cpp
-        r_inverse.cpp
-        r_identity.cpp
-        r_restrict.cpp
-        r_not.cpp
-        r_primitive.cpp
-        r_top.cpp
-        r_transitive_closure.cpp
-        r_transitive_reflexive_closure.cpp
-        r_compose.cpp
-        n_concept_distance.cpp
-        n_sum_concept_distance.cpp
-        n_role_distance.cpp
-        n_sum_role_distance.cpp
-        n_count.cpp
+        core/core.cpp
+        core/b_empty.cpp
+        core/b_inclusion.cpp
+        core/b_nullary.cpp
+        core/c_all.cpp
+        core/c_some.cpp
+        core/c_and.cpp
+        core/c_or.cpp
+        core/c_diff.cpp
+        core/c_equal.cpp
+        core/c_not.cpp
+        core/c_primitive.cpp
+        core/c_projection.cpp
+        core/c_bot.cpp
+        core/c_top.cpp
+        core/multi_instance.cpp
+        core/c_one_of.cpp
+        core/c_subset.cpp
+        core/r_and.cpp
+        core/r_or.cpp
+        core/r_diff.cpp
+        core/r_inverse.cpp
+        core/r_identity.cpp
+        core/r_restrict.cpp
+        core/r_not.cpp
+        core/r_primitive.cpp
+        core/r_top.cpp
+        core/r_transitive_closure.cpp
+        core/r_transitive_reflexive_closure.cpp
+        core/r_compose.cpp
+        core/n_concept_distance.cpp
+        core/n_sum_concept_distance.cpp
+        core/n_role_distance.cpp
+        core/n_sum_role_distance.cpp
+        core/n_count.cpp
 )
 target_link_libraries(${TEST_NAME} dlplancore gtest_main)
 
