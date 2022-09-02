@@ -172,7 +172,6 @@ std::unordered_set<std::shared_ptr<const Rule>> PolicyMinimizer::try_merge_by_co
                 continue;
             }
             std::unordered_set<std::shared_ptr<const BaseCondition>> diff;
-            // TODO: make function from here
             std::set_symmetric_difference(rule_1_conditions.begin(), rule_1_conditions.end(), rule_2_conditions.begin(), rule_2_conditions.end(), std::inserter(diff, diff.begin()));
             if (diff.size() != 2) {
                 continue;
@@ -183,11 +182,8 @@ std::unordered_set<std::shared_ptr<const Rule>> PolicyMinimizer::try_merge_by_co
             if (!check_type_equality(diff)) {
                 continue;
             }
-            // TODO: make function till here
-            // rule_1 and rule_2 can be merged
             std::vector<std::shared_ptr<const BaseCondition>> conditions = compute_merged_values(rule_1->get_conditions(), diff, builder);
             std::vector<std::shared_ptr<const BaseEffect>> effects = compute_merged_values(rule_1->get_effects(), {}, builder);
-            // add new rule and return old rules.
             builder.add_rule(std::move(conditions), std::move(effects));
             return std::unordered_set<std::shared_ptr<const Rule>>({rule_1, rule_2});
         }
@@ -236,10 +232,8 @@ std::unordered_set<std::shared_ptr<const Rule>> PolicyMinimizer::try_merge_by_ef
                 if (!check_type_equality(diff_1_2_3)) {
                     continue;
                 }
-                // rule_1 and rule_2 can be merged
                 std::vector<std::shared_ptr<const BaseCondition>> conditions = compute_merged_values(rule_1->get_conditions(), {}, builder);
                 std::vector<std::shared_ptr<const BaseEffect>> effects = compute_merged_values(rule_1->get_effects(), diff_1_2_3, builder);
-                // add new rule and return old rules.
                 builder.add_rule(std::move(conditions), std::move(effects));
                 return std::unordered_set<std::shared_ptr<const Rule>>({rule_1, rule_2, rule_3});
             }
