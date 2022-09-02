@@ -259,6 +259,8 @@ public:
  * such that it distinguishes the same true and false state pairs.
  */
 class PolicyMinimizer {
+private:
+    std::pair<std::shared_ptr<const Rule>, std::shared_ptr<const Rule>> try_merge_by_conditions(const Policy& policy, PolicyBuilder& builder) const;
 public:
     PolicyMinimizer();
     PolicyMinimizer(const PolicyMinimizer& other);

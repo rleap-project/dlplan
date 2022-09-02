@@ -159,9 +159,7 @@ PolicyMinimizer& PolicyMinimizer::operator=(PolicyMinimizer&& other) = default;
 
 PolicyMinimizer::~PolicyMinimizer() { }
 
-Policy PolicyMinimizer::minimize_greedy(const Policy& policy) const {
-    // just merge once for now
-    PolicyBuilder builder;
+std::pair<std::shared_ptr<const Rule>, std::shared_ptr<const Rule>> PolicyMinimizer::try_merge_by_conditions(const Policy& policy, PolicyBuilder& builder) const {
     for (const auto& rule_1 : policy.get_rules()) {
         auto rule_1_conditions = std::unordered_set<std::shared_ptr<const BaseCondition>>(rule_1->get_conditions().begin(), rule_1->get_conditions().end());
         for (const auto& rule_2 : policy.get_rules()) {
@@ -186,12 +184,21 @@ Policy PolicyMinimizer::minimize_greedy(const Policy& policy) const {
                 (std::dynamic_pointer_cast<const NumericalCondition>(diff[1]) != 0)))) {
                 continue;
             }
-
+            // rule_1 and rule_2 can be merged
+            std::vector<std::shared_ptr<const BaseEffect>> effects;
+            for (const auto& effect : rule_1->get_effects()) {
+                effects.push_back(effect->visit(builder));
+            }
+            // add new rule and return old rules.
+            builder.add_rule({}, std::move(effects));
+            return std::make_pair(rule_1, rule_2);
         }
-        // rule_1 cannot be merged with any so we add it to the builder
-        rule_1->visit(builder);
     }
-    throw std::runtime_error("Not implemented.");
+    return std::make_pair(nullptr, nullptr);
+}
+
+Policy PolicyMinimizer::minimize_greedy(const Policy& policy) const {
+
 }
 
 Policy PolicyMinimizer::minimize_greedy(const Policy& policy, const core::StatePairs& true_state_pairs, const core::StatePairs& false_state_pairs) const {
