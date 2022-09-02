@@ -160,6 +160,34 @@ PolicyMinimizer& PolicyMinimizer::operator=(PolicyMinimizer&& other) = default;
 PolicyMinimizer::~PolicyMinimizer() { }
 
 Policy PolicyMinimizer::minimize_greedy(const Policy& policy) const {
+    PolicyBuilder builder;
+    for (const auto& rule_1 : policy.get_rules()) {
+        auto rule_1_conditions = std::unordered_set<std::shared_ptr<const BaseCondition>>(rule_1->get_conditions().begin(), rule_1->get_conditions().end());
+        for (const auto& rule_2 : policy.get_rules()) {
+            if (rule_1->get_index() >= rule_2->get_index()) {
+                continue;
+            }
+            auto rule_2_conditions = std::unordered_set<std::shared_ptr<const BaseCondition>>(rule_2->get_conditions().begin(), rule_2->get_conditions().end());
+            if (rule_1->get_effects() != rule_2->get_effects()) {
+                continue;
+            }
+            std::vector<std::shared_ptr<const BaseCondition>> diff;
+            std::set_symmetric_difference(rule_1_conditions.begin(), rule_1_conditions.end(), rule_2_conditions.begin(), rule_2_conditions.end(), diff.begin());
+            if (diff.size() != 2) {
+                continue;
+            }
+            if (diff[0]->get_base_feature()->get_index() != diff[1]->get_base_feature()->get_index()) {
+                continue;
+            }
+            if (!(((std::dynamic_pointer_cast<const BooleanCondition>(diff[0]) != 0) &&
+                (std::dynamic_pointer_cast<const BooleanCondition>(diff[1]) != 0)) ||
+                ((std::dynamic_pointer_cast<const NumericalCondition>(diff[0]) != 0) &&
+                (std::dynamic_pointer_cast<const NumericalCondition>(diff[1]) != 0)))) {
+                continue;
+            }
+
+        }
+    }
     throw std::runtime_error("Not implemented.");
 }
 
