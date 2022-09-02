@@ -14,8 +14,8 @@ NumericalEffect::NumericalEffect(std::shared_ptr<const core::Numerical> numerica
 PositiveBooleanEffect::PositiveBooleanEffect(std::shared_ptr<const core::Boolean> boolean_feature)
     : BooleanEffect(boolean_feature) {}
 
-bool PositiveBooleanEffect::evaluate(evaluator::EvaluationContext&, evaluator::EvaluationContext& target_context) const {
-    return target_context.cache.retrieve_or_evaluate(*m_boolean, target_context);
+bool PositiveBooleanEffect::evaluate(const core::State&, const core::State& target_state, evaluator::EvaluationCache& cache) const {
+    return cache.retrieve_or_evaluate(*m_boolean, target_state);
 }
 
 std::string PositiveBooleanEffect::compute_repr() const{
@@ -30,8 +30,8 @@ std::shared_ptr<const BaseEffect> PositiveBooleanEffect::visit(PolicyBuilder& po
 NegativeBooleanEffect::NegativeBooleanEffect(std::shared_ptr<const core::Boolean> boolean_feature)
     : BooleanEffect(boolean_feature) {}
 
-bool NegativeBooleanEffect::evaluate(evaluator::EvaluationContext&, evaluator::EvaluationContext& target_context) const {
-    return !target_context.cache.retrieve_or_evaluate(*m_boolean, target_context);
+bool NegativeBooleanEffect::evaluate(const core::State&, const core::State& target_state, evaluator::EvaluationCache& cache) const {
+    return !cache.retrieve_or_evaluate(*m_boolean, target_state);
 }
 
 std::string NegativeBooleanEffect::compute_repr() const{
@@ -46,8 +46,8 @@ std::shared_ptr<const BaseEffect> NegativeBooleanEffect::visit(PolicyBuilder& po
 UnchangedBooleanEffect::UnchangedBooleanEffect(std::shared_ptr<const core::Boolean> boolean_feature)
     : BooleanEffect(boolean_feature) {}
 
-bool UnchangedBooleanEffect::evaluate(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const {
-    return source_context.cache.retrieve_or_evaluate(*m_boolean, source_context) == target_context.cache.retrieve_or_evaluate(*m_boolean, target_context);
+bool UnchangedBooleanEffect::evaluate(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const {
+    return cache.retrieve_or_evaluate(*m_boolean, source_state) == cache.retrieve_or_evaluate(*m_boolean, target_state);
 }
 
 std::string UnchangedBooleanEffect::compute_repr() const{
@@ -62,8 +62,8 @@ std::shared_ptr<const BaseEffect> UnchangedBooleanEffect::visit(PolicyBuilder& p
 IncrementNumericalEffect::IncrementNumericalEffect(std::shared_ptr<const core::Numerical> numerical_feature)
     : NumericalEffect(numerical_feature) {}
 
-bool IncrementNumericalEffect::evaluate(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const {
-    return source_context.cache.retrieve_or_evaluate(*m_numerical, source_context) < target_context.cache.retrieve_or_evaluate(*m_numerical, target_context);
+bool IncrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const {
+    return cache.retrieve_or_evaluate(*m_numerical, source_state) < cache.retrieve_or_evaluate(*m_numerical, target_state);
 }
 
 std::string IncrementNumericalEffect::compute_repr() const{
@@ -78,8 +78,8 @@ std::shared_ptr<const BaseEffect> IncrementNumericalEffect::visit(PolicyBuilder&
 DecrementNumericalEffect::DecrementNumericalEffect(std::shared_ptr<const core::Numerical> numerical_feature)
     : NumericalEffect(numerical_feature) {}
 
-bool DecrementNumericalEffect::evaluate(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const {
-    return source_context.cache.retrieve_or_evaluate(*m_numerical, source_context) > target_context.cache.retrieve_or_evaluate(*m_numerical, target_context);
+bool DecrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const {
+    return cache.retrieve_or_evaluate(*m_numerical, source_state) > cache.retrieve_or_evaluate(*m_numerical, target_state);
 }
 
 std::string DecrementNumericalEffect::compute_repr() const{
@@ -94,8 +94,8 @@ std::shared_ptr<const BaseEffect> DecrementNumericalEffect::visit(PolicyBuilder&
 UnchangedNumericalEffect::UnchangedNumericalEffect(std::shared_ptr<const core::Numerical> numerical_feature)
     : NumericalEffect(numerical_feature) {}
 
-bool UnchangedNumericalEffect::evaluate(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) const {
-    return source_context.cache.retrieve_or_evaluate(*m_numerical, source_context) == target_context.cache.retrieve_or_evaluate(*m_numerical, target_context);
+bool UnchangedNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const {
+    return cache.retrieve_or_evaluate(*m_numerical, source_state) == cache.retrieve_or_evaluate(*m_numerical, target_state);
 }
 
 std::string UnchangedNumericalEffect::compute_repr() const{

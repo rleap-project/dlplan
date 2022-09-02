@@ -31,24 +31,9 @@ public:
     EvaluationCache(EvaluationCache&& other);
     EvaluationCache& operator=(EvaluationCache&& other);
 
-    bool retrieve_or_evaluate(const core::Boolean& boolean, EvaluationContext& context);
-    int retrieve_or_evaluate(const core::Numerical& numerical, EvaluationContext& context);
+    bool retrieve_or_evaluate(const core::Boolean& boolean, const core::State& state);
+    int retrieve_or_evaluate(const core::Numerical& numerical, const core::State& state);
 };
-
-
-struct EvaluationContext {
-    // The position in the result of the state is stored.
-    const core::State& state;
-    EvaluationCache& cache;
-
-    EvaluationContext(const core::State& state, EvaluationCache& cache);
-    // we must delete copy and move constructors and assignments because state is always const.
-    EvaluationContext(const EvaluationContext& other) = delete;
-    EvaluationContext& operator=(const EvaluationContext& other) = delete;
-    EvaluationContext(EvaluationContext&& other) = delete;
-    EvaluationContext& operator=(EvaluationContext&& other) = delete;
-};
-
 
 }
 

@@ -14,8 +14,8 @@ NumericalCondition::NumericalCondition(std::shared_ptr<const core::Numerical> nu
 PositiveBooleanCondition::PositiveBooleanCondition(std::shared_ptr<const core::Boolean> boolean_feature)
     : BooleanCondition(boolean_feature) { }
 
-bool PositiveBooleanCondition::evaluate(evaluator::EvaluationContext& source_context) const {
-    return source_context.cache.retrieve_or_evaluate(*m_boolean, source_context);
+bool PositiveBooleanCondition::evaluate(const core::State& source_state, evaluator::EvaluationCache& cache) const {
+    return cache.retrieve_or_evaluate(*m_boolean, source_state);
 }
 
 std::string PositiveBooleanCondition::compute_repr() const {
@@ -30,8 +30,8 @@ std::shared_ptr<const BaseCondition> PositiveBooleanCondition::visit(PolicyBuild
 NegativeBooleanCondition::NegativeBooleanCondition(std::shared_ptr<const core::Boolean> boolean_feature)
     : BooleanCondition(boolean_feature) { }
 
-bool NegativeBooleanCondition::evaluate(evaluator::EvaluationContext& source_context) const {
-    return !source_context.cache.retrieve_or_evaluate(*m_boolean, source_context);
+bool NegativeBooleanCondition::evaluate(const core::State& source_state, evaluator::EvaluationCache& cache) const {
+    return !cache.retrieve_or_evaluate(*m_boolean, source_state);
 }
 
 std::string NegativeBooleanCondition::compute_repr() const {
@@ -46,8 +46,8 @@ std::shared_ptr<const BaseCondition> NegativeBooleanCondition::visit(PolicyBuild
 EqualNumericalCondition::EqualNumericalCondition(std::shared_ptr<const core::Numerical> numerical_feature)
     : NumericalCondition(numerical_feature) { }
 
-bool EqualNumericalCondition::evaluate(evaluator::EvaluationContext& source_context) const {
-    return source_context.cache.retrieve_or_evaluate(*m_numerical, source_context) == 0;
+bool EqualNumericalCondition::evaluate(const core::State& source_state, evaluator::EvaluationCache& cache) const {
+    return cache.retrieve_or_evaluate(*m_numerical, source_state) == 0;
 }
 
 std::string EqualNumericalCondition::compute_repr() const {
@@ -62,8 +62,8 @@ std::shared_ptr<const BaseCondition> EqualNumericalCondition::visit(PolicyBuilde
 GreaterNumericalCondition::GreaterNumericalCondition(std::shared_ptr<const core::Numerical> numerical_feature)
     : NumericalCondition(numerical_feature) { }
 
-bool GreaterNumericalCondition::evaluate(evaluator::EvaluationContext& source_context) const {
-    return source_context.cache.retrieve_or_evaluate(*m_numerical, source_context) > 0;
+bool GreaterNumericalCondition::evaluate(const core::State& source_state, evaluator::EvaluationCache& cache) const {
+    return cache.retrieve_or_evaluate(*m_numerical, source_state) > 0;
 }
 
 std::string GreaterNumericalCondition::compute_repr() const {

@@ -30,28 +30,28 @@ Policy& Policy::operator=(Policy&& other) = default;
 Policy::~Policy() = default;
 
 
-std::shared_ptr<const Rule> Policy::evaluate_lazy(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context) {
+std::shared_ptr<const Rule> Policy::evaluate_lazy(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) {
     for (const auto& r : m_rules) {
-        if (r->evaluate_conditions(source_context) && r->evaluate_effects(source_context, target_context)) {
+        if (r->evaluate_conditions(source_state, cache) && r->evaluate_effects(source_state, target_state, cache)) {
             return r;
         }
     }
     return nullptr;
 }
 
-std::vector<std::shared_ptr<const Rule>> Policy::evaluate_conditions_eager(evaluator::EvaluationContext& source_context) {
+std::vector<std::shared_ptr<const Rule>> Policy::evaluate_conditions_eager(const core::State& source_state, evaluator::EvaluationCache& cache) {
     std::vector<std::shared_ptr<const Rule>> result;
     for (const auto& r : m_rules) {
-        if (r->evaluate_conditions(source_context)) {
+        if (r->evaluate_conditions(source_state, cache)) {
             result.push_back(r);
         }
     }
     return result;
 }
 
-std::shared_ptr<const Rule> Policy::evaluate_effects_lazy(evaluator::EvaluationContext& source_context, evaluator::EvaluationContext& target_context, const std::vector<std::shared_ptr<const Rule>>& rules) {
+std::shared_ptr<const Rule> Policy::evaluate_effects_lazy(const core::State& source_state, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules, evaluator::EvaluationCache& cache) {
     for (const auto& r : rules) {
-        if (r->evaluate_effects(source_context, target_context)) {
+        if (r->evaluate_effects(source_state, target_state, cache)) {
             return r;
         }
     }

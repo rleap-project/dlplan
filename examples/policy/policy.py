@@ -11,7 +11,7 @@ def main():
     builder = dlplan.PolicyBuilder()
     b = builder.add_boolean_feature(boolean)
     n = builder.add_numerical_feature(numerical)
-    print(type(b))
+
     b_neg_condition_0 = builder.add_neg_condition(b)
     b_bot_effect_0 = builder.add_bot_effect(b)
     n_gt_condition_0 = builder.add_gt_condition(n)
@@ -31,14 +31,11 @@ def main():
     s2 = dlplan.State(instance_info, [a0, a1], 2)
 
     evaluation_cache = dlplan.EvaluationCache(len(policy.get_boolean_features()), len(policy.get_numerical_features()))
-    s0_context = dlplan.EvaluationContext(s0, evaluation_cache)
-    s1_context = dlplan.EvaluationContext(s1, evaluation_cache)
-    s2_context = dlplan.EvaluationContext(s2, evaluation_cache)
 
-    assert policy.evaluate_lazy(s2_context, s1_context)
-    assert not policy.evaluate_lazy(s2_context, s0_context)
-    assert not policy.evaluate_lazy(s1_context, s2_context)
-    assert not policy.evaluate_lazy(s0_context, s2_context)
+    assert policy.evaluate_lazy(s2, s1, evaluation_cache)
+    assert not policy.evaluate_lazy(s2, s0, evaluation_cache)
+    assert not policy.evaluate_lazy(s1, s2, evaluation_cache)
+    assert not policy.evaluate_lazy(s0, s2, evaluation_cache)
 
     print("Write policy:")
     print(policy.compute_repr())
@@ -46,6 +43,7 @@ def main():
     with open("policy.txt", "w") as f:
         f.write(dlplan.PolicyWriter().write(policy))
 
+    print("Read policy:")
     with open("policy.txt", "r") as f:
         policy_in = dlplan.PolicyReader().read("\n".join(f.readlines()), factory)
     print(policy_in.compute_repr())
