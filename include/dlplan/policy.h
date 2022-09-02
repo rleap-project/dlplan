@@ -259,7 +259,6 @@ public:
  * such that it distinguishes the same true and false state pairs.
  */
 class PolicyMinimizer {
-private:
 public:
     PolicyMinimizer();
     PolicyMinimizer(const PolicyMinimizer& other);

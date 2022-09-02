@@ -160,6 +160,7 @@ PolicyMinimizer& PolicyMinimizer::operator=(PolicyMinimizer&& other) = default;
 PolicyMinimizer::~PolicyMinimizer() { }
 
 Policy PolicyMinimizer::minimize_greedy(const Policy& policy) const {
+    // just merge once for now
     PolicyBuilder builder;
     for (const auto& rule_1 : policy.get_rules()) {
         auto rule_1_conditions = std::unordered_set<std::shared_ptr<const BaseCondition>>(rule_1->get_conditions().begin(), rule_1->get_conditions().end());
@@ -187,6 +188,8 @@ Policy PolicyMinimizer::minimize_greedy(const Policy& policy) const {
             }
 
         }
+        // rule_1 cannot be merged with any so we add it to the builder
+        rule_1->visit(builder);
     }
     throw std::runtime_error("Not implemented.");
 }
