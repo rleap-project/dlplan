@@ -113,6 +113,7 @@ Policy PolicyMinimizer::minimize(const Policy& policy) const {
         std::unordered_set<std::shared_ptr<const BaseEffect>> rule_1_effects_set(rule_1_effects.begin(), rule_1_effects.end());
         for (const auto& rule_2 : current_policy.get_rules()) {
             if (rule_1 == rule_2) {
+                // Note: there cannot be identical rules in a policy, hence this equality check suffices to not remove all identical rules.
                 continue;
             }
             auto rule_2_conditions = rule_2->get_conditions();
