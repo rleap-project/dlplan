@@ -2,7 +2,7 @@
 
 Welcome to the DLPlan-library.
 
-## 0. Background 
+## 0. Background
 
 ### 0.1. Classical Planning
 
@@ -59,7 +59,11 @@ cmake --install build
 ```
 Don't forget to update environment variable `CPLUS_INCLUDE_PATH` and `LD_LIBRARY_PATH` if necessary.
 
-### 2.2. Building the Pyhon Interface
+### 2.2. Additional Compile Flags
+
+- DCMAKE_BUILD_TESTING=1 adds tests to the compilation
+
+### 2.3. Building the Python Interface
 
 At the moment we recommend building and installing the Python bindings directly into a virtual environment.
 
@@ -86,12 +90,12 @@ python3 examples/generator/generate_exhaustively.py
 
 You can run the C++ tests with:
 ```console
-./build/tests/dlplan_tests
+cd build && ctest
 ```
 
 The Python bindings also come with their own set of tests. Run them with
 ```console
-pytest api/python/
+python3 -m pytest api/python/
 ```
 
 ## 5. Profiling
