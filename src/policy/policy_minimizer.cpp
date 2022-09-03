@@ -8,33 +8,90 @@
 
 namespace dlplan::policy {
 
-PolicyMinimizer::PolicyMinimizer() { }
-
-PolicyMinimizer::PolicyMinimizer(const PolicyMinimizer& other) = default;
-
-PolicyMinimizer& PolicyMinimizer::operator=(const PolicyMinimizer& other) = default;
-
-PolicyMinimizer::PolicyMinimizer(PolicyMinimizer&& other) = default;
-
-PolicyMinimizer& PolicyMinimizer::operator=(PolicyMinimizer&& other) = default;
-
-PolicyMinimizer::~PolicyMinimizer() { }
-
-bool PolicyMinimizer::check_policy_matches_classification(const Policy& policy, const core::StatePairs& true_state_pairs, const core::StatePairs& false_state_pairs) const {
-    for (const auto& state_pair : true_state_pairs) {
-        if (!policy.evaluate_lazy(state_pair.first, state_pair.second)) {
-            return false;
+/**
+ * Adds values to the builder with original_values minus removed_values and returns them.
+ */
+template<typename T>
+static std::vector<std::shared_ptr<const T>> compute_merged_values(
+    const std::vector<std::shared_ptr<const T>>& original_values,
+    const std::unordered_set<std::shared_ptr<const T>>& removed_values,
+    PolicyBuilder& builder) {
+    std::vector<std::shared_ptr<const T>> values;
+    for (const auto& value : original_values) {
+        if (removed_values.count(value)) {
+            continue;
         }
+        values.push_back(value->visit(builder));
     }
-    for (const auto& state_pair : false_state_pairs) {
-        if (policy.evaluate_lazy(state_pair.first, state_pair.second)) {
-            return false;
-        }
-    }
-    return true;
+    return values;
+}
+template std::vector<std::shared_ptr<const BaseCondition>> compute_merged_values(
+    const std::vector<std::shared_ptr<const BaseCondition>>&,
+    const std::unordered_set<std::shared_ptr<const BaseCondition>>&,
+    PolicyBuilder&);
+template std::vector<std::shared_ptr<const BaseEffect>> compute_merged_values(
+    const std::vector<std::shared_ptr<const BaseEffect>>&,
+    const std::unordered_set<std::shared_ptr<const BaseEffect>>&,
+    PolicyBuilder&);
+
+
+/**
+ * Returns true iff all values of given type PARENT_T are of type SUB_T
+ */
+template<typename PARENT_T, typename SUB_T>
+static bool check_subtype_equality(
+    const std::unordered_set<std::shared_ptr<const PARENT_T>>& values) {
+    return std::all_of(values.begin(), values.end(), [](const std::shared_ptr<const PARENT_T>& value){ return std::dynamic_pointer_cast<const SUB_T>(value); });
 }
 
-std::unordered_set<std::shared_ptr<const Rule>> PolicyMinimizer::try_merge_by_condition(const Policy& policy, PolicyBuilder& builder) const {
+/**
+ * Returns true iff all values of given type T have feature with same index.
+ */
+template<typename T>
+static bool check_feature_index_equality(
+    const std::unordered_set<std::shared_ptr<const T>>& values) {
+    if (values.empty()) return true;
+    return std::all_of(values.begin(), values.end(), [index=(*(values.begin()))->get_base_feature()->get_index()](const std::shared_ptr<const T>& value){ return value->get_base_feature()->get_index() == index; } );
+}
+
+/**
+ * Returns merge compatible values or the empty set if none exist.
+ * Merge compatible values must have same feature index,
+ * all subtypes are either SUB_T1 or SUB_T2.
+ */
+template<typename PARENT_T, typename SUB_T1, typename SUB_T2>
+static std::unordered_set<std::shared_ptr<const PARENT_T>> compute_mergeable_values(
+    const std::vector<std::vector<std::shared_ptr<const PARENT_T>>>& values_by_rule) {
+    std::unordered_map<std::shared_ptr<const PARENT_T>, int> value_frequencies;
+    for (const auto& values : values_by_rule) {
+        for (const auto& v : values) {
+            if (value_frequencies.count(v)) {
+                ++value_frequencies[v];
+            } else {
+                value_frequencies[v] = 1;
+            }
+        }
+    }
+    std::unordered_set<std::shared_ptr<const PARENT_T>> symmetric_diff;
+    for (const auto& p : value_frequencies) {
+        if (value_frequencies[p.first] == 1) {
+            symmetric_diff.insert(p.first);
+        }
+    }
+    if (!check_feature_index_equality(symmetric_diff) ||
+        !(check_subtype_equality<PARENT_T, SUB_T1>(symmetric_diff) || check_subtype_equality<PARENT_T, SUB_T2>(symmetric_diff))) {
+        return {};
+    }
+    return symmetric_diff;
+}
+template std::unordered_set<std::shared_ptr<const BaseCondition>> compute_mergeable_values<BaseCondition, BooleanCondition, NumericalCondition>(
+    const std::vector<std::vector<std::shared_ptr<const BaseCondition>>>&);
+template std::unordered_set<std::shared_ptr<const BaseEffect>> compute_mergeable_values<BaseEffect, BooleanEffect, NumericalEffect>(
+    const std::vector<std::vector<std::shared_ptr<const BaseEffect>>>&);
+
+
+static std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_condition(
+    const Policy& policy, PolicyBuilder& builder) {
     for (const auto& rule_1 : policy.get_rules()) {
         for (const auto& rule_2 : policy.get_rules()) {
             if (rule_1->get_index() >= rule_2->get_index()) {
@@ -54,7 +111,9 @@ std::unordered_set<std::shared_ptr<const Rule>> PolicyMinimizer::try_merge_by_co
     return {};
 }
 
-std::unordered_set<std::shared_ptr<const Rule>> PolicyMinimizer::try_merge_by_effect(const Policy& policy, PolicyBuilder& builder) const {
+
+static std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_effect(
+    const Policy& policy, PolicyBuilder& builder) {
     for (const auto& rule_1 : policy.get_rules()) {
         for (const auto& rule_2 : policy.get_rules()) {
             if (rule_1->get_index() >= rule_2->get_index()) {
@@ -86,6 +145,68 @@ std::unordered_set<std::shared_ptr<const Rule>> PolicyMinimizer::try_merge_by_ef
     return {};
 }
 
+
+static std::unordered_set<std::shared_ptr<const Rule>> compute_dominated_rules(
+    const Policy& policy) {
+    std::unordered_set<std::shared_ptr<const Rule>> dominated_rules;
+    for (const auto& rule_1 : policy.get_rules()) {
+        auto rule_1_conditions = rule_1->get_conditions();
+        auto rule_1_effects = rule_1->get_effects();
+        std::unordered_set<std::shared_ptr<const BaseCondition>> rule_1_conditions_set(rule_1_conditions.begin(), rule_1_conditions.end());
+        std::unordered_set<std::shared_ptr<const BaseEffect>> rule_1_effects_set(rule_1_effects.begin(), rule_1_effects.end());
+        for (const auto& rule_2 : policy.get_rules()) {
+            if (rule_1 == rule_2) {
+                // Note: there cannot be identical rules in a policy, hence this equality check suffices to not remove all identical rules.
+                continue;
+            }
+            auto rule_2_conditions = rule_2->get_conditions();
+            auto rule_2_effects = rule_2->get_effects();
+            std::unordered_set<std::shared_ptr<const BaseCondition>> rule_2_conditions_set(rule_2_conditions.begin(), rule_2_conditions.end());
+            std::unordered_set<std::shared_ptr<const BaseEffect>> rule_2_effects_set(rule_2_effects.begin(), rule_2_effects.end());
+            if (utils::is_subset_eq(rule_1_conditions_set, rule_2_conditions_set) && utils::is_subset_eq(rule_1_effects_set, rule_2_effects_set)) {
+                dominated_rules.insert(rule_2);
+                break;
+            }
+        }
+    }
+    return dominated_rules;
+}
+
+
+/**
+ * Returns true iff policy classifies true_state_pairs as true and false_state_pairs as false.
+ */
+static bool check_policy_matches_classification(
+    const Policy& policy,
+    const core::StatePairs& true_state_pairs,
+    const core::StatePairs& false_state_pairs) {
+    for (const auto& state_pair : true_state_pairs) {
+        if (!policy.evaluate_lazy(state_pair.first, state_pair.second)) {
+            return false;
+        }
+    }
+    for (const auto& state_pair : false_state_pairs) {
+        if (policy.evaluate_lazy(state_pair.first, state_pair.second)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
+PolicyMinimizer::PolicyMinimizer() { }
+
+PolicyMinimizer::PolicyMinimizer(const PolicyMinimizer& other) = default;
+
+PolicyMinimizer& PolicyMinimizer::operator=(const PolicyMinimizer& other) = default;
+
+PolicyMinimizer::PolicyMinimizer(PolicyMinimizer&& other) = default;
+
+PolicyMinimizer& PolicyMinimizer::operator=(PolicyMinimizer&& other) = default;
+
+PolicyMinimizer::~PolicyMinimizer() { }
+
+
 Policy PolicyMinimizer::minimize(const Policy& policy) const {
     // Merge rules
     Policy current_policy = policy;
@@ -105,27 +226,7 @@ Policy PolicyMinimizer::minimize(const Policy& policy) const {
         current_policy = builder.get_result();
     } while (!merged_rules.empty());
     // Remove dominated rules
-    std::unordered_set<std::shared_ptr<const Rule>> dominated_rules;
-    for (const auto& rule_1 : current_policy.get_rules()) {
-        auto rule_1_conditions = rule_1->get_conditions();
-        auto rule_1_effects = rule_1->get_effects();
-        std::unordered_set<std::shared_ptr<const BaseCondition>> rule_1_conditions_set(rule_1_conditions.begin(), rule_1_conditions.end());
-        std::unordered_set<std::shared_ptr<const BaseEffect>> rule_1_effects_set(rule_1_effects.begin(), rule_1_effects.end());
-        for (const auto& rule_2 : current_policy.get_rules()) {
-            if (rule_1 == rule_2) {
-                // Note: there cannot be identical rules in a policy, hence this equality check suffices to not remove all identical rules.
-                continue;
-            }
-            auto rule_2_conditions = rule_2->get_conditions();
-            auto rule_2_effects = rule_2->get_effects();
-            std::unordered_set<std::shared_ptr<const BaseCondition>> rule_2_conditions_set(rule_2_conditions.begin(), rule_2_conditions.end());
-            std::unordered_set<std::shared_ptr<const BaseEffect>> rule_2_effects_set(rule_2_effects.begin(), rule_2_effects.end());
-            if (utils::is_subset_eq(rule_1_conditions_set, rule_2_conditions_set) && utils::is_subset_eq(rule_1_effects_set, rule_2_effects_set)) {
-                dominated_rules.insert(rule_2);
-                break;
-            }
-        }
-    }
+    std::unordered_set<std::shared_ptr<const Rule>> dominated_rules = compute_dominated_rules(current_policy);
     PolicyBuilder builder;
     for (const auto& rule : current_policy.get_rules()) {
         if (dominated_rules.count(rule)) {
