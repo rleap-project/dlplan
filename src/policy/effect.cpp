@@ -14,6 +14,10 @@ NumericalEffect::NumericalEffect(std::shared_ptr<const core::Numerical> numerica
 PositiveBooleanEffect::PositiveBooleanEffect(std::shared_ptr<const core::Boolean> boolean_feature)
     : BooleanEffect(boolean_feature) {}
 
+bool PositiveBooleanEffect::evaluate(const core::State&, const core::State& target_state) const {
+    return m_boolean->evaluate(target_state);
+}
+
 bool PositiveBooleanEffect::evaluate(const core::State&, const core::State& target_state, evaluator::EvaluationCache& cache) const {
     return cache.retrieve_or_evaluate(*m_boolean, target_state);
 }
@@ -29,6 +33,10 @@ std::shared_ptr<const BaseEffect> PositiveBooleanEffect::visit(PolicyBuilder& po
 
 NegativeBooleanEffect::NegativeBooleanEffect(std::shared_ptr<const core::Boolean> boolean_feature)
     : BooleanEffect(boolean_feature) {}
+
+bool NegativeBooleanEffect::evaluate(const core::State&, const core::State& target_state) const {
+    return !m_boolean->evaluate(target_state);
+}
 
 bool NegativeBooleanEffect::evaluate(const core::State&, const core::State& target_state, evaluator::EvaluationCache& cache) const {
     return !cache.retrieve_or_evaluate(*m_boolean, target_state);
@@ -46,6 +54,10 @@ std::shared_ptr<const BaseEffect> NegativeBooleanEffect::visit(PolicyBuilder& po
 UnchangedBooleanEffect::UnchangedBooleanEffect(std::shared_ptr<const core::Boolean> boolean_feature)
     : BooleanEffect(boolean_feature) {}
 
+bool UnchangedBooleanEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
+    return m_boolean->evaluate(source_state) == m_boolean->evaluate(target_state);
+}
+
 bool UnchangedBooleanEffect::evaluate(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const {
     return cache.retrieve_or_evaluate(*m_boolean, source_state) == cache.retrieve_or_evaluate(*m_boolean, target_state);
 }
@@ -61,6 +73,10 @@ std::shared_ptr<const BaseEffect> UnchangedBooleanEffect::visit(PolicyBuilder& p
 
 IncrementNumericalEffect::IncrementNumericalEffect(std::shared_ptr<const core::Numerical> numerical_feature)
     : NumericalEffect(numerical_feature) {}
+
+bool IncrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
+    return m_numerical->evaluate(source_state) < m_numerical->evaluate(target_state);
+}
 
 bool IncrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const {
     return cache.retrieve_or_evaluate(*m_numerical, source_state) < cache.retrieve_or_evaluate(*m_numerical, target_state);
@@ -78,6 +94,10 @@ std::shared_ptr<const BaseEffect> IncrementNumericalEffect::visit(PolicyBuilder&
 DecrementNumericalEffect::DecrementNumericalEffect(std::shared_ptr<const core::Numerical> numerical_feature)
     : NumericalEffect(numerical_feature) {}
 
+bool DecrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
+    return m_numerical->evaluate(source_state) > m_numerical->evaluate(target_state);
+}
+
 bool DecrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const {
     return cache.retrieve_or_evaluate(*m_numerical, source_state) > cache.retrieve_or_evaluate(*m_numerical, target_state);
 }
@@ -93,6 +113,10 @@ std::shared_ptr<const BaseEffect> DecrementNumericalEffect::visit(PolicyBuilder&
 
 UnchangedNumericalEffect::UnchangedNumericalEffect(std::shared_ptr<const core::Numerical> numerical_feature)
     : NumericalEffect(numerical_feature) {}
+
+bool UnchangedNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
+    return m_numerical->evaluate(source_state) == m_numerical->evaluate(target_state);
+}
 
 bool UnchangedNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const {
     return cache.retrieve_or_evaluate(*m_numerical, source_state) == cache.retrieve_or_evaluate(*m_numerical, target_state);

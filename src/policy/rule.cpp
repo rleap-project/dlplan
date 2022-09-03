@@ -37,9 +37,23 @@ Rule& Rule::operator=(Rule&& other) = default;
 
 Rule::~Rule() = default;
 
+bool Rule::evaluate_conditions(const core::State& source_state) const {
+    for (const auto& condition : m_conditions) {
+        if (!condition->evaluate(source_state)) return false;
+    }
+    return true;
+}
+
 bool Rule::evaluate_conditions(const core::State& source_state, evaluator::EvaluationCache& cache) const {
     for (const auto& condition : m_conditions) {
         if (!condition->evaluate(source_state, cache)) return false;
+    }
+    return true;
+}
+
+bool Rule::evaluate_effects(const core::State& source_state, const core::State& target_state) const {
+    for (const auto& effect : m_effects) {
+        if (!effect->evaluate(source_state, target_state)) return false;
     }
     return true;
 }

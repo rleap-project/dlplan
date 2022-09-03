@@ -42,6 +42,7 @@ public:
     BaseCondition& operator=(BaseCondition&& other);
     virtual ~BaseCondition();
 
+    virtual bool evaluate(const core::State& source_state) const = 0;
     virtual bool evaluate(const core::State& source_state, evaluator::EvaluationCache& cache) const = 0;
 
     virtual std::string compute_repr() const = 0;
@@ -87,6 +88,7 @@ public:
     BaseEffect& operator=(BaseEffect&& other);
     virtual ~BaseEffect();
 
+    virtual bool evaluate(const core::State& source_state, const core::State& target_state) const = 0;
     virtual bool evaluate(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const = 0;
 
     virtual std::string compute_repr() const = 0;
@@ -137,7 +139,9 @@ public:
     Rule& operator=(Rule&& other);
     ~Rule();
 
+    bool evaluate_conditions(const core::State& source_state) const;
     bool evaluate_conditions(const core::State& source_state, evaluator::EvaluationCache& cache) const;
+    bool evaluate_effects(const core::State& source_state, const core::State& target_state) const;
     bool evaluate_effects(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const;
 
     std::string compute_repr() const;
@@ -188,13 +192,16 @@ public:
     /**
      * Approach 1: naive approach to evaluate (s,s')
      */
-    std::shared_ptr<const Rule> evaluate_lazy(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache);
+    std::shared_ptr<const Rule> evaluate_lazy(const core::State& source_state, const core::State& target_state) const;
+    std::shared_ptr<const Rule> evaluate_lazy(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const;
 
     /**
      * Approach 2: optimized approach for evaluating pairs with similar source state s, i.e., (s,s1), (s,s2), ..., (s,sn)
      */
-    std::vector<std::shared_ptr<const Rule>> evaluate_conditions_eager(const core::State& source_state, evaluator::EvaluationCache& cache);
-    std::shared_ptr<const Rule> evaluate_effects_lazy(const core::State& source_state, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules, evaluator::EvaluationCache& cache);
+    std::vector<std::shared_ptr<const Rule>> evaluate_conditions_eager(const core::State& source_state) const;
+    std::vector<std::shared_ptr<const Rule>> evaluate_conditions_eager(const core::State& source_state, evaluator::EvaluationCache& cache) const;
+    std::shared_ptr<const Rule> evaluate_effects_lazy(const core::State& source_state, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules) const;
+    std::shared_ptr<const Rule> evaluate_effects_lazy(const core::State& source_state, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules, evaluator::EvaluationCache& cache) const;
 
     std::string compute_repr() const;
 
@@ -331,8 +338,8 @@ public:
     PolicyMinimizer& operator=(PolicyMinimizer&& other);
     ~PolicyMinimizer();
 
-    Policy minimize_greedy(const Policy& policy) const;
-    Policy minimize_greedy(const Policy& policy, const core::StatePairs& true_state_pairs, const core::StatePairs& false_state_pairs) const;
+    Policy minimize(const Policy& policy) const;
+    Policy minimize(const Policy& policy, const core::StatePairs& true_state_pairs, const core::StatePairs& false_state_pairs) const;
 };
 
 

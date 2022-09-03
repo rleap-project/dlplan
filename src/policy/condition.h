@@ -31,6 +31,7 @@ class PositiveBooleanCondition : public BooleanCondition {
 public:
     PositiveBooleanCondition(std::shared_ptr<const core::Boolean> boolean_feature);
 
+    bool evaluate(const core::State& source_state) const override;
     bool evaluate(const core::State& source_state, evaluator::EvaluationCache& cache) const override;
 
     std::string compute_repr() const override;
@@ -42,6 +43,7 @@ class NegativeBooleanCondition : public BooleanCondition {
 public:
     NegativeBooleanCondition(std::shared_ptr<const core::Boolean> boolean_feature);
 
+    bool evaluate(const core::State& source_state) const override;
     bool evaluate(const core::State& source_state, evaluator::EvaluationCache& cache) const override;
 
     std::string compute_repr() const override;
@@ -53,6 +55,7 @@ class EqualNumericalCondition : public NumericalCondition {
 public:
     EqualNumericalCondition(std::shared_ptr<const core::Numerical> numerical_feature);
 
+    bool evaluate(const core::State& source_state) const override;
     bool evaluate(const core::State& source_state, evaluator::EvaluationCache& cache) const override;
 
     std::string compute_repr() const override;
@@ -64,6 +67,7 @@ class GreaterNumericalCondition : public NumericalCondition {
 public:
     GreaterNumericalCondition(std::shared_ptr<const core::Numerical> numerical_feature);
 
+    bool evaluate(const core::State& source_state) const override;
     bool evaluate(const core::State& source_state, evaluator::EvaluationCache& cache) const override;
 
     std::string compute_repr() const override;

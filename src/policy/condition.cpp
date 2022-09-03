@@ -14,6 +14,10 @@ NumericalCondition::NumericalCondition(std::shared_ptr<const core::Numerical> nu
 PositiveBooleanCondition::PositiveBooleanCondition(std::shared_ptr<const core::Boolean> boolean_feature)
     : BooleanCondition(boolean_feature) { }
 
+bool PositiveBooleanCondition::evaluate(const core::State& source_state) const {
+    return m_boolean->evaluate(source_state);
+}
+
 bool PositiveBooleanCondition::evaluate(const core::State& source_state, evaluator::EvaluationCache& cache) const {
     return cache.retrieve_or_evaluate(*m_boolean, source_state);
 }
@@ -29,6 +33,10 @@ std::shared_ptr<const BaseCondition> PositiveBooleanCondition::visit(PolicyBuild
 
 NegativeBooleanCondition::NegativeBooleanCondition(std::shared_ptr<const core::Boolean> boolean_feature)
     : BooleanCondition(boolean_feature) { }
+
+bool NegativeBooleanCondition::evaluate(const core::State& source_state) const {
+    return !m_boolean->evaluate(source_state);
+}
 
 bool NegativeBooleanCondition::evaluate(const core::State& source_state, evaluator::EvaluationCache& cache) const {
     return !cache.retrieve_or_evaluate(*m_boolean, source_state);
@@ -46,6 +54,10 @@ std::shared_ptr<const BaseCondition> NegativeBooleanCondition::visit(PolicyBuild
 EqualNumericalCondition::EqualNumericalCondition(std::shared_ptr<const core::Numerical> numerical_feature)
     : NumericalCondition(numerical_feature) { }
 
+bool EqualNumericalCondition::evaluate(const core::State& source_state) const {
+    return m_numerical->evaluate(source_state) == 0;
+}
+
 bool EqualNumericalCondition::evaluate(const core::State& source_state, evaluator::EvaluationCache& cache) const {
     return cache.retrieve_or_evaluate(*m_numerical, source_state) == 0;
 }
@@ -61,6 +73,10 @@ std::shared_ptr<const BaseCondition> EqualNumericalCondition::visit(PolicyBuilde
 
 GreaterNumericalCondition::GreaterNumericalCondition(std::shared_ptr<const core::Numerical> numerical_feature)
     : NumericalCondition(numerical_feature) { }
+
+bool GreaterNumericalCondition::evaluate(const core::State& source_state) const {
+    return m_numerical->evaluate(source_state) > 0;
+}
 
 bool GreaterNumericalCondition::evaluate(const core::State& source_state, evaluator::EvaluationCache& cache) const {
     return cache.retrieve_or_evaluate(*m_numerical, source_state) > 0;

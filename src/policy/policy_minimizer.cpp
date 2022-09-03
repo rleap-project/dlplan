@@ -70,7 +70,7 @@ std::unordered_set<std::shared_ptr<const Rule>> PolicyMinimizer::try_merge_by_ef
     return {};
 }
 
-Policy PolicyMinimizer::minimize_greedy(const Policy& policy) const {
+Policy PolicyMinimizer::minimize(const Policy& policy) const {
     Policy current_policy = policy;
     std::unordered_set<std::shared_ptr<const Rule>> merged_rules;
     do {
@@ -91,7 +91,7 @@ Policy PolicyMinimizer::minimize_greedy(const Policy& policy) const {
     return current_policy;
 }
 
-Policy PolicyMinimizer::minimize_greedy(const Policy& policy, const core::StatePairs& true_state_pairs, const core::StatePairs& false_state_pairs) const {
+Policy PolicyMinimizer::minimize(const Policy& policy, const core::StatePairs& true_state_pairs, const core::StatePairs& false_state_pairs) const {
     /*
        Idea: A rule C -> E dominates a rules C' -> E' if C subseteq C', E subseteq E'
              and substituting C' -> E' with C -> E in policy leads to consistent classification.
