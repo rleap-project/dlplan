@@ -29,6 +29,7 @@ TEST(DLPTests, AddDominatingRule) {
     std::shared_ptr<const BaseEffect> e_b_bot_2 = builder.add_bot_effect(boolean_2);
     // add dominating rule
     std::shared_ptr<const Rule> rule_1 = builder.add_rule({c_b_pos_1}, {e_b_neg_1});
+    // add dominated rule => pointer to rule_1 is returned
     std::shared_ptr<const Rule> rule_2 = builder.add_rule({c_b_pos_1}, {e_b_neg_1, e_b_neg_2});
     ASSERT_EQ(rule_1, rule_2);
 }
