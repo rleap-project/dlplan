@@ -1,6 +1,8 @@
 #include "condition.h"
 #include "effect.h"
 
+#include "../utils/set_operators.h"
+
 #include "../../include/dlplan/policy.h"
 
 
@@ -85,6 +87,7 @@ std::unordered_set<std::shared_ptr<const Rule>> PolicyMinimizer::try_merge_by_ef
 }
 
 Policy PolicyMinimizer::minimize(const Policy& policy) const {
+    // Merge rules
     Policy current_policy = policy;
     std::unordered_set<std::shared_ptr<const Rule>> merged_rules;
     do {
@@ -101,6 +104,35 @@ Policy PolicyMinimizer::minimize(const Policy& policy) const {
         }
         current_policy = builder.get_result();
     } while (!merged_rules.empty());
+    // Remove dominated rules
+    std::unordered_set<std::shared_ptr<const Rule>> dominated_rules;
+    for (const auto& rule_1 : current_policy.get_rules()) {
+        auto rule_1_conditions = rule_1->get_conditions();
+        auto rule_1_effects = rule_1->get_effects();
+        std::unordered_set<std::shared_ptr<const BaseCondition>> rule_1_conditions_set(rule_1_conditions.begin(), rule_1_conditions.end());
+        std::unordered_set<std::shared_ptr<const BaseEffect>> rule_1_effects_set(rule_1_effects.begin(), rule_1_effects.end());
+        for (const auto& rule_2 : current_policy.get_rules()) {
+            if (rule_1 == rule_2) {
+                continue;
+            }
+            auto rule_2_conditions = rule_2->get_conditions();
+            auto rule_2_effects = rule_2->get_effects();
+            std::unordered_set<std::shared_ptr<const BaseCondition>> rule_2_conditions_set(rule_2_conditions.begin(), rule_2_conditions.end());
+            std::unordered_set<std::shared_ptr<const BaseEffect>> rule_2_effects_set(rule_2_effects.begin(), rule_2_effects.end());
+            if (utils::is_subset_eq(rule_1_conditions_set, rule_2_conditions_set) && utils::is_subset_eq(rule_1_effects_set, rule_2_effects_set)) {
+                dominated_rules.insert(rule_2);
+                break;
+            }
+        }
+    }
+    PolicyBuilder builder;
+    for (const auto& rule : current_policy.get_rules()) {
+        if (dominated_rules.count(rule)) {
+            continue;
+        }
+        rule->visit(builder);
+    }
+    current_policy = builder.get_result();
     return current_policy;
 }
 
@@ -151,7 +183,8 @@ Policy PolicyMinimizer::minimize(const Policy& policy, const core::StatePairs& t
             if (minimization_succes) break;
             finished_rule_reprs.insert(rule_repr);
         }
-    } while (true);*/
+    } while (true);
+    */
     throw std::runtime_error("Not implemented.");
 }
 

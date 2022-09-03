@@ -67,30 +67,6 @@ std::shared_ptr<const BaseEffect> PolicyBuilderImpl::add_bot_effect(std::shared_
 std::shared_ptr<const Rule> PolicyBuilderImpl::add_rule(
     std::vector<std::shared_ptr<const BaseCondition>>&& conditions,
     std::vector<std::shared_ptr<const BaseEffect>>&& effects) {
-    // do not add rules that are a dominated by other rules.
-    std::unordered_set<std::shared_ptr<const BaseCondition>> conditions_set(conditions.begin(), conditions.end());
-    std::unordered_set<std::shared_ptr<const BaseEffect>> effects_set(effects.begin(), effects.end());
-    for (const auto& rule : m_rules) {
-        bool dominates = true;
-        // TODO: implement general function to compute subset.
-        for (const auto& condition : rule->get_conditions()) {
-            if (!conditions_set.count(condition)) {
-                dominates = false;
-                break;
-            }
-        }
-        if (dominates) {
-            for (const auto& effect : rule->get_effects()) {
-                if (!effects_set.count(effect)) {
-                    dominates = false;
-                    break;
-                }
-            }
-        }
-        if (dominates) {
-            return rule;
-        }
-    }
     auto result = m_caches.m_rule_cache->insert(std::make_unique<Rule>(Rule(std::move(conditions), std::move(effects), m_rules.size())));
     if (result.second) {
         m_rules.push_back(result.first);
