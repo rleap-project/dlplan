@@ -262,8 +262,7 @@ public:
 
 
 /**
- * PolicyMinimizer provides methods to minimize the number of rules in a policy
- * such that it distinguishes the same true and false state pairs.
+ * PolicyMinimizer provides methods to minimize the number of rules in a policy.
  */
 class PolicyMinimizer {
 private:
