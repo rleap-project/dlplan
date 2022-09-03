@@ -66,17 +66,10 @@ std::shared_ptr<const BaseEffect> PolicyBuilderImpl::add_bot_effect(std::shared_
 
 std::shared_ptr<const Rule> PolicyBuilderImpl::add_rule(
     std::vector<std::shared_ptr<const BaseCondition>>&& conditions,
-    std::vector<std::shared_ptr<const BaseEffect>>&& effects,
-    PolicyBuilder& parent) {
+    std::vector<std::shared_ptr<const BaseEffect>>&& effects) {
     // do not add rules that are a dominated by other rules.
-    std::unordered_set<std::shared_ptr<const BaseCondition>> conditions_set;
-    for (const auto& condition : conditions) {
-        conditions_set.insert(condition->visit(parent));
-    }
-    std::unordered_set<std::shared_ptr<const BaseEffect>> effects_set;
-    for (const auto& effect : effects) {
-        effects_set.insert(effect->visit(parent));
-    }
+    std::unordered_set<std::shared_ptr<const BaseCondition>> conditions_set(conditions.begin(), conditions.end());
+    std::unordered_set<std::shared_ptr<const BaseEffect>> effects_set(effects.begin(), effects.end());
     for (const auto& rule : m_rules) {
         bool dominates = true;
         // TODO: implement general function to compute subset.

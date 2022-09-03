@@ -139,7 +139,7 @@ std::shared_ptr<const BaseEffect> PolicyBuilder::add_bot_effect(std::shared_ptr<
 std::shared_ptr<const Rule> PolicyBuilder::add_rule(
     std::vector<std::shared_ptr<const BaseCondition>>&& conditions,
     std::vector<std::shared_ptr<const BaseEffect>>&& effects) {
-    return m_pImpl->add_rule(std::move(conditions), std::move(effects), *this);
+    return m_pImpl->add_rule(std::move(conditions), std::move(effects));
 }
 
 Policy PolicyBuilder::get_result() {

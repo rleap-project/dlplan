@@ -46,8 +46,7 @@ public:
 
     std::shared_ptr<const Rule> add_rule(
         std::vector<std::shared_ptr<const BaseCondition>>&& conditions,
-        std::vector<std::shared_ptr<const BaseEffect>>&& effects,
-        PolicyBuilder& parent);
+        std::vector<std::shared_ptr<const BaseEffect>>&& effects);
 
     Policy get_result();
 };
