@@ -270,19 +270,21 @@ private:
     std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_effect(const Policy& policy, PolicyBuilder& builder) const;
 
     /**
-     * Checks whether all values of given type PARENT_T are of type SUB_T
+     * Returns true iff all values of given type PARENT_T are of type SUB_T
      */
     template<typename PARENT_T, typename SUB_T>
     bool check_subtype_equality(const std::unordered_set<std::shared_ptr<const PARENT_T>>& values) const;
 
     /**
-     * Checks whether all values of given type T have feature with same index.
+     * Returns true iff all values of given type T have feature with same index.
      */
     template<typename T>
     bool check_feature_index_equality(const std::unordered_set<std::shared_ptr<const T>>& values) const;
 
     /**
-     * Checks whether given rules are merge compatibility by given PARENT_T and their either boolean SUB_T1 or numerical SUB_T2.
+     * Returns merge compatible values or the empty set if none exist.
+     * Merge compatible values must have same feature index,
+     * all subtypes are either SUB_T1 or SUB_T2.
      */
     template<typename PARENT_T, typename SUB_T1, typename SUB_T2>
     std::unordered_set<std::shared_ptr<const PARENT_T>> compute_mergeable_values(const std::vector<std::vector<std::shared_ptr<const PARENT_T>>>& values_by_rule) const;
@@ -292,6 +294,11 @@ private:
      */
     template<typename T>
     std::vector<std::shared_ptr<const T>> compute_merged_values(const std::vector<std::shared_ptr<const T>>& original_values, const std::unordered_set<std::shared_ptr<const T>>& removed_values, PolicyBuilder& builder) const;
+
+    /**
+     * Returns true iff policy classifies true_state_pairs as true and false_state_pairs as false.
+     */
+    bool check_policy_matches_classification(const Policy& policy, const core::StatePairs& true_state_pairs, const core::StatePairs& false_state_pairs) const;
 
 public:
     PolicyMinimizer();
