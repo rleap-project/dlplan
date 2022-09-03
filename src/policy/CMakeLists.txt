@@ -5,6 +5,7 @@ target_sources(dlplanpolicy
         effect.cpp
         policy_builder.cpp
         policy_impl.cpp
+        policy_minimizer.cpp
         policy.cpp
         reader.cpp
         rule.cpp

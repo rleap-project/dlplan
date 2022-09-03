@@ -9,7 +9,6 @@
 namespace dlplan::policy {
 
 std::shared_ptr<const core::Boolean> PolicyBuilderImpl::add_boolean_feature(core::Boolean boolean) {
-    boolean.set_index(m_boolean_features.size());
     auto result = m_caches.m_boolean_cache->insert(std::make_unique<core::Boolean>(boolean));
     if (result.second) {
         m_boolean_features.push_back(result.first);
@@ -18,7 +17,6 @@ std::shared_ptr<const core::Boolean> PolicyBuilderImpl::add_boolean_feature(core
 }
 
 std::shared_ptr<const core::Numerical> PolicyBuilderImpl::add_numerical_feature(core::Numerical numerical) {
-    numerical.set_index(m_numerical_features.size());
     auto result = m_caches.m_numerical_cache->insert(std::make_unique<core::Numerical>(numerical));
     if (result.second) {
         m_numerical_features.push_back(result.first);
