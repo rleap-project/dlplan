@@ -45,20 +45,6 @@ static bool check_feature_index_equality(
 }
 
 
-/**
- * BaseConditions and BaseEffects of rules can be unsorted.
- * Hence, we must sort them before we can check for equality.
- */
-template<typename T>
-static bool check_values_equality(const std::vector<T>& l, const std::vector<T>& r) {
-    std::vector<T> sorted_l(l);
-    std::sort(sorted_l.begin(), sorted_l.end());
-    std::vector<T> sorted_r(r);
-    std::sort(sorted_r.begin(), sorted_r.end());
-    return sorted_l == sorted_r;
-}
-
-
 static std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_condition(
     const Policy& policy, PolicyBuilder& builder) {
     for (const auto& rule_1 : policy.get_rules()) {
@@ -66,7 +52,7 @@ static std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_condition(
             if (rule_1->get_index() >= rule_2->get_index()) {
                 continue;
             }
-            if (!check_values_equality(rule_1->get_effects(), rule_2->get_effects())) {
+            if (rule_1->get_effects() != rule_2->get_effects()) {
                 continue;
             }
             std::vector<std::shared_ptr<const BaseCondition>> symmetric_diff = utils::set_symmetric_difference<std::shared_ptr<const BaseCondition>>({rule_1->get_conditions(), rule_2->get_conditions()});
@@ -94,7 +80,7 @@ static std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_effect(
             if (rule_1->get_index() >= rule_2->get_index()) {
                 continue;
             }
-            if (!check_values_equality(rule_1->get_conditions(), rule_2->get_conditions())) {
+            if (rule_1->get_conditions() != rule_2->get_conditions()) {
                 continue;
             }
             std::vector<std::shared_ptr<const BaseEffect>> symmetric_diff = utils::set_symmetric_difference<std::shared_ptr<const BaseEffect>>({rule_1->get_effects(), rule_2->get_effects()});
@@ -109,7 +95,7 @@ static std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_effect(
                 if (rule_2->get_index() >= rule_3->get_index()) {
                     continue;
                 }
-                if (!check_values_equality(rule_2->get_conditions(), rule_3->get_conditions())) {
+                if (rule_2->get_conditions() != rule_3->get_conditions()) {
                     continue;
                 }
                 symmetric_diff = utils::set_symmetric_difference<std::shared_ptr<const BaseEffect>>({rule_1->get_effects(), rule_2->get_effects(), rule_3->get_effects()});
