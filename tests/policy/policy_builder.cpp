@@ -28,4 +28,5 @@ TEST(DLPTests, PolicyBuilderTest) {
     std::shared_ptr<const BaseEffect> e_b_bot_1 = builder.add_bot_effect(boolean_1);
     std::shared_ptr<const BaseEffect> e_b_bot_2 = builder.add_bot_effect(boolean_2);
     // Test something here
+    // E.g. canonicity
 }

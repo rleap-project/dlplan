@@ -9,11 +9,20 @@
 namespace dlplan::policy {
 
 template<typename T>
-std::vector<T> sort_values_by_increasing_complexity(std::vector<T>&& values) {
+static std::vector<T> sort_values_by_increasing_complexity(const std::vector<T>& values) {
     std::vector<T> result(values);
-    std::sort(values.begin(), values.end(), [](T& l, T& r){ return l->get_base_feature()->compute_complexity() < r->get_base_feature()->compute_complexity(); });
+    std::sort(result.begin(), result.end(), [](T& l, T& r){ return l->get_base_feature()->compute_complexity() < r->get_base_feature()->compute_complexity(); });
     return result;
 }
+
+
+template<typename T>
+static std::vector<T> sort_features_by_repr(const std::vector<T>& features) {
+    std::vector<T> result(features);
+    std::sort(result.begin(), result.end(), [](const auto& l, const auto& r){ return l->compute_repr() < r->compute_repr(); } );
+    return result;
+}
+
 
 std::shared_ptr<const core::Boolean> PolicyBuilderImpl::add_boolean_feature(core::Boolean boolean) {
     auto result = m_caches.m_boolean_cache->insert(std::make_unique<core::Boolean>(boolean));
@@ -76,8 +85,8 @@ std::shared_ptr<const Rule> PolicyBuilderImpl::add_rule(
     std::vector<std::shared_ptr<const BaseEffect>>&& effects) {
     auto result = m_caches.m_rule_cache->insert(std::make_unique<Rule>(
         Rule(
-            sort_values_by_increasing_complexity(std::move(conditions)),
-            sort_values_by_increasing_complexity(std::move(effects)))));
+            sort_values_by_increasing_complexity(conditions),
+            sort_values_by_increasing_complexity(effects))));
     if (result.second) {
         m_rules.push_back(result.first);
     }
@@ -85,7 +94,26 @@ std::shared_ptr<const Rule> PolicyBuilderImpl::add_rule(
 }
 
 Policy PolicyBuilderImpl::get_result() {
-    return Policy(m_boolean_features, m_numerical_features, m_rules);
+    // Ensure canonicity.
+    PolicyBuilder builder;
+    const auto sorted_boolean_features = sort_features_by_repr(m_boolean_features);
+    std::vector<std::shared_ptr<const core::Boolean>> boolean_features;
+    for (const auto& boolean : sorted_boolean_features) {
+        boolean_features.push_back(builder.add_boolean_feature(*boolean));
+    }
+    const auto sorted_numerical_features = sort_features_by_repr(m_numerical_features);
+    std::vector<std::shared_ptr<const core::Numerical>> numerical_features;
+    for (const auto& numerical : sorted_numerical_features) {
+        numerical_features.push_back(builder.add_numerical_feature(*numerical));
+    }
+    // TODO: use more sophisiticated sorting, e.g., to ensure faster evaluation.
+    std::vector<std::shared_ptr<const Rule>> sorted_rules(m_rules);
+    std::sort(sorted_rules.begin(), sorted_rules.end(), [](const auto& l, const auto& r){ return l->compute_repr() < r->compute_repr(); } );
+    std::vector<std::shared_ptr<const Rule>> rules;
+    for (const auto& rule : sorted_rules) {
+        rules.push_back(rule->visit(builder));
+    }
+    return Policy(boolean_features, numerical_features, rules);
 }
 
 }

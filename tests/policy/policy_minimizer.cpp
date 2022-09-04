@@ -21,9 +21,9 @@ TEST(DLPTests, StructuralMinimization) {
         ")";
     std::string minimized_policy_textual =
         "(:policy\n"
-        "(:boolean_features \"b_empty(r_primitive(role,0,1))\" \"b_empty(c_primitive(concept,0))\")\n"
+        "(:boolean_features \"b_empty(c_primitive(concept,0))\" \"b_empty(r_primitive(role,0,1))\")\n"
         "(:numerical_features \"n_count(r_primitive(role,0,1))\")\n"
-        "(:rule (:conditions (:c_b_pos 0) (:c_n_gt 0) (:c_b_pos 1)) (:effects (:e_n_dec 0) (:e_b_neg 1)))\n"
+        "(:rule (:conditions (:c_n_gt 0) (:c_b_pos 1) (:c_b_pos 0)) (:effects (:e_n_dec 0) (:e_b_neg 0)))\n"
         ")";
 
     auto vocabulary_info = construct_vocabulary_info();
@@ -31,8 +31,8 @@ TEST(DLPTests, StructuralMinimization) {
     auto input_policy = PolicyReader().read(policy_textual, syntactic_element_factory);
     auto minimized_policy = PolicyMinimizer().minimize(input_policy);
     std::cout << "Input policy:" << std::endl
-              << input_policy.compute_repr() << std::endl << std::endl
+              << input_policy.str() << std::endl << std::endl
               << "Minimized policy:" << std::endl
-              << minimized_policy.compute_repr() << std::endl;
+              << minimized_policy.str() << std::endl;
     ASSERT_EQ(minimized_policy.compute_repr(), minimized_policy_textual);
 }

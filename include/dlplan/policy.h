@@ -144,8 +144,14 @@ public:
     bool evaluate_effects(const core::State& source_state, const core::State& target_state) const;
     bool evaluate_effects(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const;
 
+    /**
+     * Returns canonical string representation.
+     */
     std::string compute_repr() const;
 
+    /**
+     * Returns parseable string representation
+     */
     std::string str() const;
 
     /**

@@ -89,21 +89,18 @@ std::shared_ptr<const Rule> Policy::evaluate_effects_lazy(const core::State& sou
 std::string Policy::compute_repr() const {
     std::stringstream ss;
     ss << "(:policy\n";
-    // boolean features
     ss << "(:boolean_features ";
     for (const auto& b : m_boolean_features) {
         ss << "\"" << b->compute_repr() << "\"";
         if (b != m_boolean_features.back()) ss << " ";
     }
     ss << ")\n";
-    // numerical_features
     ss << "(:numerical_features ";
     for (const auto& n : m_numerical_features) {
         ss << "\"" << n->compute_repr() << "\"";
         if (n != m_numerical_features.back()) ss << " ";
     }
     ss << ")\n";
-    // rules
     for (const auto& r : m_rules) {
         ss << r->compute_repr() << "\n";
     }
@@ -114,21 +111,18 @@ std::string Policy::compute_repr() const {
 std::string Policy::str() const {
     std::stringstream ss;
     ss << "(:policy\n";
-    // boolean features
     ss << "(:boolean_features ";
     for (const auto& b : m_boolean_features) {
         ss << "\"" << b->compute_repr() << "\"";
         if (b != m_boolean_features.back()) ss << " ";
     }
     ss << ")\n";
-    // numerical_features
     ss << "(:numerical_features ";
     for (const auto& n : m_numerical_features) {
         ss << "\"" << n->compute_repr() << "\"";
         if (n != m_numerical_features.back()) ss << " ";
     }
     ss << ")\n";
-    // rules
     for (const auto& r : m_rules) {
         ss << r->str() << "\n";
     }
