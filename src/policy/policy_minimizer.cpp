@@ -25,14 +25,6 @@ static std::vector<std::shared_ptr<const T>> compute_merged_values(
     }
     return values;
 }
-template std::vector<std::shared_ptr<const BaseCondition>> compute_merged_values(
-    const std::vector<std::shared_ptr<const BaseCondition>>&,
-    const std::unordered_set<std::shared_ptr<const BaseCondition>>&,
-    PolicyBuilder&);
-template std::vector<std::shared_ptr<const BaseEffect>> compute_merged_values(
-    const std::vector<std::shared_ptr<const BaseEffect>>&,
-    const std::unordered_set<std::shared_ptr<const BaseEffect>>&,
-    PolicyBuilder&);
 
 
 /**
@@ -44,6 +36,7 @@ static bool check_subtype_equality(
     return std::all_of(values.begin(), values.end(), [](const std::shared_ptr<const PARENT_T>& value){ return std::dynamic_pointer_cast<const SUB_T>(value); });
 }
 
+
 /**
  * Returns true iff all values of given type T have feature with same index.
  */
@@ -54,13 +47,12 @@ static bool check_feature_index_equality(
     return std::all_of(values.begin(), values.end(), [index=(*(values.begin()))->get_base_feature()->get_index()](const std::shared_ptr<const T>& value){ return value->get_base_feature()->get_index() == index; } );
 }
 
+
 /**
- * Returns merge compatible values or the empty set if none exist.
- * Merge compatible values must have same feature index,
- * all subtypes are either SUB_T1 or SUB_T2.
+ * Computes the symmetric difference of the given values of all rules.
  */
-template<typename PARENT_T, typename SUB_T1, typename SUB_T2>
-static std::unordered_set<std::shared_ptr<const PARENT_T>> compute_mergeable_values(
+template<typename PARENT_T>
+static std::unordered_set<std::shared_ptr<const PARENT_T>> compute_symmetric_difference(
     const std::vector<std::vector<std::shared_ptr<const PARENT_T>>>& values_by_rule) {
     std::unordered_map<std::shared_ptr<const PARENT_T>, int> value_frequencies;
     for (const auto& values : values_by_rule) {
@@ -78,16 +70,8 @@ static std::unordered_set<std::shared_ptr<const PARENT_T>> compute_mergeable_val
             symmetric_diff.insert(p.first);
         }
     }
-    if (!check_feature_index_equality(symmetric_diff) ||
-        !(check_subtype_equality<PARENT_T, SUB_T1>(symmetric_diff) || check_subtype_equality<PARENT_T, SUB_T2>(symmetric_diff))) {
-        return {};
-    }
     return symmetric_diff;
 }
-template std::unordered_set<std::shared_ptr<const BaseCondition>> compute_mergeable_values<BaseCondition, BooleanCondition, NumericalCondition>(
-    const std::vector<std::vector<std::shared_ptr<const BaseCondition>>>&);
-template std::unordered_set<std::shared_ptr<const BaseEffect>> compute_mergeable_values<BaseEffect, BooleanEffect, NumericalEffect>(
-    const std::vector<std::vector<std::shared_ptr<const BaseEffect>>>&);
 
 
 static std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_condition(
@@ -100,11 +84,15 @@ static std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_condition(
             if (rule_1->get_effects() != rule_2->get_effects()) {
                 continue;
             }
-            std::unordered_set<std::shared_ptr<const BaseCondition>> diff = compute_mergeable_values<BaseCondition, BooleanCondition, NumericalCondition>({rule_1->get_conditions(), rule_2->get_conditions()});
-            if (diff.empty()) {
+            std::unordered_set<std::shared_ptr<const BaseCondition>> symmetric_diff = compute_symmetric_difference<BaseCondition>({rule_1->get_conditions(), rule_2->get_conditions()});
+            if (symmetric_diff.empty()) {
                 continue;
             }
-            builder.add_rule(compute_merged_values(rule_1->get_conditions(), diff, builder), compute_merged_values(rule_1->get_effects(), {}, builder));
+            if (!check_feature_index_equality(symmetric_diff) ||
+                !(check_subtype_equality<BaseCondition, BooleanCondition>(symmetric_diff) || check_subtype_equality<BaseCondition, NumericalCondition>(symmetric_diff))) {
+                continue;
+            }
+            builder.add_rule(compute_merged_values(rule_1->get_conditions(), symmetric_diff, builder), compute_merged_values(rule_1->get_effects(), {}, builder));
             return {rule_1, rule_2};
         }
     }
@@ -122,8 +110,12 @@ static std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_effect(
             if (rule_1->get_conditions() != rule_2->get_conditions()) {
                 continue;
             }
-            std::unordered_set<std::shared_ptr<const BaseEffect>> diff = compute_mergeable_values<BaseEffect, BooleanEffect, NumericalEffect>({rule_1->get_effects(), rule_2->get_effects()});
-            if (diff.empty()) {
+            std::unordered_set<std::shared_ptr<const BaseEffect>> symmetric_diff = compute_symmetric_difference<BaseEffect>({rule_1->get_effects(), rule_2->get_effects()});
+            if (symmetric_diff.empty()) {
+                continue;
+            }
+            if (!check_feature_index_equality(symmetric_diff) ||
+                !(check_subtype_equality<BaseEffect, BooleanEffect>(symmetric_diff) || check_subtype_equality<BaseEffect, NumericalEffect>(symmetric_diff))) {
                 continue;
             }
             for (const auto& rule_3 : policy.get_rules()) {
@@ -133,11 +125,15 @@ static std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_effect(
                 if (rule_2->get_conditions() != rule_3->get_conditions()) {
                     continue;
                 }
-                diff = compute_mergeable_values<BaseEffect, BooleanEffect, NumericalEffect>({rule_1->get_effects(), rule_2->get_effects(), rule_3->get_effects()});
-                if (diff.empty()) {
+                symmetric_diff = compute_symmetric_difference<BaseEffect>({rule_1->get_effects(), rule_2->get_effects(), rule_3->get_effects()});
+                if (symmetric_diff.empty()) {
                     continue;
                 }
-                builder.add_rule(compute_merged_values(rule_1->get_conditions(), {}, builder), compute_merged_values(rule_1->get_effects(), diff, builder));
+                if (!check_feature_index_equality(symmetric_diff) ||
+                    !(check_subtype_equality<BaseEffect, BooleanEffect>(symmetric_diff) || check_subtype_equality<BaseEffect, NumericalEffect>(symmetric_diff))) {
+                    continue;
+                }
+                builder.add_rule(compute_merged_values(rule_1->get_conditions(), {}, builder), compute_merged_values(rule_1->get_effects(), symmetric_diff, builder));
                 return {rule_1, rule_2, rule_3};
             }
         }
