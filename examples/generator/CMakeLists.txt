@@ -1,4 +1,4 @@
-add_executable(generate_exhaustively
-    generate_exhaustively.cpp
+add_executable(generator_example
+    generator.cpp
 )
-target_link_libraries(generate_exhaustively dlplangenerator dlplancore)
+target_link_libraries(generator_example dlplangenerator dlplancore)

@@ -44,14 +44,19 @@ int main() {
     dlplan::core::State s1(instance_info, {a0}, 1);
     dlplan::core::State s2(instance_info, {a0, a1}, 2);
 
-    // Construt a cache and evaluation contexts to avoid redudant reevaluations
+    // Construct a cache to avoid redundant reevaluations
     dlplan::evaluator::EvaluationCache evaluation_cache(policy.get_boolean_features().size(), policy.get_numerical_features().size());
 
-    // Evaluate the policy.
+    // Evaluate the policy using the cache
     assert(policy.evaluate_lazy(s1, s1, evaluation_cache));
     assert(!policy.evaluate_lazy(s2, s0, evaluation_cache));
     assert(!policy.evaluate_lazy(s1, s2, evaluation_cache));
     assert(!policy.evaluate_lazy(s0, s2, evaluation_cache));
+    // Evaluate the policy without the cache
+    assert(policy.evaluate_lazy(s1, s1));
+    assert(!policy.evaluate_lazy(s2, s0));
+    assert(!policy.evaluate_lazy(s1, s2));
+    assert(!policy.evaluate_lazy(s0, s2));
 
     // Write policy to file.
     std::cout << "Write policy:" << std::endl;

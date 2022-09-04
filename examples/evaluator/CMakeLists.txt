@@ -1,0 +1,2 @@
+add_executable(evaluator_example evaluator.cpp)
+target_link_libraries(evaluator_example dlplanevaluator dlplancore)

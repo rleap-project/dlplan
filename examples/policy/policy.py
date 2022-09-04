@@ -37,6 +37,11 @@ def main():
     assert not policy.evaluate_lazy(s1, s2, evaluation_cache)
     assert not policy.evaluate_lazy(s0, s2, evaluation_cache)
 
+    assert policy.evaluate_lazy(s2, s1)
+    assert not policy.evaluate_lazy(s2, s0)
+    assert not policy.evaluate_lazy(s1, s2)
+    assert not policy.evaluate_lazy(s0, s2)
+
     print("Write policy:")
     print(policy.compute_repr())
     print()

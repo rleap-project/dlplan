@@ -105,6 +105,7 @@ void init_core(py::module_ &m) {
         .def("evaluate", &core::Concept::evaluate)
         .def("compute_complexity", &core::Concept::compute_complexity)
         .def("compute_repr", &core::Concept::compute_repr)
+        .def("set_index", &core::Concept::set_index)
     ;
 
     py::class_<core::Role>(m, "Role")
@@ -112,6 +113,7 @@ void init_core(py::module_ &m) {
         .def("evaluate", &core::Role::evaluate)
         .def("compute_complexity", &core::Role::compute_complexity)
         .def("compute_repr", &core::Role::compute_repr)
+        .def("set_index", &core::Role::set_index)
     ;
 
     py::class_<core::Numerical, std::shared_ptr<core::Numerical>>(m, "Numerical")
@@ -119,6 +121,7 @@ void init_core(py::module_ &m) {
         .def("evaluate", &core::Numerical::evaluate)
         .def("compute_complexity", &core::Numerical::compute_complexity)
         .def("compute_repr", &core::Numerical::compute_repr)
+        .def("set_index", &core::Numerical::set_index)
     ;
 
     py::class_<core::Boolean, std::shared_ptr<core::Boolean>>(m, "Boolean")
@@ -126,6 +129,7 @@ void init_core(py::module_ &m) {
         .def("evaluate", &core::Boolean::evaluate)
         .def("compute_complexity", &core::Boolean::compute_complexity)
         .def("compute_repr", &core::Boolean::compute_repr)
+        .def("set_index", &core::Boolean::set_index)
     ;
 
     py::class_<core::SyntacticElementFactory, std::shared_ptr<core::SyntacticElementFactory>>(m, "SyntacticElementFactory")
