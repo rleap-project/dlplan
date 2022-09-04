@@ -25,6 +25,10 @@ class SyntacticElementFactory;
 class InstanceInfo;
 class VocabularyInfo;
 class State;
+class ConceptDenotationBitset;
+class ConceptDenotationFlatSet;
+class RoleDenotationBitset;
+class RoleDenotationFlatSet;
 namespace element {
     template<typename T>
     class Element;
@@ -36,6 +40,14 @@ namespace element {
 
 using StatePair = std::pair<State, State>;
 using StatePairs = std::vector<StatePair>;
+
+#ifdef DENABLE_SPARSE
+    using ConceptDenotation = ConceptDenotationFlatSet;
+    using RoleDenotation = RoleDenotationFlatSet;
+#else
+    using ConceptDenotation = ConceptDenotationBitset;
+    using RoleDenotation = RoleDenotationBitset;
+#endif
 
 class ConceptDenotationFlatSet {
 private:
@@ -171,7 +183,6 @@ public:
 
     int get_num_objects() const;
 };
-using ConceptDenotation = ConceptDenotationBitset;
 
 class RoleDenotationBitset {
 private:
@@ -235,8 +246,6 @@ public:
 
     int get_num_objects() const;
 };
-using RoleDenotation = RoleDenotationBitset;
-
 
 class Constant {
 private:
