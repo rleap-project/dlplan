@@ -9,21 +9,18 @@
 namespace dlplan::policy {
 
 /**
- * Adds values to the builder with original_values minus removed_values and returns them.
+ *
  */
 template<typename T>
-static std::vector<std::shared_ptr<const T>> compute_merged_values(
-    const std::vector<std::shared_ptr<const T>>& original_values,
-    const std::unordered_set<std::shared_ptr<const T>>& removed_values,
+std::vector<T> copy_values_to_builder(
+    const std::vector<T>& old_values,
     PolicyBuilder& builder) {
-    std::vector<std::shared_ptr<const T>> values;
-    for (const auto& value : original_values) {
-        if (removed_values.count(value)) {
-            continue;
-        }
-        values.push_back(value->visit(builder));
+    std::vector<T> new_values;
+    new_values.reserve(old_values.size());
+    for (const auto& element : old_values) {
+        new_values.push_back(element->visit(builder));
     }
-    return values;
+    return new_values;
 }
 
 
@@ -32,7 +29,7 @@ static std::vector<std::shared_ptr<const T>> compute_merged_values(
  */
 template<typename PARENT_T, typename SUB_T>
 static bool check_subtype_equality(
-    const std::unordered_set<std::shared_ptr<const PARENT_T>>& values) {
+    const std::vector<std::shared_ptr<const PARENT_T>>& values) {
     return std::all_of(values.begin(), values.end(), [](const std::shared_ptr<const PARENT_T>& value){ return std::dynamic_pointer_cast<const SUB_T>(value); });
 }
 
@@ -42,35 +39,23 @@ static bool check_subtype_equality(
  */
 template<typename T>
 static bool check_feature_index_equality(
-    const std::unordered_set<std::shared_ptr<const T>>& values) {
+    const std::vector<std::shared_ptr<const T>>& values) {
     if (values.empty()) return true;
     return std::all_of(values.begin(), values.end(), [index=(*(values.begin()))->get_base_feature()->get_index()](const std::shared_ptr<const T>& value){ return value->get_base_feature()->get_index() == index; } );
 }
 
 
 /**
- * Computes the symmetric difference of the given values of all rules.
+ * BaseConditions and BaseEffects of rules can be unsorted.
+ * Hence, we must sort them before we can check for equality.
  */
-template<typename PARENT_T>
-static std::unordered_set<std::shared_ptr<const PARENT_T>> compute_symmetric_difference(
-    const std::vector<std::vector<std::shared_ptr<const PARENT_T>>>& values_by_rule) {
-    std::unordered_map<std::shared_ptr<const PARENT_T>, int> value_frequencies;
-    for (const auto& values : values_by_rule) {
-        for (const auto& v : values) {
-            if (value_frequencies.count(v)) {
-                ++value_frequencies[v];
-            } else {
-                value_frequencies[v] = 1;
-            }
-        }
-    }
-    std::unordered_set<std::shared_ptr<const PARENT_T>> symmetric_diff;
-    for (const auto& p : value_frequencies) {
-        if (value_frequencies[p.first] == 1) {
-            symmetric_diff.insert(p.first);
-        }
-    }
-    return symmetric_diff;
+template<typename T>
+static bool check_values_equality(const std::vector<T>& l, const std::vector<T>& r) {
+    std::vector<T> sorted_l(l);
+    std::sort(sorted_l.begin(), sorted_l.end());
+    std::vector<T> sorted_r(r);
+    std::sort(sorted_r.begin(), sorted_r.end());
+    return sorted_l == sorted_r;
 }
 
 
@@ -81,10 +66,10 @@ static std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_condition(
             if (rule_1->get_index() >= rule_2->get_index()) {
                 continue;
             }
-            if (rule_1->get_effects() != rule_2->get_effects()) {
+            if (!check_values_equality(rule_1->get_effects(), rule_2->get_effects())) {
                 continue;
             }
-            std::unordered_set<std::shared_ptr<const BaseCondition>> symmetric_diff = compute_symmetric_difference<BaseCondition>({rule_1->get_conditions(), rule_2->get_conditions()});
+            std::vector<std::shared_ptr<const BaseCondition>> symmetric_diff = utils::set_symmetric_difference<std::shared_ptr<const BaseCondition>>({rule_1->get_conditions(), rule_2->get_conditions()});
             if (symmetric_diff.empty()) {
                 continue;
             }
@@ -92,7 +77,9 @@ static std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_condition(
                 !(check_subtype_equality<BaseCondition, BooleanCondition>(symmetric_diff) || check_subtype_equality<BaseCondition, NumericalCondition>(symmetric_diff))) {
                 continue;
             }
-            builder.add_rule(compute_merged_values(rule_1->get_conditions(), symmetric_diff, builder), compute_merged_values(rule_1->get_effects(), {}, builder));
+            const auto rule = builder.add_rule(
+                utils::set_difference(copy_values_to_builder(rule_1->get_conditions(), builder), copy_values_to_builder(symmetric_diff, builder)),
+                copy_values_to_builder(rule_1->get_effects(), builder));
             return {rule_1, rule_2};
         }
     }
@@ -107,10 +94,10 @@ static std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_effect(
             if (rule_1->get_index() >= rule_2->get_index()) {
                 continue;
             }
-            if (rule_1->get_conditions() != rule_2->get_conditions()) {
+            if (!check_values_equality(rule_1->get_conditions(), rule_2->get_conditions())) {
                 continue;
             }
-            std::unordered_set<std::shared_ptr<const BaseEffect>> symmetric_diff = compute_symmetric_difference<BaseEffect>({rule_1->get_effects(), rule_2->get_effects()});
+            std::vector<std::shared_ptr<const BaseEffect>> symmetric_diff = utils::set_symmetric_difference<std::shared_ptr<const BaseEffect>>({rule_1->get_effects(), rule_2->get_effects()});
             if (symmetric_diff.empty()) {
                 continue;
             }
@@ -122,10 +109,10 @@ static std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_effect(
                 if (rule_2->get_index() >= rule_3->get_index()) {
                     continue;
                 }
-                if (rule_2->get_conditions() != rule_3->get_conditions()) {
+                if (!check_values_equality(rule_2->get_conditions(), rule_3->get_conditions())) {
                     continue;
                 }
-                symmetric_diff = compute_symmetric_difference<BaseEffect>({rule_1->get_effects(), rule_2->get_effects(), rule_3->get_effects()});
+                symmetric_diff = utils::set_symmetric_difference<std::shared_ptr<const BaseEffect>>({rule_1->get_effects(), rule_2->get_effects(), rule_3->get_effects()});
                 if (symmetric_diff.empty()) {
                     continue;
                 }
@@ -133,7 +120,9 @@ static std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_effect(
                     !(check_subtype_equality<BaseEffect, BooleanEffect>(symmetric_diff) || check_subtype_equality<BaseEffect, NumericalEffect>(symmetric_diff))) {
                     continue;
                 }
-                builder.add_rule(compute_merged_values(rule_1->get_conditions(), {}, builder), compute_merged_values(rule_1->get_effects(), symmetric_diff, builder));
+                const auto rule = builder.add_rule(
+                    copy_values_to_builder(rule_1->get_conditions(), builder),
+                    utils::set_difference(copy_values_to_builder(rule_1->get_effects(), builder), copy_values_to_builder(symmetric_diff, builder)));
                 return {rule_1, rule_2, rule_3};
             }
         }

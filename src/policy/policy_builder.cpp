@@ -8,6 +8,13 @@
 
 namespace dlplan::policy {
 
+template<typename T>
+std::vector<T> sort_values_by_increasing_complexity(std::vector<T>&& values) {
+    std::vector<T> result(values);
+    std::sort(values.begin(), values.end(), [](T& l, T& r){ return l->get_base_feature()->compute_complexity() < r->get_base_feature()->compute_complexity(); });
+    return result;
+}
+
 std::shared_ptr<const core::Boolean> PolicyBuilderImpl::add_boolean_feature(core::Boolean boolean) {
     auto result = m_caches.m_boolean_cache->insert(std::make_unique<core::Boolean>(boolean));
     if (result.second) {
@@ -67,7 +74,10 @@ std::shared_ptr<const BaseEffect> PolicyBuilderImpl::add_bot_effect(std::shared_
 std::shared_ptr<const Rule> PolicyBuilderImpl::add_rule(
     std::vector<std::shared_ptr<const BaseCondition>>&& conditions,
     std::vector<std::shared_ptr<const BaseEffect>>&& effects) {
-    auto result = m_caches.m_rule_cache->insert(std::make_unique<Rule>(Rule(std::move(conditions), std::move(effects), m_rules.size())));
+    auto result = m_caches.m_rule_cache->insert(std::make_unique<Rule>(
+        Rule(
+            sort_values_by_increasing_complexity(std::move(conditions)),
+            sort_values_by_increasing_complexity(std::move(effects)))));
     if (result.second) {
         m_rules.push_back(result.first);
     }
