@@ -177,6 +177,7 @@ PolicyMinimizer::~PolicyMinimizer() { }
 
 Policy PolicyMinimizer::minimize(const Policy& policy) const {
     // Merge rules
+    // TODO: avoid rechecking merges.
     Policy current_policy = policy;
     std::unordered_set<std::shared_ptr<const Rule>> merged_rules;
     do {
@@ -207,55 +208,54 @@ Policy PolicyMinimizer::minimize(const Policy& policy) const {
 }
 
 Policy PolicyMinimizer::minimize(const Policy& policy, const core::StatePairs& true_state_pairs, const core::StatePairs& false_state_pairs) const {
-    /*
-       Idea: A rule C -> E dominates a rules C' -> E' if C subseteq C', E subseteq E'
-             and substituting C' -> E' with C -> E in policy leads to consistent classification.
-    */
-    /* 1. try to remove conditions such that classification remains.
-    */
-    /* 2. try to remove effects such that classification remains.
-    */
-    /*Policy current_policy = policy;
-    // To skip faster to unchecked rules, conditions and effects.
-    std::unordered_set<std::string> finished_rule_reprs;
-    std::unordered_map<std::string, std::unordered_set<std::string>> rule_repr_to_finished_value_reprs;
+    // untested naive version.
+    // TODO: avoid rechecking conditions
+    Policy current_policy = policy;
+    bool minimization_success;
     do {
-        bool minimization_succes = false;
-        PolicyBuilder builder;
-        for (const auto& rule : current_policy.get_rules()) {
-            std::string rule_repr = rule->compute_repr();
-            if (finished_rule_reprs.count(rule_repr)) {
-                continue;
-            }
-            for (const auto& condition : rule->get_conditions()) {
-                std::string condition_repr = condition->compute_repr();
-                if (condition_repr)
-                builder.add_rule(compute_merged_values(rule->get_conditions(), {condition}, builder), compute_merged_values(rule->get_effects(), {}, builder));
+        minimization_success = false;
+        for (const auto& rule_1 : current_policy.get_rules()) {
+            for (const auto& condition : rule_1->get_conditions()) {
+                PolicyBuilder builder;
+                builder.add_rule(utils::set_difference(rule_1->get_conditions(), {condition}), rule_1->get_effects());
                 for (const auto& rule_2 : current_policy.get_rules()) {
-                    if (rule == rule_2) {
+                    if (rule_1 == rule_2) {
                         continue;
                     }
                     rule_2->visit(builder);
                 }
                 Policy tmp_policy = builder.get_result();
                 if (check_policy_matches_classification(tmp_policy, true_state_pairs, false_state_pairs)) {
-                    minimization_succes = true;
+                    minimization_success = true;
                     current_policy = tmp_policy;
                     break;
                 }
-                rule_repr_to_finished_value_reprs[rule_repr].insert(condition_repr);
             }
-            if (minimization_succes) break;
-            for (const auto& effect : rule->get_effects()) {
-                std::string effect_repr = effect->compute_repr();
-                rule_repr_to_finished_value_reprs[rule_repr].insert(effect_repr);
+            if (minimization_success) {
+                break;
             }
-            if (minimization_succes) break;
-            finished_rule_reprs.insert(rule_repr);
+            for (const auto& effect : rule_1->get_effects()) {
+                PolicyBuilder builder;
+                builder.add_rule(rule_1->get_conditions(), utils::set_difference(rule_1->get_effects(), {effect}));
+                for (const auto& rule_2 : current_policy.get_rules()) {
+                    if (rule_1 == rule_2) {
+                        continue;
+                    }
+                    rule_2->visit(builder);
+                }
+                Policy tmp_policy = builder.get_result();
+                if (check_policy_matches_classification(tmp_policy, true_state_pairs, false_state_pairs)) {
+                    minimization_success = true;
+                    current_policy = tmp_policy;
+                    break;
+                }
+            }
+            if (minimization_success) {
+                break;
+            }
         }
-    } while (true);
-    */
-    throw std::runtime_error("Not implemented.");
+    } while (!minimization_success);
+    return current_policy;
 }
 
 }
