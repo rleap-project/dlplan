@@ -146,20 +146,12 @@ static std::unordered_set<std::shared_ptr<const Rule>> compute_dominated_rules(
     const Policy& policy) {
     std::unordered_set<std::shared_ptr<const Rule>> dominated_rules;
     for (const auto& rule_1 : policy.get_rules()) {
-        auto rule_1_conditions = rule_1->get_conditions();
-        auto rule_1_effects = rule_1->get_effects();
-        std::unordered_set<std::shared_ptr<const BaseCondition>> rule_1_conditions_set(rule_1_conditions.begin(), rule_1_conditions.end());
-        std::unordered_set<std::shared_ptr<const BaseEffect>> rule_1_effects_set(rule_1_effects.begin(), rule_1_effects.end());
         for (const auto& rule_2 : policy.get_rules()) {
             if (rule_1 == rule_2) {
                 // Note: there cannot be identical rules in a policy, hence this equality check suffices to not remove all identical rules.
                 continue;
             }
-            auto rule_2_conditions = rule_2->get_conditions();
-            auto rule_2_effects = rule_2->get_effects();
-            std::unordered_set<std::shared_ptr<const BaseCondition>> rule_2_conditions_set(rule_2_conditions.begin(), rule_2_conditions.end());
-            std::unordered_set<std::shared_ptr<const BaseEffect>> rule_2_effects_set(rule_2_effects.begin(), rule_2_effects.end());
-            if (utils::is_subset_eq(rule_1_conditions_set, rule_2_conditions_set) && utils::is_subset_eq(rule_1_effects_set, rule_2_effects_set)) {
+            if (utils::is_subset_eq(rule_1->get_conditions(), rule_2->get_conditions()) && utils::is_subset_eq(rule_1->get_effects(), rule_2->get_effects())) {
                 dominated_rules.insert(rule_2);
                 break;
             }
@@ -176,17 +168,8 @@ static bool check_policy_matches_classification(
     const Policy& policy,
     const core::StatePairs& true_state_pairs,
     const core::StatePairs& false_state_pairs) {
-    for (const auto& state_pair : true_state_pairs) {
-        if (!policy.evaluate_lazy(state_pair.first, state_pair.second)) {
-            return false;
-        }
-    }
-    for (const auto& state_pair : false_state_pairs) {
-        if (policy.evaluate_lazy(state_pair.first, state_pair.second)) {
-            return false;
-        }
-    }
-    return true;
+    return std::all_of(true_state_pairs.begin(), true_state_pairs.end(), [&policy](const core::StatePair& state_pair){ return policy.evaluate_lazy(state_pair.first, state_pair.second); }) &&
+           std::all_of(false_state_pairs.begin(), false_state_pairs.end(), [&policy](const core::StatePair& state_pair){ return !policy.evaluate_lazy(state_pair.first, state_pair.second); });
 }
 
 

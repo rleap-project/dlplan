@@ -34,7 +34,8 @@ namespace element {
     class Boolean;
 }
 
-using StatePairs = std::vector<std::pair<State, State>>;
+using StatePair = std::pair<State, State>;
+using StatePairs = std::vector<StatePair>;
 
 class ConceptDenotationFlatSet {
 private:
