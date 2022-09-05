@@ -19,7 +19,9 @@ static std::vector<pT> sort_by_feature_index_then_repr(const std::vector<pT>& se
         result.begin(),
         result.end(),
         [](const auto& l, const auto& r){
-            if (l->get_base_feature()->get_index() != r->get_base_feature()->get_index()) return l->get_base_feature()->get_index() < r->get_base_feature()->get_index();
+            if (l->get_base_feature()->get_index() != r->get_base_feature()->get_index()) {
+                return l->get_base_feature()->get_index() < r->get_base_feature()->get_index();
+            }
             return l->compute_repr() < r->compute_repr();
         });
     return result;

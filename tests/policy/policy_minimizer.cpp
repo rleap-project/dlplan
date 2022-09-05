@@ -23,7 +23,7 @@ TEST(DLPTests, StructuralMinimization) {
         "(:policy\n"
         "(:boolean_features \"b_empty(c_primitive(concept,0))\" \"b_empty(r_primitive(role,0,1))\")\n"
         "(:numerical_features \"n_count(r_primitive(role,0,1))\")\n"
-        "(:rule (:conditions (:c_n_gt 0) (:c_b_pos 1) (:c_b_pos 0)) (:effects (:e_n_dec 0) (:e_b_neg 0)))\n"
+        "(:rule (:conditions (:c_b_pos 0) (:c_b_pos 1) (:c_n_gt 0)) (:effects (:e_b_neg 0) (:e_n_dec 0)))\n"
         ")";
 
     auto vocabulary_info = construct_vocabulary_info();
@@ -33,6 +33,6 @@ TEST(DLPTests, StructuralMinimization) {
     std::cout << "Input policy:" << std::endl
               << input_policy.str() << std::endl << std::endl
               << "Minimized policy:" << std::endl
-              << minimized_policy.str() << std::endl;
+              << minimized_policy.compute_repr() << std::endl;
     ASSERT_EQ(minimized_policy.compute_repr(), minimized_policy_textual);
 }

@@ -63,8 +63,8 @@ static std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_condition(
                 !(check_subtype_equality<BaseCondition, BooleanCondition>(symmetric_diff) || check_subtype_equality<BaseCondition, NumericalCondition>(symmetric_diff))) {
                 continue;
             }
-            const auto rule = builder.add_rule(
-                utils::set_difference(copy_values_to_builder(rule_1->get_conditions(), builder), copy_values_to_builder(symmetric_diff, builder)),
+            builder.add_rule(
+                copy_values_to_builder(utils::set_difference(rule_1->get_conditions(), symmetric_diff), builder),
                 copy_values_to_builder(rule_1->get_effects(), builder));
             return {rule_1, rule_2};
         }
@@ -106,9 +106,9 @@ static std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_effect(
                     !(check_subtype_equality<BaseEffect, BooleanEffect>(symmetric_diff) || check_subtype_equality<BaseEffect, NumericalEffect>(symmetric_diff))) {
                     continue;
                 }
-                const auto rule = builder.add_rule(
+                builder.add_rule(
                     copy_values_to_builder(rule_1->get_conditions(), builder),
-                    utils::set_difference(copy_values_to_builder(rule_1->get_effects(), builder), copy_values_to_builder(symmetric_diff, builder)));
+                    copy_values_to_builder(utils::set_difference(rule_1->get_effects(), symmetric_diff), builder));
                 return {rule_1, rule_2, rule_3};
             }
         }
@@ -203,7 +203,9 @@ Policy PolicyMinimizer::minimize(const Policy& policy, const core::StatePairs& t
         for (const auto& rule_1 : current_policy.get_rules()) {
             for (const auto& condition : rule_1->get_conditions()) {
                 PolicyBuilder builder;
-                builder.add_rule(utils::set_difference(rule_1->get_conditions(), {condition}), rule_1->get_effects());
+                builder.add_rule(
+                    copy_values_to_builder(utils::set_difference(rule_1->get_conditions(), {condition}), builder),
+                    copy_values_to_builder(rule_1->get_effects(), builder));
                 for (const auto& rule_2 : current_policy.get_rules()) {
                     if (rule_1 == rule_2) {
                         continue;
@@ -222,7 +224,9 @@ Policy PolicyMinimizer::minimize(const Policy& policy, const core::StatePairs& t
             }
             for (const auto& effect : rule_1->get_effects()) {
                 PolicyBuilder builder;
-                builder.add_rule(rule_1->get_conditions(), utils::set_difference(rule_1->get_effects(), {effect}));
+                builder.add_rule(
+                    copy_values_to_builder(rule_1->get_conditions(), builder),
+                    copy_values_to_builder(utils::set_difference(rule_1->get_effects(), {effect}), builder));
                 for (const auto& rule_2 : current_policy.get_rules()) {
                     if (rule_1 == rule_2) {
                         continue;

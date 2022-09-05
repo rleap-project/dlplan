@@ -9,9 +9,14 @@
 namespace dlplan::policy {
 
 template<typename T>
-static std::vector<T> sort_values_by_increasing_complexity(const std::vector<T>& values) {
+static std::vector<T> sort_values_by_increasing_complexity_then_repr(const std::vector<T>& values) {
     std::vector<T> result(values);
-    std::sort(result.begin(), result.end(), [](T& l, T& r){ return l->get_base_feature()->compute_complexity() < r->get_base_feature()->compute_complexity(); });
+    std::sort(result.begin(), result.end(), [](T& l, T& r){
+        if (l->get_base_feature()->compute_complexity() != r->get_base_feature()->compute_complexity()) {
+            return l->get_base_feature()->compute_complexity() < r->get_base_feature()->compute_complexity();
+        }
+        return l->compute_repr() < r->compute_repr();
+    });
     return result;
 }
 
@@ -83,10 +88,11 @@ std::shared_ptr<const BaseEffect> PolicyBuilderImpl::add_bot_effect(std::shared_
 std::shared_ptr<const Rule> PolicyBuilderImpl::add_rule(
     std::vector<std::shared_ptr<const BaseCondition>>&& conditions,
     std::vector<std::shared_ptr<const BaseEffect>>&& effects) {
+    // Create rule in canonical representation.
     auto result = m_caches.m_rule_cache->insert(std::make_unique<Rule>(
         Rule(
-            sort_values_by_increasing_complexity(conditions),
-            sort_values_by_increasing_complexity(effects))));
+            sort_values_by_increasing_complexity_then_repr(conditions),
+            sort_values_by_increasing_complexity_then_repr(effects))));
     if (result.second) {
         m_rules.push_back(result.first);
     }
@@ -94,7 +100,7 @@ std::shared_ptr<const Rule> PolicyBuilderImpl::add_rule(
 }
 
 Policy PolicyBuilderImpl::get_result() {
-    // Ensure canonicity.
+    // Compute policy in canonical representation.
     PolicyBuilder builder;
     const auto sorted_boolean_features = sort_features_by_repr(m_boolean_features);
     std::vector<std::shared_ptr<const core::Boolean>> boolean_features;
@@ -106,7 +112,7 @@ Policy PolicyBuilderImpl::get_result() {
     for (const auto& numerical : sorted_numerical_features) {
         numerical_features.push_back(builder.add_numerical_feature(*numerical));
     }
-    // TODO: use more sophisiticated sorting, e.g., to ensure faster evaluation.
+    // TODO: use more sophisticated sorting, e.g., to ensure faster evaluation.
     std::vector<std::shared_ptr<const Rule>> sorted_rules(m_rules);
     std::sort(sorted_rules.begin(), sorted_rules.end(), [](const auto& l, const auto& r){ return l->compute_repr() < r->compute_repr(); } );
     std::vector<std::shared_ptr<const Rule>> rules;
