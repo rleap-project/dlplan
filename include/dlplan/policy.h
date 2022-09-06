@@ -52,7 +52,7 @@ public:
     /**
      * Adds the condition to the policy builder and returns it
      */
-    virtual std::shared_ptr<const BaseCondition> visit(PolicyBuilder& policy_builder) const = 0;
+    virtual std::shared_ptr<const BaseCondition> copy_to_builder(PolicyBuilder& policy_builder) const = 0;
 
     /**
      * Setters.
@@ -98,7 +98,7 @@ public:
     /**
      * Adds the effect to the policy builder and returns it
      */
-    virtual std::shared_ptr<const BaseEffect> visit(PolicyBuilder& policy_builder) const = 0;
+    virtual std::shared_ptr<const BaseEffect> copy_to_builder(PolicyBuilder& policy_builder) const = 0;
 
     /**
      * Setters.
@@ -157,7 +157,7 @@ public:
     /**
      * Adds the rule to the policy builder and returns it
      */
-    virtual std::shared_ptr<const Rule> visit(PolicyBuilder& policy_builder) const;
+    virtual std::shared_ptr<const Rule> copy_to_builder(PolicyBuilder& policy_builder) const;
 
     /**
      * Setters.

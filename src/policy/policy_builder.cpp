@@ -117,7 +117,7 @@ Policy PolicyBuilderImpl::get_result() {
     std::sort(sorted_rules.begin(), sorted_rules.end(), [](const auto& l, const auto& r){ return l->compute_repr() < r->compute_repr(); } );
     std::vector<std::shared_ptr<const Rule>> rules;
     for (const auto& rule : sorted_rules) {
-        rules.push_back(rule->visit(builder));
+        rules.push_back(rule->copy_to_builder(builder));
     }
     return Policy(boolean_features, numerical_features, rules);
 }

@@ -36,7 +36,7 @@ public:
 
     std::string compute_repr() const override;
 
-    std::shared_ptr<const BaseCondition> visit(PolicyBuilder& policy_builder) const override;
+    std::shared_ptr<const BaseCondition> copy_to_builder(PolicyBuilder& policy_builder) const override;
 };
 
 class NegativeBooleanCondition : public BooleanCondition {
@@ -48,7 +48,7 @@ public:
 
     std::string compute_repr() const override;
 
-    std::shared_ptr<const BaseCondition> visit(PolicyBuilder& policy_builder) const override;
+    std::shared_ptr<const BaseCondition> copy_to_builder(PolicyBuilder& policy_builder) const override;
 };
 
 class EqualNumericalCondition : public NumericalCondition {
@@ -60,7 +60,7 @@ public:
 
     std::string compute_repr() const override;
 
-    std::shared_ptr<const BaseCondition> visit(PolicyBuilder& policy_builder) const override;
+    std::shared_ptr<const BaseCondition> copy_to_builder(PolicyBuilder& policy_builder) const override;
 };
 
 class GreaterNumericalCondition : public NumericalCondition {
@@ -72,7 +72,7 @@ public:
 
     std::string compute_repr() const override;
 
-    std::shared_ptr<const BaseCondition> visit(PolicyBuilder& policy_builder) const override;
+    std::shared_ptr<const BaseCondition> copy_to_builder(PolicyBuilder& policy_builder) const override;
 };
 
 }

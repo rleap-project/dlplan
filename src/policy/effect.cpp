@@ -26,7 +26,7 @@ std::string PositiveBooleanEffect::compute_repr() const{
     return "(:e_b_pos " + std::to_string(m_boolean->get_index()) + ")";
 }
 
-std::shared_ptr<const BaseEffect> PositiveBooleanEffect::visit(PolicyBuilder& policy_builder) const {
+std::shared_ptr<const BaseEffect> PositiveBooleanEffect::copy_to_builder(PolicyBuilder& policy_builder) const {
     return policy_builder.add_pos_effect(policy_builder.add_boolean_feature(*m_boolean));
 }
 
@@ -46,7 +46,7 @@ std::string NegativeBooleanEffect::compute_repr() const{
     return "(:e_b_neg " + std::to_string(m_boolean->get_index()) + ")";
 }
 
-std::shared_ptr<const BaseEffect> NegativeBooleanEffect::visit(PolicyBuilder& policy_builder) const {
+std::shared_ptr<const BaseEffect> NegativeBooleanEffect::copy_to_builder(PolicyBuilder& policy_builder) const {
     return policy_builder.add_neg_effect(policy_builder.add_boolean_feature(*m_boolean));
 }
 
@@ -66,7 +66,7 @@ std::string UnchangedBooleanEffect::compute_repr() const{
     return "(:e_b_bot " + std::to_string(m_boolean->get_index()) + ")";
 }
 
-std::shared_ptr<const BaseEffect> UnchangedBooleanEffect::visit(PolicyBuilder& policy_builder) const {
+std::shared_ptr<const BaseEffect> UnchangedBooleanEffect::copy_to_builder(PolicyBuilder& policy_builder) const {
     return policy_builder.add_bot_effect(policy_builder.add_boolean_feature(*m_boolean));
 }
 
@@ -86,7 +86,7 @@ std::string IncrementNumericalEffect::compute_repr() const{
     return "(:e_n_inc " + std::to_string(m_numerical->get_index()) + ")";
 }
 
-std::shared_ptr<const BaseEffect> IncrementNumericalEffect::visit(PolicyBuilder& policy_builder) const {
+std::shared_ptr<const BaseEffect> IncrementNumericalEffect::copy_to_builder(PolicyBuilder& policy_builder) const {
     return policy_builder.add_inc_effect(policy_builder.add_numerical_feature(*m_numerical));
 }
 
@@ -106,7 +106,7 @@ std::string DecrementNumericalEffect::compute_repr() const{
     return "(:e_n_dec " + std::to_string(m_numerical->get_index()) + ")";
 }
 
-std::shared_ptr<const BaseEffect> DecrementNumericalEffect::visit(PolicyBuilder& policy_builder) const {
+std::shared_ptr<const BaseEffect> DecrementNumericalEffect::copy_to_builder(PolicyBuilder& policy_builder) const {
     return policy_builder.add_dec_effect(policy_builder.add_numerical_feature(*m_numerical));
 }
 
@@ -126,7 +126,7 @@ std::string UnchangedNumericalEffect::compute_repr() const{
     return "(:e_n_bot " + std::to_string(m_numerical->get_index()) + ")";
 }
 
-std::shared_ptr<const BaseEffect> UnchangedNumericalEffect::visit(PolicyBuilder& policy_builder) const {
+std::shared_ptr<const BaseEffect> UnchangedNumericalEffect::copy_to_builder(PolicyBuilder& policy_builder) const {
     return policy_builder.add_bot_effect(policy_builder.add_numerical_feature(*m_numerical));
 }
 

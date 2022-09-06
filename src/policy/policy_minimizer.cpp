@@ -9,39 +9,57 @@
 namespace dlplan::policy {
 
 /**
- * Visits values to construct them in the given PolicyBuilder.
+ * Copies all objects to the given PolicyBuilder and returns newly constructed objects.
  */
 template<typename T>
-std::vector<T> copy_values_to_builder(
-    const std::vector<T>& old_values,
+std::vector<T> copy_to_builder(
+    const std::vector<T>& old_objects,
     PolicyBuilder& builder) {
-    std::vector<T> new_values;
-    new_values.reserve(old_values.size());
-    for (const auto& element : old_values) {
-        new_values.push_back(element->visit(builder));
-    }
-    return new_values;
+    std::vector<T> new_objects;
+    new_objects.reserve(old_objects.size());
+    std::transform(
+        old_objects.begin(),
+        old_objects.end(),
+        std::back_inserter(new_objects),
+        [&builder](const auto& object){
+            return object->copy_to_builder(builder);
+        }
+    );
+    return new_objects;
 }
 
 
 /**
- * Returns true iff all values of given type PARENT_T are of type SUB_T
+ * Returns true iff all objects of given type PARENT_T are of type SUB_T
  */
 template<typename PARENT_T, typename SUB_T>
 static bool check_subtype_equality(
-    const std::vector<std::shared_ptr<const PARENT_T>>& values) {
-    return std::all_of(values.begin(), values.end(), [](const std::shared_ptr<const PARENT_T>& value){ return std::dynamic_pointer_cast<const SUB_T>(value); });
+    const std::vector<std::shared_ptr<const PARENT_T>>& objects) {
+    return std::all_of(
+        objects.begin(),
+        objects.end(),
+        [](const std::shared_ptr<const PARENT_T>& object){
+            return std::dynamic_pointer_cast<const SUB_T>(object);
+        }
+    );
 }
 
 
 /**
- * Returns true iff all values of given type T have feature with same index.
+ * Returns true iff all objects of given type T have feature with same index.
  */
 template<typename T>
 static bool check_feature_index_equality(
-    const std::vector<std::shared_ptr<const T>>& values) {
-    if (values.empty()) return true;
-    return std::all_of(values.begin(), values.end(), [index=(*(values.begin()))->get_base_feature()->get_index()](const std::shared_ptr<const T>& value){ return value->get_base_feature()->get_index() == index; } );
+    const std::vector<std::shared_ptr<const T>>& objects) {
+    if (objects.empty()) return true;
+    return std::all_of(
+        objects.begin(),
+        objects.end(),
+        [index=(*(objects.begin()))->get_base_feature()->get_index()](
+            const std::shared_ptr<const T>& object){
+                return object->get_base_feature()->get_index() == index;
+            }
+        );
 }
 
 
@@ -64,8 +82,8 @@ static std::vector<std::shared_ptr<const Rule>> try_merge_by_condition(
                 continue;
             }
             builder.add_rule(
-                copy_values_to_builder(utils::set_difference(rule_1->get_conditions(), symmetric_diff), builder),
-                copy_values_to_builder(rule_1->get_effects(), builder));
+                copy_to_builder(utils::set_difference(rule_1->get_conditions(), symmetric_diff), builder),
+                copy_to_builder(rule_1->get_effects(), builder));
             return {rule_1, rule_2};
         }
     }
@@ -88,7 +106,8 @@ static std::vector<std::shared_ptr<const Rule>> try_merge_by_effect(
                 continue;
             }
             if (!check_feature_index_equality(symmetric_diff) ||
-                !(check_subtype_equality<BaseEffect, BooleanEffect>(symmetric_diff) || check_subtype_equality<BaseEffect, NumericalEffect>(symmetric_diff))) {
+                !(check_subtype_equality<BaseEffect, BooleanEffect>(symmetric_diff) ||
+                  check_subtype_equality<BaseEffect, NumericalEffect>(symmetric_diff))) {
                 continue;
             }
             for (const auto& rule_3 : policy.get_rules()) {
@@ -103,12 +122,13 @@ static std::vector<std::shared_ptr<const Rule>> try_merge_by_effect(
                     continue;
                 }
                 if (!check_feature_index_equality(symmetric_diff) ||
-                    !(check_subtype_equality<BaseEffect, BooleanEffect>(symmetric_diff) || check_subtype_equality<BaseEffect, NumericalEffect>(symmetric_diff))) {
+                    !(check_subtype_equality<BaseEffect, BooleanEffect>(symmetric_diff) ||
+                      check_subtype_equality<BaseEffect, NumericalEffect>(symmetric_diff))) {
                     continue;
                 }
                 builder.add_rule(
-                    copy_values_to_builder(rule_1->get_conditions(), builder),
-                    copy_values_to_builder(utils::set_difference(rule_1->get_effects(), symmetric_diff), builder));
+                    copy_to_builder(rule_1->get_conditions(), builder),
+                    copy_to_builder(utils::set_difference(rule_1->get_effects(), symmetric_diff), builder));
                 return {rule_1, rule_2, rule_3};
             }
         }
@@ -171,12 +191,12 @@ Policy PolicyMinimizer::minimize(const Policy& policy) const {
         if (merged_rules.empty()) {
             merged_rules = try_merge_by_effect(current_policy, builder);
         }
-        copy_values_to_builder(utils::set_difference(current_policy.get_rules(), merged_rules), builder);
+        copy_to_builder(utils::set_difference(current_policy.get_rules(), merged_rules), builder);
         current_policy = builder.get_result();
     } while (!merged_rules.empty());
     // Remove dominated rules
     PolicyBuilder builder;
-    copy_values_to_builder(utils::set_difference(current_policy.get_rules(), compute_dominated_rules(current_policy)), builder);
+    copy_to_builder(utils::set_difference(current_policy.get_rules(), compute_dominated_rules(current_policy)), builder);
     current_policy = builder.get_result();
     return current_policy;
 }
@@ -192,9 +212,9 @@ Policy PolicyMinimizer::minimize(const Policy& policy, const core::StatePairs& t
             for (const auto& condition : rule->get_conditions()) {
                 PolicyBuilder builder;
                 builder.add_rule(
-                    copy_values_to_builder(utils::set_difference(rule->get_conditions(), {condition}), builder),
-                    copy_values_to_builder(rule->get_effects(), builder));
-                copy_values_to_builder(utils::set_difference(current_policy.get_rules(), {rule}), builder);
+                    copy_to_builder(utils::set_difference(rule->get_conditions(), {condition}), builder),
+                    copy_to_builder(rule->get_effects(), builder));
+                copy_to_builder(utils::set_difference(current_policy.get_rules(), {rule}), builder);
                 Policy tmp_policy = builder.get_result();
                 if (check_policy_matches_classification(tmp_policy, true_state_pairs, false_state_pairs)) {
                     minimization_success = true;
@@ -208,9 +228,9 @@ Policy PolicyMinimizer::minimize(const Policy& policy, const core::StatePairs& t
             for (const auto& effect : rule->get_effects()) {
                 PolicyBuilder builder;
                 builder.add_rule(
-                    copy_values_to_builder(rule->get_conditions(), builder),
-                    copy_values_to_builder(utils::set_difference(rule->get_effects(), {effect}), builder));
-                copy_values_to_builder(utils::set_difference(current_policy.get_rules(), {rule}), builder);
+                    copy_to_builder(rule->get_conditions(), builder),
+                    copy_to_builder(utils::set_difference(rule->get_effects(), {effect}), builder));
+                copy_to_builder(utils::set_difference(current_policy.get_rules(), {rule}), builder);
                 Policy tmp_policy = builder.get_result();
                 if (check_policy_matches_classification(tmp_policy, true_state_pairs, false_state_pairs)) {
                     minimization_success = true;
