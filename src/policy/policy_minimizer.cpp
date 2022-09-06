@@ -202,7 +202,6 @@ Policy PolicyMinimizer::minimize(const Policy& policy) const {
 }
 
 Policy PolicyMinimizer::minimize(const Policy& policy, const core::StatePairs& true_state_pairs, const core::StatePairs& false_state_pairs) const {
-    // untested.
     // TODO: avoid rechecking conditions
     Policy current_policy = policy;
     bool minimization_success;
