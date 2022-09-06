@@ -68,7 +68,7 @@ const Atom& InstanceInfoImpl::add_atom(const Predicate& predicate, const std::ve
         auto result = m_atom_name_to_atom_idx.emplace(atom.get_name(), m_atoms.size());
         bool newly_inserted = result.second;
         if (!newly_inserted) {
-            throw std::runtime_error("InstanceInfoImpl::add_atom - atom with name ("s + atom.get_name() + ") already exists.");
+            return m_atoms[result.first->second];
         }
         m_atoms.push_back(std::move(atom));
         return m_atoms.back();
