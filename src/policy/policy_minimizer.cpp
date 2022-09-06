@@ -242,7 +242,7 @@ Policy PolicyMinimizer::minimize(const Policy& policy, const core::StatePairs& t
                 break;
             }
         }
-    } while (!minimization_success);
+    } while (minimization_success);
     return current_policy;
 }
 
