@@ -38,6 +38,7 @@ namespace element {
     class Boolean;
 }
 
+using States = std::vector<State>;
 using StatePair = std::pair<State, State>;
 using StatePairs = std::vector<StatePair>;
 

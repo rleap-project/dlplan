@@ -9,7 +9,7 @@
 namespace dlplan::policy {
 
 /**
- *
+ * Visits values to construct them in the given PolicyBuilder.
  */
 template<typename T>
 std::vector<T> copy_values_to_builder(
@@ -45,7 +45,7 @@ static bool check_feature_index_equality(
 }
 
 
-static std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_condition(
+static std::vector<std::shared_ptr<const Rule>> try_merge_by_condition(
     const Policy& policy, PolicyBuilder& builder) {
     for (const auto& rule_1 : policy.get_rules()) {
         for (const auto& rule_2 : policy.get_rules()) {
@@ -73,7 +73,7 @@ static std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_condition(
 }
 
 
-static std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_effect(
+static std::vector<std::shared_ptr<const Rule>> try_merge_by_effect(
     const Policy& policy, PolicyBuilder& builder) {
     for (const auto& rule_1 : policy.get_rules()) {
         for (const auto& rule_2 : policy.get_rules()) {
@@ -117,7 +117,7 @@ static std::unordered_set<std::shared_ptr<const Rule>> try_merge_by_effect(
 }
 
 
-static std::unordered_set<std::shared_ptr<const Rule>> compute_dominated_rules(
+static std::vector<std::shared_ptr<const Rule>> compute_dominated_rules(
     const Policy& policy) {
     std::unordered_set<std::shared_ptr<const Rule>> dominated_rules;
     for (const auto& rule_1 : policy.get_rules()) {
@@ -132,7 +132,7 @@ static std::unordered_set<std::shared_ptr<const Rule>> compute_dominated_rules(
             }
         }
     }
-    return dominated_rules;
+    return std::vector<std::shared_ptr<const Rule>>(dominated_rules.begin(), dominated_rules.end());
 }
 
 
@@ -160,58 +160,41 @@ PolicyMinimizer& PolicyMinimizer::operator=(PolicyMinimizer&& other) = default;
 
 PolicyMinimizer::~PolicyMinimizer() { }
 
-
 Policy PolicyMinimizer::minimize(const Policy& policy) const {
     // Merge rules
     // TODO: avoid rechecking merges.
     Policy current_policy = policy;
-    std::unordered_set<std::shared_ptr<const Rule>> merged_rules;
+    std::vector<std::shared_ptr<const Rule>> merged_rules;
     do {
         PolicyBuilder builder;
         merged_rules = try_merge_by_condition(current_policy, builder);
         if (merged_rules.empty()) {
             merged_rules = try_merge_by_effect(current_policy, builder);
         }
-        for (const auto& rule : current_policy.get_rules()) {
-            if (merged_rules.count(rule)) {
-                continue;
-            }
-            rule->visit(builder);
-        }
+        copy_values_to_builder(utils::set_difference(current_policy.get_rules(), merged_rules), builder);
         current_policy = builder.get_result();
     } while (!merged_rules.empty());
     // Remove dominated rules
-    std::unordered_set<std::shared_ptr<const Rule>> dominated_rules = compute_dominated_rules(current_policy);
     PolicyBuilder builder;
-    for (const auto& rule : current_policy.get_rules()) {
-        if (dominated_rules.count(rule)) {
-            continue;
-        }
-        rule->visit(builder);
-    }
+    copy_values_to_builder(utils::set_difference(current_policy.get_rules(), compute_dominated_rules(current_policy)), builder);
     current_policy = builder.get_result();
     return current_policy;
 }
 
 Policy PolicyMinimizer::minimize(const Policy& policy, const core::StatePairs& true_state_pairs, const core::StatePairs& false_state_pairs) const {
-    // untested naive version.
+    // untested.
     // TODO: avoid rechecking conditions
     Policy current_policy = policy;
     bool minimization_success;
     do {
         minimization_success = false;
-        for (const auto& rule_1 : current_policy.get_rules()) {
-            for (const auto& condition : rule_1->get_conditions()) {
+        for (const auto& rule : current_policy.get_rules()) {
+            for (const auto& condition : rule->get_conditions()) {
                 PolicyBuilder builder;
                 builder.add_rule(
-                    copy_values_to_builder(utils::set_difference(rule_1->get_conditions(), {condition}), builder),
-                    copy_values_to_builder(rule_1->get_effects(), builder));
-                for (const auto& rule_2 : current_policy.get_rules()) {
-                    if (rule_1 == rule_2) {
-                        continue;
-                    }
-                    rule_2->visit(builder);
-                }
+                    copy_values_to_builder(utils::set_difference(rule->get_conditions(), {condition}), builder),
+                    copy_values_to_builder(rule->get_effects(), builder));
+                copy_values_to_builder(utils::set_difference(current_policy.get_rules(), {rule}), builder);
                 Policy tmp_policy = builder.get_result();
                 if (check_policy_matches_classification(tmp_policy, true_state_pairs, false_state_pairs)) {
                     minimization_success = true;
@@ -222,17 +205,12 @@ Policy PolicyMinimizer::minimize(const Policy& policy, const core::StatePairs& t
             if (minimization_success) {
                 break;
             }
-            for (const auto& effect : rule_1->get_effects()) {
+            for (const auto& effect : rule->get_effects()) {
                 PolicyBuilder builder;
                 builder.add_rule(
-                    copy_values_to_builder(rule_1->get_conditions(), builder),
-                    copy_values_to_builder(utils::set_difference(rule_1->get_effects(), {effect}), builder));
-                for (const auto& rule_2 : current_policy.get_rules()) {
-                    if (rule_1 == rule_2) {
-                        continue;
-                    }
-                    rule_2->visit(builder);
-                }
+                    copy_values_to_builder(rule->get_conditions(), builder),
+                    copy_values_to_builder(utils::set_difference(rule->get_effects(), {effect}), builder));
+                copy_values_to_builder(utils::set_difference(current_policy.get_rules(), {rule}), builder);
                 Policy tmp_policy = builder.get_result();
                 if (check_policy_matches_classification(tmp_policy, true_state_pairs, false_state_pairs)) {
                     minimization_success = true;

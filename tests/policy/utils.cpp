@@ -3,7 +3,9 @@
 std::shared_ptr<const VocabularyInfo> construct_vocabulary_info() {
     std::shared_ptr<VocabularyInfo> vocabulary_info = std::make_shared<VocabularyInfo>();
     vocabulary_info->add_predicate("at", 2);
+    vocabulary_info->add_predicate("at_roboter", 1);
     vocabulary_info->add_predicate("package", 1);
+    vocabulary_info->add_predicate("holding", 1);
     return vocabulary_info;
 }
 
@@ -12,13 +14,35 @@ std::shared_ptr<const InstanceInfo> construct_instance_info(std::shared_ptr<cons
     instance_info->add_atom("at", {"p1", "A"});
     instance_info->add_atom("at", {"p1", "B"});
     instance_info->add_atom("at", {"p2", "A"});
-    instance_info->add_atom("at", {"p1", "B"});
+    instance_info->add_atom("at", {"p2", "B"});
     instance_info->add_atom("at", {"p3", "A"});
-    instance_info->add_atom("at", {"p1", "B"});
+    instance_info->add_atom("at", {"p3", "B"});
+    instance_info->add_atom("at_roboter", {"A"});
+    instance_info->add_atom("at_roboter", {"B"});
+    instance_info->add_atom("holding", {"p1"});
+    instance_info->add_atom("holding", {"p2"});
+    instance_info->add_atom("holding", {"p3"});
     instance_info->add_static_atom("package", {"p1"});
     instance_info->add_static_atom("package", {"p2"});
     instance_info->add_static_atom("package", {"p3"});
     return instance_info;
+}
+
+States construct_states(std::shared_ptr<const InstanceInfo> instance_info) {
+    const auto& atoms = instance_info->get_atoms();
+    auto at_p1_A = atoms[0];
+    auto at_p1_B = atoms[1];
+    auto at_p2_A = atoms[2];
+    auto at_p2_B = atoms[3];
+    auto at_p3_A = atoms[4];
+    auto at_p3_B = atoms[5];
+    auto at_roboter_A = atoms[6];
+    auto at_roboter_B = atoms[7];
+    auto holding_p1 = atoms[8];
+    auto holding_p2 = atoms[9];
+    auto holding_p3 = atoms[10];
+    States states;
+
 }
 
 SyntacticElementFactory construct_syntactic_element_factory(std::shared_ptr<const VocabularyInfo> vocabulary_info) {
