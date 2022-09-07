@@ -371,6 +371,9 @@ public:
 
 /**
  * A State contains consists of atoms including all static atoms.
+ * TODO: Think of switching to Bitset as underlying datastructure.
+ * If there are small number of atoms this is more memory efficient.
+ * per_predicate_idx_to_atom_idxs requires |A¦*|P| many bits.
  */
 class State {
 private:
