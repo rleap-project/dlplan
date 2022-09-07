@@ -41,9 +41,26 @@ add_subdirectory(experiments)
 if (ENABLE_TESTING)
     enable_testing()
     add_subdirectory(tests)
+    add_test(NAME MatmulPython
+        COMMAND ${Python_EXECUTABLE} -m pytest ${CMAKE_CURRENT_SOURCE_DIR} / "api/python"
+    )
 endif()
 
 if(DLPLAN_PYTHON)
   # For the dynamic library to be compatible with Python we need the -fPIC flags
   add_subdirectory(api/python)
 endif()
+
+## Compile the scorpion planer
+# https://stackoverflow.com/questions/2937128/cmake-add-custom-command-not-being-run
+#find_package(Python COMPONENTS Interpreter REQUIRED)
+#message("${PYTHON_EXECUTABLE}")
+#add_custom_command(
+#  OUTPUT compile_scorpion
+#  COMMAND "${PYTHON_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/experiments/scorpion/build.py"
+#)
+#add_custom_target(
+#  scorpion
+#  DEPENDS compile_scorpion
+#)
+#add_dependencies(dlplancore scorpion)
