@@ -36,6 +36,15 @@ The evaluation component provides functionality for caching feature valuations p
 
 The policy component allows to construct a policy and evaluate state pairs (s, s') on it.
 
+### 1.5. State Space
+
+The state space component allows to generate state spaces from PDDL input files.
+
+### 1.6 Weisfeiler-Lehman
+
+The weisfeiler-lehman component allows to identify subgraphs that are indistinguishable
+by two-variable first order logic and hence, are also indistinguishable by less expressive description logics.
+
 ## 2. Building the Library
 
 ### 2.1. Building the C++ Interface
