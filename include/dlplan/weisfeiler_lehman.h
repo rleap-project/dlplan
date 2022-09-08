@@ -13,6 +13,14 @@ using CompressedColor = int;
 using CompressedColors = std::vector<CompressedColor>;
 using Colors = std::vector<Color>;
 
+/**
+ * Weisfeiler-Lehman (WL) is an important algorithm in the context of description logics features
+ * because the subgraphs G and H of two states s_1,s_2
+ * that are isomorphic according to WL, i.e., have the same color,
+ * cannot be distinguished by formulas in two-variable first order logic.
+ * Hence a description logics that is as most as expressive as two-variable first order logic
+ * cannot distinguish G and H as well.
+ */
 class WeisfeilerLehman {
 private:
     CompressedColors compute_compressed_colors(const Colors& colors) const;
