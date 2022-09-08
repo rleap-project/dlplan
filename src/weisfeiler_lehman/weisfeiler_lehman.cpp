@@ -1,5 +1,7 @@
 #include "../../include/dlplan/weisfeiler_lehman.h"
 
+#include <numeric>
+
 #include "color.h"
 
 
@@ -21,7 +23,24 @@ CompressedColors WeisfeilerLehman::compute_compressed_colors(
 
 CompressedColors WeisfeilerLehman::compute_state_coloring(
     const state_space::StateSpace& state_space) const {
-
+    // initial coloring 0,..,n where n is number of states.
+    CompressedColors old_compressed_coloring(state_space.get_num_states());
+    std::iota(old_compressed_coloring.begin(), old_compressed_coloring.end(), 0);
+    CompressedColors new_compressed_coloring;
+    do {
+        Colors new_coloring;
+        state_space.for_each_state_index(
+            [&state_space, &new_coloring](int source_state_index){
+            Color color;
+            state_space.for_each_forward_successor_state_index(
+                [&color](int successor_state_index) {
+                color.insert(successor_state_index);
+            }, source_state_index);
+            new_coloring.push_back(color);
+        });
+        new_compressed_coloring = compute_compressed_colors(new_coloring);
+    } while (old_compressed_coloring == new_compressed_coloring);
+    return new_compressed_coloring;
 }
 
 }
