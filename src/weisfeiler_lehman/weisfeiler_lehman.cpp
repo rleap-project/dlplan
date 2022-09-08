@@ -23,6 +23,10 @@ CompressedColors WeisfeilerLehman::compute_compressed_colors(
 
 CompressedColors WeisfeilerLehman::compute_one_dimensional_state_coloring(
     const state_space::StateSpace& state_space) const {
+    // TODO: we must compute reachable parts for every state,
+    // then if the number of states is equal, we must compute the CompressedColors
+    // which we compute with the algorithm below, and then compare the sorted CompressedColors.
+
     // initial coloring 0,..,n where n is number of states.
     CompressedColors old_compressed_coloring(state_space.get_num_states());
     std::iota(old_compressed_coloring.begin(), old_compressed_coloring.end(), 0);
