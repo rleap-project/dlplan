@@ -30,11 +30,11 @@ CompressedColors WeisfeilerLehman::compute_one_dimensional_state_coloring(
     do {
         Colors new_coloring;
         state_space.for_each_state_index(
-            [&state_space, &new_coloring](int source_state_index){
+            [&state_space, &old_compressed_coloring, &new_coloring](int source_state_index){
             Color color;
             state_space.for_each_forward_successor_state_index(
-                [&color](int successor_state_index) {
-                color.insert(successor_state_index);
+                [&old_compressed_coloring, &color](int successor_state_index) {
+                color.insert(old_compressed_coloring[successor_state_index]);
             }, source_state_index);
             new_coloring.push_back(color);
         });
