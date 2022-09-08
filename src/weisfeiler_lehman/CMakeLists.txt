@@ -1,6 +1,7 @@
 add_library(dlplanweisfeilerlehman SHARED)
 target_sources(dlplanweisfeilerlehman
     PRIVATE
+        color.cpp
         weisfeiler_lehman.cpp)
 target_include_directories(dlplanweisfeilerlehman
     PUBLIC

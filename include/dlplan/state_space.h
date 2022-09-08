@@ -6,19 +6,22 @@
 
 namespace dlplan::state_space {
 
+using StateIndex = int;
+
+
 class StateSpace {
 private:
     // For an efficient implementation we make use of indexing instead of shared_ptrs.
     core::States m_states;
-    int m_initial_state_index;
-    std::vector<int> m_forward_successor_state_indices;
-    std::vector<int> m_forward_successor_state_indices_offsets;
-    std::unordered_set<int> m_goal_state_indices;
+    StateIndex m_initial_state_index;
+    std::vector<StateIndex> m_forward_successor_state_indices;
+    std::vector<StateIndex> m_forward_successor_state_indices_offsets;
+    std::unordered_set<StateIndex> m_goal_state_indices;
     // backward successors can be derived from above knowledge but we precompute them for convenience.
-    std::vector<int> m_backward_successor_state_indices;
-    std::vector<int> m_backward_successor_state_indices_offsets;
+    std::vector<StateIndex> m_backward_successor_state_indices;
+    std::vector<StateIndex> m_backward_successor_state_indices_offsets;
     // deadends can be derived from above knowledge but we precompute them for convenience.
-    std::unordered_set<int> m_deadend_state_indices;
+    std::unordered_set<StateIndex> m_deadend_state_indices;
 
 public:
     StateSpace();
