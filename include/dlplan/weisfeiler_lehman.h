@@ -13,7 +13,6 @@ using CompressedColor = int;
 using CompressedColors = std::vector<CompressedColor>;
 using Colors = std::vector<Color>;
 
-
 class WeisfeilerLehman {
 private:
     CompressedColors compute_compressed_colors(const Colors& colors) const;
@@ -21,7 +20,7 @@ private:
 public:
     WeisfeilerLehman();
 
-    CompressedColors compute_state_coloring(
+    CompressedColors compute_one_dimensional_state_coloring(
         const state_space::StateSpace& state_space) const;
 };
 

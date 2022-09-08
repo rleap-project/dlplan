@@ -21,7 +21,7 @@ CompressedColors WeisfeilerLehman::compute_compressed_colors(
     return compressed_colors;
 }
 
-CompressedColors WeisfeilerLehman::compute_state_coloring(
+CompressedColors WeisfeilerLehman::compute_one_dimensional_state_coloring(
     const state_space::StateSpace& state_space) const {
     // initial coloring 0,..,n where n is number of states.
     CompressedColors old_compressed_coloring(state_space.get_num_states());
