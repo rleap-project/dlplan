@@ -22,14 +22,13 @@ using Colors = std::vector<Color>;
  * cannot distinguish G and H as well.
  */
 class WeisfeilerLehman {
-private:
-    CompressedColors compute_compressed_colors(const Colors& colors) const;
-
 public:
     WeisfeilerLehman();
 
-    CompressedColors compute_one_dimensional_state_coloring(
+    CompressedColors compute_colors_for_state_space(
         const state_space::StateSpace& state_space) const;
+
+
 };
 
 }

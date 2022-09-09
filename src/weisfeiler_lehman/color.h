@@ -10,6 +10,7 @@ namespace dlplan::weisfeiler_lehman {
 
 class Color : public std::multiset<CompressedColor> {
 public:
+    using std::multiset<int>::multiset;
     /**
      *
      */
