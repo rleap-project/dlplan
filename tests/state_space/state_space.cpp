@@ -7,5 +7,5 @@ using namespace dlplan::state_space;
 
 
 TEST(DLPTests, StateSpaceTest) {
-    StateSpaceGenerator().generate_state_space_data("domain.pddl", "p-1-0.pddl", "output.txt");
+    StateSpaceGenerator().generate_state_space("domain.pddl", "p-1-0.pddl");
 }

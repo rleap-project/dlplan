@@ -6,11 +6,13 @@ using namespace dlplan::core;
 namespace dlplan::state_space {
 
 StateSpace::StateSpace(
+    std::shared_ptr<const core::InstanceInfo>&& instance_info,
     States&& states_by_index,
     StateIndex initial_state_index,
     AdjacencyMatrix&& adjacency_matrix,
     StateIndicesSet&& goal_state_indices)
-    : m_states_by_index(std::move(states_by_index)),
+    : m_instance_info(std::move(instance_info)),
+      m_states_by_index(std::move(states_by_index)),
       m_initial_state_index(initial_state_index),
       m_goal_state_indices(std::move(goal_state_indices)) {
     // Compute flat forward transitions.

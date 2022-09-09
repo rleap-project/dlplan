@@ -19,6 +19,7 @@ const int INF = std::numeric_limits<int>::max();
 class StateSpace {
 private:
     // For an efficient implementation we make use of indexing instead of shared_ptrs.
+    std::shared_ptr<const core::InstanceInfo> m_instance_info;
     core::States m_states_by_index;
     StateIndex m_initial_state_index;
     StateIndices m_forward_successor_state_indices;
@@ -32,6 +33,7 @@ private:
 
 public:
     StateSpace(
+        std::shared_ptr<const core::InstanceInfo>&& instance_info,
         core::States&& states_by_index,
         StateIndex initial_state_index,
         AdjacencyMatrix&& adjacency_matrix,
@@ -73,10 +75,9 @@ public:
      * Generates a file containing the state space in scorpion format
      * induced by the given domain and instance PDDL descriptions.
      */
-    void generate_state_space_data(
+    StateSpace generate_state_space(
         const std::string& domain_file,
-        const std::string& instance_file,
-        const std::string& output_file) const;
+        const std::string& instance_file) const;
 };
 
 
