@@ -73,8 +73,8 @@ public:
 class StateSpaceGenerator {
 public:
     /**
-     * Generates a file containing the state space in scorpion format
-     * induced by the given domain and instance PDDL descriptions.
+     * Generates the StateSpace containing the reachable states
+     * from given PDDL domain and instance files.
      */
     StateSpace generate_state_space(
         const std::string& domain_file,
