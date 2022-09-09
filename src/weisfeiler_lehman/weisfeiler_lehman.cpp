@@ -10,19 +10,6 @@ using namespace dlplan::state_space;
 
 namespace dlplan::weisfeiler_lehman {
 
-static std::vector<StateIndices> compute_state_indices_by_goal_distance(
-    const Distances& goal_distances) {
-    std::map<Distance, StateIndices> goal_distance_to_state_indices;
-    for (StateIndex i = 0; i < static_cast<int>(goal_distances.size()); ++i) {
-        goal_distance_to_state_indices[goal_distances[i]].push_back(i);
-    }
-    std::vector<StateIndices> state_indices_by_goal_distance;
-    for (const auto pair : goal_distance_to_state_indices) {
-        state_indices_by_goal_distance.push_back(pair.second);
-    }
-    return state_indices_by_goal_distance;
-}
-
 /**
  * Compresses each color by assigning a unique index.
  */
@@ -38,13 +25,6 @@ static CompressedColors compute_compressed_colors(
         compressed_colors.push_back(find_result.first->second);
     }
     return compressed_colors;
-}
-
-/**
- * Compute the canonical color of a collection of compressed colors.
- */
-static Color compute_color_for_compressed_colors(const CompressedColors& compressed_colors)  {
-    return Color(compressed_colors.begin(), compressed_colors.end());
 }
 
 
