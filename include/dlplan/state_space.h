@@ -38,6 +38,7 @@ public:
         StateIndex initial_state_index,
         AdjacencyMatrix&& adjacency_matrix,
         StateIndicesSet&& goal_state_indices);
+    // TODO: we must update copy semantics to create a new instance info and new states.
     StateSpace(const StateSpace& other);
     StateSpace& operator=(const StateSpace& other);
     StateSpace(StateSpace&& other);
@@ -78,16 +79,6 @@ public:
     StateSpace generate_state_space(
         const std::string& domain_file,
         const std::string& instance_file) const;
-};
-
-
-class StateSpaceReader {
-public:
-    /**
-     * Reads a state space in scorpion format from file with given name.
-     */
-    StateSpace read_state_space(
-        const std::string& input_file) const;
 };
 
 }
