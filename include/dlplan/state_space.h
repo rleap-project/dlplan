@@ -9,8 +9,11 @@ namespace dlplan::state_space {
 using StateIndex = int;
 using StateIndices = std::vector<StateIndex>;
 using StateIndicesSet = std::unordered_set<StateIndex>;
+using AdjacencyMatrix = std::vector<StateIndices>;
 using Distance = int;
 using Distances = std::vector<int>;
+
+const int INF = std::numeric_limits<int>::max();
 
 
 class StateSpace {
@@ -29,16 +32,18 @@ private:
 
 public:
     StateSpace(
-        core::States&& states,
+        core::States&& states_by_index,
         StateIndex initial_state_index,
-        StateIndices&& forward_successor_state_indices,
-        StateIndices&& forward_successor_state_indices_offsets,
-        StateIndicesSet&& m_goal_state_indices);
+        AdjacencyMatrix&& adjacency_matrix,
+        StateIndicesSet&& goal_state_indices);
     StateSpace(const StateSpace& other);
     StateSpace& operator=(const StateSpace& other);
     StateSpace(StateSpace&& other);
     StateSpace& operator=(StateSpace&& other);
     ~StateSpace();
+
+    template<typename T>
+    Distances compute_distances(const T& source_state_indices, bool forward);
 
     void for_each_state_index(std::function<void(int state_index)>&& function) const;
 
@@ -61,12 +66,31 @@ public:
     const Distances& get_goal_distances_ref() const;
 };
 
-/**
- * Reads a state space from file
- */
+
+class StateSpaceGenerator {
+public:
+    /**
+     * Generates a file containing the state space in scorpion format
+     * induced by the given domain and instance PDDL descriptions.
+     */
+    void generate_state_space_data(
+        const std::string& domain_file,
+        const std::string& instance_file,
+        const std::string& output_file) const;
+};
+
+
 class StateSpaceReader {
+public:
+    /**
+     * Reads a state space in scorpion format from file with given name.
+     */
+    StateSpace read_state_space(
+        const std::string& input_file) const;
 };
 
 }
+
+#include "state_space.tpp"
 
 #endif

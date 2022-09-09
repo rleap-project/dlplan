@@ -27,8 +27,6 @@ public:
 
     CompressedColors compute_colors_for_state_space(
         const state_space::StateSpace& state_space) const;
-
-
 };
 
 }

@@ -76,6 +76,10 @@ Don't forget to update environment variable `CPLUS_INCLUDE_PATH` and `LD_LIBRARY
 
 - DENABLE_TESTING:BOOL=TRUE enables compilation of tests
 - DENABLE_SPARSE:BOOL=TRUE enabled compilation with sparse set representation for concept and role denotations. Recommended for large number of objects.
+- DPYTHON_EXECUTABLE:FILEPATH=/path/to/python to manually set path to python interpreter to install scorpion. The path can be obtained with
+```console
+where python
+```
 
 ### 2.3. Building the Python Interface
 

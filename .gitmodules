@@ -1,6 +1,6 @@
-[submodule "experiments/scorpion"]
-	path = experiments/scorpion
-	url = https://github.com/drexlerd/scorpion.git
-[submodule "experiments/tarski"]
-	path = experiments/tarski
+[submodule "libs/tarski"]
+	path = libs/tarski
 	url = https://github.com/drexlerd/tarski.git
+[submodule "libs/scorpion"]
+	path = libs/scorpion
+	url = https://github.com/drexlerd/scorpion.git

@@ -370,7 +370,7 @@ void RoleDenotationBitset::const_iterator::seek_next() {
         }
         if (m_data.test(offset + j)) break;
     }
-    assert(offset + j <= m_data.size());
+    assert(offset + j <= static_cast<int>(m_data.size()));
 }
 
 RoleDenotationBitset::const_iterator::const_iterator(const_reference data, int num_objects, bool end)
