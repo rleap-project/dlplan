@@ -79,4 +79,8 @@ bool StateSpace::is_alive(StateIndex state_index) const {
     return !(is_goal(state_index) || is_deadend(state_index));
 }
 
+int StateSpace::get_num_states() const {
+    return m_states_by_index.size();
+}
+
 }
