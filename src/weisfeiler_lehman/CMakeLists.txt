@@ -3,7 +3,7 @@ target_sources(dlplanweisfeilerlehman
     PRIVATE
         color.cpp
         weisfeiler_lehman.cpp)
-target_link_libraries(dlplanweisfeilerlehman dlplancore)
+target_link_libraries(dlplanweisfeilerlehman dlplancore dlplanstatespace)
 target_include_directories(dlplanweisfeilerlehman
     PUBLIC
         ${PROJECT_SOURCE_DIR}/include
