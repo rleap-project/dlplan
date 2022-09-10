@@ -12,45 +12,6 @@ namespace dlplan::core {
 class SyntacticElementFactoryImpl;
 class InstanceInfoImpl;
 
-enum EXPRESSION_TYPE {
-    // concepts
-    C_ALL,
-    C_AND,
-    C_BOT,
-    C_DIFF,
-    C_EQUAL,
-    C_NOT,
-    C_ONE_OF,
-    C_OR,
-    C_PRIMITIVE,
-    C_PROJECTION,
-    C_SOME,
-    C_SUBSET,
-    C_TOP,
-    // roles
-    R_AND,
-    R_COMPOSE,
-    R_DIFF,
-    R_IDENTITY,
-    R_INVERSE,
-    R_NOT,
-    R_OR,
-    R_PRIMITIVE,
-    R_RESTRICT,
-    R_TOP,
-    R_TRANSITIVE_CLOSURE,
-    R_TRANSITIVE_REFLEXIVE_CLOSURE,
-    // numerical
-    N_COUNT,
-    N_CONCEPT_DISTANCE,
-    N_SUM_CONCEPT_DISTANCE,
-    N_ROLE_DISTANCE,
-    N_SUM_ROLE_DISTANCE,
-    // boolean
-    B_EMPTY,
-    B_INCLUSION,
-    B_NULLARY,
-};
 
 class VocabularyInfoImpl {
 private:
@@ -64,11 +25,6 @@ private:
      */
     std::unordered_map<std::string, unsigned> m_constant_name_to_constant_idx;
     std::vector<Constant> m_constants;
-
-    /**
-     * Mappings between element names and enum.
-     */
-    static std::unordered_map<std::string, EXPRESSION_TYPE> m_element_name_to_expression_type;
 
 public:
     VocabularyInfoImpl();
@@ -91,9 +47,6 @@ public:
     int get_constant_idx(const std::string& name) const;
     const Constant& get_constant(int constant_idx) const;
     const std::vector<Constant>& get_constants() const;
-
-    static bool exists_element_name(const std::string& name);
-    static EXPRESSION_TYPE element_name_to_expression_type(const std::string &name);
 };
 
 }

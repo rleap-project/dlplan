@@ -48,12 +48,12 @@ int main() {
     dlplan::evaluator::EvaluationCache evaluation_cache(policy.get_boolean_features().size(), policy.get_numerical_features().size());
 
     // Evaluate the policy using the cache
-    assert(policy.evaluate_lazy(s1, s1, evaluation_cache));
+    assert(policy.evaluate_lazy(s2, s1, evaluation_cache));
     assert(!policy.evaluate_lazy(s2, s0, evaluation_cache));
     assert(!policy.evaluate_lazy(s1, s2, evaluation_cache));
     assert(!policy.evaluate_lazy(s0, s2, evaluation_cache));
     // Evaluate the policy without the cache
-    assert(policy.evaluate_lazy(s1, s1));
+    assert(policy.evaluate_lazy(s2, s1));
     assert(!policy.evaluate_lazy(s2, s0));
     assert(!policy.evaluate_lazy(s1, s2));
     assert(!policy.evaluate_lazy(s0, s2));
