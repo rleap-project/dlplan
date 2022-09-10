@@ -20,6 +20,7 @@ static void parse_predicates_file(const std::string& filename, VocabularyInfo& v
     int arity;
     while (infile >> name >> arity) {
         vocabulary_info.add_predicate(name, arity);
+        vocabulary_info.add_predicate(name + "_g", arity);
     }
 }
 
@@ -35,22 +36,25 @@ enum class AtomTokenType {
     COMMA,
     OPENING_PARENTHESIS,
     CLOSING_PARENTHESIS,
-    IDENTIFIER
+    NAME
 };
 
 static const std::vector<std::pair<AtomTokenType, std::regex>> atom_token_regexes = {
     { AtomTokenType::COMMA, utils::Tokenizer<AtomTokenType>::build_regex(",") },
     { AtomTokenType::OPENING_PARENTHESIS, utils::Tokenizer<AtomTokenType>::build_regex("\\(") },
     { AtomTokenType::CLOSING_PARENTHESIS, utils::Tokenizer<AtomTokenType>::build_regex("\\)") },
-    { AtomTokenType::IDENTIFIER, utils::Tokenizer<AtomTokenType>::build_regex("[a-zA-Z0-9_\\-]+") },
+    { AtomTokenType::NAME, utils::Tokenizer<AtomTokenType>::build_regex("[a-zA-Z0-9_\\-]+") },
 };
 
-static void parse_atom(const std::string& atom_name, InstanceInfo& instance_info) {
+static void parse_atom(const std::string& atom_name, InstanceInfo& instance_info, bool is_static, bool is_goal) {
     auto tokens = utils::Tokenizer<AtomTokenType>().tokenize(atom_name, atom_token_regexes);
     if (tokens.size() < 3) throw std::runtime_error("parse_atom - insufficient number of tokens: " + tokens.size());
-    if (tokens[0].first != AtomTokenType::IDENTIFIER) throw std::runtime_error("parse_atom_line - expected predicate name at position 0.");
+    if (tokens[0].first != AtomTokenType::NAME) throw std::runtime_error("parse_atom_line - expected predicate name at position 0.");
     if (tokens[1].first != AtomTokenType::OPENING_PARENTHESIS) throw std::runtime_error("parse_atom_line - expected opening parenthesis at position 1.");
     std::string predicate_name = tokens[0].second;
+    if (is_goal) {
+        predicate_name += "_g";
+    }
     std::vector<std::string> object_names;
     int i = 2; // position of first object_name
     while (i < static_cast<int>(tokens.size())) {
@@ -58,29 +62,43 @@ static void parse_atom(const std::string& atom_name, InstanceInfo& instance_info
             break;
         } else if (tokens[i].first == AtomTokenType::COMMA) {
             ++i;
-        } else {
+        } else if (tokens[i].first == AtomTokenType::NAME) {
             object_names.push_back(tokens[i].second);
             ++i;
+        } else {
+            throw std::runtime_error("parse_atom_line - expected comma or name: " + tokens[i].second);
         }
     }
     if (tokens.back().first != AtomTokenType::CLOSING_PARENTHESIS) throw std::runtime_error("parse_atom_line - expected closing parenthesis.");
-    instance_info.add_atom(predicate_name, object_names);
+    if (is_static) {
+        instance_info.add_atom(predicate_name, object_names);
+    } else {
+        instance_info.add_static_atom(predicate_name, object_names);
+    }
 }
 
 static void parse_atoms_file(const std::string& filename, InstanceInfo& instance_info) {
-   std::ifstream infile(filename);
-   std::string name;
+    std::ifstream infile(filename);
+    std::string name;
     while (infile >> name) {
-        parse_atom(name, instance_info);
+        parse_atom(name, instance_info, false, false);
     }
 }
 
 static void parse_static_atoms_file(const std::string& filename, InstanceInfo& instance_info) {
-
+    std::ifstream infile(filename);
+    std::string name;
+    while (infile >> name) {
+        parse_atom(name, instance_info, true, false);
+    }
 }
 
 static void parse_goal_atoms_file(const std::string& filename, InstanceInfo& instance_info) {
-
+    std::ifstream infile(filename);
+    std::string name;
+    while (infile >> name) {
+        parse_atom(name, instance_info, true, true);
+    }
 }
 
 static std::pair<core::States, StateIndicesSet> parse_states_file(const std::string& filename, std::shared_ptr<InstanceInfo> instance_info) {
@@ -120,8 +138,8 @@ StateSpace StateSpaceGenerator::generate_state_space(
     parse_constants_file("constants.txt", *vocabulary_info);
     auto instance_info = std::make_shared<core::InstanceInfo>(vocabulary_info);
     parse_atoms_file("atoms.txt", *instance_info);
-    parse_static_atoms_file("static_atoms.txt", *instance_info);
-    parse_goal_atoms_file("goal_atoms.txt", *instance_info);
+    parse_static_atoms_file("static-atoms.txt", *instance_info);
+    parse_goal_atoms_file("goal-atoms.txt", *instance_info);
     //auto parse_states_result = parse_states_file("states.txt", instance_info);
     //auto states = std::move(parse_states_result.first);
     //auto goal_state_indices = std::move(parse_states_result.second);
