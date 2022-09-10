@@ -9,7 +9,7 @@ namespace dlplan::state_space {
 using StateIndex = int;
 using StateIndices = std::vector<StateIndex>;
 using StateIndicesSet = std::unordered_set<StateIndex>;
-using AdjacencyMatrix = std::vector<StateIndices>;
+using AdjacencyList = std::vector<StateIndices>;
 using Distance = int;
 using Distances = std::vector<int>;
 
@@ -36,7 +36,7 @@ public:
         std::shared_ptr<const core::InstanceInfo>&& instance_info,
         core::States&& states_by_index,
         StateIndex initial_state_index,
-        AdjacencyMatrix&& adjacency_matrix,
+        AdjacencyList&& adjacency_matrix,
         StateIndicesSet&& goal_state_indices);
     // TODO: we must update copy semantics to create a new instance info and new states.
     StateSpace(const StateSpace& other);
@@ -45,12 +45,17 @@ public:
     StateSpace& operator=(StateSpace&& other);
     ~StateSpace();
 
-    template<typename T>
-    Distances compute_distances(const T& source_state_indices, bool forward);
+    /**
+     * Run backward BrFs to compute distances.
+     */
+    Distances compute_distances_to_states(const StateIndicesSet& state_indices);
 
+    /**
+     * For more readable iterations.
+     */
     void for_each_state_index(std::function<void(int state_index)>&& function) const;
-
-    void for_each_forward_successor_state_index(std::function<void(int state_index)>&& function, int source_state_index) const;
+    void for_each_forward_successor_state_index(std::function<void(int state_index)>&& function, int state_index) const;
+    void for_each_backward_successor_state_index(std::function<void(int state_index)>&& function, int state_index) const;
 
     /**
      * Convenience functions.
@@ -82,7 +87,5 @@ public:
 };
 
 }
-
-#include "state_space.tpp"
 
 #endif

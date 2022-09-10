@@ -1,5 +1,6 @@
 #include "../../include/dlplan/state_space.h"
 
+#include <deque>
 #include <iostream>
 
 
@@ -12,7 +13,7 @@ StateSpace::StateSpace(
     std::shared_ptr<const core::InstanceInfo>&& instance_info,
     States&& states_by_index,
     StateIndex initial_state_index,
-    AdjacencyMatrix&& adjacency_matrix,
+    AdjacencyList&& adjacency_matrix,
     StateIndicesSet&& goal_state_indices)
     : m_instance_info(std::move(instance_info)),
       m_states_by_index(std::move(states_by_index)),
@@ -35,7 +36,7 @@ StateSpace::StateSpace(
     }
     m_backward_successor_state_indices_offsets.push_back(m_backward_successor_state_indices.size());
     // Compute goal distances.
-    m_goal_distances = compute_distances(m_goal_state_indices, false);
+    m_goal_distances = compute_distances_to_states(m_goal_state_indices);
     // Compute deadends.
     for (int state_index = 0; state_index < get_num_states(); ++state_index) {
         if (m_goal_distances[state_index] == INF) {
@@ -54,15 +55,45 @@ StateSpace& StateSpace::operator=(StateSpace&& other) = default;
 
 StateSpace::~StateSpace() = default;
 
+Distances StateSpace::compute_distances_to_states(const StateIndicesSet& state_indices) {
+    Distances distances(get_num_states(), INF);
+    std::deque<StateIndex> queue;
+    for (auto state_index : state_indices) {
+        queue.push_back(state_index);
+        distances[state_index] = 0;
+    }
+    while (!queue.empty()) {
+        int current_state_index = queue.front();
+        queue.pop_front();
+        for_each_backward_successor_state_index(
+            [&distances, &queue, current_state_index](int successor_state_index){
+                if (distances[successor_state_index] == INF) {
+                    distances[successor_state_index] = distances[current_state_index] + 1;
+                    queue.push_back(successor_state_index);
+                }
+            },
+            current_state_index);
+    }
+    return distances;
+}
+
 void StateSpace::for_each_state_index(std::function<void(int state_index)>&& function) const {
     for (int state_index = 0; state_index < get_num_states(); ++state_index) {
         function(state_index);
     }
 }
 
-void StateSpace::for_each_forward_successor_state_index(std::function<void(int state_index)>&& function, int source_state_index) const {
-    int start = m_forward_successor_state_indices_offsets[source_state_index];
-    int end = m_forward_successor_state_indices_offsets[source_state_index + 1];
+void StateSpace::for_each_forward_successor_state_index(std::function<void(int state_index)>&& function, int state_index) const {
+    int start = m_forward_successor_state_indices_offsets[state_index];
+    int end = m_forward_successor_state_indices_offsets[state_index + 1];
+    for (; start < end; ++start) {
+        function(start);
+    }
+}
+
+void StateSpace::for_each_backward_successor_state_index(std::function<void(int state_index)>&& function, int state_index) const {
+    int start = m_backward_successor_state_indices_offsets[state_index];
+    int end = m_backward_successor_state_indices_offsets[state_index + 1];
     for (; start < end; ++start) {
         function(start);
     }
