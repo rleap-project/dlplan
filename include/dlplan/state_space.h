@@ -38,7 +38,6 @@ public:
         StateIndex initial_state_index,
         AdjacencyList&& adjacency_matrix,
         StateIndicesSet&& goal_state_indices);
-    // TODO: we must update copy semantics to create a new instance info and new states.
     StateSpace(const StateSpace& other);
     StateSpace& operator=(const StateSpace& other);
     StateSpace(StateSpace&& other);
@@ -68,7 +67,7 @@ public:
     /**
      * Getters.
      */
-    const core::States& get_states_ref() const;
+    const core::States& get_states_by_index_ref() const;
     const core::State& get_state_ref(int index) const;
     int get_num_states() const;
     const Distances& get_goal_distances_ref() const;
