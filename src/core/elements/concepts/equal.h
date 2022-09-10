@@ -14,7 +14,7 @@ protected:
 
 public:
     EqualConcept(const VocabularyInfo& vocabulary, Role_Ptr role_left, Role_Ptr role_right)
-    : Concept(vocabulary, "c_equal"), m_role_left(role_left), m_role_right(role_right) {
+    : Concept(vocabulary), m_role_left(role_left), m_role_right(role_right) {
         if (!(role_left && role_right)) {
             throw std::runtime_error("EqualConcept::EqualConcept - at least one child is a nullptr");
         }
@@ -39,12 +39,15 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << m_name << "(";
+        out << get_name() << "(";
         m_role_left->compute_repr(out);
         out << ",";
         m_role_right->compute_repr(out);
         out << ")";
+    }
 
+    static std::string get_name() {
+        return "c_equal";
     }
 };
 

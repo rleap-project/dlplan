@@ -13,7 +13,7 @@ protected:
 
 public:
     OrRole(const VocabularyInfo& vocabulary, Role_Ptr role_1, Role_Ptr role_2)
-    : Role(vocabulary, "r_or"),
+    : Role(vocabulary),
       m_role_left(role_1),
       m_role_right(role_2) {
         if (!(role_1 && role_2)) {
@@ -35,11 +35,15 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << m_name << "(";
+        out << get_name() << "(";
         m_role_left->compute_repr(out);
         out << ",";
         m_role_right->compute_repr(out);
         out << ")";
+    }
+
+    static std::string get_name() {
+        return "r_or";
     }
 };
 

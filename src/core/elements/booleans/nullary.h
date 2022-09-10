@@ -13,7 +13,7 @@ protected:
 
 public:
     NullaryBoolean(const VocabularyInfo& vocabulary, const Predicate& predicate)
-    : Boolean(vocabulary, "b_nullary"), m_predicate(predicate) {
+    : Boolean(vocabulary), m_predicate(predicate) {
         if (predicate.get_arity() != 0) {
             throw std::runtime_error("NullaryBoolean::NullaryBoolean - expected predicate with arity 0.");
         }
@@ -41,7 +41,11 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << m_name << "(" << m_predicate.get_name() << ")";
+        out << get_name() << "(" << m_predicate.get_name() << ")";
+    }
+
+    static std::string get_name() {
+        return "b_nullary";
     }
 };
 

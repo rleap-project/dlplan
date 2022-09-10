@@ -9,7 +9,7 @@ namespace dlplan::core::element {
 class TopConcept : public Concept {
 public:
     TopConcept(const VocabularyInfo& vocabulary)
-    : Concept(vocabulary, "c_top") {
+    : Concept(vocabulary) {
     }
 
     ConceptDenotation evaluate(const State& state) const override {
@@ -21,7 +21,11 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << m_name;
+        out << get_name();
+    }
+
+    static std::string get_name() {
+        return "c_top";
     }
 };
 

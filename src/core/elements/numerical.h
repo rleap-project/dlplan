@@ -8,7 +8,7 @@ namespace dlplan::core::element {
 
 class Numerical : public Element<int> {
 public:
-    Numerical(const VocabularyInfo& vocabulary, const std::string& name) : Element<int>(vocabulary, name) { }
+    explicit Numerical(const VocabularyInfo& vocabulary) : Element<int>(vocabulary) { }
     ~Numerical() override = default;
 };
 

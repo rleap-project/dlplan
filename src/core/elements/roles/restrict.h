@@ -14,7 +14,7 @@ protected:
 
 public:
     RestrictRole(const VocabularyInfo& vocabulary, Role_Ptr role, Concept_Ptr concept)
-    : Role(vocabulary, "r_restrict"), m_role(role), m_concept(concept) {
+    : Role(vocabulary), m_role(role), m_concept(concept) {
         if (!(role && concept)) {
             throw std::runtime_error("RestrictRole::RestrictRole - at least one child is a nullptr.");
         }
@@ -37,11 +37,15 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << m_name << "(";
+        out << get_name() << "(";
         m_role->compute_repr(out);
         out << ",";
         m_concept->compute_repr(out);
         out << ")";
+    }
+
+    static std::string get_name() {
+        return "r_restrict";
     }
 };
 

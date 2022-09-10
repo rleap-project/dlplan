@@ -12,7 +12,7 @@ protected:
 
 public:
     OneOfConcept(const VocabularyInfo& vocabulary, const Constant& constant)
-    : Concept(vocabulary, "c_one_of"), m_constant(constant) {
+    : Concept(vocabulary), m_constant(constant) {
     }
 
     ConceptDenotation evaluate(const State& state) const override {
@@ -30,7 +30,11 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << m_name << "(" << m_constant.get_name() << ")";
+        out << get_name() << "(" << m_constant.get_name() << ")";
+    }
+
+    static std::string get_name() {
+        return "c_one_of";
     }
 };
 

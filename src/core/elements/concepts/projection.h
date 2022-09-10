@@ -16,7 +16,7 @@ protected:
 
 public:
     ProjectionConcept(const VocabularyInfo& vocabulary, const Role_Ptr& role, int pos)
-    : Concept(vocabulary, "c_projection"), m_role(role), m_pos(pos) {
+    : Concept(vocabulary), m_role(role), m_pos(pos) {
         if (pos < 0 || pos > 1) {
             throw std::runtime_error("ProjectionConcept::ProjectionConcept - projection index out of range, should be 0 or 1 ("s + std::to_string(pos) + ")");
         }
@@ -40,9 +40,13 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << m_name << "(";
+        out << get_name() << "(";
         m_role->compute_repr(out);
         out << "," << std::to_string(m_pos) << ")";
+    }
+
+    static std::string get_name() {
+        return "c_projection";
     }
 };
 

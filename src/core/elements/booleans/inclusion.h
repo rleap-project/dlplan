@@ -17,7 +17,7 @@ protected:
 
 public:
     InclusionBoolean(const VocabularyInfo& vocabulary, std::shared_ptr<const T> element_left, std::shared_ptr<const T> element_right)
-    : Boolean(vocabulary, "b_inclusion"), m_element_left(element_left), m_element_right(element_right) {
+    : Boolean(vocabulary), m_element_left(element_left), m_element_right(element_right) {
     }
 
     bool evaluate(const State& state) const override {
@@ -29,11 +29,15 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-       out << m_name << "(";
+       out << get_name() << "(";
        m_element_left->compute_repr(out);
        out << ",";
        m_element_right->compute_repr(out) ;
        out << ")";
+    }
+
+    static std::string get_name() {
+        return "b_inclusion";
     }
 };
 

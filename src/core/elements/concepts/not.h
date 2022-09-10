@@ -12,7 +12,7 @@ protected:
 
 public:
     NotConcept(const VocabularyInfo& vocabulary, Concept_Ptr concept)
-    : Concept(vocabulary, "c_not"), m_concept(concept){
+    : Concept(vocabulary), m_concept(concept){
         if (!concept) {
             throw std::runtime_error("NotConcept::NotConcept - child is a nullptr");
         }
@@ -27,9 +27,13 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << m_name << "(";
+        out << get_name() << "(";
         m_concept->compute_repr(out);
         out << ")";
+    }
+
+    static std::string get_name() {
+        return "c_not";
     }
 };
 

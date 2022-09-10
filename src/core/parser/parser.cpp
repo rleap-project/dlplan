@@ -9,6 +9,7 @@
 #include "tokenizer.h"
 #include "ast_factory.h"
 #include "tokenizer.h"
+#include "../../utils/tokenizer.h"
 
 
 namespace dlplan::core::parser {

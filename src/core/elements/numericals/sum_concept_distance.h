@@ -17,7 +17,7 @@ protected:
 
 public:
     SumConceptDistanceNumerical(const VocabularyInfo& vocabulary, Concept_Ptr concept_from, Role_Ptr role, Concept_Ptr concept_to)
-    : Numerical(vocabulary, "n_sum_concept_distance"), m_concept_from(concept_from), m_role(role), m_concept_to(concept_to) {
+    : Numerical(vocabulary), m_concept_from(concept_from), m_role(role), m_concept_to(concept_to) {
         if (!(concept_from && role && concept_to)) {
             throw std::runtime_error("SumConceptDistanceNumerical::SumConceptDistanceNumerical - child is not of type Concept, Role, Concept.");
         }
@@ -49,13 +49,17 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << m_name << "(";
+        out << get_name() << "(";
         m_concept_from->compute_repr(out);
         out << ",";
         m_role->compute_repr(out);
         out << ",";
         m_concept_to->compute_repr(out);
         out << ")";
+    }
+
+    static std::string get_name() {
+        return "n_sum_concept_distance";
     }
 };
 

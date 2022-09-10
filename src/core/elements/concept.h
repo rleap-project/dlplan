@@ -8,7 +8,7 @@ namespace dlplan::core::element {
 
 class Concept : public Element<ConceptDenotation> {
 public:
-    Concept(const VocabularyInfo& vocabulary, const std::string& name) : Element<ConceptDenotation>(vocabulary, name) { }
+    explicit Concept(const VocabularyInfo& vocabulary) : Element<ConceptDenotation>(vocabulary) { }
     ~Concept() override = default;
 };
 

@@ -41,9 +41,10 @@ add_subdirectory(experiments)
 if (ENABLE_TESTING)
     enable_testing()
     add_subdirectory(tests)
-    add_test(NAME MatmulPython
-        COMMAND ${Python_EXECUTABLE} -m pytest ${CMAKE_CURRENT_SOURCE_DIR} / "api/python"
-    )
+    # TODO: does not work yet
+    #add_test(NAME MatmulPython
+    #    COMMAND ${Python_EXECUTABLE} -m pytest ${CMAKE_CURRENT_SOURCE_DIR} / "api/python"
+    #)
 endif()
 
 if(DLPLAN_PYTHON)

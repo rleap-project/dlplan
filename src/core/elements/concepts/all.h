@@ -3,6 +3,7 @@
 
 #include "../concept.h"
 #include "../role.h"
+#include "../types.h"
 
 
 namespace dlplan::core::element {
@@ -14,7 +15,7 @@ protected:
 
 public:
     AllConcept(const VocabularyInfo& vocabulary, Role_Ptr role, Concept_Ptr concept)
-    : Concept(vocabulary, "c_all"), m_role(role), m_concept(concept) {
+    : Concept(vocabulary), m_role(role), m_concept(concept) {
         if (!(role && concept)) {
             throw std::runtime_error("AllConcept::AllConcept - at least one child is a nullptr");
         }
@@ -38,11 +39,15 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << m_name << "(";
+        out << get_name() << "(";
         m_role->compute_repr(out);
         out << ",";
         m_concept->compute_repr(out);
         out << ")";
+    }
+
+    static std::string get_name() {
+        return "c_all";
     }
 };
 

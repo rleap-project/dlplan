@@ -13,7 +13,7 @@ protected:
 
 public:
     DiffRole(const VocabularyInfo& vocabulary, Role_Ptr role_left, Role_Ptr role_right)
-    : Role(vocabulary, "r_diff"), m_role_left(role_left), m_role_right(role_right)  {
+    : Role(vocabulary), m_role_left(role_left), m_role_right(role_right)  {
         if (!(role_left && role_right)) {
             throw std::runtime_error("DiffRole::DiffRole - at least one child is a nullptr.");
         }
@@ -28,11 +28,15 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << m_name << "(";
+        out << get_name() << "(";
         m_role_left->compute_repr(out);
         out << ",";
         m_role_right->compute_repr(out);
         out << ")";
+    }
+
+    static std::string get_name() {
+        return "r_diff";
     }
 };
 

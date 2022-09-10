@@ -13,7 +13,7 @@ protected:
 
 public:
     EmptyBoolean(const VocabularyInfo& vocabulary, std::shared_ptr<const T> element)
-        : Boolean(vocabulary, "b_empty"), m_element(element) {
+        : Boolean(vocabulary), m_element(element) {
     }
 
     bool evaluate(const State& state) const override {
@@ -25,9 +25,13 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const {
-        out << m_name << "(";
+        out << get_name() << "(";
         m_element->compute_repr(out);
         out << ")";
+    }
+
+    static std::string get_name() {
+        return "b_empty";
     }
 };
 

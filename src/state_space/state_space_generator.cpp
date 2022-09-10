@@ -6,6 +6,7 @@
 #include <regex>
 
 #include "../utils/command.h"
+#include "../utils/tokenizer.h"
 
 
 using namespace dlplan::core;
@@ -37,58 +38,32 @@ enum class AtomTokenType {
     IDENTIFIER
 };
 
-static std::regex build_regex(const std::string &s, std::regex::flag_type f = std::regex_constants::ECMAScript) {
-    return std::regex("^\\s*(" + s + ")\\s*", f);
-}
-
-static const std::vector<std::pair<AtomTokenType, std::regex>> atom_token_type_expressions = {
-    { AtomTokenType::COMMA, build_regex(",") },
-    { AtomTokenType::OPENING_PARENTHESIS, build_regex("\\(") },
-    { AtomTokenType::CLOSING_PARENTHESIS, build_regex("\\)") },
-    { AtomTokenType::IDENTIFIER, build_regex("[a-zA-Z0-9_\\-]+") },
+static const std::vector<std::pair<AtomTokenType, std::regex>> atom_token_regexes = {
+    { AtomTokenType::COMMA, utils::Tokenizer<AtomTokenType>::build_regex(",") },
+    { AtomTokenType::OPENING_PARENTHESIS, utils::Tokenizer<AtomTokenType>::build_regex("\\(") },
+    { AtomTokenType::CLOSING_PARENTHESIS, utils::Tokenizer<AtomTokenType>::build_regex("\\)") },
+    { AtomTokenType::IDENTIFIER, utils::Tokenizer<AtomTokenType>::build_regex("[a-zA-Z0-9_\\-]+") },
 };
 
 static void parse_atom(const std::string& atom_name, InstanceInfo& instance_info) {
-    auto start = atom_name.begin();
-    const auto end = atom_name.end();
-    std::smatch match;
-    std::vector<std::pair<AtomTokenType, std::string>> tokens;
-    while (start != end) {
-        bool has_match = false;
-        for (const auto& pair : atom_token_type_expressions) {
-            std::regex regex = pair.second;
-            if (std::regex_search(start, end, match, regex)) {
-                tokens.emplace_back(pair.first, match[1].str());
-                start += match[0].str().size();
-                has_match = true;
-            }
-        }
-        if (!has_match) {
-            throw std::runtime_error("parse_atom - atom name is not part of accepted language: " + atom_name);
-        }
-    }
-    if (tokens.size() < 1) throw std::runtime_error("parse_atom - insufficient number of tokens: " + tokens.size());
-    if (tokens[0].first != AtomTokenType::IDENTIFIER) throw std::runtime_error("parse_atom_line - expected identifier at position 0.");
+    auto tokens = utils::Tokenizer<AtomTokenType>().tokenize(atom_name, atom_token_regexes);
+    if (tokens.size() < 3) throw std::runtime_error("parse_atom - insufficient number of tokens: " + tokens.size());
+    if (tokens[0].first != AtomTokenType::IDENTIFIER) throw std::runtime_error("parse_atom_line - expected predicate name at position 0.");
+    if (tokens[1].first != AtomTokenType::OPENING_PARENTHESIS) throw std::runtime_error("parse_atom_line - expected opening parenthesis at position 1.");
     std::string predicate_name = tokens[0].second;
     std::vector<std::string> object_names;
     int i = 2; // position of first object_name
     while (i < static_cast<int>(tokens.size())) {
         if (tokens[i].first == AtomTokenType::CLOSING_PARENTHESIS) {
-            break;  // atom contains no objects
-        }
-        else if (tokens[i].first == AtomTokenType::IDENTIFIER) {
-            object_names.push_back(tokens[i].second);
-            ++i;
-        }
-        if (i == tokens.size()) {
-            throw std::runtime_error("parse_atom - insufficient number of tokens: " + tokens.size());
-        }
-        if (tokens[i].first == AtomTokenType::CLOSING_PARENTHESIS) {
             break;
         } else if (tokens[i].first == AtomTokenType::COMMA) {
             ++i;
+        } else {
+            object_names.push_back(tokens[i].second);
+            ++i;
         }
     }
+    if (tokens.back().first != AtomTokenType::CLOSING_PARENTHESIS) throw std::runtime_error("parse_atom_line - expected closing parenthesis.");
     instance_info.add_atom(predicate_name, object_names);
 }
 

@@ -13,7 +13,7 @@ protected:
 
 public:
     IdentityRole(const VocabularyInfo& vocabulary, Concept_Ptr concept)
-    : Role(vocabulary, "r_identity"), m_concept(concept) {
+    : Role(vocabulary), m_concept(concept) {
         if (!concept) {
             throw std::runtime_error("IdentityRole::IdentityRole - child is a nullptr.");
         }
@@ -33,9 +33,13 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << m_name << "(";
+        out << get_name() << "(";
         m_concept->compute_repr(out);
         out << ")";
+    }
+
+    static std::string get_name() {
+        return "r_identity";
     }
 };
 

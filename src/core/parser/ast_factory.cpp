@@ -37,6 +37,8 @@
 #include "expressions/roles/transitive_closure.h"
 #include "expressions/roles/transitive_reflexive_closure.h"
 
+#include "../vocabulary_info.h"
+
 
 namespace dlplan::core::parser {
 

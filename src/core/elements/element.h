@@ -1,17 +1,16 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_ELEMENT_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_ELEMENT_H_
 
-#include "../../../include/dlplan/types.h"
+//#include "../../../include/dlplan/types.h"
 #include "../../../include/dlplan/utils/cache.h"
-#include "../instance_info.h"
-#include "../vocabulary_info.h"
+//#include "../instance_info.h"
+#include "../../../include/dlplan/core.h"
 
 #include <iostream>
 #include <sstream>
 
 
 namespace dlplan::core::element {
-
 
 template<typename T>
 class Element : public utils::Cachable {
@@ -20,11 +19,10 @@ protected:
      * Index can be used for internal caching.
      */
     int m_index;
-    const std::string m_name;
 
 public:
     // Elements are not copieable because they must live in the cache.
-    Element(const VocabularyInfo&, const std::string& name) : m_index(-1), m_name(name) { }
+    explicit Element(const VocabularyInfo&) : m_index(-1) { }
     Element(const Element& other) = delete;
     Element& operator=(const Element& other) = delete;
     Element(Element&& other) = delete;

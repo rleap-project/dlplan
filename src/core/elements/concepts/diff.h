@@ -13,7 +13,7 @@ protected:
 
 public:
     DiffConcept(const VocabularyInfo& vocabulary, Concept_Ptr concept_1, Concept_Ptr concept_2)
-    : Concept(vocabulary, "c_diff"), m_concept_left(concept_1), m_concept_right(concept_2) {
+    : Concept(vocabulary), m_concept_left(concept_1), m_concept_right(concept_2) {
         if (!(concept_1 && concept_2)) {
             throw std::runtime_error("DiffConcept::DiffConcept - at least one child is a nullptr.");
         }
@@ -28,11 +28,15 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << m_name << "(";
+        out << get_name() << "(";
         m_concept_left->compute_repr(out);
         out << ",";
         m_concept_right->compute_repr(out);
         out << ")";
+    }
+
+    static std::string get_name() {
+        return "c_diff";
     }
 };
 

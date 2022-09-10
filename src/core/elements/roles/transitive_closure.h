@@ -14,7 +14,7 @@ protected:
 
 public:
     TransitiveClosureRole(const VocabularyInfo& vocabulary, Role_Ptr role)
-    : Role(vocabulary, "r_transitive_closure"), m_role(role) {
+    : Role(vocabulary), m_role(role) {
         if (!role) {
             throw std::runtime_error("TransitiveClosureRole::TransitiveClosureRole - child is a nullptr.");
         }
@@ -40,9 +40,13 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << m_name << "(";
+        out << get_name() << "(";
         m_role->compute_repr(out);
         out << ")";
+    }
+
+    static std::string get_name() {
+        return "r_transitive_closure";
     }
 };
 

@@ -9,7 +9,7 @@ namespace dlplan::core::element {
 class TopRole : public Role {
 public:
     TopRole(const VocabularyInfo& vocabulary)
-    : Role(vocabulary, "r_top") {
+    : Role(vocabulary) {
     }
 
     RoleDenotation evaluate(const State& state) const override {
@@ -21,7 +21,11 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << m_name;
+        out << get_name();
+    }
+
+    static std::string get_name() {
+        return "r_top";
     }
 };
 

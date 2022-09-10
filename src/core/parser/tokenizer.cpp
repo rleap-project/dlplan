@@ -1,13 +1,26 @@
 #include "tokenizer.h"
 
+#include <regex>
 #include <sstream>
 #include <iostream>
-#include "ast_factory.h"
+
+#include "../elements/concepts/all.h"
+
+#include "../../utils/tokenizer.h"
 
 
 namespace dlplan::core::parser {
 
 Tokenizer::Tokenizer() = default;
+
+static std::vector<std::pair<ElementTokenType, std::regex>> atom_token_regexes = {
+    { ElementTokenType::COMMA, utils::Tokenizer<ElementTokenType>::build_regex(",") },
+    { ElementTokenType::OPENING_PARENTHESIS, utils::Tokenizer<ElementTokenType>::build_regex("\\(") },
+    { ElementTokenType::CLOSING_PARENTHESIS, utils::Tokenizer<ElementTokenType>::build_regex("\\)") },
+    { ElementTokenType::NUMBER, utils::Tokenizer<ElementTokenType>::build_regex("[0-9]+") },
+    { ElementTokenType::C_ALL, utils::Tokenizer<ElementTokenType>::build_regex(dlplan::core::element::AllConcept::get_name()) }
+};
+
 
 static void add_token(std::stringstream &ss, bool& is_num, Tokens &tokens) {
     std::string token = ss.str();
