@@ -5,10 +5,24 @@
 
 #include "types.h"
 
+#include "../../utils/tokenizer.h"
+
 
 namespace dlplan::core {
 class VocabularyInfo;
 namespace parser {
+
+enum class TokenType {
+    COMMA,
+    OPENING_PARENTHESIS,
+    CLOSING_PARENTHESIS,
+    NAME
+};
+
+using Token = dlplan::utils::Tokenizer<TokenType>::Token;
+using Tokens = dlplan::utils::Tokenizer<TokenType>::Tokens;
+using Tokenizer = dlplan::utils::Tokenizer<TokenType>;
+using TokenRegexes = dlplan::utils::Tokenizer<TokenType>::TokenRegexes;
 
 class Parser {
 private:

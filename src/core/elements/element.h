@@ -1,9 +1,9 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_ELEMENT_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_ELEMENT_H_
 
-//#include "../../../include/dlplan/types.h"
+#include "types.h"
+
 #include "../../../include/dlplan/utils/cache.h"
-//#include "../instance_info.h"
 #include "../../../include/dlplan/core.h"
 
 #include <iostream>
@@ -11,6 +11,8 @@
 
 
 namespace dlplan::core::element {
+
+using namespace std::string_literals;
 
 template<typename T>
 class Element : public utils::Cachable {

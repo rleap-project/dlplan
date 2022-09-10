@@ -11,8 +11,7 @@ target_sources(dlplancore
         predicate.cpp
         object.cpp
         parser/parser.cpp
-        parser/tokenizer.cpp
-        parser/ast_factory.cpp
+        parser/expression_factory.cpp
         elements/utils.cpp
         ../utils/logging.cpp
         ../utils/MurmurHash3.cpp

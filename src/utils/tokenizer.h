@@ -2,6 +2,7 @@
 #define DLPLAN_SRC_UTILS_TOKENIZER_H
 
 #include <regex>
+#include <iostream>
 
 
 namespace dlplan::utils {
@@ -21,6 +22,9 @@ public:
         return std::regex("^\\s*(" + s + ")\\s*", f);
     }
 
+    /**
+     * Tokenizes a string.
+     */
     Tokens tokenize(const std::string& text, const TokenRegexes token_regexes) const {
         auto start = text.begin();
         const auto end = text.end();
