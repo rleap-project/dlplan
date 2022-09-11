@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "../utils/collections.h"
+#include "../utils/memory.h"
 
 
 using namespace dlplan::core;
@@ -79,8 +80,8 @@ void StateSpace::initialize() {
     });
     // Change adjacency list to more compact representation.
     // TODO: memory is not necessarily free-ed so we might want to implement a swap.
-    m_backward_successor_state_indices.clear();
-    m_backward_successor_state_indices_offsets.clear();
+    utils::free_memory(m_backward_successor_state_indices);
+    utils::free_memory(m_backward_successor_state_indices_offsets);
     for (int target_state_index = 0; target_state_index < get_num_states(); ++target_state_index) {
         m_backward_successor_state_indices_offsets.push_back(m_backward_successor_state_indices.size());
         for (int source_state_index : backward_adjacency_list[target_state_index]) {
@@ -91,7 +92,7 @@ void StateSpace::initialize() {
     // Compute goal distances.
     m_goal_distances = compute_distances_to_states(m_goal_state_indices);
     // Compute deadends.
-    m_deadend_state_indices.clear();
+    utils::free_memory(m_deadend_state_indices);
     for (int state_index = 0; state_index < get_num_states(); ++state_index) {
         if (m_goal_distances[state_index] == INF) {
             m_deadend_state_indices.insert(state_index);
