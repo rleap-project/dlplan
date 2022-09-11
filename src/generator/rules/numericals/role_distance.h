@@ -10,7 +10,7 @@ public:
     RoleDistanceNumerical() : Numerical("n_role_distance") { }
 
     virtual void submit_tasks_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
-        core::SyntacticElementFactory factory = *data.m_factory;
+        core::SyntacticElementFactory& factory = data.m_factory;
         for (int i = 1; i < iteration; ++i) {
             for (int j = 1; j < std::max(2,iteration - i); ++j) {
                 int k = iteration - i - j;

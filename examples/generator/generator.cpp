@@ -44,7 +44,7 @@ int main() {
     // 2. Initialize InstanceInfo
     auto i = construct_instance_info(v);
     // 3. Initialize SyntacticElementFactory
-    std::shared_ptr<SyntacticElementFactory> f = std::make_shared<SyntacticElementFactory>(v);
+    SyntacticElementFactory factory(v);
 
     // 4. Construct a bunch of states
     const auto& atoms = i->get_atoms();
@@ -81,7 +81,7 @@ int main() {
     generator.set_generate_or_role(false);
     generator.set_generate_top_role(false);
     generator.set_generate_transitive_reflexive_closure_role(false);
-    FeatureRepresentations features = generator.generate(f, 10, 180, 100000, 4, states);
+    FeatureRepresentations features = generator.generate(factory, 10, 180, 100000, 4, states);
 
     for (const auto& feature : features) {
         std::cout << feature << std::endl;

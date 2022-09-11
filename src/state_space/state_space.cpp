@@ -13,7 +13,7 @@ using namespace dlplan::core;
 namespace dlplan::state_space {
 
 StateSpace::StateSpace(
-    std::shared_ptr<const core::InstanceInfo>&& instance_info,
+    std::shared_ptr<const InstanceInfo>&& instance_info,
     States&& states,
     StateIndex initial_state_index,
     AdjacencyList&& adjacency_list,
@@ -222,6 +222,10 @@ int StateSpace::get_num_states() const {
 
 const Distances& StateSpace::get_goal_distances_ref() const {
     return m_goal_distances;
+}
+
+std::shared_ptr<const InstanceInfo> StateSpace::get_instance_info() const {
+    return m_instance_info;
 }
 
 }

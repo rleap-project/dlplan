@@ -45,7 +45,7 @@ if REMOTE:
     SUITE = ["barman", "blocksworld_3", "blocksworld_4", "childsnack", "delivery", "gripper", "miconic", "reward", "spanner", "visitall"]
     TIME_LIMIT = 3 * 3600
 else:
-    ENV = LocalEnvironment(processes=16)
+    ENV = LocalEnvironment(processes=4)
     SUITE = ["blocksworld_3:p-3-0.pddl", "childsnack:p-2-1.0-0.0-1-0.pddl", "delivery:instance_2_1_0.pddl", "gripper:p-1-0.pddl", "miconic:p-2-2-0.pddl", "reward:instance_2x2_0.pddl", "visitall:p-1-0.5-2-0.pddl"]
     TIME_LIMIT = 180
 ATTRIBUTES = [
@@ -62,6 +62,7 @@ MEMORY_LIMIT = (16 * 3000) * 0.98
 
 GENERATOR_TIME_LIMIT = 2 * 3600
 GENERATOR_FEATURE_LIMIT = 1000000
+NUM_FEATURE_VALUATION_ITERATIONS = 100
 
 # Create a new experiment.
 exp = Experiment(environment=ENV)
@@ -70,18 +71,18 @@ exp.add_parser("experiment_parser.py")
 
 for task in suites.build_suite(BENCHMARKS_DIR, SUITE):
     for num_threads in [1,2,4,8,12,16]:
-        for complexity in [10]:
+        for complexity in [2]:
             run = exp.add_run()
             # Create symbolic links and aliases. This is optional. We
             # could also use absolute paths in add_command().
             run.add_resource("domain", task.domain_file, symlink=True)
             run.add_resource("problem", task.problem_file, symlink=True)
-            run.add_resource("main", "main.py", symlink=True)
+            run.add_resource("experiment_generator", "experiment_generator", symlink=True)
             # 'ff' binary has to be on the PATH.
             # We could also use exp.add_resource().
             run.add_command(
                 f"complexity-{complexity}-{num_threads}",
-                ["python3", "main.py", "--domain", "{domain}", "--instance", "{problem}", "--c", complexity, "--t", GENERATOR_TIME_LIMIT, "--f", GENERATOR_FEATURE_LIMIT, "--n", num_threads],
+                ["./experiment_generator", "{domain}", "{problem}", complexity, GENERATOR_TIME_LIMIT, GENERATOR_FEATURE_LIMIT, num_threads, NUM_FEATURE_VALUATION_ITERATIONS],
                 time_limit=num_threads * TIME_LIMIT,
                 memory_limit=MEMORY_LIMIT,
             )

@@ -76,7 +76,6 @@ public:
     bool is_nongoal(StateIndex state_index) const;
     bool is_deadend(StateIndex state_index) const;
     bool is_alive(StateIndex state_index) const;
-    bool is_solvable() const;
 
     /**
      * Getters.
@@ -85,6 +84,7 @@ public:
     const core::State& get_state_ref(int index) const;
     int get_num_states() const;
     const Distances& get_goal_distances_ref() const;
+    std::shared_ptr<const core::InstanceInfo> get_instance_info() const;
 };
 
 

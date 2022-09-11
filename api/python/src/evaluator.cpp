@@ -8,12 +8,14 @@
 
 namespace py = pybind11;
 
-using namespace dlplan;
+using namespace dlplan::core;
+using namespace dlplan::evaluator;
+
 
 void init_evaluator(py::module_ &m) {
-    py::class_<evaluator::EvaluationCache>(m, "EvaluationCache")
+    py::class_<EvaluationCache>(m, "EvaluationCache")
         .def(py::init<int, int>())
-        .def("retrieve_or_evaluate", py::overload_cast<const core::Boolean&, const core::State&>(&evaluator::EvaluationCache::retrieve_or_evaluate))
-        .def("retrieve_or_evaluate", py::overload_cast<const core::Numerical&, const core::State&>(&evaluator::EvaluationCache::retrieve_or_evaluate))
+        .def("retrieve_or_evaluate", py::overload_cast<const Boolean&, const State&>(&EvaluationCache::retrieve_or_evaluate))
+        .def("retrieve_or_evaluate", py::overload_cast<const Numerical&, const State&>(&EvaluationCache::retrieve_or_evaluate))
     ;
 }

@@ -16,7 +16,7 @@
 namespace dlplan::generator {
 
 struct GeneratorData {
-    std::shared_ptr<core::SyntacticElementFactory> m_factory;
+    core::SyntacticElementFactory& m_factory;
     std::unordered_set<std::array<uint32_t, 4>> m_boolean_and_numerical_hash_table;
     std::unordered_set<std::array<uint32_t, 4>> m_concept_hash_table;
     std::unordered_set<std::array<uint32_t, 4>> m_role_hash_table;
@@ -36,7 +36,7 @@ struct GeneratorData {
     int m_num_generated_features;
     int m_num_novel_features;
 
-    GeneratorData(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit)
+    GeneratorData(core::SyntacticElementFactory& factory, int complexity, int time_limit, int feature_limit)
       : m_factory(factory),
         m_booleans_by_iteration(std::vector<std::vector<core::Boolean>>(complexity + 1)),
         m_numericals_by_iteration(std::vector<std::vector<core::Numerical>>(complexity + 1)),

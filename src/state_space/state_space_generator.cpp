@@ -71,9 +71,9 @@ static void parse_atom(const std::string& atom_name, InstanceInfo& instance_info
     }
     if (tokens.back().first != AtomTokenType::CLOSING_PARENTHESIS) throw std::runtime_error("parse_atom_line - expected closing parenthesis.");
     if (is_static) {
-        instance_info.add_atom(predicate_name, object_names);
-    } else {
         instance_info.add_static_atom(predicate_name, object_names);
+    } else {
+        instance_info.add_atom(predicate_name, object_names);
     }
 }
 
@@ -110,7 +110,11 @@ static std::pair<core::States, StateIndicesSet> parse_states_file(const std::str
         std::stringstream linestream(line);
         std::string type;
         linestream >> type;
-        int state_index = states.size();
+        int state_index;
+        linestream >> state_index;
+        if (state_index != static_cast<int>(states.size())) {
+            throw std::runtime_error("StateSpaceGenerator::parse_states_file - expected persistent indexing of states.");
+        }
         if (type == "G") {
             goal_state_indices.insert(state_index);
         }

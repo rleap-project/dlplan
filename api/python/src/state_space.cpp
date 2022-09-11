@@ -11,11 +11,30 @@
 
 namespace py = pybind11;
 
-using namespace dlplan;
+using namespace dlplan::core;
+using namespace dlplan::state_space;
+
 
 void init_state_space(py::module_ &m) {
-    py::class_<state_space::StateSpace>(m, "StateSpace")
-        .def("for_each_state_index", &state_space::StateSpace::for_each_state_index)
-        .def("for_each_forward_successor_state_index", &state_space::StateSpace::for_each_forward_successor_state_index)
+    py::class_<StateSpace>(m, "StateSpace")
+        .def(py::init<std::shared_ptr<const InstanceInfo>, States, StateIndex, AdjacencyList, StateIndicesSet>())
+        .def("prune_states", &StateSpace::prune_states)
+        .def("compute_distances_to_states", &StateSpace::compute_distances_to_states)
+        .def("for_each_state_index", &StateSpace::for_each_state_index)
+        .def("for_each_forward_successor_state_index", &StateSpace::for_each_forward_successor_state_index)
+        .def("is_goal", &StateSpace::is_goal)
+        .def("is_nongoal", &StateSpace::is_nongoal)
+        .def("is_deadend", &StateSpace::is_deadend)
+        .def("is_alive", &StateSpace::is_alive)
+        .def("get_states_ref", &StateSpace::get_states_ref)
+        .def("get_state_ref", &StateSpace::get_state_ref)
+        .def("get_num_states", &StateSpace::get_num_states)
+        .def("get_goal_distances_ref", &StateSpace::get_goal_distances_ref)
+        .def("get_instance_info", &StateSpace::get_instance_info)
+    ;
+
+    py::class_<StateSpaceGenerator>(m, "StateSpaceGenerator")
+        .def(py::init<>())
+        .def("generate_state_space", &StateSpaceGenerator::generate_state_space)
     ;
 }

@@ -12,7 +12,7 @@ public:
     SomeConcept() : Concept("c_some") { }
 
     virtual void submit_tasks_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
-        core::SyntacticElementFactory factory = *data.m_factory;
+        core::SyntacticElementFactory& factory = data.m_factory;
         for (int i = 1; i < iteration; ++i) {
             int j = iteration - i;
             for (const auto& r : data.m_roles_by_iteration[i]) {

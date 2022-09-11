@@ -125,7 +125,7 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
     m_inductive_rules.emplace_back(r_transitive_reflexive_closure);
 }
 
-FeatureRepresentations FeatureGeneratorImpl::generate(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit, int num_threads, const States& states) {
+FeatureRepresentations FeatureGeneratorImpl::generate(core::SyntacticElementFactory& factory, int complexity, int time_limit, int feature_limit, int num_threads, const States& states) {
     // Initialize statistics in each rule.
     for (auto& r : m_primitive_rules) r->initialize();
     for (auto& r : m_inductive_rules) r->initialize();

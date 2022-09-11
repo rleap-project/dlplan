@@ -9,7 +9,7 @@ FeatureGenerator::FeatureGenerator() : m_pImpl(FeatureGeneratorImpl()) { }
 
 FeatureGenerator::~FeatureGenerator() = default;
 
-FeatureRepresentations FeatureGenerator::generate(std::shared_ptr<core::SyntacticElementFactory> factory, int complexity, int time_limit, int feature_limit, int num_threads, const States& states) {
+FeatureRepresentations FeatureGenerator::generate(core::SyntacticElementFactory& factory, int complexity, int time_limit, int feature_limit, int num_threads, const States& states) {
     return m_pImpl->generate(factory, complexity, time_limit, feature_limit, num_threads, states);
 }
 

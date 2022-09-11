@@ -11,11 +11,12 @@
 
 namespace py = pybind11;
 
-using namespace dlplan;
+using namespace dlplan::weisfeiler_lehman;
+
 
 void init_weisfeiler_lehman(py::module_ &m) {
-    py::class_<weisfeiler_lehman::WeisfeilerLehman>(m, "WeisfeilerLehman")
+    py::class_<WeisfeilerLehman>(m, "WeisfeilerLehman")
         .def(py::init<>())
-        .def("compute_colors_for_state_space", &weisfeiler_lehman::WeisfeilerLehman::compute_colors_for_state_space)
+        .def("compute_colors_for_state_space", &WeisfeilerLehman::compute_colors_for_state_space)
     ;
 }
