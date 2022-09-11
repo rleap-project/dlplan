@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <regex>
+#include <sstream>
 
 #include "../utils/command.h"
 #include "../utils/tokenizer.h"
@@ -48,7 +49,7 @@ static const std::vector<std::pair<AtomTokenType, std::regex>> atom_token_regexe
 
 static void parse_atom(const std::string& atom_name, InstanceInfo& instance_info, bool is_static, bool is_goal) {
     auto tokens = utils::Tokenizer<AtomTokenType>().tokenize(atom_name, atom_token_regexes);
-    if (tokens.size() < 3) throw std::runtime_error("parse_atom - insufficient number of tokens: " + tokens.size());
+    if (tokens.size() < 3) throw std::runtime_error("parse_atom - insufficient number of tokens: " + std::to_string(tokens.size()));
     if (tokens[0].first != AtomTokenType::NAME) throw std::runtime_error("parse_atom_line - expected predicate name at position 0.");
     if (tokens[1].first != AtomTokenType::OPENING_PARENTHESIS) throw std::runtime_error("parse_atom_line - expected opening parenthesis at position 1.");
     std::string predicate_name = tokens[0].second;

@@ -21,10 +21,6 @@ StateSpace::StateSpace(
       m_states(std::move(states)),
       m_initial_state_index(initial_state_index),
       m_goal_state_indices(std::move(goal_state_indices)) {
-    m_states_offsets = StateIndices(m_states.size());
-    for (const auto& state : m_states) {
-        m_states_offsets.push_back(state.get_index());
-    }
     // Compute flat forward transitions.
     for (int source_state_index = 0; source_state_index < get_num_states(); ++source_state_index) {
         m_forward_successor_state_indices_offsets.push_back(m_forward_successor_state_indices.size());
