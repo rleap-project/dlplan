@@ -51,7 +51,7 @@ public:
     /**
      * Run backward BrFs to compute distances.
      */
-    Distances compute_distances_to_states(const StateIndicesSet& state_indices);
+    Distances compute_distances_to_states(const StateIndicesSet& state_indices) const;
 
     /**
      * For more readable iterations.

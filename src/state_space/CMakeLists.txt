@@ -3,7 +3,7 @@ target_sources(dlplanstatespace
     PRIVATE
         state_space_generator.cpp
         state_space.cpp)
-target_link_libraries(dlplanstatespace stdc++fs)
+target_link_libraries(dlplanstatespace dlplancore)
 target_include_directories(dlplanstatespace
     PUBLIC
         ${PROJECT_SOURCE_DIR}/include

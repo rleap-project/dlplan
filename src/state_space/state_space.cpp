@@ -82,7 +82,7 @@ StateSpace& StateSpace::operator=(StateSpace&& other) = default;
 
 StateSpace::~StateSpace() = default;
 
-Distances StateSpace::compute_distances_to_states(const StateIndicesSet& state_indices) {
+Distances StateSpace::compute_distances_to_states(const StateIndicesSet& state_indices) const {
     Distances distances(get_num_states(), INF);
     std::deque<StateIndex> queue;
     for (auto state_index : state_indices) {
