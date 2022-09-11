@@ -82,6 +82,19 @@ StateSpace& StateSpace::operator=(StateSpace&& other) = default;
 
 StateSpace::~StateSpace() = default;
 
+StateIndices StateSpace::prune_states(const StateIndicesSet& state_indices) {
+    StateIndices new_to_old_state_indices;
+    States new_states;
+    for (auto& state : m_states) {
+        if (state_indices.count(state.get_index())) {
+            continue;
+        }
+        state.set_index(new_states.size());
+        new_states.push_back(state);
+    }
+    return new_to_old_state_indices;
+}
+
 Distances StateSpace::compute_distances_to_states(const StateIndicesSet& state_indices) const {
     Distances distances(get_num_states(), INF);
     std::deque<StateIndex> queue;

@@ -410,6 +410,11 @@ public:
     size_t compute_hash() const;
 
     /**
+     * Setters.
+     */
+    void set_index(int index);
+
+    /**
      * Getters.
      */
     std::shared_ptr<const InstanceInfo> get_instance_info() const;

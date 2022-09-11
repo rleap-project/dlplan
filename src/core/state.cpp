@@ -107,4 +107,8 @@ size_t State::compute_hash() const {
     return std::hash<std::array<uint32_t, 4>>()(a);
 }
 
+void State::set_index(int index) {
+    m_index = index;
+}
+
 }

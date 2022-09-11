@@ -9,6 +9,7 @@ namespace dlplan::state_space {
 using StateIndex = int;
 using StateIndices = std::vector<StateIndex>;
 using StateIndicesSet = std::unordered_set<StateIndex>;
+using StateIndexPairs = std::vector<std::pair<StateIndex, StateIndex>>;
 using AdjacencyList = std::vector<StateIndices>;
 using Distance = int;
 using Distances = std::vector<int>;
@@ -49,6 +50,11 @@ public:
     ~StateSpace();
 
     /**
+     * Prunes the state space and returns the mapping from new to old state indices.
+     */
+    StateIndices prune_states(const StateIndicesSet& state_indices);
+
+    /**
      * Run backward BrFs to compute distances.
      */
     Distances compute_distances_to_states(const StateIndicesSet& state_indices) const;
@@ -67,6 +73,7 @@ public:
     bool is_nongoal(StateIndex state_index) const;
     bool is_deadend(StateIndex state_index) const;
     bool is_alive(StateIndex state_index) const;
+    bool is_solvable() const;
 
     /**
      * Getters.
