@@ -15,26 +15,29 @@ using Distance = int;
 using Distances = std::vector<int>;
 
 const int INF = std::numeric_limits<int>::max();
+const int UNDEFINED = -1;
 
-/**
- * Our StateSpace implementation allows for pruning states
- * while keeping existing indices intact.
- */
+
 class StateSpace {
 private:
-    /* For an efficient implementation we make use of indexing instead of shared_ptrs. */
+    /* Required information. */
     std::shared_ptr<const core::InstanceInfo> m_instance_info;
     core::States m_states;
-    StateIndices m_states_offsets;
     StateIndex m_initial_state_index;
     StateIndices m_forward_successor_state_indices;
     StateIndices m_forward_successor_state_indices_offsets;
     StateIndicesSet m_goal_state_indices;
-    /* Useful information that we precompute in the constructor. */
+    /* Derived information that we precompute in the constructor. */
     StateIndices m_backward_successor_state_indices;
     StateIndices m_backward_successor_state_indices_offsets;
     StateIndicesSet m_deadend_state_indices;
     Distances m_goal_distances;
+
+private:
+    /**
+     * Initializes derived information.
+     */
+    void initialize();
 
 public:
     StateSpace(
