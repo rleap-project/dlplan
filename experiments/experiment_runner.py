@@ -1,10 +1,5 @@
 #! /usr/bin/env python
 
-"""
-Example experiment for the FF planner
-(http://fai.cs.uni-saarland.de/hoffmann/ff.html).
-"""
-
 import os
 import platform
 import re
@@ -74,7 +69,7 @@ exp.add_parser("experiment_parser.py")
 
 for task in suites.build_suite(BENCHMARKS_DIR, SUITE):
     for num_threads in [1,2,4,8,12,16]:
-        for complexity in [2]:
+        for complexity in [10]:
             run = exp.add_run()
             # Create symbolic links and aliases. This is optional. We
             # could also use absolute paths in add_command().
