@@ -15,17 +15,24 @@ using Distances = std::vector<int>;
 
 const int INF = std::numeric_limits<int>::max();
 
-
+/**
+ * Our StateSpace implementation allows storing states
+ * with a fragmented indexing scheme such that
+ * we can prune states while not changing the state indices.
+ */
 class StateSpace {
 private:
-    // For an efficient implementation we make use of indexing instead of shared_ptrs.
+    /* For an efficient implementation we make use of indexing instead of shared_ptrs. */
     std::shared_ptr<const core::InstanceInfo> m_instance_info;
-    core::States m_states_by_index;
+    core::States m_states;
+    // TODO: we might want to switch to an unordered_map here
+    // if number of states is large and state space is sparse.
+    StateIndices m_states_offsets;
     StateIndex m_initial_state_index;
     StateIndices m_forward_successor_state_indices;
     StateIndices m_forward_successor_state_indices_offsets;
     StateIndicesSet m_goal_state_indices;
-    // Useful information that we precompute in the constructor.
+    /* Useful derived static information that we precompute in the constructor. */
     StateIndices m_backward_successor_state_indices;
     StateIndices m_backward_successor_state_indices_offsets;
     StateIndicesSet m_deadend_state_indices;
@@ -34,7 +41,7 @@ private:
 public:
     StateSpace(
         std::shared_ptr<const core::InstanceInfo>&& instance_info,
-        core::States&& states_by_index,
+        core::States&& states,
         StateIndex initial_state_index,
         AdjacencyList&& adjacency_matrix,
         StateIndicesSet&& goal_state_indices);
@@ -67,7 +74,7 @@ public:
     /**
      * Getters.
      */
-    const core::States& get_states_by_index_ref() const;
+    const core::States& get_states_ref() const;
     const core::State& get_state_ref(int index) const;
     int get_num_states() const;
     const Distances& get_goal_distances_ref() const;

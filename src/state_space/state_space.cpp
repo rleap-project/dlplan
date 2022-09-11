@@ -13,14 +13,18 @@ namespace dlplan::state_space {
 
 StateSpace::StateSpace(
     std::shared_ptr<const core::InstanceInfo>&& instance_info,
-    States&& states_by_index,
+    States&& states,
     StateIndex initial_state_index,
     AdjacencyList&& adjacency_matrix,
     StateIndicesSet&& goal_state_indices)
     : m_instance_info(std::move(instance_info)),
-      m_states_by_index(std::move(states_by_index)),
+      m_states(std::move(states)),
       m_initial_state_index(initial_state_index),
       m_goal_state_indices(std::move(goal_state_indices)) {
+    m_states_offsets = StateIndices(m_states.size());
+    for (const auto& state : m_states) {
+        m_states_offsets.push_back(state.get_index());
+    }
     // Compute flat forward transitions.
     for (int source_state_index = 0; source_state_index < get_num_states(); ++source_state_index) {
         m_forward_successor_state_indices_offsets.push_back(m_forward_successor_state_indices.size());
@@ -54,9 +58,9 @@ StateSpace::StateSpace(const StateSpace& other)
       m_forward_successor_state_indices_offsets(other.m_forward_successor_state_indices_offsets),
       m_backward_successor_state_indices(other.m_backward_successor_state_indices),
       m_backward_successor_state_indices_offsets(other.m_backward_successor_state_indices_offsets) {
-    m_states_by_index.reserve(other.get_num_states());
-    for (const auto& state : other.get_states_by_index_ref()) {
-        m_states_by_index.push_back(core::State(m_instance_info, state.get_atom_idxs()));
+    m_states.reserve(other.get_num_states());
+    for (const auto& state : other.get_states_ref()) {
+        m_states.push_back(core::State(m_instance_info, state.get_atom_idxs()));
     }
 }
 
@@ -68,9 +72,9 @@ StateSpace& StateSpace::operator=(const StateSpace& other) {
         m_forward_successor_state_indices_offsets = other.m_forward_successor_state_indices_offsets;
         m_backward_successor_state_indices = other.m_backward_successor_state_indices;
         m_backward_successor_state_indices_offsets = other.m_backward_successor_state_indices_offsets;
-        m_states_by_index.reserve(other.get_num_states());
-        for (const auto& state : other.get_states_by_index_ref()) {
-            m_states_by_index.push_back(core::State(m_instance_info, state.get_atom_idxs()));
+        m_states.reserve(other.get_num_states());
+        for (const auto& state : other.get_states_ref()) {
+            m_states.push_back(core::State(m_instance_info, state.get_atom_idxs()));
         }
     }
     return *this;
@@ -142,19 +146,19 @@ bool StateSpace::is_alive(StateIndex state_index) const {
     return !(is_goal(state_index) || is_deadend(state_index));
 }
 
-const core::States& StateSpace::get_states_by_index_ref() const {
-    return m_states_by_index;
+const core::States& StateSpace::get_states_ref() const {
+    return m_states;
 }
 
 const core::State& StateSpace::get_state_ref(int index) const {
-    if (!utils::in_bounds(index, m_states_by_index)) {
+    if (!utils::in_bounds(index, m_states)) {
         throw std::runtime_error("StateSpace - get_state_ref: state index out of range.");
     }
-    return m_states_by_index[index];
+    return m_states[index];
 }
 
 int StateSpace::get_num_states() const {
-    return m_states_by_index.size();
+    return m_states.size();
 }
 
 const Distances& StateSpace::get_goal_distances_ref() const {

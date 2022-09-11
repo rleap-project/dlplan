@@ -61,7 +61,8 @@ public:
             pclose(pipe);
             throw;
         }
-        exitcode = WEXITSTATUS(pclose(pipe));
+        int return_code = pclose(pipe);
+        exitcode = WEXITSTATUS(return_code);
         return CommandResult{result, exitcode};
     }
 };

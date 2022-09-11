@@ -10,7 +10,7 @@
 
 
 using namespace dlplan::core;
-
+using namespace std::string_literals;
 
 namespace dlplan::state_space {
 
