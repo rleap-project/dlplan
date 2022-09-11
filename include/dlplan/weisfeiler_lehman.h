@@ -24,6 +24,11 @@ using Colors = std::vector<Color>;
 class WeisfeilerLehman {
 public:
     WeisfeilerLehman();
+    WeisfeilerLehman(const WeisfeilerLehman& other);
+    WeisfeilerLehman& operator=(const WeisfeilerLehman& other);
+    WeisfeilerLehman(WeisfeilerLehman&& other);
+    WeisfeilerLehman& operator=(WeisfeilerLehman&& other);
+    ~WeisfeilerLehman();
 
     CompressedColors compute_colors_for_state_space(
         const state_space::StateSpace& state_space) const;

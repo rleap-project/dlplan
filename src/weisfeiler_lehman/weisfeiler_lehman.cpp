@@ -27,6 +27,17 @@ static CompressedColors compute_compressed_colors(
     return compressed_colors;
 }
 
+WeisfeilerLehman::WeisfeilerLehman() = default;
+
+WeisfeilerLehman::WeisfeilerLehman(const WeisfeilerLehman& other) = default;
+
+WeisfeilerLehman& WeisfeilerLehman::operator=(const WeisfeilerLehman& other) = default;
+
+WeisfeilerLehman::WeisfeilerLehman(WeisfeilerLehman&& other) = default;
+
+WeisfeilerLehman& WeisfeilerLehman::operator=(WeisfeilerLehman&& other) = default;
+
+WeisfeilerLehman::~WeisfeilerLehman() = default;
 
 CompressedColors WeisfeilerLehman::compute_colors_for_state_space(
     const StateSpace& state_space) const {
