@@ -91,7 +91,7 @@ void StateSpace::initialize() {
     }
     m_backward_successor_state_indices_offsets.push_back(m_backward_successor_state_indices.size());
     // Compute goal distances.
-    m_goal_distances = compute_distances_to_states(m_goal_state_indices);
+    m_goal_distances = compute_distances(m_goal_state_indices, false);
     // Compute deadends.
     utils::free_memory(m_deadend_state_indices);
     for (int state_index = 0; state_index < get_num_states(); ++state_index) {
@@ -125,17 +125,17 @@ StateIndices StateSpace::prune_states(const StateIndicesSet& state_indices) {
     StateIndices new_forward_successor_state_indices_offsets;
     for_each_state_index(
     [this, &state_indices, &old_to_new_state_indices, &new_forward_successor_state_indices, &new_forward_successor_state_indices_offsets](int source_state_index){
-        if (!state_indices.count(source_state_index)) {
+        if (state_indices.count(source_state_index)) {
             return;
         }
         new_forward_successor_state_indices_offsets.push_back(new_forward_successor_state_indices.size());
         this->for_each_forward_successor_state_index(
         [&state_indices, &old_to_new_state_indices, &new_forward_successor_state_indices, source_state_index](int target_state_index){
-            if (!state_indices.count(target_state_index)) {
+            if (state_indices.count(target_state_index)) {
                 return;
             }
             // transition exists in pruned transition system
-            new_forward_successor_state_indices[old_to_new_state_indices[source_state_index]] = old_to_new_state_indices[target_state_index];
+            new_forward_successor_state_indices.push_back(old_to_new_state_indices[target_state_index]);
         }, source_state_index);
     });
     new_forward_successor_state_indices_offsets.push_back(new_forward_successor_state_indices.size());
@@ -146,24 +146,36 @@ StateIndices StateSpace::prune_states(const StateIndicesSet& state_indices) {
     return new_to_old_state_indices;
 }
 
-Distances StateSpace::compute_distances_to_states(const StateIndicesSet& state_indices) const {
+Distances StateSpace::compute_distances(const StateIndicesSet& state_indices, bool forward) const {
     Distances distances(get_num_states(), INF);
     std::deque<StateIndex> queue;
     for (auto state_index : state_indices) {
         queue.push_back(state_index);
         distances[state_index] = 0;
     }
+    auto distance_update_func =
+        [&distances, &queue](int current_state_index, int successor_state_index){
+        if (distances[successor_state_index] == INF) {
+            distances[successor_state_index] = distances[current_state_index] + 1;
+            queue.push_back(successor_state_index);
+        }
+    };
     while (!queue.empty()) {
         int current_state_index = queue.front();
         queue.pop_front();
-        for_each_backward_successor_state_index(
-            [&distances, &queue, current_state_index](int successor_state_index){
-                if (distances[successor_state_index] == INF) {
-                    distances[successor_state_index] = distances[current_state_index] + 1;
-                    queue.push_back(successor_state_index);
-                }
-            },
-            current_state_index);
+        if (forward) {
+            for_each_forward_successor_state_index(
+                [&distances, &queue, &distance_update_func, current_state_index](int successor_state_index){
+                    distance_update_func(current_state_index, successor_state_index);
+                },
+                current_state_index);
+        } else {
+            for_each_backward_successor_state_index(
+                [&distances, &queue, &distance_update_func, current_state_index](int successor_state_index){
+                    distance_update_func(current_state_index, successor_state_index);
+                },
+                current_state_index);
+        }
     }
     return distances;
 }
@@ -211,7 +223,7 @@ bool StateSpace::is_solvable() const {
 }
 
 bool StateSpace::is_trivially_solvable() const {
-    return !std::all_of(m_states.begin(), m_states.end(),
+    return std::all_of(m_states.begin(), m_states.end(),
     [this](const auto& state){
         return m_goal_state_indices.count(state.get_index());
     });
@@ -258,6 +270,30 @@ const core::State& StateSpace::get_state_ref(int index) const {
 
 int StateSpace::get_num_states() const {
     return m_states.size();
+}
+
+StateIndex StateSpace::get_initial_state_index() const {
+    return m_initial_state_index;
+}
+
+StateIndices StateSpace::get_forward_successor_state_indices(int state_index) const {
+    return StateIndices(
+        &m_forward_successor_state_indices[m_forward_successor_state_indices_offsets[state_index]],
+        &m_forward_successor_state_indices[m_forward_successor_state_indices_offsets[state_index + 1]]);
+}
+
+StateIndices StateSpace::get_backward_successor_state_indices(int state_index) const {
+    return StateIndices(
+        &m_backward_successor_state_indices[m_backward_successor_state_indices_offsets[state_index]],
+        &m_backward_successor_state_indices[m_backward_successor_state_indices_offsets[state_index + 1]]);
+}
+
+const StateIndicesSet& StateSpace::get_goal_state_indices_ref() const {
+    return m_goal_state_indices;
+}
+
+const StateIndicesSet& StateSpace::get_deadend_state_indices_ref() const {
+    return m_deadend_state_indices;
 }
 
 const Distances& StateSpace::get_goal_distances_ref() const {

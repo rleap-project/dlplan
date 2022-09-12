@@ -65,4 +65,5 @@ add_custom_target(
   scorpion
   DEPENDS compile_scorpion
 )
-add_dependencies(dlplanstatespace scorpion)
+# Annoying to compile it everytime during development.
+# add_dependencies(dlplanstatespace scorpion)

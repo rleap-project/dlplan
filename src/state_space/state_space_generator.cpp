@@ -145,11 +145,9 @@ static AdjacencyList parse_transitions_file(const std::string& filename, int num
 }
 
 
-StateSpace StateSpaceGenerator::generate_state_space(
+static void generate_state_space_data(
     const std::string& domain_file,
-    const std::string& instance_file) const {
-    // Generate all necessary output files.
-    // https://raymii.org/s/articles/Execute_a_command_and_get_both_output_and_exit_code.html
+    const std::string& instance_file) {
     std::stringstream command;
     command << std::getenv("DLPLAN_ROOT_DIR") << "/libs/scorpion/fast-downward.py"
             << " " << domain_file
@@ -167,10 +165,21 @@ StateSpace StateSpaceGenerator::generate_state_space(
     state_space_file.open("planner.log");
     state_space_file << command_result.output;
     state_space_file.close();
+}
 
-    auto vocabulary_info = std::make_shared<core::VocabularyInfo>();
-    parse_predicates_file("predicates.txt", *vocabulary_info);
-    parse_constants_file("constants.txt", *vocabulary_info);
+StateSpace StateSpaceGenerator::generate_state_space(
+    const std::string& domain_file,
+    const std::string& instance_file,
+    std::shared_ptr<const VocabularyInfo> vocabulary_info) const {
+    generate_state_space_data(domain_file, instance_file);
+
+    if (!vocabulary_info) {
+        std::shared_ptr<VocabularyInfo> new_vocabulary_info = std::make_shared<core::VocabularyInfo>();
+        parse_predicates_file("predicates.txt", *new_vocabulary_info);
+        parse_constants_file("constants.txt", *new_vocabulary_info);
+        vocabulary_info = new_vocabulary_info;
+    }
+
     auto instance_info = std::make_shared<core::InstanceInfo>(vocabulary_info);
     parse_atoms_file("atoms.txt", *instance_info);
     parse_static_atoms_file("static-atoms.txt", *instance_info);

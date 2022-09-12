@@ -64,6 +64,7 @@ void init_core(py::module_ &m) {
         .def("__hash__", &State::compute_hash)
         .def("__str__", &State::str)
         .def("set_index", &State::set_index)
+        .def("get_index", &State::get_index)
         .def("get_atom_idxs", &State::get_atom_idxs)
         .def("get_instance_info", &State::get_instance_info)
     ;

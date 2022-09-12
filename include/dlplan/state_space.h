@@ -58,9 +58,9 @@ public:
     StateIndices prune_states(const StateIndicesSet& state_indices);
 
     /**
-     * Run backward BrFs to compute distances.
+     * Run BrFs to compute distances.
      */
-    Distances compute_distances_to_states(const StateIndicesSet& state_indices) const;
+    Distances compute_distances(const StateIndicesSet& state_indices, bool forward) const;
 
     /**
      * For more readable iterations.
@@ -86,6 +86,12 @@ public:
     const core::States& get_states_ref() const;
     const core::State& get_state_ref(int index) const;
     int get_num_states() const;
+    StateIndex get_initial_state_index() const;
+    // TODO: we might want to return an array view here.
+    StateIndices get_forward_successor_state_indices(int state_index) const;
+    StateIndices get_backward_successor_state_indices(int state_index) const;
+    const StateIndicesSet& get_goal_state_indices_ref() const;
+    const StateIndicesSet& get_deadend_state_indices_ref() const;
     const Distances& get_goal_distances_ref() const;
     std::shared_ptr<const core::InstanceInfo> get_instance_info() const;
 };
@@ -96,10 +102,13 @@ public:
     /**
      * Generates the StateSpace containing the reachable states
      * from given PDDL domain and instance files.
+     * Multi instance case: pass a fully initialized VocabularyInfo.
+     * Single instance case: VocabularyInfo is constructed inside the function.
      */
     StateSpace generate_state_space(
         const std::string& domain_file,
-        const std::string& instance_file) const;
+        const std::string& instance_file,
+        std::shared_ptr<const core::VocabularyInfo> vocabulary_info=nullptr) const;
 };
 
 }
