@@ -14,6 +14,8 @@ using namespace dlplan::generator;
 void init_generator(py::module_ &m) {
     py::class_<FeatureGenerator, std::shared_ptr<FeatureGenerator>>(m, "FeatureGenerator")
         .def(py::init<>())
+        .def("__copy__", [](const FeatureGenerator& generator, py::object){ return FeatureGenerator(generator); })
+        .def("__deepcopy__", [](const FeatureGenerator& generator, py::object){ return FeatureGenerator(generator); })
         .def("generate", &FeatureGenerator::generate)
         .def("set_generate_empty_boolean", &FeatureGenerator::set_generate_empty_boolean)
         .def("set_generate_inclusion_boolean", &FeatureGenerator::set_generate_inclusion_boolean)

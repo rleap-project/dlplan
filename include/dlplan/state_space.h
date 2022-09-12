@@ -30,14 +30,15 @@ private:
     /* Derived information that we precompute in the constructor. */
     StateIndices m_backward_successor_state_indices;
     StateIndices m_backward_successor_state_indices_offsets;
-    StateIndicesSet m_deadend_state_indices;
     Distances m_goal_distances;
+    StateIndicesSet m_deadend_state_indices;
 
 private:
     /**
      * Initializes derived information.
      */
-    void initialize();
+    void initialize_backward_successors();
+    void initialize_goal_distances_and_deadends();
 
 public:
     StateSpace(
@@ -79,6 +80,11 @@ public:
     bool is_solvable() const;
     bool is_trivially_solvable() const;
     void print() const;
+
+    /**
+     * Setters.
+     */
+    void set_initial_state_index(int state_index);
 
     /**
      * Getters.

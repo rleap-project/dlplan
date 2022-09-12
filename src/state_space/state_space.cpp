@@ -5,6 +5,7 @@
 
 #include "../utils/collections.h"
 #include "../utils/memory.h"
+#include "../utils/set_operators.h"
 
 
 using namespace dlplan::core;
@@ -31,7 +32,8 @@ StateSpace::StateSpace(
     }
     m_forward_successor_state_indices_offsets.push_back(m_forward_successor_state_indices.size());
     m_forward_successor_state_indices_offsets.push_back(m_forward_successor_state_indices.size());
-    initialize();
+    initialize_backward_successors();
+    initialize_goal_distances_and_deadends();
 }
 
 StateSpace::StateSpace(const StateSpace& other)
@@ -39,26 +41,32 @@ StateSpace::StateSpace(const StateSpace& other)
       m_initial_state_index(other.m_initial_state_index),
       m_forward_successor_state_indices(other.m_forward_successor_state_indices),
       m_forward_successor_state_indices_offsets(other.m_forward_successor_state_indices_offsets),
+      m_goal_state_indices(other.m_goal_state_indices),
       m_backward_successor_state_indices(other.m_backward_successor_state_indices),
-      m_backward_successor_state_indices_offsets(other.m_backward_successor_state_indices_offsets) {
+      m_backward_successor_state_indices_offsets(other.m_backward_successor_state_indices_offsets),
+      m_goal_distances(other.m_goal_distances),
+      m_deadend_state_indices(other.m_deadend_state_indices) {
     m_states.reserve(other.get_num_states());
     for (const auto& state : other.get_states_ref()) {
-        m_states.push_back(core::State(m_instance_info, state.get_atom_idxs()));
+        m_states.push_back(core::State(m_instance_info, state.get_atom_idxs(), state.get_index()));
     }
 }
 
 StateSpace& StateSpace::operator=(const StateSpace& other) {
     if (this != &other) {
         m_instance_info = std::make_shared<core::InstanceInfo>(*other.m_instance_info);
+        m_states.reserve(other.get_num_states());
+        for (const auto& state : other.get_states_ref()) {
+            m_states.push_back(core::State(m_instance_info, state.get_atom_idxs(), state.get_index()));
+        }
         m_initial_state_index = other.m_initial_state_index;
         m_forward_successor_state_indices = other.m_forward_successor_state_indices;
         m_forward_successor_state_indices_offsets = other.m_forward_successor_state_indices_offsets;
+        m_goal_state_indices = other.m_goal_state_indices;
         m_backward_successor_state_indices = other.m_backward_successor_state_indices;
         m_backward_successor_state_indices_offsets = other.m_backward_successor_state_indices_offsets;
-        m_states.reserve(other.get_num_states());
-        for (const auto& state : other.get_states_ref()) {
-            m_states.push_back(core::State(m_instance_info, state.get_atom_idxs()));
-        }
+        m_goal_distances = other.m_goal_distances;
+        m_deadend_state_indices = other.m_deadend_state_indices;
     }
     return *this;
 }
@@ -69,7 +77,7 @@ StateSpace& StateSpace::operator=(StateSpace&& other) = default;
 
 StateSpace::~StateSpace() = default;
 
-void StateSpace::initialize() {
+void StateSpace::initialize_backward_successors() {
     // Compute backward adjacency list.
     AdjacencyList backward_adjacency_list(get_num_states());
     for_each_state_index(
@@ -90,6 +98,9 @@ void StateSpace::initialize() {
         }
     }
     m_backward_successor_state_indices_offsets.push_back(m_backward_successor_state_indices.size());
+}
+
+void StateSpace::initialize_goal_distances_and_deadends() {
     // Compute goal distances.
     m_goal_distances = compute_distances(m_goal_state_indices, false);
     // Compute deadends.
@@ -132,6 +143,7 @@ StateIndices StateSpace::prune_states(const StateIndicesSet& state_indices) {
         this->for_each_forward_successor_state_index(
         [&state_indices, &old_to_new_state_indices, &new_forward_successor_state_indices, source_state_index](int target_state_index){
             if (state_indices.count(target_state_index)) {
+
                 return;
             }
             // transition exists in pruned transition system
@@ -141,8 +153,11 @@ StateIndices StateSpace::prune_states(const StateIndicesSet& state_indices) {
     new_forward_successor_state_indices_offsets.push_back(new_forward_successor_state_indices.size());
     m_forward_successor_state_indices = new_forward_successor_state_indices;
     m_forward_successor_state_indices_offsets = new_forward_successor_state_indices_offsets;
+    // Compute goal states
+    m_goal_state_indices = utils::set_difference(m_goal_state_indices, state_indices);
     // Reinitialize derived information.
-    initialize();
+    initialize_backward_successors();
+    initialize_goal_distances_and_deadends();
     return new_to_old_state_indices;
 }
 
@@ -255,6 +270,11 @@ void StateSpace::print() const {
         std::cout << deadend_state_index << " ";
     }
     std::cout << std::endl;
+}
+
+void StateSpace::set_initial_state_index(int state_index) {
+    m_initial_state_index = state_index;
+    initialize_goal_distances_and_deadends();
 }
 
 const core::States& StateSpace::get_states_ref() const {

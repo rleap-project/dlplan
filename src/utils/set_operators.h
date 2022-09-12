@@ -46,6 +46,18 @@ std::vector<T> set_difference(const std::vector<T>& left, const std::vector<T>& 
 }
 
 template<typename T>
+std::unordered_set<T> set_difference(const std::unordered_set<T>& left, const std::unordered_set<T>& right) {
+    std::unordered_set<T> result;
+    for (const auto& element : left) {
+        if (!right.count(element)) {
+            result.insert(element);
+        }
+    }
+    return result;
+}
+
+
+template<typename T>
 static std::vector<T> set_symmetric_difference(
     const std::vector<std::vector<T>>& sets) {
     std::unordered_map<T, int> frequencies;

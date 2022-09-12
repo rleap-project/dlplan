@@ -17,6 +17,8 @@ using namespace dlplan::weisfeiler_lehman;
 void init_weisfeiler_lehman(py::module_ &m) {
     py::class_<WeisfeilerLehman>(m, "WeisfeilerLehman")
         .def(py::init<>())
+        .def("__copy__", [](const WeisfeilerLehman& wl, py::object){ return WeisfeilerLehman(wl); })
+        .def("__deepcopy__", [](const WeisfeilerLehman& wl, py::object){ return WeisfeilerLehman(wl); })
         .def("compute_colors_for_state_space", &WeisfeilerLehman::compute_colors_for_state_space)
     ;
 }

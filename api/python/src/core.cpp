@@ -13,55 +13,69 @@ using namespace dlplan::core;
 
 void init_core(py::module_ &m) {
     py::class_<ConceptDenotation>(m, "ConceptDenotation")
+        .def("__copy__", [](const ConceptDenotation& denotation, py::object){ return ConceptDenotation(denotation); })
+        .def("__deepcopy__", [](const ConceptDenotation& denotation, py::object){ return ConceptDenotation(denotation); })
         .def("to_sorted_vector", &ConceptDenotation::to_sorted_vector)
     ;
 
     py::class_<RoleDenotation>(m, "RoleDenotation")
+        .def("__copy__", [](const RoleDenotation& denotation, py::object){ return RoleDenotation(denotation); })
+        .def("__deepcopy__", [](const RoleDenotation& denotation, py::object){ return RoleDenotation(denotation); })
         .def("to_sorted_vector", &RoleDenotation::to_sorted_vector)
     ;
 
     py::class_<Constant>(m, "Constant")
+        .def("__copy__", [](const Constant& constant, py::object){ return Constant(constant); })
+        .def("__deepcopy__", [](const Constant& constant, py::object){ return Constant(constant); })
         .def("__eq__", &Constant::operator==)
         .def("__neq__", &Constant::operator!=)
+        .def("__str__", &Constant::get_name)
         .def("get_index", &Constant::get_index)
         .def("get_name", &Constant::get_name)
-        .def("__str__", &Constant::get_name)
     ;
 
     py::class_<Object>(m, "Object")
+        .def("__copy__", [](const Object& object, py::object){ return Object(object); })
+        .def("__deepcopy__", [](const Object& object, py::object){ return Object(object); })
         .def("__eq__", &Object::operator==)
         .def("__neq__", &Object::operator!=)
+        .def("__str__", &Object::get_name)
         .def("get_index", &Object::get_index)
         .def("get_name", &Object::get_name)
-        .def("__str__", &Object::get_name)
     ;
 
     py::class_<Predicate>(m, "Predicate")
+        .def("__copy__", [](const Predicate& predicate, py::object){ return Predicate(predicate); })
+        .def("__deepcopy__", [](const Predicate& predicate, py::object){ return Predicate(predicate); })
         .def("__eq__", &Predicate::operator==)
         .def("__neq__", &Predicate::operator!=)
+        .def("__str__", &Predicate::get_name)
         .def("get_name", &Predicate::get_name)
         .def("get_arity", &Predicate::get_arity)
         .def("get_index", &Predicate::get_index)
-        .def("__str__", &Predicate::get_name)
     ;
 
     py::class_<Atom>(m, "Atom")
+        .def("__copy__", [](const Atom& atom, py::object){ return Atom(atom); })
+        .def("__deepcopy__", [](const Atom& atom, py::object){ return Atom(atom); })
         .def("__eq__", &Atom::operator==)
         .def("__neq__", &Atom::operator!=)
+        .def("__str__", &Atom::get_name)
         .def("get_name", &Atom::get_name)
         .def("get_index", &Atom::get_index)
         .def("get_predicate", &Atom::get_predicate)
         .def("get_objects", &Atom::get_objects)
         .def("get_object", &Atom::get_object)
         .def("get_is_static", &Atom::get_is_static)
-        .def("__str__", &Atom::get_name)
     ;
 
     py::class_<State>(m, "State")
         .def(py::init<std::shared_ptr<const InstanceInfo>, const std::vector<Atom>&, int>(), py::arg("instance_info"), py::arg("atoms"), py::arg("index") = -1)
+        .def("__copy__", [](const State& state, py::object){ return State(state); })
+        .def("__deepcopy__", [](const State& state, py::object){ return State(state); })
         .def("__eq__", &State::operator==)
-        .def("__neq__", &State::operator!=)
         .def("__hash__", &State::compute_hash)
+        .def("__neq__", &State::operator!=)
         .def("__str__", &State::str)
         .def("set_index", &State::set_index)
         .def("get_index", &State::get_index)
@@ -71,6 +85,8 @@ void init_core(py::module_ &m) {
 
     py::class_<VocabularyInfo, std::shared_ptr<VocabularyInfo>>(m, "VocabularyInfo")
         .def(py::init<>())
+        .def("__copy__", [](const VocabularyInfo& vocabulary_info, py::object){ return VocabularyInfo(vocabulary_info); })
+        .def("__deepcopy__", [](const VocabularyInfo& vocabulary_info, py::object){ return VocabularyInfo(vocabulary_info); })
         .def("add_predicate", &VocabularyInfo::add_predicate)
         .def("add_constant", &VocabularyInfo::add_constant)
         .def("exists_predicate", &VocabularyInfo::exists_predicate)
@@ -87,6 +103,8 @@ void init_core(py::module_ &m) {
 
     py::class_<InstanceInfo, std::shared_ptr<InstanceInfo>>(m, "InstanceInfo")
         .def(py::init<std::shared_ptr<const VocabularyInfo>, int>(), py::arg("vocabulary_info"), py::arg("index") = -1)
+        .def("__copy__", [](const InstanceInfo& instance_info, py::object){ return InstanceInfo(instance_info); })
+        .def("__deepcopy__", [](const InstanceInfo& instance_info, py::object){ return InstanceInfo(instance_info); })
         .def("add_object", &InstanceInfo::add_object)
         .def("add_atom", py::overload_cast<const Predicate&, const std::vector<Object>&>(&InstanceInfo::add_atom))
         .def("add_atom", py::overload_cast<const std::string&, const std::vector<std::string>&>(&InstanceInfo::add_atom))
@@ -103,6 +121,8 @@ void init_core(py::module_ &m) {
     ;
 
     py::class_<Concept>(m, "Concept")
+        .def("__copy__", [](const Concept& concept, py::object){ return Concept(concept); })
+        .def("__deepcopy__", [](const Concept& concept, py::object){ return Concept(concept); })
         .def("__repr__", &Concept::compute_repr)
         .def("evaluate", &Concept::evaluate)
         .def("compute_complexity", &Concept::compute_complexity)
@@ -111,6 +131,8 @@ void init_core(py::module_ &m) {
     ;
 
     py::class_<Role>(m, "Role")
+        .def("__copy__", [](const Role& role, py::object){ return Role(role); })
+        .def("__deepcopy__", [](const Role& role, py::object){ return Role(role); })
         .def("__repr__", &Role::compute_repr)
         .def("evaluate", &Role::evaluate)
         .def("compute_complexity", &Role::compute_complexity)
@@ -119,6 +141,8 @@ void init_core(py::module_ &m) {
     ;
 
     py::class_<Numerical, std::shared_ptr<Numerical>>(m, "Numerical")
+        .def("__copy__", [](const Numerical& numerical, py::object){ return Numerical(numerical); })
+        .def("__deepcopy__", [](const Numerical& numerical, py::object){ return Numerical(numerical); })
         .def("__repr__", &Numerical::compute_repr)
         .def("evaluate", &Numerical::evaluate)
         .def("compute_complexity", &Numerical::compute_complexity)
@@ -127,6 +151,8 @@ void init_core(py::module_ &m) {
     ;
 
     py::class_<Boolean, std::shared_ptr<Boolean>>(m, "Boolean")
+        .def("__copy__", [](const Boolean& boolean, py::object){ return Boolean(boolean); })
+        .def("__deepcopy__", [](const Boolean& boolean, py::object){ return Boolean(boolean); })
         .def("__repr__", &Boolean::compute_repr)
         .def("evaluate", &Boolean::evaluate)
         .def("compute_complexity", &Boolean::compute_complexity)
@@ -136,6 +162,8 @@ void init_core(py::module_ &m) {
 
     py::class_<SyntacticElementFactory, std::shared_ptr<SyntacticElementFactory>>(m, "SyntacticElementFactory")
         .def(py::init<std::shared_ptr<const VocabularyInfo>>())
+        .def("__copy__", [](const SyntacticElementFactory& factory, py::object){ return SyntacticElementFactory(factory); })
+        .def("__deepcopy__", [](const SyntacticElementFactory& factory, py::object){ return SyntacticElementFactory(factory); })
 
         .def("parse_concept", &SyntacticElementFactory::parse_concept, py::arg("description"), py::arg("index") = -1)
         .def("parse_role", &SyntacticElementFactory::parse_role, py::arg("description"), py::arg("index") = -1)

@@ -18,6 +18,9 @@ using namespace dlplan::state_space;
 void init_state_space(py::module_ &m) {
     py::class_<StateSpace>(m, "StateSpace")
         .def(py::init<std::shared_ptr<const InstanceInfo>, States, StateIndex, AdjacencyList, StateIndicesSet>())
+        .def("__copy__", [](const StateSpace& state_space, py::object){ return StateSpace(state_space); })
+        .def("__deepcopy__", [](const StateSpace& state_space, py::object){ return StateSpace(state_space); })
+
         .def("prune_states", &StateSpace::prune_states)
         .def("compute_distances", &StateSpace::compute_distances)
         .def("for_each_state_index", &StateSpace::for_each_state_index)
@@ -28,6 +31,7 @@ void init_state_space(py::module_ &m) {
         .def("is_alive", &StateSpace::is_alive)
         .def("is_solvable", &StateSpace::is_solvable)
         .def("is_trivially_solvable", &StateSpace::is_trivially_solvable)
+        .def("set_initial_state_index", &StateSpace::set_initial_state_index)
         .def("get_states_ref", &StateSpace::get_states_ref)
         .def("get_state_ref", &StateSpace::get_state_ref)
         .def("get_num_states", &StateSpace::get_num_states)
@@ -43,6 +47,8 @@ void init_state_space(py::module_ &m) {
 
     py::class_<StateSpaceGenerator>(m, "StateSpaceGenerator")
         .def(py::init<>())
+        .def("__copy__", [](const StateSpaceGenerator& generator, py::object){ return StateSpaceGenerator(generator); })
+        .def("__deepcopy__", [](const StateSpaceGenerator& generator, py::object){ return StateSpaceGenerator(generator); })
         .def("generate_state_space", &StateSpaceGenerator::generate_state_space, py::arg("domain_file"), py::arg("instance_file"), py::arg("vocabulary_info") = nullptr)
     ;
 }
