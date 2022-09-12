@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
 
     auto state_space = state_space::StateSpaceGenerator().generate_state_space(argv[1], argv[2]);
     auto syntactic_element_factory = core::SyntacticElementFactory(state_space.get_instance_info()->get_vocabulary_info());
-    generator::FeatureGenerator feature_generator;
+    auto feature_generator = generator::FeatureGenerator();
     feature_generator.set_generate_inclusion_boolean(false);
     feature_generator.set_generate_diff_concept(false);
     feature_generator.set_generate_or_concept(false);

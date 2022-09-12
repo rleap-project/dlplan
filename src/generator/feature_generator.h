@@ -119,6 +119,11 @@ private:
 
 public:
     FeatureGeneratorImpl();
+    FeatureGeneratorImpl(const FeatureGeneratorImpl& other);
+    FeatureGeneratorImpl& operator=(const FeatureGeneratorImpl& other);
+    FeatureGeneratorImpl(FeatureGeneratorImpl&& other);
+    FeatureGeneratorImpl& operator=(FeatureGeneratorImpl&& other);
+    ~FeatureGeneratorImpl();
 
     /**
      * Exhaustively generates features with pairwise disjoint feature evaluations on the states.

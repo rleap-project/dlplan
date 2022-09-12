@@ -7,6 +7,25 @@ namespace dlplan::generator {
 
 FeatureGenerator::FeatureGenerator() : m_pImpl(FeatureGeneratorImpl()) { }
 
+FeatureGenerator::FeatureGenerator(const FeatureGenerator& other)
+    : m_pImpl(*other.m_pImpl) { }
+
+FeatureGenerator& FeatureGenerator::operator=(const FeatureGenerator& other) {
+    if (this != &other) {
+        *m_pImpl = *other.m_pImpl;
+    }
+    return *this;
+}
+FeatureGenerator::FeatureGenerator(FeatureGenerator&& other)
+    : m_pImpl(std::move(*other.m_pImpl)) { }
+
+FeatureGenerator& FeatureGenerator::operator=(FeatureGenerator&& other) {
+    if (this != &other) {
+        std::swap(*m_pImpl, *other.m_pImpl);
+    }
+    return *this;
+}
+
 FeatureGenerator::~FeatureGenerator() = default;
 
 FeatureRepresentations FeatureGenerator::generate(core::SyntacticElementFactory& factory, int complexity, int time_limit, int feature_limit, int num_threads, const States& states) {

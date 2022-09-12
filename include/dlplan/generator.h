@@ -25,6 +25,10 @@ private:
 
 public:
     FeatureGenerator();
+    FeatureGenerator(const FeatureGenerator& other);
+    FeatureGenerator& operator=(const FeatureGenerator& other);
+    FeatureGenerator(FeatureGenerator&& other);
+    FeatureGenerator& operator=(FeatureGenerator&& other);
     ~FeatureGenerator();
 
     /**
