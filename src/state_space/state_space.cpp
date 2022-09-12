@@ -30,6 +30,7 @@ StateSpace::StateSpace(
         }
     }
     m_forward_successor_state_indices_offsets.push_back(m_forward_successor_state_indices.size());
+    m_forward_successor_state_indices_offsets.push_back(m_forward_successor_state_indices.size());
     initialize();
 }
 
@@ -177,7 +178,7 @@ void StateSpace::for_each_forward_successor_state_index(std::function<void(int s
     int start = m_forward_successor_state_indices_offsets[state_index];
     int end = m_forward_successor_state_indices_offsets[state_index + 1];
     for (; start < end; ++start) {
-        function(start);
+        function(m_forward_successor_state_indices[start]);
     }
 }
 
@@ -185,7 +186,7 @@ void StateSpace::for_each_backward_successor_state_index(std::function<void(int 
     int start = m_backward_successor_state_indices_offsets[state_index];
     int end = m_backward_successor_state_indices_offsets[state_index + 1];
     for (; start < end; ++start) {
-        function(start);
+        function(m_backward_successor_state_indices[start]);
     }
 }
 
@@ -203,6 +204,45 @@ bool StateSpace::is_deadend(StateIndex state_index) const {
 
 bool StateSpace::is_alive(StateIndex state_index) const {
     return !(is_goal(state_index) || is_deadend(state_index));
+}
+
+bool StateSpace::is_solvable() const {
+    return !is_deadend(m_initial_state_index);
+}
+
+bool StateSpace::is_trivially_solvable() const {
+    return !std::all_of(m_states.begin(), m_states.end(),
+    [this](const auto& state){
+        return m_goal_state_indices.count(state.get_index());
+    });
+}
+
+void StateSpace::print() const {
+    std::cout << "States:" << std::endl;
+    for (const auto& state : m_states) {
+        std::cout << "    " << state.str() << std::endl;
+    }
+    std::cout << "Transitions:" << std::endl;
+    for_each_state_index(
+        [this](const int state_index){
+            std::cout << "    " << state_index << ": ";
+            for_each_forward_successor_state_index(
+                [state_index](const int successor_state_index){
+                    std::cout << successor_state_index << " ";
+                }, state_index);
+            std::cout << std::endl;
+        }
+    );
+    std::cout << "Goal state indices: ";
+    for (const auto goal_state_index : m_goal_state_indices) {
+        std::cout << goal_state_index << " ";
+    }
+    std::cout << std::endl;
+    std::cout << "Deadend state indices: ";
+    for (const auto deadend_state_index : m_deadend_state_indices) {
+        std::cout << deadend_state_index << " ";
+    }
+    std::cout << std::endl;
 }
 
 const core::States& StateSpace::get_states_ref() const {

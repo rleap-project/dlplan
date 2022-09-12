@@ -7,5 +7,7 @@ using namespace dlplan::state_space;
 
 
 TEST(DLPTests, StateSpaceTest) {
-    StateSpaceGenerator().generate_state_space("domain.pddl", "instance.pddl");
+    auto state_space = StateSpaceGenerator().generate_state_space("domain.pddl", "instance.pddl");
+    state_space.print();
+    ASSERT_EQ(state_space.is_solvable(), true);
 }

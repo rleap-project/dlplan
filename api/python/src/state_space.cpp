@@ -26,6 +26,8 @@ void init_state_space(py::module_ &m) {
         .def("is_nongoal", &StateSpace::is_nongoal)
         .def("is_deadend", &StateSpace::is_deadend)
         .def("is_alive", &StateSpace::is_alive)
+        .def("is_solvable", &StateSpace::is_solvable)
+        .def("is_trivially_solvable", &StateSpace::is_trivially_solvable)
         .def("get_states_ref", &StateSpace::get_states_ref)
         .def("get_state_ref", &StateSpace::get_state_ref)
         .def("get_num_states", &StateSpace::get_num_states)

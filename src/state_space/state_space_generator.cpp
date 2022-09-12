@@ -178,7 +178,7 @@ StateSpace StateSpaceGenerator::generate_state_space(
     auto parse_states_result = parse_states_file("states.txt", instance_info);
     auto states_by_index = std::move(parse_states_result.first);
     auto goal_state_indices = std::move(parse_states_result.second);
-    auto adjacency_list = parse_transitions_file("transition.txt", states_by_index.size());
+    auto adjacency_list = parse_transitions_file("transitions.txt", states_by_index.size());
     // initial state has id 0 in scorpion
     return StateSpace(std::move(instance_info), std::move(states_by_index), 0, std::move(adjacency_list), std::move(goal_state_indices));
 }

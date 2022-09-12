@@ -76,6 +76,9 @@ public:
     bool is_nongoal(StateIndex state_index) const;
     bool is_deadend(StateIndex state_index) const;
     bool is_alive(StateIndex state_index) const;
+    bool is_solvable() const;
+    bool is_trivially_solvable() const;
+    void print() const;
 
     /**
      * Getters.
