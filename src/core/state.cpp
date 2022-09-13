@@ -11,6 +11,8 @@
 
 namespace dlplan::core {
 
+// State::State() : m_instance_info(nullptr), m_index(-1) { }
+
 State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms, int index)
     : m_instance_info(instance_info), m_index(index) {
     if (!std::all_of(atoms.begin(), atoms.end(), [&](const auto& atom){ return instance_info->exists_atom(atom); })) {

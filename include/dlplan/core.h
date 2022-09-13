@@ -385,6 +385,7 @@ private:
     phmap::flat_hash_map<int, std::vector<int>> m_per_predicate_idx_atom_idxs;
 
 public:
+    // State();
     State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms, int index=-1);
     /**
      * Expert interface to construct states without the overhead
