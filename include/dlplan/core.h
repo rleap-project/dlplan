@@ -39,6 +39,7 @@ namespace element {
 }
 
 using States = std::vector<State>;
+using StatesSet = std::unordered_set<State>;
 using StatePair = std::pair<State, State>;
 using StatePairs = std::vector<StatePair>;
 

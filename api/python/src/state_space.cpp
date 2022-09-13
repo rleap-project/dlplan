@@ -18,9 +18,9 @@ using namespace dlplan::state_space;
 void init_state_space(py::module_ &m) {
     py::class_<StateSpace>(m, "StateSpace")
         .def(py::init<std::shared_ptr<const InstanceInfo>, States, StateIndex, AdjacencyList, StateIndicesSet>())
+        //.def(py::init<const StateSpace>())
         .def("__copy__", [](const StateSpace& state_space, py::object){ return StateSpace(state_space); })
         .def("__deepcopy__", [](const StateSpace& state_space, py::object){ return StateSpace(state_space); })
-
         .def("prune_states", &StateSpace::prune_states)
         .def("compute_distances", &StateSpace::compute_distances)
         .def("for_each_state_index", &StateSpace::for_each_state_index)

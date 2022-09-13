@@ -57,6 +57,7 @@ State& State::operator=(State&& other) = default;
 State::~State() = default;
 
 bool State::operator==(const State& other) const {
+    // TODO: must sort or switch to bitset
     return (get_atom_idxs() == other.get_atom_idxs()) && (get_instance_info() == other.get_instance_info());
 }
 
