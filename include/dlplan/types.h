@@ -11,6 +11,7 @@ namespace dlplan::core {
 
 using Name_Vec = std::vector<std::string>;
 using Index_Vec = std::vector<int>;
+using Index_Set = std::unordered_set<int>;
 using IndexPair_Vec = std::vector<std::pair<int, int>>;
 
 }

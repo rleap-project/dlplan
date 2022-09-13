@@ -11,8 +11,6 @@
 
 namespace dlplan::core {
 
-// State::State() : m_instance_info(nullptr), m_index(-1) { }
-
 State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms, int index)
     : m_instance_info(instance_info), m_index(index) {
     if (!std::all_of(atoms.begin(), atoms.end(), [&](const auto& atom){ return instance_info->exists_atom(atom); })) {
@@ -59,8 +57,11 @@ State& State::operator=(State&& other) = default;
 State::~State() = default;
 
 bool State::operator==(const State& other) const {
-    // TODO: must sort or switch to bitset
-    return (get_atom_idxs() == other.get_atom_idxs()) && (get_instance_info() == other.get_instance_info());
+    // This works as long as get_atom_idxs returns a reference
+    // because a copy would point to different begin and end.
+    Index_Set atoms_set(get_atom_idxs().begin(), get_atom_idxs().end());
+    Index_Set other_atoms_set(other.get_atom_idxs().begin(), other.get_atom_idxs().end());
+    return (atoms_set == other_atoms_set) && (get_instance_info() == other.get_instance_info());
 }
 
 bool State::operator!=(const State& other) const {
