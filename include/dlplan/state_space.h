@@ -13,7 +13,6 @@ using Distance = int;
 using Distances = std::unordered_map<StateIndex, Distance>;
 using StateMapping = std::unordered_map<StateIndex, core::State>;
 
-const int INF = std::numeric_limits<int>::max();
 const int UNDEFINED = -1;
 
 /**
@@ -180,19 +179,48 @@ public:
     std::shared_ptr<const core::InstanceInfo> get_instance_info() const;
 };
 
+/**
+ * ExitCodes from the scorpion planner.
+ */
+enum class ExitCode {
+    /*
+      For a full list of exit codes, please see driver/returncodes.py. Here,
+      we only list codes that are used by the search component of the planner.
+    */
+    // 0-9: exit codes denoting a plan was found
+    SUCCESS = 0,
 
+    // 10-19: exit codes denoting no plan was found (without any error)
+    SEARCH_UNSOLVABLE = 11,  // Task is provably unsolvable with given bound.
+    SEARCH_UNSOLVED_INCOMPLETE = 12,  // Search ended without finding a solution.
+
+    // 20-29: "expected" failures
+    SEARCH_OUT_OF_MEMORY = 22,
+    SEARCH_OUT_OF_TIME = 23,
+
+    // 30-39: unrecoverable errors
+    SEARCH_CRITICAL_ERROR = 32,
+    SEARCH_INPUT_ERROR = 33,
+    SEARCH_UNSUPPORTED = 34
+};
+
+/**
+ * Generates files parsable by the StateSpaceReader
+ * from given PDDL domain and instance files.
+ */
 class StateSpaceGenerator {
 public:
-    /**
-     * Generates the StateSpace containing the reachable states
-     * from given PDDL domain and instance files.
-     * Multi instance case: pass a fully initialized VocabularyInfo.
-     * Single instance case: VocabularyInfo is constructed inside the function.
-     */
-    StateSpace generate_state_space(
+    ExitCode generate_state_space(
         const std::string& domain_file,
-        const std::string& instance_file,
-        std::shared_ptr<const core::VocabularyInfo> vocabulary_info=nullptr) const;
+        const std::string& instance_file) const;
+};
+
+/**
+ * Parses StateSpaceGenerator output files into StateSpace.
+ */
+class StateSpaceReader {
+public:
+    StateSpace read(std::shared_ptr<const core::VocabularyInfo> vocabulary_info=nullptr) const;
 };
 
 }

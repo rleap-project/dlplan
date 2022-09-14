@@ -420,6 +420,7 @@ public:
      */
     std::shared_ptr<const InstanceInfo> get_instance_info() const;
     const Index_Vec& get_atom_idxs() const;
+    Index_Vec compute_sorted_atom_idxs() const;
     int get_index() const;
     const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_atom_idxs() const;
 };

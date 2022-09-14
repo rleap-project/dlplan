@@ -24,7 +24,7 @@ GoalDistanceInformation::~GoalDistanceInformation() = default;
 bool GoalDistanceInformation::is_goal(StateIndex state_index) const {
     auto result = m_goal_distances.find(state_index);
     if (result == m_goal_distances.end()) {
-        throw std::runtime_error("GoalDistanceInformation::is_goal - state index out of bounds");
+        return false;
     }
     return result->second == 0;
 }
@@ -48,7 +48,7 @@ bool GoalDistanceInformation::is_solvable() const {
 bool GoalDistanceInformation::is_trivially_solvable() const {
     auto result = m_goal_distances.find(m_initial_state_index);
     if (result == m_goal_distances.end()) {
-        throw std::runtime_error("GoalDistanceInformation::is_trivially_solvable - state index out of bounds");
+        return false;
     }
     return result->second == 0;
 }

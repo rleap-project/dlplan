@@ -89,7 +89,7 @@ StateSpace::StateSpace(
         }
     }
     // set initial_state_index
-    if (!expanded_fragment.count(other.m_initial_state_index)) {
+    if (!generated_fragment.count(other.m_initial_state_index)) {
         m_initial_state_index = UNDEFINED;
     } else {
         m_initial_state_index = other.m_initial_state_index;
@@ -202,15 +202,27 @@ void StateSpace::add_transition(StateIndex source, StateIndex target) {
 }
 
 void StateSpace::print() const {
-    std::cout << "States:" << std::endl;
+    std::cout << "Initial state index: " << m_initial_state_index << std::endl;
+    std::cout << "States: " << std::to_string(get_num_states()) << std::endl;
     for (const auto& state : m_states) {
-        std::cout << "    " << state.str() << std::endl;
+        std::cout << "    " << std::to_string(state.get_index()) << ":" << state.str() << std::endl;
     }
-    std::cout << "Transitions:" << std::endl;
+    std::cout << "Forward successors:" << std::endl;
     for_each_state_index(
         [this](StateIndex source){
             std::cout << "    " << source << ": ";
             for_each_forward_successor_state_index(
+                [source](StateIndex target){
+                    std::cout << target << " ";
+                }, source);
+            std::cout << std::endl;
+        }
+    );
+    std::cout << "Backward successors:" << std::endl;
+    for_each_state_index(
+        [this](StateIndex source){
+            std::cout << "    " << source << ": ";
+            for_each_backward_successor_state_index(
                 [source](StateIndex target){
                     std::cout << target << " ";
                 }, source);
@@ -229,7 +241,8 @@ GoalDistanceInformation StateSpace::compute_goal_distance_information() const {
     auto goal_distances = compute_distances(m_goal_state_indices, false);
     StateIndices deadend_state_indices;
     for (StateIndex state : m_state_indices) {
-        if (goal_distances[state] == INF) {
+        const auto& find = goal_distances.find(state);
+        if (find == goal_distances.end()) {
             deadend_state_indices.insert(state);
         }
     }

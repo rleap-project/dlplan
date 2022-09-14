@@ -19,6 +19,8 @@ using namespace dlplan::policy;
 
 void init_policy(py::module_ &m) {
     py::class_<BaseCondition, std::shared_ptr<BaseCondition>>(m, "BaseCondition")
+        .def("__repr__", &BaseCondition::compute_repr)
+        .def("__str__", &BaseCondition::str)
         .def("evaluate", py::overload_cast<const State&>(&BaseCondition::evaluate, py::const_))
         .def("evaluate",  py::overload_cast<const State&, EvaluationCache&>(&BaseCondition::evaluate, py::const_))
         .def("get_base_feature", &BaseCondition::get_base_feature)
@@ -27,6 +29,8 @@ void init_policy(py::module_ &m) {
     ;
 
     py::class_<BaseEffect, std::shared_ptr<BaseEffect>>(m, "BaseEffect")
+        .def("__repr__", &BaseEffect::compute_repr)
+        .def("__str__", &BaseEffect::str)
         .def("evaluate", py::overload_cast<const State&, const State&>(&BaseEffect::evaluate, py::const_))
         .def("evaluate",  py::overload_cast<const State&, const State&, EvaluationCache&>(&BaseEffect::evaluate, py::const_))
         .def("get_base_feature", &BaseEffect::get_base_feature)
@@ -35,6 +39,8 @@ void init_policy(py::module_ &m) {
     ;
 
     py::class_<Rule, std::shared_ptr<Rule>>(m, "Rule")
+        .def("__repr__", &Rule::compute_repr)
+        .def("__str__", &Rule::str)
         .def("evaluate_conditions", py::overload_cast<const State&>(&Rule::evaluate_conditions, py::const_))
         .def("evaluate_conditions", py::overload_cast<const State&, EvaluationCache&>(&Rule::evaluate_conditions, py::const_))
         .def("evaluate_effects", py::overload_cast<const State&, const State&>(&Rule::evaluate_effects, py::const_))
@@ -46,15 +52,17 @@ void init_policy(py::module_ &m) {
     ;
 
     py::class_<Policy>(m, "Policy")
+        .def("__repr__", &Policy::compute_repr)
+        .def("__str__", &Policy::str)
         .def("evaluate_lazy", py::overload_cast<const State&, const State&>(&Policy::evaluate_lazy, py::const_))
         .def("evaluate_lazy", py::overload_cast<const State&, const State&, EvaluationCache&>(&Policy::evaluate_lazy, py::const_))
         .def("evaluate_conditions_eager", py::overload_cast<const State&>(&Policy::evaluate_conditions_eager, py::const_))
         .def("evaluate_conditions_eager", py::overload_cast<const State&, EvaluationCache&>(&Policy::evaluate_conditions_eager, py::const_))
         .def("evaluate_effects_lazy", py::overload_cast<const State&, const State&, const std::vector<std::shared_ptr<const Rule>>&>(&Policy::evaluate_effects_lazy, py::const_))
         .def("evaluate_effects_lazy", py::overload_cast<const State&, const State&, const std::vector<std::shared_ptr<const Rule>>&, EvaluationCache&>(&Policy::evaluate_effects_lazy, py::const_))
-        .def("get_rules", &Policy::get_rules)
-        .def("get_boolean_features", &Policy::get_boolean_features)
-        .def("get_numerical_features", &Policy::get_numerical_features)
+        .def("get_rules", &Policy::get_rules, py::return_value_policy::reference)
+        .def("get_boolean_features", &Policy::get_boolean_features, py::return_value_policy::reference)
+        .def("get_numerical_features", &Policy::get_numerical_features, py::return_value_policy::reference)
         .def("compute_repr", &Policy::compute_repr)
         .def("str", &Policy::str)
     ;

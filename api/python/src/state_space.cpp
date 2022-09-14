@@ -62,10 +62,28 @@ void init_state_space(py::module_ &m) {
         .def("get_instance_info", &StateSpace::get_instance_info)
     ;
 
+    py::enum_<ExitCode>(m, "ExitCode")
+        .value("SUCCESS", ExitCode::SUCCESS)
+        .value("SEARCH_UNSOLVABLE", ExitCode::SEARCH_UNSOLVABLE)
+        .value("SEARCH_UNSOLVED_INCOMPLETE", ExitCode::SEARCH_UNSOLVED_INCOMPLETE)
+        .value("SEARCH_OUT_OF_MEMORY", ExitCode::SEARCH_OUT_OF_MEMORY)
+        .value("SEARCH_OUT_OF_TIME", ExitCode::SEARCH_OUT_OF_TIME)
+        .value("SEARCH_CRITICAL_ERROR", ExitCode::SEARCH_CRITICAL_ERROR)
+        .value("SEARCH_INPUT_ERROR", ExitCode::SEARCH_INPUT_ERROR)
+        .value("SEARCH_UNSUPPORTED", ExitCode::SEARCH_UNSUPPORTED)
+    ;
+
     py::class_<StateSpaceGenerator>(m, "StateSpaceGenerator")
         .def(py::init<>())
         .def("__copy__", [](const StateSpaceGenerator& generator, py::object){ return StateSpaceGenerator(generator); })
         .def("__deepcopy__", [](const StateSpaceGenerator& generator, py::object){ return StateSpaceGenerator(generator); })
-        .def("generate_state_space", &StateSpaceGenerator::generate_state_space, py::arg("domain_file"), py::arg("instance_file"), py::arg("vocabulary_info") = nullptr)
+        .def("generate_state_space", &StateSpaceGenerator::generate_state_space)
+    ;
+
+    py::class_<StateSpaceReader>(m, "StateSpaceReader")
+        .def(py::init<>())
+        .def("__copy__", [](const StateSpaceReader& reader, py::object){ return StateSpaceReader(reader); })
+        .def("__deepcopy__", [](const StateSpaceReader& reader, py::object){ return StateSpaceReader(reader); })
+        .def("read", &StateSpaceReader::read, py::arg("vocabulary_info") = nullptr)
     ;
 }

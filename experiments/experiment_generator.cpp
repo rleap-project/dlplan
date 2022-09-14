@@ -19,7 +19,8 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    auto state_space = state_space::StateSpaceGenerator().generate_state_space(argv[1], argv[2]);
+    state_space::StateSpaceGenerator().generate_state_space(argv[1], argv[2]);
+    auto state_space = state_space::StateSpaceReader().read();
     auto syntactic_element_factory = core::SyntacticElementFactory(state_space.get_instance_info()->get_vocabulary_info());
     auto feature_generator = generator::FeatureGenerator();
     feature_generator.set_generate_inclusion_boolean(false);

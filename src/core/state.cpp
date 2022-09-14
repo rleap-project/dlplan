@@ -57,11 +57,7 @@ State& State::operator=(State&& other) = default;
 State::~State() = default;
 
 bool State::operator==(const State& other) const {
-    // This works as long as get_atom_idxs returns a reference
-    // because a copy would point to different begin and end.
-    Index_Set atoms_set(get_atom_idxs().begin(), get_atom_idxs().end());
-    Index_Set other_atoms_set(other.get_atom_idxs().begin(), other.get_atom_idxs().end());
-    return (atoms_set == other_atoms_set) && (get_instance_info() == other.get_instance_info());
+    return (compute_sorted_atom_idxs() == other.compute_sorted_atom_idxs()) && (get_instance_info() == other.get_instance_info());
 }
 
 bool State::operator!=(const State& other) const {
@@ -74,6 +70,12 @@ std::shared_ptr<const InstanceInfo> State::get_instance_info() const {
 
 const Index_Vec& State::get_atom_idxs() const {
     return m_atom_idxs;
+}
+
+Index_Vec State::compute_sorted_atom_idxs() const {
+    Index_Vec sorted_atom_idxs(m_atom_idxs);
+    std::sort(sorted_atom_idxs.begin(), sorted_atom_idxs.end());
+    return sorted_atom_idxs;
 }
 
 int State::get_index() const {
@@ -99,8 +101,7 @@ std::string State::str() const {
 
 size_t State::compute_hash() const {
     std::string data;
-    Index_Vec sorted_atom_idxs(m_atom_idxs);
-    std::sort(sorted_atom_idxs.begin(), sorted_atom_idxs.end());
+    Index_Vec sorted_atom_idxs = compute_sorted_atom_idxs();
     data.reserve(sizeof(int) * sorted_atom_idxs.size() + sizeof(std::shared_ptr<InstanceInfo>) + 1);
     for (int atom_idx : sorted_atom_idxs) {
         data += atom_idx;
