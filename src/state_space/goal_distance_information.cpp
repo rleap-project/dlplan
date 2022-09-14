@@ -26,7 +26,7 @@ bool GoalDistanceInformation::is_goal(StateIndex state_index) const {
     if (result == m_goal_distances.end()) {
         throw std::runtime_error("GoalDistanceInformation::is_goal - state index out of bounds");
     }
-    return result->first == 0;
+    return result->second == 0;
 }
 
 bool GoalDistanceInformation::is_nongoal(StateIndex state_index) const {
@@ -50,7 +50,11 @@ bool GoalDistanceInformation::is_trivially_solvable() const {
     if (result == m_goal_distances.end()) {
         throw std::runtime_error("GoalDistanceInformation::is_trivially_solvable - state index out of bounds");
     }
-    return result->first == 0;
+    return result->second == 0;
+}
+
+StateIndex GoalDistanceInformation::get_initial_state_index() const {
+    return m_initial_state_index;
 }
 
 const StateIndices& GoalDistanceInformation::get_deadend_state_indices_ref() const {

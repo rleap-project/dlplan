@@ -11,6 +11,7 @@ using StateIndices = std::unordered_set<StateIndex>;
 using AdjacencyList = std::unordered_map<StateIndex, StateIndices>;
 using Distance = int;
 using Distances = std::unordered_map<StateIndex, Distance>;
+using StateMapping = std::unordered_map<StateIndex, core::State>;
 
 const int INF = std::numeric_limits<int>::max();
 const int UNDEFINED = -1;
@@ -50,10 +51,31 @@ public:
     /**
      * Getters.
      */
-    int get_initial_state() const;
+    StateIndex get_initial_state_index() const;
     const StateIndices& get_deadend_state_indices_ref() const;
     const Distances& get_goal_distances_ref() const;
 };
+
+
+/**
+ * Provides access to information about States.
+ */
+class StateInformation {
+private:
+    StateMapping m_state_mapping;
+
+    explicit StateInformation(StateMapping&& state_mapping);
+    friend class StateSpace;
+public:
+    StateInformation(const StateInformation& other);
+    StateInformation& operator=(const StateInformation& other);
+    StateInformation(StateInformation&& other);
+    StateInformation& operator=(StateInformation&& other);
+    ~StateInformation();
+
+    const core::State& get_state_ref(StateIndex state) const;
+};
+
 
 /**
  * StateSpace stores states, transitions,
@@ -61,7 +83,8 @@ public:
  *
  * We use sparse indexing which makes it easier
  * to use the same indexing when incrementally
- * adding states from an existing state space.
+ * adding states from an existing state space
+ * and for back reference to the original state space.
  */
 class StateSpace {
 private:
@@ -138,12 +161,13 @@ public:
      * Setters.
      */
     void set_initial_state_index(StateIndex initial_state);
-    void set_goal_state_indices(const StateIndices& states);
+    void set_goal_state_indices(const StateIndices& goal_states);
 
     /**
      * Getters.
      */
     GoalDistanceInformation compute_goal_distance_information() const;
+    StateInformation compute_state_information() const;
     const core::StatesSet& get_states_ref() const;
     const StateIndices& get_state_indices_ref() const;
     int get_num_states() const;

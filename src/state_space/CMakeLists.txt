@@ -2,6 +2,7 @@ add_library(dlplanstatespace SHARED)
 target_sources(dlplanstatespace
     PRIVATE
         goal_distance_information.cpp
+        state_information.cpp
         state_space_generator.cpp
         state_space.cpp)
 target_link_libraries(dlplanstatespace dlplancore)

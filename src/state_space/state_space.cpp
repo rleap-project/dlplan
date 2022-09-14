@@ -71,7 +71,7 @@ StateSpace::StateSpace(
         throw std::runtime_error("StateSpace::StateSpace - target state index out of bounds.");
     }
     // compute backward successors
-    m_backward_successor_state_indices = compute_inverse_successor_state_indices(forward_successor_state_indices);
+    m_backward_successor_state_indices = compute_inverse_successor_state_indices(m_forward_successor_state_indices);
 }
 
 StateSpace::StateSpace(const StateSpace& other) = default;
@@ -141,14 +141,17 @@ Distances StateSpace::compute_distances(const StateIndices& state_indices, bool 
         queue.push_back(state);
         distances[state] = 0;
     }
-    AdjacencyList successor_states = (forward) ? m_forward_successor_state_indices : m_backward_successor_state_indices;
+    const auto& successor_states = (forward) ? m_forward_successor_state_indices : m_backward_successor_state_indices;
     while (!queue.empty()) {
         int source = queue.front();
         queue.pop_front();
-        for (int target : successor_states[source]) {
-            if (!distances.count(target)) {
-                distances[target] = distances[source] + 1;
-                queue.push_back(target);
+        const auto& targets = successor_states.find(source);
+        if (targets != successor_states.end()) {
+            for (int target : targets->second) {
+                if (!distances.count(target)) {
+                    distances[target] = distances[source] + 1;
+                    queue.push_back(target);
+                }
             }
         }
     }
@@ -233,8 +236,23 @@ GoalDistanceInformation StateSpace::compute_goal_distance_information() const {
     return GoalDistanceInformation(m_initial_state_index, std::move(goal_distances), std::move(deadend_state_indices));
 }
 
+StateInformation StateSpace::compute_state_information() const {
+    StateMapping state_mapping;
+    for (const auto& state : m_states) {
+        state_mapping.emplace(state.get_index(), state);
+    }
+    return StateInformation(std::move(state_mapping));
+}
+
 void StateSpace::set_initial_state_index(StateIndex state_index) {
     m_initial_state_index = state_index;
+}
+
+void StateSpace::set_goal_state_indices(const StateIndices& goal_states) {
+    if (!std::all_of(goal_states.begin(), goal_states.end(), [this](StateIndex goal_state){ return m_state_indices.count(goal_state);})) {
+        throw std::runtime_error("StateSpace::set_goal_state_indices - goal state out of bounds.");
+    }
+    m_goal_state_indices = goal_states;
 }
 
 const core::StatesSet& StateSpace::get_states_ref() const {
@@ -251,6 +269,14 @@ int StateSpace::get_num_states() const {
 
 StateIndex StateSpace::get_initial_state_index() const {
     return m_initial_state_index;
+}
+
+const AdjacencyList& StateSpace::get_forward_successor_state_indices_ref() const {
+    return m_forward_successor_state_indices;
+}
+
+const AdjacencyList& StateSpace::get_backward_successor_state_indices_ref() const {
+    return m_backward_successor_state_indices;
 }
 
 const StateIndices& StateSpace::get_forward_successor_state_indices_ref(StateIndex state) const {

@@ -23,7 +23,15 @@ target_sources(_dlplan
         src/policy.cpp
         src/state_space.cpp
         src/weisfeiler_lehman.cpp)
-target_link_libraries(_dlplan PRIVATE pybind11::module dlplancore dlplangenerator dlplanevaluator dlplanpolicy dlplanstatespace dlplanweisfeilerlehman)
+target_link_libraries(_dlplan
+    PRIVATE
+        pybind11::module
+        dlplancore
+        dlplangenerator
+        dlplanevaluator
+        dlplanpolicy
+        dlplanstatespace
+        dlplanweisfeilerlehman)
 target_compile_definitions(_dlplan PUBLIC DLPLAN_VERSION_INFO="${DLPLAN_VERSION_INFO}")
 
 # This would copy the generated dynamic library into a given path, but
