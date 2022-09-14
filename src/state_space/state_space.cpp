@@ -79,7 +79,8 @@ StateSpace::StateSpace(const StateSpace& other) = default;
 StateSpace::StateSpace(
     const StateSpace& other,
     const StateIndices& expanded_fragment,
-    const StateIndices& generated_fragment) {
+    const StateIndices& generated_fragment)
+    : m_instance_info(other.m_instance_info) {
     // set state_index_to_state
     for (const auto& state : other.m_states) {
         StateIndex state_index = state.get_index();
