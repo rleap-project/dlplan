@@ -7,8 +7,8 @@
 #include <iostream>
 #include <string>
 
-#include "evaluator.h"
 #include "core.h"
+#include "evaluator.h"
 
 
 namespace dlplan::policy {

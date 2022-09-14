@@ -51,8 +51,8 @@ StateSpace::StateSpace(
         throw std::runtime_error("StateSpace::StateSpace - goal state index out of bounds.");
     }
     // assert initial state
-    if (!m_state_indices.count(initial_state_index)) {
-        throw std::runtime_error("StateSpace::StateSpace - initial state index out of bounds.");
+    if (!m_state_indices.count(m_initial_state_index)) {
+        throw std::runtime_error("StateSpace::StateSpace - initial state index out of bounds." + std::to_string(m_initial_state_index));
     }
     // assert forward successors
     if (!std::all_of(m_forward_successor_state_indices.begin(), m_forward_successor_state_indices.end(),
