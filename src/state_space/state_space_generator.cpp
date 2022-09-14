@@ -101,9 +101,9 @@ static void parse_goal_atoms_file(const std::string& filename, InstanceInfo& ins
     }
 }
 
-static std::pair<core::States, StateIndicesSet> parse_states_file(const std::string& filename, std::shared_ptr<InstanceInfo> instance_info) {
-    core::States states;
-    StateIndicesSet goal_state_indices;
+static std::pair<core::StatesSet, StateIndices> parse_states_file(const std::string& filename, std::shared_ptr<InstanceInfo> instance_info) {
+    core::StatesSet states;
+    StateIndices goal_state_indices;
     std::ifstream infile(filename);
     std::string line;
     while (std::getline(infile, line)) {
@@ -123,25 +123,23 @@ static std::pair<core::States, StateIndicesSet> parse_states_file(const std::str
         while (linestream >> atom_index) {
             atom_indices.push_back(atom_index);
         }
-        states.push_back(core::State(instance_info, atom_indices, state_index));
+        auto result = states.emplace(core::State(instance_info, atom_indices, state_index));
+        if (!result.second) {
+            throw std::runtime_error("StateSpaceGenerator::parse_states_file - tried parsing duplicate states.");
+        }
     }
     return std::make_pair(std::move(states), std::move(goal_state_indices));
 }
 
-static AdjacencyList parse_transitions_file(const std::string& filename, int num_states) {
-    // To ensure that parallel transition are removed we begin with a hash set.
-    std::vector<StateIndicesSet> adjacency_list(num_states);
+static AdjacencyList parse_transitions_file(const std::string& filename) {
     std::ifstream infile(filename);
     int source_idx;
     int target_idx;
+    AdjacencyList adjacency_list;
     while (infile >> source_idx >> target_idx) {
         adjacency_list[source_idx].insert(target_idx);
     }
-    AdjacencyList result_adjacency_list(num_states);
-    for (int source_idx = 0; source_idx < num_states; ++source_idx) {
-        result_adjacency_list[source_idx] = StateIndices(adjacency_list[source_idx].begin(), adjacency_list[source_idx].end());
-    }
-    return result_adjacency_list;
+    return adjacency_list;
 }
 
 
@@ -185,11 +183,11 @@ StateSpace StateSpaceGenerator::generate_state_space(
     parse_static_atoms_file("static-atoms.txt", *instance_info);
     parse_goal_atoms_file("goal-atoms.txt", *instance_info);
     auto parse_states_result = parse_states_file("states.txt", instance_info);
-    auto states_by_index = std::move(parse_states_result.first);
+    auto states = std::move(parse_states_result.first);
     auto goal_state_indices = std::move(parse_states_result.second);
-    auto adjacency_list = parse_transitions_file("transitions.txt", states_by_index.size());
+    auto adjacency_list = parse_transitions_file("transitions.txt");
     // initial state has id 0 in scorpion
-    return StateSpace(std::move(instance_info), std::move(states_by_index), 0, std::move(adjacency_list), std::move(goal_state_indices));
+    return StateSpace(std::move(instance_info), std::move(states), 0, std::move(adjacency_list), std::move(goal_state_indices));
 }
 
 }

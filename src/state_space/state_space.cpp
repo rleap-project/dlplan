@@ -27,44 +27,50 @@ static AdjacencyList compute_inverse_successor_state_indices(const AdjacencyList
 
 StateSpace::StateSpace(
     std::shared_ptr<const InstanceInfo>&& instance_info,
-    std::unordered_map<StateIndex, core::State>&& state_index_to_state,
+    core::StatesSet&& states,
     StateIndex initial_state_index,
     AdjacencyList&& forward_successor_state_indices,
     StateIndices&& goal_state_indices)
     : m_instance_info(std::move(instance_info)),
-      m_state_index_to_state(std::move(state_index_to_state)),
+      m_states(std::move(states)),
       m_initial_state_index(initial_state_index),
       m_forward_successor_state_indices(std::move(forward_successor_state_indices)),
       m_goal_state_indices(std::move(goal_state_indices)) {
-    // Perform input error checks.
-    if (!std::all_of(m_state_index_to_state.begin(), m_state_index_to_state.end(),
-        [this](const auto& pair){ return pair.second.get_instance_info() == this->get_instance_info(); })) {
+    // assert states
+    if (!std::all_of(m_states.begin(), m_states.end(),
+        [this](const auto& state){ return state.get_instance_info() == this->get_instance_info(); })) {
         throw std::runtime_error("StateSpace::StateSpace - not all states come from the given InstanceInfo.");
     }
+    // compute state indices
+    std::transform(m_states.begin(), m_states.end(), std::inserter(m_state_indices, m_state_indices.begin()), [](const auto& state){ return state.get_index(); });
+    // assert goals
     if (!std::all_of(m_goal_state_indices.begin(), m_goal_state_indices.end(),
-        [this](int goal_state_index){
-            return utils::in_bounds(goal_state_index, m_goal_state_indices);
+        [this](StateIndex goal_state){
+            return m_state_indices.count(goal_state);
         })) {
         throw std::runtime_error("StateSpace::StateSpace - goal state index out of bounds.");
     }
-    if (!m_state_index_to_state.count(initial_state_index)) {
+    // assert initial state
+    if (!m_state_indices.count(initial_state_index)) {
         throw std::runtime_error("StateSpace::StateSpace - initial state index out of bounds.");
     }
+    // assert forward successors
     if (!std::all_of(m_forward_successor_state_indices.begin(), m_forward_successor_state_indices.end(),
         [this](const auto& pair) {
-            return m_state_index_to_state.count(pair.first);
+            return m_state_indices.count(pair.first);
         })) {
         throw std::runtime_error("StateSpace::StateSpace - source state index out of bounds.");
     }
     if (!std::all_of(m_forward_successor_state_indices.begin(), m_forward_successor_state_indices.end(),
         [this](const auto& pair){
             return std::all_of(pair.second.begin(), pair.second.end(),
-            [this](int successor_state_index){
-                return m_state_index_to_state.count(successor_state_index);
+            [this](StateIndex successor){
+                return m_state_indices.count(successor);
             });
         })) {
         throw std::runtime_error("StateSpace::StateSpace - target state index out of bounds.");
     }
+    // compute backward successors
     m_backward_successor_state_indices = compute_inverse_successor_state_indices(forward_successor_state_indices);
 }
 
@@ -75,11 +81,11 @@ StateSpace::StateSpace(
     const StateIndices& expanded_fragment,
     const StateIndices& generated_fragment) {
     // set state_index_to_state
-    for (const auto& pair : other.m_state_index_to_state) {
-        auto& state = pair.second;
-        int state_index = state.get_index();
+    for (const auto& state : other.m_states) {
+        StateIndex state_index = state.get_index();
         if (generated_fragment.count(state_index)) {
-            m_state_index_to_state.emplace(state_index, state);
+            m_states.insert(state);
+            m_state_indices.insert(state_index);
         }
     }
     // set initial_state_index
@@ -89,12 +95,24 @@ StateSpace::StateSpace(
         m_initial_state_index = other.m_initial_state_index;
     }
     // set goal_state_indices
-    for (StateIndex goal_state_index : other.m_goal_state_indices) {
-        if (generated_fragment.count(goal_state_index)) {
-            m_goal_state_indices.insert(goal_state_index);
+    for (StateIndex goal_state : other.m_goal_state_indices) {
+        if (generated_fragment.count(goal_state)) {
+            m_goal_state_indices.insert(goal_state);
         }
     }
-    // TODO: set forward_successor_state_indices
+    // set forward_successor_state_indices
+    for (const auto& pair : other.m_forward_successor_state_indices) {
+        StateIndex source = pair.first;
+        if (expanded_fragment.count(source)) {
+            const auto& successors = pair.second;
+            for (StateIndex successor : successors) {
+                if (generated_fragment.count(successor)) {
+                    m_forward_successor_state_indices[source].insert(successor);
+                }
+            }
+        }
+    }
+    m_backward_successor_state_indices = compute_inverse_successor_state_indices(m_forward_successor_state_indices);
 }
 
 StateSpace& StateSpace::operator=(const StateSpace& other) = default;
@@ -105,113 +123,148 @@ StateSpace& StateSpace::operator=(StateSpace&& other) = default;
 
 StateSpace::~StateSpace() = default;
 
+StateSpace& StateSpace::operator|=(const StateSpace& other) {
+    m_states.insert(other.m_states.begin(), other.m_states.end());
+    m_state_indices.insert(other.m_state_indices.begin(), other.m_state_indices.end());
+    for (const auto& pair : other.m_forward_successor_state_indices) {
+        m_forward_successor_state_indices[pair.first].insert(pair.second.begin(), pair.second.end());
+    }
+    m_goal_state_indices.insert(other.m_goal_state_indices.begin(), other.m_goal_state_indices.end());
+    m_backward_successor_state_indices = compute_inverse_successor_state_indices(m_forward_successor_state_indices);
+    return *this;
+}
+
 Distances StateSpace::compute_distances(const StateIndices& state_indices, bool forward) const {
     Distances distances;
     std::deque<StateIndex> queue;
-    for (auto state_index : state_indices) {
-        queue.push_back(state_index);
-        distances[state_index] = 0;
+    for (StateIndex state : state_indices) {
+        queue.push_back(state);
+        distances[state] = 0;
     }
-    AdjacencyList successor_state_indices = (forward) ? m_forward_successor_state_indices : m_backward_successor_state_indices;
+    AdjacencyList successor_states = (forward) ? m_forward_successor_state_indices : m_backward_successor_state_indices;
     while (!queue.empty()) {
-        int current_state_index = queue.front();
+        int source = queue.front();
         queue.pop_front();
-        for (int successor_state_index : successor_state_indices[current_state_index]) {
-            if (!distances.count(successor_state_index)) {
-                distances[successor_state_index] = distances[current_state_index] + 1;
-                queue.push_back(successor_state_index);
+        for (int target : successor_states[source]) {
+            if (!distances.count(target)) {
+                distances[target] = distances[source] + 1;
+                queue.push_back(target);
             }
         }
     }
     return distances;
 }
 
-const core::State& StateSpace::add_state(const core::State& state) {
-
+void StateSpace::for_each_state_index(std::function<void(StateIndex state)>&& function) const {
+    for (StateIndex state : m_state_indices) {
+        function(state);
+    }
 }
 
-void StateSpace::add_transition(int source_state_index, int target_state_index) {
-    if (!m_state_index_to_state.count(source_state_index)) {
-        throw std::runtime_error("StateSpace::add_transition - source_state_index out of bound.");
+void StateSpace::for_each_forward_successor_state_index(std::function<void(StateIndex)>&& function, StateIndex source) const {
+    auto result = m_forward_successor_state_indices.find(source);
+    if (result != m_forward_successor_state_indices.end()) {
+        for (StateIndex successor : result->second) {
+            function(successor);
+        }
     }
-    if (!m_state_index_to_state.count(target_state_index)) {
-        throw std::runtime_error("StateSpace::add_transition - target_state_index out of bound");
+}
+void StateSpace::for_each_backward_successor_state_index(std::function<void(StateIndex)>&& function, StateIndex source) const {
+    auto result = m_backward_successor_state_indices.find(source);
+    if (result != m_backward_successor_state_indices.end()) {
+        for (StateIndex successor : result->second) {
+            function(successor);
+        }
     }
-    m_forward_successor_state_indices[source_state_index].insert(target_state_index);
-    m_backward_successor_state_indices[target_state_index].insert(source_state_index);
+}
+
+
+const core::State& StateSpace::add_state(const core::State& state) {
+    auto result = m_states.insert(state);
+    if (!result.second) {
+        m_state_indices.insert(state.get_index());
+    }
+    return *result.first;
+}
+
+void StateSpace::add_transition(StateIndex source, StateIndex target) {
+    if (!m_state_indices.count(source)) {
+        throw std::runtime_error("StateSpace::add_transition - source out of bound.");
+    }
+    if (!m_state_indices.count(target)) {
+        throw std::runtime_error("StateSpace::add_transition - target out of bound");
+    }
+    m_forward_successor_state_indices[source].insert(target);
+    m_backward_successor_state_indices[target].insert(source);
 }
 
 void StateSpace::print() const {
     std::cout << "States:" << std::endl;
-    for (const auto& pair : m_state_index_to_state) {
-        std::cout << "    " << pair.second.str() << std::endl;
+    for (const auto& state : m_states) {
+        std::cout << "    " << state.str() << std::endl;
     }
     std::cout << "Transitions:" << std::endl;
     for_each_state_index(
-        [this](const int state_index){
-            std::cout << "    " << state_index << ": ";
+        [this](StateIndex source){
+            std::cout << "    " << source << ": ";
             for_each_forward_successor_state_index(
-                [state_index](const int successor_state_index){
-                    std::cout << successor_state_index << " ";
-                }, state_index);
+                [source](StateIndex target){
+                    std::cout << target << " ";
+                }, source);
             std::cout << std::endl;
         }
     );
     std::cout << "Goal state indices: ";
-    for (const auto goal_state_index : m_goal_state_indices) {
-        std::cout << goal_state_index << " ";
+    for (const auto goal_state : m_goal_state_indices) {
+        std::cout << goal_state << " ";
     }
     std::cout << std::endl;
 }
 
 
-StateSpaceInformation StateSpace::compute_state_space_information() const {
+GoalDistanceInformation StateSpace::compute_goal_distance_information() const {
     auto goal_distances = compute_distances(m_goal_state_indices, false);
     StateIndices deadend_state_indices;
-    for (int state_index = 0; state_index < get_num_states(); ++state_index) {
-        if (goal_distances[state_index] == INF) {
-            deadend_state_indices.insert(state_index);
+    for (StateIndex state : m_state_indices) {
+        if (goal_distances[state] == INF) {
+            deadend_state_indices.insert(state);
         }
     }
-    return StateSpaceInformation(m_initial_state_index, std::move(goal_distances), std::move(deadend_state_indices));
+    return GoalDistanceInformation(m_initial_state_index, std::move(goal_distances), std::move(deadend_state_indices));
 }
 
 void StateSpace::set_initial_state_index(StateIndex state_index) {
     m_initial_state_index = state_index;
 }
 
-const std::unordered_map<StateIndex, core::State>& StateSpace::get_state_index_to_state_ref() const {
-    return m_state_index_to_state;
+const core::StatesSet& StateSpace::get_states_ref() const {
+    return m_states;
 }
 
-const core::State& StateSpace::get_state_ref(StateIndex state_index) const {
-    const auto& result = m_state_index_to_state.find(state_index);
-    if (result == m_state_index_to_state.end()) {
-        throw std::runtime_error("StateSpace - get_state_ref: state index out of range.");
-    }
-    return result->second;
+const StateIndices& StateSpace::get_state_indices_ref() const {
+    return m_state_indices;
 }
 
 int StateSpace::get_num_states() const {
-    return m_state_index_to_state.size();
+    return m_states.size();
 }
 
 StateIndex StateSpace::get_initial_state_index() const {
     return m_initial_state_index;
 }
 
-const StateIndices& StateSpace::get_forward_successor_state_indices_ref(StateIndex state_index) const {
-    const auto& result = m_forward_successor_state_indices.find(state_index);
+const StateIndices& StateSpace::get_forward_successor_state_indices_ref(StateIndex state) const {
+    const auto& result = m_forward_successor_state_indices.find(state);
     if (result == m_forward_successor_state_indices.end()) {
-        throw std::runtime_error("StateSpace::get_forward_successor_state_indices_ref - state index out of bounds.");
+        throw std::runtime_error("StateSpace::get_forward_successor_state_indices_ref - state out of bounds.");
     }
     return result->second;
 }
 
-const StateIndices& StateSpace::get_backward_successor_state_indices_ref(StateIndex state_index) const {
-    const auto& result = m_backward_successor_state_indices.find(state_index);
+const StateIndices& StateSpace::get_backward_successor_state_indices_ref(StateIndex state) const {
+    const auto& result = m_backward_successor_state_indices.find(state);
     if (result == m_backward_successor_state_indices.end()) {
-        throw std::runtime_error("StateSpace::get_backward_successor_state_indices_ref - state index out of bounds.");
+        throw std::runtime_error("StateSpace::get_backward_successor_state_indices_ref - state out of bounds.");
     }
     return result->second;
 }

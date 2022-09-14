@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
     feature_generator.set_generate_or_role(false);
     feature_generator.set_generate_top_role(false);
     feature_generator.set_generate_transitive_reflexive_closure_role(false);
-    auto feature_reprs = feature_generator.generate(syntactic_element_factory, std::atoi(argv[3]), std::atoi(argv[4]), std::atoi(argv[5]), std::atoi(argv[6]), state_space.get_states_ref());
+    auto feature_reprs = feature_generator.generate(syntactic_element_factory, std::atoi(argv[3]), std::atoi(argv[4]), std::atoi(argv[5]), std::atoi(argv[6]), core::States(state_space.get_states_ref().begin(), state_space.get_states_ref().end()));
 
     std::vector<core::Boolean> boolean_features;
     std::vector<core::Numerical> numerical_features;
