@@ -12,6 +12,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
 
       - name: Configure CMake
         run: cmake -DENABLE_TESTING:BOOL=TRUE -S $GITHUB_WORKSPACE -B ${{runner.workspace}}/build
