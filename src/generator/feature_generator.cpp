@@ -156,6 +156,7 @@ FeatureRepresentations FeatureGeneratorImpl::generate(core::SyntacticElementFact
        This requires to add functionality for increasing/decreasing the threadpool. */
     for (auto& r : m_primitive_rules) r->cleanup();
     for (auto& r : m_inductive_rules) r->cleanup();
+    for (auto& r : m_inductive_lookahead_rules) r->cleanup();
     // Return just the representation that can be parsed again.
     // TODO: we might want to add postprocessing where features are additionally pruned
     // if they are not able to distinguish any two states.
