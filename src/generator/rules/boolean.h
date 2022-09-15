@@ -10,11 +10,12 @@ namespace dlplan::generator::rules {
 
 struct BooleanTaskResult {
     dlplan::core::Boolean boolean;
+    int complexity;
     std::string repr;
     std::array<uint32_t, 4> hash;
 
-    BooleanTaskResult(dlplan::core::Boolean&& _boolean, std::string&& _repr, std::array<uint32_t, 4>&& _hash)
-    : boolean(std::move(_boolean)), repr(std::move(_repr)), hash(std::move(_hash)) { }
+    BooleanTaskResult(dlplan::core::Boolean&& _boolean, int complexity, std::string&& _repr, std::array<uint32_t, 4>&& _hash)
+    : boolean(std::move(_boolean)), complexity(complexity), repr(std::move(_repr)), hash(std::move(_hash)) { }
 };
 
 class Boolean : public Rule {
@@ -24,10 +25,10 @@ protected:
     static std::function<BooleanTaskResult(const States&, const core::Boolean&)> m_task;
 
 protected:
-    void parse_results_of_tasks_impl(int iteration, GeneratorData& data) override;
+    void parse_results_of_tasks_impl(GeneratorData& data) override;
 
 public:
-    Boolean(const std::string& name) : Rule(name) { }
+    Boolean() : Rule() { }
 
     void cleanup() override;
 };

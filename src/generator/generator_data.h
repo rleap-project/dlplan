@@ -38,10 +38,11 @@ struct GeneratorData {
 
     GeneratorData(core::SyntacticElementFactory& factory, int complexity, int time_limit, int feature_limit)
       : m_factory(factory),
-        m_booleans_by_iteration(std::vector<std::vector<core::Boolean>>(complexity + 1)),
-        m_numericals_by_iteration(std::vector<std::vector<core::Numerical>>(complexity + 1)),
-        m_concepts_by_iteration(std::vector<std::vector<core::Concept>>(complexity + 1)),
-        m_roles_by_iteration(std::vector<std::vector<core::Role>>(complexity + 1)),
+        // in the lookahead case we need extra space so we simply make it big enough by adding 10 instead of just 1.
+        m_booleans_by_iteration(std::vector<std::vector<core::Boolean>>(complexity + 10)),
+        m_numericals_by_iteration(std::vector<std::vector<core::Numerical>>(complexity + 10)),
+        m_concepts_by_iteration(std::vector<std::vector<core::Concept>>(complexity + 10)),
+        m_roles_by_iteration(std::vector<std::vector<core::Role>>(complexity + 10)),
         m_complexity(complexity),
         m_time_limit(time_limit),
         m_feature_limit(feature_limit),

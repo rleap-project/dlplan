@@ -2,6 +2,7 @@
 #define DLPLAN_SRC_CORE_ELEMENTS_ROLES_COMPOSE_H_
 
 #include "../role.h"
+#include "../utils.h"
 
 
 namespace dlplan::core::element {
@@ -21,8 +22,8 @@ public:
 
     RoleDenotation evaluate(const State& state) const override {
         int num_objects = state.get_instance_info()->get_num_objects();
-        const auto role_left_bitset = utils::role_denot_to_bitset(m_role_left->evaluate(state));
-        const auto role_right_bitset = utils::role_denot_to_bitset(m_role_right->evaluate(state));
+        const auto role_left_bitset = element::utils::role_denot_to_bitset(m_role_left->evaluate(state));
+        const auto role_right_bitset = element::utils::role_denot_to_bitset(m_role_right->evaluate(state));
         RoleDenotation result(num_objects);
         for (int i = 0; i < num_objects; ++i) {  // source
             for (int j = 0; j < num_objects; ++j) {  // target

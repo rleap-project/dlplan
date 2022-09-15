@@ -3,12 +3,14 @@
 
 #include "../concept.h"
 
+#include "../../../core/elements/concepts/primitive.h"
+
 
 namespace dlplan::generator::rules {
 
 class PrimitiveConcept : public Concept {
 public:
-    PrimitiveConcept() : Concept("c_primitive") { }
+    PrimitiveConcept() : Concept() { }
 
     virtual void submit_tasks_impl(const States& states, int, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
         core::SyntacticElementFactory& factory = data.m_factory;
@@ -17,6 +19,10 @@ public:
                 m_tasks.push_back(th.submit(std::cref(m_task), std::cref(states), std::move(factory.make_primitive_concept(predicate, pos))));
             }
         }
+    }
+
+    std::string get_name() const override {
+        return core::element::PrimitiveConcept::get_name();
     }
 };
 

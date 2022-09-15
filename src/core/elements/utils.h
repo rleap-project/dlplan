@@ -6,6 +6,8 @@
 #include "../../../include/dlplan/core.h"
 
 
+const int INF = std::numeric_limits<int>::max();
+
 namespace dlplan::core::element::utils {
 
 using Distances = std::vector<int>;

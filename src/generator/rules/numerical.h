@@ -10,11 +10,13 @@ namespace dlplan::generator::rules {
 
 struct NumericalTaskResult {
     dlplan::core::Numerical numerical;
+    int complexity;
     std::string repr;
     std::array<uint32_t, 4> hash;
+    bool prune;
 
-    NumericalTaskResult(dlplan::core::Numerical&& _numerical, std::string&& _repr, std::array<uint32_t, 4>&& _hash)
-    : numerical(std::move(_numerical)), repr(std::move(_repr)), hash(std::move(_hash)) { }
+    NumericalTaskResult(dlplan::core::Numerical&& _numerical, int complexity, std::string&& _repr, std::array<uint32_t, 4>&& _hash, bool prune)
+    : numerical(std::move(_numerical)), complexity(complexity), repr(std::move(_repr)), hash(std::move(_hash)), prune(prune) { }
 };
 
 class Numerical : public Rule {
@@ -24,10 +26,10 @@ protected:
     static std::function<NumericalTaskResult(const States&, const core::Numerical&)> m_task;
 
 protected:
-    void parse_results_of_tasks_impl(int iteration, GeneratorData& data) override;
+    void parse_results_of_tasks_impl(GeneratorData& data) override;
 
 public:
-    Numerical(const std::string& name) : Rule(name) { }
+    Numerical() : Rule() { }
 
     void cleanup() override;
 };

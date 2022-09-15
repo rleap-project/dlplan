@@ -14,7 +14,6 @@ using Name_Vec = std::vector<std::string>;
 using Index_Vec = std::vector<int>;
 
 const int UNDEFINED = -1;
-const int INF = std::numeric_limits<int>::max();
 
 }
 

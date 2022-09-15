@@ -3,17 +3,21 @@
 
 #include "../numerical.h"
 
+#include "../../../core/elements/numericals/sum_concept_distance.h"
+
+
 namespace dlplan::generator::rules {
 
 class SumConceptDistanceNumerical : public Numerical {
 public:
-    SumConceptDistanceNumerical() : Numerical("n_sum_concept_distance") { }
+    SumConceptDistanceNumerical() : Numerical() { }
 
-    virtual void submit_tasks_impl(const States& states, int iteration, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+    virtual void submit_tasks_impl(const States& states, int target_complexity, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
         core::SyntacticElementFactory& factory = data.m_factory;
-        for (int i = 1; i < iteration; ++i) {
-            for (int j = 1; j < std::max(2,iteration - i); ++j) {
-                int k = iteration - i - j;
+        if (m_lookahead) target_complexity += 3;
+        for (int i = 1; i <= target_complexity - 3; ++i) {
+            for (int j = 1; j <= target_complexity - i - 2; ++j) {
+                int k = target_complexity - i - j - 1;
                 for (const auto& c1 : data.m_concepts_by_iteration[i]) {
                     for (const auto& r : data.m_roles_by_iteration[j]) {
                         for (const auto& c2 : data.m_concepts_by_iteration[k]) {
@@ -23,6 +27,10 @@ public:
                 }
             }
         }
+    }
+
+    std::string get_name() const override {
+        return core::element::SumConceptDistanceNumerical::get_name();
     }
 };
 

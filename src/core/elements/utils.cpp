@@ -3,7 +3,6 @@
 #include <deque>
 #include <iostream>
 
-#include "../types.h"
 #include "../../../include/dlplan/core.h"
 
 
