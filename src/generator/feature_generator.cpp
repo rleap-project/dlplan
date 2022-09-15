@@ -94,15 +94,6 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
     m_primitive_rules.emplace_back(r_top);
     m_primitive_rules.emplace_back(r_primitive);
 
-    m_inductive_rules.emplace_back(b_nullary);
-    m_inductive_rules.emplace_back(b_empty);
-    m_inductive_rules.emplace_back(n_count);
-    m_inductive_rules.emplace_back(b_inclusion);
-    m_inductive_rules.emplace_back(n_concept_distance);
-    m_inductive_rules.emplace_back(n_role_distance);
-    m_inductive_rules.emplace_back(n_sum_concept_distance);
-    m_inductive_rules.emplace_back(n_sum_role_distance);
-
     m_inductive_rules.emplace_back(c_and);
     m_inductive_rules.emplace_back(c_or);
     m_inductive_rules.emplace_back(c_not);
@@ -123,6 +114,18 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
     m_inductive_rules.emplace_back(r_compose);
     m_inductive_rules.emplace_back(r_transitive_closure);
     m_inductive_rules.emplace_back(r_transitive_reflexive_closure);
+
+    m_inductive_lookahead_rules.emplace_back(b_nullary);
+    m_inductive_lookahead_rules.emplace_back(b_empty);
+    m_inductive_lookahead_rules.emplace_back(n_count);
+    m_inductive_lookahead_rules.emplace_back(b_inclusion);
+    m_inductive_lookahead_rules.emplace_back(n_concept_distance);
+    m_inductive_lookahead_rules.emplace_back(n_role_distance);
+    m_inductive_lookahead_rules.emplace_back(n_sum_concept_distance);
+    m_inductive_lookahead_rules.emplace_back(n_sum_role_distance);
+    for (auto& r : m_inductive_lookahead_rules) {
+        r->set_lookahead(true);
+    }
 }
 
 FeatureGeneratorImpl::FeatureGeneratorImpl(const FeatureGeneratorImpl& other) = default;
@@ -135,16 +138,17 @@ FeatureGeneratorImpl& FeatureGeneratorImpl::operator=(FeatureGeneratorImpl&& oth
 
 FeatureGeneratorImpl::~FeatureGeneratorImpl() = default;
 
-FeatureRepresentations FeatureGeneratorImpl::generate(core::SyntacticElementFactory& factory, int complexity, int time_limit, int feature_limit, int num_threads, const States& states) {
+FeatureRepresentations FeatureGeneratorImpl::generate(core::SyntacticElementFactory& factory, int complexity_limit, int time_limit, int feature_limit, int num_threads, const States& states) {
     // Initialize statistics in each rule.
     for (auto& r : m_primitive_rules) r->initialize();
     for (auto& r : m_inductive_rules) r->initialize();
+    for (auto& r : m_inductive_lookahead_rules) r->initialize();
     // Initialize memory to store intermediate results.
-    GeneratorData data(factory, complexity, time_limit, feature_limit);
+    GeneratorData data(factory, complexity_limit, time_limit, feature_limit);
     // Initialize default threadpool
     utils::threadpool::ThreadPool th(num_threads);
     generate_base(states, data, th);
-    generate_inductively(complexity, states, data, th);
+    generate_inductively(complexity_limit, states, data, th);
     // utils::g_log << "Overall results: " << std::endl;
     // print_overall_statistics();
     /* Tasks must be destructed before the threadpool.
@@ -162,30 +166,50 @@ void FeatureGeneratorImpl::generate_base(const States& states, GeneratorData& da
     utils::g_log << "Started generating base features of complexity 1." << std::endl;
     for (const auto& rule : m_primitive_rules) {
         if (data.reached_resource_limit()) break;
-        rule->submit_tasks(states, 0, data, th);
+        rule->submit_tasks(states, 1, data, th);
     }
     for (const auto& rule : m_primitive_rules) {
         if (data.reached_resource_limit()) break;
-        rule->parse_results_of_tasks(0, data);
+        rule->parse_results_of_tasks(data);
+    }
+    // generate lookahead features
+    for (const auto& rule : m_inductive_lookahead_rules) {
+        if (data.reached_resource_limit()) break;
+        rule->submit_tasks(states, 1, data, th);
+    }
+    for (const auto& rule : m_inductive_lookahead_rules) {
+        if (data.reached_resource_limit()) break;
+        rule->parse_results_of_tasks(data);
     }
     utils::g_log << "Complexity " << 1 << ":" << std::endl;
     print_statistics();
     utils::g_log << "Finished generating base features." << std::endl;
 }
 
-void FeatureGeneratorImpl::generate_inductively(int complexity, const States& states, GeneratorData& data, utils::threadpool::ThreadPool& th) {
-    utils::g_log << "Started generating composite features." << std::endl;
-    for (int iteration = 1; iteration < complexity; ++iteration) {  // every composition adds at least one complexity
+void FeatureGeneratorImpl::generate_inductively(int complexity_limit, const States& states, GeneratorData& data, utils::threadpool::ThreadPool& th) {
+    utils::g_log << "Started generating composite features. " << std::endl;
+    for (int target_complexity = 2; target_complexity <= complexity_limit; ++target_complexity) {  // every composition adds at least one complexity
+        // afterwards generate other features that yield complexity iteration+1
         if (data.reached_resource_limit()) break;
         for (const auto& rule : m_inductive_rules) {
             if (data.reached_resource_limit()) break;
-            rule->submit_tasks(states, iteration, data, th);
+            rule->submit_tasks(states, target_complexity, data, th);
         }
         for (const auto& rule : m_inductive_rules) {
             if (data.reached_resource_limit()) break;
-            rule->parse_results_of_tasks(iteration, data);
+            rule->parse_results_of_tasks(data);
         }
-        utils::g_log << "Complexity " << iteration+1 << ":" << std::endl;
+        // first generate lookahead features that yield complexity iteration+lookahead
+        if (data.reached_resource_limit()) break;
+        for (const auto& rule : m_inductive_lookahead_rules) {
+            if (data.reached_resource_limit()) break;
+            rule->submit_tasks(states, target_complexity, data, th);
+        }
+        for (const auto& rule : m_inductive_lookahead_rules) {
+            if (data.reached_resource_limit()) break;
+            rule->parse_results_of_tasks(data);
+        }
+        utils::g_log << "Complexity " << target_complexity << ":" << std::endl;
         data.print_statistics();
         print_statistics();
     }
@@ -195,6 +219,7 @@ void FeatureGeneratorImpl::generate_inductively(int complexity, const States& st
 void FeatureGeneratorImpl::print_statistics() const {
     for (auto& r : m_primitive_rules) r->print_statistics();
     for (auto& r : m_inductive_rules) r->print_statistics();
+    for (auto& r : m_inductive_lookahead_rules) r->print_statistics();
 }
 
 void FeatureGeneratorImpl::set_generate_empty_boolean(bool enable) {

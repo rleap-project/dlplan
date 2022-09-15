@@ -10,11 +10,12 @@ namespace dlplan::generator::rules {
 
 struct RoleTaskResult {
     dlplan::core::Role role;
+    int complexity;
     std::string repr;
     std::array<uint32_t, 4> hash;
 
-    RoleTaskResult(dlplan::core::Role&& _role, std::string&& _repr, std::array<uint32_t, 4>&& _hash)
-    : role(std::move(_role)), repr(std::move(_repr)), hash(std::move(_hash)) { }
+    RoleTaskResult(dlplan::core::Role&& _role, int complexity, std::string&& _repr, std::array<uint32_t, 4>&& _hash)
+    : role(std::move(_role)), complexity(complexity), repr(std::move(_repr)), hash(std::move(_hash)) { }
 };
 
 class Role : public Rule {
@@ -24,10 +25,10 @@ protected:
     static std::function<RoleTaskResult(const States&, const core::Role&)> m_task;
 
 protected:
-    void parse_results_of_tasks_impl(int iteration, GeneratorData& data) override;
+    void parse_results_of_tasks_impl(GeneratorData& data) override;
 
 public:
-    Role(const std::string& name) : Rule(name) { }
+    Role() : Rule() { }
 
     void cleanup() override;
 };

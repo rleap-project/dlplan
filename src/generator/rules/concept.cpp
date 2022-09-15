@@ -7,11 +7,12 @@ std::function<ConceptTaskResult(const States&, const core::Concept&)> Concept::m
 [](const States& states, const core::Concept& element) {
     return ConceptTaskResult(
         core::Concept(element),
+        element.compute_complexity(),
         element.compute_repr(),
         compute_hash(evaluate_concept(element, states)));
 };
 
-void Concept::parse_results_of_tasks_impl(int iteration, GeneratorData& data) {
+void Concept::parse_results_of_tasks_impl(GeneratorData& data) {
     /* Wait for the result and add it. */
     while (!m_tasks.empty()) {
         if (data.reached_resource_limit()) return;
@@ -22,7 +23,7 @@ void Concept::parse_results_of_tasks_impl(int iteration, GeneratorData& data) {
             ++data.m_num_novel_features;
             ++m_count;
             data.m_reprs.push_back(std::move(result.repr));
-            data.m_concepts_by_iteration[iteration+1].push_back(std::move(result.concept));
+            data.m_concepts_by_iteration[result.complexity].push_back(std::move(result.concept));
         }
     }
 }

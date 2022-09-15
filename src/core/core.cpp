@@ -112,6 +112,10 @@ std::vector<int> ConceptDenotationFlatSet::to_sorted_vector() const {
     return result;
 }
 
+std::vector<int> ConceptDenotationFlatSet::to_canonical_data_representation() const {
+    return to_sorted_vector();
+}
+
 int ConceptDenotationFlatSet::get_num_objects() const {
     return m_num_objects;
 }
@@ -214,6 +218,17 @@ std::vector<std::pair<int, int>> RoleDenotationFlatSet::to_sorted_vector() const
     std::vector<std::pair<int, int>> result(m_data.begin(), m_data.end());
     std::sort(result.begin(), result.end());
     return result;
+}
+
+std::vector<int> RoleDenotationFlatSet::to_canonical_data_representation() const {
+    std::vector<std::pair<int, int>> sorted_vector = to_sorted_vector();
+    std::vector<int> flat;
+    flat.reserve(sorted_vector.size() * 2);
+    for (const auto& pair : sorted_vector) {
+        flat.push_back(pair.first);
+        flat.push_back(pair.second);
+    }
+    return flat;
 }
 
 int RoleDenotationFlatSet::get_num_objects() const {
@@ -336,6 +351,10 @@ std::vector<int> ConceptDenotationBitset::to_sorted_vector() const {
     }
     result.shrink_to_fit();
     return result;
+}
+
+std::vector<int> ConceptDenotationBitset::to_canonical_data_representation() const {
+    return std::vector<int>(m_data.get_blocks().begin(), m_data.get_blocks().end());
 }
 
 int ConceptDenotationBitset::get_num_objects() const {
@@ -469,6 +488,10 @@ std::vector<std::pair<int, int>> RoleDenotationBitset::to_sorted_vector() const 
     }
     result.shrink_to_fit();
     return result;
+}
+
+std::vector<int> RoleDenotationBitset::to_canonical_data_representation() const {
+    return std::vector<int>(m_data.get_blocks().begin(), m_data.get_blocks().end());
 }
 
 int RoleDenotationBitset::get_num_objects() const {

@@ -84,6 +84,8 @@ public:
 
     std::vector<int> to_sorted_vector() const;
 
+    std::vector<int> to_canonical_data_representation() const;
+
     int get_num_objects() const;
 };
 
@@ -119,6 +121,8 @@ public:
     bool is_subset_of(const RoleDenotationFlatSet& other) const;
 
     std::vector<std::pair<int, int>> to_sorted_vector() const;
+
+    std::vector<int> to_canonical_data_representation() const;
 
     int get_num_objects() const;
 };
@@ -183,6 +187,8 @@ public:
 
     std::vector<int> to_sorted_vector() const;
 
+    std::vector<int> to_canonical_data_representation() const;
+
     int get_num_objects() const;
 };
 
@@ -245,6 +251,8 @@ public:
     bool is_subset_of(const RoleDenotationBitset& other) const;
 
     std::vector<std::pair<int, int>> to_sorted_vector() const;
+
+    std::vector<int> to_canonical_data_representation() const;
 
     int get_num_objects() const;
 };

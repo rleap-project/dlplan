@@ -3,12 +3,14 @@
 
 #include "../role.h"
 
+#include "../../../core/elements/roles/primitive.h"
+
 
 namespace dlplan::generator::rules {
 
 class PrimitiveRole : public Role {
 public:
-    PrimitiveRole() : Role("r_primitive") { }
+    PrimitiveRole() : Role() { }
 
     virtual void submit_tasks_impl(const States& states, int, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
         core::SyntacticElementFactory& factory = data.m_factory;
@@ -19,6 +21,10 @@ public:
                 }
             }
         }
+    }
+
+    std::string get_name() const override {
+        return core::element::PrimitiveRole::get_name();
     }
 };
 
