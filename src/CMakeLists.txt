@@ -1,6 +1,7 @@
 add_subdirectory(core)
 add_subdirectory(evaluator)
 add_subdirectory(generator)
+add_subdirectory(novelty)
 add_subdirectory(policy)
 add_subdirectory(state_space)
 add_subdirectory(weisfeiler_lehman)
