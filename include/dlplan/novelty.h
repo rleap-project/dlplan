@@ -147,7 +147,7 @@ public:
      * until the first novel tuple is found.
      * Returns true iff a novel tuple was found.
      */
-    bool reset_novelty_until_novel(TupleIndexGenerator tuple_index_generator);
+    bool insert(TupleIndexGenerator tuple_index_generator);
 };
 
 
