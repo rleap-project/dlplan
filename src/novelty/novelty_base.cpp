@@ -15,6 +15,16 @@ NoveltyBase::NoveltyBase(int num_atoms, int width)
     }
 }
 
+NoveltyBase::NoveltyBase(const NoveltyBase& other) = default;
+
+NoveltyBase& NoveltyBase::operator=(const NoveltyBase& other) = default;
+
+NoveltyBase::NoveltyBase(NoveltyBase&& other) = default;
+
+NoveltyBase& NoveltyBase::operator=(NoveltyBase&& other) = default;
+
+NoveltyBase::~NoveltyBase() = default;
+
 TupleIndex NoveltyBase::atom_tuple_to_tuple_index(const AtomTuple& atom_tuple) const {
     assert(static_cast<int>(atom_tuple.size()) == m_width);
     TupleIndex result = 0;

@@ -2,7 +2,10 @@ add_library(dlplannovelty SHARED)
 target_sources(dlplannovelty
     PRIVATE
         novelty_base.cpp
+        novelty_table.cpp
+        tuple_graph.cpp
         tuple_index_generator.cpp
+        tuple_node.cpp
     )
 target_link_libraries(dlplannovelty dlplanstatespace)
 target_include_directories(dlplannovelty

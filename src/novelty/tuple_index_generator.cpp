@@ -8,7 +8,7 @@ namespace dlplan::novelty {
 
 // https://stackoverflow.com/questions/127704/algorithm-to-return-all-combinations-of-k-elements-from-n
 template <typename Iterator>
-bool next_combination(const Iterator first, Iterator k, const Iterator last)
+static bool next_combination(const Iterator first, Iterator k, const Iterator last)
 {
     /* Credits: Mark Nelson http://marknelson.us */
     if ((first == last) || (first == k) || (last == k))

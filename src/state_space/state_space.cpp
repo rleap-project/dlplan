@@ -135,7 +135,7 @@ StateSpace& StateSpace::operator|=(const StateSpace& other) {
     return *this;
 }
 
-Distances StateSpace::compute_distances(const StateIndices& state_indices, bool forward) const {
+Distances StateSpace::compute_distances(const StateIndices& state_indices, bool forward, bool stop_if_goal) const {
     Distances distances;
     std::deque<StateIndex> queue;
     for (StateIndex state : state_indices) {
@@ -151,7 +151,9 @@ Distances StateSpace::compute_distances(const StateIndices& state_indices, bool 
             for (int target : targets->second) {
                 if (!distances.count(target)) {
                     distances[target] = distances[source] + 1;
-                    queue.push_back(target);
+                    if (!stop_if_goal || !m_goal_state_indices.count(target)) {
+                        queue.push_back(target);
+                    }
                 }
             }
         }
@@ -182,6 +184,17 @@ void StateSpace::for_each_backward_successor_state_index(std::function<void(Stat
     }
 }
 
+bool StateSpace::is_goal(StateIndex state) const {
+    return m_goal_state_indices.count(state);
+}
+
+bool StateSpace::is_nongoal(StateIndex state) const {
+    return !is_goal(state);
+}
+
+bool StateSpace::is_trivially_solvable() const {
+    return is_goal(m_initial_state_index);
+}
 
 const core::State& StateSpace::add_state(const core::State& state) {
     auto result = m_states.insert(state);
@@ -239,7 +252,7 @@ void StateSpace::print() const {
 
 
 GoalDistanceInformation StateSpace::compute_goal_distance_information() const {
-    auto goal_distances = compute_distances(m_goal_state_indices, false);
+    auto goal_distances = compute_distances(m_goal_state_indices, false, false);
     StateIndices deadend_state_indices;
     for (StateIndex state : m_state_indices) {
         const auto& find = goal_distances.find(state);

@@ -40,10 +40,10 @@ public:
     /**
      * Convenience functions.
      */
-    bool is_goal(StateIndex state_index) const;
-    bool is_nongoal(StateIndex state_index) const;
-    bool is_deadend(StateIndex state_index) const;
-    bool is_alive(StateIndex state_index) const;
+    bool is_goal(StateIndex state) const;
+    bool is_nongoal(StateIndex state) const;
+    bool is_deadend(StateIndex state) const;
+    bool is_alive(StateIndex state) const;
     bool is_solvable() const;
     bool is_trivially_solvable() const;
 
@@ -132,7 +132,7 @@ public:
     /**
      * Run BrFs to compute distances.
      */
-    Distances compute_distances(const StateIndices& state_indices, bool forward) const;
+    Distances compute_distances(const StateIndices& state_indices, bool forward, bool stop_if_goal) const;
 
     /**
      * For more readable iterations.
@@ -140,6 +140,10 @@ public:
     void for_each_state_index(std::function<void(int)>&& function) const;
     void for_each_forward_successor_state_index(std::function<void(int)>&& function, StateIndex state) const;
     void for_each_backward_successor_state_index(std::function<void(int)>&& function, StateIndex state) const;
+
+    bool is_goal(StateIndex state) const;
+    bool is_nongoal(StateIndex state) const;
+    bool is_trivially_solvable() const;
 
     /**
      * Uniquely adds as a state and returns a reference to the stored state.
@@ -173,8 +177,8 @@ public:
     StateIndex get_initial_state_index() const;
     const AdjacencyList& get_forward_successor_state_indices_ref() const;
     const AdjacencyList& get_backward_successor_state_indices_ref() const;
-    const StateIndices& get_forward_successor_state_indices_ref(StateIndex state_index) const;
-    const StateIndices& get_backward_successor_state_indices_ref(StateIndex state_index) const;
+    const StateIndices& get_forward_successor_state_indices_ref(StateIndex state) const;
+    const StateIndices& get_backward_successor_state_indices_ref(StateIndex state) const;
     const StateIndices& get_goal_state_indices_ref() const;
     std::shared_ptr<const core::InstanceInfo> get_instance_info() const;
 };
