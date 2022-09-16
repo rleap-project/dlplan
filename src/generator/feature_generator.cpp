@@ -94,38 +94,36 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
     m_primitive_rules.emplace_back(r_top);
     m_primitive_rules.emplace_back(r_primitive);
 
-    m_inductive_rules.emplace_back(c_and);
-    m_inductive_rules.emplace_back(c_or);
-    m_inductive_rules.emplace_back(c_not);
-    m_inductive_rules.emplace_back(c_diff);
-    m_inductive_rules.emplace_back(c_projection);
-    m_inductive_rules.emplace_back(c_equal);
-    m_inductive_rules.emplace_back(c_subset);
-    m_inductive_rules.emplace_back(c_some);
-    m_inductive_rules.emplace_back(c_all);
+    m_concept_inductive_rules.emplace_back(c_and);
+    m_concept_inductive_rules.emplace_back(c_or);
+    m_concept_inductive_rules.emplace_back(c_not);
+    m_concept_inductive_rules.emplace_back(c_diff);
+    m_concept_inductive_rules.emplace_back(c_projection);
+    m_concept_inductive_rules.emplace_back(c_equal);
+    m_concept_inductive_rules.emplace_back(c_subset);
+    m_concept_inductive_rules.emplace_back(c_some);
+    m_concept_inductive_rules.emplace_back(c_all);
 
-    m_inductive_rules.emplace_back(r_and);
-    m_inductive_rules.emplace_back(r_or);
-    m_inductive_rules.emplace_back(r_not);
-    m_inductive_rules.emplace_back(r_diff);
-    m_inductive_rules.emplace_back(r_identity);
-    m_inductive_rules.emplace_back(r_inverse);
-    m_inductive_rules.emplace_back(r_restrict);
-    m_inductive_rules.emplace_back(r_compose);
-    m_inductive_rules.emplace_back(r_transitive_closure);
-    m_inductive_rules.emplace_back(r_transitive_reflexive_closure);
+    m_role_inductive_rules.emplace_back(r_and);
+    m_role_inductive_rules.emplace_back(r_or);
+    m_role_inductive_rules.emplace_back(r_not);
+    m_role_inductive_rules.emplace_back(r_diff);
+    m_role_inductive_rules.emplace_back(r_identity);
+    m_role_inductive_rules.emplace_back(r_inverse);
+    m_role_inductive_rules.emplace_back(r_restrict);
+    m_role_inductive_rules.emplace_back(r_compose);
+    m_role_inductive_rules.emplace_back(r_transitive_closure);
+    m_role_inductive_rules.emplace_back(r_transitive_reflexive_closure);
 
-    m_inductive_lookahead_rules.emplace_back(b_nullary);
-    m_inductive_lookahead_rules.emplace_back(b_empty);
-    m_inductive_lookahead_rules.emplace_back(n_count);
-    m_inductive_lookahead_rules.emplace_back(b_inclusion);
-    m_inductive_lookahead_rules.emplace_back(n_concept_distance);
-    m_inductive_lookahead_rules.emplace_back(n_role_distance);
-    m_inductive_lookahead_rules.emplace_back(n_sum_concept_distance);
-    m_inductive_lookahead_rules.emplace_back(n_sum_role_distance);
-    for (auto& r : m_inductive_lookahead_rules) {
-        r->set_lookahead(true);
-    }
+    m_boolean_inductive_rules.emplace_back(b_nullary);
+    m_boolean_inductive_rules.emplace_back(b_empty);
+    m_boolean_inductive_rules.emplace_back(b_inclusion);
+
+    m_numerical_inductive_rules.emplace_back(n_count);
+    m_numerical_inductive_rules.emplace_back(n_concept_distance);
+    m_numerical_inductive_rules.emplace_back(n_role_distance);
+    m_numerical_inductive_rules.emplace_back(n_sum_concept_distance);
+    m_numerical_inductive_rules.emplace_back(n_sum_role_distance);
 }
 
 FeatureGeneratorImpl::FeatureGeneratorImpl(const FeatureGeneratorImpl& other) = default;
@@ -138,25 +136,38 @@ FeatureGeneratorImpl& FeatureGeneratorImpl::operator=(FeatureGeneratorImpl&& oth
 
 FeatureGeneratorImpl::~FeatureGeneratorImpl() = default;
 
-FeatureRepresentations FeatureGeneratorImpl::generate(core::SyntacticElementFactory& factory, int complexity_limit, int time_limit, int feature_limit, int num_threads, const States& states) {
+FeatureRepresentations FeatureGeneratorImpl::generate(
+    core::SyntacticElementFactory& factory,
+    int concept_complexity_limit,
+    int role_complexity_limit,
+    int boolean_complexity_limit,
+    int numerical_complexity_limit,
+    int time_limit,
+    int feature_limit,
+    int num_threads,
+    const States& states) {
     // Initialize statistics in each rule.
     for (auto& r : m_primitive_rules) r->initialize();
-    for (auto& r : m_inductive_rules) r->initialize();
-    for (auto& r : m_inductive_lookahead_rules) r->initialize();
+    for (auto& r : m_concept_inductive_rules) r->initialize();
+    for (auto& r : m_role_inductive_rules) r->initialize();
+    for (auto& r : m_boolean_inductive_rules) r->initialize();
+    for (auto& r : m_numerical_inductive_rules) r->initialize();
     // Initialize memory to store intermediate results.
-    GeneratorData data(factory, complexity_limit, time_limit, feature_limit);
+    GeneratorData data(factory, std::max({concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, numerical_complexity_limit}), time_limit, feature_limit);
     // Initialize default threadpool
     utils::threadpool::ThreadPool th(num_threads);
     generate_base(states, data, th);
-    generate_inductively(complexity_limit, states, data, th);
+    generate_inductively(concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, numerical_complexity_limit, states, data, th);
     // utils::g_log << "Overall results: " << std::endl;
     // print_overall_statistics();
     /* Tasks must be destructed before the threadpool.
        We can get rid of this if we move the threadpool to the members.
        This requires to add functionality for increasing/decreasing the threadpool. */
     for (auto& r : m_primitive_rules) r->cleanup();
-    for (auto& r : m_inductive_rules) r->cleanup();
-    for (auto& r : m_inductive_lookahead_rules) r->cleanup();
+    for (auto& r : m_concept_inductive_rules) r->cleanup();
+    for (auto& r : m_role_inductive_rules) r->cleanup();
+    for (auto& r : m_boolean_inductive_rules) r->cleanup();
+    for (auto& r : m_numerical_inductive_rules) r->cleanup();
     // Return just the representation that can be parsed again.
     // TODO: we might want to add postprocessing where features are additionally pruned
     // if they are not able to distinguish any two states.
@@ -173,42 +184,65 @@ void FeatureGeneratorImpl::generate_base(const States& states, GeneratorData& da
         if (data.reached_resource_limit()) break;
         rule->parse_results_of_tasks(data);
     }
-    // generate lookahead features
-    for (const auto& rule : m_inductive_lookahead_rules) {
-        if (data.reached_resource_limit()) break;
-        rule->submit_tasks(states, 1, data, th);
-    }
-    for (const auto& rule : m_inductive_lookahead_rules) {
-        if (data.reached_resource_limit()) break;
-        rule->parse_results_of_tasks(data);
-    }
     utils::g_log << "Complexity " << 1 << ":" << std::endl;
     print_statistics();
     utils::g_log << "Finished generating base features." << std::endl;
 }
 
-void FeatureGeneratorImpl::generate_inductively(int complexity_limit, const States& states, GeneratorData& data, utils::threadpool::ThreadPool& th) {
+void FeatureGeneratorImpl::generate_inductively(
+    int concept_complexity_limit,
+    int role_complexity_limit,
+    int boolean_complexity_limit,
+    int numerical_complexity_limit,
+    const States& states,
+    GeneratorData& data,
+    utils::threadpool::ThreadPool& th) {
     utils::g_log << "Started generating composite features. " << std::endl;
-    for (int target_complexity = 2; target_complexity <= complexity_limit; ++target_complexity) {  // every composition adds at least one complexity
-        // afterwards generate other features that yield complexity iteration+1
-        if (data.reached_resource_limit()) break;
-        for (const auto& rule : m_inductive_rules) {
+    int max_complexity = std::max({concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, numerical_complexity_limit});
+    for (int target_complexity = 2; target_complexity <= max_complexity; ++target_complexity) {  // every composition adds at least one complexity
+        if (target_complexity <= concept_complexity_limit) {
             if (data.reached_resource_limit()) break;
-            rule->submit_tasks(states, target_complexity, data, th);
+            for (const auto& rule : m_concept_inductive_rules) {
+                if (data.reached_resource_limit()) break;
+                rule->submit_tasks(states, target_complexity, data, th);
+            }
+            for (const auto& rule : m_concept_inductive_rules) {
+                if (data.reached_resource_limit()) break;
+                rule->parse_results_of_tasks(data);
+            }
         }
-        for (const auto& rule : m_inductive_rules) {
+        if (target_complexity <= role_complexity_limit) {
             if (data.reached_resource_limit()) break;
-            rule->parse_results_of_tasks(data);
+            for (const auto& rule : m_role_inductive_rules) {
+                if (data.reached_resource_limit()) break;
+                rule->submit_tasks(states, target_complexity, data, th);
+            }
+            for (const auto& rule : m_role_inductive_rules) {
+                if (data.reached_resource_limit()) break;
+                rule->parse_results_of_tasks(data);
+            }
         }
-        // first generate lookahead features that yield complexity iteration+lookahead
-        if (data.reached_resource_limit()) break;
-        for (const auto& rule : m_inductive_lookahead_rules) {
+        if (target_complexity <= boolean_complexity_limit) {
             if (data.reached_resource_limit()) break;
-            rule->submit_tasks(states, target_complexity, data, th);
+            for (const auto& rule : m_boolean_inductive_rules) {
+                if (data.reached_resource_limit()) break;
+                rule->submit_tasks(states, target_complexity, data, th);
+            }
+            for (const auto& rule : m_boolean_inductive_rules) {
+                if (data.reached_resource_limit()) break;
+                rule->parse_results_of_tasks(data);
+            }
         }
-        for (const auto& rule : m_inductive_lookahead_rules) {
+        if (target_complexity <= numerical_complexity_limit) {
             if (data.reached_resource_limit()) break;
-            rule->parse_results_of_tasks(data);
+            for (const auto& rule : m_numerical_inductive_rules) {
+                if (data.reached_resource_limit()) break;
+                rule->submit_tasks(states, target_complexity, data, th);
+            }
+            for (const auto& rule : m_numerical_inductive_rules) {
+                if (data.reached_resource_limit()) break;
+                rule->parse_results_of_tasks(data);
+            }
         }
         utils::g_log << "Complexity " << target_complexity << ":" << std::endl;
         data.print_statistics();
@@ -219,8 +253,10 @@ void FeatureGeneratorImpl::generate_inductively(int complexity_limit, const Stat
 
 void FeatureGeneratorImpl::print_statistics() const {
     for (auto& r : m_primitive_rules) r->print_statistics();
-    for (auto& r : m_inductive_rules) r->print_statistics();
-    for (auto& r : m_inductive_lookahead_rules) r->print_statistics();
+    for (auto& r : m_concept_inductive_rules) r->print_statistics();
+    for (auto& r : m_role_inductive_rules) r->print_statistics();
+    for (auto& r : m_boolean_inductive_rules) r->print_statistics();
+    for (auto& r : m_numerical_inductive_rules) r->print_statistics();
 }
 
 void FeatureGeneratorImpl::set_generate_empty_boolean(bool enable) {

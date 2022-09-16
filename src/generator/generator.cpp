@@ -28,8 +28,17 @@ FeatureGenerator& FeatureGenerator::operator=(FeatureGenerator&& other) {
 
 FeatureGenerator::~FeatureGenerator() = default;
 
-FeatureRepresentations FeatureGenerator::generate(core::SyntacticElementFactory& factory, int complexity, int time_limit, int feature_limit, int num_threads, const States& states) {
-    return m_pImpl->generate(factory, complexity, time_limit, feature_limit, num_threads, states);
+FeatureRepresentations FeatureGenerator::generate(
+    core::SyntacticElementFactory& factory,
+    int concept_complexity_limit,
+    int role_complexity_limit,
+    int boolean_complexity_limit,
+    int numerical_complexity_limit,
+    int time_limit,
+    int feature_limit,
+    int num_threads,
+    const States& states) {
+    return m_pImpl->generate(factory, concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, numerical_complexity_limit, time_limit, feature_limit, num_threads, states);
 }
 
 void FeatureGenerator::set_generate_empty_boolean(bool enable) {

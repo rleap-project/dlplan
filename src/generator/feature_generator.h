@@ -63,20 +63,12 @@ class FeatureGeneratorImpl {
 private:
     std::vector<Rule_Ptr> m_primitive_rules;
     /**
-     * Construction rules in iteration i.
+     * Construction rules in iteration i>=2.
      */
-    std::vector<Rule_Ptr> m_inductive_rules;
-    /**
-     * Construction rules with a lookahead.
-     * It takes into consideration highest complexity
-     * of element argument and goes beyond current iteration i.
-     * For example:
-     *   - the distance features take 3 arguments of complexity >1
-     *     such that we can lookahead 3 iterations without affecting soundnes.
-     *   - the count feature takes 1 argument of complexity > 1
-     *     such that we can lookahead 1 iteration without affecting soundness.
-     */
-    std::vector<Rule_Ptr> m_inductive_lookahead_rules;
+    std::vector<Rule_Ptr> m_concept_inductive_rules;
+    std::vector<Rule_Ptr> m_role_inductive_rules;
+    std::vector<Rule_Ptr> m_boolean_inductive_rules;
+    std::vector<Rule_Ptr> m_numerical_inductive_rules;
 
     Rule_Ptr c_one_of;
     Rule_Ptr c_top;
@@ -119,17 +111,22 @@ private:
     /**
      * Generates all Elements with complexity 1.
      */
-    void generate_base(const States& states, GeneratorData& data, utils::threadpool::ThreadPool& th);
+    void generate_base(
+        const States& states,
+        GeneratorData& data,
+        utils::threadpool::ThreadPool& th);
 
     /**
      * Inductively generate Elements of higher complexity.
      */
-    void generate_inductively(int complexity_limit, const States& states, GeneratorData& data, utils::threadpool::ThreadPool& th);
-
-    /**
-     *
-     */
-    void generate_lookahead_inductively(int complexity_limit, const States& states, GeneratorData& data, utils::threadpool::ThreadPool& th);
+    void generate_inductively(
+        int concept_complexity_limit,
+        int role_complexity_limit,
+        int boolean_complexity_limit,
+        int numerical_complexity_limit,
+        const States& states,
+        GeneratorData& data,
+        utils::threadpool::ThreadPool& th);
 
     /**
      * Print some brief overview.
@@ -147,7 +144,16 @@ public:
     /**
      * Exhaustively generates features with pairwise disjoint feature evaluations on the states.
      */
-    FeatureRepresentations generate(core::SyntacticElementFactory& factory, int complexity_limit, int time_limit, int feature_limit, int num_threads, const States& states);
+    FeatureRepresentations generate(
+        core::SyntacticElementFactory& factory,
+        int concept_complexity_limit,
+        int role_complexity_limit,
+        int boolean_complexity_limit,
+        int numerical_complexity_limit,
+        int time_limit,
+        int feature_limit,
+        int num_threads,
+        const States& states);
 
     /**
      * Set element generation on or off
