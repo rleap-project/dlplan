@@ -1,15 +1,38 @@
 #include "../../include/dlplan/novelty.h"
 
 #include <vector>
+#include <cassert>
+#include <iostream>
 
 
 namespace dlplan::novelty {
 
-NoveltyBase::NoveltyBase(int width) : m_width(width) {
-    m_factors = std::vector<int>(width);
+NoveltyBase::NoveltyBase(int num_atoms, int width)
+    : m_num_atoms(num_atoms), m_width(width) {
+    m_factors = std::vector<int>(m_width);
     for (int i = 0; i < m_width; ++i) {
-        m_factors[i] = std::pow(2, i);
+        m_factors[i] = std::pow(m_num_atoms, i);
     }
+    std::cout << std::endl;
+}
+
+TupleIndex NoveltyBase::atom_tuple_to_tuple_index(const AtomTuple& atom_tuple) const {
+    assert(static_cast<int>(atom_tuple.size()) == m_width);
+    TupleIndex result = 0;
+    int i = 0;
+    for (auto atom_index : atom_tuple) {
+        result += m_factors[i] * atom_index;
+        ++i;
+    }
+    return result;
+}
+
+AtomTuple NoveltyBase::tuple_index_to_atom_tuple(TupleIndex tuple_index) const {
+
+}
+
+int NoveltyBase::get_width() const {
+    return m_width;
 }
 
 }

@@ -30,47 +30,62 @@ using StateIndices = std::vector<StateIndex>;
 class NoveltyBase {
 private:
     std::vector<int> m_factors;
+    int m_num_atoms;
     int m_width;
 
 public:
-    explicit NoveltyBase(int width);
+    explicit NoveltyBase(int num_atoms, int width);
 
     /**
      * Computes atom tuple to tuple index and vice versa.
      */
     TupleIndex atom_tuple_to_tuple_index(const AtomTuple& atom_tuple) const;
     AtomTuple tuple_index_to_atom_tuple(TupleIndex tuple_index) const;
+
+    /**
+     * Getters.
+     */
+    int get_width() const;
 };
 
 
 /**
  * Generates all tuple indices of atom tuples of
- * size at most k of a given set of atom indices.
+ * size k of a given set of atom indices.
  */
 class TupleIndexGenerator {
+private:
+    std::shared_ptr<const NoveltyBase> m_novelty_base;
+    const AtomIndices m_atom_indices;
+
 public:
-    class value_iterator {
+    class tuple_index_iterator {
         public:
             using iterator_category = std::forward_iterator_tag;
             using value_type        = TupleIndex;
 
-            value_iterator(std::shared_ptr<const NoveltyBase> novelty_base, const AtomIndices& atom_indices, int k, bool end=false);
+            tuple_index_iterator(std::shared_ptr<const NoveltyBase> novelty_base, const AtomIndices& atom_indices, bool end=false);
 
-            bool operator!=(const value_iterator& other) const;
-            bool operator==(const value_iterator& other) const;
+            bool operator!=(const tuple_index_iterator& other) const;
+            bool operator==(const tuple_index_iterator& other) const;
 
             TupleIndex operator*() const;
             // Postfix increment
-            value_iterator operator++(int);
+            tuple_index_iterator operator++(int);
             // Prefix increment
-            value_iterator& operator++();
+            tuple_index_iterator& operator++();
 
         private:
-            // the data to generate next tuple index.
+            // The input data.
             std::shared_ptr<const NoveltyBase> m_novelty_base;
             AtomIndices m_atom_indices;
-            int m_k;
-            // the output
+            int m_width;
+            /* The data to generate next tuple index. */
+            // compact representation of indices
+            int m_count;
+            // atom indices in current tuple
+            AtomTuple m_atom_tuple;
+            // the output, i.e., the index of the atom tuple
             TupleIndex m_tuple_index;
 
         private:
@@ -81,8 +96,8 @@ public:
         std::shared_ptr<const NoveltyBase> novelty_base,
         const AtomIndices& atom_indices);
 
-    value_iterator begin();
-    value_iterator end();
+    tuple_index_iterator begin();
+    tuple_index_iterator end();
 };
 
 
@@ -120,12 +135,15 @@ private:
     std::vector<StateIndices> m_state_indices_by_distance;
     // The root state index
     StateIndex m_root_state_index;
+    // The width
+    int m_width;
 
 public:
     TupleGraph(
         std::shared_ptr<const NoveltyBase> novelty_base,
         const state_space::StateSpace& state_space,
-        state_space::StateIndex root_state);
+        state_space::StateIndex root_state,
+        int width);
 };
 
 }
