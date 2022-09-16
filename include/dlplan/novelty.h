@@ -56,15 +56,21 @@ public:
 class TupleIndexGenerator {
 private:
     std::shared_ptr<const NoveltyBase> m_novelty_base;
-    const AtomIndices m_atom_indices;
+    AtomIndices m_atom_indices;
 
 public:
     class tuple_index_iterator {
         public:
             using iterator_category = std::forward_iterator_tag;
             using value_type        = TupleIndex;
+            using distance_type     = std::ptrdiff_t;
 
             tuple_index_iterator(std::shared_ptr<const NoveltyBase> novelty_base, const AtomIndices& atom_indices, bool end=false);
+            tuple_index_iterator(const tuple_index_iterator& other);
+            tuple_index_iterator& operator=(const tuple_index_iterator& other);
+            tuple_index_iterator(tuple_index_iterator&& other);
+            tuple_index_iterator& operator=(tuple_index_iterator&& other);
+            ~tuple_index_iterator();
 
             bool operator!=(const tuple_index_iterator& other) const;
             bool operator==(const tuple_index_iterator& other) const;
@@ -95,6 +101,11 @@ public:
     TupleIndexGenerator(
         std::shared_ptr<const NoveltyBase> novelty_base,
         const AtomIndices& atom_indices);
+    TupleIndexGenerator(const TupleIndexGenerator& other);
+    TupleIndexGenerator& operator=(const TupleIndexGenerator& other);
+    TupleIndexGenerator(TupleIndexGenerator&& other);
+    TupleIndexGenerator& operator=(TupleIndexGenerator&& other);
+    ~TupleIndexGenerator();
 
     tuple_index_iterator begin();
     tuple_index_iterator end();
