@@ -46,6 +46,7 @@ public:
      * Getters.
      */
     int get_width() const;
+    int get_dummy_atom_index() const;
 };
 
 

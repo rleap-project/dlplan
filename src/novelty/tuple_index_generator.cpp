@@ -46,21 +46,28 @@ bool next_combination(const Iterator first, Iterator k, const Iterator last)
     return false;
 }
 
+static AtomIndices pad_and_sort_atom_indices(const AtomIndices& atom_indices, int width, int dummy_atom_index) {
+    AtomIndices result(std::max(width, static_cast<int>(atom_indices.size())), dummy_atom_index);
+    std::copy(atom_indices.begin(), atom_indices.end(), result.begin());
+    std::sort(result.begin(), result.end());
+    return result;
+}
+
 
 TupleIndexGenerator::tuple_index_iterator::tuple_index_iterator(
     std::shared_ptr<const NoveltyBase> novelty_base,
     const AtomIndices& atom_indices,
     bool end) :
     m_novelty_base(novelty_base),
-    m_atom_indices(atom_indices),
+    m_atom_indices(pad_and_sort_atom_indices(
+        atom_indices,
+        novelty_base->get_width(),
+        novelty_base->get_dummy_atom_index())),
     m_width(novelty_base->get_width()),
-    m_count(end ? ((atom_indices.size() - novelty_base->get_width() + 1) * (atom_indices.size() - novelty_base->get_width() + 2) / 2) : -1),
+    m_count(end ? ((std::max(0, static_cast<int>(atom_indices.size() - novelty_base->get_width())) + 1) * (std::max(0, static_cast<int>(atom_indices.size() - novelty_base->get_width())) + 2) / 2) : -1),
     m_atom_tuple(novelty_base->get_width()) {
-    // It is required to pad atom_indices with an additional dummy atom
-    // in advance if atom_indices.size() < width.
-    assert(static_cast<int>(atom_indices.size()) >= novelty_base->get_width());
-    // Atoms must be sorted for the algorithm to work.
-    assert(std::is_sorted(atom_indices.begin(), atom_indices.end()));
+    assert(static_cast<int>(m_atom_indices.size()) >= novelty_base->get_width());
+    assert(std::is_sorted(m_atom_indices.begin(), m_atom_indices.end()));
     if (!end) seek_next();
 }
 
