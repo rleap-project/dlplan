@@ -34,7 +34,16 @@ public:
     /**
      * Exhaustively generates features with pairwise disjoint feature evaluations on the states.
      */
-    FeatureRepresentations generate(core::SyntacticElementFactory& factory, int complexity, int time_limit, int feature_limit, int num_threads, const States& states);
+    FeatureRepresentations generate(
+        core::SyntacticElementFactory& factory,
+        int concept_complexity_limit,
+        int role_complexity_limit,
+        int boolean_complexity_limit,
+        int numerical_complexity_limit,
+        int time_limit,
+        int feature_limit,
+        int num_threads,
+        const States& states);
 
     void set_generate_empty_boolean(bool enable);
     void set_generate_inclusion_boolean(bool enable);

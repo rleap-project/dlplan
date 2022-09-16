@@ -14,8 +14,8 @@ int main(int argc, char** argv) {
     for (int i = 0; i < argc; ++i) {
         std::cout << argv[i] << std::endl;
     }
-    if (argc != 8) {
-        std::cout << "User error. Expected: ./experiment_core <str:domain_filename> <str:instance_filename> <int:limit_complexity> <int:limit_time> <int:limit_features> <int:limit_threads> <int:num_iterations>" << std::endl;
+    if (argc != 11) {
+        std::cout << "User error. Expected: ./experiment_core <str:domain_filename> <str:instance_filename> <int:concept_complexity_limit> <int:role_complexity_limit> <int:boolean_complexity_limit> <int:numerical_complexity_limit> <int:time_limit> <int:features_limit> <int:limit_threads> <int:num_iterations>" << std::endl;
         return 1;
     }
 
@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
     feature_generator.set_generate_or_role(false);
     feature_generator.set_generate_top_role(false);
     feature_generator.set_generate_transitive_reflexive_closure_role(false);
-    auto feature_reprs = feature_generator.generate(syntactic_element_factory, std::atoi(argv[3]), std::atoi(argv[4]), std::atoi(argv[5]), std::atoi(argv[6]), core::States(state_space.get_states_ref().begin(), state_space.get_states_ref().end()));
+    auto feature_reprs = feature_generator.generate(syntactic_element_factory, std::atoi(argv[3]), std::atoi(argv[4]), std::atoi(argv[5]), std::atoi(argv[6]), std::atoi(argv[7]), std::atoi(argv[8]), std::atoi(argv[9]), core::States(state_space.get_states_ref().begin(), state_space.get_states_ref().end()));
 
     std::vector<core::Boolean> boolean_features;
     std::vector<core::Numerical> numerical_features;
@@ -52,7 +52,7 @@ int main(int argc, char** argv) {
 
     std::cout << "Started feature evaluation" << std::endl;
     auto start = std::chrono::steady_clock::now();
-    for (int i = 0; i < std::atoi(argv[7]); ++i) {
+    for (int i = 0; i < std::atoi(argv[10]); ++i) {
         for (const auto& state : state_space.get_states_ref()) {
             for (const auto& boolean : boolean_features) {
                 boolean.evaluate(state);
