@@ -12,11 +12,11 @@ using namespace std::string_literals;
 
 namespace dlplan::state_space {
 
-static ExitCode generate_state_space_data(
+ExitCode StateSpaceGenerator::generate_state_space(
     const std::string& domain_file,
-    const std::string& instance_file) {
+    const std::string& instance_file) const {
     std::stringstream command;
-    command << std::getenv("DLPLAN_ROOT_DIR") << "/libs/scorpion/fast-downward.py"
+    command << "./fast-downward.py"
             << " " << domain_file
             << " " << instance_file
             << " --translate-options"
@@ -33,13 +33,6 @@ static ExitCode generate_state_space_data(
     state_space_file << command_result.output;
     state_space_file.close();
     return ExitCode(command_result.exitstatus);
-}
-
-
-ExitCode StateSpaceGenerator::generate_state_space(
-    const std::string& domain_file,
-    const std::string& instance_file) const {
-    return generate_state_space_data(domain_file, instance_file);
 }
 
 }
