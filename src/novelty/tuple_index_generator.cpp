@@ -53,14 +53,27 @@ TupleIndexGenerator::tuple_index_iterator::tuple_index_iterator(
     m_novelty_base(novelty_base),
     m_atom_indices(atom_indices),
     m_width(novelty_base->get_width()),
-    m_count(end ? ((atom_indices.size() - novelty_base->get_width() + 1) * (atom_indices.size() - novelty_base->get_width() + 2) / 2) : 0),
+    m_count(end ? ((atom_indices.size() - novelty_base->get_width() + 1) * (atom_indices.size() - novelty_base->get_width() + 2) / 2) : -1),
     m_atom_tuple(novelty_base->get_width()) {
-    seek_next();
     // It is required to pad atom_indices with an additional dummy atom
     // in advance if atom_indices.size() < width.
     assert(static_cast<int>(atom_indices.size()) >= novelty_base->get_width());
-    m_tuple_index = novelty_base->atom_tuple_to_tuple_index(m_atom_tuple);
+    // Atoms must be sorted for the algorithm to work.
+    assert(std::is_sorted(atom_indices.begin(), atom_indices.end()));
+    if (!end) seek_next();
 }
+
+TupleIndexGenerator::tuple_index_iterator::tuple_index_iterator(const TupleIndexGenerator::tuple_index_iterator& other) = default;
+
+TupleIndexGenerator::tuple_index_iterator&
+TupleIndexGenerator::tuple_index_iterator::operator=(const TupleIndexGenerator::tuple_index_iterator& other) = default;
+
+TupleIndexGenerator::tuple_index_iterator::tuple_index_iterator(TupleIndexGenerator::tuple_index_iterator&& other) = default;
+
+TupleIndexGenerator::tuple_index_iterator&
+TupleIndexGenerator::tuple_index_iterator::operator=(TupleIndexGenerator::tuple_index_iterator&& other) = default;
+
+TupleIndexGenerator::tuple_index_iterator::~tuple_index_iterator() = default;
 
 bool
 TupleIndexGenerator::tuple_index_iterator::operator!=(
@@ -103,6 +116,16 @@ TupleIndexGenerator::TupleIndexGenerator(
     std::shared_ptr<const NoveltyBase> novelty_base,
     const AtomIndices& atom_indices)
     : m_novelty_base(novelty_base), m_atom_indices(atom_indices) { }
+
+TupleIndexGenerator::TupleIndexGenerator(const TupleIndexGenerator& other) = default;
+
+TupleIndexGenerator& TupleIndexGenerator::operator=(const TupleIndexGenerator& other) = default;
+
+TupleIndexGenerator::TupleIndexGenerator(TupleIndexGenerator&& other) = default;
+
+TupleIndexGenerator& TupleIndexGenerator::operator=(TupleIndexGenerator&& other) = default;
+
+TupleIndexGenerator::~TupleIndexGenerator() = default;
 
 TupleIndexGenerator::tuple_index_iterator
 TupleIndexGenerator::begin() {
