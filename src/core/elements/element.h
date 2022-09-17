@@ -101,6 +101,7 @@ public:
         std::lock_guard<std::mutex> hold(m_denotations_lock);
         assert(!count(state, element));
         m_denotations[state.get_index()][element.get_index()] = denotation;
+        m_status[state.get_index()][element.get_index()] = true;
     }
 };
 
