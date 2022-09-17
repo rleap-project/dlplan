@@ -15,8 +15,8 @@ struct NumericalTaskResult {
     std::array<uint32_t, 4> hash;
     bool prune;
 
-    NumericalTaskResult(dlplan::core::Numerical&& _numerical, int complexity, std::string&& _repr, std::array<uint32_t, 4>&& _hash, bool prune)
-    : numerical(std::move(_numerical)), complexity(complexity), repr(std::move(_repr)), hash(std::move(_hash)), prune(prune) { }
+    NumericalTaskResult(dlplan::core::Numerical&& _numerical, int complexity, std::string&& _repr, std::array<uint32_t, 4>&& _hash, bool _prune)
+    : numerical(std::move(_numerical)), complexity(complexity), repr(std::move(_repr)), hash(std::move(_hash)), prune(_prune) { }
 };
 
 class Numerical : public Rule {

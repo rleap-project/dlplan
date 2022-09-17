@@ -13,9 +13,10 @@ struct BooleanTaskResult {
     int complexity;
     std::string repr;
     std::array<uint32_t, 4> hash;
+    bool prune;
 
-    BooleanTaskResult(dlplan::core::Boolean&& _boolean, int complexity, std::string&& _repr, std::array<uint32_t, 4>&& _hash)
-    : boolean(std::move(_boolean)), complexity(complexity), repr(std::move(_repr)), hash(std::move(_hash)) { }
+    BooleanTaskResult(dlplan::core::Boolean&& _boolean, int complexity, std::string&& _repr, std::array<uint32_t, 4>&& _hash, bool _prune)
+    : boolean(std::move(_boolean)), complexity(complexity), repr(std::move(_repr)), hash(std::move(_hash)), prune(_prune) { }
 };
 
 class Boolean : public Rule {

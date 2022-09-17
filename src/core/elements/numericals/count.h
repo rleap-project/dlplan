@@ -8,6 +8,12 @@ namespace dlplan::core::element {
 
 template<typename T>
 class CountNumerical : public Numerical {
+private:
+    template<typename DENOTATION>
+    int compute_result(DENOTATION&& denot) const {
+        return denot.size();
+    }
+
 protected:
     const T m_element;
 
@@ -16,7 +22,11 @@ public:
     : Numerical(vocabulary), m_element(element) { }
 
     int evaluate(const State& state) const override {
-        return m_element->evaluate(state).size();
+        return compute_result(m_element->evaluate(state));
+    }
+
+    int evaluate(const State& state, EvaluationCaches& cache) const override {
+        return compute_result(m_element->evaluate(state, cache));
     }
 
     int compute_complexity() const override {

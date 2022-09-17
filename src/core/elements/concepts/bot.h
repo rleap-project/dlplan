@@ -15,6 +15,10 @@ public:
         return ConceptDenotation(state.get_instance_info()->get_num_objects());
     }
 
+    ConceptDenotation evaluate(const State& state, EvaluationCaches&) const override {
+        return evaluate(state);
+    }
+
     int compute_complexity() const override {
         return 1;
     }

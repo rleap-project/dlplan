@@ -16,12 +16,20 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        // TODO(dominik): We might want to allow for not crashing if there is no object of the constant and instead add a dummy concept.
         if (!state.get_instance_info()->exists_object(m_constant.get_name())) {
             throw std::runtime_error("OneOfConcept::evaluate - no object with name of constant exists in instance: (" + m_constant.get_name() + ")");
         }
         ConceptDenotation result(state.get_instance_info()->get_num_objects());
         result.insert(state.get_instance_info()->get_object_idx(m_constant.get_name()));
+        return result;
+    }
+
+    ConceptDenotation evaluate(const State& state, EvaluationCaches& cache) const override {
+        if (cache.m_concept_denotation_cache.count(state, *this)) {
+            return cache.m_concept_denotation_cache.find(state, *this);
+        }
+        auto result = evaluate(state);
+        cache.m_concept_denotation_cache.insert(state, *this, result);
         return result;
     }
 

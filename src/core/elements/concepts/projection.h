@@ -10,6 +10,15 @@
 namespace dlplan::core::element {
 
 class ProjectionConcept : public Concept {
+private:
+    ConceptDenotation compute_result(RoleDenotation&& denot, ConceptDenotation&& result) const {
+        for (const auto pair : denot) {
+            if (m_pos == 0) result.insert(pair.first);
+            else if (m_pos == 1) result.insert(pair.second);
+        }
+        return result;
+    }
+
 protected:
     const Role_Ptr m_role;
     const int m_pos;
@@ -26,12 +35,21 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        const auto role_denot = m_role->evaluate(state);
-        ConceptDenotation result(state.get_instance_info()->get_num_objects());
-        for (const auto pair : role_denot) {
-            if (m_pos == 0) result.insert(pair.first);
-            else if (m_pos == 1) result.insert(pair.second);
+        auto bot_concept = ConceptDenotation(state.get_instance_info()->get_num_objects());
+        return compute_result(
+            m_role->evaluate(state),
+            std::move(bot_concept));
+    }
+
+    ConceptDenotation evaluate(const State& state, EvaluationCaches& cache) const override {
+        if (cache.m_concept_denotation_cache.count(state, *this)) {
+            return cache.m_concept_denotation_cache.find(state, *this);
         }
+        auto bot_concept = ConceptDenotation(state.get_instance_info()->get_num_objects());
+        auto result = compute_result(
+            m_role->evaluate(state, cache),
+            std::move(bot_concept));
+        cache.m_concept_denotation_cache.insert(state, *this, result);
         return result;
     }
 

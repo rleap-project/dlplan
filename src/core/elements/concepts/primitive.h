@@ -49,6 +49,15 @@ public:
         return result;
     }
 
+    ConceptDenotation evaluate(const State& state, EvaluationCaches& cache) const override {
+        if (cache.m_concept_denotation_cache.count(state, *this)) {
+            return cache.m_concept_denotation_cache.find(state, *this);
+        }
+        auto result = evaluate(state);
+        cache.m_concept_denotation_cache.insert(state, *this, result);
+        return result;
+    }
+
     int compute_complexity() const override {
         return 1;
     }

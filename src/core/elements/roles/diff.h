@@ -7,6 +7,11 @@
 namespace dlplan::core::element {
 
 class DiffRole : public Role {
+private:
+    RoleDenotation compute_result(RoleDenotation&& left_denot, RoleDenotation&& right_denot) const {
+        return left_denot -= right_denot;
+    }
+
 protected:
     const Role_Ptr m_role_left;
     const Role_Ptr m_role_right;
@@ -20,7 +25,20 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        return m_role_left->evaluate(state) -= m_role_right->evaluate(state);
+        return compute_result(
+            m_role_left->evaluate(state),
+            m_role_right->evaluate(state));
+    }
+
+    RoleDenotation evaluate(const State& state, EvaluationCaches& cache) const override {
+        if (cache.m_role_denotation_cache.count(state, *this)) {
+            return cache.m_role_denotation_cache.find(state, *this);
+        }
+        auto result = compute_result(
+            m_role_left->evaluate(state, cache),
+            m_role_right->evaluate(state, cache));
+        cache.m_role_denotation_cache.insert(state, *this, result);
+        return result;
     }
 
     int compute_complexity() const override {

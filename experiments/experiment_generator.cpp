@@ -47,6 +47,7 @@ int main(int argc, char** argv) {
             boolean_features.push_back(syntactic_element_factory.parse_boolean(repr));
         } else if (repr.substr(0, 1) == "n_") {
             numerical_features.push_back(syntactic_element_factory.parse_numerical(repr));
+            std::cout << repr << std::endl;
         }
     }
 

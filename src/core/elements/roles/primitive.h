@@ -50,6 +50,15 @@ public:
         return result;
     }
 
+    RoleDenotation evaluate(const State& state, EvaluationCaches& cache) const override {
+        if (cache.m_role_denotation_cache.count(state, *this)) {
+            return cache.m_role_denotation_cache.find(state, *this);
+        }
+        auto result = evaluate(state);
+        cache.m_role_denotation_cache.insert(state, *this, result);
+        return result;
+    }
+
     int compute_complexity() const override {
         return 1;
     }
@@ -60,6 +69,10 @@ public:
 
     static std::string get_name() {
         return "r_primitive";
+    }
+
+    const Predicate& get_predicate_ref() const {
+        return m_predicate;
     }
 };
 

@@ -8,6 +8,23 @@
 namespace dlplan::core::element {
 
 class ComposeRole : public Role {
+private:
+    RoleDenotation compute_result(RoleDenotation&& left_denot, RoleDenotation&& right_denot, RoleDenotation&& result, int num_objects) const {
+        const auto left_bitset = element::utils::role_denot_to_bitset(left_denot);
+        const auto right_bitset = element::utils::role_denot_to_bitset(right_denot);
+        for (int i = 0; i < num_objects; ++i) {  // source
+            for (int j = 0; j < num_objects; ++j) {  // target
+                for (int k = 0; k < num_objects; ++k) {  // middle
+                    if (left_bitset.test(i * num_objects + k) && right_bitset.test(k * num_objects + j)) {
+                        result.insert(std::make_pair(i, j));
+                        break;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
 protected:
     const Role_Ptr m_role_left;
     const Role_Ptr m_role_right;
@@ -22,19 +39,26 @@ public:
 
     RoleDenotation evaluate(const State& state) const override {
         int num_objects = state.get_instance_info()->get_num_objects();
-        const auto role_left_bitset = element::utils::role_denot_to_bitset(m_role_left->evaluate(state));
-        const auto role_right_bitset = element::utils::role_denot_to_bitset(m_role_right->evaluate(state));
-        RoleDenotation result(num_objects);
-        for (int i = 0; i < num_objects; ++i) {  // source
-            for (int j = 0; j < num_objects; ++j) {  // target
-                for (int k = 0; k < num_objects; ++k) {  // middle
-                    if (role_left_bitset.test(i * num_objects + k) && role_right_bitset.test(k * num_objects + j)) {
-                        result.insert(std::make_pair(i, j));
-                        break;
-                    }
-                }
-            }
+        auto bot_role = RoleDenotation(num_objects);
+        return compute_result(
+            m_role_left->evaluate(state),
+            m_role_right->evaluate(state),
+            std::move(bot_role),
+            num_objects);
+    }
+
+    RoleDenotation evaluate(const State& state, EvaluationCaches& cache) const override {
+        if (cache.m_role_denotation_cache.count(state, *this)) {
+            return cache.m_role_denotation_cache.find(state, *this);
         }
+        int num_objects = state.get_instance_info()->get_num_objects();
+        auto bot_role = RoleDenotation(num_objects);
+        auto result = compute_result(
+            m_role_left->evaluate(state, cache),
+            m_role_right->evaluate(state, cache),
+            std::move(bot_role),
+            num_objects);
+        cache.m_role_denotation_cache.insert(state, *this, result);
         return result;
     }
 

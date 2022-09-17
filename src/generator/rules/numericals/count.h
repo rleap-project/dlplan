@@ -14,7 +14,6 @@ public:
 
     virtual void submit_tasks_impl(const States& states, int target_complexity, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
         core::SyntacticElementFactory& factory = data.m_factory;
-        if (m_lookahead) target_complexity += 1;
         for (const auto& c : data.m_concepts_by_iteration[target_complexity-1]) {
             m_tasks.push_back(th.submit(m_task, std::cref(states),factory.make_count(c)));
         }

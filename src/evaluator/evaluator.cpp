@@ -10,13 +10,7 @@ EvaluationCache::EvaluationCache(int num_booleans, int num_numericals)
   : m_boolean_denots_cache(std::vector<bool>(2 * std::max(1, num_booleans), false)),
     m_numerical_denots_cache(std::vector<int>(std::max(1, num_numericals), -1)) { }
 
-EvaluationCache::EvaluationCache(const EvaluationCache& other) = default;
-
-EvaluationCache& EvaluationCache::operator=(const EvaluationCache& other) = default;
-
-EvaluationCache::EvaluationCache(EvaluationCache&& other) = default;
-
-EvaluationCache& EvaluationCache::operator=(EvaluationCache&& other) = default;
+EvaluationCache::~EvaluationCache() = default;
 
 bool EvaluationCache::retrieve_or_evaluate(const core::Boolean& boolean, const core::State& state) {
     if (state.get_index() < 0) {

@@ -16,6 +16,10 @@ public:
         return state.get_instance_info()->get_top_role();
     }
 
+    RoleDenotation evaluate(const State& state, EvaluationCaches&) const override {
+        return evaluate(state);
+    }
+
     int compute_complexity() const override {
         return 1;
     }

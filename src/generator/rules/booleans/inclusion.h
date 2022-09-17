@@ -12,8 +12,7 @@ public:
 
     virtual void submit_tasks_impl(const States& states, int target_complexity, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
         core::SyntacticElementFactory& factory = data.m_factory;
-        if (m_lookahead) target_complexity += 2;
-        for (int i = 1; i <= target_complexity - 1; ++i) {
+        for (int i = 1; i < target_complexity - 1; ++i) {
             int j = target_complexity - i - 1;
             for (const auto& c1 : data.m_concepts_by_iteration[i]) {
                 for (const auto& c2 : data.m_concepts_by_iteration[j]) {

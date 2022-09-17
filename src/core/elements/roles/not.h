@@ -7,6 +7,11 @@
 namespace dlplan::core::element {
 
 class NotRole : public Role {
+private:
+    RoleDenotation compute_result(RoleDenotation&& denot) const {
+        return ~denot;
+    }
+
 protected:
     const Role_Ptr m_role;
 
@@ -19,7 +24,18 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        return ~m_role->evaluate(state);
+        return compute_result(m_role->evaluate(state));
+    }
+
+    RoleDenotation evaluate(const State& state, EvaluationCaches& cache) const override {
+        if (cache.m_role_denotation_cache.count(state, *this)) {
+            return cache.m_role_denotation_cache.find(state, *this);
+        }
+        auto bot_role = RoleDenotation(state.get_instance_info()->get_num_objects());
+        auto result = compute_result(
+            m_role->evaluate(state, cache));
+        cache.m_role_denotation_cache.insert(state, *this, result);
+        return result;
     }
 
     int compute_complexity() const override {

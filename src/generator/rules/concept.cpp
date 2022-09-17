@@ -9,7 +9,8 @@ std::function<ConceptTaskResult(const States&, const core::Concept&)> Concept::m
         core::Concept(element),
         element.compute_complexity(),
         element.compute_repr(),
-        compute_hash(evaluate_concept(element, states)));
+        compute_hash(evaluate_concept(element, states)),
+        false);
 };
 
 void Concept::parse_results_of_tasks_impl(GeneratorData& data) {
@@ -19,6 +20,9 @@ void Concept::parse_results_of_tasks_impl(GeneratorData& data) {
         auto result = m_tasks.front().get();
         m_tasks.pop_front();
         ++data.m_num_generated_features;
+        if (result.prune) {
+            continue;
+        }
         if (data.m_concept_hash_table.insert(std::move(result.hash)).second) {
             ++data.m_num_novel_features;
             ++m_count;

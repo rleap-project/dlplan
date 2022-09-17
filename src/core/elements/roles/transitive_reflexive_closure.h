@@ -8,6 +8,22 @@
 namespace dlplan::core::element {
 
 class TransitiveReflexiveClosureRole : public Role {
+private:
+    RoleDenotation compute_result(RoleDenotation&& denot, int num_objects) const {
+        auto role_bitset = utils::role_denot_to_bitset(denot);
+        for (int k = 0; k < num_objects; ++k) {
+            for (int i = 0; i < num_objects; ++i) {
+                for (int j = 0; j < num_objects; ++j) {
+                    if (role_bitset.test(i * num_objects + k) && role_bitset.test(k * num_objects + j)) {
+                        role_bitset.set(i * num_objects + j);
+                    }
+                }
+            }
+            role_bitset.set(k * num_objects + k);
+        }
+        return utils::bitset_to_role_denotation(role_bitset, num_objects);
+    }
+
 protected:
     const Role_Ptr m_role;
 
@@ -21,18 +37,21 @@ public:
 
     RoleDenotation evaluate(const State& state) const override {
         int num_objects = state.get_instance_info()->get_num_objects();
-        auto role_bitset = utils::role_denot_to_bitset(m_role->evaluate(state));
-        for (int k = 0; k < num_objects; ++k) {
-            for (int i = 0; i < num_objects; ++i) {
-                for (int j = 0; j < num_objects; ++j) {
-                    if (role_bitset.test(i * num_objects + k) && role_bitset.test(k * num_objects + j)) {
-                        role_bitset.set(i * num_objects + j);
-                    }
-                }
-            }
-            role_bitset.set(k * num_objects + k);
+        return compute_result(
+            m_role->evaluate(state),
+            num_objects);
+    }
+
+    RoleDenotation evaluate(const State& state, EvaluationCaches& cache) const override {
+        if (cache.m_role_denotation_cache.count(state, *this)) {
+            return cache.m_role_denotation_cache.find(state, *this);
         }
-        return utils::bitset_to_role_denotation(role_bitset, num_objects);
+        int num_objects = state.get_instance_info()->get_num_objects();
+        auto result = compute_result(
+            m_role->evaluate(state, cache),
+            num_objects);
+        cache.m_role_denotation_cache.insert(state, *this, result);
+        return result;
     }
 
     int compute_complexity() const override {

@@ -8,6 +8,18 @@
 namespace dlplan::core::element {
 
 class EqualConcept : public Concept {
+private:
+    ConceptDenotation compute_result(RoleDenotation&& left_denot, RoleDenotation&& right_denot, ConceptDenotation&& result) const {
+        // find counterexample [(a,b) in R and (a,b) not in S] or [(a,b) not in R and (a,b) in S]
+        for (const auto& pair : left_denot) {
+            if (!right_denot.contains(pair)) result.erase(pair.first);
+        }
+        for (const auto& pair : right_denot) {
+            if (!left_denot.contains(pair)) result.erase(pair.first);
+        }
+        return result;
+    }
+
 protected:
     const Role_Ptr m_role_left;
     const Role_Ptr m_role_right;
@@ -21,16 +33,23 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        const auto role_left_denot = m_role_left->evaluate(state);
-        const auto role_right_denot = m_role_right->evaluate(state);
-        ConceptDenotation result = state.get_instance_info()->get_top_concept();
-        // find counterexample [(a,b) in R and (a,b) not in S] or [(a,b) not in R and (a,b) in S]
-        for (const auto& pair : role_left_denot) {
-            if (!role_right_denot.contains(pair)) result.erase(pair.first);
+        auto top_concept = state.get_instance_info()->get_top_concept();
+        return compute_result(
+            m_role_left->evaluate(state),
+            m_role_right->evaluate(state),
+            std::move(top_concept));
+    }
+
+    ConceptDenotation evaluate(const State& state, EvaluationCaches& cache) const override {
+        if (cache.m_concept_denotation_cache.count(state, *this)) {
+            return cache.m_concept_denotation_cache.find(state, *this);
         }
-        for (const auto& pair : role_right_denot) {
-            if (!role_left_denot.contains(pair)) result.erase(pair.first);
-        }
+        auto top_concept = state.get_instance_info()->get_top_concept();
+        auto result = compute_result(
+            m_role_left->evaluate(state, cache),
+            m_role_right->evaluate(state, cache),
+            std::move(top_concept));
+        cache.m_concept_denotation_cache.insert(state, *this, result);
         return result;
     }
 

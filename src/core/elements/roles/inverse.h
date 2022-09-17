@@ -7,6 +7,14 @@
 namespace dlplan::core::element {
 
 class InverseRole : public Role {
+private:
+    RoleDenotation compute_result(RoleDenotation&& denot, RoleDenotation&& result) const {
+        for (const auto& pair : denot) {
+            result.insert(std::make_pair(pair.second, pair.first));
+        }
+        return result;
+    }
+
 protected:
     const Role_Ptr m_role;
 
@@ -19,11 +27,21 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        const auto role_denot = m_role->evaluate(state);
-        RoleDenotation result(state.get_instance_info()->get_num_objects());
-        for (const auto& pair : role_denot) {
-            result.insert(std::make_pair(pair.second, pair.first));
+        auto bot_role = RoleDenotation(state.get_instance_info()->get_num_objects());
+        return compute_result(
+            m_role->evaluate(state),
+            std::move(bot_role));
+    }
+
+    RoleDenotation evaluate(const State& state, EvaluationCaches& cache) const override {
+        if (cache.m_role_denotation_cache.count(state, *this)) {
+            return cache.m_role_denotation_cache.find(state, *this);
         }
+        auto bot_role = RoleDenotation(state.get_instance_info()->get_num_objects());
+        auto result = compute_result(
+            m_role->evaluate(state, cache),
+            std::move(bot_role));
+        cache.m_role_denotation_cache.insert(state, *this, result);
         return result;
     }
 

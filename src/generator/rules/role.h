@@ -13,9 +13,10 @@ struct RoleTaskResult {
     int complexity;
     std::string repr;
     std::array<uint32_t, 4> hash;
+    bool prune;
 
-    RoleTaskResult(dlplan::core::Role&& _role, int complexity, std::string&& _repr, std::array<uint32_t, 4>&& _hash)
-    : role(std::move(_role)), complexity(complexity), repr(std::move(_repr)), hash(std::move(_hash)) { }
+    RoleTaskResult(dlplan::core::Role&& _role, int complexity, std::string&& _repr, std::array<uint32_t, 4>&& _hash, bool _prune)
+    : role(std::move(_role)), complexity(complexity), repr(std::move(_repr)), hash(std::move(_hash)), prune(_prune) { }
 };
 
 class Role : public Rule {

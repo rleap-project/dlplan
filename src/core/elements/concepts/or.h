@@ -7,6 +7,11 @@
 namespace dlplan::core::element {
 
 class OrConcept : public Concept {
+private:
+    ConceptDenotation compute_result(ConceptDenotation&& left_denot, ConceptDenotation&& right_denot) const {
+        return left_denot |= right_denot;
+    }
+
 protected:
     Concept_Ptr m_concept_left;
     Concept_Ptr m_concept_right;
@@ -27,7 +32,18 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        return m_concept_left->evaluate(state) |= m_concept_right->evaluate(state);
+        return compute_result(m_concept_left->evaluate(state), m_concept_right->evaluate(state));
+    }
+
+    ConceptDenotation evaluate(const State& state, EvaluationCaches& cache) const override {
+        if (cache.m_concept_denotation_cache.count(state, *this)) {
+            return cache.m_concept_denotation_cache.find(state, *this);
+        }
+        auto result = compute_result(
+            m_concept_left->evaluate(state, cache),
+            m_concept_right->evaluate(state, cache));
+        cache.m_concept_denotation_cache.insert(state, *this, result);
+        return result;
     }
 
     int compute_complexity() const override {

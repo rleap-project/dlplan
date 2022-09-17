@@ -15,8 +15,8 @@ public:
     virtual void submit_tasks_impl(const States& states, int, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
         core::SyntacticElementFactory& factory = data.m_factory;
         for (const auto& predicate : factory.get_vocabulary_info()->get_predicates()) {
-            for (int pos = 0; pos < predicate.get_arity(); ++pos) {
-                m_tasks.push_back(th.submit(std::cref(m_task), std::cref(states), std::move(factory.make_primitive_concept(predicate, pos))));
+            if (predicate.get_arity() == 1) {
+                m_tasks.push_back(th.submit(std::cref(m_task), std::cref(states), std::move(factory.make_primitive_concept(predicate, 0))));
             }
         }
     }

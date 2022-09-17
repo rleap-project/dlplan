@@ -10,6 +10,11 @@
 namespace dlplan::core::element {
 
 class ConceptDistanceNumerical : public Numerical {
+private:
+    int compute_result(ConceptDenotation&& concept_from_denot, RoleDenotation&& role_denot, ConceptDenotation&& concept_to_denot) const {
+        return utils::compute_multi_source_multi_target_shortest_distance(concept_from_denot, role_denot, concept_to_denot);
+    }
+
 protected:
     const Concept_Ptr m_concept_from;
     const Role_Ptr m_role;
@@ -24,20 +29,37 @@ public:
     }
 
     int evaluate(const State& state) const override {
-        const auto concept_from_denot = m_concept_from->evaluate(state);
+        auto concept_from_denot = m_concept_from->evaluate(state);
         if (concept_from_denot.empty()) {
             return INF;
         }
-        const auto concept_to_denot = m_concept_to->evaluate(state);
+        auto concept_to_denot = m_concept_to->evaluate(state);
         if (concept_to_denot.empty()) {
             return INF;
         }
         if (concept_from_denot.intersects(concept_to_denot)) {
             return 0;
         }
-        const auto role_denot = m_role->evaluate(state);
-        return utils::compute_multi_source_multi_target_shortest_distance(concept_from_denot, role_denot, concept_to_denot);
+        auto role_denot = m_role->evaluate(state);
+        return compute_result(std::move(concept_from_denot), std::move(role_denot), std::move(concept_to_denot));
     }
+
+    int evaluate(const State& state, EvaluationCaches& cache) const override {
+        auto concept_from_denot = m_concept_from->evaluate(state, cache);
+        if (concept_from_denot.empty()) {
+            return INF;
+        }
+        auto concept_to_denot = m_concept_to->evaluate(state, cache);
+        if (concept_to_denot.empty()) {
+            return INF;
+        }
+        if (concept_from_denot.intersects(concept_to_denot)) {
+            return 0;
+        }
+        auto role_denot = m_role->evaluate(state, cache);
+        return compute_result(std::move(concept_from_denot), std::move(role_denot), std::move(concept_to_denot));
+    }
+
 
     int compute_complexity() const override {
         return m_concept_from->compute_complexity() + m_role->compute_complexity() + m_concept_to->compute_complexity() + 1;

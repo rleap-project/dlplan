@@ -13,9 +13,10 @@ struct ConceptTaskResult {
     int complexity;
     std::string repr;
     std::array<uint32_t, 4> hash;
+    bool prune;
 
-    ConceptTaskResult(dlplan::core::Concept&& _concept, int complexity, std::string&& _repr, std::array<uint32_t, 4>&& _hash)
-    : concept(std::move(_concept)), complexity(complexity), repr(std::move(_repr)), hash(std::move(_hash)) { }
+    ConceptTaskResult(dlplan::core::Concept&& _concept, int complexity, std::string&& _repr, std::array<uint32_t, 4>&& _hash, bool _prune)
+    : concept(std::move(_concept)), complexity(complexity), repr(std::move(_repr)), hash(std::move(_hash)), prune(_prune) { }
 };
 
 class Concept : public Rule {

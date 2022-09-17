@@ -10,6 +10,11 @@
 namespace dlplan::core::element {
 
 template<typename T>
+static bool compute_result(T&& denot_left, T&& denot_right) {
+    return denot_left.is_subset_of(denot_right);
+}
+
+template<typename T>
 class InclusionBoolean : public Boolean {
 protected:
     const std::shared_ptr<const T> m_element_left;
@@ -21,7 +26,11 @@ public:
     }
 
     bool evaluate(const State& state) const override {
-        return m_element_left->evaluate(state).is_subset_of(m_element_right->evaluate(state));
+        return compute_result(m_element_left->evaluate(state), m_element_right->evaluate(state));
+    }
+
+    bool evaluate(const State& state, EvaluationCaches& cache) const override {
+        return compute_result(m_element_left->evaluate(state, cache), m_element_right->evaluate(state, cache));
     }
 
     int compute_complexity() const override {

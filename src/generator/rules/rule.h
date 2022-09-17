@@ -31,11 +31,6 @@ protected:
     bool m_enabled;
 
     /**
-     * Whether this rule is executed in lookahead mode.
-     */
-    bool m_lookahead;
-
-    /**
      * Collect some statistics.
      */
     int m_count;
@@ -46,7 +41,7 @@ protected:
     virtual void parse_results_of_tasks_impl(GeneratorData& data) = 0;
 
 public:
-    Rule() : m_enabled(true), m_lookahead(false), m_count(0) { }
+    Rule() : m_enabled(true), m_count(0) { }
     virtual ~Rule() = default;
 
     void initialize() {
@@ -84,10 +79,6 @@ public:
 
     void set_enabled(bool enabled) {
         m_enabled = enabled;
-    }
-
-    void set_lookahead(bool lookahead) {
-        m_lookahead = lookahead;
     }
 
     virtual std::string get_name() const = 0;

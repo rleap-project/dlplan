@@ -36,6 +36,10 @@ public:
         return false;
     }
 
+    bool evaluate(const State& state, EvaluationCaches&) const override {
+        return evaluate(state);
+    }
+
     int compute_complexity() const override {
         return 1;
     }

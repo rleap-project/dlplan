@@ -26,10 +26,7 @@ private:
 
 public:
     EvaluationCache(int num_booleans, int num_numericals);
-    EvaluationCache(const EvaluationCache& other);
-    EvaluationCache& operator=(const EvaluationCache& other);
-    EvaluationCache(EvaluationCache&& other);
-    EvaluationCache& operator=(EvaluationCache&& other);
+    ~EvaluationCache();
 
     bool retrieve_or_evaluate(const core::Boolean& boolean, const core::State& state);
     int retrieve_or_evaluate(const core::Numerical& numerical, const core::State& state);
