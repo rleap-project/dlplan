@@ -48,6 +48,7 @@
 #include "../../include/dlplan/generator.h"
 #include "../utils/logging.h"
 #include "../utils/threadpool.h"
+#include "../core/elements/element.h"
 
 
 namespace dlplan::generator {
@@ -154,10 +155,12 @@ FeatureRepresentations FeatureGeneratorImpl::generate(
     for (auto& r : m_numerical_inductive_rules) r->initialize();
     // Initialize memory to store intermediate results.
     GeneratorData data(factory, std::max({concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, numerical_complexity_limit}), time_limit, feature_limit);
+    // Initialize cache.
+    core::element::GeneratorEvaluationCaches caches;
     // Initialize default threadpool
     utils::threadpool::ThreadPool th(num_threads);
-    generate_base(states, data, th);
-    generate_inductively(concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, numerical_complexity_limit, states, data, th);
+    generate_base(states, data, caches, th);
+    generate_inductively(concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, numerical_complexity_limit, states, data, caches, th);
     // utils::g_log << "Overall results: " << std::endl;
     // print_overall_statistics();
     /* Tasks must be destructed before the threadpool.
@@ -174,11 +177,11 @@ FeatureRepresentations FeatureGeneratorImpl::generate(
     return data.m_reprs;
 }
 
-void FeatureGeneratorImpl::generate_base(const States& states, GeneratorData& data, utils::threadpool::ThreadPool& th) {
+void FeatureGeneratorImpl::generate_base(const States& states, GeneratorData& data, core::element::GeneratorEvaluationCaches& caches, utils::threadpool::ThreadPool& th) {
     utils::g_log << "Started generating base features of complexity 1." << std::endl;
     for (const auto& rule : m_primitive_rules) {
         if (data.reached_resource_limit()) break;
-        rule->submit_tasks(states, 1, data, th);
+        rule->submit_tasks(states, 1, data, caches, th);
     }
     for (const auto& rule : m_primitive_rules) {
         if (data.reached_resource_limit()) break;
@@ -196,6 +199,7 @@ void FeatureGeneratorImpl::generate_inductively(
     int numerical_complexity_limit,
     const States& states,
     GeneratorData& data,
+    core::element::GeneratorEvaluationCaches& caches,
     utils::threadpool::ThreadPool& th) {
     utils::g_log << "Started generating composite features. " << std::endl;
     int max_complexity = std::max({concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, numerical_complexity_limit});
@@ -204,7 +208,7 @@ void FeatureGeneratorImpl::generate_inductively(
             if (data.reached_resource_limit()) break;
             for (const auto& rule : m_concept_inductive_rules) {
                 if (data.reached_resource_limit()) break;
-                rule->submit_tasks(states, target_complexity, data, th);
+                rule->submit_tasks(states, target_complexity, data, caches, th);
             }
             for (const auto& rule : m_concept_inductive_rules) {
                 if (data.reached_resource_limit()) break;
@@ -215,7 +219,7 @@ void FeatureGeneratorImpl::generate_inductively(
             if (data.reached_resource_limit()) break;
             for (const auto& rule : m_role_inductive_rules) {
                 if (data.reached_resource_limit()) break;
-                rule->submit_tasks(states, target_complexity, data, th);
+                rule->submit_tasks(states, target_complexity, data, caches, th);
             }
             for (const auto& rule : m_role_inductive_rules) {
                 if (data.reached_resource_limit()) break;
@@ -226,7 +230,7 @@ void FeatureGeneratorImpl::generate_inductively(
             if (data.reached_resource_limit()) break;
             for (const auto& rule : m_boolean_inductive_rules) {
                 if (data.reached_resource_limit()) break;
-                rule->submit_tasks(states, target_complexity, data, th);
+                rule->submit_tasks(states, target_complexity, data, caches, th);
             }
             for (const auto& rule : m_boolean_inductive_rules) {
                 if (data.reached_resource_limit()) break;
@@ -237,7 +241,7 @@ void FeatureGeneratorImpl::generate_inductively(
             if (data.reached_resource_limit()) break;
             for (const auto& rule : m_numerical_inductive_rules) {
                 if (data.reached_resource_limit()) break;
-                rule->submit_tasks(states, target_complexity, data, th);
+                rule->submit_tasks(states, target_complexity, data, caches, th);
             }
             for (const auto& rule : m_numerical_inductive_rules) {
                 if (data.reached_resource_limit()) break;

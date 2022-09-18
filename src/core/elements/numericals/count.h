@@ -40,6 +40,9 @@ public:
             *m_element->evaluate(state, cache),
             denotation);
         status = true;
+        /*std::stringstream ss;
+        compute_repr(ss);
+        std::cout << "evaluation: " << ss.str() << " " << denotation << std::endl;*/
         return &denotation;
     }
 

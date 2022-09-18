@@ -3,13 +3,13 @@
 
 namespace dlplan::generator::rules {
 
-std::function<NumericalTaskResult(const States&, const core::Numerical&)> Numerical::m_task =
-[](const States& states, const core::Numerical& element) {
+std::function<NumericalTaskResult(const States&, const core::Numerical&, core::element::GeneratorEvaluationCaches&)> Numerical::m_task =
+[](const States& states, const core::Numerical& element, core::element::GeneratorEvaluationCaches& caches) {
     return NumericalTaskResult(
         core::Numerical(element),
         element.compute_complexity(),
         element.compute_repr(),
-        compute_hash(evaluate_numerical(element, states)),
+        compute_hash(evaluate_numerical(*element.get_element(), states, caches)),
         false);
 };
 
@@ -28,6 +28,8 @@ void Numerical::parse_results_of_tasks_impl(GeneratorData& data) {
             ++m_count;
             data.m_reprs.push_back(std::move(result.repr));
             data.m_numericals_by_iteration[result.complexity].push_back(std::move(result.numerical));
+        } else {
+            std::cout << "pruned by evaluation: " << result.repr << std::endl;
         }
     }
 }

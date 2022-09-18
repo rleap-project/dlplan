@@ -100,12 +100,12 @@ private:
     std::mutex m_mutex;
 
 public:
-    GeneratorEvaluationCache();
+    GeneratorEvaluationCache() { }
     ~GeneratorEvaluationCache() {
         std::lock_guard<std::mutex> hold(m_mutex);
-        for (auto per_element_denotations : m_denotations) {
-            for (auto denotation : per_element_denotations) {
-                delete denotation;
+        for (auto& pair1 : m_denotations) {
+            for (auto& pair2 : pair1.second) {
+                delete pair2.second;
             }
         }
     }

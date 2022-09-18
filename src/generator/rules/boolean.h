@@ -23,7 +23,7 @@ class Boolean : public Rule {
 protected:
     std::deque<utils::threadpool::ThreadPool::TaskFuture<BooleanTaskResult>> m_tasks;
 
-    static std::function<BooleanTaskResult(const States&, const core::Boolean&)> m_task;
+    static std::function<BooleanTaskResult(const States&, const core::Boolean&, core::element::GeneratorEvaluationCaches&)> m_task;
 
 protected:
     void parse_results_of_tasks_impl(GeneratorData& data) override;

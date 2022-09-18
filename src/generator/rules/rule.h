@@ -9,6 +9,11 @@
 #include "../types.h"
 
 #include "../../utils/threadpool.h"
+#include "../../core/elements/element.h"
+#include "../../core/elements/boolean.h"
+#include "../../core/elements/numerical.h"
+#include "../../core/elements/concept.h"
+#include "../../core/elements/role.h"
 
 
 namespace dlplan {
@@ -36,7 +41,7 @@ protected:
     int m_count;
 
 protected:
-    virtual void submit_tasks_impl(const States& states, int target_complexity, GeneratorData& data, utils::threadpool::ThreadPool& th) = 0;
+    virtual void submit_tasks_impl(const States& states, int target_complexity, GeneratorData& data, core::element::GeneratorEvaluationCaches& caches, utils::threadpool::ThreadPool& th) = 0;
 
     virtual void parse_results_of_tasks_impl(GeneratorData& data) = 0;
 
@@ -56,9 +61,9 @@ public:
     /**
      * Submits tasks to threadpool.
      */
-    void submit_tasks(const States& states, int target_complexity, GeneratorData& data, utils::threadpool::ThreadPool& th) {
+    void submit_tasks(const States& states, int target_complexity, GeneratorData& data, core::element::GeneratorEvaluationCaches& caches, utils::threadpool::ThreadPool& th) {
         if (m_enabled) {
-            submit_tasks_impl(states, target_complexity, data, th);
+            submit_tasks_impl(states, target_complexity, data, caches, th);
         }
     }
 
@@ -88,39 +93,39 @@ public:
  * Evaluate each element on set of states.
  * The result is hashable data.
  */
-inline std::vector<int> evaluate_boolean(const core::Boolean& boolean, const States& states) {
+inline std::vector<int> evaluate_boolean(const core::element::Boolean& boolean, const States& states, core::element::GeneratorEvaluationCaches& cache) {
     std::vector<int> result;
     result.reserve(states.size());
     for (const auto& state : states) {
-        result.push_back(static_cast<int>(boolean.evaluate(state)));
+        result.push_back(static_cast<int>(*boolean.evaluate(state, cache)));
     }
     return result;
 }
 
-inline std::vector<int> evaluate_numerical(const core::Numerical& numerical, const States& states) {
+inline std::vector<int> evaluate_numerical(const core::element::Numerical& numerical, const States& states, core::element::GeneratorEvaluationCaches& cache) {
     std::vector<int> result;
     result.reserve(states.size());
     for (const auto& state : states) {
-        result.push_back(numerical.evaluate(state));
+        result.push_back(*numerical.evaluate(state, cache));
     }
     return result;
 }
 
-inline std::vector<int> evaluate_concept(const core::Concept& concept, const States& states) {
+inline std::vector<int> evaluate_concept(const core::element::Concept& concept, const States& states, core::element::GeneratorEvaluationCaches& cache) {
     std::vector<int> result;
     result.reserve(states.size());
     for (const auto& state : states) {
-        const auto data = concept.evaluate(state).to_canonical_data_representation();
+        const auto data = concept.evaluate(state, cache)->to_canonical_data_representation();
         result.push_back(data.size());
         result.insert(result.end(), data.begin(), data.end());
     }
     return result;
 }
 
-inline std::vector<int> evaluate_role(const core::Role& role, const States& states) {
+inline std::vector<int> evaluate_role(const core::element::Role& role, const States& states, core::element::GeneratorEvaluationCaches& cache) {
     std::vector<int> result;
     for (const auto& state : states) {
-        const auto data = role.evaluate(state).to_canonical_data_representation();
+        const auto data = role.evaluate(state, cache)->to_canonical_data_representation();
         result.push_back(data.size());
         result.insert(result.end(), data.begin(), data.end());
     }

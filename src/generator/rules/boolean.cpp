@@ -3,13 +3,13 @@
 
 namespace dlplan::generator::rules {
 
-std::function<BooleanTaskResult(const States&, const core::Boolean&)> Boolean::m_task =
-[](const States& states, const core::Boolean& element) {
+std::function<BooleanTaskResult(const States&, const core::Boolean&, core::element::GeneratorEvaluationCaches&)> Boolean::m_task =
+[](const States& states, const core::Boolean& element, core::element::GeneratorEvaluationCaches& cache) {
     return BooleanTaskResult(
         core::Boolean(element),
         element.compute_complexity(),
         element.compute_repr(),
-        compute_hash(evaluate_boolean(element, states)),
+        compute_hash(evaluate_boolean(*element.get_element(), states, cache)),
         false);
 };
 

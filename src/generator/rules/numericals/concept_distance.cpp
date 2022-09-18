@@ -2,9 +2,9 @@
 
 namespace dlplan::generator::rules {
 
-std::function<NumericalTaskResult(const States&, const core::Concept&, const core::Role&, const core::Numerical&)> ConceptDistanceNumerical::m_concept_distance_task =
-[](const States& states, const core::Concept& concept, const core::Role& role, const core::Numerical& element) {
-    auto concept_denotations = evaluate_concept(concept, states);
+std::function<NumericalTaskResult(const States&, const core::Concept&, const core::Role&, const core::Numerical&, core::element::GeneratorEvaluationCaches&)> ConceptDistanceNumerical::m_concept_distance_task =
+[](const States& states, const core::Concept& concept, const core::Role& role, const core::Numerical& element, core::element::GeneratorEvaluationCaches& caches) {
+    auto concept_denotations = evaluate_concept(*concept.get_element(), states, caches);
     // check if R is a restriction in R:C
     if (role.compute_complexity() == 3 && role.compute_repr().substr(0, 10) != "r_restrict") {
         return NumericalTaskResult(
@@ -29,7 +29,7 @@ std::function<NumericalTaskResult(const States&, const core::Concept&, const cor
         core::Numerical(element),
         element.compute_complexity(),
         element.compute_repr(),
-        compute_hash(evaluate_numerical(element, states)),
+        compute_hash(evaluate_numerical(*element.get_element(), states, caches)),
         false);
 };
 

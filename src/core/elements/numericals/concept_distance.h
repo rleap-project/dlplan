@@ -66,6 +66,8 @@ public:
             return &denotation;
         }
         if (concept_from_denot->intersects(*concept_to_denot)) {
+            denotation = INF;
+            status = true;
             return 0;
         }
         auto role_denot = m_role->evaluate(state, cache);

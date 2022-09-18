@@ -23,7 +23,7 @@ class Role : public Rule {
 protected:
     std::deque<utils::threadpool::ThreadPool::TaskFuture<RoleTaskResult>> m_tasks;
 
-    static std::function<RoleTaskResult(const States&, const core::Role&)> m_task;
+    static std::function<RoleTaskResult(const States&, const core::Role&, core::element::GeneratorEvaluationCaches&)> m_task;
 
 protected:
     void parse_results_of_tasks_impl(GeneratorData& data) override;

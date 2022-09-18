@@ -23,7 +23,7 @@ class Numerical : public Rule {
 protected:
     std::deque<utils::threadpool::ThreadPool::TaskFuture<NumericalTaskResult>> m_tasks;
 
-    static std::function<NumericalTaskResult(const States&, const core::Numerical&)> m_task;
+    static std::function<NumericalTaskResult(const States&, const core::Numerical&, core::element::GeneratorEvaluationCaches&)> m_task;
 
 protected:
     void parse_results_of_tasks_impl(GeneratorData& data) override;

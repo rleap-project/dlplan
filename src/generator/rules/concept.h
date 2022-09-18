@@ -23,7 +23,7 @@ class Concept : public Rule {
 protected:
     std::deque<utils::threadpool::ThreadPool::TaskFuture<ConceptTaskResult>> m_tasks;
 
-    static std::function<ConceptTaskResult(const States&, const core::Concept&)> m_task;
+    static std::function<ConceptTaskResult(const States&, const core::Concept&, core::element::GeneratorEvaluationCaches&)> m_task;
 
 protected:
     void parse_results_of_tasks_impl(GeneratorData& data) override;

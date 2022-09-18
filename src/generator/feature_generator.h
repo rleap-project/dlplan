@@ -114,6 +114,7 @@ private:
     void generate_base(
         const States& states,
         GeneratorData& data,
+        core::element::GeneratorEvaluationCaches& caches,
         utils::threadpool::ThreadPool& th);
 
     /**
@@ -126,6 +127,7 @@ private:
         int numerical_complexity_limit,
         const States& states,
         GeneratorData& data,
+        core::element::GeneratorEvaluationCaches& caches,
         utils::threadpool::ThreadPool& th);
 
     /**
