@@ -9,7 +9,7 @@ namespace dlplan::core::element {
 
 class ComposeRole : public Role {
 private:
-    RoleDenotation compute_result(RoleDenotation&& left_denot, RoleDenotation&& right_denot, RoleDenotation&& result, int num_objects) const {
+    void compute_result(const RoleDenotation& left_denot, const RoleDenotation& right_denot, int num_objects, RoleDenotation& result) const {
         const auto left_bitset = element::utils::role_denot_to_bitset(left_denot);
         const auto right_bitset = element::utils::role_denot_to_bitset(right_denot);
         for (int i = 0; i < num_objects; ++i) {  // source
@@ -22,7 +22,6 @@ private:
                 }
             }
         }
-        return result;
     }
 
 protected:
@@ -39,27 +38,29 @@ public:
 
     RoleDenotation evaluate(const State& state) const override {
         int num_objects = state.get_instance_info()->get_num_objects();
-        auto bot_role = RoleDenotation(num_objects);
-        return compute_result(
+        RoleDenotation denotation(num_objects);
+        compute_result(
             m_role_left->evaluate(state),
             m_role_right->evaluate(state),
-            std::move(bot_role),
-            num_objects);
+            num_objects,
+            denotation);
+        return denotation;
     }
 
-    RoleDenotation evaluate(const State& state, EvaluationCaches& cache) const override {
-        if (cache.m_role_denotation_cache.count(state, *this)) {
-            return cache.m_role_denotation_cache.find(state, *this);
+    const RoleDenotation* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {
+        auto role_cache_entry = cache.m_role_denotation_cache.find(state, *this);
+        auto& status = role_cache_entry->m_status;
+        auto& denotation = role_cache_entry->m_denotation;
+        if (status) {
+            return &denotation;
         }
-        int num_objects = state.get_instance_info()->get_num_objects();
-        auto bot_role = RoleDenotation(num_objects);
-        auto result = compute_result(
-            m_role_left->evaluate(state, cache),
-            m_role_right->evaluate(state, cache),
-            std::move(bot_role),
-            num_objects);
-        cache.m_role_denotation_cache.insert(state, *this, result);
-        return result;
+        compute_result(
+            *m_role_left->evaluate(state, cache),
+            *m_role_right->evaluate(state, cache),
+            state.get_instance_info()->get_num_objects(),
+            denotation);
+        status = true;
+        return &denotation;
     }
 
     int compute_complexity() const override {

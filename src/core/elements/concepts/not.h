@@ -8,8 +8,9 @@ namespace dlplan::core::element {
 
 class NotConcept : public Concept {
 private:
-    ConceptDenotation compute_result(ConceptDenotation&& denot) const {
-        return ~denot;
+    void compute_result(const ConceptDenotation& denot, ConceptDenotation& result) const {
+        result = denot;
+        ~result;
     }
 
 protected:
@@ -24,16 +25,25 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        return compute_result(m_concept->evaluate(state));
+        ConceptDenotation denotation(state.get_instance_info()->get_num_objects());
+        compute_result(
+            m_concept->evaluate(state),
+            denotation);
+        return denotation;
     }
 
-    ConceptDenotation evaluate(const State& state, EvaluationCaches& cache) const override {
-        if (cache.m_concept_denotation_cache.count(state, *this)) {
-            return cache.m_concept_denotation_cache.find(state, *this);
+    const ConceptDenotation* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {
+        auto concept_cache_entry = cache.m_concept_denotation_cache.find(state, *this);
+        auto& status = concept_cache_entry->m_status;
+        auto& denotation = concept_cache_entry->m_denotation;
+        if (status) {
+            return &denotation;
         }
-        auto result = compute_result(m_concept->evaluate(state, cache));
-        cache.m_concept_denotation_cache.insert(state, *this, result);
-        return result;
+        compute_result(
+            *m_concept->evaluate(state, cache),
+            denotation);
+        status = true;
+        return &denotation;
     }
 
     int compute_complexity() const override {

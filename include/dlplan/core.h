@@ -73,7 +73,7 @@ public:
     phmap::flat_hash_set<int>::const_iterator end() const;
 
     bool contains(int value) const;
-
+    void set();
     void insert(int value);
     void erase(int value);
 
@@ -112,6 +112,7 @@ public:
     phmap::flat_hash_set<std::pair<int, int>>::const_iterator end() const;
 
     bool contains(const std::pair<int, int>& value) const;
+    void set();
     void insert(const std::pair<int, int>& value);
     void erase(const std::pair<int, int>& value);
 
@@ -176,7 +177,7 @@ public:
     const_iterator end() const;
 
     bool contains(int value) const;
-
+    void set();
     void insert(int value);
     void erase(int value);
 
@@ -241,7 +242,7 @@ public:
     const_iterator end() const;
 
     bool contains(const std::pair<int, int>& value) const;
-
+    void set();
     void insert(const std::pair<int, int>& value);
     void erase(const std::pair<int, int>& value);
 

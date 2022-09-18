@@ -16,10 +16,17 @@ public:
         return state.get_instance_info()->get_top_role();
     }
 
-    RoleDenotation evaluate(const State& state, EvaluationCaches&) const override {
-        return evaluate(state);
+    const RoleDenotation* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {
+        auto role_cache_entry = cache.m_role_denotation_cache.find(state, *this);
+        auto& status = role_cache_entry->m_status;
+        auto& denotation = role_cache_entry->m_denotation;
+        if (status) {
+            return &denotation;
+        }
+        denotation.set();
+        status = true;
+        return &denotation;
     }
-
     int compute_complexity() const override {
         return 1;
     }

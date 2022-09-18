@@ -10,7 +10,7 @@ namespace dlplan::core::element {
 // https://stackoverflow.com/questions/3517524/what-is-the-best-known-transitive-closure-algorithm-for-a-directed-graph
 class TransitiveClosureRole : public Role {
 private:
-    RoleDenotation compute_result(RoleDenotation&& denot, int num_objects) const {
+    void compute_result(const RoleDenotation& denot, int num_objects, RoleDenotation& result) const {
         auto role_bitset = utils::role_denot_to_bitset(denot);
         for (int k = 0; k < num_objects; ++k) {
             for (int i = 0; i < num_objects; ++i) {
@@ -21,7 +21,7 @@ private:
                 }
             }
         }
-        return utils::bitset_to_role_denotation(role_bitset, num_objects);
+        result = utils::bitset_to_role_denotation(role_bitset, num_objects);
     }
 
 protected:
@@ -37,21 +37,27 @@ public:
 
     RoleDenotation evaluate(const State& state) const override {
         int num_objects = state.get_instance_info()->get_num_objects();
-        return compute_result(
+        RoleDenotation result(num_objects);
+        compute_result(
             m_role->evaluate(state),
-            num_objects);
+            num_objects,
+            result);
+        return result;
     }
 
-    RoleDenotation evaluate(const State& state, EvaluationCaches& cache) const override {
-        if (cache.m_role_denotation_cache.count(state, *this)) {
-            return cache.m_role_denotation_cache.find(state, *this);
+    const RoleDenotation* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {
+        auto role_cache_entry = cache.m_role_denotation_cache.find(state, *this);
+        auto& status = role_cache_entry->m_status;
+        auto& denotation = role_cache_entry->m_denotation;
+        if (status) {
+            return &denotation;
         }
-        int num_objects = state.get_instance_info()->get_num_objects();
-        auto result = compute_result(
-            m_role->evaluate(state, cache),
-            num_objects);
-        cache.m_role_denotation_cache.insert(state, *this, result);
-        return result;
+        compute_result(
+            *m_role->evaluate(state, cache),
+            state.get_instance_info()->get_num_objects(),
+            denotation);
+        status = true;
+        return &denotation;
     }
 
     int compute_complexity() const override {

@@ -9,12 +9,11 @@ namespace dlplan::core::element {
 
 class SubsetConcept : public Concept {
 private:
-    ConceptDenotation compute_result(RoleDenotation&& left_denot, RoleDenotation&& right_denot, ConceptDenotation&& result) const {
+    void compute_result(const RoleDenotation& left_denot, const RoleDenotation& right_denot, ConceptDenotation& result) const {
         // find counterexamples a : exists b . (a,b) in R and (a,b) notin S
         for (const auto& pair : left_denot) {
             if (!right_denot.contains(pair)) result.erase(pair.first);
         }
-        return result;
     }
 
 protected:
@@ -30,24 +29,28 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        auto top_concept = state.get_instance_info()->get_top_concept();
-        return compute_result(
+        auto denotation = state.get_instance_info()->get_top_concept();
+        compute_result(
             m_role_left->evaluate(state),
             m_role_right->evaluate(state),
-            std::move(top_concept));
+            denotation);
+        return denotation;
     }
 
-    ConceptDenotation evaluate(const State& state, EvaluationCaches& cache) const override {
-        if (cache.m_concept_denotation_cache.count(state, *this)) {
-            return cache.m_concept_denotation_cache.find(state, *this);
+    const ConceptDenotation* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {
+        auto concept_cache_entry = cache.m_concept_denotation_cache.find(state, *this);
+        auto& status = concept_cache_entry->m_status;
+        auto& denotation = concept_cache_entry->m_denotation;
+        if (status) {
+            return &denotation;
         }
-        auto top_concept = state.get_instance_info()->get_top_concept();
-        auto result = compute_result(
-            m_role_left->evaluate(state, cache),
-            m_role_right->evaluate(state, cache),
-            std::move(top_concept));
-        cache.m_concept_denotation_cache.insert(state, *this, result);
-        return result;
+        denotation.set();
+        compute_result(
+            *m_role_left->evaluate(state, cache),
+            *m_role_right->evaluate(state, cache),
+            denotation);
+        status = true;
+        return &denotation;
     }
 
     int compute_complexity() const override {

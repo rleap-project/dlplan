@@ -85,7 +85,7 @@ public:
         m_entries(default_array.size()) { }
 
     ArrayView<Element> operator[](int index) {
-        // state_id does not fit anymore so we must resize
+        // index does not fit anymore so we must resize
         if (static_cast<int>(m_entries.size()) <= index) {
             m_entries.resize(index + 1, m_default_array.data());
         }

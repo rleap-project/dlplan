@@ -5,17 +5,18 @@
 #include <sstream>
 #include <mutex>
 #include <cassert>
+#include <memory>
 
 #include "types.h"
 
 #include "../../../include/dlplan/utils/cache.h"
 #include "../../../include/dlplan/core.h"
-#include "../../../include/dlplan/utils/segmented_vector.h"
+
 
 using namespace std::string_literals;
 
 namespace dlplan::core::element {
-class EvaluationCaches;
+class GeneratorEvaluationCaches;
 
 template<typename T>
 class Element : public utils::Cachable {
@@ -35,7 +36,7 @@ public:
     virtual ~Element() = default;
 
     virtual T evaluate(const State& state) const = 0;
-    virtual T evaluate(const State& state, EvaluationCaches& cache) const = 0;
+    virtual const T* evaluate(const State& state, GeneratorEvaluationCaches& cache) const = 0;
 
     virtual int compute_complexity() const = 0;
 
@@ -56,63 +57,86 @@ public:
     }
 };
 
+
 /**
- * Thread-safe cache for concept and role denotations per state.
+ * In our feature generator, we can assume that no two threads
+ * compute the same denotation and that no computation
+ * depends on the computation of another denotation
+ * because we compute elements with same complexity.
  */
-template<typename ELEMENT_TYPE, typename DENOTATION_TYPE>
-class EvaluationCache {
-private:
-    utils::SegmentedVector<utils::SegmentedVector<DENOTATION_TYPE>> m_denotations;
-    utils::SegmentedVector<utils::SegmentedVector<bool>> m_status;
+template<typename DENOTATION_TYPE>
+struct CacheEntry {
+    DENOTATION_TYPE m_denotation;
+    bool m_status;
+
+    std::mutex m_mutex;
+
+    CacheEntry(int num_objects)
+        : m_denotation(DENOTATION_TYPE(num_objects)), m_status(false) { }
 
     /**
-     * For multi-threading purposes
+     * A CacheEntry is lock free readable if it is cached.
+     * This function is useful for assertions.
      */
-    mutable std::mutex m_status_lock;
-    mutable std::mutex m_denotations_lock;
-
-public:
-    EvaluationCache(int num_objects);
-    ~EvaluationCache();
-
-    /**
-     * Returns 1 if denotation is cached else 0.
-     */
-    int count(const State& state, const ELEMENT_TYPE& element) {
-        std::lock_guard<std::mutex> hold(m_status_lock);
-        return m_status[state.get_index()][element.get_index()];
-    }
-
-    /**
-     * Returns the denotation from the cache.
-     * Throws an exception if denotation is not present.
-     */
-    DENOTATION_TYPE find(const State& state, const ELEMENT_TYPE& element) {
-        std::lock_guard<std::mutex> hold(m_denotations_lock);
-        assert(count(state, element));
-        return m_denotations[state.get_index()][element.get_index()];
-    }
-
-    /**
-     * Inserts the denotation into the cache.
-     *
-     */
-    void insert(const State& state, const ELEMENT_TYPE& element, const DENOTATION_TYPE& denotation) {
-        std::lock_guard<std::mutex> hold(m_denotations_lock);
-        assert(!count(state, element));
-        m_denotations[state.get_index()][element.get_index()] = denotation;
-        m_status[state.get_index()][element.get_index()] = true;
+    bool is_lock_free_readable() const {
+        return m_status;
     }
 };
 
 /**
- * Maybe we want to have a single cache for all individual concepts and roles.
- * Hence, to reduce the number of arguments and for extendability
- * we store all caches in a struct.
+ * Thread-safe cache for concept and role denotations per state.
  */
-struct EvaluationCaches {
-    EvaluationCache<element::Concept, ConceptDenotation> m_concept_denotation_cache;
-    EvaluationCache<element::Role, RoleDenotation> m_role_denotation_cache;
+template<typename ELEMENT_TYPE, typename DENOTATION_TYPE>
+class GeneratorEvaluationCache {
+private:
+    /**
+     * After accessing the CacheEntry, we return it and unlock the cache.
+     * Access to the CacheEntry after return will remain thread safe.
+     *
+     * For simplicity we used unordered_maps but we might want to use vector instead
+     */
+    std::unordered_map<int, std::unordered_map<int, CacheEntry<DENOTATION_TYPE>*>> m_denotations;
+
+    std::mutex m_mutex;
+
+public:
+    GeneratorEvaluationCache();
+    ~GeneratorEvaluationCache() {
+        std::lock_guard<std::mutex> hold(m_mutex);
+        for (auto per_element_denotations : m_denotations) {
+            for (auto denotation : per_element_denotations) {
+                delete denotation;
+            }
+        }
+    }
+
+    /**
+     * Returns a reference to the cache entry.
+     * User must check
+     */
+    CacheEntry<DENOTATION_TYPE>* find(const State& state, const ELEMENT_TYPE& element) {
+        std::lock_guard<std::mutex> hold(m_mutex);
+        // Attempt to insert nullptr.
+        auto result = m_denotations[state.get_index()].insert(
+            std::make_pair(element.get_index(), nullptr));
+        if (result.second) {
+            // nullptr was inserted, i.e., no denotation existed,
+            // Hence, we can allocate and insert a new denotation.
+            result.first->second = new CacheEntry<DENOTATION_TYPE>(state.get_instance_info()->get_num_objects());
+        }
+        return result.first->second;
+    }
+};
+
+/**
+ * Pass all caches to the element evaluation function as single argument.
+ * If we cache boolean and numericals here, we can also get rid of the evaluator component.
+ */
+struct GeneratorEvaluationCaches {
+    GeneratorEvaluationCache<element::Boolean, bool> m_boolean_denotation_cache;
+    GeneratorEvaluationCache<element::Numerical, int> m_numerical_denotation_cache;
+    GeneratorEvaluationCache<element::Concept, ConceptDenotation> m_concept_denotation_cache;
+    GeneratorEvaluationCache<element::Role, RoleDenotation> m_role_denotation_cache;
 };
 
 }

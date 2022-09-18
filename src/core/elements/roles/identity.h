@@ -9,11 +9,10 @@ namespace dlplan::core::element {
 
 class IdentityRole : public Role {
 private:
-    RoleDenotation compute_result(ConceptDenotation&& denot, RoleDenotation&& result) const {
+    void compute_result(const ConceptDenotation& denot, RoleDenotation& result) const {
         for (const auto& single : denot) {
             result.insert(std::make_pair(single, single));
         }
-        return result;
     }
 
 protected:
@@ -28,22 +27,25 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        auto bot_role = RoleDenotation(state.get_instance_info()->get_num_objects());
-        return compute_result(
+        RoleDenotation denotation(state.get_instance_info()->get_num_objects());
+        compute_result(
             m_concept->evaluate(state),
-            std::move(bot_role));
+            denotation);
+        return denotation;
     }
 
-    RoleDenotation evaluate(const State& state, EvaluationCaches& cache) const override {
-        if (cache.m_role_denotation_cache.count(state, *this)) {
-            return cache.m_role_denotation_cache.find(state, *this);
+    const RoleDenotation* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {
+        auto role_cache_entry = cache.m_role_denotation_cache.find(state, *this);
+        auto& status = role_cache_entry->m_status;
+        auto& denotation = role_cache_entry->m_denotation;
+        if (status) {
+            return &denotation;
         }
-        auto bot_role = RoleDenotation(state.get_instance_info()->get_num_objects());
-        auto result = compute_result(
-            m_concept->evaluate(state, cache),
-            std::move(bot_role));
-        cache.m_role_denotation_cache.insert(state, *this, result);
-        return result;
+        compute_result(
+            *m_concept->evaluate(state, cache),
+            denotation);
+        status = true;
+        return &denotation;
     }
 
     int compute_complexity() const override {

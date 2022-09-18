@@ -8,6 +8,23 @@
 namespace dlplan::core::element {
 
 class NullaryBoolean : public Boolean {
+private:
+    void compute_result(const State& state, bool& result) const {
+        const auto& per_predicate_idx_atom_idxs = state.get_per_predicate_idx_atom_idxs();
+        auto it = per_predicate_idx_atom_idxs.find(m_predicate.get_index());
+        if (it != per_predicate_idx_atom_idxs.end()) {
+            result = !it->second.empty();
+            return;
+        }
+        const auto& per_predicate_idx_static_atom_idxs = state.get_instance_info()->get_per_predicate_idx_static_atom_idxs();
+        it = per_predicate_idx_static_atom_idxs.find(m_predicate.get_index());
+        if (it != per_predicate_idx_static_atom_idxs.end()) {
+            result = !it->second.empty();
+            return;
+        }
+        result = false;
+    }
+
 protected:
     const Predicate m_predicate;
 
@@ -23,21 +40,21 @@ public:
     }
 
     bool evaluate(const State& state) const override {
-        const auto& per_predicate_idx_atom_idxs = state.get_per_predicate_idx_atom_idxs();
-        auto it = per_predicate_idx_atom_idxs.find(m_predicate.get_index());
-        if (it != per_predicate_idx_atom_idxs.end()) {
-            return !it->second.empty();
-        }
-        const auto& per_predicate_idx_static_atom_idxs = state.get_instance_info()->get_per_predicate_idx_static_atom_idxs();
-        it = per_predicate_idx_static_atom_idxs.find(m_predicate.get_index());
-        if (it != per_predicate_idx_static_atom_idxs.end()) {
-            return !it->second.empty();
-        }
-        return false;
+        bool denotation;
+        compute_result(state, denotation);
+        return denotation;
     }
 
-    bool evaluate(const State& state, EvaluationCaches&) const override {
-        return evaluate(state);
+    const bool* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {
+        auto boolean_cache_entry = cache.m_boolean_denotation_cache.find(state, *this);
+        auto& status = boolean_cache_entry->m_status;
+        auto& denotation = boolean_cache_entry->m_denotation;
+        if (status) {
+            return &denotation;
+        }
+        compute_result(state, denotation);
+        status = true;
+        return &denotation;
     }
 
     int compute_complexity() const override {

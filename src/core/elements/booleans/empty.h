@@ -6,13 +6,15 @@
 
 namespace dlplan::core::element {
 
-template<typename T>
-bool compute_result(T&& denotation) {
-    return denotation.empty();
-}
 
 template<typename T>
 class EmptyBoolean : public Boolean {
+private:
+    template<typename DENOTATION_TYPE>
+    void compute_result(const DENOTATION_TYPE& denotation, bool& result) const {
+        result = denotation.empty();
+    }
+
 protected:
     const std::shared_ptr<const T> m_element;
 
@@ -22,11 +24,23 @@ public:
     }
 
     bool evaluate(const State& state) const override {
-        return compute_result(m_element->evaluate(state));
+        bool denotation;
+        compute_result(m_element->evaluate(state), denotation);
+        return denotation;
     }
 
-    bool evaluate(const State& state, EvaluationCaches& cache) const override {
-        return compute_result(m_element->evaluate(state, cache));
+    const bool* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {
+        auto boolean_cache_entry = cache.m_boolean_denotation_cache.find(state, *this);
+        auto& status = boolean_cache_entry->m_status;
+        auto& denotation = boolean_cache_entry->m_denotation;
+        if (status) {
+            return &denotation;
+        }
+        compute_result(
+            *m_element->evaluate(state, cache),
+            denotation);
+        status = true;
+        return &denotation;
     }
 
     int compute_complexity() const override {

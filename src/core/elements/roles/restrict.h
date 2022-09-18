@@ -9,13 +9,13 @@ namespace dlplan::core::element {
 
 class RestrictRole : public Role {
 private:
-    RoleDenotation compute_result(RoleDenotation&& role_denot, ConceptDenotation&& concept_denot, RoleDenotation&& result) const {
+    void compute_result(const RoleDenotation& role_denot, const ConceptDenotation& concept_denot, RoleDenotation& result) const {
+        result = role_denot;
         for (const auto& pair : role_denot) {
             if (!concept_denot.contains(pair.second)) {
                 result.erase(pair);
             }
         }
-        return result;
     }
 
 protected:
@@ -33,26 +33,27 @@ public:
     RoleDenotation evaluate(const State& state) const override {
         auto role_denot = m_role->evaluate(state);
         auto concept_denot = m_concept->evaluate(state);
-        RoleDenotation result = role_denot;
-        return compute_result(
-            std::move(role_denot),
-            std::move(concept_denot),
-            std::move(result));
+        RoleDenotation denotation(state.get_instance_info()->get_num_objects());
+        compute_result(
+            m_role->evaluate(state),
+            m_concept->evaluate(state),
+            denotation);
+        return denotation;
     }
 
-    RoleDenotation evaluate(const State& state, EvaluationCaches& cache) const override {
-        if (cache.m_role_denotation_cache.count(state, *this)) {
-            return cache.m_role_denotation_cache.find(state, *this);
+    const RoleDenotation* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {
+        auto role_cache_entry = cache.m_role_denotation_cache.find(state, *this);
+        auto& status = role_cache_entry->m_status;
+        auto& denotation = role_cache_entry->m_denotation;
+        if (status) {
+            return &denotation;
         }
-        auto role_denot = m_role->evaluate(state, cache);
-        auto concept_denot = m_concept->evaluate(state, cache);
-        auto role_denot_2 = role_denot;
-        auto result = compute_result(
-            std::move(role_denot),
-            std::move(concept_denot),
-            std::move(role_denot_2));
-        cache.m_role_denotation_cache.insert(state, *this, result);
-        return result;
+        compute_result(
+            *m_role->evaluate(state, cache),
+            *m_concept->evaluate(state, cache),
+            denotation);
+        status = true;
+        return &denotation;
     }
 
     int compute_complexity() const override {

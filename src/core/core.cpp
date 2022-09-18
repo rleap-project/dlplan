@@ -76,6 +76,12 @@ bool ConceptDenotationFlatSet::contains(int value) const {
     return static_cast<bool>(m_data.count(value));
 }
 
+void ConceptDenotationFlatSet::set() {
+    for (int o1 = 0; o1 < m_num_objects; ++o1) {
+        insert(o1);
+    }
+}
+
 void ConceptDenotationFlatSet::insert(int value) {
     m_data.insert(value);
 }
@@ -182,6 +188,14 @@ phmap::flat_hash_set<std::pair<int, int>>::const_iterator RoleDenotationFlatSet:
 
 bool RoleDenotationFlatSet::contains(const std::pair<int, int>& value) const {
     return static_cast<bool>(m_data.count(value));
+}
+
+void RoleDenotationFlatSet::set() {
+    for (int o1 = 0; o1 < m_num_objects; ++o1) {
+        for (int o2 = 0; o2 < m_num_objects; ++o2) {
+            insert(std::make_pair(o1, o2));
+        }
+    }
 }
 
 void RoleDenotationFlatSet::insert(const std::pair<int, int>& value) {
@@ -317,6 +331,10 @@ bool ConceptDenotationBitset::contains(int value) const {
     return m_data.test(value);
 }
 
+void ConceptDenotationBitset::set() {
+    m_data.set();
+}
+
 void ConceptDenotationBitset::insert(int value) {
     assert(value >= 0 && value < m_num_objects);
     m_data.set(value);
@@ -446,6 +464,10 @@ RoleDenotationBitset::const_iterator RoleDenotationBitset::begin() const {
 
 RoleDenotationBitset::const_iterator RoleDenotationBitset::end() const {
     return RoleDenotationBitset::const_iterator(m_data, m_num_objects, true);
+}
+
+void RoleDenotationBitset::set() {
+    m_data.set();
 }
 
 bool RoleDenotationBitset::contains(const std::pair<int, int>& value) const {

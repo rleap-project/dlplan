@@ -11,9 +11,9 @@ namespace dlplan::core::element {
 
 class SumRoleDistanceNumerical : public Numerical {
 private:
-    int compute_result(RoleDenotation&& role_from_denot, RoleDenotation&& role_denot, RoleDenotation&& role_to_denot) const {
+    void compute_result(const RoleDenotation& role_from_denot, const RoleDenotation& role_denot, const RoleDenotation& role_to_denot, int& result) const {
         utils::PairwiseDistances pairwise_distances = utils::compute_floyd_warshall(role_denot);
-        int result = 0;
+        result = 0;
         int num_objects = role_denot.get_num_objects();
         for (int k = 0; k < num_objects; ++k) {  // property
             for (int i = 0; i < num_objects; ++i) {  // source
@@ -28,7 +28,6 @@ private:
                 }
             }
         }
-        return result;
     }
 
 protected:
@@ -54,20 +53,38 @@ public:
             return INF;
         }
         auto role_denot = m_role->evaluate(state);
-        return compute_result(std::move(role_from_denot), std::move(role_denot), std::move(role_to_denot));
+        int denotation;
+        compute_result(role_from_denot, role_denot, role_to_denot, denotation);
+        return denotation;
     }
 
-    int evaluate(const State& state, EvaluationCaches& cache) const override {
+    const int* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {
+        auto numerical_cache_entry = cache.m_numerical_denotation_cache.find(state, *this);
+        auto& status = numerical_cache_entry->m_status;
+        auto& denotation = numerical_cache_entry->m_denotation;
+        if (status) {
+            return &denotation;
+        }
         auto role_from_denot = m_role_from->evaluate(state, cache);
-        if (role_from_denot.empty()) {
-            return INF;
+        if (role_from_denot->empty()) {
+            denotation = INF;
+            status = true;
+            return &denotation;
         }
         auto role_to_denot = m_role_to->evaluate(state, cache);
-        if (role_to_denot.empty()) {
-            return INF;
+        if (role_to_denot->empty()) {
+            denotation = INF;
+            status = true;
+            return &denotation;
         }
         auto role_denot = m_role->evaluate(state, cache);
-        return compute_result(std::move(role_from_denot), std::move(role_denot), std::move(role_to_denot));
+        compute_result(
+            *role_from_denot,
+            *role_denot,
+            *role_to_denot,
+            denotation);
+        status = true;
+        return &denotation;
     }
 
     int compute_complexity() const override {

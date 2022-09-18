@@ -9,14 +9,13 @@ namespace dlplan::core::element {
 
 class SomeConcept : public Concept {
 private:
-    ConceptDenotation compute_result(RoleDenotation&& role_denot, ConceptDenotation&& concept_denot, ConceptDenotation&& result) const {
+    void compute_result(const RoleDenotation& role_denot, const ConceptDenotation& concept_denot, ConceptDenotation& result) const {
         // find examples a : exists b . (a,b) in R and b in C
         for (const auto& pair : role_denot) {
             if (concept_denot.contains(pair.second)) {
                 result.insert(pair.first);
             }
         }
-        return result;
     }
 
 protected:
@@ -32,24 +31,27 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        auto bot_concept = ConceptDenotation(state.get_instance_info()->get_num_objects());
-        return compute_result(
+        auto denotation = ConceptDenotation(state.get_instance_info()->get_num_objects());
+        compute_result(
             m_role->evaluate(state),
             m_concept->evaluate(state),
-            std::move(bot_concept));
+            denotation);
+        return denotation;
     }
 
-    ConceptDenotation evaluate(const State& state, EvaluationCaches& cache) const override {
-        if (cache.m_concept_denotation_cache.count(state, *this)) {
-            return cache.m_concept_denotation_cache.find(state, *this);
+    const ConceptDenotation* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {
+        auto concept_cache_entry = cache.m_concept_denotation_cache.find(state, *this);
+        auto& status = concept_cache_entry->m_status;
+        auto& denotation = concept_cache_entry->m_denotation;
+        if (status) {
+            return &denotation;
         }
-        auto bot_concept = ConceptDenotation(state.get_instance_info()->get_num_objects());
-        auto result = compute_result(
-            m_role->evaluate(state),
-            m_concept->evaluate(state),
-            std::move(bot_concept));
-        cache.m_concept_denotation_cache.insert(state, *this, result);
-        return result;
+        compute_result(
+            *m_role->evaluate(state, cache),
+            *m_concept->evaluate(state, cache),
+            denotation);
+        status = true;
+        return &denotation;
     }
 
     int compute_complexity() const override {

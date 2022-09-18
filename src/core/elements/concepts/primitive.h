@@ -23,6 +23,16 @@ static void collect_concepts(
 }
 
 class PrimitiveConcept : public Concept {
+private:
+    void compute_result(const State& state, ConceptDenotation& result) const {
+        const InstanceInfo& info = *state.get_instance_info();
+        const auto& atoms = info.get_atoms();
+        const auto& static_atoms = info.get_static_atoms();
+        collect_concepts(state.get_per_predicate_idx_atom_idxs(), atoms, m_predicate, m_pos, result);
+        collect_concepts(info.get_per_predicate_idx_static_atom_idxs(), static_atoms, m_predicate, m_pos, result);
+
+    }
+
 protected:
     const Predicate m_predicate;
     const int m_pos;
@@ -39,23 +49,23 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        const InstanceInfo& info = *state.get_instance_info();
-        int num_objects = info.get_num_objects();
-        ConceptDenotation result(num_objects);
-        const auto& atoms = info.get_atoms();
-        const auto& static_atoms = info.get_static_atoms();
-        collect_concepts(state.get_per_predicate_idx_atom_idxs(), atoms, m_predicate, m_pos, result);
-        collect_concepts(info.get_per_predicate_idx_static_atom_idxs(), static_atoms, m_predicate, m_pos, result);
-        return result;
+        ConceptDenotation denotation(state.get_instance_info()->get_num_objects());
+        compute_result(state, denotation);
+        return denotation;
     }
 
-    ConceptDenotation evaluate(const State& state, EvaluationCaches& cache) const override {
-        if (cache.m_concept_denotation_cache.count(state, *this)) {
-            return cache.m_concept_denotation_cache.find(state, *this);
+    const ConceptDenotation* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {
+        auto concept_cache_entry = cache.m_concept_denotation_cache.find(state, *this);
+        auto& status = concept_cache_entry->m_status;
+        auto& denotation = concept_cache_entry->m_denotation;
+        if (status) {
+            return &denotation;
         }
-        auto result = evaluate(state);
-        cache.m_concept_denotation_cache.insert(state, *this, result);
-        return result;
+        compute_result(
+            state,
+            denotation);
+        status = true;
+        return &denotation;
     }
 
     int compute_complexity() const override {

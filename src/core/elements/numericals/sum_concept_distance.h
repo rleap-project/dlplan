@@ -11,13 +11,12 @@ namespace dlplan::core::element {
 
 class SumConceptDistanceNumerical : public Numerical {
 private:
-    int compute_result(ConceptDenotation&& concept_from_denot, RoleDenotation&& role_denot, ConceptDenotation&& concept_to_denot) const {
-        int result = 0;
+    void compute_result(const ConceptDenotation& concept_from_denot, const RoleDenotation& role_denot, const ConceptDenotation& concept_to_denot, int& result) const {
+        result = 0;
         utils::Distances source_distances = utils::compute_multi_source_multi_target_shortest_distances(concept_from_denot, role_denot, concept_to_denot);
         for (const auto single : concept_from_denot) {
             result = utils::path_addition(result, source_distances[single]);
         }
-        return result;
     }
 
 protected:
@@ -43,20 +42,38 @@ public:
             return INF;
         }
         auto role_denot = m_role->evaluate(state);
-        return compute_result(std::move(concept_from_denot), std::move(role_denot), std::move(concept_to_denot));
+        int denotation;
+        compute_result(concept_from_denot, role_denot, concept_to_denot, denotation);
+        return denotation;
     }
 
-    int evaluate(const State& state, EvaluationCaches& cache) const override {
+    const int* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {
+        auto numerical_cache_entry = cache.m_numerical_denotation_cache.find(state, *this);
+        auto& status = numerical_cache_entry->m_status;
+        auto& denotation = numerical_cache_entry->m_denotation;
+        if (status) {
+            return &denotation;
+        }
         auto concept_from_denot = m_concept_from->evaluate(state, cache);
-        if (concept_from_denot.empty()) {
-            return INF;
+        if (concept_from_denot->empty()) {
+            denotation = INF;
+            status = true;
+            return &denotation;
         }
         auto concept_to_denot = m_concept_to->evaluate(state, cache);
-        if (concept_to_denot.empty()) {
-            return INF;
+        if (concept_to_denot->empty()) {
+            denotation = INF;
+            status = true;
+            return &denotation;
         }
         auto role_denot = m_role->evaluate(state, cache);
-        return compute_result(std::move(concept_from_denot), std::move(role_denot), std::move(concept_to_denot));
+        compute_result(
+            *concept_from_denot,
+            *role_denot,
+            *concept_to_denot,
+            denotation);
+        status = true;
+        return &denotation;
     }
 
     int compute_complexity() const override {

@@ -24,13 +24,16 @@ public:
         return result;
     }
 
-    ConceptDenotation evaluate(const State& state, EvaluationCaches& cache) const override {
-        if (cache.m_concept_denotation_cache.count(state, *this)) {
-            return cache.m_concept_denotation_cache.find(state, *this);
+    const ConceptDenotation* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {
+        auto concept_cache_entry = cache.m_concept_denotation_cache.find(state, *this);
+        auto& status = concept_cache_entry->m_status;
+        auto& denotation = concept_cache_entry->m_denotation;
+        if (status) {
+            return &denotation;
         }
-        auto result = evaluate(state);
-        cache.m_concept_denotation_cache.insert(state, *this, result);
-        return result;
+        denotation = evaluate(state);
+        status = true;
+        return &denotation;
     }
 
     int compute_complexity() const override {

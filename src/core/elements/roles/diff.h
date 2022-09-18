@@ -8,8 +8,9 @@ namespace dlplan::core::element {
 
 class DiffRole : public Role {
 private:
-    RoleDenotation compute_result(RoleDenotation&& left_denot, RoleDenotation&& right_denot) const {
-        return left_denot -= right_denot;
+    void compute_result(const RoleDenotation& left_denot, const RoleDenotation& right_denot, RoleDenotation& result) const {
+        result = left_denot;
+        result -= right_denot;
     }
 
 protected:
@@ -25,20 +26,27 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        return compute_result(
+        RoleDenotation denotation(state.get_instance_info()->get_num_objects());
+        compute_result(
             m_role_left->evaluate(state),
-            m_role_right->evaluate(state));
+            m_role_right->evaluate(state),
+            denotation);
+        return denotation;
     }
 
-    RoleDenotation evaluate(const State& state, EvaluationCaches& cache) const override {
-        if (cache.m_role_denotation_cache.count(state, *this)) {
-            return cache.m_role_denotation_cache.find(state, *this);
+    const RoleDenotation* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {
+        auto role_cache_entry = cache.m_role_denotation_cache.find(state, *this);
+        auto& status = role_cache_entry->m_status;
+        auto& denotation = role_cache_entry->m_denotation;
+        if (status) {
+            return &denotation;
         }
-        auto result = compute_result(
-            m_role_left->evaluate(state, cache),
-            m_role_right->evaluate(state, cache));
-        cache.m_role_denotation_cache.insert(state, *this, result);
-        return result;
+        compute_result(
+            *m_role_left->evaluate(state, cache),
+            *m_role_right->evaluate(state, cache),
+            denotation);
+        status = true;
+        return &denotation;
     }
 
     int compute_complexity() const override {

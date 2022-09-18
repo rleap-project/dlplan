@@ -144,7 +144,6 @@ public:
     }
 
     void push_back(const Element *entry) {
-        //std::cout << "push_back" << std::endl;
         size_t segment = get_segment(the_size);
         size_t offset = get_offset(the_size);
         if (segment == segments.size()) {

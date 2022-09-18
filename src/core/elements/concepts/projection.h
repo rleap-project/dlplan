@@ -11,12 +11,11 @@ namespace dlplan::core::element {
 
 class ProjectionConcept : public Concept {
 private:
-    ConceptDenotation compute_result(RoleDenotation&& denot, ConceptDenotation&& result) const {
+    void compute_result(const RoleDenotation& denot, ConceptDenotation& result) const {
         for (const auto pair : denot) {
             if (m_pos == 0) result.insert(pair.first);
             else if (m_pos == 1) result.insert(pair.second);
         }
-        return result;
     }
 
 protected:
@@ -35,22 +34,25 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        auto bot_concept = ConceptDenotation(state.get_instance_info()->get_num_objects());
-        return compute_result(
+        ConceptDenotation denotation(state.get_instance_info()->get_num_objects());
+        compute_result(
             m_role->evaluate(state),
-            std::move(bot_concept));
+            denotation);
+        return denotation;
     }
 
-    ConceptDenotation evaluate(const State& state, EvaluationCaches& cache) const override {
-        if (cache.m_concept_denotation_cache.count(state, *this)) {
-            return cache.m_concept_denotation_cache.find(state, *this);
+    const ConceptDenotation* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {
+        auto concept_cache_entry = cache.m_concept_denotation_cache.find(state, *this);
+        auto& status = concept_cache_entry->m_status;
+        auto& denotation = concept_cache_entry->m_denotation;
+        if (status) {
+            return &denotation;
         }
-        auto bot_concept = ConceptDenotation(state.get_instance_info()->get_num_objects());
-        auto result = compute_result(
-            m_role->evaluate(state, cache),
-            std::move(bot_concept));
-        cache.m_concept_denotation_cache.insert(state, *this, result);
-        return result;
+        compute_result(
+            *m_role->evaluate(state, cache),
+            denotation);
+        status = true;
+        return &denotation;
     }
 
     int compute_complexity() const override {

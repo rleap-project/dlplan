@@ -8,8 +8,9 @@ namespace dlplan::core::element {
 
 class DiffConcept : public Concept {
 private:
-    ConceptDenotation compute_result(ConceptDenotation&& left_denot, ConceptDenotation&& right_denot) const {
-        return left_denot -= right_denot;
+    void compute_result(const ConceptDenotation& left_denot, const ConceptDenotation& right_denot, ConceptDenotation& result) const {
+        result = left_denot;
+        result -= right_denot;
     }
 
 protected:
@@ -25,20 +26,27 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        return compute_result(
+        ConceptDenotation result(state.get_instance_info()->get_num_objects());
+        compute_result(
             m_concept_left->evaluate(state),
-            m_concept_right->evaluate(state));
+            m_concept_right->evaluate(state),
+            result);
+        return result;
     }
 
-    ConceptDenotation evaluate(const State& state, EvaluationCaches& cache) const override {
-        if (cache.m_concept_denotation_cache.count(state, *this)) {
-            return cache.m_concept_denotation_cache.find(state, *this);
+    const ConceptDenotation* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {
+        auto concept_cache_entry = cache.m_concept_denotation_cache.find(state, *this);
+        auto& status = concept_cache_entry->m_status;
+        auto& denotation = concept_cache_entry->m_denotation;
+        if (status) {
+            return &denotation;
         }
-        auto result = compute_result(
-            m_concept_left->evaluate(state, cache),
-            m_concept_right->evaluate(state, cache));
-        cache.m_concept_denotation_cache.insert(state, *this, result);
-        return result;
+        compute_result(
+            *m_concept_left->evaluate(state, cache),
+            *m_concept_right->evaluate(state, cache),
+            denotation);
+        status = true;
+        return &denotation;
     }
 
     int compute_complexity() const override {
