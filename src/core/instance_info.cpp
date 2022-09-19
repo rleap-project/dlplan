@@ -13,10 +13,10 @@ namespace dlplan::core {
 
 static std::string compute_atom_name(const Predicate& predicate, const std::vector<Object>& objects) {
     std::stringstream ss;
-    ss << predicate.get_name() << "(";
+    ss << predicate.get_name_ref() << "(";
     for (size_t i = 0; i < objects.size(); ++i) {
         const auto& object = objects[i];
-        ss << object.get_name();
+        ss << object.get_name_ref();
         if (i < objects.size() - 1) ss << ",";
     }
     ss << ")";
@@ -55,17 +55,17 @@ const Atom& InstanceInfoImpl::add_atom(const Predicate& predicate, const std::ve
     }
     if (is_static) {
         Atom atom = Atom(compute_atom_name(predicate, objects), m_static_atoms.size(), predicate, objects, is_static);
-        auto result = m_static_atom_name_to_static_atom_idx.emplace(atom.get_name(), m_static_atoms.size());
+        auto result = m_static_atom_name_to_static_atom_idx.emplace(atom.get_name_ref(), m_static_atoms.size());
         bool newly_inserted = result.second;
         if (!newly_inserted) {
-            throw std::runtime_error("InstanceInfoImpl::add_atom - atom with name ("s + atom.get_name() + ") already exists.");
+            throw std::runtime_error("InstanceInfoImpl::add_atom - atom with name ("s + atom.get_name_ref() + ") already exists.");
         }
         m_per_predicate_idx_static_atom_idxs[predicate.get_index()].push_back(atom.get_index());
         m_static_atoms.push_back(std::move(atom));
         return m_static_atoms.back();
     } else {
         Atom atom = Atom(compute_atom_name(predicate, objects), m_atoms.size(), predicate, objects, is_static);
-        auto result = m_atom_name_to_atom_idx.emplace(atom.get_name(), m_atoms.size());
+        auto result = m_atom_name_to_atom_idx.emplace(atom.get_name_ref(), m_atoms.size());
         bool newly_inserted = result.second;
         if (!newly_inserted) {
             return m_atoms[result.first->second];
@@ -77,9 +77,9 @@ const Atom& InstanceInfoImpl::add_atom(const Predicate& predicate, const std::ve
 
 const Object& InstanceInfoImpl::add_object(const std::string& object_name) {
     Object object = Object(object_name, m_objects.size());
-    auto result = m_object_name_to_object_idx.emplace(object.get_name(), m_objects.size());
+    auto result = m_object_name_to_object_idx.emplace(object.get_name_ref(), m_objects.size());
     if (!result.second) {
-        throw std::runtime_error("InstanceInfoImpl::add_object - object with name ("s + object.get_name() + ") already exists.");
+        throw std::runtime_error("InstanceInfoImpl::add_object - object with name ("s + object.get_name_ref() + ") already exists.");
     }
     m_objects.push_back(std::move(object));
     return m_objects.back();
@@ -155,7 +155,7 @@ const std::vector<Object>& InstanceInfoImpl::get_objects() const {
     return m_objects;
 }
 
-const Object& InstanceInfoImpl::get_object(int object_idx) const {
+const Object& InstanceInfoImpl::get_object_ref(int object_idx) const {
     if (!utils::in_bounds(object_idx, m_objects)) {
         throw std::runtime_error("InstanceInfoImpl::get_object - object index out of range.");
     }

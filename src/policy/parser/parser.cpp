@@ -34,7 +34,7 @@ Expression_Ptr Parser::parse_ast(Tokens &tokens) const {
         if (tokens.empty()) throw std::runtime_error("Parser::parse_ast - Expected ')' is missing.");
         tokens.pop_front();
         if (children.empty()) throw std::runtime_error("Parser::parse_ast - Empty list ().");
-        std::string name = children.at(0)->get_name();
+        std::string name = children.at(0)->get_name_ref();
         // Construct an expression that can be parsed into an element if the description is correct.
         return ExpressionFactory().make_ast(name, std::move(children));
     } else if (token.second == ")") {

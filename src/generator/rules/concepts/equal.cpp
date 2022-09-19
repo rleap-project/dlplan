@@ -10,7 +10,7 @@ std::function<ConceptTaskResult(const States&, const core::Role&, const core::Co
     [](const States& states, const core::Role& role, const core::Concept& element, core::element::GeneratorEvaluationCaches& caches) {
     auto primitive_role = std::dynamic_pointer_cast<const core::element::PrimitiveRole>(role.get_element());
     assert(primitive_role);
-    std::string predicate_name = primitive_role->get_predicate_ref().get_name();
+    std::string predicate_name = primitive_role->get_predicate_ref().get_name_ref();
     if (predicate_name.substr(predicate_name.size() - 2, 2) != "_g") {
         return ConceptTaskResult(
             core::Concept(element),

@@ -17,7 +17,7 @@ static void collect_concepts(
     if (it != per_predicate_idx_atom_idxs.end()) {
         for (int atom_idx : it->second) {
             const auto& atom = atoms[atom_idx];
-            result.insert(atom.get_object(pos).get_index());
+            result.insert(atom.get_object_ref(pos).get_index());
         }
     }
 }
@@ -28,7 +28,7 @@ private:
         const InstanceInfo& info = *state.get_instance_info();
         const auto& atoms = info.get_atoms();
         const auto& static_atoms = info.get_static_atoms();
-        collect_concepts(state.get_per_predicate_idx_atom_idxs(), atoms, m_predicate, m_pos, result);
+        collect_concepts(state.get_per_predicate_idx_atom_idxs_ref(), atoms, m_predicate, m_pos, result);
         collect_concepts(info.get_per_predicate_idx_static_atom_idxs(), static_atoms, m_predicate, m_pos, result);
 
     }
@@ -74,7 +74,7 @@ public:
 
 
     void compute_repr(std::stringstream& out) const override {
-        out << get_name() << "(" << m_predicate.get_name() << "," << std::to_string(m_pos) << ")";
+        out << get_name() << "(" << m_predicate.get_name_ref() << "," << std::to_string(m_pos) << ")";
     }
 
     static std::string get_name() {

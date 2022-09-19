@@ -605,8 +605,8 @@ const std::vector<Object>& InstanceInfo::get_objects() const {
     return m_pImpl->get_objects();
 }
 
-const Object& InstanceInfo::get_object(int index) const {
-    return m_pImpl->get_object(index);
+const Object& InstanceInfo::get_object_ref(int index) const {
+    return m_pImpl->get_object_ref(index);
 }
 
 int InstanceInfo::get_object_idx(const std::string& name) const {

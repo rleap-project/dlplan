@@ -67,7 +67,7 @@ public:
     bool exists_object(const Object& object) const;
     bool exists_object(const std::string name) const;
     const std::vector<Object>& get_objects() const;
-    const Object& get_object(int object_idx) const;
+    const Object& get_object_ref(int object_idx) const;
     int get_object_idx(const std::string& object_name) const;
     int get_num_objects() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;

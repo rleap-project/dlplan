@@ -278,7 +278,7 @@ public:
     bool operator!=(const Constant& other) const;
 
     int get_index() const;
-    const std::string& get_name() const;
+    const std::string& get_name_ref() const;
 };
 
 
@@ -308,7 +308,7 @@ public:
      * Getters.
      */
     int get_index() const;
-    const std::string& get_name() const;
+    const std::string& get_name_ref() const;
     int get_arity() const;
 };
 
@@ -335,7 +335,7 @@ public:
     bool operator!=(const Object& other) const;
 
     int get_index() const;
-    const std::string& get_name() const;
+    const std::string& get_name_ref() const;
 };
 
 
@@ -370,11 +370,11 @@ public:
     /**
      * Getters.
      */
-    std::string get_name() const;
+    std::string get_name_ref() const;
     int get_index() const;
     const Predicate& get_predicate() const;
     const std::vector<Object>& get_objects() const;
-    const Object& get_object(int pos) const;
+    const Object& get_object_ref(int pos) const;
     bool get_is_static() const;
 };
 
@@ -427,11 +427,12 @@ public:
     /**
      * Getters.
      */
+    const InstanceInfo& get_instance_info_ref() const;
     std::shared_ptr<const InstanceInfo> get_instance_info() const;
-    const Index_Vec& get_atom_idxs() const;
+    const Index_Vec& get_atom_idxs_ref() const;
     Index_Vec compute_sorted_atom_idxs() const;
     int get_index() const;
-    const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_atom_idxs() const;
+    const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_atom_idxs_ref() const;
 };
 
 
@@ -513,7 +514,7 @@ public:
     bool exists_object(const Object& object) const;
     bool exists_object(const std::string name) const;
     const std::vector<Object>& get_objects() const;
-    const Object& get_object(int index) const;
+    const Object& get_object_ref(int index) const;
     int get_object_idx(const std::string& name) const;
     int get_num_objects() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;

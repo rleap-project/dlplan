@@ -10,7 +10,7 @@ namespace dlplan::core::element {
 class NullaryBoolean : public Boolean {
 private:
     void compute_result(const State& state, bool& result) const {
-        const auto& per_predicate_idx_atom_idxs = state.get_per_predicate_idx_atom_idxs();
+        const auto& per_predicate_idx_atom_idxs = state.get_per_predicate_idx_atom_idxs_ref();
         auto it = per_predicate_idx_atom_idxs.find(m_predicate.get_index());
         if (it != per_predicate_idx_atom_idxs.end()) {
             result = !it->second.empty();
@@ -62,7 +62,7 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << get_name() << "(" << m_predicate.get_name() << ")";
+        out << get_name() << "(" << m_predicate.get_name_ref() << ")";
     }
 
     static std::string get_name() {

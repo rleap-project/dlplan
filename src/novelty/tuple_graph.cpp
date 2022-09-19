@@ -24,7 +24,7 @@ TupleGraph::TupleGraph(
     m_state_indices_by_distance[0].emplace_back(root_state);
     //novelty_table.insert(TupleIndexGenerator(
     //    novelty_base,
-    //    state_information.get_state_ref(root_state).get_atom_idxs()));
+    //    state_information.get_state_ref(root_state).get_atom_idxs_ref()));
     if (stop_if_goal && state_space.is_goal(root_state)) {
         return;
     }
@@ -37,7 +37,7 @@ TupleGraph::TupleGraph(
         m_state_indices_by_distance[1].emplace_back(successor);
         //novelty_table.insert(TupleIndexGenerator(
         //    novelty_base,
-        //    state_information.get_state_ref(successor).get_atom_idxs()));
+        //    state_information.get_state_ref(successor).get_atom_idxs_ref()));
     }
     if (width == 0) {
         return;
