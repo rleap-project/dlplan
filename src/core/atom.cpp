@@ -39,7 +39,7 @@ bool Atom::operator!=(const Atom& other) const {
     return !(*this == other);
 }
 
-std::string Atom::get_name_ref() const {
+const std::string& Atom::get_name_ref() const {
     return m_name;
 }
 
@@ -47,11 +47,11 @@ int Atom::get_index() const {
     return m_index;
 }
 
-const Predicate& Atom::get_predicate() const {
+const Predicate& Atom::get_predicate_ref() const {
     return m_predicate;
 }
 
-const std::vector<Object>& Atom::get_objects() const {
+const std::vector<Object>& Atom::get_objects_ref() const {
     return m_objects;
 }
 

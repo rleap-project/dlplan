@@ -237,8 +237,12 @@ Role SyntacticElementFactoryImpl::make_transitive_reflexive_closure(const Role& 
         std::make_unique<element::TransitiveReflexiveClosureRole>(*m_vocabulary_info, role.get_element())).first, index);
 }
 
-const VocabularyInfo* SyntacticElementFactoryImpl::get_vocabulary_info() const {
-    return m_vocabulary_info.get();
+const VocabularyInfo& SyntacticElementFactoryImpl::get_vocabulary_info_ref() const {
+    return *m_vocabulary_info;
+}
+
+std::shared_ptr<const VocabularyInfo> SyntacticElementFactoryImpl::get_vocabulary_info() const {
+    return m_vocabulary_info;
 }
 
 }

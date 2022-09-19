@@ -41,7 +41,7 @@ public:
     bool exists_predicate_name(const std::string& name) const;
     const std::vector<Predicate>& get_predicates() const;
     int get_predicate_idx(const std::string& name) const;
-    const Predicate& get_predicate(int index) const;
+    const Predicate& get_predicate_ref(int index) const;
     bool exists_constant(const Constant& constant) const;
     bool exists_constant_name(const std::string& name) const;
     int get_constant_idx(const std::string& name) const;

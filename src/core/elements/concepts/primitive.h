@@ -26,8 +26,8 @@ class PrimitiveConcept : public Concept {
 private:
     void compute_result(const State& state, ConceptDenotation& result) const {
         const InstanceInfo& info = *state.get_instance_info();
-        const auto& atoms = info.get_atoms();
-        const auto& static_atoms = info.get_static_atoms();
+        const auto& atoms = info.get_atoms_ref();
+        const auto& static_atoms = info.get_static_atoms_ref();
         collect_concepts(state.get_per_predicate_idx_atom_idxs_ref(), atoms, m_predicate, m_pos, result);
         collect_concepts(info.get_per_predicate_idx_static_atom_idxs(), static_atoms, m_predicate, m_pos, result);
 

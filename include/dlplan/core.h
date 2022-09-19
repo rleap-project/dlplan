@@ -370,10 +370,10 @@ public:
     /**
      * Getters.
      */
-    std::string get_name_ref() const;
+    const std::string& get_name_ref() const;
     int get_index() const;
-    const Predicate& get_predicate() const;
-    const std::vector<Object>& get_objects() const;
+    const Predicate& get_predicate_ref() const;
+    const std::vector<Object>& get_objects_ref() const;
     const Object& get_object_ref(int pos) const;
     bool get_is_static() const;
 };
@@ -459,7 +459,7 @@ public:
     bool exists_predicate_name(const std::string& name) const;
     const std::vector<Predicate>& get_predicates() const;
     int get_predicate_idx(const std::string& name) const;
-    const Predicate& get_predicate(int index) const;
+    const Predicate& get_predicate_ref(int index) const;
     bool exists_constant(const Constant& constant) const;
     bool exists_constant_name(const std::string& name) const;
     int get_constant_idx(const std::string& name) const;
@@ -507,16 +507,17 @@ public:
      */
     int get_index() const;
     bool exists_atom(const Atom& atom) const;
-    const std::vector<Atom>& get_atoms() const;
-    const std::vector<Atom>& get_static_atoms() const;
+    const std::vector<Atom>& get_atoms_ref() const;
+    const std::vector<Atom>& get_static_atoms_ref() const;
     const Atom& get_atom(int index) const;
     int get_atom_idx(const std::string& name) const;
     bool exists_object(const Object& object) const;
     bool exists_object(const std::string name) const;
-    const std::vector<Object>& get_objects() const;
+    const std::vector<Object>& get_objects_ref() const;
     const Object& get_object_ref(int index) const;
     int get_object_idx(const std::string& name) const;
     int get_num_objects() const;
+    const VocabularyInfo& get_vocabulary_info_ref() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
     const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs() const;
     const ConceptDenotation& get_top_concept() const;
@@ -559,6 +560,7 @@ public:
      * Getters.
      */
     int get_index() const;
+    const VocabularyInfo& get_vocabulary_info_ref() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
 };
 
@@ -603,6 +605,7 @@ public:
 
     std::string compute_repr() const override;
 
+    const element::Concept& get_element_ref() const;
     std::shared_ptr<const element::Concept> get_element() const;
 };
 
@@ -630,6 +633,7 @@ public:
 
     std::string compute_repr() const override;
 
+    const element::Role& get_element_ref() const;
     std::shared_ptr<const element::Role> get_element() const;
 };
 
@@ -657,6 +661,7 @@ public:
 
     std::string compute_repr() const override;
 
+    const element::Numerical& get_element_ref() const;
     std::shared_ptr<const element::Numerical> get_element() const;
 };
 
@@ -684,6 +689,7 @@ public:
 
     std::string compute_repr() const override;
 
+    const element::Boolean& get_element_ref() const;
     std::shared_ptr<const element::Boolean> get_element() const;
 };
 
@@ -703,7 +709,8 @@ public:
     SyntacticElementFactory& operator=(SyntacticElementFactory&& other);
     ~SyntacticElementFactory();
 
-    const VocabularyInfo* get_vocabulary_info() const;
+    const VocabularyInfo& get_vocabulary_info_ref() const;
+    std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
 
     /**
      * Returns a Concept if the description is correct.

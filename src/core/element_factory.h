@@ -71,7 +71,8 @@ public:
     /**
      * Getters.
      */
-    const VocabularyInfo* get_vocabulary_info() const;
+    const VocabularyInfo& get_vocabulary_info_ref() const;
+    std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
 };
 
 }

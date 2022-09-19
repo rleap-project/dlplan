@@ -52,7 +52,7 @@ int VocabularyInfoImpl::get_predicate_idx(const std::string& name) const {
     return m_predicate_name_to_predicate_idx.at(name);
 }
 
-const Predicate& VocabularyInfoImpl::get_predicate(int predicate_idx) const {
+const Predicate& VocabularyInfoImpl::get_predicate_ref(int predicate_idx) const {
     if (!utils::in_bounds(predicate_idx, m_predicates)) {
         throw std::runtime_error("VocabularyInfoImpl::get_predicate - predicate index out of range.");
     }

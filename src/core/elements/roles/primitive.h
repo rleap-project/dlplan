@@ -26,8 +26,8 @@ class PrimitiveRole : public Role {
 private:
     void compute_result(const State& state, RoleDenotation& result) const {
         const InstanceInfo& info = *state.get_instance_info();
-        const auto& atoms = info.get_atoms();
-        const auto& static_atoms = info.get_static_atoms();
+        const auto& atoms = info.get_atoms_ref();
+        const auto& static_atoms = info.get_static_atoms_ref();
         collect_roles(state.get_per_predicate_idx_atom_idxs_ref(), atoms, m_predicate, m_pos_1, m_pos_2, result);
         collect_roles(info.get_per_predicate_idx_static_atom_idxs(), static_atoms, m_predicate, m_pos_1, m_pos_2, result);
     }

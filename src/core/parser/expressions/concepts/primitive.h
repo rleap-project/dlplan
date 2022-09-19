@@ -18,7 +18,7 @@ protected:
         const std::string& predicate_name = m_children[0]->get_name();
         int pos = try_parse_number(m_children[1]->get_name());
         // 2. Construct element
-        return std::make_unique<element::PrimitiveConcept>(vocabulary, vocabulary.get_predicate(vocabulary.get_predicate_idx(predicate_name)), pos);
+        return std::make_unique<element::PrimitiveConcept>(vocabulary, vocabulary.get_predicate_ref(vocabulary.get_predicate_idx(predicate_name)), pos);
     }
 
 public:

@@ -22,7 +22,7 @@ State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vecto
     m_atom_idxs.reserve(atoms.size());
     for (const auto& atom : atoms) {
         int atom_idx = atom.get_index();
-        int predicate_idx = atom.get_predicate().get_index();
+        int predicate_idx = atom.get_predicate_ref().get_index();
         m_atom_idxs.push_back(atom_idx);
         m_per_predicate_idx_atom_idxs[predicate_idx].push_back(atom_idx);
     }
@@ -30,7 +30,7 @@ State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vecto
 
 State::State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs, int index)
     : m_instance_info(instance_info), m_index(index) {
-    const auto& atoms = instance_info->get_atoms();
+    const auto& atoms = instance_info->get_atoms_ref();
     if (!std::all_of(atom_idxs.begin(), atom_idxs.end(), [&](int atom_idx){ return utils::in_bounds(atom_idx, atoms); })) {
         throw std::runtime_error("State::State - atom index out of range.");
     }
@@ -40,7 +40,7 @@ State::State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec&
     m_atom_idxs.reserve(atoms.size());
     for (int atom_idx : atom_idxs) {
         const auto& atom = atoms[atom_idx];
-        int predicate_idx = atom.get_predicate().get_index();
+        int predicate_idx = atom.get_predicate_ref().get_index();
         m_atom_idxs.push_back(atom_idx);
         m_per_predicate_idx_atom_idxs[predicate_idx].push_back(atom_idx);
     }

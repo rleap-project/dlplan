@@ -577,12 +577,12 @@ bool InstanceInfo::exists_atom(const Atom& atom) const {
     return m_pImpl->exists_atom(atom);
 }
 
-const std::vector<Atom>& InstanceInfo::get_atoms() const {
-    return m_pImpl->get_atoms();
+const std::vector<Atom>& InstanceInfo::get_atoms_ref() const {
+    return m_pImpl->get_atoms_ref();
 }
 
-const std::vector<Atom>& InstanceInfo::get_static_atoms() const {
-    return m_pImpl->get_static_atoms();
+const std::vector<Atom>& InstanceInfo::get_static_atoms_ref() const {
+    return m_pImpl->get_static_atoms_ref();
 }
 
 const Atom& InstanceInfo::get_atom(int index) const {
@@ -601,8 +601,8 @@ bool InstanceInfo::exists_object(const std::string name) const {
     return m_pImpl->exists_object(name);
 }
 
-const std::vector<Object>& InstanceInfo::get_objects() const {
-    return m_pImpl->get_objects();
+const std::vector<Object>& InstanceInfo::get_objects_ref() const {
+    return m_pImpl->get_objects_ref();
 }
 
 const Object& InstanceInfo::get_object_ref(int index) const {
@@ -615,6 +615,10 @@ int InstanceInfo::get_object_idx(const std::string& name) const {
 
 int InstanceInfo::get_num_objects() const {
     return m_pImpl->get_num_objects();
+}
+
+const VocabularyInfo& InstanceInfo::get_vocabulary_info_ref() const {
+    return m_pImpl->get_vocabulary_info_ref();
 }
 
 std::shared_ptr<const VocabularyInfo> InstanceInfo::get_vocabulary_info() const {
@@ -681,8 +685,8 @@ int VocabularyInfo::get_predicate_idx(const std::string& name) const {
     return m_pImpl->get_predicate_idx(name);
 }
 
-const Predicate& VocabularyInfo::get_predicate(int index) const {
-    return m_pImpl->get_predicate(index);
+const Predicate& VocabularyInfo::get_predicate_ref(int index) const {
+    return m_pImpl->get_predicate_ref(index);
 }
 
 bool VocabularyInfo::exists_constant(const Constant& constant) const {
@@ -717,6 +721,10 @@ void BaseElement::set_index(int index) {
 
 int BaseElement::get_index() const {
     return m_index;
+}
+
+const VocabularyInfo& BaseElement::get_vocabulary_info_ref() const {
+    return *m_vocabulary_info;
 }
 
 std::shared_ptr<const VocabularyInfo> BaseElement::get_vocabulary_info() const {
@@ -756,6 +764,10 @@ std::string Concept::compute_repr() const {
     return m_element->compute_repr();
 }
 
+const element::Concept& Concept::get_element_ref() const {
+    return *m_element;
+}
+
 std::shared_ptr<const element::Concept> Concept::get_element() const {
     return m_element;
 }
@@ -791,6 +803,10 @@ int Role::compute_complexity() const {
 
 std::string Role::compute_repr() const {
     return m_element->compute_repr();
+}
+
+const element::Role& Role::get_element_ref() const {
+    return *m_element;
 }
 
 std::shared_ptr<const element::Role> Role::get_element() const {
@@ -830,6 +846,10 @@ std::string Numerical::compute_repr() const {
     return m_element->compute_repr();
 }
 
+const element::Numerical& Numerical::get_element_ref() const {
+    return *m_element;
+}
+
 std::shared_ptr<const element::Numerical> Numerical::get_element() const {
     return m_element;
 }
@@ -867,6 +887,10 @@ std::string Boolean::compute_repr() const {
     return m_element->compute_repr();
 }
 
+const element::Boolean& Boolean::get_element_ref() const {
+    return *m_element;
+}
+
 std::shared_ptr<const element::Boolean> Boolean::get_element() const {
     return m_element;
 }
@@ -895,7 +919,11 @@ SyntacticElementFactory& SyntacticElementFactory::operator=(SyntacticElementFact
 
 SyntacticElementFactory::~SyntacticElementFactory() = default;
 
-const VocabularyInfo* SyntacticElementFactory::get_vocabulary_info() const {
+const VocabularyInfo& SyntacticElementFactory::get_vocabulary_info_ref() const {
+    return m_pImpl->get_vocabulary_info_ref();
+}
+
+std::shared_ptr<const VocabularyInfo> SyntacticElementFactory::get_vocabulary_info() const {
     return m_pImpl->get_vocabulary_info();
 }
 

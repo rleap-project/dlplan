@@ -28,12 +28,12 @@ InstanceInfoImpl::InstanceInfoImpl(std::shared_ptr<const VocabularyInfo> vocabul
 }
 
 const Atom& InstanceInfoImpl::add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static) {
-    if (m_vocabulary_info->get_predicate(m_vocabulary_info->get_predicate_idx(predicate_name)).get_arity() != static_cast<int>(object_names.size())) {
-        throw std::runtime_error("InstanceInfoImpl::add_atom - predicate arity does not match the number of objects ("s + std::to_string(m_vocabulary_info->get_predicate(m_vocabulary_info->get_predicate_idx(predicate_name)).get_arity()) + " != " + std::to_string(object_names.size()));
+    if (m_vocabulary_info->get_predicate_ref(m_vocabulary_info->get_predicate_idx(predicate_name)).get_arity() != static_cast<int>(object_names.size())) {
+        throw std::runtime_error("InstanceInfoImpl::add_atom - predicate arity does not match the number of objects ("s + std::to_string(m_vocabulary_info->get_predicate_ref(m_vocabulary_info->get_predicate_idx(predicate_name)).get_arity()) + " != " + std::to_string(object_names.size()));
     }
     // predicate related
     int predicate_idx = m_vocabulary_info->get_predicate_idx(predicate_name);
-    const Predicate& predicate = m_vocabulary_info->get_predicate(predicate_idx);
+    const Predicate& predicate = m_vocabulary_info->get_predicate_ref(predicate_idx);
     // object related
     std::vector<Object> objects;
     for (int i = 0; i < static_cast<int>(object_names.size()); ++i) {
@@ -117,11 +117,11 @@ bool InstanceInfoImpl::exists_atom(const Atom& atom) const {
     return (m_atoms[atom.get_index()] == atom) ? true : false;
 }
 
-const std::vector<Atom>& InstanceInfoImpl::get_atoms() const {
+const std::vector<Atom>& InstanceInfoImpl::get_atoms_ref() const {
     return m_atoms;
 }
 
-const std::vector<Atom>& InstanceInfoImpl::get_static_atoms() const {
+const std::vector<Atom>& InstanceInfoImpl::get_static_atoms_ref() const {
     return m_static_atoms;
 }
 
@@ -151,7 +151,7 @@ bool InstanceInfoImpl::exists_object(const std::string name) const {
     return m_object_name_to_object_idx.find(name) != m_object_name_to_object_idx.end();
 }
 
-const std::vector<Object>& InstanceInfoImpl::get_objects() const {
+const std::vector<Object>& InstanceInfoImpl::get_objects_ref() const {
     return m_objects;
 }
 
@@ -171,6 +171,10 @@ int InstanceInfoImpl::get_object_idx(const std::string& object_name) const {
 
 int InstanceInfoImpl::get_num_objects() const {
     return m_objects.size();
+}
+
+const VocabularyInfo& InstanceInfoImpl::get_vocabulary_info_ref() const {
+    return *m_vocabulary_info;
 }
 
 std::shared_ptr<const VocabularyInfo> InstanceInfoImpl::get_vocabulary_info() const {
