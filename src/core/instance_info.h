@@ -56,9 +56,8 @@ public:
     const Atom& add_atom(const std::string &predicate_name, const Name_Vec &object_names);
     const Atom& add_static_atom(const std::string& predicate_name, const Name_Vec& object_names);
 
-    /**
-     * Getters
-     */
+    void set_index(int index);
+
     int get_index() const;
     bool exists_atom(const Atom& atom) const;
     const std::vector<Atom>& get_atoms() const;

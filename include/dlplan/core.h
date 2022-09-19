@@ -497,6 +497,11 @@ public:
     const Atom& add_static_atom(const std::string& predicate_name, const Name_Vec& object_names);
 
     /**
+     * Setters.
+     */
+    void set_index(int index);
+
+    /**
      * Getters.
      */
     int get_index() const;

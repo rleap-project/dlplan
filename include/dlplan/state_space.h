@@ -224,7 +224,7 @@ public:
  */
 class StateSpaceReader {
 public:
-    StateSpace read(std::shared_ptr<const core::VocabularyInfo> vocabulary_info=nullptr) const;
+    StateSpace read(std::shared_ptr<const core::VocabularyInfo> vocabulary_info=nullptr, int index=-1) const;
 };
 
 }

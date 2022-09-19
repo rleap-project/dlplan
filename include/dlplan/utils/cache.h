@@ -66,7 +66,6 @@ public:
         if (!sp) {
             new_insertion = true;
             element->set_index(m_index_counter++);
-            std::cout << "instantiated: " << key << " " << element->get_index() << std::endl;
             cached = sp = std::shared_ptr<VALUE>(
                 element.get(),
                 [parent=this->shared_from_this(), original_deleter=element.get_deleter()](VALUE* x)
@@ -81,8 +80,6 @@ public:
                 }
             );
             element.release();
-        } else {
-            std::cout << "pruned: " << key << std::endl;
         }
         return std::make_pair(sp, new_insertion);
     }

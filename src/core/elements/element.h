@@ -84,6 +84,32 @@ struct CacheEntry {
 };
 
 /**
+ * A wrapper around std::vector that automatically resizes
+ * upon access such that index fits into it.
+ */
+template<typename T, typename Alloc=std::allocator<T>>
+class AutoResizeVector {
+private:
+    std::vector<T, Alloc> m_data;
+
+public:
+    T& operator[](int index) {
+        if (index >= static_cast<int>(m_data.size())) {
+            m_data.resize(index + 1);
+        }
+        return m_data[index];
+    }
+
+    auto begin() {
+        return m_data.begin();
+    }
+
+    auto end() {
+        return m_data.end();
+    }
+};
+
+/**
  * Thread-safe cache for concept and role denotations per state.
  */
 template<typename ELEMENT_TYPE, typename DENOTATION_TYPE>
@@ -95,7 +121,7 @@ private:
      *
      * For simplicity we used unordered_maps but we might want to use vector instead
      */
-    std::unordered_map<int, std::unordered_map<int, CacheEntry<DENOTATION_TYPE>*>> m_denotations;
+    AutoResizeVector<AutoResizeVector<std::unordered_map<int, CacheEntry<DENOTATION_TYPE>*>>> m_denotations;
 
     std::mutex m_mutex;
 
@@ -103,9 +129,11 @@ public:
     GeneratorEvaluationCache() { }
     ~GeneratorEvaluationCache() {
         std::lock_guard<std::mutex> hold(m_mutex);
-        for (auto& pair1 : m_denotations) {
-            for (auto& pair2 : pair1.second) {
-                delete pair2.second;
+        for (auto& nested_1 : m_denotations) {
+            for (auto& nested_2 : nested_1) {
+                for (auto& pair : nested_2) {
+                    delete pair.second;
+                }
             }
         }
     }
@@ -116,8 +144,11 @@ public:
      */
     CacheEntry<DENOTATION_TYPE>* find(const State& state, const ELEMENT_TYPE& element) {
         std::lock_guard<std::mutex> hold(m_mutex);
+        assert(state.get_instance_info()->get_index() >= 0);
+        assert(state.get_index() >= 0);
+        assert(element.get_index() >= 0);
         // Attempt to insert nullptr.
-        auto result = m_denotations[state.get_index()].insert(
+        auto result = m_denotations[state.get_instance_info()->get_index()][state.get_index()].insert(
             std::make_pair(element.get_index(), nullptr));
         if (result.second) {
             // nullptr was inserted, i.e., no denotation existed,

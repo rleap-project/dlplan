@@ -28,8 +28,6 @@ void Concept::parse_results_of_tasks_impl(GeneratorData& data) {
             ++m_count;
             data.m_reprs.push_back(std::move(result.repr));
             data.m_concepts_by_iteration[result.complexity].push_back(std::move(result.concept));
-        } else {
-            std::cout << "pruned by evaluation: " << result.repr << std::endl;
         }
     }
 }

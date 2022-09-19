@@ -101,6 +101,10 @@ const Atom& InstanceInfoImpl::add_static_atom(const std::string& predicate_name,
     return add_atom(predicate_name, object_names, true);
 }
 
+void InstanceInfoImpl::set_index(int index) {
+    m_index = index;
+}
+
 int InstanceInfoImpl::get_index() const {
     return m_index;
 }

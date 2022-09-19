@@ -565,6 +565,10 @@ const Atom& InstanceInfo::add_static_atom(const std::string &name, const Name_Ve
     return m_pImpl->add_static_atom(name, object_names);
 }
 
+void InstanceInfo::set_index(int index) {
+    m_pImpl->set_index(index);
+}
+
 int InstanceInfo::get_index() const {
     return m_pImpl->get_index();
 }

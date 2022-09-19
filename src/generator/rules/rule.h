@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <mutex>
+#include <cassert>
 
 #include "../generator_data.h"
 #include "../types.h"
@@ -97,7 +98,9 @@ inline std::vector<int> evaluate_boolean(const core::element::Boolean& boolean, 
     std::vector<int> result;
     result.reserve(states.size());
     for (const auto& state : states) {
-        result.push_back(static_cast<int>(*boolean.evaluate(state, cache)));
+        auto denot_ptr = boolean.evaluate(state, cache);
+        assert(denot_ptr != nullptr);
+        result.push_back(static_cast<int>(*denot_ptr));
     }
     return result;
 }
@@ -106,7 +109,9 @@ inline std::vector<int> evaluate_numerical(const core::element::Numerical& numer
     std::vector<int> result;
     result.reserve(states.size());
     for (const auto& state : states) {
-        result.push_back(*numerical.evaluate(state, cache));
+        auto denot_ptr = numerical.evaluate(state, cache);
+        assert(denot_ptr != nullptr);
+        result.push_back(*denot_ptr);
     }
     return result;
 }
@@ -115,7 +120,9 @@ inline std::vector<int> evaluate_concept(const core::element::Concept& concept, 
     std::vector<int> result;
     result.reserve(states.size());
     for (const auto& state : states) {
-        const auto data = concept.evaluate(state, cache)->to_canonical_data_representation();
+        auto denot_ptr = concept.evaluate(state, cache);
+        assert(denot_ptr != nullptr);
+        const auto data = denot_ptr->to_canonical_data_representation();
         result.push_back(data.size());
         result.insert(result.end(), data.begin(), data.end());
     }
@@ -125,7 +132,9 @@ inline std::vector<int> evaluate_concept(const core::element::Concept& concept, 
 inline std::vector<int> evaluate_role(const core::element::Role& role, const States& states, core::element::GeneratorEvaluationCaches& cache) {
     std::vector<int> result;
     for (const auto& state : states) {
-        const auto data = role.evaluate(state, cache)->to_canonical_data_representation();
+        auto denot_ptr = role.evaluate(state, cache);
+        assert(denot_ptr != nullptr);
+        const auto data = denot_ptr->to_canonical_data_representation();
         result.push_back(data.size());
         result.insert(result.end(), data.begin(), data.end());
     }

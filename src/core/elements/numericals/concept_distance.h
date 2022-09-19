@@ -48,6 +48,7 @@ public:
 
     const int* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {
         auto numerical_cache_entry = cache.m_numerical_denotation_cache.find(state, *this);
+        assert(numerical_cache_entry != nullptr);
         auto& status = numerical_cache_entry->m_status;
         auto& denotation = numerical_cache_entry->m_denotation;
         if (status) {
@@ -68,7 +69,7 @@ public:
         if (concept_from_denot->intersects(*concept_to_denot)) {
             denotation = INF;
             status = true;
-            return 0;
+            return &denotation;
         }
         auto role_denot = m_role->evaluate(state, cache);
         compute_result(
