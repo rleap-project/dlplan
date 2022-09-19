@@ -125,7 +125,7 @@ const std::vector<Atom>& InstanceInfoImpl::get_static_atoms_ref() const {
     return m_static_atoms;
 }
 
-const Atom& InstanceInfoImpl::get_atom(int atom_idx) const {
+const Atom& InstanceInfoImpl::get_atom_ref(int atom_idx) const {
     if (!utils::in_bounds(atom_idx, m_atoms)) {
         throw std::runtime_error("InstanceInfoImpl::get_atom - atom index out of range.");
     }
@@ -181,11 +181,11 @@ std::shared_ptr<const VocabularyInfo> InstanceInfoImpl::get_vocabulary_info() co
     return m_vocabulary_info;
 }
 
-const phmap::flat_hash_map<int, std::vector<int>>& InstanceInfoImpl::get_per_predicate_idx_static_atom_idxs() const {
+const phmap::flat_hash_map<int, std::vector<int>>& InstanceInfoImpl::get_per_predicate_idx_static_atom_idxs_ref() const {
     return m_per_predicate_idx_static_atom_idxs;
 }
 
-const ConceptDenotation& InstanceInfoImpl::get_top_concept() const {
+const ConceptDenotation& InstanceInfoImpl::get_top_concept_ref() const {
     if (static_cast<int>(m_top_concept.size()) != get_num_objects()) {
         m_top_concept = ConceptDenotation(get_num_objects());
         for (int i = 0; i < get_num_objects(); ++i) {
@@ -195,7 +195,7 @@ const ConceptDenotation& InstanceInfoImpl::get_top_concept() const {
     return m_top_concept;
 }
 
-const RoleDenotation& InstanceInfoImpl::get_top_role() const {
+const RoleDenotation& InstanceInfoImpl::get_top_role_ref() const {
     if (static_cast<int>(m_top_role.size()) != get_num_objects() * get_num_objects()) {
         m_top_role = RoleDenotation(get_num_objects());
         for (int i = 0; i < get_num_objects(); ++i) {

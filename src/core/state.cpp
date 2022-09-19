@@ -93,7 +93,7 @@ const phmap::flat_hash_map<int, std::vector<int>>& State::get_per_predicate_idx_
 std::string State::str() const {
     std::string res("{");
     for (int i = 0; i < static_cast<int>(m_atom_idxs.size()); ++i) {
-        const auto& atom = m_instance_info->get_atom(m_atom_idxs[i]);
+        const auto& atom = m_instance_info->get_atom_ref(m_atom_idxs[i]);
         res += atom.get_name_ref();
         if (i < static_cast<int>(m_atom_idxs.size()) - 1) {
             res += ", ";

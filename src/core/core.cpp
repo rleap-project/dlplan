@@ -585,8 +585,8 @@ const std::vector<Atom>& InstanceInfo::get_static_atoms_ref() const {
     return m_pImpl->get_static_atoms_ref();
 }
 
-const Atom& InstanceInfo::get_atom(int index) const {
-    return m_pImpl->get_atom(index);
+const Atom& InstanceInfo::get_atom_ref(int index) const {
+    return m_pImpl->get_atom_ref(index);
 }
 
 int InstanceInfo::get_atom_idx(const std::string& name) const {
@@ -625,16 +625,16 @@ std::shared_ptr<const VocabularyInfo> InstanceInfo::get_vocabulary_info() const 
     return m_pImpl->get_vocabulary_info();
 }
 
-const phmap::flat_hash_map<int, std::vector<int>>& InstanceInfo::get_per_predicate_idx_static_atom_idxs() const {
-    return m_pImpl->get_per_predicate_idx_static_atom_idxs();
+const phmap::flat_hash_map<int, std::vector<int>>& InstanceInfo::get_per_predicate_idx_static_atom_idxs_ref() const {
+    return m_pImpl->get_per_predicate_idx_static_atom_idxs_ref();
 }
 
-const ConceptDenotation& InstanceInfo::get_top_concept() const {
-    return m_pImpl->get_top_concept();
+const ConceptDenotation& InstanceInfo::get_top_concept_ref() const {
+    return m_pImpl->get_top_concept_ref();
 }
 
-const RoleDenotation& InstanceInfo::get_top_role() const {
-    return m_pImpl->get_top_role();
+const RoleDenotation& InstanceInfo::get_top_role_ref() const {
+    return m_pImpl->get_top_role_ref();
 }
 
 
@@ -677,8 +677,8 @@ bool VocabularyInfo::exists_predicate_name(const std::string& name) const {
     return m_pImpl->exists_predicate_name(name);
 }
 
-const std::vector<Predicate>& VocabularyInfo::get_predicates() const {
-    return m_pImpl->get_predicates();
+const std::vector<Predicate>& VocabularyInfo::get_predicates_ref() const {
+    return m_pImpl->get_predicates_ref();
 }
 
 int VocabularyInfo::get_predicate_idx(const std::string& name) const {
@@ -701,12 +701,12 @@ int VocabularyInfo::get_constant_idx(const std::string& name) const {
     return m_pImpl->get_constant_idx(name);
 }
 
-const Constant& VocabularyInfo::get_constant(int index) const {
-    return m_pImpl->get_constant(index);
+const Constant& VocabularyInfo::get_constant_ref(int index) const {
+    return m_pImpl->get_constant_ref(index);
 }
 
-const std::vector<Constant>& VocabularyInfo::get_constants() const {
-    return m_pImpl->get_constants();
+const std::vector<Constant>& VocabularyInfo::get_constants_ref() const {
+    return m_pImpl->get_constants_ref();
 }
 
 

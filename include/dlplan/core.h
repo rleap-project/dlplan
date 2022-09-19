@@ -457,14 +457,14 @@ public:
 
     bool exists_predicate(const Predicate& predicate) const;
     bool exists_predicate_name(const std::string& name) const;
-    const std::vector<Predicate>& get_predicates() const;
+    const std::vector<Predicate>& get_predicates_ref() const;
     int get_predicate_idx(const std::string& name) const;
     const Predicate& get_predicate_ref(int index) const;
     bool exists_constant(const Constant& constant) const;
     bool exists_constant_name(const std::string& name) const;
     int get_constant_idx(const std::string& name) const;
-    const Constant& get_constant(int index) const;
-    const std::vector<Constant>& get_constants() const;
+    const Constant& get_constant_ref(int index) const;
+    const std::vector<Constant>& get_constants_ref() const;
 };
 
 
@@ -509,7 +509,7 @@ public:
     bool exists_atom(const Atom& atom) const;
     const std::vector<Atom>& get_atoms_ref() const;
     const std::vector<Atom>& get_static_atoms_ref() const;
-    const Atom& get_atom(int index) const;
+    const Atom& get_atom_ref(int index) const;
     int get_atom_idx(const std::string& name) const;
     bool exists_object(const Object& object) const;
     bool exists_object(const std::string name) const;
@@ -519,9 +519,9 @@ public:
     int get_num_objects() const;
     const VocabularyInfo& get_vocabulary_info_ref() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
-    const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs() const;
-    const ConceptDenotation& get_top_concept() const;
-    const RoleDenotation& get_top_role() const;
+    const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs_ref() const;
+    const ConceptDenotation& get_top_concept_ref() const;
+    const RoleDenotation& get_top_role_ref() const;
 };
 
 

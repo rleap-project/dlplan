@@ -13,7 +13,7 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        return state.get_instance_info()->get_top_concept();
+        return state.get_instance_info()->get_top_concept_ref();
     }
 
     const ConceptDenotation* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {

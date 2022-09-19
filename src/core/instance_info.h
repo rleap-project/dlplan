@@ -62,7 +62,7 @@ public:
     bool exists_atom(const Atom& atom) const;
     const std::vector<Atom>& get_atoms_ref() const;
     const std::vector<Atom>& get_static_atoms_ref() const;
-    const Atom& get_atom(int atom_idx) const;
+    const Atom& get_atom_ref(int atom_idx) const;
     int get_atom_idx(const std::string& name) const;
     bool exists_object(const Object& object) const;
     bool exists_object(const std::string name) const;
@@ -72,9 +72,9 @@ public:
     int get_num_objects() const;
     const VocabularyInfo& get_vocabulary_info_ref() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
-    const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs() const;
-    const ConceptDenotation& get_top_concept() const;
-    const RoleDenotation& get_top_role() const;
+    const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs_ref() const;
+    const ConceptDenotation& get_top_concept_ref() const;
+    const RoleDenotation& get_top_role_ref() const;
 };
 
 }
