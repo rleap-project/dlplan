@@ -33,7 +33,7 @@ public:
     RoleDenotation evaluate(const State& state) const override {
         auto role_denot = m_role->evaluate(state);
         auto concept_denot = m_concept->evaluate(state);
-        RoleDenotation denotation(state.get_instance_info()->get_num_objects());
+        RoleDenotation denotation(state.get_instance_info_ref().get_num_objects());
         compute_result(
             m_role->evaluate(state),
             m_concept->evaluate(state),

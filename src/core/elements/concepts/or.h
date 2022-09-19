@@ -33,7 +33,7 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        ConceptDenotation result(state.get_instance_info()->get_num_objects());
+        ConceptDenotation result(state.get_instance_info_ref().get_num_objects());
         compute_result(
             m_concept_left->evaluate(state),
             m_concept_right->evaluate(state),

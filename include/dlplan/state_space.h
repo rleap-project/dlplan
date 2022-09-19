@@ -180,6 +180,7 @@ public:
     const StateIndices& get_forward_successor_state_indices_ref(StateIndex state) const;
     const StateIndices& get_backward_successor_state_indices_ref(StateIndex state) const;
     const StateIndices& get_goal_state_indices_ref() const;
+    const core::InstanceInfo& get_instance_info_ref() const;
     std::shared_ptr<const core::InstanceInfo> get_instance_info() const;
 };
 

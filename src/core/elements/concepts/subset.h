@@ -29,7 +29,7 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        auto denotation = state.get_instance_info()->get_top_concept_ref();
+        auto denotation = state.get_instance_info_ref().get_top_concept_ref();
         compute_result(
             m_role_left->evaluate(state),
             m_role_right->evaluate(state),

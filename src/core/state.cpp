@@ -57,7 +57,7 @@ State& State::operator=(State&& other) = default;
 State::~State() = default;
 
 bool State::operator==(const State& other) const {
-    return (compute_sorted_atom_idxs() == other.compute_sorted_atom_idxs()) && (get_instance_info() == other.get_instance_info());
+    return (compute_sorted_atom_idxs() == other.compute_sorted_atom_idxs()) && (&get_instance_info_ref() == &other.get_instance_info_ref());
 }
 
 bool State::operator!=(const State& other) const {

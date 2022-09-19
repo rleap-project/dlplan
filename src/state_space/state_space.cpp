@@ -38,7 +38,7 @@ StateSpace::StateSpace(
       m_goal_state_indices(std::move(goal_state_indices)) {
     // assert states
     if (!std::all_of(m_states.begin(), m_states.end(),
-        [this](const auto& state){ return state.get_instance_info() == this->get_instance_info(); })) {
+        [this](const auto& state){ return &state.get_instance_info_ref() == &this->get_instance_info_ref(); })) {
         throw std::runtime_error("StateSpace::StateSpace - not all states come from the given InstanceInfo.");
     }
     // compute state indices
@@ -324,6 +324,10 @@ const StateIndices& StateSpace::get_backward_successor_state_indices_ref(StateIn
 
 const StateIndices& StateSpace::get_goal_state_indices_ref() const {
     return m_goal_state_indices;
+}
+
+const core::InstanceInfo& StateSpace::get_instance_info_ref() const {
+    return *m_instance_info;
 }
 
 std::shared_ptr<const InstanceInfo> StateSpace::get_instance_info() const {

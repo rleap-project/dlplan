@@ -16,7 +16,7 @@ private:
             result = !it->second.empty();
             return;
         }
-        const auto& per_predicate_idx_static_atom_idxs = state.get_instance_info()->get_per_predicate_idx_static_atom_idxs_ref();
+        const auto& per_predicate_idx_static_atom_idxs = state.get_instance_info_ref().get_per_predicate_idx_static_atom_idxs_ref();
         it = per_predicate_idx_static_atom_idxs.find(m_predicate.get_index());
         if (it != per_predicate_idx_static_atom_idxs.end()) {
             result = !it->second.empty();

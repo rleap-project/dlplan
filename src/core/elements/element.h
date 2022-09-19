@@ -144,16 +144,16 @@ public:
      */
     CacheEntry<DENOTATION_TYPE>* find(const State& state, const ELEMENT_TYPE& element) {
         std::lock_guard<std::mutex> hold(m_mutex);
-        assert(state.get_instance_info()->get_index() >= 0);
+        assert(state.get_instance_info_ref().get_index() >= 0);
         assert(state.get_index() >= 0);
         assert(element.get_index() >= 0);
         // Attempt to insert nullptr.
-        auto result = m_denotations[state.get_instance_info()->get_index()][state.get_index()].insert(
+        auto result = m_denotations[state.get_instance_info_ref().get_index()][state.get_index()].insert(
             std::make_pair(element.get_index(), nullptr));
         if (result.second) {
             // nullptr was inserted, i.e., no denotation existed,
             // Hence, we can allocate and insert a new denotation.
-            result.first->second = new CacheEntry<DENOTATION_TYPE>(state.get_instance_info()->get_num_objects());
+            result.first->second = new CacheEntry<DENOTATION_TYPE>(state.get_instance_info_ref().get_num_objects());
         }
         return result.first->second;
     }

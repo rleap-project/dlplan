@@ -750,7 +750,7 @@ Concept& Concept::operator=(Concept&& other) = default;
 Concept::~Concept() = default;
 
 ConceptDenotation Concept::evaluate(const State& state) const {
-    if (state.get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
+    if (&state.get_instance_info_ref().get_vocabulary_info_ref() != &get_vocabulary_info_ref()) {
         throw std::runtime_error("Concept::evaluate - mismatched vocabularies of Concept and State.");
     }
     return m_element->evaluate(state);
@@ -791,7 +791,7 @@ Role& Role::operator=(Role&& other) = default;
 Role::~Role() = default;
 
 RoleDenotation Role::evaluate(const State& state) const {
-    if (state.get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
+    if (&state.get_instance_info_ref().get_vocabulary_info_ref() != &get_vocabulary_info_ref()) {
         throw std::runtime_error("Role::evaluate - mismatched vocabularies of Role and State.");
     }
     return m_element->evaluate(state);
@@ -832,7 +832,7 @@ Numerical& Numerical::operator=(Numerical&& other) = default;
 Numerical::~Numerical() = default;
 
 int Numerical::evaluate(const State& state) const {
-    if (state.get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
+    if (&state.get_instance_info_ref().get_vocabulary_info_ref() != &get_vocabulary_info_ref()) {
         throw std::runtime_error("Numerical::evaluate - mismatched vocabularies of Numerical and State.");
     }
     return m_element->evaluate(state);
@@ -873,7 +873,7 @@ Boolean& Boolean::operator=(Boolean&& other) = default;
 Boolean::~Boolean() = default;
 
 bool Boolean::evaluate(const State& state) const {
-    if (state.get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
+    if (&state.get_instance_info_ref().get_vocabulary_info_ref() != &get_vocabulary_info_ref()) {
         throw std::runtime_error("Boolean::evaluate - mismatched vocabularies of Boolean and State.");
     }
     return m_element->evaluate(state);

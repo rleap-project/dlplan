@@ -25,7 +25,7 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        ConceptDenotation denotation(state.get_instance_info()->get_num_objects());
+        ConceptDenotation denotation(state.get_instance_info_ref().get_num_objects());
         compute_result(
             m_concept->evaluate(state),
             denotation);

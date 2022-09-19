@@ -25,7 +25,7 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        RoleDenotation denotation(state.get_instance_info()->get_num_objects());
+        RoleDenotation denotation(state.get_instance_info_ref().get_num_objects());
         compute_result(
             m_role->evaluate(state),
             denotation);

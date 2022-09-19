@@ -13,7 +13,7 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        return state.get_instance_info()->get_top_role_ref();
+        return state.get_instance_info_ref().get_top_role_ref();
     }
 
     const RoleDenotation* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {

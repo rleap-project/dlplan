@@ -16,11 +16,11 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        if (!state.get_instance_info()->exists_object(m_constant.get_name_ref())) {
+        if (!state.get_instance_info_ref().exists_object(m_constant.get_name_ref())) {
             throw std::runtime_error("OneOfConcept::evaluate - no object with name of constant exists in instance: (" + m_constant.get_name_ref() + ")");
         }
-        ConceptDenotation result(state.get_instance_info()->get_num_objects());
-        result.insert(state.get_instance_info()->get_object_idx(m_constant.get_name_ref()));
+        ConceptDenotation result(state.get_instance_info_ref().get_num_objects());
+        result.insert(state.get_instance_info_ref().get_object_idx(m_constant.get_name_ref()));
         return result;
     }
 

@@ -12,7 +12,7 @@ public:
     : Concept(vocabulary) { }
 
     ConceptDenotation evaluate(const State& state) const override {
-        return ConceptDenotation(state.get_instance_info()->get_num_objects());
+        return ConceptDenotation(state.get_instance_info_ref().get_num_objects());
     }
 
     const ConceptDenotation* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {
