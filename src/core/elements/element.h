@@ -139,6 +139,21 @@ public:
     }
 
     /**
+     * Deletes a previously generated cache entry.
+     */
+    void erase(const State& state, const ELEMENT_TYPE& element) {
+        std::lock_guard<std::mutex> hold(m_mutex);
+        assert(state.get_instance_info_ref().get_index() >= 0);
+        assert(state.get_index() >= 0);
+        assert(element.get_index() >= 0);
+        auto& denotations = m_denotations[state.get_instance_info_ref().get_index()][state.get_index()];
+        auto result = denotations.insert(std::make_pair(element.get_index(), nullptr));
+        assert(result);
+        delete result;
+        denotations.erase(element.get_index());
+    }
+
+    /**
      * Returns a reference to the cache entry.
      * User must check
      */

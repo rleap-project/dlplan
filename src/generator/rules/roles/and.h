@@ -14,6 +14,7 @@ public:
 
     virtual void submit_tasks_impl(const States& states, int target_complexity, GeneratorData& data, core::element::GeneratorEvaluationCaches& caches, utils::threadpool::ThreadPool& th) override {
         core::SyntacticElementFactory& factory = data.m_factory;
+        // TODO: make tasks bigger, i.e., all elements in one task
         for (int i = 1; i <= target_complexity - 1; ++i) {
             int j = target_complexity - i - 1;
             for (const auto& r1 : data.m_roles_by_iteration[i]) {
