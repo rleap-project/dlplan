@@ -16,7 +16,7 @@
 using namespace std::string_literals;
 
 namespace dlplan::core::element {
-class GeneratorEvaluationCaches;
+class DenotationsCaches;
 
 template<typename T>
 class Element : public utils::Cachable {
@@ -36,7 +36,7 @@ public:
     virtual ~Element() = default;
 
     virtual T evaluate(const State& state) const = 0;
-    virtual const T* evaluate(const State& state, GeneratorEvaluationCaches& cache) const = 0;
+    virtual const std::vector<const T*>* evaluate(const States& states, DenotationsCaches& caches) const = 0;
 
     virtual int compute_complexity() const = 0;
 
@@ -58,144 +58,154 @@ public:
 };
 
 
-/**
- * In our feature generator, we can assume that no two threads
- * compute the same denotation and that no computation
- * depends on the computation of another denotation
- * because we compute elements with same complexity.
- */
-template<typename DENOTATION_TYPE>
-struct CacheEntry {
-    DENOTATION_TYPE m_denotation;
-    bool m_status;
-
-    std::mutex m_mutex;
-
-    CacheEntry(int num_objects)
-        : m_denotation(DENOTATION_TYPE(num_objects)), m_status(false) { }
-
-    /**
-     * A CacheEntry is lock free readable if it is cached.
-     * This function is useful for assertions.
-     */
-    bool is_lock_free_readable() const {
-        return m_status;
+template<typename T>
+struct DenotationEqual {
+public:
+    bool operator()(const T& l, const T& r) const {
+        return l->get_blocks() == r->get_blocks();
     }
 };
 
-/**
- * A wrapper around std::vector that automatically resizes
- * upon access such that index fits into it.
- */
-template<typename T, typename Alloc=std::allocator<T>>
-class AutoResizeVector {
-private:
-    std::vector<T, Alloc> m_data;
 
+template<typename T>
+struct DenotationHasher {
 public:
-    T& operator[](int index) {
-        if (index >= static_cast<int>(m_data.size())) {
-            m_data.resize(index + 1);
-        }
-        return m_data[index];
-    }
-
-    auto begin() {
-        return m_data.begin();
-    }
-
-    auto end() {
-        return m_data.end();
+    std::size_t operator()(const T& denotation) const {
+        return denotation->compute_hash();
     }
 };
 
+
 /**
- * Thread-safe cache for concept and role denotations per state.
+ * Caches single denotations of type T.
+ * We store everything as pointers for faster resize
+ * and no invalidation on resize.
  */
-template<typename ELEMENT_TYPE, typename DENOTATION_TYPE>
-class GeneratorEvaluationCache {
+template<typename T>
+class DenotationCache {
 private:
-    /**
-     * After accessing the CacheEntry, we return it and unlock the cache.
-     * Access to the CacheEntry after return will remain thread safe.
-     *
-     * For simplicity we used unordered_maps but we might want to use vector instead
-     */
-    AutoResizeVector<AutoResizeVector<std::unordered_map<int, CacheEntry<DENOTATION_TYPE>*>>> m_denotations;
+    using CONST_DENOT = const T*;
 
-    std::mutex m_mutex;
+    std::unordered_set<CONST_DENOT, DenotationHasher<CONST_DENOT>, DenotationEqual<CONST_DENOT>> m_storage;
 
+    // optional mapping from (instance, state, element) -> denotation*
+    std::vector<std::vector<std::unordered_map<int, CONST_DENOT>>> m_mapping;
+
+    int m_num_objects;
 public:
-    GeneratorEvaluationCache() { }
-    ~GeneratorEvaluationCache() {
-        std::lock_guard<std::mutex> hold(m_mutex);
-        for (auto& nested_1 : m_denotations) {
-            for (auto& nested_2 : nested_1) {
-                for (auto& pair : nested_2) {
-                    delete pair.second;
-                }
-            }
-        }
+    explicit DenotationCache(int num_objects) : m_num_objects(num_objects) { }
+    ~DenotationCache() {
+        // TODO: deallocate memory
+    }
+
+    T* get_new_denotation() const {
+        return new T(m_num_objects);
     }
 
     /**
-     * Deletes a previously generated cache entry.
+     * Uniquely inserts a denotation and returns a reference to it.
+     * Second alternative also creates mapping (instance, state, element) -> denotation*
      */
-    void erase(const State& state, const ELEMENT_TYPE& element) {
-        std::lock_guard<std::mutex> hold(m_mutex);
-        assert(state.get_instance_info_ref().get_index() >= 0);
-        assert(state.get_index() >= 0);
-        assert(element.get_index() >= 0);
-        auto& denotations = m_denotations[state.get_instance_info_ref().get_index()][state.get_index()];
-        auto result = denotations.insert(std::make_pair(element.get_index(), nullptr));
-        assert(result);
-        delete result;
-        denotations.erase(element.get_index());
+    CONST_DENOT insert(CONST_DENOT denotation) {
+        return *m_storage.insert(denotation).first;
+    }
+    CONST_DENOT insert(CONST_DENOT denotation, int instance_index, int state_index, int element_index) {
+        auto result = insert(denotation);
+        if (instance_index >= m_mapping.size())
+            m_mapping.resize(instance_index + 1);
+        if (state_index >= m_mapping[state_index].size())
+            m_mapping[instance_index].resize(state_index + 1);
+        m_mapping[instance_index][state_index].emplace(element_index, denotation);
     }
 
     /**
-     * Returns a reference to the cache entry.
-     * User must check
+     * Returns a ptr to the denotation if it exists and otherwise creates
+     * an entry in the mapping that maps to nullptr.
      */
-    CacheEntry<DENOTATION_TYPE>* find(const State& state, const ELEMENT_TYPE& element) {
-        std::lock_guard<std::mutex> hold(m_mutex);
-        assert(state.get_instance_info_ref().get_index() >= 0);
-        assert(state.get_index() >= 0);
-        assert(element.get_index() >= 0);
-        // Attempt to insert nullptr.
-        auto result = m_denotations[state.get_instance_info_ref().get_index()][state.get_index()].insert(
-            std::make_pair(element.get_index(), nullptr));
-        if (result.second) {
-            // nullptr was inserted, i.e., no denotation existed,
-            // Hence, we can allocate and insert a new denotation.
-            result.first->second = new CacheEntry<DENOTATION_TYPE>(state.get_instance_info_ref().get_num_objects());
+    CONST_DENOT find(int instance_index, int state_index, int element_index) const {
+        if (instance_index >= m_mapping.size())
+            return nullptr;
+        if (state_index >= m_mapping[state_index].size())
+            return nullptr;
+        auto result = m_mapping[instance_index][state_index].find(element_index);
+        if (result == m_mapping[instance_index][state_index].end()) {
+            return nullptr;
         }
         return result.first->second;
     }
 };
 
+
+template<typename T>
+struct DenotationsEqual {
+public:
+    bool operator()(const std::vector<const T*>& l, const std::vector<const T*>& r) const {
+        return *l == *r;
+    }
+};
+
+
+template<typename T>
+struct DenotationsHasher {
+public:
+    std::size_t operator()(const std::vector<const T*>& denotations) const {
+        // TODO
+        return 0;
+    }
+};
+
+
 /**
- * Pass all caches to the element evaluation function as single argument.
- * If we cache boolean and numericals here, we can also get rid of the evaluator component.
+ * Caches a collection of denotation of type T.
  */
-struct GeneratorEvaluationCaches {
-    GeneratorEvaluationCache<element::Boolean, bool> m_boolean_denotation_cache;
-    GeneratorEvaluationCache<element::Numerical, int> m_numerical_denotation_cache;
-    GeneratorEvaluationCache<element::Concept, ConceptDenotation> m_concept_denotation_cache;
-    GeneratorEvaluationCache<element::Role, RoleDenotation> m_role_denotation_cache;
+template<typename T>
+class DenotationsCache {
+private:
+    using CONST_DENOTS = const std::vector<const T*>*;
+
+    std::unordered_set<CONST_DENOTS, DenotationsHasher<CONST_DENOTS>, DenotationsEqual<CONST_DENOTS>> m_storage;
+
+    // mapping from (element) -> std::vector<T*>*
+    std::unordered_map<int, CONST_DENOTS> m_mapping;
+
+    int m_num_states;
+public:
+    DenotationsCache(int num_states) : m_num_states(num_states) {}
+    ~DenotationsCache() {
+        // TODO: deallocate memory
+    }
+
+    std::vector<const T*>* get_new_denotations() const {
+        auto result = new std::vector<const T*>();
+        result->reserve(m_num_states);
+        return result;
+    }
+
+    CONST_DENOTS insert(CONST_DENOTS denotations) {
+        return m_storage.insert(denotations).first;
+    }
+
+    CONST_DENOTS find(int element_index) const {
+        auto result = m_mapping.find(element_index);
+        if (result == m_mapping.end())
+            return nullptr;
+        return result->second;
+    }
 };
 
-/*
-template<typename DENOTATION_TYPE>
-class PerStateCache {
-    std::unordered_set<DENOTATION_TYPE*> m_uniqueness;
-};
 
-template<typename DENOTATION_TYPE>
-class PerStatesCache {
-    std::unordered_set<DENOTATION_TYPE*> m_uniqueness;
+struct DenotationsCaches {
+    // Cache for single denotations.
+    DenotationCache<bool> m_b_denot_cache;
+    DenotationCache<int> m_n_denot_cache;
+    DenotationCache<ConceptDenotation> m_c_denot_cache;
+    DenotationCache<RoleDenotation> m_r_denot_cache;
+    // Cache for collections of denotations.
+    DenotationsCache<bool> m_b_denots_cache;
+    DenotationsCache<int> m_n_denots_cache;
+    DenotationsCache<ConceptDenotation> m_c_denots_cache;
+    DenotationsCache<RoleDenotation> m_r_denots_cache;
 };
-*/
 
 }
 

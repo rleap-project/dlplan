@@ -45,19 +45,22 @@ public:
         return denotation;
     }
 
-    const RoleDenotation* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {
-        auto role_cache_entry = cache.m_role_denotation_cache.find(state, *this);
-        auto& status = role_cache_entry->m_status;
-        auto& denotation = role_cache_entry->m_denotation;
-        if (status) {
-            return &denotation;
+    const std::vector<const RoleDenotation*>* evaluate(const States& states, DenotationsCaches& caches) const override {
+        auto role_cache_entry = caches.m_r_denots_cache.find(get_index());
+        if (role_cache_entry) return role_cache_entry;
+        auto denotations = caches.m_r_denots_cache.get_new_denotations();
+        auto role_denotations = m_role->evaluate(states, caches);
+        for (size_t i = 0; i < states.size(); ++i) {
+            auto denotation = caches.m_r_denot_cache.get_new_denotation();
+            const auto& state = states[i];
+            compute_result(
+                *((*role_denotations)[i]),
+                state.get_instance_info_ref().get_num_objects(),
+                *denotation);
+            denotations->push_back(denotation);
+            caches.m_r_denot_cache.insert(denotation);
         }
-        compute_result(
-            *m_role->evaluate(state, cache),
-            state.get_instance_info_ref().get_num_objects(),
-            denotation);
-        status = true;
-        return &denotation;
+        return denotations;
     }
 
     int compute_complexity() const override {
