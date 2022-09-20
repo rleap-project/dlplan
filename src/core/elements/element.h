@@ -94,10 +94,10 @@ private:
     int m_num_objects;
 public:
     explicit DenotationCache(int num_objects) : m_num_objects(num_objects) { }
-    DenotationsCache(const DenotationsCache& other) = delete;
-    DenotationsCache& operator=(const DenotationsCache& other) = delete;
-    DenotationsCache(DenotationsCache&& other) = default;
-    DenotationsCache& operator=(DenotationsCache&&) = default;
+    DenotationCache(const DenotationCache& other) = delete;
+    DenotationCache& operator=(const DenotationCache& other) = delete;
+    DenotationCache(DenotationCache&& other) = default;
+    DenotationCache& operator=(DenotationCache&&) = default;
     ~DenotationCache() {
         for (auto denot : m_storage) {
             delete denot;
