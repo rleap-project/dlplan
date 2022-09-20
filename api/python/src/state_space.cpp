@@ -87,6 +87,6 @@ void init_state_space(py::module_ &m) {
         .def(py::init<>())
         .def("__copy__", [](const StateSpaceReader& reader, py::object){ return StateSpaceReader(reader); })
         .def("__deepcopy__", [](const StateSpaceReader& reader, py::object){ return StateSpaceReader(reader); })
-        .def("read", &StateSpaceReader::read, py::arg("vocabulary_info") = nullptr)
+        .def("read", &StateSpaceReader::read, py::arg("vocabulary_info") = nullptr, py::arg("index") = -1)
     ;
 }

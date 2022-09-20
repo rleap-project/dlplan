@@ -43,7 +43,7 @@ parser.add_pattern("generate_memory_complexity_10", r"\[t=.+s, (.+) KB\] Complex
 parser.add_pattern("num_states", r"Number of states: (.+)", type=int)
 parser.add_pattern("num_dynamic_atoms", r"Number of dynamic atoms: (.+)", type=int)
 parser.add_pattern("num_static_atoms", r"Number of static atoms: (.+)", type=int)
-parser.add_pattern("evaluate_time", r"Time to construct and evaluate features: (.+)s", type=float)
+parser.add_pattern("evaluate_time", r"Time to construct and evaluate features: (.+)ms", type=float)
 parser.add_function(get_num_generated_features_complexity_5)
 parser.add_function(get_num_novel_features_complexity_5)
 parser.add_function(get_num_generated_features_complexity_10)

@@ -64,8 +64,8 @@ int main(int argc, char** argv) {
         }
     }
     auto end = std::chrono::steady_clock::now();
-    std::cout << "Elapsed time in milliseconds: "
+    std::cout << "Time to construct and evaluate features: "
         << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
-        << " ms" << std::endl;
+        << "ms" << std::endl;
     return 0;
 }

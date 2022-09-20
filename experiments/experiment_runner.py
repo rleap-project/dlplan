@@ -47,13 +47,14 @@ else:
     SUITE = ["blocksworld_3:p-3-0.pddl", "childsnack:p-2-1.0-0.0-1-0.pddl", "delivery:instance_2_1_0.pddl", "gripper:p-1-0.pddl", "miconic:p-2-2-0.pddl", "reward:instance_2x2_0.pddl", "visitall:p-1-0.5-2-0.pddl"]
     TIME_LIMIT = 180
 ATTRIBUTES = [
+    Attribute("generate_time_complexity_5", absolute=True, min_wins=True, scale="linear"),
+    Attribute("generate_memory_complexity_5", absolute=True, min_wins=True, scale="linear"),
+    Attribute("num_generated_features_complexity_5", absolute=True, min_wins=True, scale="linear"),
+    Attribute("num_novel_features_complexity_5", absolute=True, min_wins=True, scale="linear"),
     Attribute("generate_time_complexity_10", absolute=True, min_wins=True, scale="linear"),
     Attribute("generate_memory_complexity_10", absolute=True, min_wins=True, scale="linear"),
     Attribute("num_generated_features_complexity_10", absolute=True, min_wins=True, scale="linear"),
     Attribute("num_novel_features_complexity_10", absolute=True, min_wins=True, scale="linear"),
-    Attribute("num_states", absolute=True, min_wins=False, scale="linear"),
-    Attribute("num_dynamic_atoms", absolute=True, min_wins=False, scale="linear"),
-    Attribute("num_static_atoms", absolute=True, min_wins=False, scale="linear"),
     Attribute("evaluate_time", absolute=True, min_wins=True, scale="linear"),
 ]
 MEMORY_LIMIT = (16 * 3000) * 0.98
@@ -76,11 +77,12 @@ for task in suites.build_suite(BENCHMARKS_DIR, SUITE):
             run.add_resource("domain", task.domain_file, symlink=True)
             run.add_resource("problem", task.problem_file, symlink=True)
             run.add_resource("experiment_generator", "experiment_generator", symlink=True)
+            run.add_resource("planner", "fast-downward.py", symlink=True)
             # 'ff' binary has to be on the PATH.
             # We could also use exp.add_resource().
             run.add_command(
                 f"complexity-{complexity}-{num_threads}",
-                ["./experiment_generator", "{domain}", "{problem}", complexity, GENERATOR_TIME_LIMIT, GENERATOR_FEATURE_LIMIT, num_threads, NUM_FEATURE_VALUATION_ITERATIONS],
+                ["./experiment_generator", "{domain}", "{problem}", complexity, complexity, complexity, complexity, GENERATOR_TIME_LIMIT, GENERATOR_FEATURE_LIMIT, num_threads, NUM_FEATURE_VALUATION_ITERATIONS],
                 time_limit=num_threads * TIME_LIMIT,
                 memory_limit=MEMORY_LIMIT,
             )
