@@ -58,19 +58,19 @@ public:
 };
 
 
-template<typename T>
+template<typename CONST_DENOT>
 struct DenotationEqual {
 public:
-    bool operator()(const T& l, const T& r) const {
+    bool operator()(const CONST_DENOT& l, const CONST_DENOT& r) const {
         return l->get_blocks() == r->get_blocks();
     }
 };
 
 
-template<typename T>
+template<typename CONST_DENOT>
 struct DenotationHasher {
 public:
-    std::size_t operator()(const T& denotation) const {
+    std::size_t operator()(const CONST_DENOT& denotation) const {
         return denotation->compute_hash();
     }
 };
@@ -88,14 +88,20 @@ private:
 
     std::unordered_set<CONST_DENOT, DenotationHasher<CONST_DENOT>, DenotationEqual<CONST_DENOT>> m_storage;
 
-    // optional mapping from (instance, state, element) -> denotation*
+    // optional mapping from (instance, state, element) -> CONST_DENOT
     std::vector<std::vector<std::unordered_map<int, CONST_DENOT>>> m_mapping;
 
     int m_num_objects;
 public:
     explicit DenotationCache(int num_objects) : m_num_objects(num_objects) { }
+    DenotationsCache(const DenotationsCache& other) = delete;
+    DenotationsCache& operator=(const DenotationsCache& other) = delete;
+    DenotationsCache(DenotationsCache&& other) = default;
+    DenotationsCache& operator=(DenotationsCache&&) = default;
     ~DenotationCache() {
-        // TODO: deallocate memory
+        for (auto denot : m_storage) {
+            delete denot;
+        }
     }
 
     T* get_new_denotation() const {
@@ -136,19 +142,19 @@ public:
 };
 
 
-template<typename T>
+template<typename CONST_DENOTS>
 struct DenotationsEqual {
 public:
-    bool operator()(const std::vector<const T*>& l, const std::vector<const T*>& r) const {
+    bool operator()(const CONST_DENOTS& l, const CONST_DENOTS& r) const {
         return *l == *r;
     }
 };
 
 
-template<typename T>
+template<typename CONST_DENOTS>
 struct DenotationsHasher {
 public:
-    std::size_t operator()(const std::vector<const T*>& denotations) const {
+    std::size_t operator()(const CONST_DENOTS& denotations) const {
         // TODO
         return 0;
     }
@@ -171,8 +177,14 @@ private:
     int m_num_states;
 public:
     DenotationsCache(int num_states) : m_num_states(num_states) {}
+    DenotationsCache(const DenotationsCache& other) = delete;
+    DenotationsCache& operator=(const DenotationsCache& other) = delete;
+    DenotationsCache(DenotationsCache&& other) = default;
+    DenotationsCache& operator=(DenotationsCache&& other) = default;
     ~DenotationsCache() {
-        // TODO: deallocate memory
+        for (auto denots : m_storage) {
+            delete denots;
+        }
     }
 
     std::vector<const T*>* get_new_denotations() const {
