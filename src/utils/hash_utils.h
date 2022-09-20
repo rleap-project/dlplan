@@ -37,6 +37,15 @@ namespace std {
             return seed;
         }
     };
+    template<> struct hash<std::vector<unsigned>> {
+        std::size_t operator()(const std::vector<unsigned>& denotation) const noexcept {
+            std::size_t seed = denotation.size();
+            for (const auto& i : denotation) {
+                dlplan::utils::hashing::hash_combine(seed, i);
+            }
+            return seed;
+        }
+    };
     template<> struct hash<std::array<uint32_t, 4>> {
         std::size_t operator()(const std::array<uint32_t, 4>& h) const noexcept {
             std::size_t seed = 4;

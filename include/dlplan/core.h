@@ -25,10 +25,8 @@ class SyntacticElementFactory;
 class InstanceInfo;
 class VocabularyInfo;
 class State;
-class ConceptDenotationBitset;
-class ConceptDenotationFlatSet;
-class RoleDenotationBitset;
-class RoleDenotationFlatSet;
+class ConceptDenotation;
+class RoleDenotation;
 namespace element {
     template<typename T>
     class Element;
@@ -43,92 +41,7 @@ using StatesSet = std::unordered_set<State>;
 using StatePair = std::pair<State, State>;
 using StatePairs = std::vector<StatePair>;
 
-#ifdef DENABLE_SPARSE
-    using ConceptDenotation = ConceptDenotationFlatSet;
-    using RoleDenotation = RoleDenotationFlatSet;
-#else
-    using ConceptDenotation = ConceptDenotationBitset;
-    using RoleDenotation = RoleDenotationBitset;
-#endif
-
-class ConceptDenotationFlatSet {
-private:
-    int m_num_objects;
-    phmap::flat_hash_set<int> m_data;
-
-public:
-    explicit ConceptDenotationFlatSet(int num_objects);
-    ConceptDenotationFlatSet(const ConceptDenotationFlatSet& other);
-    ConceptDenotationFlatSet& operator=(const ConceptDenotationFlatSet& other);
-    ConceptDenotationFlatSet(ConceptDenotationFlatSet&& other);
-    ConceptDenotationFlatSet& operator=(ConceptDenotationFlatSet&& other);
-    ~ConceptDenotationFlatSet();
-
-    ConceptDenotationFlatSet& operator&=(const ConceptDenotationFlatSet& other);
-    ConceptDenotationFlatSet& operator|=(const ConceptDenotationFlatSet& other);
-    ConceptDenotationFlatSet& operator-=(const ConceptDenotationFlatSet& other);
-    ConceptDenotationFlatSet& operator~();
-
-    phmap::flat_hash_set<int>::const_iterator begin() const;
-    phmap::flat_hash_set<int>::const_iterator end() const;
-
-    bool contains(int value) const;
-    void set();
-    void insert(int value);
-    void erase(int value);
-
-    int size() const;
-    bool empty() const;
-    bool intersects(const ConceptDenotationFlatSet& other) const;
-    bool is_subset_of(const ConceptDenotationFlatSet& other) const;
-
-    std::vector<int> to_sorted_vector() const;
-
-    std::vector<int> to_canonical_data_representation() const;
-
-    int get_num_objects() const;
-};
-
-
-class RoleDenotationFlatSet {
-private:
-    int m_num_objects;
-    phmap::flat_hash_set<std::pair<int, int>> m_data;
-
-public:
-    explicit RoleDenotationFlatSet(int num_objects);
-    RoleDenotationFlatSet(const RoleDenotationFlatSet& other);
-    RoleDenotationFlatSet& operator=(const RoleDenotationFlatSet& other);
-    RoleDenotationFlatSet(RoleDenotationFlatSet&& other);
-    RoleDenotationFlatSet& operator=(RoleDenotationFlatSet&& other);
-    ~RoleDenotationFlatSet();
-
-    RoleDenotationFlatSet& operator&=(const RoleDenotationFlatSet& other);
-    RoleDenotationFlatSet& operator|=(const RoleDenotationFlatSet& other);
-    RoleDenotationFlatSet& operator-=(const RoleDenotationFlatSet& other);
-    RoleDenotationFlatSet& operator~();
-
-    phmap::flat_hash_set<std::pair<int, int>>::const_iterator begin() const;
-    phmap::flat_hash_set<std::pair<int, int>>::const_iterator end() const;
-
-    bool contains(const std::pair<int, int>& value) const;
-    void set();
-    void insert(const std::pair<int, int>& value);
-    void erase(const std::pair<int, int>& value);
-
-    int size() const;
-    bool empty() const;
-    bool intersects(const RoleDenotationFlatSet& other) const;
-    bool is_subset_of(const RoleDenotationFlatSet& other) const;
-
-    std::vector<std::pair<int, int>> to_sorted_vector() const;
-
-    std::vector<int> to_canonical_data_representation() const;
-
-    int get_num_objects() const;
-};
-
-class ConceptDenotationBitset {
+class ConceptDenotation {
 private:
     int m_num_objects;
     utils::DynamicBitset<unsigned> m_data;
@@ -161,17 +74,17 @@ public:
             void seek_next();
     };
 
-    explicit ConceptDenotationBitset(int num_objects);
-    ConceptDenotationBitset(const ConceptDenotationBitset& other);
-    ConceptDenotationBitset& operator=(const ConceptDenotationBitset& other);
-    ConceptDenotationBitset(ConceptDenotationBitset&& other);
-    ConceptDenotationBitset& operator=(ConceptDenotationBitset&& other);
-    ~ConceptDenotationBitset();
+    explicit ConceptDenotation(int num_objects);
+    ConceptDenotation(const ConceptDenotation& other);
+    ConceptDenotation& operator=(const ConceptDenotation& other);
+    ConceptDenotation(ConceptDenotation&& other);
+    ConceptDenotation& operator=(ConceptDenotation&& other);
+    ~ConceptDenotation();
 
-    ConceptDenotationBitset& operator&=(const ConceptDenotationBitset& other);
-    ConceptDenotationBitset& operator|=(const ConceptDenotationBitset& other);
-    ConceptDenotationBitset& operator-=(const ConceptDenotationBitset& other);
-    ConceptDenotationBitset& operator~();
+    ConceptDenotation& operator&=(const ConceptDenotation& other);
+    ConceptDenotation& operator|=(const ConceptDenotation& other);
+    ConceptDenotation& operator-=(const ConceptDenotation& other);
+    ConceptDenotation& operator~();
 
     const_iterator begin() const;
     const_iterator end() const;
@@ -183,8 +96,8 @@ public:
 
     int size() const;
     bool empty() const;
-    bool intersects(const ConceptDenotationBitset& other) const;
-    bool is_subset_of(const ConceptDenotationBitset& other) const;
+    bool intersects(const ConceptDenotation& other) const;
+    bool is_subset_of(const ConceptDenotation& other) const;
 
     std::vector<int> to_sorted_vector() const;
 
@@ -193,7 +106,8 @@ public:
     int get_num_objects() const;
 };
 
-class RoleDenotationBitset {
+
+class RoleDenotation {
 private:
     int m_num_objects;
     utils::DynamicBitset<unsigned> m_data;
@@ -226,17 +140,17 @@ public:
             void seek_next();
     };
 
-    explicit RoleDenotationBitset(int num_objects);
-    RoleDenotationBitset(const RoleDenotationBitset& other);
-    RoleDenotationBitset& operator=(const RoleDenotationBitset& other);
-    RoleDenotationBitset(RoleDenotationBitset&& other);
-    RoleDenotationBitset& operator=(RoleDenotationBitset&& other);
-    ~RoleDenotationBitset();
+    explicit RoleDenotation(int num_objects);
+    RoleDenotation(const RoleDenotation& other);
+    RoleDenotation& operator=(const RoleDenotation& other);
+    RoleDenotation(RoleDenotation&& other);
+    RoleDenotation& operator=(RoleDenotation&& other);
+    ~RoleDenotation();
 
-    RoleDenotationBitset& operator&=(const RoleDenotationBitset& other);
-    RoleDenotationBitset& operator|=(const RoleDenotationBitset& other);
-    RoleDenotationBitset& operator-=(const RoleDenotationBitset& other);
-    RoleDenotationBitset& operator~();
+    RoleDenotation& operator&=(const RoleDenotation& other);
+    RoleDenotation& operator|=(const RoleDenotation& other);
+    RoleDenotation& operator-=(const RoleDenotation& other);
+    RoleDenotation& operator~();
 
     const_iterator begin() const;
     const_iterator end() const;
@@ -248,15 +162,100 @@ public:
 
     int size() const;
     bool empty() const;
-    bool intersects(const RoleDenotationBitset& other) const;
-    bool is_subset_of(const RoleDenotationBitset& other) const;
+    bool intersects(const RoleDenotation& other) const;
+    bool is_subset_of(const RoleDenotation& other) const;
 
     std::vector<std::pair<int, int>> to_sorted_vector() const;
 
     std::vector<int> to_canonical_data_representation() const;
 
+    const std::vector<unsigned>& get_blocks() const;
+    std::size_t compute_hash() const;
+
     int get_num_objects() const;
 };
+
+template<typename T>
+class DenotationEqual {
+public:
+    bool operator()(const T& l, const T& r) const {
+        return l.get_blocks() == r.get_blocks();
+    }
+};
+
+template<typename T>
+class DenotationHasher {
+public:
+    std::size_t operator()(const T& denotation) const {
+        return denotation.compute_hash();
+    }
+};
+
+
+/**
+ * Caches single denotations of type T.
+ * We store everything as pointers for faster resize
+ * and no invalidation on resize.
+ */
+template<typename T>
+class DenotationCache {
+private:
+    std::unordered_set<T*> m_storage;
+
+    // optional mapping from (instance, state, element) -> denotation*
+    std::vector<std::vector<std::unordered_map<int, T*>>> m_mapping;
+
+    int m_num_objects;
+public:
+    explicit DenotationCache(int num_objects);
+    ~DenotationCache();
+
+    T* get_new_denotation() const;
+
+    /**
+     * Uniquely inserts a denotation and returns a reference to it.
+     * Second alternative also creates mapping (instance, state, element) -> denotation*
+     */
+    const T* insert(const T* denotation);
+    const T* insert(const T* denotation, int instance_index, int state_index, int element_index);
+
+    /**
+     * Returns a ptr to the denotation if it exists and otherwise creates
+     * an entry in the mapping that maps to nullptr.
+     */
+    const T* find(int instance_index, int state_index, int element_index) const;
+};
+
+
+/**
+ * Caches a collection of denotation of type T.
+ */
+template<typename T>
+class DenotationsCache {
+private:
+    std::unordered_set<std::vector<T*>*> m_storage;
+
+    // mapping from (element) -> std::vector<T*>*
+    std::unordered_map<int, std::vector<T*>*> m_mapping;
+public:
+    const std::vector<const T*>* insert(const std::vector<const T*>* denotations);
+
+    const std::vector<const T*>* find(int element_index) const;
+};
+
+struct EvaluationCaches {
+    // Cache for single denotations.
+    DenotationCache<bool> m_b_denot_cache;
+    DenotationCache<int> m_n_denot_cache;
+    DenotationCache<ConceptDenotation> m_c_denot_cache;
+    DenotationCache<RoleDenotation> m_r_denot_cache;
+    // Cache for collections of denotations.
+    DenotationsCache<bool> m_b_denots_cache;
+    DenotationsCache<int> m_n_denots_cache;
+    DenotationsCache<ConceptDenotation> m_c_denots_cache;
+    DenotationsCache<RoleDenotation> m_r_denots_cache;
+};
+
 
 class Constant {
 private:

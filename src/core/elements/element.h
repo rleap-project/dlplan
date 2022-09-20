@@ -185,6 +185,18 @@ struct GeneratorEvaluationCaches {
     GeneratorEvaluationCache<element::Role, RoleDenotation> m_role_denotation_cache;
 };
 
+/*
+template<typename DENOTATION_TYPE>
+class PerStateCache {
+    std::unordered_set<DENOTATION_TYPE*> m_uniqueness;
+};
+
+template<typename DENOTATION_TYPE>
+class PerStatesCache {
+    std::unordered_set<DENOTATION_TYPE*> m_uniqueness;
+};
+*/
+
 }
 
 #endif
