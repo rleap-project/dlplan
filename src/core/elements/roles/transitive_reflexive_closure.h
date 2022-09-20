@@ -45,7 +45,7 @@ public:
         return denotation;
     }
 
-    const std::vector<const RoleDenotation*>* evaluate(const States& states, DenotationsCaches& caches) const override {
+    std::vector<RoleDenotation*>* evaluate(const States& states, DenotationsCaches& caches) const override {
         auto role_cache_entry = caches.m_r_denots_cache.find(get_index());
         if (role_cache_entry) return role_cache_entry;
         auto denotations = caches.m_r_denots_cache.get_new_denotations();
@@ -57,8 +57,8 @@ public:
                 *((*role_denotations)[i]),
                 state.get_instance_info_ref().get_num_objects(),
                 *denotation);
+            denotation = caches.m_r_denot_cache.insert(denotation);
             denotations->push_back(denotation);
-            caches.m_r_denot_cache.insert(denotation);
         }
         return denotations;
     }
