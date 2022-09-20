@@ -48,6 +48,7 @@ public:
     std::vector<RoleDenotation*>* evaluate(const States& states, DenotationsCaches& caches) const override {
         auto role_cache_entry = caches.m_r_denots_cache.find(get_index());
         if (role_cache_entry) return role_cache_entry;
+        // todo new denotations will leak. should we return unique_ptr instead?
         auto denotations = caches.m_r_denots_cache.get_new_denotations();
         auto role_denotations = m_role->evaluate(states, caches);
         for (size_t i = 0; i < states.size(); ++i) {
