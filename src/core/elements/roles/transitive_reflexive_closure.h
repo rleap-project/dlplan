@@ -45,23 +45,21 @@ public:
         return denotation;
     }
 
-    std::vector<RoleDenotation*>* evaluate(const States& states, DenotationsCaches& caches) const override {
-        auto role_cache_entry = caches.m_r_denots_cache.find(get_index());
-        if (role_cache_entry) return role_cache_entry;
-        // todo new denotations will leak. should we return unique_ptr instead?
+    RoleDenotationsPtr evaluate(const States& states, DenotationsCaches& caches) const override {
+        auto cached = caches.m_r_denots_cache.find(get_index());
+        if (cached) return cached;
         auto denotations = caches.m_r_denots_cache.get_new_denotations();
         auto role_denotations = m_role->evaluate(states, caches);
         for (size_t i = 0; i < states.size(); ++i) {
-            auto denotation = caches.m_r_denot_cache.get_new_denotation();
             const auto& state = states[i];
+            auto denotation = caches.m_r_denot_cache.get_new_denotation(state.get_instance_info_ref().get_num_objects());
             compute_result(
-                *((*role_denotations)[i]),
+                *(*role_denotations)[i],
                 state.get_instance_info_ref().get_num_objects(),
                 *denotation);
-            denotation = caches.m_r_denot_cache.insert(denotation);
-            denotations->push_back(denotation);
+            denotations->push_back(caches.m_r_denot_cache.insert(std::move(denotation)));
         }
-        return denotations;
+        return caches.m_r_denots_cache.insert(std::move(denotations), get_index());
     }
 
     int compute_complexity() const override {

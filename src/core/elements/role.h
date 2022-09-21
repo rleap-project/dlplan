@@ -6,6 +6,8 @@
 
 namespace dlplan::core::element {
 
+using RoleDenotationsPtr = std::vector<RoleDenotation*>*;
+
 class Role : public Element<RoleDenotation> {
 public:
     explicit Role(const VocabularyInfo& vocabulary) : Element<RoleDenotation>(vocabulary) { }
