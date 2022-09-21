@@ -81,6 +81,9 @@ public:
     ConceptDenotation& operator=(ConceptDenotation&& other);
     ~ConceptDenotation();
 
+    bool operator==(const ConceptDenotation& other) const ;
+    bool operator!=(const ConceptDenotation& other) const;
+
     ConceptDenotation& operator&=(const ConceptDenotation& other);
     ConceptDenotation& operator|=(const ConceptDenotation& other);
     ConceptDenotation& operator-=(const ConceptDenotation& other);
@@ -149,6 +152,9 @@ public:
     RoleDenotation(RoleDenotation&& other);
     RoleDenotation& operator=(RoleDenotation&& other);
     ~RoleDenotation();
+
+    bool operator==(const RoleDenotation& other) const ;
+    bool operator!=(const RoleDenotation& other) const;
 
     RoleDenotation& operator&=(const RoleDenotation& other);
     RoleDenotation& operator|=(const RoleDenotation& other);

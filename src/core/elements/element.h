@@ -19,13 +19,7 @@ namespace dlplan::core::element {
 class DenotationsCaches;
 
 template<typename T>
-using DENOT = T*;
-template<typename T>
-using U_DENOT = std::unique_ptr<T>;
-template<typename T>
-using DENOTS = std::vector<DENOT<T>>*;
-template<typename T>
-using U_DENOTS = std::unique_ptr<std::vector<DENOT<T>>>;
+using DENOTS = std::vector<T>;
 
 template<typename T>
 class Element : public utils::Cachable {
@@ -45,7 +39,7 @@ public:
     virtual ~Element() = default;
 
     virtual T evaluate(const State& state) const = 0;
-    virtual std::vector<T*>* evaluate(const States& states, DenotationsCaches& caches) const = 0;
+    virtual DENOTS<T*>* evaluate(const States& states, DenotationsCaches& caches) const = 0;
 
     virtual int compute_complexity() const = 0;
 
@@ -67,19 +61,19 @@ public:
 };
 
 
-template<typename DENOT>
+template<typename T>
 struct DenotationEqual {
 public:
-    bool operator()(const DENOT& l, const DENOT& r) const {
+    bool operator()(const T& l, const T& r) const {
         return l->get_blocks() == r->get_blocks();
     }
 };
 
 
-template<typename DENOT>
+template<typename T>
 struct DenotationHasher {
 public:
-    std::size_t operator()(const DENOT& denotation) const {
+    std::size_t operator()(const T& denotation) const {
         return denotation->compute_hash();
     }
 };
@@ -93,10 +87,10 @@ public:
 template<typename T>
 class DenotationCache {
 private:
-   std::unordered_set<U_DENOT<T>, DenotationHasher<U_DENOT<T>>, DenotationEqual<U_DENOT<T>>> m_storage;
+   std::unordered_set<std::unique_ptr<T>, DenotationHasher<std::unique_ptr<T>>, DenotationEqual<std::unique_ptr<T>>> m_storage;
 
     // optional mapping from (instance, state, element) -> DENOT
-    std::vector<std::vector<std::unordered_map<int, DENOT<T>>>> m_mapping;
+    std::vector<std::vector<std::unordered_map<int, T*>>> m_mapping;
 public:
     DenotationCache() { }
     DenotationCache(const DenotationCache& other) = delete;
@@ -105,7 +99,7 @@ public:
     DenotationCache& operator=(DenotationCache&&) = default;
     ~DenotationCache() { }
 
-    U_DENOT<T> get_new_denotation(int num_objects) const {
+    std::unique_ptr<T> get_new_denotation(int num_objects) const {
         return std::make_unique<T>(T(num_objects));
     }
 
@@ -113,11 +107,11 @@ public:
      * Uniquely inserts a denotation and returns a reference to it.
      * Second alternative also creates mapping (instance, state, element) -> denotation*
      */
-    DENOT<T> insert(U_DENOT<T>&& denotation) {
+    T* insert(std::unique_ptr<T>&& denotation) {
         return m_storage.insert(std::move(denotation)).first->get();
     }
 
-    DENOT<T> insert(U_DENOT<T>&& denotation, int instance_index, int state_index, int element_index) {
+    T* insert(std::unique_ptr<T>&& denotation, int instance_index, int state_index, int element_index) {
         auto result = m_storage.insert(std::move(denotation));
         if (result.second) {
             if (instance_index >= m_mapping.size())
@@ -133,7 +127,7 @@ public:
      * Returns a ptr to the denotation if it exists and otherwise creates
      * an entry in the mapping that maps to nullptr.
      */
-    DENOT<T> find(int instance_index, int state_index, int element_index) const {
+    T* find(int instance_index, int state_index, int element_index) const {
         if (instance_index >= m_mapping.size())
             return nullptr;
         if (state_index >= m_mapping[state_index].size())
@@ -147,19 +141,19 @@ public:
 };
 
 
-template<typename DENOTS>
+template<typename T>
 struct DenotationsEqual {
 public:
-    bool operator()(const DENOTS& l, const DENOTS& r) const {
+    bool operator()(const T& l, const T& r) const {
         return *l == *r;
     }
 };
 
 
-template<typename DENOTS>
+template<typename T>
 struct DenotationsHasher {
 public:
-    std::size_t operator()(const DENOTS& denotations) const {
+    std::size_t operator()(const T& denotations) const {
         // TODO
         return 0;
     }
@@ -172,10 +166,10 @@ public:
 template<typename T>
 class DenotationsCache {
 private:
-    std::unordered_set<U_DENOTS<T>, DenotationsHasher<U_DENOTS<T>>, DenotationsEqual<U_DENOTS<T>>> m_storage;
+    std::unordered_set<std::unique_ptr<DENOTS<T*>>, DenotationsHasher<std::unique_ptr<DENOTS<T*>>>, DenotationsEqual<std::unique_ptr<DENOTS<T*>>>> m_storage;
 
     // mapping from (element) -> std::vector<T*>*
-    std::unordered_map<int, DENOTS<T>> m_mapping;
+    std::unordered_map<int, DENOTS<T*>*> m_mapping;
 
     int m_num_states;
 public:
@@ -186,13 +180,13 @@ public:
     DenotationsCache& operator=(DenotationsCache&& other) = default;
     ~DenotationsCache() { }
 
-    U_DENOTS<T> get_new_denotations() const {
+    std::unique_ptr<DENOTS<T*>> get_new_denotations() const {
         auto result = std::make_unique<std::vector<T*>>();
         result->reserve(m_num_states);
         return result;
     }
 
-    DENOTS<T> insert(U_DENOTS<T>&& denotations, int element_index) {
+    DENOTS<T*>* insert(std::unique_ptr<DENOTS<T*>>&& denotations, int element_index) {
         auto result = m_storage.insert(std::move(denotations));
         if (result.second) {
             m_mapping.insert(std::make_pair(element_index, result.first->get()));
@@ -200,7 +194,7 @@ public:
         return result.first->get();
     }
 
-    DENOTS<T> find(int element_index) const {
+    DENOTS<T*>* find(int element_index) const {
         auto result = m_mapping.find(element_index);
         if (result == m_mapping.end())
             return nullptr;
@@ -227,6 +221,7 @@ struct DenotationsCaches {
       m_c_denots_cache(num_states),
       m_r_denots_cache(num_states) { }
 };
+
 
 }
 

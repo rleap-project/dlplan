@@ -66,6 +66,17 @@ ConceptDenotation::const_iterator& ConceptDenotation::const_iterator::operator++
     return *this;
 }
 
+bool ConceptDenotation::operator==(const ConceptDenotation& other) const {
+    if (this != &other) {
+        return this->get_blocks() == other.get_blocks();
+    }
+    return true;
+}
+
+bool ConceptDenotation::operator!=(const ConceptDenotation& other) const {
+    return !(*this == other);
+}
+
 ConceptDenotation& ConceptDenotation::operator&=(const ConceptDenotation& other) {
     m_data &= other.m_data;
     return *this;
@@ -212,6 +223,17 @@ RoleDenotation::const_iterator RoleDenotation::const_iterator::operator++(int) {
 RoleDenotation::const_iterator& RoleDenotation::const_iterator::operator++() {
     seek_next();
     return *this;
+}
+
+bool RoleDenotation::operator==(const RoleDenotation& other) const {
+    if (this != &other) {
+        return this->get_blocks() == other.get_blocks();
+    }
+    return true;
+}
+
+bool RoleDenotation::operator!=(const RoleDenotation& other) const {
+    return !(*this == other);
 }
 
 RoleDenotation& RoleDenotation::operator&=(const RoleDenotation& other) {
