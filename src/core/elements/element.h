@@ -173,7 +173,6 @@ private:
         }
     };
 
-
     template<typename T1>
     struct ValueDenotationsHasher {
     public:
