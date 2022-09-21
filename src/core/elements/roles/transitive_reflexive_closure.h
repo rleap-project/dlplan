@@ -45,20 +45,27 @@ public:
         return denotation;
     }
 
-    RoleDenotationsPtr evaluate(const States& states, DenotationsCaches& caches) const override {
+    DENOTS<RoleDenotation> evaluate(const States& states, DenotationsCaches& caches) const override {
+        // check if denotations is cached.
         auto cached = caches.m_r_denots_cache.find(get_index());
         if (cached) return cached;
+        // allocate memory for new denotations
         auto denotations = caches.m_r_denots_cache.get_new_denotations();
+        // get denotations of children
         auto role_denotations = m_role->evaluate(states, caches);
+        // compute denotations
         for (size_t i = 0; i < states.size(); ++i) {
             const auto& state = states[i];
-            auto denotation = caches.m_r_denot_cache.get_new_denotation(state.get_instance_info_ref().get_num_objects());
+            int num_objects = state.get_instance_info_ref().get_num_objects();
+            auto denotation = caches.m_r_denot_cache.get_new_denotation(num_objects);
             compute_result(
                 *(*role_denotations)[i],
-                state.get_instance_info_ref().get_num_objects(),
+                num_objects,
                 *denotation);
+            // register denotation and append it to denotations.
             denotations->push_back(caches.m_r_denot_cache.insert(std::move(denotation)));
         }
+        // register denotations and return it.
         return caches.m_r_denots_cache.insert(std::move(denotations), get_index());
     }
 

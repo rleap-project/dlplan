@@ -45,7 +45,7 @@ public:
         return denotation;
     }
 
-    const bool* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {
+    DENOTS<bool> evaluate(const States& states, DenotationsCaches& caches) const override {
         auto boolean_cache_entry = cache.m_boolean_denotation_cache.find(state, *this);
         auto& status = boolean_cache_entry->m_status;
         auto& denotation = boolean_cache_entry->m_denotation;

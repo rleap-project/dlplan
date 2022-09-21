@@ -5,10 +5,11 @@
 #include <numeric>
 #include <vector>
 
-#include "../utils/countdown_timer.h"
-
 #include "hash_utils.h"
+
+#include "../core/elements/element.h"
 #include "../utils/hash_utils.h"
+#include "../utils/countdown_timer.h"
 
 #include "../../include/dlplan/core.h"
 
@@ -17,9 +18,11 @@ namespace dlplan::generator {
 
 struct GeneratorData {
     core::SyntacticElementFactory& m_factory;
-    std::unordered_set<std::array<uint32_t, 4>> m_boolean_and_numerical_hash_table;
-    std::unordered_set<std::array<uint32_t, 4>> m_concept_hash_table;
-    std::unordered_set<std::array<uint32_t, 4>> m_role_hash_table;
+    // TODO: we might want to store boolean and numerical in same hash.
+    std::unordered_set<core::element::DENOTS<bool>> m_boolean_hash_table;
+    std::unordered_set<core::element::DENOTS<int>> m_numerical_hash_table;
+    std::unordered_set<core::element::DENOTS<core::ConceptDenotation>> m_concept_hash_table;
+    std::unordered_set<core::element::DENOTS<core::RoleDenotation>> m_role_hash_table;
     std::vector<std::vector<core::Boolean>> m_booleans_by_iteration;
     std::vector<std::vector<core::Numerical>> m_numericals_by_iteration;
     std::vector<std::vector<core::Concept>> m_concepts_by_iteration;

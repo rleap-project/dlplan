@@ -143,6 +143,14 @@ std::vector<int> ConceptDenotation::to_canonical_data_representation() const {
     return std::vector<int>(m_data.get_blocks().begin(), m_data.get_blocks().end());
 }
 
+const std::vector<unsigned>& ConceptDenotation::get_blocks() const {
+    return m_data.get_blocks();
+}
+
+std::size_t ConceptDenotation::compute_hash() const {
+    return std::hash<std::vector<unsigned>>()(m_data.get_blocks());
+}
+
 int ConceptDenotation::get_num_objects() const {
     return m_num_objects;
 }

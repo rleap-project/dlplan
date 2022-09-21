@@ -57,7 +57,7 @@ public:
         return denotation;
     }
 
-    const int* evaluate(const State& state, GeneratorEvaluationCaches& cache) const override {
+    DENOTS<int> evaluate(const States& states, DenotationsCaches& caches) const override {
         auto numerical_cache_entry = cache.m_numerical_denotation_cache.find(state, *this);
         auto& status = numerical_cache_entry->m_status;
         auto& denotation = numerical_cache_entry->m_denotation;

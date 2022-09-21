@@ -19,6 +19,15 @@ namespace dlplan::core::element {
 class DenotationsCaches;
 
 template<typename T>
+using DENOT = T*;
+template<typename T>
+using U_DENOT = std::unique_ptr<T>;
+template<typename T>
+using DENOTS = std::vector<DENOT<T>>*;
+template<typename T>
+using U_DENOTS = std::unique_ptr<std::vector<DENOT<T>>>;
+
+template<typename T>
 class Element : public utils::Cachable {
 protected:
     /**
@@ -84,13 +93,10 @@ public:
 template<typename T>
 class DenotationCache {
 private:
-    using DENOT = T*;
-    using U_DENOT = std::unique_ptr<T>;
-
-    std::unordered_set<U_DENOT, DenotationHasher<U_DENOT>, DenotationEqual<U_DENOT>> m_storage;
+   std::unordered_set<U_DENOT<T>, DenotationHasher<U_DENOT<T>>, DenotationEqual<U_DENOT<T>>> m_storage;
 
     // optional mapping from (instance, state, element) -> DENOT
-    std::vector<std::vector<std::unordered_map<int, DENOT>>> m_mapping;
+    std::vector<std::vector<std::unordered_map<int, DENOT<T>>>> m_mapping;
 public:
     DenotationCache() { }
     DenotationCache(const DenotationCache& other) = delete;
@@ -99,7 +105,7 @@ public:
     DenotationCache& operator=(DenotationCache&&) = default;
     ~DenotationCache() { }
 
-    U_DENOT get_new_denotation(int num_objects) const {
+    U_DENOT<T> get_new_denotation(int num_objects) const {
         return std::make_unique<T>(T(num_objects));
     }
 
@@ -107,11 +113,11 @@ public:
      * Uniquely inserts a denotation and returns a reference to it.
      * Second alternative also creates mapping (instance, state, element) -> denotation*
      */
-    DENOT insert(U_DENOT&& denotation) {
+    DENOT<T> insert(U_DENOT<T>&& denotation) {
         return m_storage.insert(std::move(denotation)).first->get();
     }
 
-    DENOT insert(U_DENOT&& denotation, int instance_index, int state_index, int element_index) {
+    DENOT<T> insert(U_DENOT<T>&& denotation, int instance_index, int state_index, int element_index) {
         auto result = m_storage.insert(std::move(denotation));
         if (result.second) {
             if (instance_index >= m_mapping.size())
@@ -127,7 +133,7 @@ public:
      * Returns a ptr to the denotation if it exists and otherwise creates
      * an entry in the mapping that maps to nullptr.
      */
-    DENOT find(int instance_index, int state_index, int element_index) const {
+    DENOT<T> find(int instance_index, int state_index, int element_index) const {
         if (instance_index >= m_mapping.size())
             return nullptr;
         if (state_index >= m_mapping[state_index].size())
@@ -166,30 +172,27 @@ public:
 template<typename T>
 class DenotationsCache {
 private:
-    using DENOTS = std::vector<T*>*;
-    using U_DENOTS = std::unique_ptr<std::vector<T*>>;
-
-    std::unordered_set<U_DENOTS, DenotationsHasher<U_DENOTS>, DenotationsEqual<U_DENOTS>> m_storage;
+    std::unordered_set<U_DENOTS<T>, DenotationsHasher<U_DENOTS<T>>, DenotationsEqual<U_DENOTS<T>>> m_storage;
 
     // mapping from (element) -> std::vector<T*>*
-    std::unordered_map<int, DENOTS> m_mapping;
+    std::unordered_map<int, DENOTS<T>> m_mapping;
 
     int m_num_states;
 public:
-    DenotationsCache(int num_states) : m_num_states(num_states) {}
+    explicit DenotationsCache(int num_states) : m_num_states(num_states) {}
     DenotationsCache(const DenotationsCache& other) = delete;
     DenotationsCache& operator=(const DenotationsCache& other) = delete;
     DenotationsCache(DenotationsCache&& other) = default;
     DenotationsCache& operator=(DenotationsCache&& other) = default;
     ~DenotationsCache() { }
 
-    U_DENOTS get_new_denotations() const {
+    U_DENOTS<T> get_new_denotations() const {
         auto result = std::make_unique<std::vector<T*>>();
         result->reserve(m_num_states);
         return result;
     }
 
-    DENOTS insert(U_DENOTS&& denotations, int element_index) {
+    DENOTS<T> insert(U_DENOTS<T>&& denotations, int element_index) {
         auto result = m_storage.insert(std::move(denotations));
         if (result.second) {
             m_mapping.insert(std::make_pair(element_index, result.first->get()));
@@ -197,7 +200,7 @@ public:
         return result.first->get();
     }
 
-    DENOTS find(int element_index) const {
+    DENOTS<T> find(int element_index) const {
         auto result = m_mapping.find(element_index);
         if (result == m_mapping.end())
             return nullptr;
@@ -217,6 +220,12 @@ struct DenotationsCaches {
     DenotationsCache<int> m_n_denots_cache;
     DenotationsCache<ConceptDenotation> m_c_denots_cache;
     DenotationsCache<RoleDenotation> m_r_denots_cache;
+
+    DenotationsCaches(int num_states)
+    : m_b_denots_cache(num_states),
+      m_n_denots_cache(num_states),
+      m_c_denots_cache(num_states),
+      m_r_denots_cache(num_states) { }
 };
 
 }

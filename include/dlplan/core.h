@@ -103,6 +103,9 @@ public:
 
     std::vector<int> to_canonical_data_representation() const;
 
+    const std::vector<unsigned>& get_blocks() const;
+    std::size_t compute_hash() const;
+
     int get_num_objects() const;
 };
 
