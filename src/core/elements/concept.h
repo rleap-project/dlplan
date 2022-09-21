@@ -10,6 +10,9 @@ class Concept : public Element<ConceptDenotation> {
 public:
     explicit Concept(const VocabularyInfo& vocabulary) : Element<ConceptDenotation>(vocabulary) { }
     ~Concept() override = default;
+
+    virtual ConceptDenotation evaluate(const State& state) const = 0;
+    virtual DENOTS<ConceptDenotation*>* evaluate(const States& states, DenotationsCaches& caches) const = 0;
 };
 
 }

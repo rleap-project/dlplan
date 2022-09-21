@@ -15,7 +15,7 @@ public:
         return ConceptDenotation(state.get_instance_info_ref().get_num_objects());
     }
 
-    DENOTS<ConceptDenotation> evaluate(const States& states, DenotationsCaches& caches) const override {
+    DENOTS<ConceptDenotation*>* evaluate(const States& states, DenotationsCaches& caches) const override {
         auto concept_cache_entry = cache.m_concept_denotation_cache.find(state, *this);
         auto& status = concept_cache_entry->m_status;
         auto& denotation = concept_cache_entry->m_denotation;

@@ -10,6 +10,9 @@ class Role : public Element<RoleDenotation> {
 public:
     explicit Role(const VocabularyInfo& vocabulary) : Element<RoleDenotation>(vocabulary) { }
     ~Role() override = default;
+
+    virtual RoleDenotation evaluate(const State& state) const = 0;
+    virtual DENOTS<RoleDenotation*>* evaluate(const States& states, DenotationsCaches& caches) const = 0;
 };
 
 }

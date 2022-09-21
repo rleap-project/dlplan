@@ -19,7 +19,7 @@ namespace dlplan::generator {
 struct GeneratorData {
     core::SyntacticElementFactory& m_factory;
     // TODO: we might want to store boolean and numerical in same hash.
-    std::unordered_set<core::element::DENOTS<bool>> m_boolean_hash_table;
+    std::unordered_set<core::element::DENOTS<bool*>*> m_boolean_hash_table;
     std::unordered_set<core::element::DENOTS<int>> m_numerical_hash_table;
     std::unordered_set<core::element::DENOTS<core::ConceptDenotation>> m_concept_hash_table;
     std::unordered_set<core::element::DENOTS<core::RoleDenotation>> m_role_hash_table;

@@ -10,6 +10,9 @@ class Numerical : public Element<int> {
 public:
     explicit Numerical(const VocabularyInfo& vocabulary) : Element<int>(vocabulary) { }
     ~Numerical() override = default;
+
+    virtual int evaluate(const State& state) const = 0;
+    virtual DENOTS<int>* evaluate(const States& states, DenotationsCaches& caches) const = 0;
 };
 
 }

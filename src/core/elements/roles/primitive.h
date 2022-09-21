@@ -53,7 +53,7 @@ public:
         return denotation;
     }
 
-    DENOTS<RoleDenotation> evaluate(const States& states, DenotationsCaches& caches) const override {
+    DENOTS<RoleDenotation*>* evaluate(const States& states, DenotationsCaches& caches) const override {
         auto cached = caches.m_r_denots_cache.find(get_index());
         if (cached) return cached;
         auto denotations = caches.m_r_denots_cache.get_new_denotations();
