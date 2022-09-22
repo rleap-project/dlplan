@@ -15,8 +15,8 @@ template<typename T>
 class PointerCache {
 public:
     template<typename... Args>
-    std::unique_ptr<T> get_new_entry(Args... args) const {
-        return std::make_unique<T>(T(args...));
+    std::unique_ptr<T> get_new_entry(Args&& ...args) const {
+        return std::make_unique<T>(T(std::forward<Args>(args)...));
     }
 
     auto insert(std::unique_ptr<T>&& entry) {

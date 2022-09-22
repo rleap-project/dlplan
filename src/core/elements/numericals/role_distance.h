@@ -63,6 +63,7 @@ public:
         if (cached) return cached;
         // allocate memory for new denotations
         auto denotations = caches.m_n_denots_cache.get_new_entry();
+        denotations->reserve(states.size());
         // get denotations of children
         auto role_from_denots = m_role_from->evaluate(states, caches);
         auto role_denots = m_role->evaluate(states, caches);

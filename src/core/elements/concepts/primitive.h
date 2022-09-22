@@ -58,7 +58,8 @@ public:
         auto cached = caches.m_c_denots_mapping.find(get_index());
         if (cached) return cached;
         // allocate memory for new denotations
-        auto denotations = caches.m_c_denots_cache.get_new_entry(states.size());
+        auto denotations = caches.m_c_denots_cache.get_new_entry();
+        denotations->reserve(states.size());
         // get denotations of children
         for (size_t i = 0; i < states.size(); ++i) {
             const auto& state = states[i];

@@ -51,6 +51,7 @@ public:
         if (cached) return cached;
         // allocate memory for new denotations
         auto denotations = caches.m_b_denots_cache.get_new_entry();
+        denotations->reserve(states.size());
         // compute denotations
         for (size_t i = 0; i < states.size(); ++i) {
             bool denotation;

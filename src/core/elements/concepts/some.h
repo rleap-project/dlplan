@@ -44,7 +44,8 @@ public:
         auto cached = caches.m_c_denots_mapping.find(get_index());
         if (cached) return cached;
         // allocate memory for new denotations
-        auto denotations = caches.m_c_denots_cache.get_new_entry(states.size());
+        auto denotations = caches.m_c_denots_cache.get_new_entry();
+        denotations->reserve(states.size());
         // get denotations of children
         auto role_denotations = m_role->evaluate(states, caches);
         auto concept_denotations = m_concept->evaluate(states, caches);

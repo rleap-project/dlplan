@@ -41,6 +41,7 @@ public:
         if (cached) return cached;
         // allocate memory for new denotations
         auto denotations = caches.m_b_denots_cache.get_new_entry();
+        denotations->reserve(states.size());
         // get denotations of children
         auto element_left_denotations = m_element_left->evaluate(states, caches);
         auto element_right_denotations = m_element_right->evaluate(states, caches);
