@@ -1,13 +1,10 @@
-#ifndef DLPLAN_SRC_UTILS_HASH_UTILS_H_
-#define DLPLAN_SRC_UTILS_HASH_UTILS_H_
+#ifndef DLPLAN_INCLUDE_DLPLAN_UTILS_HASHING_H_
+#define DLPLAN_INCLUDE_DLPLAN_UTILS_HASHING_H_
 
-#include <vector>
-#include <array>
-
-#include "MurmurHash3.h"
+#include <functional>
 
 
-namespace dlplan::utils::hashing {
+namespace dlplan::utils {
 
 /**
  * For combining hash value we use the boost::hash_combine one-liner.
@@ -21,5 +18,6 @@ void hash_combine(std::size_t& seed, const T& v)
 }
 
 }
+
 
 #endif

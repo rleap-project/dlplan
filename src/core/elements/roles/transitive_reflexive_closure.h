@@ -47,26 +47,28 @@ public:
 
     DENOTS<RoleDenotation*>* evaluate(const States& states, DenotationsCaches& caches) const override {
         // check if denotations is cached.
-        auto cached = caches.m_r_denots_cache.find(get_index());
+        auto cached = caches.m_r_denots_mapping.find(get_index());
         if (cached) return cached;
         // allocate memory for new denotations
-        auto denotations = caches.m_r_denots_cache.get_new_denotations();
+        auto denotations = caches.m_r_denots_cache.get_new_entry(states.size());
         // get denotations of children
         auto role_denotations = m_role->evaluate(states, caches);
         // compute denotations
         for (size_t i = 0; i < states.size(); ++i) {
             const auto& state = states[i];
             int num_objects = state.get_instance_info_ref().get_num_objects();
-            auto denotation = caches.m_r_denot_cache.get_new_denotation(num_objects);
+            auto denotation = caches.m_r_denot_cache.get_new_entry(num_objects);
             compute_result(
                 *(*role_denotations)[i],
                 num_objects,
                 *denotation);
             // register denotation and append it to denotations.
-            denotations->push_back(caches.m_r_denot_cache.insert(std::move(denotation)));
+            denotations->push_back(caches.m_r_denot_cache.insert(std::move(denotation)).first->get());
         }
         // register denotations and return it.
-        return caches.m_r_denots_cache.insert(std::move(denotations), get_index());
+        auto result_denotations = caches.m_r_denots_cache.insert(std::move(denotations)).first->get();
+        caches.m_r_denots_mapping.insert(result_denotations, get_index());
+        return result_denotations;
     }
 
     int compute_complexity() const override {

@@ -13,21 +13,6 @@
 #include "vocabulary_info.h"
 #include "elements/types.h"
 
-#include "../utils/hash_utils.h"
-
-
-namespace std {
-    template<> struct hash<vector<unsigned>> {
-        size_t operator()(const vector<unsigned>& data) const noexcept {
-            size_t seed = data.size();
-            for (unsigned value : data) {
-                dlplan::utils::hashing::hash_combine(seed, value);
-            }
-            return seed;
-        }
-    };
-}
-
 
 namespace dlplan::core {
 

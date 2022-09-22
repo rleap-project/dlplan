@@ -6,7 +6,6 @@
 
 #include "instance_info.h"
 #include "../utils/collections.h"
-#include "../utils/hash_utils.h"
 
 
 namespace dlplan::core {
@@ -107,9 +106,9 @@ size_t State::compute_hash() const {
     Index_Vec sorted_atom_idxs = compute_sorted_atom_idxs();
     size_t seed = sorted_atom_idxs.size();
     for (int atom_idx : sorted_atom_idxs) {
-        utils::hashing::hash_combine(seed, atom_idx);
+        utils::hash_combine(seed, atom_idx);
     }
-    utils::hashing::hash_combine(seed, m_instance_info.get());
+    utils::hash_combine(seed, m_instance_info.get());
     return seed;
 }
 

@@ -5,8 +5,6 @@
 #include <numeric>
 #include <vector>
 
-#include "hash_utils.h"
-
 #include "../core/elements/element.h"
 #include "../utils/hash_utils.h"
 #include "../utils/countdown_timer.h"

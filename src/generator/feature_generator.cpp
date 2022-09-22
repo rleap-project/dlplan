@@ -101,7 +101,7 @@ FeatureRepresentations FeatureGeneratorImpl::generate(
     int numerical_complexity_limit,
     int time_limit,
     int feature_limit,
-    int num_threads,
+    int,
     const States& states) {
     // Initialize statistics in each rule.
     for (auto& r : m_primitive_rules) r->initialize();
@@ -115,8 +115,6 @@ FeatureRepresentations FeatureGeneratorImpl::generate(
     core::element::DenotationsCaches caches(states.size());
     generate_base(states, data, caches);
     generate_inductively(concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, numerical_complexity_limit, states, data, caches);
-    // utils::g_log << "Overall results: " << std::endl;
-    // print_overall_statistics();
     return data.m_reprs;
 }
 

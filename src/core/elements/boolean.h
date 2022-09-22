@@ -12,6 +12,7 @@ public:
     ~Boolean() override = default;
 
     virtual bool evaluate(const State& state) const = 0;
+    //virtual bool evaluate(const State& state, DenotationsCaches& caches) const = 0;
     virtual DENOTS<bool>* evaluate(const States& states, DenotationsCaches& caches) const = 0;
 };
 

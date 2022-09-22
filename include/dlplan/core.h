@@ -14,7 +14,7 @@
 #include "utils/pimpl.h"
 #include "utils/dynamic_bitset.h"
 #include "utils/cache.h"
-
+#include "utils/hashing.h"
 
 
 namespace dlplan::core {
@@ -711,6 +711,63 @@ namespace std {
     template<> struct hash<dlplan::core::State> {
         size_t operator()(const dlplan::core::State& state) const noexcept {
             return state.compute_hash();
+        }
+    };
+    template<>
+    struct hash<unique_ptr<dlplan::core::ConceptDenotation>> {
+        size_t operator()(const unique_ptr<dlplan::core::ConceptDenotation>& denotation) const noexcept {
+            return denotation->compute_hash();
+        }
+    };
+    template<>
+    struct hash<dlplan::core::RoleDenotation> {
+        size_t operator()(const unique_ptr<dlplan::core::RoleDenotation>& denotation) const noexcept {
+            return denotation->compute_hash();
+        }
+    };
+    template<>
+    struct hash<unique_ptr<vector<dlplan::core::ConceptDenotation*>>> {
+        size_t operator()(const unique_ptr<vector<dlplan::core::ConceptDenotation*>>& denotations) const noexcept {
+            size_t seed = 0;
+            for (const auto denot_ptr : *denotations) {
+                dlplan::utils::hash_combine(seed, denot_ptr);
+            }
+            return seed;
+        }
+    };
+    template<>
+    struct hash<unique_ptr<vector<dlplan::core::RoleDenotation*>>> {
+        size_t operator()(const unique_ptr<vector<dlplan::core::RoleDenotation*>>& denotations) const noexcept {
+            size_t seed = 0;
+            for (const auto denot_ptr : *denotations) {
+                dlplan::utils::hash_combine(seed, denot_ptr);
+            }
+            return seed;
+        }
+    };
+    template<>
+    struct hash<unique_ptr<vector<bool>>> {
+        size_t operator()(const unique_ptr<vector<bool>>& denotations) const noexcept {
+            return hash<vector<bool>>()(*denotations);
+        }
+    };
+    template<>
+    struct hash<unique_ptr<vector<int>>> {
+        size_t operator()(const unique_ptr<vector<int>>& denotations) const noexcept {
+            size_t seed = 0;
+            for (const int denot : *denotations) {
+                dlplan::utils::hash_combine(seed, denot);
+            }
+            return seed;
+        }
+    };
+    template<> struct hash<vector<unsigned>> {
+        size_t operator()(const vector<unsigned>& data) const noexcept {
+            size_t seed = data.size();
+            for (unsigned value : data) {
+                dlplan::utils::hash_combine(seed, value);
+            }
+            return seed;
         }
     };
 }

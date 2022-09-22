@@ -12,6 +12,7 @@ public:
     ~Numerical() override = default;
 
     virtual int evaluate(const State& state) const = 0;
+    //virtual int evaluate(const State& state, DenotationsCaches& caches) const = 0;
     virtual DENOTS<int>* evaluate(const States& states, DenotationsCaches& caches) const = 0;
 };
 
