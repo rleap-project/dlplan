@@ -22,40 +22,4 @@ void hash_combine(std::size_t& seed, const T& v)
 
 }
 
-
-namespace std {
-    /**
-     * We provide custom specialization of std::hash that are injected in the namespace std.
-     * https://en.cppreference.com/w/cpp/utility/hash
-     */
-    template<> struct hash<std::vector<int>> {
-        std::size_t operator()(const std::vector<int>& denotation) const noexcept {
-            std::size_t seed = denotation.size();
-            for (const auto& i : denotation) {
-                dlplan::utils::hashing::hash_combine(seed, i);
-            }
-            return seed;
-        }
-    };
-    template<> struct hash<std::vector<unsigned>> {
-        std::size_t operator()(const std::vector<unsigned>& denotation) const noexcept {
-            std::size_t seed = denotation.size();
-            for (const auto& i : denotation) {
-                dlplan::utils::hashing::hash_combine(seed, i);
-            }
-            return seed;
-        }
-    };
-    template<> struct hash<std::array<uint32_t, 4>> {
-        std::size_t operator()(const std::array<uint32_t, 4>& h) const noexcept {
-            std::size_t seed = 4;
-            for (int i = 0; i < 4; i += 2) {
-                const std::size_t combined = (static_cast<size_t>(h[0]) << 32) ^ static_cast<size_t>(h[1]);
-                dlplan::utils::hashing::hash_combine(seed, combined);
-            }
-            return seed;
-        }
-    };
-}
-
 #endif

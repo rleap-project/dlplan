@@ -69,7 +69,7 @@ exp = Experiment(environment=ENV)
 exp.add_parser("experiment_parser.py")
 
 for task in suites.build_suite(BENCHMARKS_DIR, SUITE):
-    for num_threads in [1,2,4,8,12,16]:
+    for num_threads in [1]:
         for complexity in [10]:
             run = exp.add_run()
             # Create symbolic links and aliases. This is optional. We

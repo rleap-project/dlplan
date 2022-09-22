@@ -104,18 +104,13 @@ std::string State::str() const {
 }
 
 size_t State::compute_hash() const {
-    std::string data;
     Index_Vec sorted_atom_idxs = compute_sorted_atom_idxs();
-    data.reserve(sizeof(int) * sorted_atom_idxs.size() + sizeof(std::shared_ptr<InstanceInfo>) + 1);
+    size_t seed = sorted_atom_idxs.size();
     for (int atom_idx : sorted_atom_idxs) {
-        data += atom_idx;
+        utils::hashing::hash_combine(seed, atom_idx);
     }
-    std::stringstream ss;
-    ss << m_instance_info.get();
-    data += ss.str();
-    std::array<uint32_t, 4> a;
-    MurmurHash3_x64_128(data.begin().base(), data.size(), sorted_atom_idxs.size(), a.begin());
-    return std::hash<std::array<uint32_t, 4>>()(a);
+    utils::hashing::hash_combine(seed, m_instance_info.get());
+    return seed;
 }
 
 void State::set_index(int index) {
