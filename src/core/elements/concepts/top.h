@@ -22,6 +22,7 @@ public:
         if (cached) return cached;
         // allocate memory for new denotations
         auto denotations = caches.m_c_denots_cache.get_new_entry(states.size());
+        denotations->reserve(states.size());
         // get denotations of children
         for (size_t i = 0; i < states.size(); ++i) {
             int num_objects = states[i].get_instance_info_ref().get_num_objects();
