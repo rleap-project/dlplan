@@ -17,6 +17,7 @@ public:
             auto element = factory.make_empty_boolean(concept);
             auto denotations = element.get_element_ref().evaluate(states, caches);
             if (data.m_boolean_hash_table.insert(denotations).second) {
+                data.m_reprs.push_back(element.compute_repr());
                 data.m_booleans_by_iteration[target_complexity].push_back(std::move(element));
                 increment_generated();
             }
@@ -25,6 +26,7 @@ public:
             auto element = factory.make_empty_boolean(role);
             auto denotations = element.get_element_ref().evaluate(states, caches);
             if (data.m_boolean_hash_table.insert(denotations).second) {
+                data.m_reprs.push_back(element.compute_repr());
                 data.m_booleans_by_iteration[target_complexity].push_back(std::move(element));
                 increment_generated();
             }

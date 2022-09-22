@@ -18,6 +18,7 @@ public:
             auto element = factory.make_one_of_concept(constant);
             auto denotations = element.get_element_ref().evaluate(states, caches);
             if (data.m_concept_hash_table.insert(denotations).second) {
+                data.m_reprs.push_back(element.compute_repr());
                 data.m_concepts_by_iteration[target_complexity].push_back(std::move(element));
                 increment_generated();
             }
