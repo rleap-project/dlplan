@@ -758,12 +758,12 @@ Boolean SyntacticElementFactory::make_empty_boolean(const Role& role, int index)
     return m_pImpl->make_empty_boolean(role, index);
 }
 
-Boolean SyntacticElementFactory::make_concept_inclusion_boolean(const Concept& concept_left, const Concept& concept_right, int index) {
-    return m_pImpl->make_concept_inclusion_boolean(concept_left, concept_right, index);
+Boolean SyntacticElementFactory::make_inclusion_boolean(const Concept& concept_left, const Concept& concept_right, int index) {
+    return m_pImpl->make_inclusion_boolean(concept_left, concept_right, index);
 }
 
-Boolean SyntacticElementFactory::make_role_inclusion_boolean(const Role& role_left, const Role& role_right, int index) {
-    return m_pImpl->make_role_inclusion_boolean(role_left, role_right, index);
+Boolean SyntacticElementFactory::make_inclusion_boolean(const Role& role_left, const Role& role_right, int index) {
+    return m_pImpl->make_inclusion_boolean(role_left, role_right, index);
 }
 
 Boolean SyntacticElementFactory::make_nullary_boolean(const Predicate& predicate, int index) {
@@ -822,28 +822,28 @@ Concept SyntacticElementFactory::make_top_concept(int index) {
     return m_pImpl->make_top_concept(index);
 }
 
-Numerical SyntacticElementFactory::make_concept_distance(const Concept& concept_from, const Role& role, const Concept& concept_to, int index) {
-    return m_pImpl->make_concept_distance(concept_from, role, concept_to, index);
+Numerical SyntacticElementFactory::make_concept_distance_numerical(const Concept& concept_from, const Role& role, const Concept& concept_to, int index) {
+    return m_pImpl->make_concept_distance_numerical(concept_from, role, concept_to, index);
 }
 
-Numerical SyntacticElementFactory::make_count(const Concept& concept, int index) {
-    return m_pImpl->make_count(concept, index);
+Numerical SyntacticElementFactory::make_count_numerical(const Concept& concept, int index) {
+    return m_pImpl->make_count_numerical(concept, index);
 }
 
-Numerical SyntacticElementFactory::make_count(const Role& role, int index) {
-    return m_pImpl->make_count(role, index);
+Numerical SyntacticElementFactory::make_count_numerical(const Role& role, int index) {
+    return m_pImpl->make_count_numerical(role, index);
 }
 
-Numerical SyntacticElementFactory::make_role_distance(const Role& role_from, const Role& role, const Role& role_to, int index) {
-    return m_pImpl->make_role_distance(role_from, role, role_to, index);
+Numerical SyntacticElementFactory::make_role_distance_numerical(const Role& role_from, const Role& role, const Role& role_to, int index) {
+    return m_pImpl->make_role_distance_numerical(role_from, role, role_to, index);
 }
 
-Numerical SyntacticElementFactory::make_sum_concept_distance(const Concept& concept_from, const Role& role, const Concept& concept_to, int index) {
-    return m_pImpl->make_sum_concept_distance(concept_from, role, concept_to, index);
+Numerical SyntacticElementFactory::make_sum_concept_distance_numerical(const Concept& concept_from, const Role& role, const Concept& concept_to, int index) {
+    return m_pImpl->make_sum_concept_distance_numerical(concept_from, role, concept_to, index);
 }
 
-Numerical SyntacticElementFactory::make_sum_role_distance(const Role& role_from, const Role& role, const Role& role_to, int index) {
-    return m_pImpl->make_sum_role_distance(role_from, role, role_to, index);
+Numerical SyntacticElementFactory::make_sum_role_distance_numerical(const Role& role_from, const Role& role, const Role& role_to, int index) {
+    return m_pImpl->make_sum_role_distance_numerical(role_from, role, role_to, index);
 }
 
 Role SyntacticElementFactory::make_and_role(const Role& role_left, const Role& role_right, int index) {

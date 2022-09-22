@@ -71,6 +71,10 @@ public:
     }
 
     virtual std::string get_name() const = 0;
+
+    void increment_generated() {
+        ++m_count;
+    }
 };
 
 }

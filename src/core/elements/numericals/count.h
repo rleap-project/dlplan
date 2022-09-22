@@ -30,20 +30,18 @@ public:
     }
 
     DENOTS<int>* evaluate(const States& states, DenotationsCaches& caches) const override {
-        auto numerical_cache_entry = cache.m_numerical_denotation_cache.find(state, *this);
-        auto& status = numerical_cache_entry->m_status;
-        auto& denotation = numerical_cache_entry->m_denotation;
-        if (status) {
-            return &denotation;
+        auto cached = caches.m_n_denots_cache.find(get_index());
+        if (cached) return cached;
+        auto denotations = caches.m_n_denots_cache.get_new_denotations();
+        auto element_denotations = m_element->evaluate(states, caches);
+        for (size_t i = 0; i < states.size(); ++i) {
+            int denotation;
+            compute_result(
+                *(*element_denotations)[i],
+                denotation);
+            denotations->push_back(denotation);
         }
-        compute_result(
-            *m_element->evaluate(state, cache),
-            denotation);
-        status = true;
-        /*std::stringstream ss;
-        compute_repr(ss);
-        std::cout << "evaluation: " << ss.str() << " " << denotation << std::endl;*/
-        return &denotation;
+        return caches.m_n_denots_cache.insert(std::move(denotations), get_index());
     }
 
     int compute_complexity() const override {

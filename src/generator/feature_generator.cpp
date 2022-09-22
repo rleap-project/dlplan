@@ -6,43 +6,6 @@
 #include <chrono>
 #include <thread>
 
-
-#include "rules/concepts/all.h"
-#include "rules/concepts/and.h"
-#include "rules/concepts/bot.h"
-#include "rules/concepts/diff.h"
-#include "rules/concepts/equal.h"
-#include "rules/concepts/not.h"
-#include "rules/concepts/one_of.h"
-#include "rules/concepts/or.h"
-#include "rules/concepts/primitive.h"
-#include "rules/concepts/projection.h"
-#include "rules/concepts/some.h"
-#include "rules/concepts/subset.h"
-#include "rules/concepts/top.h"
-
-#include "rules/roles/and.h"
-#include "rules/roles/compose.h"
-#include "rules/roles/diff.h"
-#include "rules/roles/identity.h"
-#include "rules/roles/inverse.h"
-#include "rules/roles/not.h"
-#include "rules/roles/or.h"
-#include "rules/roles/primitive.h"
-#include "rules/roles/restrict.h"
-#include "rules/roles/top.h"
-#include "rules/roles/transitive_closure.h"
-#include "rules/roles/transitive_reflexive_closure.h"
-
-#include "rules/numericals/concept_distance.h"
-#include "rules/numericals/count.h"
-#include "rules/numericals/role_distance.h"
-#include "rules/numericals/sum_concept_distance.h"
-#include "rules/numericals/sum_role_distance.h"
-
-#include "rules/booleans/empty.h"
-#include "rules/booleans/nullary.h"
-
 #include "generator_data.h"
 
 #include "../../include/dlplan/generator.h"
@@ -65,9 +28,6 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
       n_count(std::make_shared<rules::CountNumerical>()),
       b_inclusion(std::make_shared<rules::InclusionBoolean>()),
       n_concept_distance(std::make_shared<rules::ConceptDistanceNumerical>()),
-      n_role_distance(std::make_shared<rules::RoleDistanceNumerical>()),
-      n_sum_concept_distance(std::make_shared<rules::SumConceptDistanceNumerical>()),
-      n_sum_role_distance(std::make_shared<rules::SumRoleDistanceNumerical>()),
       c_and(std::make_shared<rules::AndConcept>()),
       c_or(std::make_shared<rules::OrConcept>()),
       c_not(std::make_shared<rules::NotConcept>()),
@@ -93,6 +53,7 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
     m_primitive_rules.emplace_back(c_primitive);
     m_primitive_rules.emplace_back(r_top);
     m_primitive_rules.emplace_back(r_primitive);
+    m_primitive_rules.emplace_back(b_nullary);
 
     m_concept_inductive_rules.emplace_back(c_and);
     m_concept_inductive_rules.emplace_back(c_or);
@@ -115,15 +76,11 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
     m_role_inductive_rules.emplace_back(r_transitive_closure);
     m_role_inductive_rules.emplace_back(r_transitive_reflexive_closure);
 
-    m_boolean_inductive_rules.emplace_back(b_nullary);
     m_boolean_inductive_rules.emplace_back(b_empty);
     m_boolean_inductive_rules.emplace_back(b_inclusion);
 
     m_numerical_inductive_rules.emplace_back(n_count);
     m_numerical_inductive_rules.emplace_back(n_concept_distance);
-    m_numerical_inductive_rules.emplace_back(n_role_distance);
-    m_numerical_inductive_rules.emplace_back(n_sum_concept_distance);
-    m_numerical_inductive_rules.emplace_back(n_sum_role_distance);
 }
 
 FeatureGeneratorImpl::FeatureGeneratorImpl(const FeatureGeneratorImpl& other) = default;
@@ -301,18 +258,6 @@ void FeatureGeneratorImpl::set_generate_concept_distance_numerical(bool enable) 
 
 void FeatureGeneratorImpl::set_generate_count_numerical(bool enable) {
     n_count->set_enabled(enable);
-}
-
-void FeatureGeneratorImpl::set_generate_role_distance_numerical(bool enable) {
-    n_role_distance->set_enabled(enable);
-}
-
-void FeatureGeneratorImpl::set_generate_sum_concept_distance_numerical(bool enable) {
-    n_sum_concept_distance->set_enabled(enable);
-}
-
-void FeatureGeneratorImpl::set_generate_sum_role_distance_numerical(bool enable) {
-    n_sum_role_distance->set_enabled(enable);
 }
 
 void FeatureGeneratorImpl::set_generate_and_role(bool enable) {

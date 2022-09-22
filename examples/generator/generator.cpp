@@ -70,9 +70,6 @@ int main() {
     generator.set_generate_diff_concept(false);
     generator.set_generate_or_concept(false);
     generator.set_generate_subset_concept(false);
-    generator.set_generate_role_distance_numerical(false);
-    generator.set_generate_sum_concept_distance_numerical(false);
-    generator.set_generate_sum_role_distance_numerical(false);
     generator.set_generate_and_role(false);
     generator.set_generate_compose_role(false);
     generator.set_generate_diff_role(false);

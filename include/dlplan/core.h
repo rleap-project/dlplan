@@ -666,8 +666,8 @@ public:
 
     Boolean make_empty_boolean(const Concept& concept, int index=-1);
     Boolean make_empty_boolean(const Role& role, int index=-1);
-    Boolean make_concept_inclusion_boolean(const Concept& concept_left, const Concept& concept_right, int index=-1);
-    Boolean make_role_inclusion_boolean(const Role& role_left, const Role& role_right, int index=-1);
+    Boolean make_inclusion_boolean(const Concept& concept_left, const Concept& concept_right, int index=-1);
+    Boolean make_inclusion_boolean(const Role& role_left, const Role& role_right, int index=-1);
     Boolean make_nullary_boolean(const Predicate& predicate, int index=-1);
 
     Concept make_all_concept(const Role& role, const Concept& concept, int index=-1);
@@ -684,12 +684,12 @@ public:
     Concept make_subset_concept(const Role& role_left, const Role& role_right, int index=-1);
     Concept make_top_concept(int index=-1);
 
-    Numerical make_concept_distance(const Concept& concept_from, const Role& role, const Concept& concept_to, int index=-1);
-    Numerical make_count(const Concept& concept, int index=-1);
-    Numerical make_count(const Role& role, int index=-1);
-    Numerical make_role_distance(const Role& role_from, const Role& role, const Role& role_to, int index=-1);
-    Numerical make_sum_concept_distance(const Concept& concept_from, const Role& role, const Concept& concept_to, int index=-1);
-    Numerical make_sum_role_distance(const Role& role_from, const Role& role, const Role& role_to, int index=-1);
+    Numerical make_concept_distance_numerical(const Concept& concept_from, const Role& role, const Concept& concept_to, int index=-1);
+    Numerical make_count_numerical(const Concept& concept, int index=-1);
+    Numerical make_count_numerical(const Role& role, int index=-1);
+    Numerical make_role_distance_numerical(const Role& role_from, const Role& role, const Role& role_to, int index=-1);
+    Numerical make_sum_concept_distance_numerical(const Concept& concept_from, const Role& role, const Concept& concept_to, int index=-1);
+    Numerical make_sum_role_distance_numerical(const Role& role_from, const Role& role, const Role& role_to, int index=-1);
 
     Role make_and_role(const Role& role_left, const Role& role_right, int index=-1);
     Role make_compose_role(const Role& role_left, const Role& role_right, int index=-1);
@@ -707,19 +707,12 @@ public:
 
 }
 
-namespace std {
-    /**
-     * We provide custom specialization of std::hash that are injected in the namespace std
-     * to be able to use standard hash containers.
-     * https://en.cppreference.com/w/cpp/utility/hash
-     */
-    template<> struct hash<dlplan::core::State> {
-        std::size_t operator()(const dlplan::core::State& state) const noexcept {
-            return state.compute_hash();
-        }
-    };
-}
 
+template<> struct std::hash<dlplan::core::State> {
+    std::size_t operator()(const dlplan::core::State& state) const noexcept {
+        return state.compute_hash();
+    }
+};
 
 #include "core.tpp"
 

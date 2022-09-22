@@ -35,7 +35,6 @@ public:
         auto denotations = caches.m_b_denots_cache.get_new_denotations();
         auto element_denotations = m_element->evaluate(states, caches);
         for (size_t i = 0; i < states.size(); ++i) {
-            const auto& state = states[i];
             bool denotation;
             compute_result(
                 *(*element_denotations)[i],

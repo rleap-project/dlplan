@@ -35,18 +35,22 @@ public:
     }
 
     DENOTS<ConceptDenotation*>* evaluate(const States& states, DenotationsCaches& caches) const override {
-        auto concept_cache_entry = cache.m_concept_denotation_cache.find(state, *this);
-        auto& status = concept_cache_entry->m_status;
-        auto& denotation = concept_cache_entry->m_denotation;
-        if (status) {
-            return &denotation;
+        auto cached = caches.m_c_denots_cache.find(get_index());
+        if (cached) return cached;
+        auto denotations = caches.m_c_denots_cache.get_new_denotations();
+        auto concept_left_denotations = m_concept_left->evaluate(states, caches);
+        auto concept_right_denotations = m_concept_right->evaluate(states, caches);
+        for (size_t i = 0; i < states.size(); ++i) {
+            const auto& state = states[i];
+            int num_objects = state.get_instance_info_ref().get_num_objects();
+            auto denotation = caches.m_c_denot_cache.get_new_denotation(num_objects);
+            compute_result(
+                *(*concept_left_denotations)[i],
+                *(*concept_right_denotations)[i],
+                *denotation);
+            denotations->push_back(caches.m_c_denot_cache.insert(std::move(denotation)));
         }
-        compute_result(
-            *m_concept_left->evaluate(state, cache),
-            *m_concept_right->evaluate(state, cache),
-            denotation);
-        status = true;
-        return &denotation;
+        return caches.m_c_denots_cache.insert(std::move(denotations), get_index());
     }
 
     int compute_complexity() const override {

@@ -59,32 +59,30 @@ public:
     }
 
     DENOTS<int>* evaluate(const States& states, DenotationsCaches& caches) const override {
-        auto numerical_cache_entry = cache.m_numerical_denotation_cache.find(state, *this);
-        auto& status = numerical_cache_entry->m_status;
-        auto& denotation = numerical_cache_entry->m_denotation;
-        if (status) {
-            return &denotation;
+        auto cached = caches.m_n_denots_cache.find(get_index());
+        if (cached) return cached;
+        auto denotations = caches.m_n_denots_cache.get_new_denotations();
+        auto role_from_denots = m_role_from->evaluate(states, caches);
+        auto role_denots = m_role->evaluate(states, caches);
+        auto role_to_denots = m_role_to->evaluate(states, caches);
+        for (size_t i = 0; i < states.size(); ++i) {
+            if ((*role_from_denots)[i]->empty()) {
+                denotations->push_back(INF);
+                continue;
+            }
+            if ((*role_to_denots)[i]->empty()) {
+                denotations->push_back(INF);
+                continue;
+            }
+            int denotation;
+            compute_result(
+                *(*role_from_denots)[i],
+                *(*role_denots)[i],
+                *(*role_to_denots)[i],
+                denotation);
+            denotations->push_back(denotation);
         }
-        auto role_from_denot = m_role_from->evaluate(state, cache);
-        if (role_from_denot->empty()) {
-            denotation = INF;
-            status = true;
-            return &denotation;
-        }
-        auto role_to_denot = m_role_to->evaluate(state, cache);
-        if (role_to_denot->empty()) {
-            denotation = INF;
-            status = true;
-            return &denotation;
-        }
-        auto role_denot = m_role->evaluate(state, cache);
-        compute_result(
-            *role_from_denot,
-            *role_denot,
-            *role_to_denot,
-            denotation);
-        status = true;
-        return &denotation;
+        return caches.m_n_denots_cache.insert(std::move(denotations), get_index());
     }
 
     int compute_complexity() const override {

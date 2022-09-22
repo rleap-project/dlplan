@@ -1,21 +1,26 @@
 #ifndef DLPLAN_SRC_GENERATOR_RULES_CONCEPTS_ONE_OF_H_
 #define DLPLAN_SRC_GENERATOR_RULES_CONCEPTS_ONE_OF_H_
 
-#include "../concept.h"
-
+#include "../rule.h"
 #include "../../../core/elements/concepts/one_of.h"
 
 
 namespace dlplan::generator::rules {
 
-class OneOfConcept : public Concept {
+class OneOfConcept : public Rule {
 public:
-    OneOfConcept() : Concept() { }
+    OneOfConcept() : Rule() { }
 
-    virtual void submit_tasks_impl(const States& states, int, GeneratorData& data, core::element::GeneratorEvaluationCaches& caches, utils::threadpool::ThreadPool& th) override {
+    void generate_impl(const States& states, int target_complexity, GeneratorData& data, core::element::DenotationsCaches& caches) override {
         core::SyntacticElementFactory& factory = data.m_factory;
+        assert(target_complexity == 1);
         for (const auto& constant : factory.get_vocabulary_info_ref().get_constants_ref()) {
-            m_tasks.push_back(th.submit(std::cref(m_task), std::cref(states), std::move(factory.make_one_of_concept(constant)), std::ref(caches)));
+            auto element = factory.make_one_of_concept(constant);
+            auto denotations = element.get_element_ref().evaluate(states, caches);
+            if (data.m_concept_hash_table.insert(denotations).second) {
+                data.m_concepts_by_iteration[target_complexity].push_back(std::move(element));
+                increment_generated();
+            }
         }
     }
 

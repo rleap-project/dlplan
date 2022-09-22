@@ -36,18 +36,20 @@ public:
     }
 
     DENOTS<bool>* evaluate(const States& states, DenotationsCaches& caches) const override {
-        auto boolean_cache_entry = cache.m_boolean_denotation_cache.find(state, *this);
-        auto& status = boolean_cache_entry->m_status;
-        auto& denotation = boolean_cache_entry->m_denotation;
-        if (status) {
-            return &denotation;
+        auto cached = caches.m_b_denots_cache.find(get_index());
+        if (cached) return cached;
+        auto denotations = caches.m_b_denots_cache.get_new_denotations();
+        auto element_left_denotations = m_element_left->evaluate(states, caches);
+        auto element_right_denotations = m_element_right->evaluate(states, caches);
+        for (size_t i = 0; i < states.size(); ++i) {
+            bool denotation;
+            compute_result(
+                *(*element_left_denotations)[i],
+                *(*element_right_denotations)[i],
+                denotation);
+            denotations->push_back(denotation);
         }
-        compute_result(
-            *m_element_left->evaluate(state, cache),
-            *m_element_right->evaluate(state, cache),
-            denotation);
-        status = true;
-        return &denotation;
+        return caches.m_b_denots_cache.insert(std::move(denotations), get_index());
     }
 
     int compute_complexity() const override {

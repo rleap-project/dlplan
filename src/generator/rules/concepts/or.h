@@ -1,24 +1,28 @@
 #ifndef DLPLAN_SRC_GENERATOR_RULES_CONCEPTS_OR_H_
 #define DLPLAN_SRC_GENERATOR_RULES_CONCEPTS_OR_H_
 
-#include "../concept.h"
-
+#include "../rule.h"
 #include "../../../core/elements/concepts/or.h"
 
 
 namespace dlplan::generator::rules {
 
-class OrConcept : public Concept {
+class OrConcept : public Rule {
 public:
-    OrConcept() : Concept() { }
+    OrConcept() : Rule() { }
 
-    virtual void submit_tasks_impl(const States& states, int target_complexity, GeneratorData& data, core::element::GeneratorEvaluationCaches& caches, utils::threadpool::ThreadPool& th) override {
+    void generate_impl(const States& states, int target_complexity, GeneratorData& data, core::element::DenotationsCaches& caches) override {
         core::SyntacticElementFactory& factory = data.m_factory;
-        for (int i = 1; i <= target_complexity - 1; ++i) {
+        for (int i = 1; i < target_complexity - 1; ++i) {
             int j = target_complexity - i - 1;
             for (const auto& c1 : data.m_concepts_by_iteration[i]) {
                 for (const auto& c2 : data.m_concepts_by_iteration[j]) {
-                    m_tasks.push_back(th.submit(std::cref(m_task), std::cref(states), std::move(factory.make_or_concept(c1, c2)), std::ref(caches)));
+                    auto element = factory.make_or_concept(c1, c2);
+                    auto denotations = element.get_element_ref().evaluate(states, caches);
+                    if (data.m_concept_hash_table.insert(denotations).second) {
+                        data.m_concepts_by_iteration[target_complexity].push_back(std::move(element));
+                        increment_generated();
+                    }
                 }
             }
         }

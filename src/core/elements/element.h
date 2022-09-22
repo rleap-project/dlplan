@@ -64,24 +64,22 @@ public:
 template<typename T>
 class PointerDenotationCache {
 private:
-    template<typename T1>
+    using KEY=std::unique_ptr<T>;
+    using RAW_KEY=T*;
+
     struct PointerDenotationEqual {
-    public:
-        bool operator()(const std::unique_ptr<T1>& l, const std::unique_ptr<T1>& r) const {
+        bool operator()(const KEY& l, const KEY& r) const {
             return *l == *r;
         }
     };
 
-
-    template<typename T1>
     struct PointerDenotationHasher {
-    public:
-        std::size_t operator()(const std::unique_ptr<T1>& denotation) const {
-            return denotation->compute_hash();
+        std::size_t operator()(const KEY& denotation) const {
+            return std::hash<KEY>()(denotation);
         }
     };
 private:
-   std::unordered_set<std::unique_ptr<T>, PointerDenotationHasher<T>, PointerDenotationEqual<T>> m_storage;
+   std::unordered_set<std::unique_ptr<T>, PointerDenotationHasher, PointerDenotationEqual> m_storage;
 public:
     PointerDenotationCache() { }
     PointerDenotationCache(const PointerDenotationCache& other) = delete;
@@ -90,7 +88,7 @@ public:
     PointerDenotationCache& operator=(PointerDenotationCache&&) = default;
     ~PointerDenotationCache() { }
 
-    std::unique_ptr<T> get_new_denotation(int num_objects) const {
+    KEY get_new_denotation(int num_objects) const {
         return std::make_unique<T>(T(num_objects));
     }
 
@@ -98,7 +96,7 @@ public:
      * Uniquely inserts a denotation and returns a reference to it.
      * Second alternative also creates mapping (instance, state, element) -> denotation*
      */
-    T* insert(std::unique_ptr<T>&& denotation) {
+    RAW_KEY insert(KEY&& denotation) {
         return m_storage.insert(std::move(denotation)).first->get();
     }
 };
@@ -109,25 +107,25 @@ public:
 template<typename T>
 class PointerDenotationsCache {
 private:
-    template<typename T1>
+    using KEY=std::unique_ptr<DENOTS<T*>>;
+    using RAW_KEY=DENOTS<T*>*;
+
     struct PointerDenotationsEqual {
-        bool operator()(const std::unique_ptr<T1>& l, const std::unique_ptr<T1>& r) const {
+        bool operator()(const KEY& l, const KEY& r) const {
             return *l == *r;
         }
     };
-
-    template<typename T1>
     struct PointerDenotationsHasher {
-        std::size_t operator()(const std::unique_ptr<T1>& denotations) const {
-            return std::hash<T1>()(*denotations);
+        std::size_t operator()(const KEY& denotations) const {
+            return std::hash<KEY>()(denotations);
         }
     };
 
 private:
-    std::unordered_set<std::unique_ptr<DENOTS<T*>>, PointerDenotationsHasher<DENOTS<T*>>, PointerDenotationsEqual<DENOTS<T*>>> m_storage;
+    std::unordered_set<KEY, PointerDenotationsHasher, PointerDenotationsEqual> m_storage;
 
     // mapping from (element) -> std::vector<T*>*
-    std::unordered_map<int, DENOTS<T*>*> m_mapping;
+    std::unordered_map<int, RAW_KEY> m_mapping;
 
     int m_num_states;
 
@@ -139,13 +137,13 @@ public:
     PointerDenotationsCache& operator=(PointerDenotationsCache&& other) = default;
     ~PointerDenotationsCache() { }
 
-    std::unique_ptr<DENOTS<T*>> get_new_denotations() const {
+    KEY get_new_denotations() const {
         auto result = std::make_unique<std::vector<T*>>();
         result->reserve(m_num_states);
         return result;
     }
 
-    DENOTS<T*>* insert(std::unique_ptr<DENOTS<T*>>&& denotations, int element_index) {
+    RAW_KEY insert(KEY&& denotations, int element_index) {
         auto result = m_storage.insert(std::move(denotations));
         if (result.second) {
             m_mapping.insert(std::make_pair(element_index, result.first->get()));
@@ -153,7 +151,7 @@ public:
         return result.first->get();
     }
 
-    DENOTS<T*>* find(int element_index) const {
+    RAW_KEY find(int element_index) const {
         auto result = m_mapping.find(element_index);
         if (result == m_mapping.end())
             return nullptr;
@@ -165,23 +163,22 @@ public:
 template<typename T>
 class ValueDenotationsCache {
 private:
-    template<typename T1>
+    using KEY=std::unique_ptr<DENOTS<T>>;
+    using RAW_KEY=DENOTS<T>*;
+
     struct ValueDenotationsEqual {
-    public:
-        bool operator()(const std::unique_ptr<T1>& l, const std::unique_ptr<T1>& r) const {
+        bool operator()(const KEY& l, const KEY& r) const {
             return *l == *r;
         }
     };
-
-    template<typename T1>
     struct ValueDenotationsHasher {
-    public:
-        std::size_t operator()(const std::unique_ptr<T1>& denotations) const {
-            return std::hash<T1>()(*denotations);
+        std::size_t operator()(const KEY& denotations) const {
+            return std::hash<KEY>()(denotations);
         }
     };
+
 private:
-    std::unordered_set<std::unique_ptr<DENOTS<T>>, ValueDenotationsHasher<DENOTS<T>>, ValueDenotationsEqual<DENOTS<T>>> m_storage;
+    std::unordered_set<KEY, ValueDenotationsHasher, ValueDenotationsEqual> m_storage;
 
     // mapping from (element) -> std::vector<T*>*
     std::unordered_map<int, DENOTS<T>*> m_mapping;
@@ -195,13 +192,13 @@ public:
     ValueDenotationsCache& operator=(ValueDenotationsCache&& other) = default;
     ~ValueDenotationsCache() { }
 
-    std::unique_ptr<DENOTS<T>> get_new_denotations() const {
+    KEY get_new_denotations() const {
         auto result = std::make_unique<std::vector<T>>();
         result->reserve(m_num_states);
         return result;
     }
 
-    DENOTS<T>* insert(std::unique_ptr<DENOTS<T>>&& denotations, int element_index) {
+    RAW_KEY insert(KEY&& denotations, int element_index) {
         auto result = m_storage.insert(std::move(denotations));
         if (result.second) {
             m_mapping.insert(std::make_pair(element_index, result.first->get()));
@@ -209,7 +206,7 @@ public:
         return result.first->get();
     }
 
-    DENOTS<T>* find(int element_index) const {
+    RAW_KEY find(int element_index) const {
         auto result = m_mapping.find(element_index);
         if (result == m_mapping.end())
             return nullptr;
@@ -237,42 +234,56 @@ struct DenotationsCaches {
 
 }
 
-namespace std {
-    /**
-     * We provide custom specialization of std::hash that are injected in the namespace std
-     * to be able to use standard hash containers.
-     * https://en.cppreference.com/w/cpp/utility/hash
-     */
-    template<> struct hash<dlplan::core::ConceptDenotation> {
-        std::size_t operator()(const dlplan::core::ConceptDenotation& denotation) const noexcept {
-            return denotation.compute_hash();
+
+template<>
+struct std::hash<std::unique_ptr<dlplan::core::ConceptDenotation>> {
+    std::size_t operator()(const std::unique_ptr<dlplan::core::ConceptDenotation>& denotation) const noexcept {
+        return denotation->compute_hash();
+    }
+};
+template<>
+struct std::hash<dlplan::core::RoleDenotation> {
+    std::size_t operator()(const std::unique_ptr<dlplan::core::RoleDenotation>& denotation) const noexcept {
+        return denotation->compute_hash();
+    }
+};
+template<>
+struct std::hash<std::unique_ptr<std::vector<dlplan::core::ConceptDenotation*>>> {
+    std::size_t operator()(const std::unique_ptr<std::vector<dlplan::core::ConceptDenotation*>>& denotations) const noexcept {
+        std::size_t seed = 0;
+        for (const auto denot_ptr : *denotations) {
+            dlplan::utils::hashing::hash_combine(seed, denot_ptr);
         }
-    };
-    template<> struct hash<dlplan::core::RoleDenotation> {
-        std::size_t operator()(const dlplan::core::RoleDenotation& denotation) const noexcept {
-            return denotation.compute_hash();
+        return seed;
+    }
+};
+template<>
+struct std::hash<std::unique_ptr<std::vector<dlplan::core::RoleDenotation*>>> {
+    std::size_t operator()(const std::unique_ptr<std::vector<dlplan::core::RoleDenotation*>>& denotations) const noexcept {
+        std::size_t seed = 0;
+        for (const auto denot_ptr : *denotations) {
+            dlplan::utils::hashing::hash_combine(seed, denot_ptr);
         }
-    };
-    template<> struct hash<std::vector<dlplan::core::ConceptDenotation*>> {
-        std::size_t operator()(const std::vector<dlplan::core::ConceptDenotation*>& denotations) const noexcept {
-            auto denot_hasher = std::hash<dlplan::core::ConceptDenotation>();
-            std::size_t seed = 0;
-            for (const auto denot_ptr : denotations) {
-                dlplan::utils::hashing::hash_combine(seed, denot_hasher(*denot_ptr));
-            }
-            return seed;
+        return seed;
+    }
+};
+template<>
+struct std::hash<std::unique_ptr<std::vector<bool>>> {
+    std::size_t operator()(const std::unique_ptr<std::vector<bool>>& denotations) const noexcept {
+        return std::hash<std::vector<bool>>()(*denotations);
+    }
+};
+template<>
+struct std::hash<std::unique_ptr<std::vector<int>>> {
+    std::size_t operator()(const std::unique_ptr<std::vector<int>>& denotations) const noexcept {
+        std::size_t seed = 0;
+        for (const int denot : *denotations) {
+            dlplan::utils::hashing::hash_combine(seed, denot);
         }
-    };
-    template<> struct hash<std::vector<dlplan::core::RoleDenotation*>> {
-        std::size_t operator()(const std::vector<dlplan::core::RoleDenotation*>& denotations) const noexcept {
-            auto denot_hasher = std::hash<dlplan::core::RoleDenotation>();
-            std::size_t seed = 0;
-            for (const auto denot_ptr : denotations) {
-                dlplan::utils::hashing::hash_combine(seed, denot_hasher(*denot_ptr));
-            }
-            return seed;
-        }
-    };
-}
+        return seed;
+    }
+};
+
+
 
 #endif
