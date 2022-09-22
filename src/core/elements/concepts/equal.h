@@ -54,6 +54,7 @@ public:
             const auto& state = states[i];
             int num_objects = state.get_instance_info_ref().get_num_objects();
             auto denotation = caches.m_c_denot_cache.get_new_entry(num_objects);
+            denotation->set();
             compute_result(
                 *(*role_left_denotations)[i],
                 *(*role_right_denotations)[i],
