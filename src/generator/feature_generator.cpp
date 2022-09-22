@@ -112,7 +112,7 @@ FeatureRepresentations FeatureGeneratorImpl::generate(
     // Initialize memory to store intermediate results.
     GeneratorData data(factory, std::max({concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, numerical_complexity_limit}), time_limit, feature_limit);
     // Initialize cache.
-    core::element::DenotationsCaches caches(states.size());
+    core::element::DenotationsCaches caches;
     generate_base(states, data, caches);
     generate_inductively(concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, numerical_complexity_limit, states, data, caches);
     return data.m_reprs;

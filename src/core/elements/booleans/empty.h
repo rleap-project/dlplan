@@ -30,10 +30,14 @@ public:
     }
 
     DENOTS<bool>* evaluate(const States& states, DenotationsCaches& caches) const override {
-        auto cached = caches.m_b_denots_cache.find(get_index());
+        // check if denotations is cached.
+        auto cached = caches.m_b_denots_mapping.find(get_index());
         if (cached) return cached;
-        auto denotations = caches.m_b_denots_cache.get_new_denotations();
+        // allocate memory for new denotations
+        auto denotations = caches.m_b_denots_cache.get_new_entry();
+        // get denotations of children
         auto element_denotations = m_element->evaluate(states, caches);
+        // compute denotations
         for (size_t i = 0; i < states.size(); ++i) {
             bool denotation;
             compute_result(
@@ -41,7 +45,10 @@ public:
                 denotation);
             denotations->push_back(denotation);
         }
-        return caches.m_b_denots_cache.insert(std::move(denotations), get_index());
+        // register denotations and return it.
+        auto result_denotations = caches.m_b_denots_cache.insert(std::move(denotations)).first->get();
+        caches.m_b_denots_mapping.insert(result_denotations, get_index());
+        return result_denotations;
     }
 
     int compute_complexity() const override {

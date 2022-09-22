@@ -79,8 +79,6 @@ public:
 
     bool is_subset_of(const BitsetView &other) const;
 
-    std::size_t compute_hash() const;
-
     void dump() const;
 };
 

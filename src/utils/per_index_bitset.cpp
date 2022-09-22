@@ -6,8 +6,6 @@
 
 #include <iostream>
 
-#include "hash_utils.h"
-
 
 using namespace std;
 
@@ -146,14 +144,6 @@ bool BitsetView::is_subset_of(const BitsetView &other) const {
             return false;
     }
     return true;
-}
-
-std::size_t BitsetView::compute_hash() const {
-    size_t seed = num_bits;
-    for (std::size_t i = 0; i < data.size(); ++i) {
-        utils::hashing::hash_combine(seed, data[i]);
-    }
-    return seed;
 }
 
 void BitsetView::dump() const {

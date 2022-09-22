@@ -6,7 +6,6 @@
 #include <vector>
 
 #include "../core/elements/element.h"
-#include "../utils/hash_utils.h"
 #include "../utils/countdown_timer.h"
 
 #include "../../include/dlplan/core.h"
