@@ -235,55 +235,55 @@ struct DenotationsCaches {
 }
 
 
-template<>
-struct std::hash<std::unique_ptr<dlplan::core::ConceptDenotation>> {
-    std::size_t operator()(const std::unique_ptr<dlplan::core::ConceptDenotation>& denotation) const noexcept {
-        return denotation->compute_hash();
-    }
-};
-template<>
-struct std::hash<dlplan::core::RoleDenotation> {
-    std::size_t operator()(const std::unique_ptr<dlplan::core::RoleDenotation>& denotation) const noexcept {
-        return denotation->compute_hash();
-    }
-};
-template<>
-struct std::hash<std::unique_ptr<std::vector<dlplan::core::ConceptDenotation*>>> {
-    std::size_t operator()(const std::unique_ptr<std::vector<dlplan::core::ConceptDenotation*>>& denotations) const noexcept {
-        std::size_t seed = 0;
-        for (const auto denot_ptr : *denotations) {
-            dlplan::utils::hashing::hash_combine(seed, denot_ptr);
+namespace std {
+    template<>
+    struct hash<unique_ptr<dlplan::core::ConceptDenotation>> {
+        size_t operator()(const unique_ptr<dlplan::core::ConceptDenotation>& denotation) const noexcept {
+            return denotation->compute_hash();
         }
-        return seed;
-    }
-};
-template<>
-struct std::hash<std::unique_ptr<std::vector<dlplan::core::RoleDenotation*>>> {
-    std::size_t operator()(const std::unique_ptr<std::vector<dlplan::core::RoleDenotation*>>& denotations) const noexcept {
-        std::size_t seed = 0;
-        for (const auto denot_ptr : *denotations) {
-            dlplan::utils::hashing::hash_combine(seed, denot_ptr);
+    };
+    template<>
+    struct hash<dlplan::core::RoleDenotation> {
+        size_t operator()(const unique_ptr<dlplan::core::RoleDenotation>& denotation) const noexcept {
+            return denotation->compute_hash();
         }
-        return seed;
-    }
-};
-template<>
-struct std::hash<std::unique_ptr<std::vector<bool>>> {
-    std::size_t operator()(const std::unique_ptr<std::vector<bool>>& denotations) const noexcept {
-        return std::hash<std::vector<bool>>()(*denotations);
-    }
-};
-template<>
-struct std::hash<std::unique_ptr<std::vector<int>>> {
-    std::size_t operator()(const std::unique_ptr<std::vector<int>>& denotations) const noexcept {
-        std::size_t seed = 0;
-        for (const int denot : *denotations) {
-            dlplan::utils::hashing::hash_combine(seed, denot);
+    };
+    template<>
+    struct hash<unique_ptr<vector<dlplan::core::ConceptDenotation*>>> {
+        size_t operator()(const unique_ptr<vector<dlplan::core::ConceptDenotation*>>& denotations) const noexcept {
+            size_t seed = 0;
+            for (const auto denot_ptr : *denotations) {
+                dlplan::utils::hashing::hash_combine(seed, denot_ptr);
+            }
+            return seed;
         }
-        return seed;
-    }
-};
-
-
+    };
+    template<>
+    struct hash<unique_ptr<vector<dlplan::core::RoleDenotation*>>> {
+        size_t operator()(const unique_ptr<vector<dlplan::core::RoleDenotation*>>& denotations) const noexcept {
+            size_t seed = 0;
+            for (const auto denot_ptr : *denotations) {
+                dlplan::utils::hashing::hash_combine(seed, denot_ptr);
+            }
+            return seed;
+        }
+    };
+    template<>
+    struct hash<unique_ptr<vector<bool>>> {
+        size_t operator()(const unique_ptr<vector<bool>>& denotations) const noexcept {
+            return hash<vector<bool>>()(*denotations);
+        }
+    };
+    template<>
+    struct hash<unique_ptr<vector<int>>> {
+        size_t operator()(const unique_ptr<vector<int>>& denotations) const noexcept {
+            size_t seed = 0;
+            for (const int denot : *denotations) {
+                dlplan::utils::hashing::hash_combine(seed, denot);
+            }
+            return seed;
+        }
+    };
+}
 
 #endif

@@ -707,12 +707,13 @@ public:
 
 }
 
-
-template<> struct std::hash<dlplan::core::State> {
-    std::size_t operator()(const dlplan::core::State& state) const noexcept {
-        return state.compute_hash();
-    }
-};
+namespace std {
+    template<> struct hash<dlplan::core::State> {
+        size_t operator()(const dlplan::core::State& state) const noexcept {
+            return state.compute_hash();
+        }
+    };
+}
 
 #include "core.tpp"
 
