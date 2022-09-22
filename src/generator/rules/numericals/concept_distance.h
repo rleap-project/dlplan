@@ -24,7 +24,7 @@ public:
                 auto c1_denotations = c1.get_element_ref().evaluate(states, caches);
                 bool one = true;
                 for (const auto denot_ptr : *c1_denotations) {
-                    if (denot_ptr->size() != 1) {
+                    if (denot_ptr->count() != 1) {
                         one = false;
                         break;
                     }

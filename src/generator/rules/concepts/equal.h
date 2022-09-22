@@ -27,7 +27,7 @@ public:
                         continue;
                     }
                     for (const auto& r2 : data.m_roles_by_iteration[j]) {
-                        auto element = factory.make_subset_concept(r2, r1);
+                        auto element = factory.make_equal_concept(r2, r1);
                         auto denotations = element.get_element_ref().evaluate(states, caches);
                         if (data.m_concept_hash_table.insert(denotations).second) {
                             data.m_reprs.push_back(element.compute_repr());

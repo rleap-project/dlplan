@@ -152,12 +152,8 @@ std::vector<int> ConceptDenotation::to_sorted_vector() const {
     return result;
 }
 
-std::vector<int> ConceptDenotation::to_canonical_data_representation() const {
-    return std::vector<int>(m_data.get_blocks().begin(), m_data.get_blocks().end());
-}
-
-const std::vector<unsigned>& ConceptDenotation::get_blocks() const {
-    return m_data.get_blocks();
+const utils::DynamicBitset<unsigned>& ConceptDenotation::get_bitset_ref() const {
+    return m_data;
 }
 
 std::size_t ConceptDenotation::compute_hash() const {
@@ -316,8 +312,8 @@ std::vector<std::pair<int, int>> RoleDenotation::to_sorted_vector() const {
     return result;
 }
 
-std::vector<int> RoleDenotation::to_canonical_data_representation() const {
-    return std::vector<int>(m_data.get_blocks().begin(), m_data.get_blocks().end());
+const utils::DynamicBitset<unsigned>& RoleDenotation::get_bitset_ref() const {
+    return m_data;
 }
 
 const std::vector<unsigned>& RoleDenotation::get_blocks() const {

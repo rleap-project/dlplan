@@ -104,10 +104,8 @@ public:
     bool is_subset_of(const ConceptDenotation& other) const;
 
     std::vector<int> to_sorted_vector() const;
+    const utils::DynamicBitset<unsigned>& get_bitset_ref() const;
 
-    std::vector<int> to_canonical_data_representation() const;
-
-    const std::vector<unsigned>& get_blocks() const;
     std::size_t compute_hash() const;
 
     int get_num_objects() const;
@@ -177,8 +175,7 @@ public:
     bool is_subset_of(const RoleDenotation& other) const;
 
     std::vector<std::pair<int, int>> to_sorted_vector() const;
-
-    std::vector<int> to_canonical_data_representation() const;
+    const utils::DynamicBitset<unsigned>& get_bitset_ref() const;
 
     const std::vector<unsigned>& get_blocks() const;
     std::size_t compute_hash() const;
