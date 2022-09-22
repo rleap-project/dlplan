@@ -27,6 +27,7 @@ public:
         for (size_t i = 0; i < states.size(); ++i) {
             int num_objects = states[i].get_instance_info_ref().get_num_objects();
             auto denotation = caches.m_c_denot_cache.get_new_entry(num_objects);
+            // std::cout << num_objects << " " << denotation->size() << " " << states[i].str() << std::endl;
             denotation->set();
             // register denotation and append it to denotations.
             denotations->push_back(caches.m_c_denot_cache.insert(std::move(denotation)).first->get());

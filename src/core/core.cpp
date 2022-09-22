@@ -66,7 +66,7 @@ ConceptDenotation::const_iterator& ConceptDenotation::const_iterator::operator++
 
 bool ConceptDenotation::operator==(const ConceptDenotation& other) const {
     if (this != &other) {
-        return this->get_blocks() == other.get_blocks();
+        return this->m_data == other.m_data;
     }
     return true;
 }
@@ -123,6 +123,10 @@ void ConceptDenotation::erase(int value) {
 }
 
 int ConceptDenotation::size() const {
+    return m_data.size();
+}
+
+int ConceptDenotation::count() const {
     return m_data.count();
 }
 
@@ -225,7 +229,7 @@ RoleDenotation::const_iterator& RoleDenotation::const_iterator::operator++() {
 
 bool RoleDenotation::operator==(const RoleDenotation& other) const {
     if (this != &other) {
-        return this->get_blocks() == other.get_blocks();
+        return this->m_data == other.m_data;
     }
     return true;
 }
@@ -279,6 +283,10 @@ void RoleDenotation::erase(const std::pair<int, int>& value) {
 }
 
 int RoleDenotation::size() const {
+    return m_data.size();
+}
+
+int RoleDenotation::count() const {
     return m_data.count();
 }
 

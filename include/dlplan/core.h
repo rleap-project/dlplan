@@ -98,6 +98,7 @@ public:
     void erase(int value);
 
     int size() const;
+    int count() const;
     bool empty() const;
     bool intersects(const ConceptDenotation& other) const;
     bool is_subset_of(const ConceptDenotation& other) const;
@@ -170,6 +171,7 @@ public:
     void erase(const std::pair<int, int>& value);
 
     int size() const;
+    int count() const;
     bool empty() const;
     bool intersects(const RoleDenotation& other) const;
     bool is_subset_of(const RoleDenotation& other) const;

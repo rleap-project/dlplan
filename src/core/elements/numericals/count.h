@@ -11,7 +11,7 @@ class CountNumerical : public Numerical {
 private:
     template<typename DENOTATION_TYPE>
     void compute_result(const DENOTATION_TYPE& denot, int& result) const {
-        result = denot.size();
+        result = denot.count();
     }
 
 protected:

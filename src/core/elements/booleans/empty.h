@@ -12,7 +12,7 @@ class EmptyBoolean : public Boolean {
 private:
     template<typename DENOTATION_TYPE>
     void compute_result(const DENOTATION_TYPE& denotation, bool& result) const {
-        result = denotation.empty();
+        result = denotation.count();
     }
 
 protected:
