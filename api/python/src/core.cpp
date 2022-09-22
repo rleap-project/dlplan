@@ -181,8 +181,8 @@ void init_core(py::module_ &m) {
 
         .def("make_empty_boolean", py::overload_cast<const Concept&, int>(&SyntacticElementFactory::make_empty_boolean), py::arg("concept"), py::arg("index") = -1)
         .def("make_empty_boolean", py::overload_cast<const Role&, int>(&SyntacticElementFactory::make_empty_boolean), py::arg("role"), py::arg("index") = -1)
-        .def("make_concept_inclusion_boolean", &SyntacticElementFactory::make_concept_inclusion_boolean, py::arg("concept_left"), py::arg("concept_right"), py::arg("index") = -1)
-        .def("make_role_inclusion_boolean", &SyntacticElementFactory::make_role_inclusion_boolean, py::arg("role_left"), py::arg("role_right"), py::arg("index") = -1)
+        .def("make_inclusion_boolean", py::overload_cast<const Concept&, const Concept&, int>(&SyntacticElementFactory::make_inclusion_boolean), py::arg("concept_left"), py::arg("concept_right"), py::arg("index") = -1)
+        .def("make_inclusion_boolean", py::overload_cast<const Role&, const Role&, int>(&SyntacticElementFactory::make_inclusion_boolean), py::arg("role_left"), py::arg("role_right"), py::arg("index") = -1)
         .def("make_nullary_boolean", &SyntacticElementFactory::make_nullary_boolean, py::arg("predicate"), py::arg("index") = -1)
 
         .def("make_all_concept", &SyntacticElementFactory::make_all_concept, py::arg("role"), py::arg("concept"), py::arg("index") = -1)
@@ -199,12 +199,12 @@ void init_core(py::module_ &m) {
         .def("make_subset_concept", &SyntacticElementFactory::make_subset_concept, py::arg("concept_left"), py::arg("concept_right"), py::arg("index") = -1)
         .def("make_top_concept", &SyntacticElementFactory::make_top_concept, py::arg("index") = -1)
 
-        .def("make_concept_distance", &SyntacticElementFactory::make_concept_distance, py::arg("concept_from"), py::arg("role"), py::arg("concept_to"), py::arg("index") = -1)
-        .def("make_count", py::overload_cast<const Concept&, int>(&SyntacticElementFactory::make_count), py::arg("concept"), py::arg("index") = -1)
-        .def("make_count", py::overload_cast<const Role&, int>(&SyntacticElementFactory::make_count), py::arg("role"), py::arg("index") = -1)
-        .def("make_role_distance", &SyntacticElementFactory::make_role_distance, py::arg("role_from"), py::arg("role"), py::arg("role_to"), py::arg("index") = -1)
-        .def("make_sum_concept_distance", &SyntacticElementFactory::make_sum_concept_distance, py::arg("concept_from"), py::arg("role"), py::arg("concept_to"), py::arg("index") = -1)
-        .def("make_sum_role_distance", &SyntacticElementFactory::make_sum_role_distance, py::arg("role_from"), py::arg("role"), py::arg("role_to"), py::arg("index") = -1)
+        .def("make_concept_distance_numerical", &SyntacticElementFactory::make_concept_distance_numerical, py::arg("concept_from"), py::arg("role"), py::arg("concept_to"), py::arg("index") = -1)
+        .def("make_count_numerical", py::overload_cast<const Concept&, int>(&SyntacticElementFactory::make_count_numerical), py::arg("concept"), py::arg("index") = -1)
+        .def("make_count_numerical", py::overload_cast<const Role&, int>(&SyntacticElementFactory::make_count_numerical), py::arg("role"), py::arg("index") = -1)
+        .def("make_role_distance_numerical", &SyntacticElementFactory::make_role_distance_numerical, py::arg("role_from"), py::arg("role"), py::arg("role_to"), py::arg("index") = -1)
+        .def("make_sum_concept_distance_numerical", &SyntacticElementFactory::make_sum_concept_distance_numerical, py::arg("concept_from"), py::arg("role"), py::arg("concept_to"), py::arg("index") = -1)
+        .def("make_sum_role_distance_numerical", &SyntacticElementFactory::make_sum_role_distance_numerical, py::arg("role_from"), py::arg("role"), py::arg("role_to"), py::arg("index") = -1)
 
         .def("make_and_role", &SyntacticElementFactory::make_and_role, py::arg("role_left"), py::arg("role_right"), py::arg("index") = -1)
         .def("make_compose_role", &SyntacticElementFactory::make_compose_role, py::arg("role_left"), py::arg("role_right"), py::arg("index") = -1)
