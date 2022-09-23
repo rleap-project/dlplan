@@ -1,5 +1,6 @@
 #include "../../include/dlplan/core.h"
 
+#include <cassert>
 #include <iostream>
 #include <algorithm>
 
@@ -210,6 +211,10 @@ bool RoleDenotation::const_iterator::operator==(const const_iterator& other) con
 
 const std::pair<int, int>& RoleDenotation::const_iterator::operator*() const {
     return m_indices;
+}
+
+std::pair<int, int>* RoleDenotation::const_iterator::operator->() {
+    return &m_indices;
 }
 
 RoleDenotation::const_iterator RoleDenotation::const_iterator::operator++(int) {

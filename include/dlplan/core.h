@@ -131,6 +131,7 @@ public:
             bool operator==(const const_iterator& other) const;
 
             const std::pair<int, int>& operator*() const;
+            std::pair<int, int>* operator->();
             // Postfix increment
             const_iterator operator++(int);
             // Prefix increment

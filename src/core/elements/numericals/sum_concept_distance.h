@@ -14,8 +14,8 @@ private:
     void compute_result(const ConceptDenotation& concept_from_denot, const RoleDenotation& role_denot, const ConceptDenotation& concept_to_denot, int& result) const {
         result = 0;
         utils::Distances source_distances = utils::compute_multi_source_multi_target_shortest_distances(concept_from_denot, role_denot, concept_to_denot);
-        for (const auto single : concept_from_denot) {
-            result = utils::path_addition(result, source_distances[single]);
+        for (const auto target : concept_to_denot) {
+            result = utils::path_addition(result, source_distances[target]);
         }
     }
 

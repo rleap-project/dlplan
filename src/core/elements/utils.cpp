@@ -55,26 +55,26 @@ Distances compute_distances_from_state(const AdjList& adj_list, int source) {
 
 
 int compute_multi_source_multi_target_shortest_distance(const ConceptDenotation& sources, const RoleDenotation& edges, const ConceptDenotation& targets) {
-    // TODO: make use of bitset instead of switching to adj_list
     int num_objects = targets.get_num_objects();
-    AdjList adj_list = compute_adjacency_list(edges);
     Distances distances(num_objects, INF);
     std::deque<int> queue;
-    for (int s : sources) {
-        distances[s] = 0;
-        queue.push_back(s);
+    for (int source : sources) {
+        distances[source] = 0;
+        queue.push_back(source);
     }
     while (!queue.empty()) {
-        int s = queue.front();
+        int source = queue.front();
         queue.pop_front();
-        for (int t : adj_list[s]) {
-            int alt = distances[s] + 1;
-            if (distances[t] > alt) {
-                if (targets.contains(t)) {
-                    return alt;
+        for (int target = 0; target < num_objects; ++target) {
+            if (edges.get_bitset_ref().test(source * num_objects + target)) {
+                int alt = distances[source] + 1;
+                if (distances[target] > alt) {
+                    if (targets.contains(target)) {
+                        return alt;
+                    }
+                    queue.push_back(target);
+                    distances[target] = alt;
                 }
-                queue.push_back(t);
-                distances[t] = alt;
             }
         }
     }
@@ -84,28 +84,26 @@ int compute_multi_source_multi_target_shortest_distance(const ConceptDenotation&
 
 Distances compute_multi_source_multi_target_shortest_distances(const ConceptDenotation& sources, const RoleDenotation& edges, const ConceptDenotation& targets) {
     int num_objects = targets.get_num_objects();
-    AdjList adj_list = compute_adjacency_list(edges, false);
-    Distances backward_distances(num_objects, INF);
+    Distances distances(num_objects, INF);
     std::deque<int> queue;
-    for (int t : targets) {
-        backward_distances[t] = 0;
-        queue.push_back(t);
+    for (int source : sources) {
+        distances[source] = 0;
+        queue.push_back(source);
     }
     while (!queue.empty()) {
-        int s = queue.front();
+        int source = queue.front();
         queue.pop_front();
-        for (int t : adj_list[s]) {
-            int alt = backward_distances[s] + 1;
-            if (backward_distances[t] > alt) {
-                if (sources.contains(t)) {
-                    backward_distances[t] = alt;
+        for (int target = 0; target < num_objects; ++target) {
+            if (edges.get_bitset_ref().test(source * num_objects + target)) {
+                int alt = distances[source] + 1;
+                if (distances[target] > alt) {
+                    queue.push_back(target);
+                    distances[target] = alt;
                 }
-                queue.push_back(t);
-                backward_distances[t] = alt;
             }
         }
     }
-    return backward_distances;
+    return distances;
 }
 
 
