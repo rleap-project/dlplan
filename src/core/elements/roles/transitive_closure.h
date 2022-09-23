@@ -45,7 +45,10 @@ public:
         return result;
     }
 
-    std::vector<RoleDenotation*>* evaluate(const States& states, DenotationsCaches& caches) const override {
+    RoleDenotation* evaluate(const State& state, DenotationsCaches& caches) const override {
+    }
+
+    RoleDenotations* evaluate(const States& states, DenotationsCaches& caches) const override {
         // check if denotations is cached.
         auto cached = caches.m_r_denots_mapping.find(get_index());
         if (cached != caches.m_r_denots_mapping.end()) return cached->second;

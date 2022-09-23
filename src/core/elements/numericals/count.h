@@ -29,7 +29,15 @@ public:
         return result;
     }
 
-    std::vector<int>* evaluate(const States& states, DenotationsCaches& caches) const override {
+    int evaluate(const State& state, DenotationsCaches& caches) const override {
+        int denotation;
+        compute_result(
+            *m_element->evaluate(state, caches),
+            denotation);
+        return denotation;
+    }
+
+    NumericalDenotations* evaluate(const States& states, DenotationsCaches& caches) const override {
         // check if denotations is cached.
         auto cached = caches.m_n_denots_mapping.find(get_index());
         if (cached != caches.m_n_denots_mapping.end()) return cached->second;

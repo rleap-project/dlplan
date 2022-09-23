@@ -35,6 +35,15 @@ public:
         return denotation;
     }
 
+    bool evaluate(const State& state, DenotationsCaches& caches) const override {
+        bool denotation;
+        compute_result(
+                *m_element_left->evaluate(state, caches),
+                *m_element_right->evaluate(state, caches),
+                denotation);
+        return denotation;
+    }
+
     BooleanDenotations* evaluate(const States& states, DenotationsCaches& caches) const override {
         // check if denotations is cached.
         auto cached = caches.m_b_denots_mapping.find(get_index());

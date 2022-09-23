@@ -46,7 +46,28 @@ public:
         return denotation;
     }
 
-    std::vector<int>* evaluate(const States& states, DenotationsCaches& caches) const override {
+    int evaluate(const State& state, DenotationsCaches& caches) const override {
+        auto concept_from_denot = m_concept_from->evaluate(state, caches);
+        if (concept_from_denot->empty()) {
+            return INF;
+        }
+        auto concept_to_denot = m_concept_to->evaluate(state, caches);
+        if (concept_to_denot->empty()) {
+            return INF;
+        }
+        if (concept_from_denot->intersects(*concept_to_denot)) {
+            return 0;
+        }
+        auto role_denot = m_role->evaluate(state, caches);
+        int denotation;
+        compute_result(
+            *concept_from_denot,
+            *role_denot,
+            *concept_to_denot, denotation);
+        return denotation;
+    }
+
+    NumericalDenotations* evaluate(const States& states, DenotationsCaches& caches) const override {
         // check if denotations is cached.
         auto cached = caches.m_n_denots_mapping.find(get_index());
         if (cached != caches.m_n_denots_mapping.end()) return cached->second;

@@ -12,8 +12,8 @@ public:
     ~Concept() override = default;
 
     virtual ConceptDenotation evaluate(const State& state) const = 0;
-    //virtual ConceptDenotation evaluate(const State& state, DenotationsCaches& caches) const = 0;
-    virtual std::vector<ConceptDenotation*>* evaluate(const States& states, DenotationsCaches& caches) const = 0;
+    virtual ConceptDenotation* evaluate(const State& state, DenotationsCaches& caches) const = 0;
+    virtual ConceptDenotations* evaluate(const States& states, DenotationsCaches& caches) const = 0;
 };
 
 }

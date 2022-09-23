@@ -40,7 +40,25 @@ public:
         return denotation;
     }
 
-    std::vector<ConceptDenotation*>* evaluate(const States& states, DenotationsCaches& caches) const override {
+    ConceptDenotation* evaluate(const State& state, DenotationsCaches& caches) const override {
+        // check if denotations is cached.
+        std::array<int, 3> key({state.get_instance_info_ref().get_index(), state.get_index(), get_index()});
+        auto cached = caches.m_c_denots_mapping_per_state.find(key);
+        if (cached != caches.m_c_denots_mapping_per_state.end()) return cached->second;
+        int num_objects = state.get_instance_info_ref().get_index();
+        auto denotation = std::make_unique<ConceptDenotation>(ConceptDenotation(num_objects));
+        denotation->set();
+        compute_result(
+            *m_role->evaluate(state, caches),
+            *m_concept->evaluate(state, caches),
+            *denotation);
+        // register denotation and append it to denotations.
+        auto result_denotation = caches.m_c_denot_cache.insert(std::move(denotation)).first->get();
+        caches.m_c_denots_mapping_per_state.emplace(key, result_denotation);
+        return result_denotation;
+    }
+
+    ConceptDenotations* evaluate(const States& states, DenotationsCaches& caches) const override {
         // check if denotations is cached.
         auto cached = caches.m_c_denots_mapping.find(get_index());
         if (cached != caches.m_c_denots_mapping.end()) return cached->second;

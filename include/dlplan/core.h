@@ -265,11 +265,10 @@ struct DenotationsCaches {
     std::unordered_map<int, ConceptDenotations*> m_c_denots_mapping;
     std::unordered_map<int, RoleDenotations*> m_r_denots_mapping;
     // Mapping from instance, state, element index to denotations
-    std::unordered_map<std::array<int, 3>, BooleanDenotations*> m_b_denots_mapping_per_state;
-    std::unordered_map<std::array<int, 3>, NumericalDenotations*> m_n_denots_mapping_per_state;
-    std::unordered_map<std::array<int, 3>, ConceptDenotations*> m_c_denots_mapping_per_state;
-    std::unordered_map<std::array<int, 3>, RoleDenotations*> m_r_denots_mapping_per_state;
-
+    std::unordered_map<std::array<int, 3>, int> m_n_denots_mapping_per_state;
+    std::unordered_map<std::array<int, 3>, bool> m_b_denots_mapping_per_state;
+    std::unordered_map<std::array<int, 3>, ConceptDenotation*> m_c_denots_mapping_per_state;
+    std::unordered_map<std::array<int, 3>, RoleDenotation*> m_r_denots_mapping_per_state;
 };
 
 
@@ -598,6 +597,7 @@ public:
     ~Concept() override;
 
     ConceptDenotation evaluate(const State& state) const;
+    ConceptDenotation* evaluate(const State& state, DenotationsCaches& caches) const;
     ConceptDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
 
     int compute_complexity() const override;
@@ -627,6 +627,7 @@ public:
     ~Role() override;
 
     RoleDenotation evaluate(const State& state) const;
+    RoleDenotation* evaluate(const State& state, DenotationsCaches& caches) const;
     RoleDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
 
     int compute_complexity() const override;
@@ -656,6 +657,7 @@ public:
     ~Numerical() override;
 
     int evaluate(const State& state) const;
+    int evaluate(const State& state, DenotationsCaches& caches) const;
     NumericalDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
 
     int compute_complexity() const override;
@@ -685,6 +687,7 @@ public:
     ~Boolean() override;
 
     bool evaluate(const State& state) const;
+    bool evaluate(const State& state, DenotationsCaches& caches) const;
     BooleanDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
 
     int compute_complexity() const override;

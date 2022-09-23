@@ -16,7 +16,10 @@ public:
         return state.get_instance_info_ref().get_top_concept_ref();
     }
 
-    std::vector<ConceptDenotation*>* evaluate(const States& states, DenotationsCaches& caches) const override {
+    ConceptDenotation* evaluate(const State& state, DenotationsCaches& caches) const override {
+    }
+
+    ConceptDenotations* evaluate(const States& states, DenotationsCaches& caches) const override {
         // check if denotations is cached.
         auto cached = caches.m_c_denots_mapping.find(get_index());
         if (cached != caches.m_c_denots_mapping.end()) return cached->second;

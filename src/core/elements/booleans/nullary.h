@@ -45,6 +45,10 @@ public:
         return denotation;
     }
 
+    bool evaluate(const State& state, DenotationsCaches& caches) const override {
+        return evaluate(state);
+    }
+
     BooleanDenotations* evaluate(const States& states, DenotationsCaches& caches) const override {
         // check if denotations is cached.
         auto cached = caches.m_b_denots_mapping.find(get_index());
@@ -54,11 +58,7 @@ public:
         denotations->reserve(states.size());
         // compute denotations
         for (size_t i = 0; i < states.size(); ++i) {
-            bool denotation;
-            compute_result(
-                states[i],
-                denotation);
-            denotations->push_back(denotation);
+            denotations->push_back(evaluate(states[i]));
         }
         // register denotations and return it.
         auto result_denotations = caches.m_b_denots_cache.insert(std::move(denotations)).first->get();

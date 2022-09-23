@@ -624,6 +624,10 @@ ConceptDenotation Concept::evaluate(const State& state) const {
     return m_element->evaluate(state);
 }
 
+ConceptDenotation* Concept::evaluate(const State& state, DenotationsCaches& caches) const {
+    return m_element->evaluate(state, caches);
+}
+
 ConceptDenotations* Concept::evaluate(const States& states, DenotationsCaches& caches) const {
     return m_element->evaluate(states, caches);
 }
@@ -667,6 +671,10 @@ RoleDenotation Role::evaluate(const State& state) const {
         throw std::runtime_error("Role::evaluate - mismatched vocabularies of Role and State.");
     }
     return m_element->evaluate(state);
+}
+
+RoleDenotation* Role::evaluate(const State& state, DenotationsCaches& caches) const {
+    return m_element->evaluate(state, caches);
 }
 
 RoleDenotations* Role::evaluate(const States& states, DenotationsCaches& caches) const {
@@ -714,6 +722,10 @@ int Numerical::evaluate(const State& state) const {
     return m_element->evaluate(state);
 }
 
+int Numerical::evaluate(const State& state, DenotationsCaches& caches) const {
+    return m_element->evaluate(state, caches);
+}
+
 NumericalDenotations* Numerical::evaluate(const States& states, DenotationsCaches& caches) const {
     return m_element->evaluate(states, caches);
 }
@@ -758,6 +770,10 @@ bool Boolean::evaluate(const State& state) const {
         throw std::runtime_error("Boolean::evaluate - mismatched vocabularies of Boolean and State.");
     }
     return m_element->evaluate(state);
+}
+
+bool Boolean::evaluate(const State& state, DenotationsCaches& caches) const {
+    return m_element->evaluate(state, caches);
 }
 
 BooleanDenotations* Boolean::evaluate(const States& states, DenotationsCaches& caches) const {
