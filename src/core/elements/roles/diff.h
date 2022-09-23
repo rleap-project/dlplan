@@ -37,7 +37,7 @@ public:
     DENOTS<RoleDenotation*>* evaluate(const States& states, DenotationsCaches& caches) const override {
         // check if denotations is cached.
         auto cached = caches.m_r_denots_mapping.find(get_index());
-        if (cached) return cached;
+        if (cached != caches.m_r_denots_mapping.end()) return cached->second;
         // allocate memory for new denotations
         auto denotations = caches.m_r_denots_cache.get_new_entry();
         denotations->reserve(states.size());
@@ -58,7 +58,7 @@ public:
         }
         // register denotations and return it.
         auto result_denotations = caches.m_r_denots_cache.insert(std::move(denotations)).first->get();
-        caches.m_r_denots_mapping.insert(result_denotations, get_index());
+        caches.m_r_denots_mapping.emplace(get_index(), result_denotations);
         return result_denotations;
     }
 

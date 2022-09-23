@@ -59,25 +59,6 @@ public:
 };
 
 
-template<typename T>
-class DenotationsMapping {
-private:
-    std::unordered_map<int, T*> m_mapping;
-
-public:
-    T* insert(T* denotations, int element_index) {
-        return m_mapping.insert(std::make_pair(element_index, denotations)).first->second;
-    }
-
-    T* find(int element_index) const {
-        auto result = m_mapping.find(element_index);
-        if (result == m_mapping.end())
-            return nullptr;
-        return result->second;
-    }
-};
-
-
 struct DenotationsCaches {
     // Cache for single denotations.
     dlplan::utils::PointerCache<ConceptDenotation> m_c_denot_cache;
@@ -89,12 +70,10 @@ struct DenotationsCaches {
     dlplan::utils::PointerCache<std::vector<ConceptDenotation*>> m_c_denots_cache;
     dlplan::utils::PointerCache<std::vector<RoleDenotation*>> m_r_denots_cache;
     // Mapping from element index to denotations.
-    // TODO: get rid of extra class and use unordered_map directly
-    // std::unordered_map<int, std::vector<bool>*>
-    DenotationsMapping<std::vector<bool>> m_b_denots_mapping;
-    DenotationsMapping<std::vector<int>> m_n_denots_mapping;
-    DenotationsMapping<std::vector<ConceptDenotation*>> m_c_denots_mapping;
-    DenotationsMapping<std::vector<RoleDenotation*>> m_r_denots_mapping;
+    std::unordered_map<int, std::vector<bool>*> m_b_denots_mapping;
+    std::unordered_map<int, std::vector<int>*> m_n_denots_mapping;
+    std::unordered_map<int, std::vector<ConceptDenotation*>*> m_c_denots_mapping;
+    std::unordered_map<int, std::vector<RoleDenotation*>*> m_r_denots_mapping;
 };
 
 }
