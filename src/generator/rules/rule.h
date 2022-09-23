@@ -41,7 +41,7 @@ protected:
     int m_count;
 
 protected:
-    virtual void generate_impl(const States& states, int target_complexity, GeneratorData& data, core::element::DenotationsCaches& caches) = 0;
+    virtual void generate_impl(const States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) = 0;
 
 public:
     Rule() : m_enabled(true), m_count(0) { }
@@ -54,7 +54,7 @@ public:
     /**
      * Submits tasks to threadpool.
      */
-    void generate(const States& states, int target_complexity, GeneratorData& data, core::element::DenotationsCaches& caches) {
+    void generate(const States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) {
         if (m_enabled) {
             generate_impl(states, target_complexity, data, caches);
         }

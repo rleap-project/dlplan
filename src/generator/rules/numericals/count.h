@@ -11,12 +11,12 @@ class CountNumerical : public Rule {
 public:
     CountNumerical() : Rule() { }
 
-    void generate_impl(const States& states, int target_complexity, GeneratorData& data, core::element::DenotationsCaches& caches) override {
+    void generate_impl(const States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) override {
         core::SyntacticElementFactory& factory = data.m_factory;
         for (const auto& concept : data.m_concepts_by_iteration[target_complexity-1]) {
             auto element = factory.make_count_numerical(concept);
-            auto denotations = element.get_element_ref().evaluate(states, caches);
-            if (data.m_numerical_hash_table.insert(denotations).second) {
+            auto& denotations = element.get_element_ref().evaluate(states, caches);
+                if (data.m_n_denots_cache.insert(&denotations).second) {
                 data.m_reprs.push_back(element.compute_repr());
                 data.m_numericals_by_iteration[target_complexity].push_back(std::move(element));
                 increment_generated();
@@ -24,8 +24,8 @@ public:
         }
         for (const auto& role : data.m_roles_by_iteration[target_complexity-1]) {
             auto element = factory.make_count_numerical(role);
-            auto denotations = element.get_element_ref().evaluate(states, caches);
-            if (data.m_numerical_hash_table.insert(denotations).second) {
+            auto& denotations = element.get_element_ref().evaluate(states, caches);
+                if (data.m_n_denots_cache.insert(&denotations).second) {
                 data.m_reprs.push_back(element.compute_repr());
                 data.m_numericals_by_iteration[target_complexity].push_back(std::move(element));
                 increment_generated();

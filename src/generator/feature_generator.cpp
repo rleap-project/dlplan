@@ -10,7 +10,6 @@
 
 #include "../../include/dlplan/generator.h"
 #include "../utils/logging.h"
-#include "../core/elements/element.h"
 
 
 namespace dlplan::generator {
@@ -112,7 +111,7 @@ FeatureRepresentations FeatureGeneratorImpl::generate(
     // Initialize memory to store intermediate results.
     GeneratorData data(factory, std::max({concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, numerical_complexity_limit}), time_limit, feature_limit);
     // Initialize cache.
-    core::element::DenotationsCaches caches;
+    core::DenotationsCaches caches;
     generate_base(states, data, caches);
     generate_inductively(concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, numerical_complexity_limit, states, data, caches);
     return data.m_reprs;
@@ -121,7 +120,7 @@ FeatureRepresentations FeatureGeneratorImpl::generate(
 void FeatureGeneratorImpl::generate_base(
     const States& states,
     GeneratorData& data,
-    core::element::DenotationsCaches& caches) {
+    core::DenotationsCaches& caches) {
     utils::g_log << "Started generating base features of complexity 1." << std::endl;
     for (const auto& rule : m_primitive_rules) {
         if (data.reached_resource_limit()) break;
@@ -139,7 +138,7 @@ void FeatureGeneratorImpl::generate_inductively(
     int numerical_complexity_limit,
     const States& states,
     GeneratorData& data,
-    core::element::DenotationsCaches& caches) {
+    core::DenotationsCaches& caches) {
     utils::g_log << "Started generating composite features. " << std::endl;
     int max_complexity = std::max({concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, numerical_complexity_limit});
     for (int target_complexity = 2; target_complexity <= max_complexity; ++target_complexity) {  // every composition adds at least one complexity

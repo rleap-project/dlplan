@@ -16,30 +16,90 @@
 #include "utils/cache.h"
 #include "utils/hashing.h"
 
-
+/**
+ * Forward declarations and usings
+ */
 namespace dlplan::core {
-class SyntacticElementFactoryImpl;
-class InstanceInfoImpl;
-class VocabularyInfoImpl;
-class SyntacticElementFactory;
-class InstanceInfo;
-class VocabularyInfo;
-class State;
-class ConceptDenotation;
-class RoleDenotation;
-namespace element {
-    template<typename T>
-    class Element;
-    class Concept;
-    class Role;
-    class Numerical;
-    class Boolean;
+    class SyntacticElementFactoryImpl;
+    class InstanceInfoImpl;
+    class VocabularyInfoImpl;
+    class SyntacticElementFactory;
+    class InstanceInfo;
+    class VocabularyInfo;
+    class State;
+    class ConceptDenotation;
+    class RoleDenotation;
+    namespace element {
+        template<typename T>
+        class Element;
+        class Concept;
+        class Role;
+        class Numerical;
+        class Boolean;
+    }
+
+    using States = std::vector<State>;
+    using StatesSet = std::unordered_set<State>;
+    using StatePair = std::pair<State, State>;
+    using StatePairs = std::vector<StatePair>;
+
+    using ConceptDenotationPtr = std::unique_ptr<ConceptDenotation>;
+    using RoleDenotationPtr = std::unique_ptr<RoleDenotation>;
+
+    using ConceptDenotations = std::vector<std::reference_wrapper<const ConceptDenotation>>;
+    using RoleDenotations = std::vector<std::reference_wrapper<const RoleDenotation>>;
+    using BooleanDenotations = std::vector<bool>;
+    using NumericalDenotations = std::vector<int>;
+
+    using ConceptDenotationsPtr = std::unique_ptr<ConceptDenotations>;
+    using RoleDenotationsPtr = std::unique_ptr<RoleDenotations>;
+    using BooleanDenotationsPtr = std::unique_ptr<BooleanDenotations>;
+    using NumericalDenotationsPtr = std::unique_ptr<NumericalDenotations>;
+
+    using ConceptDenotationsRef = std::reference_wrapper<const ConceptDenotations>;
+    using RoleDenotationsRef = std::reference_wrapper<const RoleDenotations>;
+    using BooleanDenotationsRef = std::reference_wrapper<const BooleanDenotations>;
+    using NumericalDenotationsRef = std::reference_wrapper<const NumericalDenotations>;
 }
 
-using States = std::vector<State>;
-using StatesSet = std::unordered_set<State>;
-using StatePair = std::pair<State, State>;
-using StatePairs = std::vector<StatePair>;
+/**
+ * Template specializations
+ */
+namespace std {
+    template<> struct hash<dlplan::core::State> {
+        size_t operator()(const dlplan::core::State& state) const noexcept;
+    };
+    template<>
+    struct hash<dlplan::core::ConceptDenotation> {
+        size_t operator()(const dlplan::core::ConceptDenotation& denotation) const noexcept;
+    };
+    template<>
+    struct hash<dlplan::core::RoleDenotation> {
+        size_t operator()(const dlplan::core::RoleDenotation& denotation) const noexcept;
+    };
+    template<>
+    struct hash<dlplan::core::ConceptDenotationsPtr> {
+        size_t operator()(const dlplan::core::ConceptDenotationsPtr& denotations) const noexcept;
+    };
+    template<>
+    struct hash<dlplan::core::RoleDenotationsPtr> {
+        size_t operator()(const dlplan::core::RoleDenotationsPtr& denotations) const noexcept;
+    };
+    template<>
+    struct hash<dlplan::core::BooleanDenotationsPtr> {
+        size_t operator()(const dlplan::core::BooleanDenotationsPtr& denotations) const noexcept;
+    };
+    template<>
+    struct hash<dlplan::core::NumericalDenotationsPtr> {
+        size_t operator()(const dlplan::core::NumericalDenotationsPtr& denotations) const noexcept;
+    };
+    template<> struct hash<vector<unsigned>> {
+        size_t operator()(const vector<unsigned>& data) const noexcept;
+    };
+}
+
+
+namespace dlplan::core {
 
 class ConceptDenotation {
 private:
@@ -182,6 +242,57 @@ public:
     std::size_t compute_hash() const;
 
     int get_num_objects() const;
+};
+
+
+
+/**
+ * Compares two std::unique_ptr<T>
+ * by comparing objects T.
+ */
+template<typename T>
+struct DerefEqual {
+    bool operator()(const T& left, const T& right) const {
+        return *left == *right;
+    }
+};
+
+/**
+ * Compares two std::unique_ptr<vector<std::reference_wrapper<T>>>
+ * by the pointers of the element in the vectors.
+ */
+template<typename T>
+struct DerefElementPtrsEqual {
+    bool operator()(const T& left, const T& right) const {
+        if (left->size() != right->size()) {
+            return false;
+        }
+        for (size_t i = 0; i < left->size(); ++i) {
+            if (&(*left)[i].get() != &(*right)[i].get()) {
+                return false;
+            }
+        }
+        return true;
+    }
+};
+
+
+struct DenotationsCaches {
+    // Cache for single denotations.
+    std::unordered_set<ConceptDenotationPtr, std::hash<ConceptDenotationPtr>, DerefEqual<ConceptDenotationPtr>> m_c_denot_cache;
+    std::unordered_set<RoleDenotationPtr, std::hash<RoleDenotationPtr>, DerefEqual<RoleDenotationPtr>> m_r_denot_cache;
+    // Cache for collections of denotations.
+    std::unordered_set<BooleanDenotationsPtr, std::hash<BooleanDenotationsPtr>, DerefEqual<BooleanDenotationsPtr>> m_b_denots_cache;
+    std::unordered_set<NumericalDenotationsPtr, std::hash<NumericalDenotationsPtr>, DerefEqual<NumericalDenotationsPtr>> m_n_denots_cache;
+    std::unordered_set<ConceptDenotationsPtr, std::hash<ConceptDenotationsPtr>, DerefElementPtrsEqual<ConceptDenotationsPtr>> m_c_denots_cache;
+    std::unordered_set<RoleDenotationsPtr, std::hash<RoleDenotationsPtr>, DerefElementPtrsEqual<RoleDenotationsPtr>> m_r_denots_cache;
+    // Mapping from element index to denotations.
+    std::unordered_map<int, BooleanDenotationsRef> m_b_denots_mapping;
+    std::unordered_map<int, NumericalDenotationsRef> m_n_denots_mapping;
+    std::unordered_map<int, ConceptDenotationsRef> m_c_denots_mapping;
+    std::unordered_map<int, RoleDenotationsRef> m_r_denots_mapping;
+    // Mapping from instance, state, element index to denotations
+    // std::unordered_map<std::array<int, 3>, std::vector<bool>*> m_b_denots_mapping_per_state;
 };
 
 
@@ -705,71 +816,6 @@ public:
     Role make_transitive_reflexive_closure(const Role& role, int index=-1);
 };
 
-}
-
-namespace std {
-    template<> struct hash<dlplan::core::State> {
-        size_t operator()(const dlplan::core::State& state) const noexcept {
-            return state.compute_hash();
-        }
-    };
-    template<>
-    struct hash<unique_ptr<dlplan::core::ConceptDenotation>> {
-        size_t operator()(const unique_ptr<dlplan::core::ConceptDenotation>& denotation) const noexcept {
-            return denotation->compute_hash();
-        }
-    };
-    template<>
-    struct hash<dlplan::core::RoleDenotation> {
-        size_t operator()(const unique_ptr<dlplan::core::RoleDenotation>& denotation) const noexcept {
-            return denotation->compute_hash();
-        }
-    };
-    template<>
-    struct hash<unique_ptr<vector<dlplan::core::ConceptDenotation*>>> {
-        size_t operator()(const unique_ptr<vector<dlplan::core::ConceptDenotation*>>& denotations) const noexcept {
-            size_t seed = 0;
-            for (const auto denot_ptr : *denotations) {
-                dlplan::utils::hash_combine(seed, denot_ptr);
-            }
-            return seed;
-        }
-    };
-    template<>
-    struct hash<unique_ptr<vector<dlplan::core::RoleDenotation*>>> {
-        size_t operator()(const unique_ptr<vector<dlplan::core::RoleDenotation*>>& denotations) const noexcept {
-            size_t seed = 0;
-            for (const auto denot_ptr : *denotations) {
-                dlplan::utils::hash_combine(seed, denot_ptr);
-            }
-            return seed;
-        }
-    };
-    template<>
-    struct hash<unique_ptr<vector<bool>>> {
-        size_t operator()(const unique_ptr<vector<bool>>& denotations) const noexcept {
-            return hash<vector<bool>>()(*denotations);
-        }
-    };
-    template<>
-    struct hash<unique_ptr<vector<int>>> {
-        size_t operator()(const unique_ptr<vector<int>>& denotations) const noexcept {
-            size_t seed = 0;
-            for (const int denot : *denotations) {
-                dlplan::utils::hash_combine(seed, denot);
-            }
-            return seed;
-        }
-    };
-    template<> struct hash<vector<unsigned>> {
-        size_t operator()(const vector<unsigned>& data) const noexcept {
-            size_t seed = data.size();
-            for (unsigned value : data) {
-                dlplan::utils::hash_combine(seed, value);
-            }
-            return seed;
-        }
-    };
 }
 
 #include "core.tpp"

@@ -11,7 +11,7 @@ namespace dlplan::utils {
  * which makes copying cheap and ptrs remain valid
  * as long as the cache is not destructed.
  */
-template<typename T>
+template<typename T, typename Hash, typename Equal>
 class PointerCache {
 public:
     template<typename... Args>
@@ -23,19 +23,7 @@ public:
         return m_storage.insert(std::move(entry));
     }
 private:
-    struct PointerCacheHash {
-        std::size_t operator()(const std::unique_ptr<T>& entry) const {
-            return std::hash<std::unique_ptr<T>>()(entry);
-        }
-    };
-
-    struct PointerCacheEqual {
-        bool operator()(const std::unique_ptr<T>& left, const std::unique_ptr<T>& right) const {
-            return *left == *right;
-        }
-    };
-private:
-    std::unordered_set<std::unique_ptr<T>, PointerCacheHash, PointerCacheEqual> m_storage;
+    std::unordered_set<std::unique_ptr<T>, Hash, Equal> m_storage;
 };
 
 }

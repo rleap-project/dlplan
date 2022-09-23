@@ -15,6 +15,56 @@
 #include "elements/types.h"
 
 
+
+size_t std::hash<dlplan::core::State>::operator()(const dlplan::core::State& state) const noexcept {
+    return state.compute_hash();
+}
+
+size_t std::hash<dlplan::core::ConceptDenotation>::operator()(const dlplan::core::ConceptDenotation& denotation) const noexcept {
+    return denotation.compute_hash();
+}
+
+size_t std::hash<dlplan::core::RoleDenotation>::operator()(const dlplan::core::RoleDenotation& denotation) const noexcept {
+    return denotation.compute_hash();
+}
+
+size_t std::hash<dlplan::core::ConceptDenotationsPtr>::operator()(const dlplan::core::ConceptDenotationsPtr& denotations) const noexcept {
+    size_t seed = 0;
+    for (const auto denot_ptr : *denotations) {
+        dlplan::utils::hash_combine(seed, denot_ptr.get());
+    }
+    return seed;
+}
+
+size_t std::hash<dlplan::core::RoleDenotationsPtr>::operator()(const dlplan::core::RoleDenotationsPtr& denotations) const noexcept {
+    size_t seed = 0;
+    for (const auto denot_ptr : *denotations) {
+        dlplan::utils::hash_combine(seed, denot_ptr.get());
+    }
+    return seed;
+}
+
+size_t std::hash<dlplan::core::BooleanDenotationsPtr>::operator()(const dlplan::core::BooleanDenotationsPtr& denotations) const noexcept {
+    return hash<vector<bool>>()(*denotations);
+}
+
+size_t std::hash<dlplan::core::NumericalDenotationsPtr>::operator()(const dlplan::core::NumericalDenotationsPtr& denotations) const noexcept {
+    size_t seed = 0;
+    for (const int denot : *denotations) {
+        dlplan::utils::hash_combine(seed, denot);
+    }
+    return seed;
+}
+
+size_t std::hash<std::vector<unsigned>>::operator()(const std::vector<unsigned>& data) const noexcept {
+    size_t seed = data.size();
+    for (unsigned value : data) {
+        dlplan::utils::hash_combine(seed, value);
+    }
+    return seed;
+}
+
+
 namespace dlplan::core {
 
 ConceptDenotation::ConceptDenotation(int num_objects)
