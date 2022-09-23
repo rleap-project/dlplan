@@ -16,7 +16,7 @@ public:
         return state.get_instance_info_ref().get_top_role_ref();
     }
 
-    DENOTS<RoleDenotation*>* evaluate(const States& states, DenotationsCaches& caches) const override {
+    std::vector<RoleDenotation*>* evaluate(const States& states, DenotationsCaches& caches) const override {
         // check if denotations is cached.
         auto cached = caches.m_r_denots_mapping.find(get_index());
         if (cached != caches.m_r_denots_mapping.end()) return cached->second;

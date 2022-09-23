@@ -20,9 +20,6 @@ namespace dlplan::core::element {
 class DenotationsCaches;
 
 template<typename T>
-using DENOTS = std::vector<T>;
-
-template<typename T>
 class Element : public utils::Cachable {
 protected:
     /**

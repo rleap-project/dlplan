@@ -35,7 +35,7 @@ public:
         return denotation;
     }
 
-    DENOTS<bool>* evaluate(const States& states, DenotationsCaches& caches) const override {
+    std::vector<bool>* evaluate(const States& states, DenotationsCaches& caches) const override {
         // check if denotations is cached.
         auto cached = caches.m_b_denots_mapping.find(get_index());
         if (cached != caches.m_b_denots_mapping.end()) return cached->second;

@@ -13,7 +13,7 @@ public:
 
     virtual RoleDenotation evaluate(const State& state) const = 0;
     //virtual RoleDenotation evaluate(const State& state, DenotationsCaches& caches) const = 0;
-    virtual DENOTS<RoleDenotation*>* evaluate(const States& states, DenotationsCaches& caches) const = 0;
+    virtual std::vector<RoleDenotation*>* evaluate(const States& states, DenotationsCaches& caches) const = 0;
 };
 
 }
