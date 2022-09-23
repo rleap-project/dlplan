@@ -10,6 +10,7 @@
 
 #include "../../include/dlplan/generator.h"
 #include "../utils/logging.h"
+#include "../core/elements/element.h"
 
 
 namespace dlplan::generator {
@@ -64,13 +65,13 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
     m_concept_inductive_rules.emplace_back(c_some);
     m_concept_inductive_rules.emplace_back(c_all);
 
+    m_role_inductive_rules.emplace_back(r_restrict);
     m_role_inductive_rules.emplace_back(r_and);
     m_role_inductive_rules.emplace_back(r_or);
     m_role_inductive_rules.emplace_back(r_not);
     m_role_inductive_rules.emplace_back(r_diff);
     m_role_inductive_rules.emplace_back(r_identity);
     m_role_inductive_rules.emplace_back(r_inverse);
-    m_role_inductive_rules.emplace_back(r_restrict);
     m_role_inductive_rules.emplace_back(r_compose);
     m_role_inductive_rules.emplace_back(r_transitive_closure);
     m_role_inductive_rules.emplace_back(r_transitive_reflexive_closure);

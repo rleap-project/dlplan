@@ -29,12 +29,12 @@ public:
         return result;
     }
 
-    const std::vector<int>& evaluate(const States& states, DenotationsCaches& caches) const override {
+    std::vector<int>* evaluate(const States& states, DenotationsCaches& caches) const override {
         // check if denotations is cached.
         auto cached = caches.m_n_denots_mapping.find(get_index());
         if (cached != caches.m_n_denots_mapping.end()) return cached->second;
         // allocate memory for new denotations
-        NumericalDenotationsPtr denotations = std::make_unique<NumericalDenotations>();
+        auto denotations = std::make_unique<NumericalDenotations>();
         denotations->reserve(states.size());
         // get denotations of children
         auto element_denotations = m_element->evaluate(states, caches);
@@ -42,12 +42,12 @@ public:
         for (size_t i = 0; i < states.size(); ++i) {
             int denotation;
             compute_result(
-                element_denotations[i].get(),
+                *(*element_denotations)[i],
                 denotation);
             denotations->push_back(denotation);
         }
         // register denotations and return it.
-        auto result_denotations = std::cref(*caches.m_n_denots_cache.insert(std::move(denotations)).first->get());
+        auto result_denotations = caches.m_n_denots_cache.insert(std::move(denotations)).first->get();
         caches.m_n_denots_mapping.emplace(get_index(), result_denotations);
         return result_denotations;
     }

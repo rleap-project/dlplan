@@ -13,7 +13,7 @@ public:
 
     virtual bool evaluate(const State& state) const = 0;
     //virtual bool evaluate(const State& state, DenotationsCaches& caches) const = 0;
-    virtual const std::vector<bool>& evaluate(const States& states, DenotationsCaches& caches) const = 0;
+    virtual BooleanDenotations* evaluate(const States& states, DenotationsCaches& caches) const = 0;
 };
 
 }

@@ -18,8 +18,8 @@ public:
             for (const auto& r1 : data.m_roles_by_iteration[i]) {
                 for (const auto& r2 : data.m_roles_by_iteration[j]) {
                     auto element = factory.make_and_role(r1, r2);
-                    auto& denotations = element.get_element_ref().evaluate(states, caches);
-                        if (data.m_r_denots_cache.insert(&denotations).second) {
+                    auto denotations = element.get_element_ref().evaluate(states, caches);
+                    if (data.m_role_hash_table.insert(denotations).second) {
                         data.m_reprs.push_back(element.compute_repr());
                         data.m_roles_by_iteration[target_complexity].push_back(std::move(element));
                         increment_generated();

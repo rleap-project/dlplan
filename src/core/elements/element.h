@@ -6,12 +6,10 @@
 #include <mutex>
 #include <cassert>
 #include <memory>
-#include <functional>
 
 #include "types.h"
 
 #include "../../../include/dlplan/utils/cache.h"
-#include "../../../include/dlplan/utils/pointer_cache.h"
 #include "../../../include/dlplan/core.h"
 
 
@@ -54,6 +52,7 @@ public:
         return m_index;
     }
 };
+
 
 }
 

@@ -35,12 +35,12 @@ public:
         return denotation;
     }
 
-    const std::vector<bool>& evaluate(const States& states, DenotationsCaches& caches) const override {
+    BooleanDenotations* evaluate(const States& states, DenotationsCaches& caches) const override {
         // check if denotations is cached.
         auto cached = caches.m_b_denots_mapping.find(get_index());
         if (cached != caches.m_b_denots_mapping.end()) return cached->second;
         // allocate memory for new denotations
-        BooleanDenotationsPtr denotations = std::make_unique<BooleanDenotations>();
+        auto denotations = std::make_unique<BooleanDenotations>();
         denotations->reserve(states.size());
         // get denotations of children
         auto element_left_denotations = m_element_left->evaluate(states, caches);
@@ -49,13 +49,13 @@ public:
         for (size_t i = 0; i < states.size(); ++i) {
             bool denotation;
             compute_result(
-                element_left_denotations[i].get(),
-                element_right_denotations[i].get(),
+                *(*element_left_denotations)[i],
+                *(*element_right_denotations)[i],
                 denotation);
             denotations->push_back(denotation);
         }
         // register denotations and return it.
-        auto result_denotations = std::cref(*caches.m_b_denots_cache.insert(std::move(denotations)).first->get());
+        auto result_denotations = caches.m_b_denots_cache.insert(std::move(denotations)).first->get();
         caches.m_b_denots_mapping.emplace(get_index(), result_denotations);
         return result_denotations;
     }

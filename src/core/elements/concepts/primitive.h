@@ -53,26 +53,26 @@ public:
         return denotation;
     }
 
-    const ConceptDenotations& evaluate(const States& states, DenotationsCaches& caches) const override {
+    std::vector<ConceptDenotation*>* evaluate(const States& states, DenotationsCaches& caches) const override {
         // check if denotations is cached.
         auto cached = caches.m_c_denots_mapping.find(get_index());
         if (cached != caches.m_c_denots_mapping.end()) return cached->second;
         // allocate memory for new denotations
-        ConceptDenotationsPtr denotations = std::make_unique<ConceptDenotations>();
+        auto denotations = std::make_unique<ConceptDenotations>();
         denotations->reserve(states.size());
         // get denotations of children
         for (size_t i = 0; i < states.size(); ++i) {
             const auto& state = states[i];
             int num_objects = state.get_instance_info_ref().get_num_objects();
-            ConceptDenotationPtr denotation = std::make_unique<ConceptDenotation>(ConceptDenotation(num_objects));
+            auto denotation = std::make_unique<ConceptDenotation>(ConceptDenotation(num_objects));
             compute_result(
                 state,
                 *denotation);
             // register denotation and append it to denotations.
-            denotations->push_back(std::cref(*caches.m_c_denot_cache.insert(std::move(denotation)).first->get()));
+            denotations->push_back(caches.m_c_denot_cache.insert(std::move(denotation)).first->get());
         }
         // register denotations and return it.
-        auto result_denotations = std::cref(*caches.m_c_denots_cache.insert(std::move(denotations)).first->get());
+        auto result_denotations = caches.m_c_denots_cache.insert(std::move(denotations)).first->get();
         caches.m_c_denots_mapping.emplace(get_index(), result_denotations);
         return result_denotations;
     }

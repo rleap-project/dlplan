@@ -46,12 +46,12 @@ public:
         return denotation;
     }
 
-    const std::vector<int>& evaluate(const States& states, DenotationsCaches& caches) const override {
+    std::vector<int>* evaluate(const States& states, DenotationsCaches& caches) const override {
         // check if denotations is cached.
         auto cached = caches.m_n_denots_mapping.find(get_index());
         if (cached != caches.m_n_denots_mapping.end()) return cached->second;
         // allocate memory for new denotations
-        NumericalDenotationsPtr denotations = std::make_unique<NumericalDenotations>();
+        auto denotations = std::make_unique<NumericalDenotations>();
         denotations->reserve(states.size());
         // get denotations of children
         auto concept_from_denots = m_concept_from->evaluate(states, caches);
@@ -59,24 +59,24 @@ public:
         auto concept_to_denots = m_concept_to->evaluate(states, caches);
         // compute denotations
         for (size_t i = 0; i < states.size(); ++i) {
-            if (concept_from_denots[i].get().empty()) {
+            if ((*concept_from_denots)[i]->empty()) {
                 denotations->push_back(INF);
                 continue;
             }
-            if (concept_to_denots[i].get().empty()) {
+            if ((*concept_to_denots)[i]->empty()) {
                 denotations->push_back(INF);
                 continue;
             }
             int denotation;
             compute_result(
-                concept_from_denots[i],
-                role_denots[i],
-                concept_to_denots[i],
+                *(*concept_from_denots)[i],
+                *(*role_denots)[i],
+                *(*concept_to_denots)[i],
                 denotation);
             denotations->push_back(denotation);
         }
         // register denotations and return it.
-        auto result_denotations = std::cref(*caches.m_n_denots_cache.insert(std::move(denotations)).first->get());
+        auto result_denotations = caches.m_n_denots_cache.insert(std::move(denotations)).first->get();
         caches.m_n_denots_mapping.emplace(get_index(), result_denotations);
         return result_denotations;
     }
