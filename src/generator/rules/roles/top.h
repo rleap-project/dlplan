@@ -13,7 +13,7 @@ class TopRole : public Rule {
 public:
     TopRole() : Rule() { }
 
-    void generate_impl(const States& states, int target_complexity, GeneratorData& data, core::element::DenotationsCaches& caches) override {
+    void generate_impl(const States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) override {
         assert(target_complexity == 1);
         core::SyntacticElementFactory& factory = data.m_factory;
         auto element = factory.make_top_role();

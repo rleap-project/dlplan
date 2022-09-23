@@ -42,14 +42,14 @@ public:
         auto cached = caches.m_c_denots_mapping.find(get_index());
         if (cached != caches.m_c_denots_mapping.end()) return cached->second;
         // allocate memory for new denotations
-        auto denotations = caches.m_c_denots_cache.get_new_entry();
+        auto denotations = std::make_unique<ConceptDenotations>();
         denotations->reserve(states.size());
         // get denotations of children
         auto role_left_denotations = m_role_left->evaluate(states, caches);
         auto role_right_denotations = m_role_right->evaluate(states, caches);
         for (size_t i = 0; i < states.size(); ++i) {
             int num_objects = states[i].get_instance_info_ref().get_num_objects();
-            auto denotation = caches.m_c_denot_cache.get_new_entry(num_objects);
+            auto denotation = std::make_unique<ConceptDenotation>(ConceptDenotation(num_objects));
             compute_result(
                 *(*role_left_denotations)[i],
                 *(*role_right_denotations)[i],

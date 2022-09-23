@@ -38,7 +38,7 @@ public:
         auto cached = caches.m_r_denots_mapping.find(get_index());
         if (cached != caches.m_r_denots_mapping.end()) return cached->second;
         // allocate memory for new denotations
-        auto denotations = caches.m_r_denots_cache.get_new_entry();
+        auto denotations = std::make_unique<RoleDenotations>();
         denotations->reserve(states.size());
         // get denotations of children
         auto role_denotations = m_role->evaluate(states, caches);
@@ -46,7 +46,7 @@ public:
         for (size_t i = 0; i < states.size(); ++i) {
             const auto& state = states[i];
             int num_objects = state.get_instance_info_ref().get_num_objects();
-            auto denotation = caches.m_r_denot_cache.get_new_entry(num_objects);
+            auto denotation = std::make_unique<RoleDenotation>(RoleDenotation(num_objects));
             compute_result(
                 *(*role_denotations)[i],
                 *denotation);

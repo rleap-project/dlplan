@@ -11,7 +11,7 @@ class PrimitiveRole : public Rule {
 public:
     PrimitiveRole() : Rule() { }
 
-    void generate_impl(const States& states, int target_complexity, GeneratorData& data, core::element::DenotationsCaches& caches) override {
+    void generate_impl(const States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) override {
         assert(target_complexity == 1);
         core::SyntacticElementFactory& factory = data.m_factory;
         for (const auto& predicate : factory.get_vocabulary_info_ref().get_predicates_ref()) {

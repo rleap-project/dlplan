@@ -11,7 +11,7 @@ class SubsetConcept : public Rule {
 public:
     SubsetConcept() : Rule() { }
 
-    void generate_impl(const States& states, int target_complexity, GeneratorData& data, core::element::DenotationsCaches& caches) override {
+    void generate_impl(const States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) override {
         if (target_complexity == 3) {
             core::SyntacticElementFactory& factory = data.m_factory;
             for (int i = 1; i < target_complexity - 1; ++i) {

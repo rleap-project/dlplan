@@ -11,7 +11,7 @@ class OneOfConcept : public Rule {
 public:
     OneOfConcept() : Rule() { }
 
-    void generate_impl(const States& states, int target_complexity, GeneratorData& data, core::element::DenotationsCaches& caches) override {
+    void generate_impl(const States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) override {
         core::SyntacticElementFactory& factory = data.m_factory;
         assert(target_complexity == 1);
         for (const auto& constant : factory.get_vocabulary_info_ref().get_constants_ref()) {

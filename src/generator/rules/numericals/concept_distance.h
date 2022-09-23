@@ -14,7 +14,7 @@ class ConceptDistanceNumerical : public Rule {
 public:
     ConceptDistanceNumerical() : Rule() { }
 
-    void generate_impl(const States& states, int target_complexity, GeneratorData& data, core::element::DenotationsCaches& caches) override {
+    void generate_impl(const States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) override {
         core::SyntacticElementFactory& factory = data.m_factory;
         int j = 3;  // R:C has complexity 3
         for (int i = 1; i < target_complexity - j - 1; ++i) {

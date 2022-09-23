@@ -37,14 +37,14 @@ public:
         auto cached = caches.m_c_denots_mapping.find(get_index());
         if (cached != caches.m_c_denots_mapping.end()) return cached->second;
         // allocate memory for new denotations
-        auto denotations = caches.m_c_denots_cache.get_new_entry();
+        auto denotations = std::make_unique<ConceptDenotations>();
         denotations->reserve(states.size());
         // get denotations of children
         auto concept_denotations = m_concept->evaluate(states, caches);
         for (size_t i = 0; i < states.size(); ++i) {
             const auto& state = states[i];
             int num_objects = state.get_instance_info_ref().get_num_objects();
-            auto denotation = caches.m_c_denot_cache.get_new_entry(num_objects);
+            auto denotation = std::make_unique<ConceptDenotation>(ConceptDenotation(num_objects));
             compute_result(
                 *(*concept_denotations)[i],
                 *denotation);

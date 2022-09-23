@@ -11,7 +11,7 @@ class NotRole : public Rule {
 public:
     NotRole() : Rule() { }
 
-    void generate_impl(const States& states, int target_complexity, GeneratorData& data, core::element::DenotationsCaches& caches) override {
+    void generate_impl(const States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) override {
         core::SyntacticElementFactory& factory = data.m_factory;
         for (const auto& r : data.m_roles_by_iteration[target_complexity-1]) {
             auto element = factory.make_not_role(r);

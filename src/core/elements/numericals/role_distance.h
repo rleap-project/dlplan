@@ -62,7 +62,7 @@ public:
         auto cached = caches.m_n_denots_mapping.find(get_index());
         if (cached != caches.m_n_denots_mapping.end()) return cached->second;
         // allocate memory for new denotations
-        auto denotations = caches.m_n_denots_cache.get_new_entry();
+        auto denotations = std::make_unique<NumericalDenotations>();
         denotations->reserve(states.size());
         // get denotations of children
         auto role_from_denots = m_role_from->evaluate(states, caches);

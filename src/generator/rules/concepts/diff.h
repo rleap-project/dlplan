@@ -12,7 +12,7 @@ class DiffConcept : public Rule {
 public:
     DiffConcept() : Rule() { }
 
-    void generate_impl(const States& states, int target_complexity, GeneratorData& data, core::element::DenotationsCaches& caches) override {
+    void generate_impl(const States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) override {
         core::SyntacticElementFactory& factory = data.m_factory;
         for (int i = 1; i < target_complexity - 1; ++i) {
             int j = target_complexity - i - 1;

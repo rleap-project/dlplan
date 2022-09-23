@@ -45,12 +45,12 @@ public:
         return denotation;
     }
 
-    std::vector<bool>* evaluate(const States& states, DenotationsCaches& caches) const override {
+    BooleanDenotations* evaluate(const States& states, DenotationsCaches& caches) const override {
         // check if denotations is cached.
         auto cached = caches.m_b_denots_mapping.find(get_index());
         if (cached != caches.m_b_denots_mapping.end()) return cached->second;
         // allocate memory for new denotations
-        auto denotations = caches.m_b_denots_cache.get_new_entry();
+        auto denotations = std::make_unique<BooleanDenotations>();
         denotations->reserve(states.size());
         // compute denotations
         for (size_t i = 0; i < states.size(); ++i) {

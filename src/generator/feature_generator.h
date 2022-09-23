@@ -108,7 +108,7 @@ private:
     void generate_base(
         const States& states,
         GeneratorData& data,
-        core::element::DenotationsCaches& caches);
+        core::DenotationsCaches& caches);
 
     /**
      * Inductively generate Elements of higher complexity.
@@ -120,7 +120,7 @@ private:
         int numerical_complexity_limit,
         const States& states,
         GeneratorData& data,
-        core::element::DenotationsCaches& caches);
+        core::DenotationsCaches& caches);
 
     /**
      * Print some brief overview.
