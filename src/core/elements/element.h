@@ -85,9 +85,12 @@ struct DenotationsCaches {
     // Cache for collections of denotations.
     dlplan::utils::PointerCache<std::vector<bool>> m_b_denots_cache;
     dlplan::utils::PointerCache<std::vector<int>> m_n_denots_cache;
+    // std::reference_wrapper to indicate not null? We would need custom equal operator
     dlplan::utils::PointerCache<std::vector<ConceptDenotation*>> m_c_denots_cache;
     dlplan::utils::PointerCache<std::vector<RoleDenotation*>> m_r_denots_cache;
     // Mapping from element index to denotations.
+    // TODO: get rid of extra class and use unordered_map directly
+    // std::unordered_map<int, std::vector<bool>*>
     DenotationsMapping<std::vector<bool>> m_b_denots_mapping;
     DenotationsMapping<std::vector<int>> m_n_denots_mapping;
     DenotationsMapping<std::vector<ConceptDenotation*>> m_c_denots_mapping;

@@ -55,6 +55,7 @@ Distances compute_distances_from_state(const AdjList& adj_list, int source) {
 
 
 int compute_multi_source_multi_target_shortest_distance(const ConceptDenotation& sources, const RoleDenotation& edges, const ConceptDenotation& targets) {
+    // TODO: make use of bitset instead of switching to adj_list
     int num_objects = targets.get_num_objects();
     AdjList adj_list = compute_adjacency_list(edges);
     Distances distances(num_objects, INF);
