@@ -8,7 +8,6 @@
 #include <string>
 
 #include "core.h"
-#include "evaluator.h"
 
 
 namespace dlplan::policy {
@@ -18,7 +17,6 @@ class PolicyBuilder;
 class PolicyBuilderImpl;
 class PolicyReaderImpl;
 class PolicyWriterImpl;
-class EvaluationContext;
 
 
 /**
@@ -43,7 +41,7 @@ public:
     virtual ~BaseCondition();
 
     virtual bool evaluate(const core::State& source_state) const = 0;
-    virtual bool evaluate(const core::State& source_state, evaluator::EvaluationCache& cache) const = 0;
+    virtual bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const = 0;
 
     virtual std::string compute_repr() const = 0;
 
@@ -89,7 +87,7 @@ public:
     virtual ~BaseEffect();
 
     virtual bool evaluate(const core::State& source_state, const core::State& target_state) const = 0;
-    virtual bool evaluate(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const = 0;
+    virtual bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const = 0;
 
     virtual std::string compute_repr() const = 0;
 
@@ -140,9 +138,9 @@ public:
     ~Rule();
 
     bool evaluate_conditions(const core::State& source_state) const;
-    bool evaluate_conditions(const core::State& source_state, evaluator::EvaluationCache& cache) const;
+    bool evaluate_conditions(const core::State& source_state, core::DenotationsCaches& caches) const;
     bool evaluate_effects(const core::State& source_state, const core::State& target_state) const;
-    bool evaluate_effects(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const;
+    bool evaluate_effects(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const;
 
     /**
      * Returns canonical string representation.
@@ -199,15 +197,15 @@ public:
      * Approach 1: naive approach to evaluate (s,s')
      */
     std::shared_ptr<const Rule> evaluate_lazy(const core::State& source_state, const core::State& target_state) const;
-    std::shared_ptr<const Rule> evaluate_lazy(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const;
+    std::shared_ptr<const Rule> evaluate_lazy(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const;
 
     /**
      * Approach 2: optimized approach for evaluating pairs with similar source state s, i.e., (s,s1), (s,s2), ..., (s,sn)
      */
     std::vector<std::shared_ptr<const Rule>> evaluate_conditions_eager(const core::State& source_state) const;
-    std::vector<std::shared_ptr<const Rule>> evaluate_conditions_eager(const core::State& source_state, evaluator::EvaluationCache& cache) const;
+    std::vector<std::shared_ptr<const Rule>> evaluate_conditions_eager(const core::State& source_state, core::DenotationsCaches& caches) const;
     std::shared_ptr<const Rule> evaluate_effects_lazy(const core::State& source_state, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules) const;
-    std::shared_ptr<const Rule> evaluate_effects_lazy(const core::State& source_state, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules, evaluator::EvaluationCache& cache) const;
+    std::shared_ptr<const Rule> evaluate_effects_lazy(const core::State& source_state, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules, core::DenotationsCaches& caches) const;
 
     std::string compute_repr() const;
 

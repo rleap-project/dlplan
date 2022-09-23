@@ -36,7 +36,7 @@ public:
     PositiveBooleanEffect(std::shared_ptr<const core::Boolean> boolean_feature);
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
-    bool evaluate(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const override;
+    bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
 
     std::string compute_repr() const override;
 
@@ -48,7 +48,7 @@ public:
     NegativeBooleanEffect(std::shared_ptr<const core::Boolean> boolean_feature);
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
-    bool evaluate(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const override;
+    bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
 
     std::string compute_repr() const override;
 
@@ -60,7 +60,7 @@ public:
     UnchangedBooleanEffect(std::shared_ptr<const core::Boolean> boolean_feature);
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
-    bool evaluate(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const override;
+    bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
 
     std::string compute_repr() const override;
 
@@ -72,7 +72,7 @@ public:
     IncrementNumericalEffect(std::shared_ptr<const core::Numerical> numerical_feature);
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
-    bool evaluate(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const override;
+    bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
 
     std::string compute_repr() const override;
 
@@ -84,7 +84,7 @@ public:
     DecrementNumericalEffect(std::shared_ptr<const core::Numerical> numerical_feature);
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
-    bool evaluate(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const override;
+    bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
 
     std::string compute_repr() const override;
 
@@ -96,7 +96,7 @@ public:
     UnchangedNumericalEffect(std::shared_ptr<const core::Numerical> numerical_feature);
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
-    bool evaluate(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const override;
+    bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
 
     std::string compute_repr() const override;
 
