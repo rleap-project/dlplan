@@ -601,7 +601,7 @@ std::shared_ptr<const VocabularyInfo> BaseElement::get_vocabulary_info() const {
 
 
 Concept::Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Concept>&& concept, int index)
-    : Element<ConceptDenotation>(vocabulary_info, index), m_element(concept) {
+    : BaseElement(vocabulary_info, index), m_element(concept) {
     if (!m_element) {
         throw std::runtime_error("Concept::Concept - tried to construct Concept from nullptr");
     }
@@ -624,6 +624,10 @@ ConceptDenotation Concept::evaluate(const State& state) const {
     return m_element->evaluate(state);
 }
 
+ConceptDenotations* Concept::evaluate(const States& states, DenotationsCaches& caches) const {
+    return m_element->evaluate(states, caches);
+}
+
 int Concept::compute_complexity() const {
     return m_element->compute_complexity();
 }
@@ -642,7 +646,7 @@ std::shared_ptr<const element::Concept> Concept::get_element() const {
 
 
 Role::Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Role>&& role, int index)
-    : Element<RoleDenotation>(vocabulary_info, index), m_element(role) {
+    : BaseElement(vocabulary_info, index), m_element(role) {
     if (!m_element) {
         throw std::runtime_error("Role::Role - tried to construct Role from nullptr");
     }
@@ -665,6 +669,10 @@ RoleDenotation Role::evaluate(const State& state) const {
     return m_element->evaluate(state);
 }
 
+RoleDenotations* Role::evaluate(const States& states, DenotationsCaches& caches) const {
+    return m_element->evaluate(states, caches);
+}
+
 int Role::compute_complexity() const {
     return m_element->compute_complexity();
 }
@@ -683,7 +691,7 @@ std::shared_ptr<const element::Role> Role::get_element() const {
 
 
 Numerical::Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Numerical>&& numerical, int index)
-    : Element<int>(vocabulary_info, index), m_element(numerical) {
+    : BaseElement(vocabulary_info, index), m_element(numerical) {
     if (!m_element) {
         throw std::runtime_error("Numerical::Numerical - tried to construct Numerical from nullptr");
     }
@@ -706,6 +714,11 @@ int Numerical::evaluate(const State& state) const {
     return m_element->evaluate(state);
 }
 
+NumericalDenotations* Numerical::evaluate(const States& states, DenotationsCaches& caches) const {
+    return m_element->evaluate(states, caches);
+}
+
+
 int Numerical::compute_complexity() const {
     return m_element->compute_complexity();
 }
@@ -724,7 +737,7 @@ std::shared_ptr<const element::Numerical> Numerical::get_element() const {
 
 
 Boolean::Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Boolean>&& boolean, int index)
-    : Element<bool>(vocabulary_info, index), m_element(boolean) {
+    : BaseElement(vocabulary_info, index), m_element(boolean) {
     if (!m_element) {
         throw std::runtime_error("Boolean::Boolean - tried to construct Boolean from nullptr");
     }
@@ -746,6 +759,11 @@ bool Boolean::evaluate(const State& state) const {
     }
     return m_element->evaluate(state);
 }
+
+BooleanDenotations* Boolean::evaluate(const States& states, DenotationsCaches& caches) const {
+    return m_element->evaluate(states, caches);
+}
+
 
 int Boolean::compute_complexity() const {
     return m_element->compute_complexity();

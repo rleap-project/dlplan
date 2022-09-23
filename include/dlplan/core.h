@@ -579,28 +579,11 @@ public:
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
 };
 
-/**
- * Abstract base class of any Element.
- */
-template<typename T>
-class Element : public BaseElement {
-protected:
-    Element(std::shared_ptr<const VocabularyInfo> vocabulary_info, int index=-1);
-
-public:
-    ~Element() override;
-
-    /**
-     * Evaluates the element for a state given as a vector of atom indices.
-     */
-    virtual T evaluate(const State& state) const = 0;
-};
-
 
 /**
  * Concept evaluates to ConceptDenotation.
  */
-class Concept : public Element<ConceptDenotation> {
+class Concept : public BaseElement {
 private:
     std::shared_ptr<const element::Concept> m_element;
 
@@ -614,7 +597,8 @@ public:
     Concept& operator=(Concept&& other);
     ~Concept() override;
 
-    ConceptDenotation evaluate(const State& state) const override;
+    ConceptDenotation evaluate(const State& state) const;
+    ConceptDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
 
     int compute_complexity() const override;
 
@@ -628,7 +612,7 @@ public:
 /**
  * Concept evaluates to RoleDenotation.
  */
-class Role : public Element<RoleDenotation> {
+class Role : public BaseElement {
 private:
     std::shared_ptr<const element::Role> m_element;
 
@@ -642,7 +626,8 @@ public:
     Role& operator=(Role&& other);
     ~Role() override;
 
-    RoleDenotation evaluate(const State& state) const override;
+    RoleDenotation evaluate(const State& state) const;
+    RoleDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
 
     int compute_complexity() const override;
 
@@ -656,7 +641,7 @@ public:
 /**
  * Numerical evaluates to int.
  */
-class Numerical : public Element<int> {
+class Numerical : public BaseElement {
 private:
     std::shared_ptr<const element::Numerical> m_element;
 
@@ -670,7 +655,8 @@ public:
     Numerical& operator=(Numerical&& other);
     ~Numerical() override;
 
-    int evaluate(const State& state) const override;
+    int evaluate(const State& state) const;
+    NumericalDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
 
     int compute_complexity() const override;
 
@@ -684,7 +670,7 @@ public:
 /**
  * Boolean evaluates to bool.
  */
-class Boolean : public Element<bool> {
+class Boolean : public BaseElement {
 private:
     std::shared_ptr<const element::Boolean> m_element;
 
@@ -698,7 +684,8 @@ public:
     Boolean& operator=(Boolean&& other);
     ~Boolean() override;
 
-    bool evaluate(const State& state) const override;
+    bool evaluate(const State& state) const;
+    BooleanDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
 
     int compute_complexity() const override;
 
@@ -794,7 +781,5 @@ public:
 };
 
 }
-
-#include "core.tpp"
 
 #endif
