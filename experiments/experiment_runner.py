@@ -1,18 +1,12 @@
 #! /usr/bin/env python
-
-import os
 import platform
 import re
-import shutil
 
 from downward import suites
 from downward.reports.absolute import AbsoluteReport
 from lab.environments import TetralithEnvironment, BaselSlurmEnvironment, LocalEnvironment
 from lab.experiment import Experiment
 from lab.reports import Attribute, geometric_mean
-
-# copy experiment binary to this directory
-shutil.copy2("../build/experiments/experiment_generator", "experiment_generator")
 
 # Create custom report class with suitable info and error attributes.
 class BaseReport(AbsoluteReport):
