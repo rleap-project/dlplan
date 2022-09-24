@@ -21,10 +21,13 @@ TEST(DLPTests, ConceptSome) {
     Atom a5 = instance->add_atom("concept", {"B"});
     Atom a6 = instance->add_atom("concept", {"C"});
 
-    State state(instance, {a0, a1, a2, a3, a4, a5, a6});
+    State state(instance, {a0, a1, a2, a3, a4, a5, a6}, 0);
 
     SyntacticElementFactory factory(vocabulary);
 
     Concept concept = factory.parse_concept("c_some(r_primitive(role,0,1),c_primitive(concept,0))");
     EXPECT_EQ(concept.evaluate(state).to_sorted_vector(), Index_Vec({0, 1}));
+
+    DenotationsCaches caches;
+    EXPECT_EQ(concept.evaluate(state), *concept.evaluate(state, caches));
 }

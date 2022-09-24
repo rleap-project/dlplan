@@ -29,7 +29,6 @@ private:
         const auto& static_atoms = state.get_instance_info_ref().get_static_atoms_ref();
         collect_concepts(state.get_per_predicate_idx_atom_idxs_ref(), atoms, m_predicate, m_pos, result);
         collect_concepts(state.get_instance_info_ref().get_per_predicate_idx_static_atom_idxs_ref(), static_atoms, m_predicate, m_pos, result);
-
     }
 
     std::unique_ptr<ConceptDenotation> evaluate_impl(const State& state, DenotationsCaches&) const override {

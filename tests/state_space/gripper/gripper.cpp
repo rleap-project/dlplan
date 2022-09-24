@@ -11,5 +11,5 @@ TEST(DLPTests, StateSpaceGripperTest) {
     auto state_space = StateSpaceReader().read();
     auto distance_information = state_space.compute_goal_distance_information();
     state_space.print();
-    ASSERT_EQ(distance_information.is_solvable(), true);
+    EXPECT_EQ(distance_information.is_solvable(), true);
 }

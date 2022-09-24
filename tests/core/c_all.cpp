@@ -21,12 +21,15 @@ TEST(DLPTests, ConceptAll) {
     Atom a5 = instance->add_atom("concept", {"B"});
     Atom a6 = instance->add_atom("concept", {"C"});
 
-    State state(instance, {a0, a1, a2, a3, a4, a5, a6});
+    State state(instance, {a0, a1, a2, a3, a4, a5, a6}, 0);
 
     SyntacticElementFactory factory(vocabulary);
 
     Concept concept = factory.parse_concept("c_all(r_primitive(role,0,1),c_primitive(concept,0))");
     EXPECT_EQ(concept.evaluate(state).to_sorted_vector(), Index_Vec({0, 2, 3}));
+
+    DenotationsCaches caches;
+    EXPECT_EQ(concept.evaluate(state), *concept.evaluate(state, caches));
 }
 
 TEST(DLPTests, ConceptAll2) {
@@ -42,8 +45,8 @@ TEST(DLPTests, ConceptAll2) {
     Atom a2 = instance->add_atom("at", {"bob", "location_1"});
     Atom a3 = instance->add_atom("man", {"bob"});
 
-    State state_1(instance, {a0, a1, a2, a3});  // bob and spanner_1 at location_1
-    State state_2(instance, {a1, a2, a3});  // only bob at location_1
+    State state_1(instance, {a0, a1, a2, a3}, 0);  // bob and spanner_1 at location_1
+    State state_2(instance, {a1, a2, a3}, 1);  // only bob at location_1
 
     SyntacticElementFactory factory(vocabulary);
 
@@ -51,4 +54,8 @@ TEST(DLPTests, ConceptAll2) {
     EXPECT_EQ(concept.evaluate(state_1).to_sorted_vector(), Index_Vec({0, 2, 4}));
 
     EXPECT_EQ(concept.evaluate(state_2).to_sorted_vector(), Index_Vec({0, 1, 2, 4}));
+
+    DenotationsCaches caches;
+    EXPECT_EQ(concept.evaluate(state_1), *concept.evaluate(state_1, caches));
+    EXPECT_EQ(concept.evaluate(state_2), *concept.evaluate(state_2, caches));
 }

@@ -12,6 +12,7 @@ class AllConcept : public Concept {
 private:
     void compute_result(const RoleDenotation& role_denot, const ConceptDenotation& concept_denot, ConceptDenotation& result) const {
         // find counterexamples b : exists b . (a,b) in R and b notin C
+        result.set();
         for (const auto& pair : role_denot) {
             if (!concept_denot.contains(pair.second)) {
                 result.erase(pair.first);
@@ -22,7 +23,6 @@ private:
     std::unique_ptr<ConceptDenotation> evaluate_impl(const State& state, DenotationsCaches& caches) const override {
         auto denotation = std::make_unique<ConceptDenotation>(
             ConceptDenotation(state.get_instance_info_ref().get_num_objects()));
-        denotation->set();
         compute_result(
             *m_role->evaluate(state, caches),
             *m_concept->evaluate(state, caches),
@@ -36,10 +36,8 @@ private:
         auto role_denotations = m_role->evaluate(states, caches);
         auto concept_denotations = m_concept->evaluate(states, caches);
         for (size_t i = 0; i < states.size(); ++i) {
-            const auto& state = states[i];
-            int num_objects = state.get_instance_info_ref().get_num_objects();
-            auto denotation = std::make_unique<ConceptDenotation>(ConceptDenotation(num_objects));
-            denotation->set();
+            auto denotation = std::make_unique<ConceptDenotation>(
+                ConceptDenotation(states[i].get_instance_info_ref().get_num_objects()));
             compute_result(
                 *(*role_denotations)[i],
                 *(*concept_denotations)[i],
@@ -62,7 +60,7 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        auto denotation = state.get_instance_info_ref().get_top_concept_ref();
+        auto denotation = ConceptDenotation(state.get_instance_info_ref().get_num_objects());
         compute_result(
             m_role->evaluate(state),
             m_concept->evaluate(state),

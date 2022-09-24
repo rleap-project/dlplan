@@ -29,7 +29,7 @@ public:
         auto cached = caches.m_n_denots_mapping_per_state.find(key);
         if (cached != caches.m_n_denots_mapping_per_state.end()) return cached->second;
         // compute denotation
-        bool denotation = evaluate_impl(state, caches);
+        auto denotation = evaluate_impl(state, caches);
         // register denotation and return it
         caches.m_n_denots_mapping_per_state.emplace(key, denotation);
         return denotation;

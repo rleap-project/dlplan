@@ -34,9 +34,8 @@ private:
         auto role_denotations = m_role->evaluate(states, caches);
         auto concept_denotations = m_concept->evaluate(states, caches);
         for (size_t i = 0; i < states.size(); ++i) {
-            const auto& state = states[i];
-            int num_objects = state.get_instance_info_ref().get_num_objects();
-            auto denotation = std::make_unique<ConceptDenotation>(ConceptDenotation(num_objects));
+            auto denotation = std::make_unique<ConceptDenotation>(
+                ConceptDenotation(states[i].get_instance_info_ref().get_num_objects()));
             compute_result(
                 *(*role_denotations)[i],
                 *(*concept_denotations)[i],
