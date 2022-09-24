@@ -32,7 +32,7 @@ public:
     PositiveBooleanCondition(std::shared_ptr<const core::Boolean> boolean_feature);
 
     bool evaluate(const core::State& source_state) const override;
-    bool evaluate(const core::State& source_state, evaluator::EvaluationCache& cache) const override;
+    bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const override;
 
     std::string compute_repr() const override;
 
@@ -44,7 +44,7 @@ public:
     NegativeBooleanCondition(std::shared_ptr<const core::Boolean> boolean_feature);
 
     bool evaluate(const core::State& source_state) const override;
-    bool evaluate(const core::State& source_state, evaluator::EvaluationCache& cache) const override;
+    bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const override;
 
     std::string compute_repr() const override;
 
@@ -56,7 +56,7 @@ public:
     EqualNumericalCondition(std::shared_ptr<const core::Numerical> numerical_feature);
 
     bool evaluate(const core::State& source_state) const override;
-    bool evaluate(const core::State& source_state, evaluator::EvaluationCache& cache) const override;
+    bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const override;
 
     std::string compute_repr() const override;
 
@@ -68,7 +68,7 @@ public:
     GreaterNumericalCondition(std::shared_ptr<const core::Numerical> numerical_feature);
 
     bool evaluate(const core::State& source_state) const override;
-    bool evaluate(const core::State& source_state, evaluator::EvaluationCache& cache) const override;
+    bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const override;
 
     std::string compute_repr() const override;
 

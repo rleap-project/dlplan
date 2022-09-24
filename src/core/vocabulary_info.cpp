@@ -4,7 +4,7 @@
 #include "element_factory.h"
 
 #include "../utils/collections.h"
-#include "../utils/hash_utils.h"
+
 
 namespace dlplan::core {
 
@@ -41,7 +41,7 @@ bool VocabularyInfoImpl::exists_predicate_name(const std::string& name) const {
     return m_predicate_name_to_predicate_idx.find(name) != m_predicate_name_to_predicate_idx.end();
 }
 
-const std::vector<Predicate>& VocabularyInfoImpl::get_predicates() const {
+const std::vector<Predicate>& VocabularyInfoImpl::get_predicates_ref() const {
     return m_predicates;
 }
 
@@ -52,7 +52,7 @@ int VocabularyInfoImpl::get_predicate_idx(const std::string& name) const {
     return m_predicate_name_to_predicate_idx.at(name);
 }
 
-const Predicate& VocabularyInfoImpl::get_predicate(int predicate_idx) const {
+const Predicate& VocabularyInfoImpl::get_predicate_ref(int predicate_idx) const {
     if (!utils::in_bounds(predicate_idx, m_predicates)) {
         throw std::runtime_error("VocabularyInfoImpl::get_predicate - predicate index out of range.");
     }
@@ -78,14 +78,14 @@ int VocabularyInfoImpl::get_constant_idx(const std::string& name) const {
     return m_constant_name_to_constant_idx.at(name);
 }
 
-const Constant& VocabularyInfoImpl::get_constant(int constant_idx) const {
+const Constant& VocabularyInfoImpl::get_constant_ref(int constant_idx) const {
     if (!utils::in_bounds(constant_idx, m_constants)) {
         throw std::runtime_error("VocabularyInfoImpl::get_constant - constant index out of range.");
     }
     return m_constants[constant_idx];
 }
 
-const std::vector<Constant>& VocabularyInfoImpl::get_constants() const {
+const std::vector<Constant>& VocabularyInfoImpl::get_constants_ref() const {
     return m_constants;
 }
 

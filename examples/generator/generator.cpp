@@ -47,7 +47,7 @@ int main() {
     SyntacticElementFactory factory(v);
 
     // 4. Construct a bunch of states
-    const auto& atoms = i->get_atoms();
+    const auto& atoms = i->get_atoms_ref();
     const Atom& a0 = atoms[0];
     const Atom& a1 = atoms[1];
     const Atom& a2 = atoms[2];
@@ -70,9 +70,6 @@ int main() {
     generator.set_generate_diff_concept(false);
     generator.set_generate_or_concept(false);
     generator.set_generate_subset_concept(false);
-    generator.set_generate_role_distance_numerical(false);
-    generator.set_generate_sum_concept_distance_numerical(false);
-    generator.set_generate_sum_role_distance_numerical(false);
     generator.set_generate_and_role(false);
     generator.set_generate_compose_role(false);
     generator.set_generate_diff_role(false);

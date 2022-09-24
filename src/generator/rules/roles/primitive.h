@@ -1,23 +1,27 @@
 #ifndef DLPLAN_SRC_GENERATOR_RULES_ROLES_PRIMITIVE_H_
 #define DLPLAN_SRC_GENERATOR_RULES_ROLES_PRIMITIVE_H_
 
-#include "../role.h"
-
+#include "../rule.h"
 #include "../../../core/elements/roles/primitive.h"
 
 
 namespace dlplan::generator::rules {
 
-class PrimitiveRole : public Role {
+class PrimitiveRole : public Rule {
 public:
-    PrimitiveRole() : Role() { }
+    PrimitiveRole() : Rule() { }
 
-    virtual void submit_tasks_impl(const States& states, int, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+    void generate_impl(const States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) override {
+        assert(target_complexity == 1);
         core::SyntacticElementFactory& factory = data.m_factory;
-        for (const auto& predicate : factory.get_vocabulary_info()->get_predicates()) {
-            for (int pos1 = 0; pos1 < predicate.get_arity(); ++pos1) {
-                for (int pos2 = pos1+1; pos2 < predicate.get_arity(); ++pos2) {
-                    m_tasks.push_back(th.submit(std::cref(m_task), std::cref(states), std::move(factory.make_primitive_role(predicate, pos1, pos2))));
+        for (const auto& predicate : factory.get_vocabulary_info_ref().get_predicates_ref()) {
+            if (predicate.get_arity() == 2) {
+                auto element = factory.make_primitive_role(predicate, 0, 1);
+                auto denotations = element.get_element_ref().evaluate(states, caches);
+                if (data.m_role_hash_table.insert(denotations).second) {
+                    data.m_reprs.push_back(element.compute_repr());
+                    data.m_roles_by_iteration[target_complexity].push_back(std::move(element));
+                    increment_generated();
                 }
             }
         }

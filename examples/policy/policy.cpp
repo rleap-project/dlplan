@@ -45,13 +45,13 @@ int main() {
     dlplan::core::State s2(instance_info, {a0, a1}, 2);
 
     // Construct a cache to avoid redundant reevaluations
-    dlplan::evaluator::EvaluationCache evaluation_cache(policy.get_boolean_features().size(), policy.get_numerical_features().size());
+    dlplan::core::DenotationsCaches caches;
 
     // Evaluate the policy using the cache
-    assert(policy.evaluate_lazy(s2, s1, evaluation_cache));
-    assert(!policy.evaluate_lazy(s2, s0, evaluation_cache));
-    assert(!policy.evaluate_lazy(s1, s2, evaluation_cache));
-    assert(!policy.evaluate_lazy(s0, s2, evaluation_cache));
+    assert(policy.evaluate_lazy(s2, s1, caches));
+    assert(!policy.evaluate_lazy(s2, s0, caches));
+    assert(!policy.evaluate_lazy(s1, s2, caches));
+    assert(!policy.evaluate_lazy(s0, s2, caches));
     // Evaluate the policy without the cache
     assert(policy.evaluate_lazy(s2, s1));
     assert(!policy.evaluate_lazy(s2, s0));

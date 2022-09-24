@@ -113,18 +113,6 @@ void FeatureGenerator::set_generate_count_numerical(bool enable) {
     m_pImpl->set_generate_count_numerical(enable);
 }
 
-void FeatureGenerator::set_generate_role_distance_numerical(bool enable) {
-    m_pImpl->set_generate_role_distance_numerical(enable);
-}
-
-void FeatureGenerator::set_generate_sum_concept_distance_numerical(bool enable) {
-    m_pImpl->set_generate_sum_concept_distance_numerical(enable);
-}
-
-void FeatureGenerator::set_generate_sum_role_distance_numerical(bool enable) {
-    m_pImpl->set_generate_sum_role_distance_numerical(enable);
-}
-
 void FeatureGenerator::set_generate_and_role(bool enable) {
     m_pImpl->set_generate_and_role(enable);
 }

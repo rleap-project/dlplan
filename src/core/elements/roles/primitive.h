@@ -17,12 +17,43 @@ static void collect_roles(
     if (it != per_predicate_idx_atom_idxs.end()) {
         for (int atom_idx : it->second) {
             const auto& atom = atoms[atom_idx];
-            result.insert(std::make_pair(atom.get_object(pos_1).get_index(), atom.get_object(pos_2).get_index()));
+            result.insert(std::make_pair(atom.get_object_ref(pos_1).get_index(), atom.get_object_ref(pos_2).get_index()));
         }
     }
 }
 
 class PrimitiveRole : public Role {
+private:
+    void compute_result(const State& state, RoleDenotation& result) const {
+        const auto& atoms = state.get_instance_info_ref().get_atoms_ref();
+        const auto& static_atoms = state.get_instance_info_ref().get_static_atoms_ref();
+        collect_roles(state.get_per_predicate_idx_atom_idxs_ref(), atoms, m_predicate, m_pos_1, m_pos_2, result);
+        collect_roles(state.get_instance_info_ref().get_per_predicate_idx_static_atom_idxs_ref(), static_atoms, m_predicate, m_pos_1, m_pos_2, result);
+    }
+
+    std::unique_ptr<RoleDenotation> evaluate_impl(const State& state, DenotationsCaches&) const override {
+        auto denotation = std::make_unique<RoleDenotation>(
+            RoleDenotation(state.get_instance_info_ref().get_num_objects()));
+        compute_result(
+            state,
+            *denotation);
+        return denotation;
+    }
+
+    std::unique_ptr<RoleDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const override {
+        auto denotations = std::make_unique<RoleDenotations>();
+        denotations->reserve(states.size());
+        for (size_t i = 0; i < states.size(); ++i) {
+            auto denotation = std::make_unique<RoleDenotation>(
+                RoleDenotation(states[i].get_instance_info_ref().get_num_objects()));
+            compute_result(
+                states[i],
+                *denotation);
+            denotations->push_back(caches.m_r_denot_cache.insert(std::move(denotation)).first->get());
+        }
+        return denotations;
+    }
+
 protected:
     const Predicate m_predicate;
     const int m_pos_1;
@@ -40,14 +71,9 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        const InstanceInfo& info = *state.get_instance_info();
-        int num_objects = info.get_num_objects();
-        RoleDenotation result(num_objects);
-        const auto& atoms = info.get_atoms();
-        const auto& static_atoms = info.get_static_atoms();
-        collect_roles(state.get_per_predicate_idx_atom_idxs(), atoms, m_predicate, m_pos_1, m_pos_2, result);
-        collect_roles(info.get_per_predicate_idx_static_atom_idxs(), static_atoms, m_predicate, m_pos_1, m_pos_2, result);
-        return result;
+        RoleDenotation denotation(state.get_instance_info_ref().get_num_objects());
+        compute_result(state, denotation);
+        return denotation;
     }
 
     int compute_complexity() const override {
@@ -55,11 +81,15 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << get_name() << "(" << m_predicate.get_name() << "," << std::to_string(m_pos_1) << "," << std::to_string(m_pos_2) << ")";
+        out << get_name() << "(" << m_predicate.get_name_ref() << "," << std::to_string(m_pos_1) << "," << std::to_string(m_pos_2) << ")";
     }
 
     static std::string get_name() {
         return "r_primitive";
+    }
+
+    const Predicate& get_predicate_ref() const {
+        return m_predicate;
     }
 };
 

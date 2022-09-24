@@ -8,6 +8,36 @@
 namespace dlplan::core::element {
 
 class NullaryBoolean : public Boolean {
+private:
+    void compute_result(const State& state, bool& result) const {
+        const auto& per_predicate_idx_atom_idxs = state.get_per_predicate_idx_atom_idxs_ref();
+        auto it = per_predicate_idx_atom_idxs.find(m_predicate.get_index());
+        if (it != per_predicate_idx_atom_idxs.end()) {
+            result = !it->second.empty();
+            return;
+        }
+        const auto& per_predicate_idx_static_atom_idxs = state.get_instance_info_ref().get_per_predicate_idx_static_atom_idxs_ref();
+        it = per_predicate_idx_static_atom_idxs.find(m_predicate.get_index());
+        if (it != per_predicate_idx_static_atom_idxs.end()) {
+            result = !it->second.empty();
+            return;
+        }
+        result = false;
+    }
+
+    bool evaluate_impl(const State& state, DenotationsCaches&) const override {
+        return evaluate(state);
+    }
+
+    std::unique_ptr<BooleanDenotations>
+    evaluate_impl(const States& states, DenotationsCaches&) const override {
+        auto denotations = std::make_unique<BooleanDenotations>();
+        for (size_t i = 0; i < states.size(); ++i) {
+            denotations->push_back(evaluate(states[i]));
+        }
+        return denotations;
+    }
+
 protected:
     const Predicate m_predicate;
 
@@ -23,17 +53,9 @@ public:
     }
 
     bool evaluate(const State& state) const override {
-        const auto& per_predicate_idx_atom_idxs = state.get_per_predicate_idx_atom_idxs();
-        auto it = per_predicate_idx_atom_idxs.find(m_predicate.get_index());
-        if (it != per_predicate_idx_atom_idxs.end()) {
-            return !it->second.empty();
-        }
-        const auto& per_predicate_idx_static_atom_idxs = state.get_instance_info()->get_per_predicate_idx_static_atom_idxs();
-        it = per_predicate_idx_static_atom_idxs.find(m_predicate.get_index());
-        if (it != per_predicate_idx_static_atom_idxs.end()) {
-            return !it->second.empty();
-        }
-        return false;
+        bool denotation;
+        compute_result(state, denotation);
+        return denotation;
     }
 
     int compute_complexity() const override {
@@ -41,7 +63,7 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << get_name() << "(" << m_predicate.get_name() << ")";
+        out << get_name() << "(" << m_predicate.get_name_ref() << ")";
     }
 
     static std::string get_name() {

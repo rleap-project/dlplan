@@ -43,6 +43,9 @@ void init_state_space(py::module_ &m) {
         .def("__deepcopy__", [](const StateSpace& state_space, py::object){ return StateSpace(state_space); })
         .def("merge", &StateSpace::operator|=)
         .def("compute_distances", &StateSpace::compute_distances)
+        .def("is_goal", &StateSpace::is_goal)
+        .def("is_nongoal", &StateSpace::is_nongoal)
+        .def("is_trivially_solvable", &StateSpace::is_trivially_solvable)
         .def("add_state", &StateSpace::add_state, py::return_value_policy::reference)
         .def("add_transition", &StateSpace::add_transition)
         .def("print", &StateSpace::print)
@@ -84,6 +87,6 @@ void init_state_space(py::module_ &m) {
         .def(py::init<>())
         .def("__copy__", [](const StateSpaceReader& reader, py::object){ return StateSpaceReader(reader); })
         .def("__deepcopy__", [](const StateSpaceReader& reader, py::object){ return StateSpaceReader(reader); })
-        .def("read", &StateSpaceReader::read, py::arg("vocabulary_info") = nullptr)
+        .def("read", &StateSpaceReader::read, py::arg("vocabulary_info") = nullptr, py::arg("index") = -1)
     ;
 }

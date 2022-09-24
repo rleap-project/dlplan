@@ -114,6 +114,17 @@ public:
         return test(pos);
     }
 
+    bool operator==(const DynamicBitset& other) const {
+        if (this != &other) {
+            return (blocks == other.blocks) && (num_bits == other.num_bits);
+        }
+        return true;
+    }
+
+    bool operator!=(const DynamicBitset& other) const {
+        return !(*this == other);
+    }
+
     DynamicBitset& operator&=(const DynamicBitset& other) {
         assert(size() == other.size());
         for (std::size_t i = 0; i < blocks.size(); ++i) {

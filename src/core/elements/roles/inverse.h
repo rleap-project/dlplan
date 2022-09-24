@@ -7,6 +7,37 @@
 namespace dlplan::core::element {
 
 class InverseRole : public Role {
+private:
+    void compute_result(const RoleDenotation& denot, RoleDenotation& result) const {
+        for (const auto& pair : denot) {
+            result.insert(std::make_pair(pair.second, pair.first));
+        }
+    }
+
+    std::unique_ptr<RoleDenotation> evaluate_impl(const State& state, DenotationsCaches& caches) const override {
+        auto denotation = std::make_unique<RoleDenotation>(
+            RoleDenotation(state.get_instance_info_ref().get_num_objects()));
+        compute_result(
+            *m_role->evaluate(state, caches),
+            *denotation);
+        return denotation;
+    }
+
+    std::unique_ptr<RoleDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const override {
+        auto denotations = std::make_unique<RoleDenotations>();
+        denotations->reserve(states.size());
+        auto role_denotations = m_role->evaluate(states, caches);
+        for (size_t i = 0; i < states.size(); ++i) {
+            auto denotation = std::make_unique<RoleDenotation>(
+                RoleDenotation(states[i].get_instance_info_ref().get_num_objects()));
+            compute_result(
+                *(*role_denotations)[i],
+                *denotation);
+            denotations->push_back(caches.m_r_denot_cache.insert(std::move(denotation)).first->get());
+        }
+       return denotations;
+    }
+
 protected:
     const Role_Ptr m_role;
 
@@ -19,12 +50,11 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        const auto role_denot = m_role->evaluate(state);
-        RoleDenotation result(state.get_instance_info()->get_num_objects());
-        for (const auto& pair : role_denot) {
-            result.insert(std::make_pair(pair.second, pair.first));
-        }
-        return result;
+        RoleDenotation denotation(state.get_instance_info_ref().get_num_objects());
+        compute_result(
+            m_role->evaluate(state),
+            denotation);
+        return denotation;
     }
 
     int compute_complexity() const override {

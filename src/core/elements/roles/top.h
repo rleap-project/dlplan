@@ -7,13 +7,33 @@
 namespace dlplan::core::element {
 
 class TopRole : public Role {
+private:
+    std::unique_ptr<RoleDenotation> evaluate_impl(const State& state, DenotationsCaches&) const override {
+        auto denotation = std::make_unique<RoleDenotation>(
+            RoleDenotation(state.get_instance_info_ref().get_num_objects()));
+        denotation->set();
+        return denotation;
+    }
+
+    std::unique_ptr<RoleDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const override {
+        auto denotations = std::make_unique<RoleDenotations>();
+        denotations->reserve(states.size());
+        for (size_t i = 0; i < states.size(); ++i) {
+            auto denotation = std::make_unique<RoleDenotation>(
+                RoleDenotation(states[i].get_instance_info_ref().get_num_objects()));
+            denotation->set();
+            denotations->push_back(caches.m_r_denot_cache.insert(std::move(denotation)).first->get());
+        }
+        return denotations;
+    }
+
 public:
     TopRole(const VocabularyInfo& vocabulary)
     : Role(vocabulary) {
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        return state.get_instance_info()->get_top_role();
+        return state.get_instance_info_ref().get_top_role_ref();
     }
 
     int compute_complexity() const override {

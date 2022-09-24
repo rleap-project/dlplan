@@ -46,9 +46,9 @@ bool Rule::evaluate_conditions(const core::State& source_state) const {
     return true;
 }
 
-bool Rule::evaluate_conditions(const core::State& source_state, evaluator::EvaluationCache& cache) const {
+bool Rule::evaluate_conditions(const core::State& source_state, core::DenotationsCaches& caches) const {
     for (const auto& condition : m_conditions) {
-        if (!condition->evaluate(source_state, cache)) return false;
+        if (!condition->evaluate(source_state, caches)) return false;
     }
     return true;
 }
@@ -60,9 +60,9 @@ bool Rule::evaluate_effects(const core::State& source_state, const core::State& 
     return true;
 }
 
-bool Rule::evaluate_effects(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const {
+bool Rule::evaluate_effects(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
     for (const auto& effect : m_effects) {
-        if (!effect->evaluate(source_state, target_state, cache)) return false;
+        if (!effect->evaluate(source_state, target_state, caches)) return false;
     }
     return true;
 }

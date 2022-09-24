@@ -18,8 +18,8 @@ bool PositiveBooleanCondition::evaluate(const core::State& source_state) const {
     return m_boolean->evaluate(source_state);
 }
 
-bool PositiveBooleanCondition::evaluate(const core::State& source_state, evaluator::EvaluationCache& cache) const {
-    return cache.retrieve_or_evaluate(*m_boolean, source_state);
+bool PositiveBooleanCondition::evaluate(const core::State& source_state, core::DenotationsCaches& caches) const {
+    return m_boolean->evaluate(source_state, caches);
 }
 
 std::string PositiveBooleanCondition::compute_repr() const {
@@ -38,8 +38,8 @@ bool NegativeBooleanCondition::evaluate(const core::State& source_state) const {
     return !m_boolean->evaluate(source_state);
 }
 
-bool NegativeBooleanCondition::evaluate(const core::State& source_state, evaluator::EvaluationCache& cache) const {
-    return !cache.retrieve_or_evaluate(*m_boolean, source_state);
+bool NegativeBooleanCondition::evaluate(const core::State& source_state, core::DenotationsCaches& caches) const {
+    return !m_boolean->evaluate(source_state, caches);
 }
 
 std::string NegativeBooleanCondition::compute_repr() const {
@@ -58,8 +58,8 @@ bool EqualNumericalCondition::evaluate(const core::State& source_state) const {
     return m_numerical->evaluate(source_state) == 0;
 }
 
-bool EqualNumericalCondition::evaluate(const core::State& source_state, evaluator::EvaluationCache& cache) const {
-    return cache.retrieve_or_evaluate(*m_numerical, source_state) == 0;
+bool EqualNumericalCondition::evaluate(const core::State& source_state, core::DenotationsCaches& caches) const {
+    return m_numerical->evaluate(source_state, caches) == 0;
 }
 
 std::string EqualNumericalCondition::compute_repr() const {
@@ -78,8 +78,8 @@ bool GreaterNumericalCondition::evaluate(const core::State& source_state) const 
     return m_numerical->evaluate(source_state) > 0;
 }
 
-bool GreaterNumericalCondition::evaluate(const core::State& source_state, evaluator::EvaluationCache& cache) const {
-    return cache.retrieve_or_evaluate(*m_numerical, source_state) > 0;
+bool GreaterNumericalCondition::evaluate(const core::State& source_state, core::DenotationsCaches& caches) const {
+    return m_numerical->evaluate(source_state, caches) > 0;
 }
 
 std::string GreaterNumericalCondition::compute_repr() const {

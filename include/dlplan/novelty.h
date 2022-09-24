@@ -34,7 +34,13 @@ private:
     int m_width;
 
 public:
-    explicit NoveltyBase(int num_atoms, int width);
+    NoveltyBase(int num_atoms, int width);
+    NoveltyBase(const NoveltyBase& other);
+    NoveltyBase& operator=(const NoveltyBase& other);
+    NoveltyBase(NoveltyBase&& other);
+    NoveltyBase& operator=(NoveltyBase&& other);
+    ~NoveltyBase();
+
 
     /**
      * Computes atom tuple to tuple index and vice versa.
@@ -46,6 +52,7 @@ public:
      * Getters.
      */
     int get_width() const;
+    int get_dummy_atom_index() const;
 };
 
 
@@ -87,7 +94,7 @@ public:
             AtomIndices m_atom_indices;
             int m_width;
             /* The data to generate next tuple index. */
-            // compact representation of indices
+            // compact representation of atom tuple
             int m_count;
             // atom indices in current tuple
             AtomTuple m_atom_tuple;
@@ -117,17 +124,30 @@ private:
     std::shared_ptr<const NoveltyBase> m_novelty_base;
     std::vector<bool> m_table;
 public:
-    NoveltyTable(std::shared_ptr<const NoveltyBase> novelty_base);
+    explicit NoveltyTable(std::shared_ptr<const NoveltyBase> novelty_base);
+    NoveltyTable(const NoveltyTable& other);
+    NoveltyTable& operator=(const NoveltyTable& other);
+    NoveltyTable(NoveltyTable&& other);
+    NoveltyTable& operator=(NoveltyTable&& other);
+    ~NoveltyTable();
 
     /**
-     * Computes all tuples that are novel for a given state.
+     * Reset novelty of all tuples.
      */
-    TupleIndices compute_novel_tuples(const core::State& state) const;
+    void reset_novelty(const TupleIndices& tuple_indices);
+    void reset_novelty(TupleIndexGenerator tuple_index_generator);
+    /**
+     * Check novelty.
+     */
+    bool test_novelty(TupleIndex) const;
 
     /**
-     * All tuples become not novel anymore
+     * Useful for width-based planners.
+     * Iterates over the tuples, marks each as not novel
+     * until the first novel tuple is found.
+     * Returns true iff a novel tuple was found.
      */
-    void reset_tuple_novelty(const TupleIndices& tuple_indices);
+    bool insert(TupleIndexGenerator&& tuple_index_generator);
 };
 
 
@@ -135,6 +155,14 @@ class TupleNode {
 private:
     TupleIndex m_tuple_index;
     StateIndices m_state_indices;
+
+public:
+    TupleNode(TupleIndex tuple_index, StateIndices&& state_indices);
+    TupleNode(const TupleNode& other);
+    TupleNode& operator=(const TupleNode& other);
+    TupleNode(TupleNode&& other);
+    TupleNode& operator=(TupleNode&& other);
+    ~TupleNode();
 };
 
 
@@ -154,7 +182,13 @@ public:
         std::shared_ptr<const NoveltyBase> novelty_base,
         const state_space::StateSpace& state_space,
         state_space::StateIndex root_state,
-        int width);
+        int width,
+        bool stop_if_goal);
+    TupleGraph(const TupleGraph& other);
+    TupleGraph& operator=(const TupleGraph& other);
+    TupleGraph(TupleGraph&& other);
+    TupleGraph& operator=(TupleGraph&& other);
+    ~TupleGraph();
 };
 
 }

@@ -11,6 +11,38 @@ namespace dlplan::core::element {
 
 template<typename T>
 class InclusionBoolean : public Boolean {
+private:
+    template<typename DENOTATION_TYPE>
+    void compute_result(const DENOTATION_TYPE& denot_left, const DENOTATION_TYPE& denot_right, bool& result) const {
+        result = denot_left.is_subset_of(denot_right);
+    }
+
+    bool
+    evaluate_impl(const State& state, DenotationsCaches& caches) const override {
+        bool denotation;
+        compute_result(
+                *m_element_left->evaluate(state, caches),
+                *m_element_right->evaluate(state, caches),
+                denotation);
+        return denotation;
+    }
+
+    std::unique_ptr<BooleanDenotations>
+    evaluate_impl(const States& states, DenotationsCaches& caches) const override {
+        auto denotations = std::make_unique<BooleanDenotations>();
+        auto element_left_denotations = m_element_left->evaluate(states, caches);
+        auto element_right_denotations = m_element_left->evaluate(states, caches);
+        for (size_t i = 0; i < states.size(); ++i) {
+            bool denotation;
+            compute_result(
+                *(*element_left_denotations)[i],
+                *(*element_right_denotations)[i],
+                denotation);
+            denotations->push_back(denotation);
+        }
+        return denotations;
+    }
+
 protected:
     const std::shared_ptr<const T> m_element_left;
     const std::shared_ptr<const T> m_element_right;
@@ -21,7 +53,12 @@ public:
     }
 
     bool evaluate(const State& state) const override {
-        return m_element_left->evaluate(state).is_subset_of(m_element_right->evaluate(state));
+        bool denotation;
+        compute_result(
+            m_element_left->evaluate(state),
+            m_element_right->evaluate(state),
+            denotation);
+        return denotation;
     }
 
     int compute_complexity() const override {

@@ -1,5 +1,6 @@
 #include "../../include/dlplan/core.h"
 
+#include <cassert>
 #include <iostream>
 #include <algorithm>
 
@@ -14,336 +15,190 @@
 #include "elements/types.h"
 
 
+
+namespace std {
+    size_t hash<dlplan::core::State>::operator()(const dlplan::core::State& state) const noexcept {
+        return state.compute_hash();
+    }
+    size_t hash<unique_ptr<dlplan::core::ConceptDenotation>>::operator()(const unique_ptr<dlplan::core::ConceptDenotation>& denotation) const noexcept {
+        return denotation->compute_hash();
+    }
+    size_t hash<unique_ptr<dlplan::core::RoleDenotation>>::operator()(const unique_ptr<dlplan::core::RoleDenotation>& denotation) const noexcept {
+        return denotation->compute_hash();
+    }
+    size_t hash<unique_ptr<dlplan::core::ConceptDenotations>>::operator()(const unique_ptr<dlplan::core::ConceptDenotations>& denotations) const noexcept {
+        size_t seed = 0;
+        for (const auto denot_ptr : *denotations) {
+            dlplan::utils::hash_combine(seed, denot_ptr);
+        }
+        return seed;
+    }
+    size_t hash<unique_ptr<dlplan::core::RoleDenotations>>::operator()(const unique_ptr<dlplan::core::RoleDenotations>& denotations) const noexcept {
+        size_t seed = 0;
+        for (const auto denot_ptr : *denotations) {
+            dlplan::utils::hash_combine(seed, denot_ptr);
+        }
+        return seed;
+    }
+    size_t hash<unique_ptr<dlplan::core::BooleanDenotations>>::operator()(const unique_ptr<dlplan::core::BooleanDenotations>& denotations) const noexcept {
+        return hash<dlplan::core::BooleanDenotations>()(*denotations);
+    }
+    size_t hash<unique_ptr<dlplan::core::NumericalDenotations>>::operator()(const unique_ptr<dlplan::core::NumericalDenotations>& denotations) const noexcept {
+        return hash<dlplan::core::NumericalDenotations>()(*denotations);
+    }
+    size_t hash<vector<unsigned>>::operator()(const vector<unsigned>& data) const noexcept {
+        size_t seed = data.size();
+        for (unsigned value : data) {
+            dlplan::utils::hash_combine(seed, value);
+        }
+        return seed;
+    }
+    size_t hash<vector<int>>::operator()(const vector<int>& data) const noexcept {
+        size_t seed = data.size();
+        for (int value : data) {
+            dlplan::utils::hash_combine(seed, value);
+        }
+        return seed;
+    }
+    size_t hash<std::array<int, 3>>::operator()(const std::array<int, 3>& data) const noexcept {
+        size_t seed = data.size();
+        for (int value : data) {
+            dlplan::utils::hash_combine(seed, value);
+        }
+        return seed;
+    }
+}
+
+
 namespace dlplan::core {
 
-ConceptDenotationFlatSet::ConceptDenotationFlatSet(int num_objects) : m_num_objects(num_objects) { }
-
-ConceptDenotationFlatSet::ConceptDenotationFlatSet(const ConceptDenotationFlatSet& other) = default;
-
-ConceptDenotationFlatSet& ConceptDenotationFlatSet::operator=(const ConceptDenotationFlatSet& other) = default;
-
-ConceptDenotationFlatSet::ConceptDenotationFlatSet(ConceptDenotationFlatSet&& other) = default;
-
-ConceptDenotationFlatSet& ConceptDenotationFlatSet::operator=(ConceptDenotationFlatSet&& other) = default;
-
-ConceptDenotationFlatSet::~ConceptDenotationFlatSet() = default;
-
-ConceptDenotationFlatSet& ConceptDenotationFlatSet::operator&=(const ConceptDenotationFlatSet& other) {
-    for (auto it = m_data.begin(); it != m_data.end();) {
-        if (!other.contains(*it)) {
-            it = m_data.erase(it);
-        } else {
-            ++it;
-        }
-    }
-    return *this;
-}
-
-ConceptDenotationFlatSet& ConceptDenotationFlatSet::operator|=(const ConceptDenotationFlatSet& other) {
-    for (const auto single : other.m_data) {
-        m_data.insert(single);
-    }
-    return *this;
-}
-
-ConceptDenotationFlatSet& ConceptDenotationFlatSet::operator-=(const ConceptDenotationFlatSet& other) {
-    for (const auto single : other.m_data) {
-        m_data.erase(single);
-    }
-    return *this;
-}
-
-ConceptDenotationFlatSet& ConceptDenotationFlatSet::operator~() {
-    phmap::flat_hash_set<int> result;
-    for (int i = 0; i < m_num_objects; ++i) {
-        if (m_data.count(i) == 0) {
-            result.insert(i);
-        }
-    }
-    m_data = result;
-    return *this;
-}
-
-phmap::flat_hash_set<int>::const_iterator ConceptDenotationFlatSet::begin() const {
-    return m_data.begin();
-}
-
-phmap::flat_hash_set<int>::const_iterator ConceptDenotationFlatSet::end() const {
-    return m_data.end();
-}
-
-bool ConceptDenotationFlatSet::contains(int value) const {
-    return static_cast<bool>(m_data.count(value));
-}
-
-void ConceptDenotationFlatSet::insert(int value) {
-    m_data.insert(value);
-}
-
-void ConceptDenotationFlatSet::erase(int value) {
-    m_data.erase(value);
-}
-
-int ConceptDenotationFlatSet::size() const {
-    return m_data.size();
-}
-
-bool ConceptDenotationFlatSet::empty() const {
-    return m_data.empty();
-}
-
-bool ConceptDenotationFlatSet::intersects(const ConceptDenotationFlatSet& other) const {
-    for (const auto single : m_data) {
-        if (other.contains(single)) return true;
-    }
-    return false;
-}
-
-bool ConceptDenotationFlatSet::is_subset_of(const ConceptDenotationFlatSet& other) const {
-    for (const auto single : m_data) {
-        if (!other.contains(single)) return false;
-    }
-    return true;
-}
-
-std::vector<int> ConceptDenotationFlatSet::to_sorted_vector() const {
-    std::vector<int> result(m_data.begin(), m_data.end());
-    std::sort(result.begin(), result.end());
-    return result;
-}
-
-std::vector<int> ConceptDenotationFlatSet::to_canonical_data_representation() const {
-    return to_sorted_vector();
-}
-
-int ConceptDenotationFlatSet::get_num_objects() const {
-    return m_num_objects;
-}
-
-
-RoleDenotationFlatSet::RoleDenotationFlatSet(int num_objects) : m_num_objects(num_objects) { }
-
-RoleDenotationFlatSet::RoleDenotationFlatSet(const RoleDenotationFlatSet& other) = default;
-
-RoleDenotationFlatSet& RoleDenotationFlatSet::operator=(const RoleDenotationFlatSet& other) = default;
-
-RoleDenotationFlatSet::RoleDenotationFlatSet(RoleDenotationFlatSet&& other) = default;
-
-RoleDenotationFlatSet& RoleDenotationFlatSet::operator=(RoleDenotationFlatSet&& other) = default;
-
-RoleDenotationFlatSet::~RoleDenotationFlatSet() = default;
-
-RoleDenotationFlatSet& RoleDenotationFlatSet::operator&=(const RoleDenotationFlatSet& other) {
-    for (auto it = m_data.begin(); it != m_data.end();) {
-        if (!other.contains(*it)) {
-            it = m_data.erase(it);
-        } else {
-            ++it;
-        }
-    }
-    return *this;
-}
-
-RoleDenotationFlatSet& RoleDenotationFlatSet::operator|=(const RoleDenotationFlatSet& other) {
-    for (const auto single : other.m_data) {
-        m_data.insert(single);
-    }
-    return *this;
-}
-
-RoleDenotationFlatSet& RoleDenotationFlatSet::operator-=(const RoleDenotationFlatSet& other) {
-    for (const auto single : other.m_data) {
-        m_data.erase(single);
-    }
-    return *this;
-}
-
-RoleDenotationFlatSet& RoleDenotationFlatSet::operator~() {
-    phmap::flat_hash_set<std::pair<int, int>> result;
-    for (int i = 0; i < m_num_objects; ++i) {
-        for (int j = 0; j < m_num_objects; ++j) {
-            std::pair<int, int> pair(i, j);
-            if (m_data.count(pair) == 0) {
-                result.insert(pair);
-            }
-        }
-    }
-    m_data = result;
-    return *this;
-}
-
-phmap::flat_hash_set<std::pair<int, int>>::const_iterator RoleDenotationFlatSet::begin() const {
-    return m_data.begin();
-}
-
-phmap::flat_hash_set<std::pair<int, int>>::const_iterator RoleDenotationFlatSet::end() const {
-    return m_data.end();
-}
-
-bool RoleDenotationFlatSet::contains(const std::pair<int, int>& value) const {
-    return static_cast<bool>(m_data.count(value));
-}
-
-void RoleDenotationFlatSet::insert(const std::pair<int, int>& value) {
-    m_data.insert(value);
-}
-
-void RoleDenotationFlatSet::erase(const std::pair<int, int>& value) {
-    m_data.erase(value);
-}
-
-int RoleDenotationFlatSet::size() const {
-    return m_data.size();
-}
-
-bool RoleDenotationFlatSet::empty() const {
-    return m_data.empty();
-}
-
-bool RoleDenotationFlatSet::intersects(const RoleDenotationFlatSet& other) const {
-    for (const auto single : m_data) {
-        if (other.contains(single)) return true;
-    }
-    return false;
-}
-
-bool RoleDenotationFlatSet::is_subset_of(const RoleDenotationFlatSet& other) const {
-    for (const auto single : m_data) {
-        if (!other.contains(single)) return false;
-    }
-    return true;
-}
-
-std::vector<std::pair<int, int>> RoleDenotationFlatSet::to_sorted_vector() const {
-    std::vector<std::pair<int, int>> result(m_data.begin(), m_data.end());
-    std::sort(result.begin(), result.end());
-    return result;
-}
-
-std::vector<int> RoleDenotationFlatSet::to_canonical_data_representation() const {
-    std::vector<std::pair<int, int>> sorted_vector = to_sorted_vector();
-    std::vector<int> flat;
-    flat.reserve(sorted_vector.size() * 2);
-    for (const auto& pair : sorted_vector) {
-        flat.push_back(pair.first);
-        flat.push_back(pair.second);
-    }
-    return flat;
-}
-
-int RoleDenotationFlatSet::get_num_objects() const {
-    return m_num_objects;
-}
-
-
-ConceptDenotationBitset::ConceptDenotationBitset(int num_objects)
+ConceptDenotation::ConceptDenotation(int num_objects)
     : m_num_objects(num_objects), m_data(utils::DynamicBitset<unsigned>(num_objects)) { }
 
-ConceptDenotationBitset::ConceptDenotationBitset(const ConceptDenotationBitset& other) = default;
+ConceptDenotation::ConceptDenotation(const ConceptDenotation& other) = default;
 
-ConceptDenotationBitset& ConceptDenotationBitset::operator=(const ConceptDenotationBitset& other) = default;
+ConceptDenotation& ConceptDenotation::operator=(const ConceptDenotation& other) = default;
 
-ConceptDenotationBitset::ConceptDenotationBitset(ConceptDenotationBitset&& other) = default;
+ConceptDenotation::ConceptDenotation(ConceptDenotation&& other) = default;
 
-ConceptDenotationBitset& ConceptDenotationBitset::operator=(ConceptDenotationBitset&& other) = default;
+ConceptDenotation& ConceptDenotation::operator=(ConceptDenotation&& other) = default;
 
-ConceptDenotationBitset::~ConceptDenotationBitset() = default;
+ConceptDenotation::~ConceptDenotation() = default;
 
-void ConceptDenotationBitset::const_iterator::seek_next() {
+void ConceptDenotation::const_iterator::seek_next() {
     while (++m_index < m_num_objects) {
         if (m_data.test(m_index)) break;
     }
 }
 
-ConceptDenotationBitset::const_iterator::const_iterator(
-    ConceptDenotationBitset::const_iterator::const_reference data, int num_objects, bool end)
+ConceptDenotation::const_iterator::const_iterator(
+    ConceptDenotation::const_iterator::const_reference data, int num_objects, bool end)
     : m_data(data), m_num_objects(num_objects), m_index(end ? num_objects : -1) {
     if (!end) seek_next();
 }
 
-bool ConceptDenotationBitset::const_iterator::operator!=(const const_iterator& other) const {
+bool ConceptDenotation::const_iterator::operator!=(const const_iterator& other) const {
     return !(*this == other);
 }
 
-bool ConceptDenotationBitset::const_iterator::operator==(const const_iterator& other) const {
+bool ConceptDenotation::const_iterator::operator==(const const_iterator& other) const {
     return ((m_index == other.m_index) && (&m_data == &other.m_data));
 }
 
-const int& ConceptDenotationBitset::const_iterator::operator*() const {
+const int& ConceptDenotation::const_iterator::operator*() const {
     return m_index;
 }
 
-ConceptDenotationBitset::const_iterator ConceptDenotationBitset::const_iterator::operator++(int) {
-    ConceptDenotationBitset::const_iterator prev = *this;
+ConceptDenotation::const_iterator ConceptDenotation::const_iterator::operator++(int) {
+    ConceptDenotation::const_iterator prev = *this;
     seek_next();
     return prev;
 }
 
-ConceptDenotationBitset::const_iterator& ConceptDenotationBitset::const_iterator::operator++() {
+ConceptDenotation::const_iterator& ConceptDenotation::const_iterator::operator++() {
     seek_next();
     return *this;
 }
 
-ConceptDenotationBitset& ConceptDenotationBitset::operator&=(const ConceptDenotationBitset& other) {
+bool ConceptDenotation::operator==(const ConceptDenotation& other) const {
+    if (this != &other) {
+        return this->m_data == other.m_data;
+    }
+    return true;
+}
+
+bool ConceptDenotation::operator!=(const ConceptDenotation& other) const {
+    return !(*this == other);
+}
+
+ConceptDenotation& ConceptDenotation::operator&=(const ConceptDenotation& other) {
     m_data &= other.m_data;
     return *this;
 }
 
-ConceptDenotationBitset& ConceptDenotationBitset::operator|=(const ConceptDenotationBitset& other) {
+ConceptDenotation& ConceptDenotation::operator|=(const ConceptDenotation& other) {
     m_data |= other.m_data;
     return *this;
 }
 
-ConceptDenotationBitset& ConceptDenotationBitset::operator-=(const ConceptDenotationBitset& other) {
+ConceptDenotation& ConceptDenotation::operator-=(const ConceptDenotation& other) {
     m_data -= other.m_data;
     return *this;
 }
 
-ConceptDenotationBitset& ConceptDenotationBitset::operator~() {
+ConceptDenotation& ConceptDenotation::operator~() {
     ~m_data;
     return *this;
 }
 
-ConceptDenotationBitset::const_iterator ConceptDenotationBitset::begin() const {
-    return ConceptDenotationBitset::const_iterator(m_data, m_num_objects);
+ConceptDenotation::const_iterator ConceptDenotation::begin() const {
+    return ConceptDenotation::const_iterator(m_data, m_num_objects);
 }
 
-ConceptDenotationBitset::const_iterator ConceptDenotationBitset::end() const {
-    return ConceptDenotationBitset::const_iterator(m_data, m_num_objects, true);
+ConceptDenotation::const_iterator ConceptDenotation::end() const {
+    return ConceptDenotation::const_iterator(m_data, m_num_objects, true);
 }
 
-bool ConceptDenotationBitset::contains(int value) const {
+bool ConceptDenotation::contains(int value) const {
     assert(value >= 0 && value < m_num_objects);
     return m_data.test(value);
 }
 
-void ConceptDenotationBitset::insert(int value) {
+void ConceptDenotation::set() {
+    m_data.set();
+}
+
+void ConceptDenotation::insert(int value) {
     assert(value >= 0 && value < m_num_objects);
     m_data.set(value);
 }
 
-void ConceptDenotationBitset::erase(int value) {
+void ConceptDenotation::erase(int value) {
     assert(value >= 0 && value < m_num_objects);
     m_data.reset(value);
 }
 
-int ConceptDenotationBitset::size() const {
+int ConceptDenotation::size() const {
+    return m_data.size();
+}
+
+int ConceptDenotation::count() const {
     return m_data.count();
 }
 
-bool ConceptDenotationBitset::empty() const {
+bool ConceptDenotation::empty() const {
     return m_data.none();
 }
 
-bool ConceptDenotationBitset::intersects(const ConceptDenotationBitset& other) const {
+bool ConceptDenotation::intersects(const ConceptDenotation& other) const {
     return m_data.intersects(other.m_data);
 }
 
-bool ConceptDenotationBitset::is_subset_of(const ConceptDenotationBitset& other) const {
+bool ConceptDenotation::is_subset_of(const ConceptDenotation& other) const {
     return m_data.is_subset_of(other.m_data);
 }
 
-std::vector<int> ConceptDenotationBitset::to_sorted_vector() const {
+std::vector<int> ConceptDenotation::to_sorted_vector() const {
     std::vector<int> result;
     result.reserve(m_num_objects);
     for (int i = 0; i < m_num_objects; ++i) {
@@ -353,29 +208,33 @@ std::vector<int> ConceptDenotationBitset::to_sorted_vector() const {
     return result;
 }
 
-std::vector<int> ConceptDenotationBitset::to_canonical_data_representation() const {
-    return std::vector<int>(m_data.get_blocks().begin(), m_data.get_blocks().end());
+const utils::DynamicBitset<unsigned>& ConceptDenotation::get_bitset_ref() const {
+    return m_data;
 }
 
-int ConceptDenotationBitset::get_num_objects() const {
+std::size_t ConceptDenotation::compute_hash() const {
+    return std::hash<std::vector<unsigned>>()(m_data.get_blocks());
+}
+
+int ConceptDenotation::get_num_objects() const {
     return m_num_objects;
 }
 
 
-RoleDenotationBitset::RoleDenotationBitset(int num_objects)
+RoleDenotation::RoleDenotation(int num_objects)
     : m_num_objects(num_objects), m_data(utils::DynamicBitset<unsigned>(num_objects * num_objects)) { }
 
-RoleDenotationBitset::RoleDenotationBitset(const RoleDenotationBitset& other) = default;
+RoleDenotation::RoleDenotation(const RoleDenotation& other) = default;
 
-RoleDenotationBitset& RoleDenotationBitset::operator=(const RoleDenotationBitset& other) = default;
+RoleDenotation& RoleDenotation::operator=(const RoleDenotation& other) = default;
 
-RoleDenotationBitset::RoleDenotationBitset(RoleDenotationBitset&& other) = default;
+RoleDenotation::RoleDenotation(RoleDenotation&& other) = default;
 
-RoleDenotationBitset& RoleDenotationBitset::operator=(RoleDenotationBitset&& other) = default;
+RoleDenotation& RoleDenotation::operator=(RoleDenotation&& other) = default;
 
-RoleDenotationBitset::~RoleDenotationBitset() = default;
+RoleDenotation::~RoleDenotation() = default;
 
-void RoleDenotationBitset::const_iterator::seek_next() {
+void RoleDenotation::const_iterator::seek_next() {
     int& i = m_indices.first;
     int& j = m_indices.second;
     int offset = i * m_num_objects;
@@ -392,91 +251,114 @@ void RoleDenotationBitset::const_iterator::seek_next() {
     assert(offset + j <= static_cast<int>(m_data.size()));
 }
 
-RoleDenotationBitset::const_iterator::const_iterator(const_reference data, int num_objects, bool end)
+RoleDenotation::const_iterator::const_iterator(const_reference data, int num_objects, bool end)
     : m_data(data), m_num_objects(num_objects), m_indices(end ? std::pair<size_t, size_t>(num_objects, 0) : std::pair<size_t, size_t>(0, -1)) {
     if (!end) seek_next();
 }
 
-bool RoleDenotationBitset::const_iterator::operator!=(const const_iterator& other) const {
+bool RoleDenotation::const_iterator::operator!=(const const_iterator& other) const {
     return !(*this == other);
 }
 
-bool RoleDenotationBitset::const_iterator::operator==(const const_iterator& other) const {
+bool RoleDenotation::const_iterator::operator==(const const_iterator& other) const {
     return ((m_indices == other.m_indices) && (&m_data == &other.m_data));
 }
 
-const std::pair<int, int>& RoleDenotationBitset::const_iterator::operator*() const {
+const std::pair<int, int>& RoleDenotation::const_iterator::operator*() const {
     return m_indices;
 }
 
-RoleDenotationBitset::const_iterator RoleDenotationBitset::const_iterator::operator++(int) {
-    RoleDenotationBitset::const_iterator prev = *this;
+std::pair<int, int>* RoleDenotation::const_iterator::operator->() {
+    return &m_indices;
+}
+
+RoleDenotation::const_iterator RoleDenotation::const_iterator::operator++(int) {
+    RoleDenotation::const_iterator prev = *this;
     seek_next();
     return prev;
 }
 
-RoleDenotationBitset::const_iterator& RoleDenotationBitset::const_iterator::operator++() {
+RoleDenotation::const_iterator& RoleDenotation::const_iterator::operator++() {
     seek_next();
     return *this;
 }
 
-RoleDenotationBitset& RoleDenotationBitset::operator&=(const RoleDenotationBitset& other) {
+bool RoleDenotation::operator==(const RoleDenotation& other) const {
+    if (this != &other) {
+        return this->m_data == other.m_data;
+    }
+    return true;
+}
+
+bool RoleDenotation::operator!=(const RoleDenotation& other) const {
+    return !(*this == other);
+}
+
+RoleDenotation& RoleDenotation::operator&=(const RoleDenotation& other) {
     m_data &= other.m_data;
     return *this;
 }
 
-RoleDenotationBitset& RoleDenotationBitset::operator|=(const RoleDenotationBitset& other) {
+RoleDenotation& RoleDenotation::operator|=(const RoleDenotation& other) {
     m_data |= other.m_data;
     return *this;
 }
 
-RoleDenotationBitset& RoleDenotationBitset::operator-=(const RoleDenotationBitset& other) {
+RoleDenotation& RoleDenotation::operator-=(const RoleDenotation& other) {
     m_data -= other.m_data;
     return *this;
 }
 
-RoleDenotationBitset& RoleDenotationBitset::operator~() {
+RoleDenotation& RoleDenotation::operator~() {
     ~m_data;
     return *this;
 }
 
-RoleDenotationBitset::const_iterator RoleDenotationBitset::begin() const {
-    return RoleDenotationBitset::const_iterator(m_data, m_num_objects);
+RoleDenotation::const_iterator RoleDenotation::begin() const {
+    return RoleDenotation::const_iterator(m_data, m_num_objects);
 }
 
-RoleDenotationBitset::const_iterator RoleDenotationBitset::end() const {
-    return RoleDenotationBitset::const_iterator(m_data, m_num_objects, true);
+RoleDenotation::const_iterator RoleDenotation::end() const {
+    return RoleDenotation::const_iterator(m_data, m_num_objects, true);
 }
 
-bool RoleDenotationBitset::contains(const std::pair<int, int>& value) const {
+void RoleDenotation::set() {
+    m_data.set();
+}
+
+bool RoleDenotation::contains(const std::pair<int, int>& value) const {
     return m_data.test(value.first * m_num_objects + value.second);
 }
 
-void RoleDenotationBitset::insert(const std::pair<int, int>& value) {
+void RoleDenotation::insert(const std::pair<int, int>& value) {
     return m_data.set(value.first * m_num_objects + value.second);
 }
 
-void RoleDenotationBitset::erase(const std::pair<int, int>& value) {
+void RoleDenotation::erase(const std::pair<int, int>& value) {
     return m_data.reset(value.first * m_num_objects + value.second);
 }
 
-int RoleDenotationBitset::size() const {
+int RoleDenotation::size() const {
+    return m_data.size();
+}
+
+int RoleDenotation::count() const {
     return m_data.count();
 }
 
-bool RoleDenotationBitset::empty() const {
+bool RoleDenotation::empty() const {
     return m_data.none();
 }
 
-bool RoleDenotationBitset::intersects(const RoleDenotationBitset& other) const {
+bool RoleDenotation::intersects(const RoleDenotation& other) const {
     return m_data.intersects(other.m_data);
 }
 
-bool RoleDenotationBitset::is_subset_of(const RoleDenotationBitset& other) const {
+bool RoleDenotation::is_subset_of(const RoleDenotation& other) const {
     return m_data.is_subset_of(other.m_data);
 }
 
-std::vector<std::pair<int, int>> RoleDenotationBitset::to_sorted_vector() const {
+std::vector<std::pair<int, int>> RoleDenotation::to_sorted_vector() const {
     std::vector<std::pair<int, int>> result;
     result.reserve(m_num_objects * m_num_objects);
     for (int i = 0; i < m_num_objects; ++i) {
@@ -490,11 +372,19 @@ std::vector<std::pair<int, int>> RoleDenotationBitset::to_sorted_vector() const 
     return result;
 }
 
-std::vector<int> RoleDenotationBitset::to_canonical_data_representation() const {
-    return std::vector<int>(m_data.get_blocks().begin(), m_data.get_blocks().end());
+const utils::DynamicBitset<unsigned>& RoleDenotation::get_bitset_ref() const {
+    return m_data;
 }
 
-int RoleDenotationBitset::get_num_objects() const {
+const std::vector<unsigned>& RoleDenotation::get_blocks() const {
+    return m_data.get_blocks();
+}
+
+std::size_t RoleDenotation::compute_hash() const {
+    return std::hash<std::vector<unsigned>>()(m_data.get_blocks());
+}
+
+int RoleDenotation::get_num_objects() const {
     return m_num_objects;
 }
 
@@ -543,6 +433,10 @@ const Atom& InstanceInfo::add_static_atom(const std::string &name, const Name_Ve
     return m_pImpl->add_static_atom(name, object_names);
 }
 
+void InstanceInfo::set_index(int index) {
+    m_pImpl->set_index(index);
+}
+
 int InstanceInfo::get_index() const {
     return m_pImpl->get_index();
 }
@@ -551,16 +445,16 @@ bool InstanceInfo::exists_atom(const Atom& atom) const {
     return m_pImpl->exists_atom(atom);
 }
 
-const std::vector<Atom>& InstanceInfo::get_atoms() const {
-    return m_pImpl->get_atoms();
+const std::vector<Atom>& InstanceInfo::get_atoms_ref() const {
+    return m_pImpl->get_atoms_ref();
 }
 
-const std::vector<Atom>& InstanceInfo::get_static_atoms() const {
-    return m_pImpl->get_static_atoms();
+const std::vector<Atom>& InstanceInfo::get_static_atoms_ref() const {
+    return m_pImpl->get_static_atoms_ref();
 }
 
-const Atom& InstanceInfo::get_atom(int index) const {
-    return m_pImpl->get_atom(index);
+const Atom& InstanceInfo::get_atom_ref(int index) const {
+    return m_pImpl->get_atom_ref(index);
 }
 
 int InstanceInfo::get_atom_idx(const std::string& name) const {
@@ -575,12 +469,12 @@ bool InstanceInfo::exists_object(const std::string name) const {
     return m_pImpl->exists_object(name);
 }
 
-const std::vector<Object>& InstanceInfo::get_objects() const {
-    return m_pImpl->get_objects();
+const std::vector<Object>& InstanceInfo::get_objects_ref() const {
+    return m_pImpl->get_objects_ref();
 }
 
-const Object& InstanceInfo::get_object(int index) const {
-    return m_pImpl->get_object(index);
+const Object& InstanceInfo::get_object_ref(int index) const {
+    return m_pImpl->get_object_ref(index);
 }
 
 int InstanceInfo::get_object_idx(const std::string& name) const {
@@ -591,20 +485,24 @@ int InstanceInfo::get_num_objects() const {
     return m_pImpl->get_num_objects();
 }
 
+const VocabularyInfo& InstanceInfo::get_vocabulary_info_ref() const {
+    return m_pImpl->get_vocabulary_info_ref();
+}
+
 std::shared_ptr<const VocabularyInfo> InstanceInfo::get_vocabulary_info() const {
     return m_pImpl->get_vocabulary_info();
 }
 
-const phmap::flat_hash_map<int, std::vector<int>>& InstanceInfo::get_per_predicate_idx_static_atom_idxs() const {
-    return m_pImpl->get_per_predicate_idx_static_atom_idxs();
+const phmap::flat_hash_map<int, std::vector<int>>& InstanceInfo::get_per_predicate_idx_static_atom_idxs_ref() const {
+    return m_pImpl->get_per_predicate_idx_static_atom_idxs_ref();
 }
 
-const ConceptDenotation& InstanceInfo::get_top_concept() const {
-    return m_pImpl->get_top_concept();
+const ConceptDenotation& InstanceInfo::get_top_concept_ref() const {
+    return m_pImpl->get_top_concept_ref();
 }
 
-const RoleDenotation& InstanceInfo::get_top_role() const {
-    return m_pImpl->get_top_role();
+const RoleDenotation& InstanceInfo::get_top_role_ref() const {
+    return m_pImpl->get_top_role_ref();
 }
 
 
@@ -647,16 +545,16 @@ bool VocabularyInfo::exists_predicate_name(const std::string& name) const {
     return m_pImpl->exists_predicate_name(name);
 }
 
-const std::vector<Predicate>& VocabularyInfo::get_predicates() const {
-    return m_pImpl->get_predicates();
+const std::vector<Predicate>& VocabularyInfo::get_predicates_ref() const {
+    return m_pImpl->get_predicates_ref();
 }
 
 int VocabularyInfo::get_predicate_idx(const std::string& name) const {
     return m_pImpl->get_predicate_idx(name);
 }
 
-const Predicate& VocabularyInfo::get_predicate(int index) const {
-    return m_pImpl->get_predicate(index);
+const Predicate& VocabularyInfo::get_predicate_ref(int index) const {
+    return m_pImpl->get_predicate_ref(index);
 }
 
 bool VocabularyInfo::exists_constant(const Constant& constant) const {
@@ -671,12 +569,12 @@ int VocabularyInfo::get_constant_idx(const std::string& name) const {
     return m_pImpl->get_constant_idx(name);
 }
 
-const Constant& VocabularyInfo::get_constant(int index) const {
-    return m_pImpl->get_constant(index);
+const Constant& VocabularyInfo::get_constant_ref(int index) const {
+    return m_pImpl->get_constant_ref(index);
 }
 
-const std::vector<Constant>& VocabularyInfo::get_constants() const {
-    return m_pImpl->get_constants();
+const std::vector<Constant>& VocabularyInfo::get_constants_ref() const {
+    return m_pImpl->get_constants_ref();
 }
 
 
@@ -693,13 +591,17 @@ int BaseElement::get_index() const {
     return m_index;
 }
 
+const VocabularyInfo& BaseElement::get_vocabulary_info_ref() const {
+    return *m_vocabulary_info;
+}
+
 std::shared_ptr<const VocabularyInfo> BaseElement::get_vocabulary_info() const {
     return m_vocabulary_info;
 }
 
 
 Concept::Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Concept>&& concept, int index)
-    : Element<ConceptDenotation>(vocabulary_info, index), m_element(concept) {
+    : BaseElement(vocabulary_info, index), m_element(concept) {
     if (!m_element) {
         throw std::runtime_error("Concept::Concept - tried to construct Concept from nullptr");
     }
@@ -716,10 +618,18 @@ Concept& Concept::operator=(Concept&& other) = default;
 Concept::~Concept() = default;
 
 ConceptDenotation Concept::evaluate(const State& state) const {
-    if (state.get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
+    if (&state.get_instance_info_ref().get_vocabulary_info_ref() != &get_vocabulary_info_ref()) {
         throw std::runtime_error("Concept::evaluate - mismatched vocabularies of Concept and State.");
     }
     return m_element->evaluate(state);
+}
+
+ConceptDenotation* Concept::evaluate(const State& state, DenotationsCaches& caches) const {
+    return m_element->evaluate(state, caches);
+}
+
+ConceptDenotations* Concept::evaluate(const States& states, DenotationsCaches& caches) const {
+    return m_element->evaluate(states, caches);
 }
 
 int Concept::compute_complexity() const {
@@ -730,13 +640,17 @@ std::string Concept::compute_repr() const {
     return m_element->compute_repr();
 }
 
+const element::Concept& Concept::get_element_ref() const {
+    return *m_element;
+}
+
 std::shared_ptr<const element::Concept> Concept::get_element() const {
     return m_element;
 }
 
 
 Role::Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Role>&& role, int index)
-    : Element<RoleDenotation>(vocabulary_info, index), m_element(role) {
+    : BaseElement(vocabulary_info, index), m_element(role) {
     if (!m_element) {
         throw std::runtime_error("Role::Role - tried to construct Role from nullptr");
     }
@@ -753,10 +667,18 @@ Role& Role::operator=(Role&& other) = default;
 Role::~Role() = default;
 
 RoleDenotation Role::evaluate(const State& state) const {
-    if (state.get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
+    if (&state.get_instance_info_ref().get_vocabulary_info_ref() != &get_vocabulary_info_ref()) {
         throw std::runtime_error("Role::evaluate - mismatched vocabularies of Role and State.");
     }
     return m_element->evaluate(state);
+}
+
+RoleDenotation* Role::evaluate(const State& state, DenotationsCaches& caches) const {
+    return m_element->evaluate(state, caches);
+}
+
+RoleDenotations* Role::evaluate(const States& states, DenotationsCaches& caches) const {
+    return m_element->evaluate(states, caches);
 }
 
 int Role::compute_complexity() const {
@@ -767,13 +689,17 @@ std::string Role::compute_repr() const {
     return m_element->compute_repr();
 }
 
+const element::Role& Role::get_element_ref() const {
+    return *m_element;
+}
+
 std::shared_ptr<const element::Role> Role::get_element() const {
     return m_element;
 }
 
 
 Numerical::Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Numerical>&& numerical, int index)
-    : Element<int>(vocabulary_info, index), m_element(numerical) {
+    : BaseElement(vocabulary_info, index), m_element(numerical) {
     if (!m_element) {
         throw std::runtime_error("Numerical::Numerical - tried to construct Numerical from nullptr");
     }
@@ -790,11 +716,20 @@ Numerical& Numerical::operator=(Numerical&& other) = default;
 Numerical::~Numerical() = default;
 
 int Numerical::evaluate(const State& state) const {
-    if (state.get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
+    if (&state.get_instance_info_ref().get_vocabulary_info_ref() != &get_vocabulary_info_ref()) {
         throw std::runtime_error("Numerical::evaluate - mismatched vocabularies of Numerical and State.");
     }
     return m_element->evaluate(state);
 }
+
+int Numerical::evaluate(const State& state, DenotationsCaches& caches) const {
+    return m_element->evaluate(state, caches);
+}
+
+NumericalDenotations* Numerical::evaluate(const States& states, DenotationsCaches& caches) const {
+    return m_element->evaluate(states, caches);
+}
+
 
 int Numerical::compute_complexity() const {
     return m_element->compute_complexity();
@@ -804,13 +739,17 @@ std::string Numerical::compute_repr() const {
     return m_element->compute_repr();
 }
 
+const element::Numerical& Numerical::get_element_ref() const {
+    return *m_element;
+}
+
 std::shared_ptr<const element::Numerical> Numerical::get_element() const {
     return m_element;
 }
 
 
 Boolean::Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Boolean>&& boolean, int index)
-    : Element<bool>(vocabulary_info, index), m_element(boolean) {
+    : BaseElement(vocabulary_info, index), m_element(boolean) {
     if (!m_element) {
         throw std::runtime_error("Boolean::Boolean - tried to construct Boolean from nullptr");
     }
@@ -827,11 +766,20 @@ Boolean& Boolean::operator=(Boolean&& other) = default;
 Boolean::~Boolean() = default;
 
 bool Boolean::evaluate(const State& state) const {
-    if (state.get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
+    if (&state.get_instance_info_ref().get_vocabulary_info_ref() != &get_vocabulary_info_ref()) {
         throw std::runtime_error("Boolean::evaluate - mismatched vocabularies of Boolean and State.");
     }
     return m_element->evaluate(state);
 }
+
+bool Boolean::evaluate(const State& state, DenotationsCaches& caches) const {
+    return m_element->evaluate(state, caches);
+}
+
+BooleanDenotations* Boolean::evaluate(const States& states, DenotationsCaches& caches) const {
+    return m_element->evaluate(states, caches);
+}
+
 
 int Boolean::compute_complexity() const {
     return m_element->compute_complexity();
@@ -839,6 +787,10 @@ int Boolean::compute_complexity() const {
 
 std::string Boolean::compute_repr() const {
     return m_element->compute_repr();
+}
+
+const element::Boolean& Boolean::get_element_ref() const {
+    return *m_element;
 }
 
 std::shared_ptr<const element::Boolean> Boolean::get_element() const {
@@ -869,7 +821,11 @@ SyntacticElementFactory& SyntacticElementFactory::operator=(SyntacticElementFact
 
 SyntacticElementFactory::~SyntacticElementFactory() = default;
 
-const VocabularyInfo* SyntacticElementFactory::get_vocabulary_info() const {
+const VocabularyInfo& SyntacticElementFactory::get_vocabulary_info_ref() const {
+    return m_pImpl->get_vocabulary_info_ref();
+}
+
+std::shared_ptr<const VocabularyInfo> SyntacticElementFactory::get_vocabulary_info() const {
     return m_pImpl->get_vocabulary_info();
 }
 
@@ -898,12 +854,12 @@ Boolean SyntacticElementFactory::make_empty_boolean(const Role& role, int index)
     return m_pImpl->make_empty_boolean(role, index);
 }
 
-Boolean SyntacticElementFactory::make_concept_inclusion_boolean(const Concept& concept_left, const Concept& concept_right, int index) {
-    return m_pImpl->make_concept_inclusion_boolean(concept_left, concept_right, index);
+Boolean SyntacticElementFactory::make_inclusion_boolean(const Concept& concept_left, const Concept& concept_right, int index) {
+    return m_pImpl->make_inclusion_boolean(concept_left, concept_right, index);
 }
 
-Boolean SyntacticElementFactory::make_role_inclusion_boolean(const Role& role_left, const Role& role_right, int index) {
-    return m_pImpl->make_role_inclusion_boolean(role_left, role_right, index);
+Boolean SyntacticElementFactory::make_inclusion_boolean(const Role& role_left, const Role& role_right, int index) {
+    return m_pImpl->make_inclusion_boolean(role_left, role_right, index);
 }
 
 Boolean SyntacticElementFactory::make_nullary_boolean(const Predicate& predicate, int index) {
@@ -962,28 +918,28 @@ Concept SyntacticElementFactory::make_top_concept(int index) {
     return m_pImpl->make_top_concept(index);
 }
 
-Numerical SyntacticElementFactory::make_concept_distance(const Concept& concept_from, const Role& role, const Concept& concept_to, int index) {
-    return m_pImpl->make_concept_distance(concept_from, role, concept_to, index);
+Numerical SyntacticElementFactory::make_concept_distance_numerical(const Concept& concept_from, const Role& role, const Concept& concept_to, int index) {
+    return m_pImpl->make_concept_distance_numerical(concept_from, role, concept_to, index);
 }
 
-Numerical SyntacticElementFactory::make_count(const Concept& concept, int index) {
-    return m_pImpl->make_count(concept, index);
+Numerical SyntacticElementFactory::make_count_numerical(const Concept& concept, int index) {
+    return m_pImpl->make_count_numerical(concept, index);
 }
 
-Numerical SyntacticElementFactory::make_count(const Role& role, int index) {
-    return m_pImpl->make_count(role, index);
+Numerical SyntacticElementFactory::make_count_numerical(const Role& role, int index) {
+    return m_pImpl->make_count_numerical(role, index);
 }
 
-Numerical SyntacticElementFactory::make_role_distance(const Role& role_from, const Role& role, const Role& role_to, int index) {
-    return m_pImpl->make_role_distance(role_from, role, role_to, index);
+Numerical SyntacticElementFactory::make_role_distance_numerical(const Role& role_from, const Role& role, const Role& role_to, int index) {
+    return m_pImpl->make_role_distance_numerical(role_from, role, role_to, index);
 }
 
-Numerical SyntacticElementFactory::make_sum_concept_distance(const Concept& concept_from, const Role& role, const Concept& concept_to, int index) {
-    return m_pImpl->make_sum_concept_distance(concept_from, role, concept_to, index);
+Numerical SyntacticElementFactory::make_sum_concept_distance_numerical(const Concept& concept_from, const Role& role, const Concept& concept_to, int index) {
+    return m_pImpl->make_sum_concept_distance_numerical(concept_from, role, concept_to, index);
 }
 
-Numerical SyntacticElementFactory::make_sum_role_distance(const Role& role_from, const Role& role, const Role& role_to, int index) {
-    return m_pImpl->make_sum_role_distance(role_from, role, role_to, index);
+Numerical SyntacticElementFactory::make_sum_role_distance_numerical(const Role& role_from, const Role& role, const Role& role_to, int index) {
+    return m_pImpl->make_sum_role_distance_numerical(role_from, role, role_to, index);
 }
 
 Role SyntacticElementFactory::make_and_role(const Role& role_left, const Role& role_right, int index) {

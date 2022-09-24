@@ -4,11 +4,6 @@ target_sources(dlplangenerator
     PRIVATE
         feature_generator.cpp
         generator.cpp
-        rules/boolean.cpp
-        rules/numerical.cpp
-        rules/concept.cpp
-        rules/role.cpp
-        rules/numericals/concept_distance.cpp
         ../utils/logging.cpp
         ../utils/countdown_timer.cpp
         ../utils/sha-256.c

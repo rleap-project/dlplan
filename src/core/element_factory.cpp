@@ -69,12 +69,12 @@ Boolean SyntacticElementFactoryImpl::make_empty_boolean(const Role& role, int in
         std::make_unique<element::EmptyBoolean<element::Role>>(*m_vocabulary_info, role.get_element())).first, index);
 }
 
-Boolean SyntacticElementFactoryImpl::make_concept_inclusion_boolean(const Concept& concept_left, const Concept& concept_right, int index) {
+Boolean SyntacticElementFactoryImpl::make_inclusion_boolean(const Concept& concept_left, const Concept& concept_right, int index) {
     return Boolean(m_vocabulary_info, m_caches.m_boolean_cache->insert(
         std::make_unique<element::InclusionBoolean<element::Concept>>(*m_vocabulary_info, concept_left.get_element(), concept_right.get_element())).first, index);
 }
 
-Boolean SyntacticElementFactoryImpl::make_role_inclusion_boolean(const Role& role_left, const Role& role_right, int index) {
+Boolean SyntacticElementFactoryImpl::make_inclusion_boolean(const Role& role_left, const Role& role_right, int index) {
     return Boolean(m_vocabulary_info, m_caches.m_boolean_cache->insert(
         std::make_unique<element::InclusionBoolean<element::Role>>(*m_vocabulary_info, role_left.get_element(), role_right.get_element())).first, index);
 }
@@ -147,32 +147,32 @@ Concept SyntacticElementFactoryImpl::make_top_concept(int index) {
         std::make_unique<element::TopConcept>(*m_vocabulary_info)).first, index);
 }
 
-Numerical SyntacticElementFactoryImpl::make_concept_distance(const Concept& concept_from, const Role& role, const Concept& concept_to, int index) {
+Numerical SyntacticElementFactoryImpl::make_concept_distance_numerical(const Concept& concept_from, const Role& role, const Concept& concept_to, int index) {
     return Numerical(m_vocabulary_info, m_caches.m_numerical_cache->insert(
         std::make_unique<element::ConceptDistanceNumerical>(*m_vocabulary_info, concept_from.get_element(), role.get_element(), concept_to.get_element())).first, index);
 }
 
-Numerical SyntacticElementFactoryImpl::make_count(const Concept& concept, int index) {
+Numerical SyntacticElementFactoryImpl::make_count_numerical(const Concept& concept, int index) {
     return Numerical(m_vocabulary_info, m_caches.m_numerical_cache->insert(
         std::make_unique<element::CountNumerical<element::Concept_Ptr>>(*m_vocabulary_info, concept.get_element())).first, index);
 }
 
-Numerical SyntacticElementFactoryImpl::make_count(const Role& role, int index) {
+Numerical SyntacticElementFactoryImpl::make_count_numerical(const Role& role, int index) {
     return Numerical(m_vocabulary_info, m_caches.m_numerical_cache->insert(
         std::make_unique<element::CountNumerical<element::Role_Ptr>>(*m_vocabulary_info, role.get_element())).first, index);
 }
 
-Numerical SyntacticElementFactoryImpl::make_role_distance(const Role& role_from, const Role& role, const Role& role_to, int index) {
+Numerical SyntacticElementFactoryImpl::make_role_distance_numerical(const Role& role_from, const Role& role, const Role& role_to, int index) {
     return Numerical(m_vocabulary_info, m_caches.m_numerical_cache->insert(
         std::make_unique<element::RoleDistanceNumerical>(*m_vocabulary_info, role_from.get_element(), role.get_element(), role_to.get_element())).first, index);
 }
 
-Numerical SyntacticElementFactoryImpl::make_sum_concept_distance(const Concept& concept_from, const Role& role, const Concept& concept_to, int index) {
+Numerical SyntacticElementFactoryImpl::make_sum_concept_distance_numerical(const Concept& concept_from, const Role& role, const Concept& concept_to, int index) {
     return Numerical(m_vocabulary_info, m_caches.m_numerical_cache->insert(
         std::make_unique<element::SumConceptDistanceNumerical>(*m_vocabulary_info, concept_from.get_element(), role.get_element(), concept_to.get_element())).first, index);
 }
 
-Numerical SyntacticElementFactoryImpl::make_sum_role_distance(const Role& role_from, const Role& role, const Role& role_to, int index) {
+Numerical SyntacticElementFactoryImpl::make_sum_role_distance_numerical(const Role& role_from, const Role& role, const Role& role_to, int index) {
     return Numerical(m_vocabulary_info, m_caches.m_numerical_cache->insert(
         std::make_unique<element::SumRoleDistanceNumerical>(*m_vocabulary_info, role_from.get_element(), role.get_element(), role_to.get_element())).first, index);
 }
@@ -237,8 +237,12 @@ Role SyntacticElementFactoryImpl::make_transitive_reflexive_closure(const Role& 
         std::make_unique<element::TransitiveReflexiveClosureRole>(*m_vocabulary_info, role.get_element())).first, index);
 }
 
-const VocabularyInfo* SyntacticElementFactoryImpl::get_vocabulary_info() const {
-    return m_vocabulary_info.get();
+const VocabularyInfo& SyntacticElementFactoryImpl::get_vocabulary_info_ref() const {
+    return *m_vocabulary_info;
+}
+
+std::shared_ptr<const VocabularyInfo> SyntacticElementFactoryImpl::get_vocabulary_info() const {
+    return m_vocabulary_info;
 }
 
 }

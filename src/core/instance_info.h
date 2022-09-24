@@ -56,25 +56,25 @@ public:
     const Atom& add_atom(const std::string &predicate_name, const Name_Vec &object_names);
     const Atom& add_static_atom(const std::string& predicate_name, const Name_Vec& object_names);
 
-    /**
-     * Getters
-     */
+    void set_index(int index);
+
     int get_index() const;
     bool exists_atom(const Atom& atom) const;
-    const std::vector<Atom>& get_atoms() const;
-    const std::vector<Atom>& get_static_atoms() const;
-    const Atom& get_atom(int atom_idx) const;
+    const std::vector<Atom>& get_atoms_ref() const;
+    const std::vector<Atom>& get_static_atoms_ref() const;
+    const Atom& get_atom_ref(int atom_idx) const;
     int get_atom_idx(const std::string& name) const;
     bool exists_object(const Object& object) const;
     bool exists_object(const std::string name) const;
-    const std::vector<Object>& get_objects() const;
-    const Object& get_object(int object_idx) const;
+    const std::vector<Object>& get_objects_ref() const;
+    const Object& get_object_ref(int object_idx) const;
     int get_object_idx(const std::string& object_name) const;
     int get_num_objects() const;
+    const VocabularyInfo& get_vocabulary_info_ref() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
-    const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs() const;
-    const ConceptDenotation& get_top_concept() const;
-    const RoleDenotation& get_top_role() const;
+    const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs_ref() const;
+    const ConceptDenotation& get_top_concept_ref() const;
+    const RoleDenotation& get_top_role_ref() const;
 };
 
 }

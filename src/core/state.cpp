@@ -6,7 +6,6 @@
 
 #include "instance_info.h"
 #include "../utils/collections.h"
-#include "../utils/hash_utils.h"
 
 
 namespace dlplan::core {
@@ -22,7 +21,7 @@ State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vecto
     m_atom_idxs.reserve(atoms.size());
     for (const auto& atom : atoms) {
         int atom_idx = atom.get_index();
-        int predicate_idx = atom.get_predicate().get_index();
+        int predicate_idx = atom.get_predicate_ref().get_index();
         m_atom_idxs.push_back(atom_idx);
         m_per_predicate_idx_atom_idxs[predicate_idx].push_back(atom_idx);
     }
@@ -30,7 +29,7 @@ State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vecto
 
 State::State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs, int index)
     : m_instance_info(instance_info), m_index(index) {
-    const auto& atoms = instance_info->get_atoms();
+    const auto& atoms = instance_info->get_atoms_ref();
     if (!std::all_of(atom_idxs.begin(), atom_idxs.end(), [&](int atom_idx){ return utils::in_bounds(atom_idx, atoms); })) {
         throw std::runtime_error("State::State - atom index out of range.");
     }
@@ -40,7 +39,7 @@ State::State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec&
     m_atom_idxs.reserve(atoms.size());
     for (int atom_idx : atom_idxs) {
         const auto& atom = atoms[atom_idx];
-        int predicate_idx = atom.get_predicate().get_index();
+        int predicate_idx = atom.get_predicate_ref().get_index();
         m_atom_idxs.push_back(atom_idx);
         m_per_predicate_idx_atom_idxs[predicate_idx].push_back(atom_idx);
     }
@@ -57,18 +56,22 @@ State& State::operator=(State&& other) = default;
 State::~State() = default;
 
 bool State::operator==(const State& other) const {
-    return (compute_sorted_atom_idxs() == other.compute_sorted_atom_idxs()) && (get_instance_info() == other.get_instance_info());
+    return (compute_sorted_atom_idxs() == other.compute_sorted_atom_idxs()) && (&get_instance_info_ref() == &other.get_instance_info_ref());
 }
 
 bool State::operator!=(const State& other) const {
     return !(*this == other);
 }
 
+const InstanceInfo& State::get_instance_info_ref() const {
+    return *m_instance_info;
+}
+
 std::shared_ptr<const InstanceInfo> State::get_instance_info() const {
     return m_instance_info;
 }
 
-const Index_Vec& State::get_atom_idxs() const {
+const Index_Vec& State::get_atom_idxs_ref() const {
     return m_atom_idxs;
 }
 
@@ -82,15 +85,15 @@ int State::get_index() const {
     return m_index;
 }
 
-const phmap::flat_hash_map<int, std::vector<int>>& State::get_per_predicate_idx_atom_idxs() const {
+const phmap::flat_hash_map<int, std::vector<int>>& State::get_per_predicate_idx_atom_idxs_ref() const {
     return m_per_predicate_idx_atom_idxs;
 }
 
 std::string State::str() const {
     std::string res("{");
     for (int i = 0; i < static_cast<int>(m_atom_idxs.size()); ++i) {
-        const auto& atom = m_instance_info->get_atom(m_atom_idxs[i]);
-        res += atom.get_name();
+        const auto& atom = m_instance_info->get_atom_ref(m_atom_idxs[i]);
+        res += atom.get_name_ref();
         if (i < static_cast<int>(m_atom_idxs.size()) - 1) {
             res += ", ";
         }
@@ -100,18 +103,13 @@ std::string State::str() const {
 }
 
 size_t State::compute_hash() const {
-    std::string data;
     Index_Vec sorted_atom_idxs = compute_sorted_atom_idxs();
-    data.reserve(sizeof(int) * sorted_atom_idxs.size() + sizeof(std::shared_ptr<InstanceInfo>) + 1);
+    size_t seed = sorted_atom_idxs.size();
     for (int atom_idx : sorted_atom_idxs) {
-        data += atom_idx;
+        utils::hash_combine(seed, atom_idx);
     }
-    std::stringstream ss;
-    ss << m_instance_info.get();
-    data += ss.str();
-    std::array<uint32_t, 4> a;
-    MurmurHash3_x64_128(data.begin().base(), data.size(), sorted_atom_idxs.size(), a.begin());
-    return std::hash<std::array<uint32_t, 4>>()(a);
+    utils::hash_combine(seed, m_instance_info.get());
+    return seed;
 }
 
 void State::set_index(int index) {

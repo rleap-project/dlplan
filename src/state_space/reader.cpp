@@ -166,14 +166,15 @@ static AdjacencyList parse_transitions_file(const std::string& filename) {
 
 
 StateSpace StateSpaceReader::read(
-    std::shared_ptr<const VocabularyInfo> vocabulary_info) const {
+    std::shared_ptr<const VocabularyInfo> vocabulary_info,
+    int index) const {
     if (!vocabulary_info) {
         std::shared_ptr<VocabularyInfo> new_vocabulary_info = std::make_shared<core::VocabularyInfo>();
         parse_predicates_file("predicates.txt", *new_vocabulary_info);
         parse_constants_file("constants.txt", *new_vocabulary_info);
         vocabulary_info = new_vocabulary_info;
     }
-    auto instance_info = std::make_shared<core::InstanceInfo>(vocabulary_info);
+    auto instance_info = std::make_shared<core::InstanceInfo>(vocabulary_info, index);
     auto new_atom_indices = parse_atoms_file("atoms.txt", *instance_info);
     parse_static_atoms_file("static-atoms.txt", *instance_info);
     parse_goal_atoms_file("goal-atoms.txt", *instance_info);

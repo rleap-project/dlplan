@@ -1,18 +1,21 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_ELEMENT_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_ELEMENT_H_
 
+#include <iostream>
+#include <sstream>
+#include <mutex>
+#include <cassert>
+#include <memory>
+
 #include "types.h"
 
 #include "../../../include/dlplan/utils/cache.h"
 #include "../../../include/dlplan/core.h"
 
-#include <iostream>
-#include <sstream>
-
-
-namespace dlplan::core::element {
 
 using namespace std::string_literals;
+
+namespace dlplan::core::element {
 
 template<typename T>
 class Element : public utils::Cachable {
@@ -31,8 +34,6 @@ public:
     Element& operator=(Element&& other) = delete;
     virtual ~Element() = default;
 
-    virtual T evaluate(const State& state) const = 0;
-
     virtual int compute_complexity() const = 0;
 
     virtual void compute_repr(std::stringstream& out) const = 0;
@@ -46,8 +47,14 @@ public:
         compute_repr(ss);
         return ss.str();
     }
+
+    int get_index() const {
+        return m_index;
+    }
 };
 
+
 }
+
 
 #endif

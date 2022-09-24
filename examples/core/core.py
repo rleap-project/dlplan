@@ -47,9 +47,11 @@ def main():
     # 4. Construct a state.
     atoms = i.get_atoms()
     a0 = atoms[0]
+    a1 = atoms[1]
     a3 = atoms[3]
     a6 = atoms[6]
     state = dlplan.State(i, [a0, a3, a6])
+    state2 = dlplan.State(i, [a1, a3, a6])
 
     # 5. Parse and evaluate elements.
     numerical = f.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))")
@@ -59,6 +61,17 @@ def main():
     boolean = f.parse_boolean("b_empty(c_and(c_primitive(on_g,0),c_primitive(on,0)))")
     print(f"repr: {boolean.compute_repr()}")
     print(f"value: {boolean.evaluate(state)}")
+
+    denotations_caches = dlplan.DenotationsCaches()
+    concept = f.parse_concept("c_and(c_primitive(on_g,0),c_primitive(on,0))")
+    evaluations = concept.evaluate([state, state, state2], denotations_caches)
+    for eval in evaluations:
+        print(eval.to_sorted_vector())
+
+    role = f.parse_role("r_and(r_primitive(on_g,0,1),r_primitive(on,0,1))")
+    evaluations = role.evaluate([state, state, state2], denotations_caches)
+    for eval in evaluations:
+        print(eval.to_sorted_vector())
 
 
 if __name__ == "__main__":

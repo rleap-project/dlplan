@@ -7,6 +7,41 @@
 namespace dlplan::core::element {
 
 class AndConcept : public Concept {
+private:
+    void compute_result(const ConceptDenotation& left_denot, const ConceptDenotation& right_denot, ConceptDenotation& result) const {
+        result = left_denot;
+        result &= right_denot;
+    }
+
+    std::unique_ptr<ConceptDenotation> evaluate_impl(const State& state, DenotationsCaches& caches) const override {
+        auto denotation = std::make_unique<ConceptDenotation>(
+            ConceptDenotation(state.get_instance_info_ref().get_num_objects()));
+        denotation->set();
+        compute_result(
+            *m_concept_left->evaluate(state, caches),
+            *m_concept_right->evaluate(state, caches),
+            *denotation);
+        return denotation;
+    }
+
+    std::unique_ptr<ConceptDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const override {
+        auto denotations = std::make_unique<ConceptDenotations>();
+        denotations->reserve(states.size());
+        auto concept_left_denotations = m_concept_left->evaluate(states, caches);
+        auto concept_right_denotations = m_concept_right->evaluate(states, caches);
+        for (size_t i = 0; i < states.size(); ++i) {
+            const auto& state = states[i];
+            int num_objects = state.get_instance_info_ref().get_num_objects();
+            auto denotation = std::make_unique<ConceptDenotation>(ConceptDenotation(num_objects));
+            compute_result(
+                *(*concept_left_denotations)[i],
+                *(*concept_right_denotations)[i],
+                *denotation);
+            denotations->push_back(caches.m_c_denot_cache.insert(std::move(denotation)).first->get());
+        }
+        return denotations;
+    }
+
 protected:
     Concept_Ptr m_concept_left;
     Concept_Ptr m_concept_right;
@@ -27,7 +62,12 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        return m_concept_left->evaluate(state) &= m_concept_right->evaluate(state);
+        ConceptDenotation result(state.get_instance_info_ref().get_num_objects());
+        compute_result(
+            m_concept_left->evaluate(state),
+            m_concept_right->evaluate(state),
+            result);
+        return result;
     }
 
     int compute_complexity() const override {

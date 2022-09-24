@@ -6,14 +6,12 @@
 #define MACRO_STRINGIFY(x) STRINGIFY(x)
 
 #include "../../../include/dlplan/core.h"
-#include "../../../include/dlplan/evaluator.h"
 #include "../../../include/dlplan/policy.h"
 
 
 namespace py = pybind11;
 
 using namespace dlplan::core;
-using namespace dlplan::evaluator;
 using namespace dlplan::policy;
 
 
@@ -22,7 +20,7 @@ void init_policy(py::module_ &m) {
         .def("__repr__", &BaseCondition::compute_repr)
         .def("__str__", &BaseCondition::str)
         .def("evaluate", py::overload_cast<const State&>(&BaseCondition::evaluate, py::const_))
-        .def("evaluate",  py::overload_cast<const State&, EvaluationCache&>(&BaseCondition::evaluate, py::const_))
+        .def("evaluate",  py::overload_cast<const State&, DenotationsCaches&>(&BaseCondition::evaluate, py::const_))
         .def("get_index", &BaseCondition::get_index)
         .def("get_base_feature", &BaseCondition::get_base_feature)
         .def("compute_repr", &BaseCondition::compute_repr)
@@ -33,7 +31,7 @@ void init_policy(py::module_ &m) {
         .def("__repr__", &BaseEffect::compute_repr)
         .def("__str__", &BaseEffect::str)
         .def("evaluate", py::overload_cast<const State&, const State&>(&BaseEffect::evaluate, py::const_))
-        .def("evaluate",  py::overload_cast<const State&, const State&, EvaluationCache&>(&BaseEffect::evaluate, py::const_))
+        .def("evaluate",  py::overload_cast<const State&, const State&, DenotationsCaches&>(&BaseEffect::evaluate, py::const_))
         .def("get_index", &BaseEffect::get_index)
         .def("get_base_feature", &BaseEffect::get_base_feature)
         .def("compute_repr", &BaseEffect::compute_repr)
@@ -44,9 +42,9 @@ void init_policy(py::module_ &m) {
         .def("__repr__", &Rule::compute_repr)
         .def("__str__", &Rule::str)
         .def("evaluate_conditions", py::overload_cast<const State&>(&Rule::evaluate_conditions, py::const_))
-        .def("evaluate_conditions", py::overload_cast<const State&, EvaluationCache&>(&Rule::evaluate_conditions, py::const_))
+        .def("evaluate_conditions", py::overload_cast<const State&, DenotationsCaches&>(&Rule::evaluate_conditions, py::const_))
         .def("evaluate_effects", py::overload_cast<const State&, const State&>(&Rule::evaluate_effects, py::const_))
-        .def("evaluate_effects", py::overload_cast<const State&, const State&, EvaluationCache&>(&Rule::evaluate_effects, py::const_))
+        .def("evaluate_effects", py::overload_cast<const State&, const State&, DenotationsCaches&>(&Rule::evaluate_effects, py::const_))
         .def("get_index", &Rule::get_index)
         .def("get_conditions", &Rule::get_conditions)
         .def("get_effects", &Rule::get_effects)
@@ -58,11 +56,11 @@ void init_policy(py::module_ &m) {
         .def("__repr__", &Policy::compute_repr)
         .def("__str__", &Policy::str)
         .def("evaluate_lazy", py::overload_cast<const State&, const State&>(&Policy::evaluate_lazy, py::const_))
-        .def("evaluate_lazy", py::overload_cast<const State&, const State&, EvaluationCache&>(&Policy::evaluate_lazy, py::const_))
+        .def("evaluate_lazy", py::overload_cast<const State&, const State&, DenotationsCaches&>(&Policy::evaluate_lazy, py::const_))
         .def("evaluate_conditions_eager", py::overload_cast<const State&>(&Policy::evaluate_conditions_eager, py::const_))
-        .def("evaluate_conditions_eager", py::overload_cast<const State&, EvaluationCache&>(&Policy::evaluate_conditions_eager, py::const_))
+        .def("evaluate_conditions_eager", py::overload_cast<const State&, DenotationsCaches&>(&Policy::evaluate_conditions_eager, py::const_))
         .def("evaluate_effects_lazy", py::overload_cast<const State&, const State&, const std::vector<std::shared_ptr<const Rule>>&>(&Policy::evaluate_effects_lazy, py::const_))
-        .def("evaluate_effects_lazy", py::overload_cast<const State&, const State&, const std::vector<std::shared_ptr<const Rule>>&, EvaluationCache&>(&Policy::evaluate_effects_lazy, py::const_))
+        .def("evaluate_effects_lazy", py::overload_cast<const State&, const State&, const std::vector<std::shared_ptr<const Rule>>&, DenotationsCaches&>(&Policy::evaluate_effects_lazy, py::const_))
         .def("get_rules", &Policy::get_rules, py::return_value_policy::reference)
         .def("get_boolean_features", &Policy::get_boolean_features, py::return_value_policy::reference)
         .def("get_numerical_features", &Policy::get_numerical_features, py::return_value_policy::reference)

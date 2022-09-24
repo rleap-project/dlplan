@@ -35,9 +35,6 @@
 
 #include "rules/numericals/concept_distance.h"
 #include "rules/numericals/count.h"
-#include "rules/numericals/role_distance.h"
-#include "rules/numericals/sum_concept_distance.h"
-#include "rules/numericals/sum_role_distance.h"
 
 #include "rules/booleans/empty.h"
 #include "rules/booleans/inclusion.h"
@@ -82,9 +79,6 @@ private:
     Rule_Ptr n_count;
     Rule_Ptr b_inclusion;
     Rule_Ptr n_concept_distance;
-    Rule_Ptr n_role_distance;
-    Rule_Ptr n_sum_concept_distance;
-    Rule_Ptr n_sum_role_distance;
 
     Rule_Ptr c_and;
     Rule_Ptr c_or;
@@ -114,7 +108,7 @@ private:
     void generate_base(
         const States& states,
         GeneratorData& data,
-        utils::threadpool::ThreadPool& th);
+        core::DenotationsCaches& caches);
 
     /**
      * Inductively generate Elements of higher complexity.
@@ -126,7 +120,7 @@ private:
         int numerical_complexity_limit,
         const States& states,
         GeneratorData& data,
-        utils::threadpool::ThreadPool& th);
+        core::DenotationsCaches& caches);
 
     /**
      * Print some brief overview.
@@ -176,9 +170,6 @@ public:
     void set_generate_top_concept(bool enable);
     void set_generate_concept_distance_numerical(bool enable);
     void set_generate_count_numerical(bool enable);
-    void set_generate_role_distance_numerical(bool enable);
-    void set_generate_sum_concept_distance_numerical(bool enable);
-    void set_generate_sum_role_distance_numerical(bool enable);
     void set_generate_and_role(bool enable);
     void set_generate_compose_role(bool enable);
     void set_generate_diff_role(bool enable);

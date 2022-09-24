@@ -8,13 +8,22 @@
 namespace dlplan::novelty {
 
 NoveltyBase::NoveltyBase(int num_atoms, int width)
-    : m_num_atoms(num_atoms), m_width(width) {
+    : m_num_atoms(num_atoms+1), m_width(width) {
     m_factors = std::vector<int>(m_width);
     for (int i = 0; i < m_width; ++i) {
         m_factors[i] = std::pow(m_num_atoms, i);
     }
-    std::cout << std::endl;
 }
+
+NoveltyBase::NoveltyBase(const NoveltyBase& other) = default;
+
+NoveltyBase& NoveltyBase::operator=(const NoveltyBase& other) = default;
+
+NoveltyBase::NoveltyBase(NoveltyBase&& other) = default;
+
+NoveltyBase& NoveltyBase::operator=(NoveltyBase&& other) = default;
+
+NoveltyBase::~NoveltyBase() = default;
 
 TupleIndex NoveltyBase::atom_tuple_to_tuple_index(const AtomTuple& atom_tuple) const {
     assert(static_cast<int>(atom_tuple.size()) == m_width);
@@ -33,6 +42,10 @@ AtomTuple NoveltyBase::tuple_index_to_atom_tuple(TupleIndex tuple_index) const {
 
 int NoveltyBase::get_width() const {
     return m_width;
+}
+
+int NoveltyBase::get_dummy_atom_index() const {
+    return m_num_atoms;
 }
 
 }

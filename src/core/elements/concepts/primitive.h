@@ -17,12 +17,44 @@ static void collect_concepts(
     if (it != per_predicate_idx_atom_idxs.end()) {
         for (int atom_idx : it->second) {
             const auto& atom = atoms[atom_idx];
-            result.insert(atom.get_object(pos).get_index());
+            result.insert(atom.get_object_ref(pos).get_index());
         }
     }
 }
 
 class PrimitiveConcept : public Concept {
+private:
+    void compute_result(const State& state, ConceptDenotation& result) const {
+        const auto& atoms = state.get_instance_info_ref().get_atoms_ref();
+        const auto& static_atoms = state.get_instance_info_ref().get_static_atoms_ref();
+        collect_concepts(state.get_per_predicate_idx_atom_idxs_ref(), atoms, m_predicate, m_pos, result);
+        collect_concepts(state.get_instance_info_ref().get_per_predicate_idx_static_atom_idxs_ref(), static_atoms, m_predicate, m_pos, result);
+
+    }
+
+    std::unique_ptr<ConceptDenotation> evaluate_impl(const State& state, DenotationsCaches&) const override {
+        auto denotation = std::make_unique<ConceptDenotation>(
+            ConceptDenotation(state.get_instance_info_ref().get_num_objects()));
+        compute_result(
+            state,
+            *denotation);
+        return denotation;
+    }
+
+    std::unique_ptr<ConceptDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const override {
+        auto denotations = std::make_unique<ConceptDenotations>();
+        denotations->reserve(states.size());
+        for (size_t i = 0; i < states.size(); ++i) {
+            auto denotation = std::make_unique<ConceptDenotation>(
+                ConceptDenotation(states[i].get_instance_info_ref().get_num_objects()));
+            compute_result(
+                states[i],
+                *denotation);
+            denotations->push_back(caches.m_c_denot_cache.insert(std::move(denotation)).first->get());
+        }
+        return denotations;
+    }
+
 protected:
     const Predicate m_predicate;
     const int m_pos;
@@ -39,14 +71,9 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        const InstanceInfo& info = *state.get_instance_info();
-        int num_objects = info.get_num_objects();
-        ConceptDenotation result(num_objects);
-        const auto& atoms = info.get_atoms();
-        const auto& static_atoms = info.get_static_atoms();
-        collect_concepts(state.get_per_predicate_idx_atom_idxs(), atoms, m_predicate, m_pos, result);
-        collect_concepts(info.get_per_predicate_idx_static_atom_idxs(), static_atoms, m_predicate, m_pos, result);
-        return result;
+        ConceptDenotation denotation(state.get_instance_info_ref().get_num_objects());
+        compute_result(state, denotation);
+        return denotation;
     }
 
     int compute_complexity() const override {
@@ -55,7 +82,7 @@ public:
 
 
     void compute_repr(std::stringstream& out) const override {
-        out << get_name() << "(" << m_predicate.get_name() << "," << std::to_string(m_pos) << ")";
+        out << get_name() << "(" << m_predicate.get_name_ref() << "," << std::to_string(m_pos) << ")";
     }
 
     static std::string get_name() {

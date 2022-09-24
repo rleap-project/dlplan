@@ -20,14 +20,14 @@ Object::~Object() = default;
 
 bool Object::operator==(const Object& other) const {
     // our construction ensures that there are not two objects with same index and same root.
-    return (get_index() == other.get_index()) && (get_name() == other.get_name());
+    return (get_index() == other.get_index()) && (get_name_ref() == other.get_name_ref());
 }
 
 bool Object::operator!=(const Object& other) const {
     return !(*this == other);
 }
 
-const std::string& Object::get_name() const {
+const std::string& Object::get_name_ref() const {
     return m_name;
 }
 

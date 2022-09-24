@@ -39,7 +39,7 @@ bool Atom::operator!=(const Atom& other) const {
     return !(*this == other);
 }
 
-std::string Atom::get_name() const {
+const std::string& Atom::get_name_ref() const {
     return m_name;
 }
 
@@ -47,18 +47,18 @@ int Atom::get_index() const {
     return m_index;
 }
 
-const Predicate& Atom::get_predicate() const {
+const Predicate& Atom::get_predicate_ref() const {
     return m_predicate;
 }
 
-const std::vector<Object>& Atom::get_objects() const {
+const std::vector<Object>& Atom::get_objects_ref() const {
     return m_objects;
 }
 
-const Object& Atom::get_object(int pos) const {
+const Object& Atom::get_object_ref(int pos) const {
     assert(utils::in_bounds(pos, m_objects));
     if (!utils::in_bounds(pos, m_objects)) {
-        throw std::runtime_error("Out of bounds (" + get_name() + ")");
+        throw std::runtime_error("Out of bounds (" + get_name_ref() + ")");
     }
     return m_objects[pos];
 }

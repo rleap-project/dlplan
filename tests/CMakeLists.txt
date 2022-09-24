@@ -12,6 +12,7 @@ FetchContent_MakeAvailable(googletest)
 include(GoogleTest)
 
 add_subdirectory(core)
+add_subdirectory(generator)
 add_subdirectory(novelty)
 add_subdirectory(policy)
 # add_subdirectory(state_space)

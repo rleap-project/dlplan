@@ -63,9 +63,6 @@ public:
     void set_generate_top_concept(bool enable);
     void set_generate_concept_distance_numerical(bool enable);
     void set_generate_count_numerical(bool enable);
-    void set_generate_role_distance_numerical(bool enable);
-    void set_generate_sum_concept_distance_numerical(bool enable);
-    void set_generate_sum_role_distance_numerical(bool enable);
     void set_generate_and_role(bool enable);
     void set_generate_compose_role(bool enable);
     void set_generate_diff_role(bool enable);

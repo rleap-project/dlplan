@@ -9,6 +9,46 @@
 namespace dlplan::core::element {
 
 class AllConcept : public Concept {
+private:
+    void compute_result(const RoleDenotation& role_denot, const ConceptDenotation& concept_denot, ConceptDenotation& result) const {
+        // find counterexamples b : exists b . (a,b) in R and b notin C
+        for (const auto& pair : role_denot) {
+            if (!concept_denot.contains(pair.second)) {
+                result.erase(pair.first);
+            }
+        }
+    }
+
+    std::unique_ptr<ConceptDenotation> evaluate_impl(const State& state, DenotationsCaches& caches) const override {
+        auto denotation = std::make_unique<ConceptDenotation>(
+            ConceptDenotation(state.get_instance_info_ref().get_num_objects()));
+        denotation->set();
+        compute_result(
+            *m_role->evaluate(state, caches),
+            *m_concept->evaluate(state, caches),
+            *denotation);
+        return denotation;
+    }
+
+    std::unique_ptr<ConceptDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const override {
+        auto denotations = std::make_unique<ConceptDenotations>();
+        denotations->reserve(states.size());
+        auto role_denotations = m_role->evaluate(states, caches);
+        auto concept_denotations = m_concept->evaluate(states, caches);
+        for (size_t i = 0; i < states.size(); ++i) {
+            const auto& state = states[i];
+            int num_objects = state.get_instance_info_ref().get_num_objects();
+            auto denotation = std::make_unique<ConceptDenotation>(ConceptDenotation(num_objects));
+            denotation->set();
+            compute_result(
+                *(*role_denotations)[i],
+                *(*concept_denotations)[i],
+                *denotation);
+            denotations->push_back(caches.m_c_denot_cache.insert(std::move(denotation)).first->get());
+        }
+        return denotations;
+    }
+
 protected:
     const Role_Ptr m_role;
     const Concept_Ptr m_concept;
@@ -22,16 +62,12 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        const auto role_denot = m_role->evaluate(state);
-        const auto concept_denot = m_concept->evaluate(state);
-        ConceptDenotation result = state.get_instance_info()->get_top_concept();
-        // find counterexamples b : exists b . (a,b) in R and b notin C
-        for (const auto& pair : role_denot) {
-            if (!concept_denot.contains(pair.second)) {
-                result.erase(pair.first);
-            }
-        }
-        return result;
+        auto denotation = state.get_instance_info_ref().get_top_concept_ref();
+        compute_result(
+            m_role->evaluate(state),
+            m_concept->evaluate(state),
+            denotation);
+        return denotation;
     }
 
     int compute_complexity() const override {

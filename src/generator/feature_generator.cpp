@@ -6,48 +6,11 @@
 #include <chrono>
 #include <thread>
 
-
-#include "rules/concepts/all.h"
-#include "rules/concepts/and.h"
-#include "rules/concepts/bot.h"
-#include "rules/concepts/diff.h"
-#include "rules/concepts/equal.h"
-#include "rules/concepts/not.h"
-#include "rules/concepts/one_of.h"
-#include "rules/concepts/or.h"
-#include "rules/concepts/primitive.h"
-#include "rules/concepts/projection.h"
-#include "rules/concepts/some.h"
-#include "rules/concepts/subset.h"
-#include "rules/concepts/top.h"
-
-#include "rules/roles/and.h"
-#include "rules/roles/compose.h"
-#include "rules/roles/diff.h"
-#include "rules/roles/identity.h"
-#include "rules/roles/inverse.h"
-#include "rules/roles/not.h"
-#include "rules/roles/or.h"
-#include "rules/roles/primitive.h"
-#include "rules/roles/restrict.h"
-#include "rules/roles/top.h"
-#include "rules/roles/transitive_closure.h"
-#include "rules/roles/transitive_reflexive_closure.h"
-
-#include "rules/numericals/concept_distance.h"
-#include "rules/numericals/count.h"
-#include "rules/numericals/role_distance.h"
-#include "rules/numericals/sum_concept_distance.h"
-#include "rules/numericals/sum_role_distance.h"
-
-#include "rules/booleans/empty.h"
-#include "rules/booleans/nullary.h"
-
 #include "generator_data.h"
 
 #include "../../include/dlplan/generator.h"
 #include "../utils/logging.h"
-#include "../utils/threadpool.h"
+#include "../core/elements/element.h"
 
 
 namespace dlplan::generator {
@@ -65,9 +28,6 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
       n_count(std::make_shared<rules::CountNumerical>()),
       b_inclusion(std::make_shared<rules::InclusionBoolean>()),
       n_concept_distance(std::make_shared<rules::ConceptDistanceNumerical>()),
-      n_role_distance(std::make_shared<rules::RoleDistanceNumerical>()),
-      n_sum_concept_distance(std::make_shared<rules::SumConceptDistanceNumerical>()),
-      n_sum_role_distance(std::make_shared<rules::SumRoleDistanceNumerical>()),
       c_and(std::make_shared<rules::AndConcept>()),
       c_or(std::make_shared<rules::OrConcept>()),
       c_not(std::make_shared<rules::NotConcept>()),
@@ -87,6 +47,7 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
       r_compose(std::make_shared<rules::ComposeRole>()),
       r_transitive_closure(std::make_shared<rules::TransitiveClosureRole>()),
       r_transitive_reflexive_closure(std::make_shared<rules::TransitiveReflexiveClosureRole>()) {
+    m_primitive_rules.emplace_back(b_nullary);
     m_primitive_rules.emplace_back(c_one_of);
     m_primitive_rules.emplace_back(c_top);
     m_primitive_rules.emplace_back(c_bot);
@@ -104,26 +65,22 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
     m_concept_inductive_rules.emplace_back(c_some);
     m_concept_inductive_rules.emplace_back(c_all);
 
+    m_role_inductive_rules.emplace_back(r_restrict);
     m_role_inductive_rules.emplace_back(r_and);
     m_role_inductive_rules.emplace_back(r_or);
     m_role_inductive_rules.emplace_back(r_not);
     m_role_inductive_rules.emplace_back(r_diff);
     m_role_inductive_rules.emplace_back(r_identity);
     m_role_inductive_rules.emplace_back(r_inverse);
-    m_role_inductive_rules.emplace_back(r_restrict);
     m_role_inductive_rules.emplace_back(r_compose);
     m_role_inductive_rules.emplace_back(r_transitive_closure);
     m_role_inductive_rules.emplace_back(r_transitive_reflexive_closure);
 
-    m_boolean_inductive_rules.emplace_back(b_nullary);
     m_boolean_inductive_rules.emplace_back(b_empty);
     m_boolean_inductive_rules.emplace_back(b_inclusion);
 
     m_numerical_inductive_rules.emplace_back(n_count);
     m_numerical_inductive_rules.emplace_back(n_concept_distance);
-    m_numerical_inductive_rules.emplace_back(n_role_distance);
-    m_numerical_inductive_rules.emplace_back(n_sum_concept_distance);
-    m_numerical_inductive_rules.emplace_back(n_sum_role_distance);
 }
 
 FeatureGeneratorImpl::FeatureGeneratorImpl(const FeatureGeneratorImpl& other) = default;
@@ -144,7 +101,7 @@ FeatureRepresentations FeatureGeneratorImpl::generate(
     int numerical_complexity_limit,
     int time_limit,
     int feature_limit,
-    int num_threads,
+    int,
     const States& states) {
     // Initialize statistics in each rule.
     for (auto& r : m_primitive_rules) r->initialize();
@@ -154,35 +111,21 @@ FeatureRepresentations FeatureGeneratorImpl::generate(
     for (auto& r : m_numerical_inductive_rules) r->initialize();
     // Initialize memory to store intermediate results.
     GeneratorData data(factory, std::max({concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, numerical_complexity_limit}), time_limit, feature_limit);
-    // Initialize default threadpool
-    utils::threadpool::ThreadPool th(num_threads);
-    generate_base(states, data, th);
-    generate_inductively(concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, numerical_complexity_limit, states, data, th);
-    // utils::g_log << "Overall results: " << std::endl;
-    // print_overall_statistics();
-    /* Tasks must be destructed before the threadpool.
-       We can get rid of this if we move the threadpool to the members.
-       This requires to add functionality for increasing/decreasing the threadpool. */
-    for (auto& r : m_primitive_rules) r->cleanup();
-    for (auto& r : m_concept_inductive_rules) r->cleanup();
-    for (auto& r : m_role_inductive_rules) r->cleanup();
-    for (auto& r : m_boolean_inductive_rules) r->cleanup();
-    for (auto& r : m_numerical_inductive_rules) r->cleanup();
-    // Return just the representation that can be parsed again.
-    // TODO: we might want to add postprocessing where features are additionally pruned
-    // if they are not able to distinguish any two states.
+    // Initialize cache.
+    core::DenotationsCaches caches;
+    generate_base(states, data, caches);
+    generate_inductively(concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, numerical_complexity_limit, states, data, caches);
     return data.m_reprs;
 }
 
-void FeatureGeneratorImpl::generate_base(const States& states, GeneratorData& data, utils::threadpool::ThreadPool& th) {
+void FeatureGeneratorImpl::generate_base(
+    const States& states,
+    GeneratorData& data,
+    core::DenotationsCaches& caches) {
     utils::g_log << "Started generating base features of complexity 1." << std::endl;
     for (const auto& rule : m_primitive_rules) {
         if (data.reached_resource_limit()) break;
-        rule->submit_tasks(states, 1, data, th);
-    }
-    for (const auto& rule : m_primitive_rules) {
-        if (data.reached_resource_limit()) break;
-        rule->parse_results_of_tasks(data);
+        rule->generate(states, 1, data, caches);
     }
     utils::g_log << "Complexity " << 1 << ":" << std::endl;
     print_statistics();
@@ -196,7 +139,7 @@ void FeatureGeneratorImpl::generate_inductively(
     int numerical_complexity_limit,
     const States& states,
     GeneratorData& data,
-    utils::threadpool::ThreadPool& th) {
+    core::DenotationsCaches& caches) {
     utils::g_log << "Started generating composite features. " << std::endl;
     int max_complexity = std::max({concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, numerical_complexity_limit});
     for (int target_complexity = 2; target_complexity <= max_complexity; ++target_complexity) {  // every composition adds at least one complexity
@@ -204,44 +147,28 @@ void FeatureGeneratorImpl::generate_inductively(
             if (data.reached_resource_limit()) break;
             for (const auto& rule : m_concept_inductive_rules) {
                 if (data.reached_resource_limit()) break;
-                rule->submit_tasks(states, target_complexity, data, th);
-            }
-            for (const auto& rule : m_concept_inductive_rules) {
-                if (data.reached_resource_limit()) break;
-                rule->parse_results_of_tasks(data);
+                rule->generate(states, target_complexity, data, caches);
             }
         }
         if (target_complexity <= role_complexity_limit) {
             if (data.reached_resource_limit()) break;
             for (const auto& rule : m_role_inductive_rules) {
                 if (data.reached_resource_limit()) break;
-                rule->submit_tasks(states, target_complexity, data, th);
-            }
-            for (const auto& rule : m_role_inductive_rules) {
-                if (data.reached_resource_limit()) break;
-                rule->parse_results_of_tasks(data);
+                rule->generate(states, target_complexity, data, caches);
             }
         }
         if (target_complexity <= boolean_complexity_limit) {
             if (data.reached_resource_limit()) break;
             for (const auto& rule : m_boolean_inductive_rules) {
                 if (data.reached_resource_limit()) break;
-                rule->submit_tasks(states, target_complexity, data, th);
-            }
-            for (const auto& rule : m_boolean_inductive_rules) {
-                if (data.reached_resource_limit()) break;
-                rule->parse_results_of_tasks(data);
+                rule->generate(states, target_complexity, data, caches);
             }
         }
         if (target_complexity <= numerical_complexity_limit) {
             if (data.reached_resource_limit()) break;
             for (const auto& rule : m_numerical_inductive_rules) {
                 if (data.reached_resource_limit()) break;
-                rule->submit_tasks(states, target_complexity, data, th);
-            }
-            for (const auto& rule : m_numerical_inductive_rules) {
-                if (data.reached_resource_limit()) break;
-                rule->parse_results_of_tasks(data);
+                rule->generate(states, target_complexity, data, caches);
             }
         }
         utils::g_log << "Complexity " << target_complexity << ":" << std::endl;
@@ -329,18 +256,6 @@ void FeatureGeneratorImpl::set_generate_concept_distance_numerical(bool enable) 
 
 void FeatureGeneratorImpl::set_generate_count_numerical(bool enable) {
     n_count->set_enabled(enable);
-}
-
-void FeatureGeneratorImpl::set_generate_role_distance_numerical(bool enable) {
-    n_role_distance->set_enabled(enable);
-}
-
-void FeatureGeneratorImpl::set_generate_sum_concept_distance_numerical(bool enable) {
-    n_sum_concept_distance->set_enabled(enable);
-}
-
-void FeatureGeneratorImpl::set_generate_sum_role_distance_numerical(bool enable) {
-    n_sum_role_distance->set_enabled(enable);
 }
 
 void FeatureGeneratorImpl::set_generate_and_role(bool enable) {

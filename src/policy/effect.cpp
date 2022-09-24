@@ -18,8 +18,8 @@ bool PositiveBooleanEffect::evaluate(const core::State&, const core::State& targ
     return m_boolean->evaluate(target_state);
 }
 
-bool PositiveBooleanEffect::evaluate(const core::State&, const core::State& target_state, evaluator::EvaluationCache& cache) const {
-    return cache.retrieve_or_evaluate(*m_boolean, target_state);
+bool PositiveBooleanEffect::evaluate(const core::State&, const core::State& target_state, core::DenotationsCaches& caches) const {
+    return m_boolean->evaluate(target_state, caches);
 }
 
 std::string PositiveBooleanEffect::compute_repr() const{
@@ -38,8 +38,8 @@ bool NegativeBooleanEffect::evaluate(const core::State&, const core::State& targ
     return !m_boolean->evaluate(target_state);
 }
 
-bool NegativeBooleanEffect::evaluate(const core::State&, const core::State& target_state, evaluator::EvaluationCache& cache) const {
-    return !cache.retrieve_or_evaluate(*m_boolean, target_state);
+bool NegativeBooleanEffect::evaluate(const core::State&, const core::State& target_state, core::DenotationsCaches& caches) const {
+    return !m_boolean->evaluate(target_state, caches);
 }
 
 std::string NegativeBooleanEffect::compute_repr() const{
@@ -58,8 +58,8 @@ bool UnchangedBooleanEffect::evaluate(const core::State& source_state, const cor
     return m_boolean->evaluate(source_state) == m_boolean->evaluate(target_state);
 }
 
-bool UnchangedBooleanEffect::evaluate(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const {
-    return cache.retrieve_or_evaluate(*m_boolean, source_state) == cache.retrieve_or_evaluate(*m_boolean, target_state);
+bool UnchangedBooleanEffect::evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
+    return m_boolean->evaluate(source_state, caches) == m_boolean->evaluate(target_state, caches);
 }
 
 std::string UnchangedBooleanEffect::compute_repr() const{
@@ -78,8 +78,8 @@ bool IncrementNumericalEffect::evaluate(const core::State& source_state, const c
     return m_numerical->evaluate(source_state) < m_numerical->evaluate(target_state);
 }
 
-bool IncrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const {
-    return cache.retrieve_or_evaluate(*m_numerical, source_state) < cache.retrieve_or_evaluate(*m_numerical, target_state);
+bool IncrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
+    return m_numerical->evaluate(source_state, caches) < m_numerical->evaluate(target_state, caches);
 }
 
 std::string IncrementNumericalEffect::compute_repr() const{
@@ -98,8 +98,8 @@ bool DecrementNumericalEffect::evaluate(const core::State& source_state, const c
     return m_numerical->evaluate(source_state) > m_numerical->evaluate(target_state);
 }
 
-bool DecrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const {
-    return cache.retrieve_or_evaluate(*m_numerical, source_state) > cache.retrieve_or_evaluate(*m_numerical, target_state);
+bool DecrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
+    return m_numerical->evaluate(source_state, caches) > m_numerical->evaluate(target_state, caches);
 }
 
 std::string DecrementNumericalEffect::compute_repr() const{
@@ -118,8 +118,8 @@ bool UnchangedNumericalEffect::evaluate(const core::State& source_state, const c
     return m_numerical->evaluate(source_state) == m_numerical->evaluate(target_state);
 }
 
-bool UnchangedNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const {
-    return cache.retrieve_or_evaluate(*m_numerical, source_state) == cache.retrieve_or_evaluate(*m_numerical, target_state);
+bool UnchangedNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
+    return m_numerical->evaluate(source_state, caches) == m_numerical->evaluate(target_state, caches);
 }
 
 std::string UnchangedNumericalEffect::compute_repr() const{

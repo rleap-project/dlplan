@@ -18,7 +18,7 @@ protected:
             throw std::runtime_error("OneOfConcept::parse_concept_impl - VocabularyInfo does not contain constant (" + constant_name + ")");
         }
         // 2. Construct element
-        return std::make_unique<element::OneOfConcept>(vocabulary, vocabulary.get_constant(vocabulary.get_constant_idx(constant_name)));
+        return std::make_unique<element::OneOfConcept>(vocabulary, vocabulary.get_constant_ref(vocabulary.get_constant_idx(constant_name)));
     }
 
 public:

@@ -38,9 +38,9 @@ std::shared_ptr<const Rule> Policy::evaluate_lazy(const core::State& source_stat
     return nullptr;
 }
 
-std::shared_ptr<const Rule> Policy::evaluate_lazy(const core::State& source_state, const core::State& target_state, evaluator::EvaluationCache& cache) const {
+std::shared_ptr<const Rule> Policy::evaluate_lazy(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
     for (const auto& r : m_rules) {
-        if (r->evaluate_conditions(source_state, cache) && r->evaluate_effects(source_state, target_state, cache)) {
+        if (r->evaluate_conditions(source_state, caches) && r->evaluate_effects(source_state, target_state, caches)) {
             return r;
         }
     }
@@ -57,10 +57,10 @@ std::vector<std::shared_ptr<const Rule>> Policy::evaluate_conditions_eager(const
     return result;
 }
 
-std::vector<std::shared_ptr<const Rule>> Policy::evaluate_conditions_eager(const core::State& source_state, evaluator::EvaluationCache& cache) const {
+std::vector<std::shared_ptr<const Rule>> Policy::evaluate_conditions_eager(const core::State& source_state, core::DenotationsCaches& caches) const {
     std::vector<std::shared_ptr<const Rule>> result;
     for (const auto& r : m_rules) {
-        if (r->evaluate_conditions(source_state, cache)) {
+        if (r->evaluate_conditions(source_state, caches)) {
             result.push_back(r);
         }
     }
@@ -76,9 +76,9 @@ std::shared_ptr<const Rule> Policy::evaluate_effects_lazy(const core::State& sou
     return nullptr;
 }
 
-std::shared_ptr<const Rule> Policy::evaluate_effects_lazy(const core::State& source_state, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules, evaluator::EvaluationCache& cache) const {
+std::shared_ptr<const Rule> Policy::evaluate_effects_lazy(const core::State& source_state, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules, core::DenotationsCaches& caches) const {
     for (const auto& r : rules) {
-        if (r->evaluate_effects(source_state, target_state, cache)) {
+        if (r->evaluate_effects(source_state, target_state, caches)) {
             return r;
         }
     }

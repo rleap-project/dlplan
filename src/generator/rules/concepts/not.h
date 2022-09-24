@@ -1,21 +1,26 @@
 #ifndef DLPLAN_SRC_GENERATOR_RULES_CONCEPTS_NOT_H_
 #define DLPLAN_SRC_GENERATOR_RULES_CONCEPTS_NOT_H_
 
-#include "../concept.h"
-
+#include "../rule.h"
 #include "../../../core/elements/concepts/not.h"
 
 
 namespace dlplan::generator::rules {
 
-class NotConcept : public Concept {
+class NotConcept : public Rule {
 public:
-    NotConcept() : Concept() { }
+    NotConcept() : Rule() { }
 
-    virtual void submit_tasks_impl(const States& states, int target_complexity, GeneratorData& data, utils::threadpool::ThreadPool& th) override {
+    void generate_impl(const States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) override {
         core::SyntacticElementFactory& factory = data.m_factory;
         for (const auto& c : data.m_concepts_by_iteration[target_complexity-1]) {
-            m_tasks.push_back(th.submit(std::cref(m_task), std::cref(states), std::move(factory.make_not_concept(c))));
+            auto element = factory.make_not_concept(c);
+            auto denotations = element.get_element_ref().evaluate(states, caches);
+            if (data.m_concept_hash_table.insert(denotations).second) {
+                data.m_reprs.push_back(element.compute_repr());
+                data.m_concepts_by_iteration[target_complexity].push_back(std::move(element));
+                increment_generated();
+            }
         }
     }
 

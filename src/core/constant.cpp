@@ -31,7 +31,7 @@ int Constant::get_index() const {
     return m_index;
 }
 
-const std::string& Constant::get_name() const {
+const std::string& Constant::get_name_ref() const {
     return m_name;
 }
 

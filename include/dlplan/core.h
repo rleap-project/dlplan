@@ -14,120 +14,88 @@
 #include "utils/pimpl.h"
 #include "utils/dynamic_bitset.h"
 #include "utils/cache.h"
+#include "utils/hashing.h"
 
+/**
+ * Forward declarations and usings
+ */
+namespace dlplan::core {
+    class SyntacticElementFactoryImpl;
+    class InstanceInfoImpl;
+    class VocabularyInfoImpl;
+    class SyntacticElementFactory;
+    class InstanceInfo;
+    class VocabularyInfo;
+    class State;
+    class ConceptDenotation;
+    class RoleDenotation;
+    namespace element {
+        template<typename T>
+        class Element;
+        class Concept;
+        class Role;
+        class Numerical;
+        class Boolean;
+    }
+
+    using States = std::vector<State>;
+    using StatesSet = std::unordered_set<State>;
+    using StatePair = std::pair<State, State>;
+    using StatePairs = std::vector<StatePair>;
+
+    using ConceptDenotations = std::vector<ConceptDenotation*>;
+    using RoleDenotations = std::vector<RoleDenotation*>;
+    using BooleanDenotations = std::vector<bool>;
+    using NumericalDenotations = std::vector<int>;
+}
+
+
+/**
+ * Template specializations
+ */
+namespace std {
+    template<> struct hash<dlplan::core::State> {
+        size_t operator()(const dlplan::core::State& state) const noexcept;
+    };
+    template<>
+    struct hash<unique_ptr<dlplan::core::ConceptDenotation>> {
+        size_t operator()(const unique_ptr<dlplan::core::ConceptDenotation>& denotation) const noexcept;
+    };
+    template<>
+    struct hash<unique_ptr<dlplan::core::RoleDenotation>> {
+        size_t operator()(const unique_ptr<dlplan::core::RoleDenotation>& denotation) const noexcept;
+    };
+    template<>
+    struct hash<unique_ptr<dlplan::core::ConceptDenotations>> {
+        size_t operator()(const unique_ptr<dlplan::core::ConceptDenotations>& denotations) const noexcept;
+    };
+    template<>
+    struct hash<unique_ptr<dlplan::core::RoleDenotations>> {
+        size_t operator()(const unique_ptr<dlplan::core::RoleDenotations>& denotations) const noexcept;
+    };
+    template<>
+    struct hash<unique_ptr<dlplan::core::BooleanDenotations>> {
+        size_t operator()(const unique_ptr<dlplan::core::BooleanDenotations>& denotations) const noexcept;
+    };
+    template<>
+    struct hash<unique_ptr<dlplan::core::NumericalDenotations>> {
+        size_t operator()(const unique_ptr<dlplan::core::NumericalDenotations>& denotations) const noexcept;
+    };
+    template<> struct hash<vector<unsigned>> {
+        size_t operator()(const vector<unsigned>& data) const noexcept;
+    };
+    template<> struct hash<vector<int>> {
+        size_t operator()(const vector<int>& data) const noexcept;
+    };
+    template<> struct hash<std::array<int, 3>> {
+        size_t operator()(const std::array<int, 3>& data) const noexcept;
+    };
+}
 
 
 namespace dlplan::core {
-class SyntacticElementFactoryImpl;
-class InstanceInfoImpl;
-class VocabularyInfoImpl;
-class SyntacticElementFactory;
-class InstanceInfo;
-class VocabularyInfo;
-class State;
-class ConceptDenotationBitset;
-class ConceptDenotationFlatSet;
-class RoleDenotationBitset;
-class RoleDenotationFlatSet;
-namespace element {
-    template<typename T>
-    class Element;
-    class Concept;
-    class Role;
-    class Numerical;
-    class Boolean;
-}
 
-using States = std::vector<State>;
-using StatesSet = std::unordered_set<State>;
-using StatePair = std::pair<State, State>;
-using StatePairs = std::vector<StatePair>;
-
-#ifdef DENABLE_SPARSE
-    using ConceptDenotation = ConceptDenotationFlatSet;
-    using RoleDenotation = RoleDenotationFlatSet;
-#else
-    using ConceptDenotation = ConceptDenotationBitset;
-    using RoleDenotation = RoleDenotationBitset;
-#endif
-
-class ConceptDenotationFlatSet {
-private:
-    int m_num_objects;
-    phmap::flat_hash_set<int> m_data;
-
-public:
-    explicit ConceptDenotationFlatSet(int num_objects);
-    ConceptDenotationFlatSet(const ConceptDenotationFlatSet& other);
-    ConceptDenotationFlatSet& operator=(const ConceptDenotationFlatSet& other);
-    ConceptDenotationFlatSet(ConceptDenotationFlatSet&& other);
-    ConceptDenotationFlatSet& operator=(ConceptDenotationFlatSet&& other);
-    ~ConceptDenotationFlatSet();
-
-    ConceptDenotationFlatSet& operator&=(const ConceptDenotationFlatSet& other);
-    ConceptDenotationFlatSet& operator|=(const ConceptDenotationFlatSet& other);
-    ConceptDenotationFlatSet& operator-=(const ConceptDenotationFlatSet& other);
-    ConceptDenotationFlatSet& operator~();
-
-    phmap::flat_hash_set<int>::const_iterator begin() const;
-    phmap::flat_hash_set<int>::const_iterator end() const;
-
-    bool contains(int value) const;
-
-    void insert(int value);
-    void erase(int value);
-
-    int size() const;
-    bool empty() const;
-    bool intersects(const ConceptDenotationFlatSet& other) const;
-    bool is_subset_of(const ConceptDenotationFlatSet& other) const;
-
-    std::vector<int> to_sorted_vector() const;
-
-    std::vector<int> to_canonical_data_representation() const;
-
-    int get_num_objects() const;
-};
-
-
-class RoleDenotationFlatSet {
-private:
-    int m_num_objects;
-    phmap::flat_hash_set<std::pair<int, int>> m_data;
-
-public:
-    explicit RoleDenotationFlatSet(int num_objects);
-    RoleDenotationFlatSet(const RoleDenotationFlatSet& other);
-    RoleDenotationFlatSet& operator=(const RoleDenotationFlatSet& other);
-    RoleDenotationFlatSet(RoleDenotationFlatSet&& other);
-    RoleDenotationFlatSet& operator=(RoleDenotationFlatSet&& other);
-    ~RoleDenotationFlatSet();
-
-    RoleDenotationFlatSet& operator&=(const RoleDenotationFlatSet& other);
-    RoleDenotationFlatSet& operator|=(const RoleDenotationFlatSet& other);
-    RoleDenotationFlatSet& operator-=(const RoleDenotationFlatSet& other);
-    RoleDenotationFlatSet& operator~();
-
-    phmap::flat_hash_set<std::pair<int, int>>::const_iterator begin() const;
-    phmap::flat_hash_set<std::pair<int, int>>::const_iterator end() const;
-
-    bool contains(const std::pair<int, int>& value) const;
-    void insert(const std::pair<int, int>& value);
-    void erase(const std::pair<int, int>& value);
-
-    int size() const;
-    bool empty() const;
-    bool intersects(const RoleDenotationFlatSet& other) const;
-    bool is_subset_of(const RoleDenotationFlatSet& other) const;
-
-    std::vector<std::pair<int, int>> to_sorted_vector() const;
-
-    std::vector<int> to_canonical_data_representation() const;
-
-    int get_num_objects() const;
-};
-
-class ConceptDenotationBitset {
+class ConceptDenotation {
 private:
     int m_num_objects;
     utils::DynamicBitset<unsigned> m_data;
@@ -160,39 +128,45 @@ public:
             void seek_next();
     };
 
-    explicit ConceptDenotationBitset(int num_objects);
-    ConceptDenotationBitset(const ConceptDenotationBitset& other);
-    ConceptDenotationBitset& operator=(const ConceptDenotationBitset& other);
-    ConceptDenotationBitset(ConceptDenotationBitset&& other);
-    ConceptDenotationBitset& operator=(ConceptDenotationBitset&& other);
-    ~ConceptDenotationBitset();
+    explicit ConceptDenotation(int num_objects);
+    ConceptDenotation(const ConceptDenotation& other);
+    ConceptDenotation& operator=(const ConceptDenotation& other);
+    ConceptDenotation(ConceptDenotation&& other);
+    ConceptDenotation& operator=(ConceptDenotation&& other);
+    ~ConceptDenotation();
 
-    ConceptDenotationBitset& operator&=(const ConceptDenotationBitset& other);
-    ConceptDenotationBitset& operator|=(const ConceptDenotationBitset& other);
-    ConceptDenotationBitset& operator-=(const ConceptDenotationBitset& other);
-    ConceptDenotationBitset& operator~();
+    bool operator==(const ConceptDenotation& other) const ;
+    bool operator!=(const ConceptDenotation& other) const;
+
+    ConceptDenotation& operator&=(const ConceptDenotation& other);
+    ConceptDenotation& operator|=(const ConceptDenotation& other);
+    ConceptDenotation& operator-=(const ConceptDenotation& other);
+    ConceptDenotation& operator~();
 
     const_iterator begin() const;
     const_iterator end() const;
 
     bool contains(int value) const;
-
+    void set();
     void insert(int value);
     void erase(int value);
 
     int size() const;
+    int count() const;
     bool empty() const;
-    bool intersects(const ConceptDenotationBitset& other) const;
-    bool is_subset_of(const ConceptDenotationBitset& other) const;
+    bool intersects(const ConceptDenotation& other) const;
+    bool is_subset_of(const ConceptDenotation& other) const;
 
     std::vector<int> to_sorted_vector() const;
+    const utils::DynamicBitset<unsigned>& get_bitset_ref() const;
 
-    std::vector<int> to_canonical_data_representation() const;
+    std::size_t compute_hash() const;
 
     int get_num_objects() const;
 };
 
-class RoleDenotationBitset {
+
+class RoleDenotation {
 private:
     int m_num_objects;
     utils::DynamicBitset<unsigned> m_data;
@@ -211,6 +185,7 @@ public:
             bool operator==(const const_iterator& other) const;
 
             const std::pair<int, int>& operator*() const;
+            std::pair<int, int>* operator->();
             // Postfix increment
             const_iterator operator++(int);
             // Prefix increment
@@ -225,37 +200,77 @@ public:
             void seek_next();
     };
 
-    explicit RoleDenotationBitset(int num_objects);
-    RoleDenotationBitset(const RoleDenotationBitset& other);
-    RoleDenotationBitset& operator=(const RoleDenotationBitset& other);
-    RoleDenotationBitset(RoleDenotationBitset&& other);
-    RoleDenotationBitset& operator=(RoleDenotationBitset&& other);
-    ~RoleDenotationBitset();
+    explicit RoleDenotation(int num_objects);
+    RoleDenotation(const RoleDenotation& other);
+    RoleDenotation& operator=(const RoleDenotation& other);
+    RoleDenotation(RoleDenotation&& other);
+    RoleDenotation& operator=(RoleDenotation&& other);
+    ~RoleDenotation();
 
-    RoleDenotationBitset& operator&=(const RoleDenotationBitset& other);
-    RoleDenotationBitset& operator|=(const RoleDenotationBitset& other);
-    RoleDenotationBitset& operator-=(const RoleDenotationBitset& other);
-    RoleDenotationBitset& operator~();
+    bool operator==(const RoleDenotation& other) const ;
+    bool operator!=(const RoleDenotation& other) const;
+
+    RoleDenotation& operator&=(const RoleDenotation& other);
+    RoleDenotation& operator|=(const RoleDenotation& other);
+    RoleDenotation& operator-=(const RoleDenotation& other);
+    RoleDenotation& operator~();
 
     const_iterator begin() const;
     const_iterator end() const;
 
     bool contains(const std::pair<int, int>& value) const;
-
+    void set();
     void insert(const std::pair<int, int>& value);
     void erase(const std::pair<int, int>& value);
 
     int size() const;
+    int count() const;
     bool empty() const;
-    bool intersects(const RoleDenotationBitset& other) const;
-    bool is_subset_of(const RoleDenotationBitset& other) const;
+    bool intersects(const RoleDenotation& other) const;
+    bool is_subset_of(const RoleDenotation& other) const;
 
     std::vector<std::pair<int, int>> to_sorted_vector() const;
+    const utils::DynamicBitset<unsigned>& get_bitset_ref() const;
 
-    std::vector<int> to_canonical_data_representation() const;
+    const std::vector<unsigned>& get_blocks() const;
+    std::size_t compute_hash() const;
 
     int get_num_objects() const;
 };
+
+
+/**
+ * Compares two std::unique_ptr<T>
+ * by comparing objects T.
+ */
+template<typename T>
+struct DerefEqual {
+    bool operator()(const T& left, const T& right) const {
+        return *left == *right;
+    }
+};
+
+struct DenotationsCaches {
+    // Cache for single denotations.
+    std::unordered_set<std::unique_ptr<ConceptDenotation>, std::hash<std::unique_ptr<ConceptDenotation>>, DerefEqual<std::unique_ptr<ConceptDenotation>>> m_c_denot_cache;
+    std::unordered_set<std::unique_ptr<RoleDenotation>, std::hash<std::unique_ptr<RoleDenotation>>, DerefEqual<std::unique_ptr<RoleDenotation>>> m_r_denot_cache;
+    // Cache for collections of denotations.
+    std::unordered_set<std::unique_ptr<BooleanDenotations>, std::hash<std::unique_ptr<BooleanDenotations>>, DerefEqual<std::unique_ptr<BooleanDenotations>>> m_b_denots_cache;
+    std::unordered_set<std::unique_ptr<NumericalDenotations>, std::hash<std::unique_ptr<NumericalDenotations>>, DerefEqual<std::unique_ptr<NumericalDenotations>>> m_n_denots_cache;
+    std::unordered_set<std::unique_ptr<ConceptDenotations>, std::hash<std::unique_ptr<ConceptDenotations>>, DerefEqual<std::unique_ptr<ConceptDenotations>>> m_c_denots_cache;
+    std::unordered_set<std::unique_ptr<RoleDenotations>, std::hash<std::unique_ptr<RoleDenotations>>, DerefEqual<std::unique_ptr<RoleDenotations>>> m_r_denots_cache;
+    // Mapping from element index to denotations.
+    std::unordered_map<int, BooleanDenotations*> m_b_denots_mapping;
+    std::unordered_map<int, NumericalDenotations*> m_n_denots_mapping;
+    std::unordered_map<int, ConceptDenotations*> m_c_denots_mapping;
+    std::unordered_map<int, RoleDenotations*> m_r_denots_mapping;
+    // Mapping from instance, state, element index to denotations
+    std::unordered_map<std::array<int, 3>, int> m_n_denots_mapping_per_state;
+    std::unordered_map<std::array<int, 3>, bool> m_b_denots_mapping_per_state;
+    std::unordered_map<std::array<int, 3>, ConceptDenotation*> m_c_denots_mapping_per_state;
+    std::unordered_map<std::array<int, 3>, RoleDenotation*> m_r_denots_mapping_per_state;
+};
+
 
 class Constant {
 private:
@@ -277,7 +292,7 @@ public:
     bool operator!=(const Constant& other) const;
 
     int get_index() const;
-    const std::string& get_name() const;
+    const std::string& get_name_ref() const;
 };
 
 
@@ -307,7 +322,7 @@ public:
      * Getters.
      */
     int get_index() const;
-    const std::string& get_name() const;
+    const std::string& get_name_ref() const;
     int get_arity() const;
 };
 
@@ -334,7 +349,7 @@ public:
     bool operator!=(const Object& other) const;
 
     int get_index() const;
-    const std::string& get_name() const;
+    const std::string& get_name_ref() const;
 };
 
 
@@ -369,11 +384,11 @@ public:
     /**
      * Getters.
      */
-    std::string get_name() const;
+    const std::string& get_name_ref() const;
     int get_index() const;
-    const Predicate& get_predicate() const;
-    const std::vector<Object>& get_objects() const;
-    const Object& get_object(int pos) const;
+    const Predicate& get_predicate_ref() const;
+    const std::vector<Object>& get_objects_ref() const;
+    const Object& get_object_ref(int pos) const;
     bool get_is_static() const;
 };
 
@@ -426,11 +441,12 @@ public:
     /**
      * Getters.
      */
+    const InstanceInfo& get_instance_info_ref() const;
     std::shared_ptr<const InstanceInfo> get_instance_info() const;
-    const Index_Vec& get_atom_idxs() const;
+    const Index_Vec& get_atom_idxs_ref() const;
     Index_Vec compute_sorted_atom_idxs() const;
     int get_index() const;
-    const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_atom_idxs() const;
+    const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_atom_idxs_ref() const;
 };
 
 
@@ -455,14 +471,14 @@ public:
 
     bool exists_predicate(const Predicate& predicate) const;
     bool exists_predicate_name(const std::string& name) const;
-    const std::vector<Predicate>& get_predicates() const;
+    const std::vector<Predicate>& get_predicates_ref() const;
     int get_predicate_idx(const std::string& name) const;
-    const Predicate& get_predicate(int index) const;
+    const Predicate& get_predicate_ref(int index) const;
     bool exists_constant(const Constant& constant) const;
     bool exists_constant_name(const std::string& name) const;
     int get_constant_idx(const std::string& name) const;
-    const Constant& get_constant(int index) const;
-    const std::vector<Constant>& get_constants() const;
+    const Constant& get_constant_ref(int index) const;
+    const std::vector<Constant>& get_constants_ref() const;
 };
 
 
@@ -496,24 +512,30 @@ public:
     const Atom& add_static_atom(const std::string& predicate_name, const Name_Vec& object_names);
 
     /**
+     * Setters.
+     */
+    void set_index(int index);
+
+    /**
      * Getters.
      */
     int get_index() const;
     bool exists_atom(const Atom& atom) const;
-    const std::vector<Atom>& get_atoms() const;
-    const std::vector<Atom>& get_static_atoms() const;
-    const Atom& get_atom(int index) const;
+    const std::vector<Atom>& get_atoms_ref() const;
+    const std::vector<Atom>& get_static_atoms_ref() const;
+    const Atom& get_atom_ref(int index) const;
     int get_atom_idx(const std::string& name) const;
     bool exists_object(const Object& object) const;
     bool exists_object(const std::string name) const;
-    const std::vector<Object>& get_objects() const;
-    const Object& get_object(int index) const;
+    const std::vector<Object>& get_objects_ref() const;
+    const Object& get_object_ref(int index) const;
     int get_object_idx(const std::string& name) const;
     int get_num_objects() const;
+    const VocabularyInfo& get_vocabulary_info_ref() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
-    const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs() const;
-    const ConceptDenotation& get_top_concept() const;
-    const RoleDenotation& get_top_role() const;
+    const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs_ref() const;
+    const ConceptDenotation& get_top_concept_ref() const;
+    const RoleDenotation& get_top_role_ref() const;
 };
 
 
@@ -552,31 +574,15 @@ public:
      * Getters.
      */
     int get_index() const;
+    const VocabularyInfo& get_vocabulary_info_ref() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
-};
-
-/**
- * Abstract base class of any Element.
- */
-template<typename T>
-class Element : public BaseElement {
-protected:
-    Element(std::shared_ptr<const VocabularyInfo> vocabulary_info, int index=-1);
-
-public:
-    ~Element() override;
-
-    /**
-     * Evaluates the element for a state given as a vector of atom indices.
-     */
-    virtual T evaluate(const State& state) const = 0;
 };
 
 
 /**
  * Concept evaluates to ConceptDenotation.
  */
-class Concept : public Element<ConceptDenotation> {
+class Concept : public BaseElement {
 private:
     std::shared_ptr<const element::Concept> m_element;
 
@@ -590,12 +596,15 @@ public:
     Concept& operator=(Concept&& other);
     ~Concept() override;
 
-    ConceptDenotation evaluate(const State& state) const override;
+    ConceptDenotation evaluate(const State& state) const;
+    ConceptDenotation* evaluate(const State& state, DenotationsCaches& caches) const;
+    ConceptDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
 
     int compute_complexity() const override;
 
     std::string compute_repr() const override;
 
+    const element::Concept& get_element_ref() const;
     std::shared_ptr<const element::Concept> get_element() const;
 };
 
@@ -603,7 +612,7 @@ public:
 /**
  * Concept evaluates to RoleDenotation.
  */
-class Role : public Element<RoleDenotation> {
+class Role : public BaseElement {
 private:
     std::shared_ptr<const element::Role> m_element;
 
@@ -617,12 +626,15 @@ public:
     Role& operator=(Role&& other);
     ~Role() override;
 
-    RoleDenotation evaluate(const State& state) const override;
+    RoleDenotation evaluate(const State& state) const;
+    RoleDenotation* evaluate(const State& state, DenotationsCaches& caches) const;
+    RoleDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
 
     int compute_complexity() const override;
 
     std::string compute_repr() const override;
 
+    const element::Role& get_element_ref() const;
     std::shared_ptr<const element::Role> get_element() const;
 };
 
@@ -630,7 +642,7 @@ public:
 /**
  * Numerical evaluates to int.
  */
-class Numerical : public Element<int> {
+class Numerical : public BaseElement {
 private:
     std::shared_ptr<const element::Numerical> m_element;
 
@@ -644,12 +656,15 @@ public:
     Numerical& operator=(Numerical&& other);
     ~Numerical() override;
 
-    int evaluate(const State& state) const override;
+    int evaluate(const State& state) const;
+    int evaluate(const State& state, DenotationsCaches& caches) const;
+    NumericalDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
 
     int compute_complexity() const override;
 
     std::string compute_repr() const override;
 
+    const element::Numerical& get_element_ref() const;
     std::shared_ptr<const element::Numerical> get_element() const;
 };
 
@@ -657,7 +672,7 @@ public:
 /**
  * Boolean evaluates to bool.
  */
-class Boolean : public Element<bool> {
+class Boolean : public BaseElement {
 private:
     std::shared_ptr<const element::Boolean> m_element;
 
@@ -671,12 +686,15 @@ public:
     Boolean& operator=(Boolean&& other);
     ~Boolean() override;
 
-    bool evaluate(const State& state) const override;
+    bool evaluate(const State& state) const;
+    bool evaluate(const State& state, DenotationsCaches& caches) const;
+    BooleanDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
 
     int compute_complexity() const override;
 
     std::string compute_repr() const override;
 
+    const element::Boolean& get_element_ref() const;
     std::shared_ptr<const element::Boolean> get_element() const;
 };
 
@@ -696,7 +714,8 @@ public:
     SyntacticElementFactory& operator=(SyntacticElementFactory&& other);
     ~SyntacticElementFactory();
 
-    const VocabularyInfo* get_vocabulary_info() const;
+    const VocabularyInfo& get_vocabulary_info_ref() const;
+    std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
 
     /**
      * Returns a Concept if the description is correct.
@@ -725,8 +744,8 @@ public:
 
     Boolean make_empty_boolean(const Concept& concept, int index=-1);
     Boolean make_empty_boolean(const Role& role, int index=-1);
-    Boolean make_concept_inclusion_boolean(const Concept& concept_left, const Concept& concept_right, int index=-1);
-    Boolean make_role_inclusion_boolean(const Role& role_left, const Role& role_right, int index=-1);
+    Boolean make_inclusion_boolean(const Concept& concept_left, const Concept& concept_right, int index=-1);
+    Boolean make_inclusion_boolean(const Role& role_left, const Role& role_right, int index=-1);
     Boolean make_nullary_boolean(const Predicate& predicate, int index=-1);
 
     Concept make_all_concept(const Role& role, const Concept& concept, int index=-1);
@@ -743,12 +762,12 @@ public:
     Concept make_subset_concept(const Role& role_left, const Role& role_right, int index=-1);
     Concept make_top_concept(int index=-1);
 
-    Numerical make_concept_distance(const Concept& concept_from, const Role& role, const Concept& concept_to, int index=-1);
-    Numerical make_count(const Concept& concept, int index=-1);
-    Numerical make_count(const Role& role, int index=-1);
-    Numerical make_role_distance(const Role& role_from, const Role& role, const Role& role_to, int index=-1);
-    Numerical make_sum_concept_distance(const Concept& concept_from, const Role& role, const Concept& concept_to, int index=-1);
-    Numerical make_sum_role_distance(const Role& role_from, const Role& role, const Role& role_to, int index=-1);
+    Numerical make_concept_distance_numerical(const Concept& concept_from, const Role& role, const Concept& concept_to, int index=-1);
+    Numerical make_count_numerical(const Concept& concept, int index=-1);
+    Numerical make_count_numerical(const Role& role, int index=-1);
+    Numerical make_role_distance_numerical(const Role& role_from, const Role& role, const Role& role_to, int index=-1);
+    Numerical make_sum_concept_distance_numerical(const Concept& concept_from, const Role& role, const Concept& concept_to, int index=-1);
+    Numerical make_sum_role_distance_numerical(const Role& role_from, const Role& role, const Role& role_to, int index=-1);
 
     Role make_and_role(const Role& role_left, const Role& role_right, int index=-1);
     Role make_compose_role(const Role& role_left, const Role& role_right, int index=-1);
@@ -765,21 +784,5 @@ public:
 };
 
 }
-
-namespace std {
-    /**
-     * We provide custom specialization of std::hash that are injected in the namespace std
-     * to be able to use standard hash containers.
-     * https://en.cppreference.com/w/cpp/utility/hash
-     */
-    template<> struct hash<dlplan::core::State> {
-        std::size_t operator()(const dlplan::core::State& state) const noexcept {
-            return state.compute_hash();
-        }
-    };
-}
-
-
-#include "core.tpp"
 
 #endif
