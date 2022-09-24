@@ -54,7 +54,7 @@ endif()
 
 ## Compile the scorpion planer
 # https://stackoverflow.com/questions/2937128/cmake-add-custom-command-not-being-run
-find_package(Python3 COMPONENTS Interpreter REQUIRED)
+find_package(Python COMPONENTS Interpreter REQUIRED)
 message("${PYTHON_EXECUTABLE}")
 message("${PROJECT_SOURCE_DIR}/libs/scorpion/build.py")
 add_custom_command(
