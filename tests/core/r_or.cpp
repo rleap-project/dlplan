@@ -10,7 +10,7 @@ TEST(DLPTests, RoleOr) {
     std::shared_ptr<VocabularyInfo> vocabulary = std::make_shared<VocabularyInfo>();
     Predicate p0 = vocabulary->add_predicate("role_1", 2);
     Predicate p1 = vocabulary->add_predicate("role_2", 2);
-    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary);
+    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary, 0);
     // Add state atoms
     Atom a0 = instance->add_atom("role_1", {"A", "X"});
     Atom a1 = instance->add_atom("role_1", {"B", "Y"});

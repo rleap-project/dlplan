@@ -35,7 +35,7 @@ TEST(DLPTests, InstanceCreation) {
     Predicate p2 = vocabulary->add_predicate("holding", 1);
     Predicate p3 = vocabulary->add_predicate("on_g", 2);
     std::vector<Predicate> predicates({p0, p1, p2, p3});
-    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary);
+    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary, 0);
     // Add state atoms
     Atom a0 = instance->add_atom("on", {"A", "B"});
     Atom a1 = instance->add_atom("on", {"B", "A"});

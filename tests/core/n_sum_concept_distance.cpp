@@ -16,7 +16,7 @@ TEST(DLPTests, NumericalSumConceptDistance) {
     Predicate p3 = vocabulary->add_predicate("start2", 1);
     Predicate p4 = vocabulary->add_predicate("end2", 1);
     Predicate p5 = vocabulary->add_predicate("start3", 1);
-    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary);
+    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary, 0);
     // Add state atoms
     Atom a0 = instance->add_atom("conn", {"A", "B"});
     Atom a1 = instance->add_atom("conn", {"B", "C"});
