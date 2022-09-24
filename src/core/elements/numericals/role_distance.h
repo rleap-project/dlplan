@@ -29,6 +29,47 @@ private:
         }
     }
 
+    int evaluate_impl(const State& state, DenotationsCaches& caches) const override {
+        auto role_from_denot = m_role_from->evaluate(state, caches);
+        if (role_from_denot->empty()) {
+            return INF;
+        }
+        auto role_to_denot = m_role_to->evaluate(state, caches);
+        if (role_to_denot->empty()) {
+            return INF;
+        }
+        auto role_denot = m_role->evaluate(state, caches);
+        int denotation;
+        compute_result(*role_from_denot, *role_denot, *role_to_denot, denotation);
+        return denotation;
+    }
+
+    std::unique_ptr<NumericalDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const override {
+        auto denotations = std::make_unique<NumericalDenotations>();
+        denotations->reserve(states.size());
+        auto role_from_denots = m_role_from->evaluate(states, caches);
+        auto role_denots = m_role->evaluate(states, caches);
+        auto role_to_denots = m_role_to->evaluate(states, caches);
+        for (size_t i = 0; i < states.size(); ++i) {
+            if ((*role_from_denots)[i]->empty()) {
+                denotations->push_back(INF);
+                continue;
+            }
+            if ((*role_to_denots)[i]->empty()) {
+                denotations->push_back(INF);
+                continue;
+            }
+            int denotation;
+            compute_result(
+                *(*role_from_denots)[i],
+                *(*role_denots)[i],
+                *(*role_to_denots)[i],
+                denotation);
+            denotations->push_back(denotation);
+        }
+        return denotations;
+    }
+
 protected:
     const Role_Ptr m_role_from;
     const Role_Ptr m_role;
@@ -55,56 +96,6 @@ public:
         int denotation;
         compute_result(role_from_denot, role_denot, role_to_denot, denotation);
         return denotation;
-    }
-
-    int evaluate(const State& state, DenotationsCaches& caches) const override {
-        auto role_from_denot = m_role_from->evaluate(state, caches);
-        if (role_from_denot->empty()) {
-            return INF;
-        }
-        auto role_to_denot = m_role_to->evaluate(state, caches);
-        if (role_to_denot->empty()) {
-            return INF;
-        }
-        auto role_denot = m_role->evaluate(state, caches);
-        int denotation;
-        compute_result(*role_from_denot, *role_denot, *role_to_denot, denotation);
-        return denotation;
-    }
-
-    NumericalDenotations* evaluate(const States& states, DenotationsCaches& caches) const override {
-        // check if denotations is cached.
-        auto cached = caches.m_n_denots_mapping.find(get_index());
-        if (cached != caches.m_n_denots_mapping.end()) return cached->second;
-        // allocate memory for new denotations
-        auto denotations = std::make_unique<NumericalDenotations>();
-        denotations->reserve(states.size());
-        // get denotations of children
-        auto role_from_denots = m_role_from->evaluate(states, caches);
-        auto role_denots = m_role->evaluate(states, caches);
-        auto role_to_denots = m_role_to->evaluate(states, caches);
-        // compute denotations
-        for (size_t i = 0; i < states.size(); ++i) {
-            if ((*role_from_denots)[i]->empty()) {
-                denotations->push_back(INF);
-                continue;
-            }
-            if ((*role_to_denots)[i]->empty()) {
-                denotations->push_back(INF);
-                continue;
-            }
-            int denotation;
-            compute_result(
-                *(*role_from_denots)[i],
-                *(*role_denots)[i],
-                *(*role_to_denots)[i],
-                denotation);
-            denotations->push_back(denotation);
-        }
-        // register denotations and return it.
-        auto result_denotations = caches.m_n_denots_cache.insert(std::move(denotations)).first->get();
-        caches.m_n_denots_mapping.emplace(get_index(), result_denotations);
-        return result_denotations;
     }
 
     int compute_complexity() const override {

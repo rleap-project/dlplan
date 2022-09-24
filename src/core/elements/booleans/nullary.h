@@ -25,6 +25,19 @@ private:
         result = false;
     }
 
+    bool evaluate_impl(const State& state, DenotationsCaches&) const override {
+        return evaluate(state);
+    }
+
+    std::unique_ptr<BooleanDenotations>
+    evaluate_impl(const States& states, DenotationsCaches&) const override {
+        auto denotations = std::make_unique<BooleanDenotations>();
+        for (size_t i = 0; i < states.size(); ++i) {
+            denotations->push_back(evaluate(states[i]));
+        }
+        return denotations;
+    }
+
 protected:
     const Predicate m_predicate;
 
@@ -43,27 +56,6 @@ public:
         bool denotation;
         compute_result(state, denotation);
         return denotation;
-    }
-
-    bool evaluate(const State& state, DenotationsCaches& caches) const override {
-        return evaluate(state);
-    }
-
-    BooleanDenotations* evaluate(const States& states, DenotationsCaches& caches) const override {
-        // check if denotations is cached.
-        auto cached = caches.m_b_denots_mapping.find(get_index());
-        if (cached != caches.m_b_denots_mapping.end()) return cached->second;
-        // allocate memory for new denotations
-        auto denotations = std::make_unique<BooleanDenotations>();
-        denotations->reserve(states.size());
-        // compute denotations
-        for (size_t i = 0; i < states.size(); ++i) {
-            denotations->push_back(evaluate(states[i]));
-        }
-        // register denotations and return it.
-        auto result_denotations = caches.m_b_denots_cache.insert(std::move(denotations)).first->get();
-        caches.m_b_denots_mapping.emplace(get_index(), result_denotations);
-        return result_denotations;
     }
 
     int compute_complexity() const override {

@@ -19,6 +19,36 @@ private:
         }
     }
 
+    std::unique_ptr<ConceptDenotation> evaluate_impl(const State& state, DenotationsCaches& caches) const override {
+        auto denotation = std::make_unique<ConceptDenotation>(
+            ConceptDenotation(state.get_instance_info_ref().get_num_objects()));
+        denotation->set();
+        compute_result(
+            *m_role->evaluate(state, caches),
+            *m_concept->evaluate(state, caches),
+            *denotation);
+        return denotation;
+    }
+
+    std::unique_ptr<ConceptDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const override {
+        auto denotations = std::make_unique<ConceptDenotations>();
+        denotations->reserve(states.size());
+        auto role_denotations = m_role->evaluate(states, caches);
+        auto concept_denotations = m_concept->evaluate(states, caches);
+        for (size_t i = 0; i < states.size(); ++i) {
+            const auto& state = states[i];
+            int num_objects = state.get_instance_info_ref().get_num_objects();
+            auto denotation = std::make_unique<ConceptDenotation>(ConceptDenotation(num_objects));
+            denotation->set();
+            compute_result(
+                *(*role_denotations)[i],
+                *(*concept_denotations)[i],
+                *denotation);
+            denotations->push_back(caches.m_c_denot_cache.insert(std::move(denotation)).first->get());
+        }
+        return denotations;
+    }
+
 protected:
     const Role_Ptr m_role;
     const Concept_Ptr m_concept;
@@ -38,52 +68,6 @@ public:
             m_concept->evaluate(state),
             denotation);
         return denotation;
-    }
-
-    ConceptDenotation* evaluate(const State& state, DenotationsCaches& caches) const override {
-        // check if denotations is cached.
-        std::array<int, 3> key({state.get_instance_info_ref().get_index(), state.get_index(), get_index()});
-        auto cached = caches.m_c_denots_mapping_per_state.find(key);
-        if (cached != caches.m_c_denots_mapping_per_state.end()) return cached->second;
-        int num_objects = state.get_instance_info_ref().get_index();
-        auto denotation = std::make_unique<ConceptDenotation>(ConceptDenotation(num_objects));
-        denotation->set();
-        compute_result(
-            *m_role->evaluate(state, caches),
-            *m_concept->evaluate(state, caches),
-            *denotation);
-        // register denotation and append it to denotations.
-        auto result_denotation = caches.m_c_denot_cache.insert(std::move(denotation)).first->get();
-        caches.m_c_denots_mapping_per_state.emplace(key, result_denotation);
-        return result_denotation;
-    }
-
-    ConceptDenotations* evaluate(const States& states, DenotationsCaches& caches) const override {
-        // check if denotations is cached.
-        auto cached = caches.m_c_denots_mapping.find(get_index());
-        if (cached != caches.m_c_denots_mapping.end()) return cached->second;
-        // allocate memory for new denotations
-        auto denotations = std::make_unique<ConceptDenotations>();
-        denotations->reserve(states.size());
-        // get denotations of children
-        auto role_denotations = m_role->evaluate(states, caches);
-        auto concept_denotations = m_concept->evaluate(states, caches);
-        for (size_t i = 0; i < states.size(); ++i) {
-            const auto& state = states[i];
-            int num_objects = state.get_instance_info_ref().get_num_objects();
-            auto denotation = std::make_unique<ConceptDenotation>(ConceptDenotation(num_objects));
-            denotation->set();
-            compute_result(
-                *(*role_denotations)[i],
-                *(*concept_denotations)[i],
-                *denotation);
-            // register denotation and append it to denotations.
-            denotations->push_back(caches.m_c_denot_cache.insert(std::move(denotation)).first->get());
-        }
-        // register denotations and return it.
-        auto result_denotations = caches.m_c_denots_cache.insert(std::move(denotations)).first->get();
-        caches.m_c_denots_mapping.emplace(get_index(), result_denotations);
-        return result_denotations;
     }
 
     int compute_complexity() const override {

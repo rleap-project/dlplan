@@ -31,6 +31,29 @@ private:
         collect_roles(state.get_instance_info_ref().get_per_predicate_idx_static_atom_idxs_ref(), static_atoms, m_predicate, m_pos_1, m_pos_2, result);
     }
 
+    std::unique_ptr<RoleDenotation> evaluate_impl(const State& state, DenotationsCaches&) const override {
+        auto denotation = std::make_unique<RoleDenotation>(
+            RoleDenotation(state.get_instance_info_ref().get_num_objects()));
+        compute_result(
+            state,
+            *denotation);
+        return denotation;
+    }
+
+    std::unique_ptr<RoleDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const override {
+        auto denotations = std::make_unique<RoleDenotations>();
+        denotations->reserve(states.size());
+        for (size_t i = 0; i < states.size(); ++i) {
+            auto denotation = std::make_unique<RoleDenotation>(
+                RoleDenotation(states[i].get_instance_info_ref().get_num_objects()));
+            compute_result(
+                states[i],
+                *denotation);
+            denotations->push_back(caches.m_r_denot_cache.insert(std::move(denotation)).first->get());
+        }
+        return denotations;
+    }
+
 protected:
     const Predicate m_predicate;
     const int m_pos_1;
@@ -51,33 +74,6 @@ public:
         RoleDenotation denotation(state.get_instance_info_ref().get_num_objects());
         compute_result(state, denotation);
         return denotation;
-    }
-
-    RoleDenotation* evaluate(const State& state, DenotationsCaches& caches) const override {
-    }
-
-    RoleDenotations* evaluate(const States& states, DenotationsCaches& caches) const override {
-        // check if denotations is cached.
-        auto cached = caches.m_r_denots_mapping.find(get_index());
-        if (cached != caches.m_r_denots_mapping.end()) return cached->second;
-        // allocate memory for new denotations
-        auto denotations = std::make_unique<RoleDenotations>();
-        denotations->reserve(states.size());
-        // compute denotations
-        for (size_t i = 0; i < states.size(); ++i) {
-            const auto& state = states[i];
-            int num_objects = state.get_instance_info_ref().get_num_objects();
-            auto denotation = std::make_unique<RoleDenotation>(RoleDenotation(num_objects));
-            compute_result(
-                state,
-                *denotation);
-            // register denotation and append it to denotations.
-            denotations->push_back(caches.m_r_denot_cache.insert(std::move(denotation)).first->get());
-        }
-        // register denotations and return it.
-        auto result_denotations = caches.m_r_denots_cache.insert(std::move(denotations)).first->get();
-        caches.m_r_denots_mapping.emplace(get_index(), result_denotations);
-        return result_denotations;
     }
 
     int compute_complexity() const override {

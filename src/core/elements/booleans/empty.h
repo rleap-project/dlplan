@@ -15,6 +15,29 @@ private:
         result = denotation.empty();
     }
 
+    bool
+    evaluate_impl(const State& state, DenotationsCaches& caches) const override {
+        bool denotation;
+        compute_result(
+                *m_element->evaluate(state, caches),
+                denotation);
+        return denotation;
+    }
+
+    std::unique_ptr<BooleanDenotations>
+    evaluate_impl(const States& states, DenotationsCaches& caches) const override {
+        auto denotations = std::make_unique<BooleanDenotations>();
+        auto element_denotations = m_element->evaluate(states, caches);
+        for (size_t i = 0; i < states.size(); ++i) {
+            bool denotation;
+            compute_result(
+                *(*element_denotations)[i],
+                denotation);
+            denotations->push_back(denotation);
+        }
+        return denotations;
+    }
+
 protected:
     const std::shared_ptr<const T> m_element;
 
@@ -27,37 +50,6 @@ public:
         bool denotation;
         compute_result(m_element->evaluate(state), denotation);
         return denotation;
-    }
-
-    bool evaluate(const State& state, DenotationsCaches& caches) const override {
-        bool denotation;
-        compute_result(
-                *m_element->evaluate(state, caches),
-                denotation);
-       return denotation;
-    }
-
-    BooleanDenotations* evaluate(const States& states, DenotationsCaches& caches) const override {
-        // check if denotations is cached.
-        auto cached = caches.m_b_denots_mapping.find(get_index());
-        if (cached != caches.m_b_denots_mapping.end()) return cached->second;
-        // allocate memory for new denotations
-        auto denotations = std::make_unique<BooleanDenotations>();
-        denotations->reserve(states.size());
-        // get denotations of children
-        auto element_denotations = m_element->evaluate(states, caches);
-        // compute denotations
-        for (size_t i = 0; i < states.size(); ++i) {
-            bool denotation;
-            compute_result(
-                *(*element_denotations)[i],
-                denotation);
-            denotations->push_back(denotation);
-        }
-        // register denotations and return it.
-        auto result_denotations = caches.m_b_denots_cache.insert(std::move(denotations)).first->get();
-        caches.m_b_denots_mapping.emplace(get_index(), result_denotations);
-        return result_denotations;
     }
 
     int compute_complexity() const override {

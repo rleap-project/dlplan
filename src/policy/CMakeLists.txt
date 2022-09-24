@@ -14,7 +14,7 @@ target_sources(dlplanpolicy
         parser/parser.cpp
         parser/tokenizer.cpp
         parser/utils.cpp)
-target_link_libraries(dlplanpolicy dlplancore dlplanevaluator)
+target_link_libraries(dlplanpolicy dlplancore)
 target_include_directories(dlplanpolicy
     PUBLIC
         ${PROJECT_SOURCE_DIR}/include/
