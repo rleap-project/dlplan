@@ -41,21 +41,27 @@ else:
     SUITE = ["blocksworld_3:p-3-0.pddl", "childsnack:p-2-1.0-0.0-1-0.pddl", "delivery:instance_2_1_0.pddl", "gripper:p-1-0.pddl", "miconic:p-2-2-0.pddl", "reward:instance_2x2_0.pddl", "visitall:p-1-0.5-2-0.pddl"]
     TIME_LIMIT = 180
 ATTRIBUTES = [
+    Attribute("num_iterations", absolute=True, min_wins=True, scale="linear"),
+    Attribute("num_states", absolute=True, min_wins=True, scale="linear"),
+    Attribute("num_dynamic_atoms", absolute=True, min_wins=True, scale="linear"),
+    Attribute("num_static_atoms", absolute=True, min_wins=True, scale="linear"),
     Attribute("generate_time_complexity_5", absolute=True, min_wins=True, scale="linear"),
     Attribute("generate_memory_complexity_5", absolute=True, min_wins=True, scale="linear"),
-    Attribute("num_generated_features_complexity_5", absolute=True, min_wins=True, scale="linear"),
-    Attribute("num_novel_features_complexity_5", absolute=True, min_wins=True, scale="linear"),
     Attribute("generate_time_complexity_10", absolute=True, min_wins=True, scale="linear"),
     Attribute("generate_memory_complexity_10", absolute=True, min_wins=True, scale="linear"),
-    Attribute("num_generated_features_complexity_10", absolute=True, min_wins=True, scale="linear"),
-    Attribute("num_novel_features_complexity_10", absolute=True, min_wins=True, scale="linear"),
-    Attribute("evaluate_time", absolute=True, min_wins=True, scale="linear"),
+    Attribute("num_booleans", absolute=True, min_wins=True, scale="linear"),
+    Attribute("num_numericals", absolute=True, min_wins=True, scale="linear"),
+    Attribute("evaluate_time_single", absolute=True, min_wins=True, scale="linear"),
+    Attribute("evaluate_time_single_cache", absolute=True, min_wins=True, scale="linear"),
+    Attribute("evaluate_time_multi_cache", absolute=True, min_wins=True, scale="linear"),
+
 ]
+
 MEMORY_LIMIT = (16 * 3000) * 0.98
 
 GENERATOR_TIME_LIMIT = 2 * 3600
 GENERATOR_FEATURE_LIMIT = 1000000
-NUM_FEATURE_VALUATION_ITERATIONS = 100
+NUM_FEATURE_VALUATION_ITERATIONS = 1000
 
 # Create a new experiment.
 exp = Experiment(environment=ENV)

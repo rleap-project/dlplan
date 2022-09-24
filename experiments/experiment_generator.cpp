@@ -18,11 +18,25 @@ int main(int argc, char** argv) {
         std::cout << "User error. Expected: ./experiment_core <str:domain_filename> <str:instance_filename> <int:concept_complexity_limit> <int:role_complexity_limit> <int:boolean_complexity_limit> <int:numerical_complexity_limit> <int:time_limit> <int:features_limit> <int:limit_threads> <int:num_iterations>" << std::endl;
         return 1;
     }
+    std::string domain_filename = argv[1];
+    std::string instance_filename = argv[2];
+    int concept_complexity_limit = std::atoi(argv[3]);
+    int role_complexity_limit = std::atoi(argv[4]);
+    int boolean_complexity_limit = std::atoi(argv[5]);
+    int numerical_complexity_limit = std::atoi(argv[6]);
+    int time_limit = std::atoi(argv[7]);
+    int feature_limit = std::atoi(argv[8]);
+    int threads_limit = std::atoi(argv[9]);
+    int num_iterations = std::atoi(argv[10]);
+    std::cout << "Number of iterations: " << num_iterations << std::endl;
 
-    state_space::StateSpaceGenerator().generate_state_space(argv[1], argv[2]);
+    state_space::StateSpaceGenerator().generate_state_space(domain_filename, instance_filename);
     auto state_space = state_space::StateSpaceReader().read(nullptr, 0);
     std::cout << "Started generating features" << std::endl;
     std::cout << "Number of states: " << state_space.get_num_states() << std::endl;
+    std::cout << "Number of dynamic atoms: " << state_space.get_instance_info_ref().get_atoms_ref().size() << std::endl;
+    std::cout << "Number of static atoms: " << state_space.get_instance_info_ref().get_static_atoms_ref().size() << std::endl;
+
     auto syntactic_element_factory = core::SyntacticElementFactory(state_space.get_instance_info()->get_vocabulary_info());
     auto feature_generator = generator::FeatureGenerator();
     feature_generator.set_generate_inclusion_boolean(false);
@@ -37,7 +51,16 @@ int main(int argc, char** argv) {
     feature_generator.set_generate_or_role(false);
     feature_generator.set_generate_top_role(false);
     feature_generator.set_generate_transitive_reflexive_closure_role(false);
-    auto feature_reprs = feature_generator.generate(syntactic_element_factory, std::atoi(argv[3]), std::atoi(argv[4]), std::atoi(argv[5]), std::atoi(argv[6]), std::atoi(argv[7]), std::atoi(argv[8]), std::atoi(argv[9]), core::States(state_space.get_states_ref().begin(), state_space.get_states_ref().end()));
+    auto feature_reprs = feature_generator.generate(
+        syntactic_element_factory,
+        concept_complexity_limit,
+        role_complexity_limit,
+        boolean_complexity_limit,
+        numerical_complexity_limit,
+        time_limit,
+        feature_limit,
+        threads_limit,
+        core::States(state_space.get_states_ref().begin(), state_space.get_states_ref().end()));
 
     std::vector<core::Boolean> boolean_features;
     std::vector<core::Numerical> numerical_features;
@@ -50,14 +73,12 @@ int main(int argc, char** argv) {
     }
 
     std::cout << "Started element evaluation" << std::endl;
-    std::cout << "Number of boolean elements: " << boolean_features.size() << std::endl;
-    std::cout << "Number of numerical elements: " << numerical_features.size() << std::endl;
-    std::cout << "Number of states: " << state_space.get_num_states() << std::endl;
-    std::cout << "Number of evaluations per element: " << argv[10] << std::endl;
+    std::cout << "Number of booleans: " << boolean_features.size() << std::endl;
+    std::cout << "Number of numericals: " << numerical_features.size() << std::endl;
 
     {
         auto start = std::chrono::steady_clock::now();
-        for (int i = 0; i < std::atoi(argv[10]); ++i) {
+        for (int i = 0; i < num_iterations; ++i) {
             for (const auto& state : state_space.get_states_ref()) {
                 for (const auto& boolean : boolean_features) {
                     boolean.evaluate(state);
