@@ -119,6 +119,8 @@ void init_core(py::module_ &m) {
         .def("add_atom", py::overload_cast<const std::string&, const std::vector<std::string>&>(&InstanceInfo::add_atom))
         .def("add_static_atom", py::overload_cast<const Predicate&, const std::vector<Object>&>(&InstanceInfo::add_static_atom))
         .def("add_static_atom", py::overload_cast<const std::string&, const std::vector<std::string>&>(&InstanceInfo::add_static_atom))
+        .def("set_index", &InstanceInfo::set_index)
+        .def("get_index", &InstanceInfo::get_index)
         .def("get_atoms", &InstanceInfo::get_atoms_ref, py::return_value_policy::reference)
         .def("get_static_atoms", &InstanceInfo::get_static_atoms_ref, py::return_value_policy::reference)
         .def("get_atom", &InstanceInfo::get_atom_ref, py::return_value_policy::reference)
@@ -127,6 +129,8 @@ void init_core(py::module_ &m) {
         .def("get_object", &InstanceInfo::get_object_ref, py::return_value_policy::reference)
         .def("get_object_idx", &InstanceInfo::get_object_idx)
         .def("get_num_objects", &InstanceInfo::get_num_objects)
+        .def("get_vocabulary_info_ref", &InstanceInfo::get_vocabulary_info_ref, py::return_value_policy::reference)
+        .def("get_vocabulary_info", &InstanceInfo::get_vocabulary_info)
     ;
 
     py::class_<Concept>(m, "Concept")
@@ -140,6 +144,7 @@ void init_core(py::module_ &m) {
         .def("compute_complexity", &Concept::compute_complexity)
         .def("compute_repr", &Concept::compute_repr)
         .def("set_index", &Concept::set_index)
+        .def("get_index", &Concept::get_index)
     ;
 
     py::class_<Role>(m, "Role")
@@ -153,6 +158,7 @@ void init_core(py::module_ &m) {
         .def("compute_complexity", &Role::compute_complexity)
         .def("compute_repr", &Role::compute_repr)
         .def("set_index", &Role::set_index)
+        .def("get_index", &Role::get_index)
     ;
 
     py::class_<Numerical, std::shared_ptr<Numerical>>(m, "Numerical")
@@ -166,6 +172,7 @@ void init_core(py::module_ &m) {
         .def("compute_complexity", &Numerical::compute_complexity)
         .def("compute_repr", &Numerical::compute_repr)
         .def("set_index", &Numerical::set_index)
+        .def("get_index", &Numerical::get_index)
     ;
 
     py::class_<Boolean, std::shared_ptr<Boolean>>(m, "Boolean")
@@ -179,6 +186,7 @@ void init_core(py::module_ &m) {
         .def("compute_complexity", &Boolean::compute_complexity)
         .def("compute_repr", &Boolean::compute_repr)
         .def("set_index", &Boolean::set_index)
+        .def("get_index", &Boolean::get_index)
     ;
 
     py::class_<SyntacticElementFactory, std::shared_ptr<SyntacticElementFactory>>(m, "SyntacticElementFactory")
@@ -230,5 +238,8 @@ void init_core(py::module_ &m) {
         .def("make_top_role", &SyntacticElementFactory::make_top_role, py::arg("index") = -1)
         .def("make_transitive_closure", &SyntacticElementFactory::make_transitive_closure, py::arg("role"), py::arg("index") = -1)
         .def("make_transitive_reflexive_closure", &SyntacticElementFactory::make_transitive_reflexive_closure, py::arg("role"), py::arg("index") = -1)
+
+        .def("get_vocabulary_info_ref", &SyntacticElementFactory::get_vocabulary_info_ref, py::return_value_policy::reference)
+        .def("get_vocabulary_info", &SyntacticElementFactory::get_vocabulary_info)
     ;
 }

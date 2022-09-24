@@ -62,6 +62,7 @@ void init_state_space(py::module_ &m) {
         .def("get_backward_successor_state_indices", py::overload_cast<>(&StateSpace::get_backward_successor_state_indices_ref, py::const_), py::return_value_policy::reference)
         .def("get_backward_successor_state_indices", py::overload_cast<StateIndex>(&StateSpace::get_backward_successor_state_indices_ref, py::const_), py::return_value_policy::reference)
         .def("get_goal_state_indices", &StateSpace::get_goal_state_indices_ref, py::return_value_policy::reference)
+        .def("get_instance_info_ref", &StateSpace::get_instance_info_ref, py::return_value_policy::reference)
         .def("get_instance_info", &StateSpace::get_instance_info)
     ;
 
