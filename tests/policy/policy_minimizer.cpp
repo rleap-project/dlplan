@@ -34,7 +34,7 @@ TEST(DLPTests, StructuralMinimization) {
               << input_policy.str() << std::endl << std::endl
               << "Minimized policy:" << std::endl
               << minimized_policy.compute_repr() << std::endl;
-    ASSERT_EQ(minimized_policy.compute_repr(), minimized_policy_textual);
+    EXPECT_EQ(minimized_policy.compute_repr(), minimized_policy_textual);
 }
 
 
@@ -85,5 +85,5 @@ TEST(DLPTests, EmpiricalMinimization) {
               << input_policy.str() << std::endl << std::endl
               << "Minimized policy:" << std::endl
               << minimized_policy.compute_repr() << std::endl;
-    ASSERT_EQ(minimized_policy.compute_repr(), minimized_policy_textual);
+    EXPECT_EQ(minimized_policy.compute_repr(), minimized_policy_textual);
 }

@@ -52,10 +52,10 @@ TEST(DLPTests, GeneratorDeliveryTest) {
     };
     for (const auto& denotations : required_boolean_denotations) {
         auto find = boolean_denotations.find(denotations);
-        ASSERT_NE(find, boolean_denotations.end());
+        EXPECT_NE(find, boolean_denotations.end());
     }
     for (const auto& denotations : required_numerical_denotations) {
         auto find = numerical_denotations.find(denotations);
-        ASSERT_NE(find, numerical_denotations.end());
+        EXPECT_NE(find, numerical_denotations.end());
     }
 }
