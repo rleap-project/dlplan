@@ -21,6 +21,8 @@ int main(int argc, char** argv) {
 
     state_space::StateSpaceGenerator().generate_state_space(argv[1], argv[2]);
     auto state_space = state_space::StateSpaceReader().read(nullptr, 0);
+    std::cout << "Started generating features" << std::endl;
+    std::cout << "Number of states: " << state_space.get_num_states() << std::endl;
     auto syntactic_element_factory = core::SyntacticElementFactory(state_space.get_instance_info()->get_vocabulary_info());
     auto feature_generator = generator::FeatureGenerator();
     feature_generator.set_generate_inclusion_boolean(false);

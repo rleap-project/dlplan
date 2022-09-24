@@ -30,12 +30,12 @@ def main():
     s1 = dlplan.State(instance_info, [a0], 1)
     s2 = dlplan.State(instance_info, [a0, a1], 2)
 
-    evaluation_cache = dlplan.EvaluationCache(len(policy.get_boolean_features()), len(policy.get_numerical_features()))
+    caches = dlplan.DenotationsCaches()
 
-    assert policy.evaluate_lazy(s2, s1, evaluation_cache)
-    assert not policy.evaluate_lazy(s2, s0, evaluation_cache)
-    assert not policy.evaluate_lazy(s1, s2, evaluation_cache)
-    assert not policy.evaluate_lazy(s0, s2, evaluation_cache)
+    assert policy.evaluate_lazy(s2, s1, caches)
+    assert not policy.evaluate_lazy(s2, s0, caches)
+    assert not policy.evaluate_lazy(s1, s2, caches)
+    assert not policy.evaluate_lazy(s0, s2, caches)
 
     assert policy.evaluate_lazy(s2, s1)
     assert not policy.evaluate_lazy(s2, s0)

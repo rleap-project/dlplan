@@ -7,7 +7,6 @@
 namespace py = pybind11;
 
 void init_core(py::module_ &);
-void init_evaluator(py::module_ &);
 void init_generator(py::module_ &);
 void init_policy(py::module_ &);
 void init_state_space(py::module_ &);
@@ -17,7 +16,6 @@ PYBIND11_MODULE(_dlplan, m) {
     m.doc() = "Python bindings for the dlplan description logics first-order features for planning";
 
     init_core(m);
-    init_evaluator(m);
     init_generator(m);
     init_policy(m);
     init_state_space(m);
