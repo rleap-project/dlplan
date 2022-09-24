@@ -6,8 +6,8 @@ using namespace dlplan::core;
 using namespace dlplan::state_space;
 
 
-TEST(DLPTests, StateSpaceTest) {
-    StateSpaceGenerator().generate_state_space("domain.pddl", "instance.pddl");
+TEST(DLPTests, StateSpaceGripperTest) {
+    StateSpaceGenerator().generate_state_space("domain.pddl", "p-1-0.pddl");
     auto state_space = StateSpaceReader().read();
     auto distance_information = state_space.compute_goal_distance_information();
     state_space.print();
