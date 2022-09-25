@@ -12,7 +12,6 @@ target_sources(dlplanpolicy
         writer.cpp
         parser/expression_factory.cpp
         parser/parser.cpp
-        parser/tokenizer.cpp
         parser/utils.cpp)
 target_link_libraries(dlplanpolicy dlplancore)
 target_include_directories(dlplanpolicy

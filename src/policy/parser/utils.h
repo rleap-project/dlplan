@@ -4,8 +4,6 @@
 #include <algorithm>
 #include <string>
 
-#include "types.h"
-
 
 namespace dlplan::policy::parser {
 

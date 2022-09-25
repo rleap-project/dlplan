@@ -18,8 +18,8 @@ public:
     using TokenRegex = std::pair<TOKEN_TYPE, std::regex>;
     using TokenRegexes = std::vector<TokenRegex>;
 
-    static std::regex build_regex(const std::string &s, std::regex::flag_type f = std::regex_constants::ECMAScript) {
-        return std::regex("^\\s*(" + s + ")\\s*", f);
+    static std::regex build_regex(const std::string &s, std::regex::flag_type f = std::regex_constants::ECMAScript, std::string prefix="^\\s*(", std::string suffix=")\\s*") {
+        return std::regex(prefix + s + suffix, f);
     }
 
     /**
@@ -41,7 +41,7 @@ public:
                 }
             }
             if (!has_match) {
-                throw std::runtime_error("tokenize - unrecognized text: " + text);
+                throw std::runtime_error("tokenize - unrecognized text: " + std::string(start,end));
             }
         }
         return tokens;

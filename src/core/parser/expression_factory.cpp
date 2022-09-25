@@ -76,7 +76,7 @@
 
 namespace dlplan::core::parser {
 
-Expression_Ptr ExpressionFactory::make_ast(const VocabularyInfo& vocabulary_info, const std::string& name, std::vector<Expression_Ptr> &&children) {
+Expression_Ptr ExpressionFactory::make_expression(const VocabularyInfo& vocabulary_info, const std::string& name, std::vector<Expression_Ptr> &&children) {
     // case 1: name is in alphabet of elements
     if (name == element::EmptyBoolean<int>::get_name()) {
         return std::make_unique<EmptyBoolean>(EmptyBoolean(name, std::move(children)));
@@ -158,7 +158,7 @@ Expression_Ptr ExpressionFactory::make_ast(const VocabularyInfo& vocabulary_info
         return std::make_unique<Expression>(Expression(name, std::move(children)));
     }
     // case 4: wrong syntax
-    throw std::runtime_error("ExpressionFactory::make_ast - No implementation available for ("s + name + ").");
+    throw std::runtime_error("ExpressionFactory::make_expression - No implementation available for ("s + name + ").");
 }
 
 

@@ -8,6 +8,7 @@
 #include "types.h"
 #include "utils.h"
 
+#include "../../../include/dlplan/core.h"
 #include "../../../include/dlplan/policy.h"
 
 
@@ -121,7 +122,7 @@ public:
     RuleExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : Expression(name, std::move(children)) { }
 
-    std::shared_ptr<const Rule> parse_rule(PolicyBuilder& builder, const std::vector<std::shared_ptr<const core::Boolean>>& boolean_features, const std::vector<std::shared_ptr<const core::Numerical>>& numerical_features) const override {
+    std::shared_ptr<const Rule> parse_rule(policy::PolicyBuilder& builder, const std::vector<std::shared_ptr<const core::Boolean>>& boolean_features, const std::vector<std::shared_ptr<const core::Numerical>>& numerical_features) const override {
         if (m_children.size() != 3) {
             throw std::runtime_error("RuleExpression::parse_rule - incorrect number of children. Should be 3.");
         }

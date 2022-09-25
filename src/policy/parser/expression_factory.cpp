@@ -40,7 +40,7 @@ EXPRESSION_TYPE ExpressionFactory::element_name_to_expression_type(const std::st
     return p->second;
 }
 
-Expression_Ptr ExpressionFactory::make_ast(const std::string &name, std::vector<Expression_Ptr> &&children) {
+Expression_Ptr ExpressionFactory::make_expression(const std::string &name, std::vector<Expression_Ptr> &&children) {
     if (ExpressionFactory::exists_element_name(name)) {
         EXPRESSION_TYPE expression_type = ExpressionFactory::element_name_to_expression_type(name);
         switch (expression_type)
@@ -97,7 +97,7 @@ Expression_Ptr ExpressionFactory::make_ast(const std::string &name, std::vector<
     } else if (is_number(name)) {
         return std::make_unique<Expression>(Expression(name, std::move(children)));
     }
-    throw std::runtime_error("ExpressionFactory::make_ast - No implementation available for (" + name + ").");
+    throw std::runtime_error("ExpressionFactory::make_expression - No implementation available for (" + name + ").");
 }
 
 

@@ -5,15 +5,31 @@
 
 #include "types.h"
 
+#include "../../utils/tokenizer.h"
+
 
 namespace dlplan::policy::parser {
+
+enum class TokenType {
+    COMMA,
+    OPENING_PARENTHESIS,
+    CLOSING_PARENTHESIS,
+    INTEGER,
+    STRING,
+    NAME
+};
+
+using Token = dlplan::utils::Tokenizer<TokenType>::Token;
+using Tokens = dlplan::utils::Tokenizer<TokenType>::Tokens;
+using Tokenizer = dlplan::utils::Tokenizer<TokenType>;
+using TokenRegexes = dlplan::utils::Tokenizer<TokenType>::TokenRegexes;
 
 class Parser {
 private:
     /**
      * Parses tokens into an abstract syntax tree.
      */
-    Expression_Ptr parse_ast(Tokens &tokens) const;
+    Expression_Ptr parse_expressions_tree(Tokens &tokens) const;
 
 public:
     Parser();

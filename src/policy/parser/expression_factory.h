@@ -39,7 +39,7 @@ private:
     static EXPRESSION_TYPE element_name_to_expression_type(const std::string &name);
 
 public:
-    Expression_Ptr make_ast(const std::string &name, std::vector<Expression_Ptr> &&children);
+    Expression_Ptr make_expression(const std::string &name, std::vector<Expression_Ptr> &&children);
 };
 
 }

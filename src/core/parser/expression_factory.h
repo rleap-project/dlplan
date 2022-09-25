@@ -12,7 +12,7 @@ namespace parser {
 
 class ExpressionFactory {
 public:
-    Expression_Ptr make_ast(
+    Expression_Ptr make_expression(
         const VocabularyInfo& vocabulary_info,
         const std::string& name,
         std::vector<Expression_Ptr> &&children);
