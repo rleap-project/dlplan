@@ -4,7 +4,6 @@
 #include <stdexcept>
 #include <sstream>
 
-#include "instance_info.h"
 #include "../utils/collections.h"
 
 

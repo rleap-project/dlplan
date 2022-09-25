@@ -33,7 +33,10 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        return state.get_instance_info_ref().get_top_role_ref();
+        auto denotation = RoleDenotation(state.get_instance_info_ref().get_num_objects());
+        denotation.set();
+        return denotation;
+
     }
 
     int compute_complexity() const override {

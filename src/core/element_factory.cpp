@@ -1,5 +1,4 @@
 #include "element_factory.h"
-#include "vocabulary_info.h"
 #include "parser/parser.h"
 #include "parser/expressions/expression.h"
 #include "elements/booleans/empty.h"

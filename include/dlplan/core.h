@@ -278,7 +278,7 @@ private:
     int m_index;
 
     Constant(const std::string& name, int index);
-    friend class VocabularyInfoImpl;
+    friend class VocabularyInfo;
 
 public:
     Constant() = delete;
@@ -306,7 +306,7 @@ private:
     int m_arity;
 
     Predicate(const std::string& name, int index, int arity);
-    friend class VocabularyInfoImpl;
+    friend class VocabularyInfo;
 
 public:
     Predicate(const Predicate& other);
@@ -336,7 +336,7 @@ private:
     int m_index;
 
     Object(const std::string& name, int index);
-    friend class InstanceInfoImpl;
+    friend class InstanceInfo;
 
 public:
     Object(const Object& other);
@@ -369,7 +369,7 @@ private:
         const Predicate& predicate,
         const std::vector<Object> &objects,
         bool is_static);
-    friend class InstanceInfoImpl;
+    friend class InstanceInfo;
 
 public:
     Atom(const Atom& other);
@@ -455,7 +455,11 @@ public:
  */
 class VocabularyInfo {
 private:
-    utils::pimpl<VocabularyInfoImpl> m_pImpl;
+    std::unordered_map<std::string, unsigned> m_predicate_name_to_predicate_idx;
+    std::vector<Predicate> m_predicates;
+
+    std::unordered_map<std::string, unsigned> m_constant_name_to_constant_idx;
+    std::vector<Constant> m_constants;
 
 public:
     VocabularyInfo();
@@ -487,7 +491,21 @@ public:
  */
 class InstanceInfo {
 private:
-    utils::pimpl<InstanceInfoImpl> m_pImpl;
+    std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
+    int m_index;
+
+    std::unordered_map<std::string, unsigned> m_atom_name_to_atom_idx;
+    std::vector<Atom> m_atoms;
+
+    std::unordered_map<std::string, unsigned> m_static_atom_name_to_static_atom_idx;
+    std::vector<Atom> m_static_atoms;
+    phmap::flat_hash_map<int, std::vector<int>> m_per_predicate_idx_static_atom_idxs;
+
+    std::unordered_map<std::string, unsigned> m_object_name_to_object_idx;
+    std::vector<Object> m_objects;
+
+    const Atom& add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static);
+    const Atom& add_atom(const Predicate& predicate, const std::vector<Object>& objects, bool is_static);
 
 public:
     InstanceInfo() = delete;
@@ -534,8 +552,6 @@ public:
     const VocabularyInfo& get_vocabulary_info_ref() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
     const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs_ref() const;
-    const ConceptDenotation& get_top_concept_ref() const;
-    const RoleDenotation& get_top_role_ref() const;
 };
 
 

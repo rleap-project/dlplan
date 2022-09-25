@@ -11,6 +11,7 @@ class SubsetConcept : public Concept {
 private:
     void compute_result(const RoleDenotation& left_denot, const RoleDenotation& right_denot, ConceptDenotation& result) const {
         // find counterexamples a : exists b . (a,b) in R and (a,b) notin S
+        result.set();
         for (const auto& pair : left_denot) {
             if (!right_denot.contains(pair)) result.erase(pair.first);
         }
@@ -19,7 +20,6 @@ private:
     std::unique_ptr<ConceptDenotation> evaluate_impl(const State& state, DenotationsCaches& caches) const override {
         auto denotation = std::make_unique<ConceptDenotation>(
             ConceptDenotation(state.get_instance_info_ref().get_num_objects()));
-        denotation->set();
         compute_result(
             *m_role_left->evaluate(state, caches),
             *m_role_right->evaluate(state, caches),
@@ -35,7 +35,6 @@ private:
         for (size_t i = 0; i < states.size(); ++i) {
             auto denotation = std::make_unique<ConceptDenotation>(
                 ConceptDenotation(states[i].get_instance_info_ref().get_num_objects()));
-            denotation->set();
             compute_result(
                 *(*role_left_denotations)[i],
                 *(*role_right_denotations)[i],
@@ -59,7 +58,7 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        auto denotation = state.get_instance_info_ref().get_top_concept_ref();
+        auto denotation = ConceptDenotation(state.get_instance_info_ref().get_num_objects());
         compute_result(
             m_role_left->evaluate(state),
             m_role_right->evaluate(state),
