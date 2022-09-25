@@ -32,12 +32,10 @@ protected:
 
 public:
     // Condition is not copieable because it must live in the cache.
-    // For construction we need it to be moveable.
-    // However, moving cannot be abused because Condition is always const
     BaseCondition(const BaseCondition& other) = delete;
     BaseCondition& operator=(const BaseCondition& other) = delete;
-    BaseCondition(BaseCondition&& other);
-    BaseCondition& operator=(BaseCondition&& other);
+    BaseCondition(BaseCondition&& other) = delete;
+    BaseCondition& operator=(BaseCondition&& other) = delete;
     virtual ~BaseCondition();
 
     virtual bool evaluate(const core::State& source_state) const = 0;
@@ -78,12 +76,10 @@ protected:
 
 public:
     // Effect is not copieable because it must live in the cache.
-    // For construction we need it to be moveable.
-    // However, moving cannot be abused because Effect is always const
     BaseEffect(const BaseEffect& other) = delete;
     BaseEffect& operator=(const BaseEffect& other) = delete;
-    BaseEffect(BaseEffect&& other);
-    BaseEffect& operator=(BaseEffect&& other);
+    BaseEffect(BaseEffect&& other) = delete;
+    BaseEffect& operator=(BaseEffect&& other) = delete;
     virtual ~BaseEffect();
 
     virtual bool evaluate(const core::State& source_state, const core::State& target_state) const = 0;
@@ -129,12 +125,10 @@ private:
 
 public:
     // Rule is not copieable because it must live in the cache.
-    // For construction we need it to be moveable.
-    // However, moving cannot be abused because Rule is always const
     Rule(const Rule& other) = delete;
     Rule& operator=(const Rule& other) = delete;
-    Rule(Rule&& other);
-    Rule& operator=(Rule&& other);
+    Rule(Rule&& other) = delete;
+    Rule& operator=(Rule&& other) = delete;
     ~Rule();
 
     bool evaluate_conditions(const core::State& source_state) const;

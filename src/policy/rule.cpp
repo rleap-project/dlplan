@@ -33,10 +33,6 @@ Rule::Rule(
     int index)
     : m_conditions(std::move(conditions)), m_effects(std::move(effects)), m_index(index) { }
 
-Rule::Rule(Rule&& other) = default;
-
-Rule& Rule::operator=(Rule&& other) = default;
-
 Rule::~Rule() = default;
 
 bool Rule::evaluate_conditions(const core::State& source_state) const {

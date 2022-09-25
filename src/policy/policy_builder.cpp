@@ -46,53 +46,52 @@ std::shared_ptr<const core::Numerical> PolicyBuilderImpl::add_numerical_feature(
 }
 
 std::shared_ptr<const BaseCondition> PolicyBuilderImpl::add_pos_condition(std::shared_ptr<const core::Boolean> b) {
-    return m_caches.m_condition_cache->insert(std::make_unique<PositiveBooleanCondition>(PositiveBooleanCondition(b))).first;
+    return m_caches.m_condition_cache->insert(std::make_unique<PositiveBooleanCondition>(b)).first;
 }
 
 std::shared_ptr<const BaseCondition> PolicyBuilderImpl::add_neg_condition(std::shared_ptr<const core::Boolean> b) {
-    return m_caches.m_condition_cache->insert(std::make_unique<NegativeBooleanCondition>(NegativeBooleanCondition(b))).first;
+    return m_caches.m_condition_cache->insert(std::make_unique<NegativeBooleanCondition>(b)).first;
 }
 
 std::shared_ptr<const BaseCondition> PolicyBuilderImpl::add_gt_condition(std::shared_ptr<const core::Numerical> n) {
-    return m_caches.m_condition_cache->insert(std::make_unique<GreaterNumericalCondition>(GreaterNumericalCondition(n))).first;
+    return m_caches.m_condition_cache->insert(std::make_unique<GreaterNumericalCondition>(n)).first;
 }
 
 std::shared_ptr<const BaseCondition> PolicyBuilderImpl::add_eq_condition(std::shared_ptr<const core::Numerical> n) {
-    return m_caches.m_condition_cache->insert(std::make_unique<EqualNumericalCondition>(EqualNumericalCondition(n))).first;
+    return m_caches.m_condition_cache->insert(std::make_unique<EqualNumericalCondition>(n)).first;
 }
 
 std::shared_ptr<const BaseEffect> PolicyBuilderImpl::add_pos_effect(std::shared_ptr<const core::Boolean> b) {
-    return m_caches.m_effect_cache->insert(std::make_unique<PositiveBooleanEffect>(PositiveBooleanEffect(b))).first;
+    return m_caches.m_effect_cache->insert(std::make_unique<PositiveBooleanEffect>(b)).first;
 }
 
 std::shared_ptr<const BaseEffect> PolicyBuilderImpl::add_neg_effect(std::shared_ptr<const core::Boolean> b) {
-    return m_caches.m_effect_cache->insert(std::make_unique<NegativeBooleanEffect>(NegativeBooleanEffect(b))).first;
+    return m_caches.m_effect_cache->insert(std::make_unique<NegativeBooleanEffect>(b)).first;
 }
 
 std::shared_ptr<const BaseEffect> PolicyBuilderImpl::add_bot_effect(std::shared_ptr<const core::Boolean> b) {
-    return m_caches.m_effect_cache->insert(std::make_unique<UnchangedBooleanEffect>(UnchangedBooleanEffect(b))).first;
+    return m_caches.m_effect_cache->insert(std::make_unique<UnchangedBooleanEffect>(b)).first;
 }
 
 std::shared_ptr<const BaseEffect> PolicyBuilderImpl::add_inc_effect(std::shared_ptr<const core::Numerical> n) {
-    return m_caches.m_effect_cache->insert(std::make_unique<IncrementNumericalEffect>(IncrementNumericalEffect(n))).first;
+    return m_caches.m_effect_cache->insert(std::make_unique<IncrementNumericalEffect>(n)).first;
 }
 
 std::shared_ptr<const BaseEffect> PolicyBuilderImpl::add_dec_effect(std::shared_ptr<const core::Numerical> n) {
-    return m_caches.m_effect_cache->insert(std::make_unique<DecrementNumericalEffect>(DecrementNumericalEffect(n))).first;
+    return m_caches.m_effect_cache->insert(std::make_unique<DecrementNumericalEffect>(n)).first;
 }
 
 std::shared_ptr<const BaseEffect> PolicyBuilderImpl::add_bot_effect(std::shared_ptr<const core::Numerical> n) {
-    return m_caches.m_effect_cache->insert(std::make_unique<UnchangedNumericalEffect>(UnchangedNumericalEffect(n))).first;
+    return m_caches.m_effect_cache->insert(std::make_unique<UnchangedNumericalEffect>(n)).first;
 }
 
 std::shared_ptr<const Rule> PolicyBuilderImpl::add_rule(
     std::vector<std::shared_ptr<const BaseCondition>>&& conditions,
     std::vector<std::shared_ptr<const BaseEffect>>&& effects) {
     // Create rule in canonical representation.
-    auto result = m_caches.m_rule_cache->insert(std::make_unique<Rule>(
-        Rule(
-            sort_values_by_increasing_complexity_then_repr(conditions),
-            sort_values_by_increasing_complexity_then_repr(effects))));
+    auto result = m_caches.m_rule_cache->insert(std::unique_ptr<Rule>(
+        new Rule(sort_values_by_increasing_complexity_then_repr(conditions),
+        sort_values_by_increasing_complexity_then_repr(effects))));
     if (result.second) {
         m_rules.push_back(result.first);
     }

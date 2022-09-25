@@ -15,10 +15,6 @@ namespace dlplan::policy {
 BaseCondition::BaseCondition(std::shared_ptr<const core::BaseElement> base_feature, int index)
     : m_base_feature(base_feature), m_index(index) { }
 
-BaseCondition::BaseCondition(BaseCondition&& other) = default;
-
-BaseCondition& BaseCondition::operator=(BaseCondition&& other) = default;
-
 BaseCondition::~BaseCondition() = default;
 
 void BaseCondition::set_index(int index) {
@@ -40,10 +36,6 @@ std::string BaseCondition::str() const {
 
 BaseEffect::BaseEffect(std::shared_ptr<const core::BaseElement> base_feature, int index)
     : m_base_feature(base_feature), m_index(index) { }
-
-BaseEffect::BaseEffect(BaseEffect&& other) = default;
-
-BaseEffect& BaseEffect::operator=(BaseEffect&& other) = default;
 
 BaseEffect::~BaseEffect() = default;
 
