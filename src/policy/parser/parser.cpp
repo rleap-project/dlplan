@@ -16,7 +16,7 @@ static TokenRegexes element_token_regexes = {
     { TokenType::OPENING_PARENTHESIS, Tokenizer::build_regex("\\(") },
     { TokenType::CLOSING_PARENTHESIS, Tokenizer::build_regex("\\)") },
     { TokenType::INTEGER, Tokenizer::build_regex("[0-9]+")},
-    { TokenType::STRING, Tokenizer::build_regex("[a-zA-Z0-9_,\\-\\)\\(\\s]+", std::regex_constants::ECMAScript, "^\\s*\"(", ")\"\\s*") },
+    { TokenType::STRING, Tokenizer::build_regex("[a-zA-Z0-9_,\\)\\(\\s]+", std::regex_constants::ECMAScript, "^\\s*\"(", ")\"\\s*") },
     { TokenType::NAME, Tokenizer::build_regex(":[a-zA-Z0-9_\\-]+") },
 };
 
