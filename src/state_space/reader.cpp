@@ -45,7 +45,7 @@ static const std::vector<std::pair<AtomTokenType, std::regex>> atom_token_regexe
     { AtomTokenType::COMMA, utils::Tokenizer<AtomTokenType>::build_regex(",") },
     { AtomTokenType::OPENING_PARENTHESIS, utils::Tokenizer<AtomTokenType>::build_regex("\\(") },
     { AtomTokenType::CLOSING_PARENTHESIS, utils::Tokenizer<AtomTokenType>::build_regex("\\)") },
-    { AtomTokenType::NAME, utils::Tokenizer<AtomTokenType>::build_regex("[a-zA-Z0-9_\\-]+") },
+    { AtomTokenType::NAME, utils::Tokenizer<AtomTokenType>::build_regex("[a-zA-Z0-9_@\\-]+") },
 };
 
 
@@ -59,6 +59,9 @@ static void parse_atom(const std::string& atom_name, InstanceInfo& instance_info
         predicate_name += "_g";
     }
     if (predicate_name == "dummy") {
+        new_atom_indices.push_back(UNDEFINED);
+        return;
+    } else if (predicate_name.substr(0, 10) == "new-axiom@") {
         new_atom_indices.push_back(UNDEFINED);
         return;
     }
