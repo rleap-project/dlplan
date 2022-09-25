@@ -13,10 +13,13 @@ TEST(DLPTests, RoleNot) {
     // Add state atoms
     Atom a0 = instance->add_atom("role", {"A", "B"});
 
-    State state(instance, {a0});
+    State state(instance, {a0}, 0);
 
     SyntacticElementFactory factory(vocabulary);
+    DenotationsCaches caches;
 
     Role role = factory.parse_role("r_not(r_primitive(role,0,1))");
     EXPECT_EQ(role.evaluate(state).to_sorted_vector(), IndexPair_Vec({{0,0},{1,0},{1,1}}));
+    EXPECT_EQ(role.evaluate(state, caches)->to_sorted_vector(), IndexPair_Vec({{0,0},{1,0},{1,1}}));
+    EXPECT_EQ(role.evaluate({state}, caches)->to_sorted_vector(), IndexPair_Vec({{0,0},{1,0},{1,1}}));
 }

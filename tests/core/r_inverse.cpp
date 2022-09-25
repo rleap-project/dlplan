@@ -14,10 +14,13 @@ TEST(DLPTests, RoleInverse) {
     Atom a0 = instance->add_atom("role", {"A", "B"});
     Atom a1 = instance->add_atom("role", {"C", "D"});
 
-    State state(instance, {a0, a1});
+    State state(instance, {a0, a1}, 0);
 
     SyntacticElementFactory factory(vocabulary);
+    DenotationsCaches caches;
 
     Role role = factory.parse_role("r_inverse(r_primitive(role,0,1))");
     EXPECT_EQ(role.evaluate(state).to_sorted_vector(), IndexPair_Vec({{1,0},{3,2}}));
+    EXPECT_EQ(role.evaluate(state, caches)->to_sorted_vector(), IndexPair_Vec({{1,0},{3,2}}));
+    EXPECT_EQ(role.evaluate({state}, caches)->to_sorted_vector(), IndexPair_Vec({{1,0},{3,2}}));
 }

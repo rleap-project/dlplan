@@ -18,10 +18,13 @@ TEST(DLPTests, RoleAnd) {
     Atom a2 = instance->add_atom("role_2", {"B", "Y"});
     Atom a3 = instance->add_atom("role_2", {"C", "Z"});
 
-    State state(instance, {a0, a1, a2, a3});
+    State state(instance, {a0, a1, a2, a3}, 0);
 
     SyntacticElementFactory factory(vocabulary);
+    DenotationsCaches caches;
 
     Role role = factory.parse_role("r_and(r_primitive(role_1,0,1),r_primitive(role_2,0,1))");
     EXPECT_EQ(role.evaluate(state).to_sorted_vector(), IndexPair_Vec({{2,3}}));
+    EXPECT_EQ(role.evaluate(state, caches)->to_sorted_vector(), IndexPair_Vec({{2,3}}));
+    EXPECT_EQ(role.evaluate({state}, caches)->to_sorted_vector(), IndexPair_Vec({{2,3}}));
 }

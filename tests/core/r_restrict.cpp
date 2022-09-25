@@ -17,10 +17,13 @@ TEST(DLPTests, RoleRestrict) {
 
     Atom a2 = instance->add_atom("concept", {"B"});
 
-    State state(instance, {a0, a1, a2});
+    State state(instance, {a0, a1, a2}, 0);
 
     SyntacticElementFactory factory(vocabulary);
+    DenotationsCaches caches;
 
     Role role = factory.parse_role("r_restrict(r_primitive(role,0,1),c_primitive(concept,0))");
     EXPECT_EQ(role.evaluate(state).to_sorted_vector(), IndexPair_Vec({{0, 1}}));
+    EXPECT_EQ(role.evaluate(state, caches)->to_sorted_vector(), IndexPair_Vec({{0, 1}}));
+    EXPECT_EQ(role.evaluate({state}, caches)->to_sorted_vector(), IndexPair_Vec({{0, 1}}));
 }
