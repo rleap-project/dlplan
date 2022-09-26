@@ -25,18 +25,13 @@ State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vecto
 }
 
 State::State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs, int index)
-    : m_instance_info(instance_info), m_index(index) {
+    : m_instance_info(instance_info), m_atom_idxs(atom_idxs), m_index(index) {
     const auto& atoms = instance_info->get_atoms_ref();
     if (!std::all_of(atom_idxs.begin(), atom_idxs.end(), [&](int atom_idx){ return utils::in_bounds(atom_idx, atoms); })) {
         throw std::runtime_error("State::State - atom index out of range.");
     }
     if (!std::all_of(atom_idxs.begin(), atom_idxs.end(), [&](int atom_idx){ return !atoms[atom_idx].get_is_static(); })) {
         throw std::runtime_error("State::State - static atom is not allowed in State.");
-    }
-    m_atom_idxs.reserve(atoms.size());
-    for (int atom_idx : atom_idxs) {
-        const auto& atom = atoms[atom_idx];
-        m_atom_idxs.push_back(atom_idx);
     }
 }
 
