@@ -405,8 +405,6 @@ private:
     Index_Vec m_atom_idxs;
     int m_index;
 
-    phmap::flat_hash_map<int, std::vector<int>> m_per_predicate_idx_atom_idxs;
-
 public:
     State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms, int index=-1);
     /**
@@ -446,7 +444,6 @@ public:
     const Index_Vec& get_atom_idxs_ref() const;
     Index_Vec compute_sorted_atom_idxs() const;
     int get_index() const;
-    const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_atom_idxs_ref() const;
 };
 
 

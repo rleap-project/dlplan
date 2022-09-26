@@ -20,9 +20,7 @@ State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vecto
     m_atom_idxs.reserve(atoms.size());
     for (const auto& atom : atoms) {
         int atom_idx = atom.get_index();
-        int predicate_idx = atom.get_predicate_ref().get_index();
         m_atom_idxs.push_back(atom_idx);
-        m_per_predicate_idx_atom_idxs[predicate_idx].push_back(atom_idx);
     }
 }
 
@@ -38,9 +36,7 @@ State::State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec&
     m_atom_idxs.reserve(atoms.size());
     for (int atom_idx : atom_idxs) {
         const auto& atom = atoms[atom_idx];
-        int predicate_idx = atom.get_predicate_ref().get_index();
         m_atom_idxs.push_back(atom_idx);
-        m_per_predicate_idx_atom_idxs[predicate_idx].push_back(atom_idx);
     }
 }
 
@@ -82,10 +78,6 @@ Index_Vec State::compute_sorted_atom_idxs() const {
 
 int State::get_index() const {
     return m_index;
-}
-
-const phmap::flat_hash_map<int, std::vector<int>>& State::get_per_predicate_idx_atom_idxs_ref() const {
-    return m_per_predicate_idx_atom_idxs;
 }
 
 std::string State::str() const {

@@ -6,29 +6,26 @@
 
 namespace dlplan::core::element {
 
-static void collect_roles(
-    const phmap::flat_hash_map<int, std::vector<int>>& per_predicate_idx_atom_idxs,
-    const std::vector<Atom>& atoms,
-    const Predicate& predicate,
-    int pos_1,
-    int pos_2,
-    RoleDenotation& result) {
-    auto it = per_predicate_idx_atom_idxs.find(predicate.get_index());
-    if (it != per_predicate_idx_atom_idxs.end()) {
-        for (int atom_idx : it->second) {
-            const auto& atom = atoms[atom_idx];
-            result.insert(std::make_pair(atom.get_object_ref(pos_1).get_index(), atom.get_object_ref(pos_2).get_index()));
-        }
-    }
-}
-
 class PrimitiveRole : public Role {
 private:
     void compute_result(const State& state, RoleDenotation& result) const {
-        const auto& atoms = state.get_instance_info_ref().get_atoms_ref();
-        const auto& static_atoms = state.get_instance_info_ref().get_static_atoms_ref();
-        collect_roles(state.get_per_predicate_idx_atom_idxs_ref(), atoms, m_predicate, m_pos_1, m_pos_2, result);
-        collect_roles(state.get_instance_info_ref().get_per_predicate_idx_static_atom_idxs_ref(), static_atoms, m_predicate, m_pos_1, m_pos_2, result);
+        const auto& instance_info = state.get_instance_info_ref();
+        const auto& atoms = instance_info.get_atoms_ref();
+        for (int atom_idx : state.get_atom_idxs_ref()) {
+            const auto& atom = atoms[atom_idx];
+            if (atom.get_predicate_ref().get_index() == m_predicate.get_index()) {
+                result.insert(std::make_pair(atom.get_object_ref(m_pos_1).get_index(), atom.get_object_ref(m_pos_2).get_index()));
+            }
+        }
+        const auto& static_atoms = instance_info.get_static_atoms_ref();
+        const auto& per_predicate_idx_static_atom_idxs = instance_info.get_per_predicate_idx_static_atom_idxs_ref();
+        auto it = per_predicate_idx_static_atom_idxs.find(m_predicate.get_index());
+        if (it != per_predicate_idx_static_atom_idxs.end()) {
+            for (int atom_idx : it->second) {
+                const auto& atom = static_atoms[atom_idx];
+                result.insert(std::make_pair(atom.get_object_ref(m_pos_1).get_index(), atom.get_object_ref(m_pos_2).get_index()));
+            }
+        }
     }
 
     std::unique_ptr<RoleDenotation> evaluate_impl(const State& state, DenotationsCaches&) const override {

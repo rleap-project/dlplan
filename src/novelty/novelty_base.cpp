@@ -37,7 +37,16 @@ TupleIndex NoveltyBase::atom_tuple_to_tuple_index(const AtomTuple& atom_tuple) c
 }
 
 AtomTuple NoveltyBase::tuple_index_to_atom_tuple(TupleIndex tuple_index) const {
-
+    AtomTuple result;
+    for (int i = m_width-1; i >= 0; --i) {
+        int atom_index = tuple_index / m_factors[i];
+        if (atom_index != get_dummy_atom_index()) {
+            result.push_back(atom_index);
+        }
+        tuple_index -= atom_index * m_factors[i];
+    }
+    // result is unsorted.
+    return result;
 }
 
 int NoveltyBase::get_width() const {

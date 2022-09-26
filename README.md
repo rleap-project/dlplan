@@ -45,11 +45,6 @@ by two-variable first order logic and hence, are also indistinguishable by less 
 ### 3.1. Building the C++ Interface
 
 Run the following from the project root to build the library.
-Some parts of the library code needs a reference to the root directory.
-```console
-export DLPLAN_ROOT_DIR="path/to/dlplan"
-```
-
 By default, the library compiles in `Debug` mode.
 
 ```console

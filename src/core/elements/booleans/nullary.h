@@ -10,14 +10,16 @@ namespace dlplan::core::element {
 class NullaryBoolean : public Boolean {
 private:
     void compute_result(const State& state, bool& result) const {
-        const auto& per_predicate_idx_atom_idxs = state.get_per_predicate_idx_atom_idxs_ref();
-        auto it = per_predicate_idx_atom_idxs.find(m_predicate.get_index());
-        if (it != per_predicate_idx_atom_idxs.end()) {
-            result = !it->second.empty();
-            return;
+        const auto& atoms = state.get_instance_info_ref().get_atoms_ref();
+        for (int atom_idx : state.get_atom_idxs_ref()) {
+            const auto& atom = atoms[atom_idx];
+            if (atom.get_predicate_ref().get_index() == m_predicate.get_index()) {
+                result = true;
+                return;
+            }
         }
         const auto& per_predicate_idx_static_atom_idxs = state.get_instance_info_ref().get_per_predicate_idx_static_atom_idxs_ref();
-        it = per_predicate_idx_static_atom_idxs.find(m_predicate.get_index());
+        auto it = per_predicate_idx_static_atom_idxs.find(m_predicate.get_index());
         if (it != per_predicate_idx_static_atom_idxs.end()) {
             result = !it->second.empty();
             return;

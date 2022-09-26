@@ -132,22 +132,21 @@ public:
     ~NoveltyTable();
 
     /**
-     * Reset novelty of all tuples.
+     * Useful for tuple graphs.
      */
     void reset_novelty(const TupleIndices& tuple_indices);
     void reset_novelty(TupleIndexGenerator tuple_index_generator);
-    /**
-     * Check novelty.
-     */
     bool test_novelty(TupleIndex) const;
 
     /**
      * Useful for width-based planners.
-     * Iterates over the tuples, marks each as not novel
-     * until the first novel tuple is found.
+     *
+     * Iterates over the tuples, marks each as not novel.
      * Returns true iff a novel tuple was found.
+     * If the additional parameter stop_if_novel is true
+     * then iteration stopps after novelty was proven.
      */
-    bool insert(TupleIndexGenerator&& tuple_index_generator);
+    bool insert(TupleIndexGenerator&& tuple_index_generator, bool stop_if_novel=true);
 };
 
 
