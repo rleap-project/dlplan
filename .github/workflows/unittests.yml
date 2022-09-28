@@ -16,7 +16,7 @@ jobs:
           submodules: 'true'
 
       - name: Configure CMake
-        run: cmake -DENABLE_TESTING:BOOL=TRUE -S $GITHUB_WORKSPACE -B ${{runner.workspace}}/build
+        run: cmake -DENABLE_TESTING:BOOL=TRUE -DBUILD_SCORPION:BOOL=FALSE -S $GITHUB_WORKSPACE -B ${{runner.workspace}}/build
 
       - name: Build
         working-directory: ${{runner.workspace}}/build
