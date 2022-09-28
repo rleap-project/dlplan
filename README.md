@@ -36,7 +36,7 @@ The policy component allows to construct a policy and evaluate state pairs (s, s
 
 The state space component allows to generate state spaces from PDDL input files.
 
-### 2.5 Weisfeiler-Lehman
+### 2.5 Weisfeiler-Lehman (in progress)
 
 The weisfeiler-lehman component allows to identify subgraphs that are indistinguishable
 by two-variable first order logic and hence, are also indistinguishable by less expressive description logics.
