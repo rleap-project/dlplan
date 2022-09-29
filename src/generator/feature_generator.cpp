@@ -168,17 +168,11 @@ void FeatureGeneratorImpl::generate_inductively(
         }
         if (target_complexity <= count_numerical_complexity_limit) {
             if (data.reached_resource_limit()) break;
-            for (const auto& rule : m_numerical_inductive_rules) {
-                if (data.reached_resource_limit()) break;
-                rule->generate(states, target_complexity, data, caches);
-            }
+            n_count->generate(states, target_complexity, data, caches);
         }
         if (target_complexity <= distance_numerical_complexity_limit) {
             if (data.reached_resource_limit()) break;
-            for (const auto& rule : m_numerical_inductive_rules) {
-                if (data.reached_resource_limit()) break;
-                rule->generate(states, target_complexity, data, caches);
-            }
+            n_concept_distance->generate(states, target_complexity, data, caches);
         }
         utils::g_log << "Complexity " << target_complexity << ":" << std::endl;
         data.print_statistics();
