@@ -23,11 +23,12 @@ int main(int argc, char** argv) {
     int concept_complexity_limit = std::atoi(argv[3]);
     int role_complexity_limit = std::atoi(argv[4]);
     int boolean_complexity_limit = std::atoi(argv[5]);
-    int numerical_complexity_limit = std::atoi(argv[6]);
-    int time_limit = std::atoi(argv[7]);
-    int feature_limit = std::atoi(argv[8]);
-    int threads_limit = std::atoi(argv[9]);
-    int num_iterations = std::atoi(argv[10]);
+    int count_numerical_complexity_limit = std::atoi(argv[6]);
+    int distance_numerical_complexity_limit = std::atoi(argv[7]);
+    int time_limit = std::atoi(argv[8]);
+    int feature_limit = std::atoi(argv[9]);
+    int threads_limit = std::atoi(argv[10]);
+    int num_iterations = std::atoi(argv[11]);
     std::cout << "Number of iterations: " << num_iterations << std::endl;
 
     state_space::StateSpaceGenerator().generate_state_space(domain_filename, instance_filename);
@@ -56,7 +57,8 @@ int main(int argc, char** argv) {
         concept_complexity_limit,
         role_complexity_limit,
         boolean_complexity_limit,
-        numerical_complexity_limit,
+        count_numerical_complexity_limit,
+        distance_numerical_complexity_limit,
         time_limit,
         feature_limit,
         threads_limit,

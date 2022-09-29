@@ -98,7 +98,8 @@ FeatureRepresentations FeatureGeneratorImpl::generate(
     int concept_complexity_limit,
     int role_complexity_limit,
     int boolean_complexity_limit,
-    int numerical_complexity_limit,
+    int count_numerical_complexity_limit,
+    int distance_numerical_complexity_limit,
     int time_limit,
     int feature_limit,
     int,
@@ -110,11 +111,11 @@ FeatureRepresentations FeatureGeneratorImpl::generate(
     for (auto& r : m_boolean_inductive_rules) r->initialize();
     for (auto& r : m_numerical_inductive_rules) r->initialize();
     // Initialize memory to store intermediate results.
-    GeneratorData data(factory, std::max({concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, numerical_complexity_limit}), time_limit, feature_limit);
+    GeneratorData data(factory, std::max({concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, count_numerical_complexity_limit, distance_numerical_complexity_limit}), time_limit, feature_limit);
     // Initialize cache.
     core::DenotationsCaches caches;
     generate_base(states, data, caches);
-    generate_inductively(concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, numerical_complexity_limit, states, data, caches);
+    generate_inductively(concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, count_numerical_complexity_limit, distance_numerical_complexity_limit, states, data, caches);
     return data.m_reprs;
 }
 
@@ -136,12 +137,13 @@ void FeatureGeneratorImpl::generate_inductively(
     int concept_complexity_limit,
     int role_complexity_limit,
     int boolean_complexity_limit,
-    int numerical_complexity_limit,
+    int count_numerical_complexity_limit,
+    int distance_numerical_complexity_limit,
     const States& states,
     GeneratorData& data,
     core::DenotationsCaches& caches) {
     utils::g_log << "Started generating composite features. " << std::endl;
-    int max_complexity = std::max({concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, numerical_complexity_limit});
+    int max_complexity = std::max({concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, count_numerical_complexity_limit, distance_numerical_complexity_limit});
     for (int target_complexity = 2; target_complexity <= max_complexity; ++target_complexity) {  // every composition adds at least one complexity
         if (target_complexity <= concept_complexity_limit) {
             if (data.reached_resource_limit()) break;
@@ -164,7 +166,14 @@ void FeatureGeneratorImpl::generate_inductively(
                 rule->generate(states, target_complexity, data, caches);
             }
         }
-        if (target_complexity <= numerical_complexity_limit) {
+        if (target_complexity <= count_numerical_complexity_limit) {
+            if (data.reached_resource_limit()) break;
+            for (const auto& rule : m_numerical_inductive_rules) {
+                if (data.reached_resource_limit()) break;
+                rule->generate(states, target_complexity, data, caches);
+            }
+        }
+        if (target_complexity <= distance_numerical_complexity_limit) {
             if (data.reached_resource_limit()) break;
             for (const auto& rule : m_numerical_inductive_rules) {
                 if (data.reached_resource_limit()) break;

@@ -82,7 +82,7 @@ for task in suites.build_suite(BENCHMARKS_DIR, SUITE):
             # We could also use exp.add_resource().
             run.add_command(
                 f"complexity-{complexity}-{num_threads}",
-                ["./experiment_generator", "{domain}", "{problem}", complexity, complexity, complexity, complexity, GENERATOR_TIME_LIMIT, GENERATOR_FEATURE_LIMIT, num_threads, NUM_FEATURE_VALUATION_ITERATIONS],
+                ["./experiment_generator", "{domain}", "{problem}", complexity, complexity, complexity, complexity, complexity, GENERATOR_TIME_LIMIT, GENERATOR_FEATURE_LIMIT, num_threads, NUM_FEATURE_VALUATION_ITERATIONS],
                 time_limit=num_threads * TIME_LIMIT,
                 memory_limit=MEMORY_LIMIT,
             )
