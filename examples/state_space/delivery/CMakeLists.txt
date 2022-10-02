@@ -16,4 +16,4 @@ add_custom_target(state_space_delivery_example_instance_2 ALL
 add_custom_target(state_space_delivery_example_fd ALL
     COMMAND ${CMAKE_COMMAND} -E create_symlink "${PROJECT_SOURCE_DIR}/libs/scorpion/fast-downward.py" "${CMAKE_BINARY_DIR}/examples/state_space/delivery/fast-downward.py")
 
-target_link_libraries(state_space_delivery_example dlplancore dlplangenerator dlplanstatespace gtest_main)
+target_link_libraries(state_space_delivery_example dlplancore dlplangenerator dlplanstatespace)
