@@ -37,7 +37,7 @@ def test_generate_exhaustively():
     s1 = State(instance, [a1, a2])  # b on a
     s2 = State(instance, [a2, a3])  # both on table
     states = [s0, s1, s2]
-    feature_reprs = generator.generate(factory, 2, 2, 5, 5, 180, 100000, 1, states)
+    feature_reprs = generator.generate(factory, 2, 2, 5, 5, 5, 180, 100000, 1, states)
 
     boolean_reprs = [repr for repr in feature_reprs if repr.startswith("b_")]
     numerical_reprs = [repr for repr in feature_reprs if repr.startswith("n_")]

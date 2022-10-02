@@ -1,6 +1,9 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_NOVELTY_H_
 #define DLPLAN_INCLUDE_DLPLAN_NOVELTY_H_
 
+#include <unordered_map>
+#include <unordered_set>
+
 #include "core.h"
 #include "state_space.h"
 
@@ -22,6 +25,7 @@ using AtomIndices = std::vector<AtomIndex>;
 using StateIndex = state_space::StateIndex;
 using StateIndices = std::vector<StateIndex>;
 
+using AdjacencyList = std::unordered_map<TupleIndex, std::unordered_set<TupleIndex>>;
 
 /**
  * Provides functionality to map atom tuples to indices and vice versa.
@@ -171,6 +175,9 @@ private:
     std::vector<TupleNodes> m_tuple_nodes_by_distance;
     // The reachable states with distance at most the largest distance of a tuple node.
     std::vector<StateIndices> m_state_indices_by_distance;
+    // successors
+    AdjacencyList m_forward_successors;
+    AdjacencyList m_backward_successors;
     // The root state index
     StateIndex m_root_state_index;
     // The width
@@ -188,6 +195,22 @@ public:
     TupleGraph(TupleGraph&& other);
     TupleGraph& operator=(TupleGraph&& other);
     ~TupleGraph();
+};
+
+/**
+ * TupleGraphBuilder separates the construction of a tuple graph
+ * to clean up the tuple graph interface.
+ */
+class TupleGraphBuilder {
+private:
+
+public:
+    TupleGraph make_tuple_graph(
+        std::shared_ptr<const NoveltyBase> novelty_base,
+        const state_space::StateSpace& state_space,
+        state_space::StateIndex root_state,
+        int width,
+        bool stop_if_goal) const;
 };
 
 }

@@ -78,7 +78,7 @@ int main() {
     generator.set_generate_or_role(false);
     generator.set_generate_top_role(false);
     generator.set_generate_transitive_reflexive_closure_role(false);
-    FeatureRepresentations features = generator.generate(factory, 5, 5, 10, 10, 180, 100000, 4, states);
+    FeatureRepresentations features = generator.generate(factory, 5, 5, 10, 10, 10, 180, 100000, 4, states);
 
     for (const auto& feature : features) {
         std::cout << feature << std::endl;

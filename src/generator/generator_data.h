@@ -15,8 +15,7 @@ namespace dlplan::generator {
 
 struct GeneratorData {
     core::SyntacticElementFactory& m_factory;
-    std::unordered_set<core::BooleanDenotations*> m_boolean_hash_table;
-    std::unordered_set<core::NumericalDenotations*> m_numerical_hash_table;
+    std::unordered_set<void*> m_boolean_and_numerical_hash_table;
     std::unordered_set<core::ConceptDenotations*> m_concept_hash_table;
     std::unordered_set<core::RoleDenotations*> m_role_hash_table;
     std::vector<std::vector<core::Boolean>> m_booleans_by_iteration;

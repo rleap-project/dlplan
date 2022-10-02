@@ -3,9 +3,9 @@
 #include <iostream>
 #include <vector>
 
-#include "../include/dlplan/core.h"
-#include "../include/dlplan/generator.h"
-#include "../include/dlplan/state_space.h"
+#include "../../../include/dlplan/core.h"
+#include "../../../include/dlplan/generator.h"
+#include "../../../include/dlplan/state_space.h"
 
 using namespace dlplan::core;
 using namespace dlplan::generator;
@@ -31,7 +31,7 @@ TEST(DLPTests, GeneratorDeliveryTest) {
     feature_generator.set_generate_transitive_reflexive_closure_role(false);
     SyntacticElementFactory syntactic_element_factory(vocabulary_info);
     States states(state_space.get_states_ref().begin(), state_space.get_states_ref().end());
-    auto feature_reprs = feature_generator.generate(syntactic_element_factory, 9, 9, 9, 15, 1000, 100000, 1, states);
+    auto feature_reprs = feature_generator.generate(syntactic_element_factory, 9, 9, 9, 9, 15, 1000, 100000, 1, states);
     DenotationsCaches caches;
     std::unordered_set<BooleanDenotations*> boolean_denotations;
     std::unordered_set<NumericalDenotations*> numerical_denotations;

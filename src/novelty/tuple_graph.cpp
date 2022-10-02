@@ -5,6 +5,27 @@
 
 namespace dlplan::novelty {
 
+static void add_tuple_node(
+    TupleNode&& tuple_node,
+    int distance,
+    std::vector<TupleNodes>& tuple_nodes_by_distance,
+    std::vector<StateIndices>& state_indices_by_distance) {
+    //state_indices_by_distance.resize(distance+1);
+    //tuple_nodes_by_distance.resize(distance+1);
+    //tuple_nodes_by_distance[distance].insert(std::move(tuple_node));
+}
+
+
+static void add_edge(
+    TupleIndex source,
+    TupleIndex target,
+    AdjacencyList& forward_successors,
+    AdjacencyList& backward_successors) {
+    //forward_successors[source].insert(target);
+    //backward_successors[target].insert(source);
+}
+
+
 TupleGraph::TupleGraph(
     std::shared_ptr<const NoveltyBase> novelty_base,
     const state_space::StateSpace& state_space,

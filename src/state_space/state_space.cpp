@@ -146,14 +146,15 @@ Distances StateSpace::compute_distances(const StateIndices& state_indices, bool 
     while (!queue.empty()) {
         int source = queue.front();
         queue.pop_front();
+        if (stop_if_goal && m_goal_state_indices.count(source)) {
+            continue;
+        }
         const auto& targets = successor_states.find(source);
         if (targets != successor_states.end()) {
             for (int target : targets->second) {
                 if (!distances.count(target)) {
                     distances[target] = distances[source] + 1;
-                    if (!stop_if_goal || !m_goal_state_indices.count(target)) {
-                        queue.push_back(target);
-                    }
+                    queue.push_back(target);
                 }
             }
         }
