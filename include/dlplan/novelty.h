@@ -17,6 +17,7 @@ using AtomTuples = std::vector<AtomTuple>;
 
 using TupleIndex = int;
 using TupleIndices = std::vector<TupleIndex>;
+using TupleIndicesSet = std::unordered_set<TupleIndex>;
 
 using TupleNodes = std::vector<TupleNode>;
 
@@ -24,6 +25,7 @@ using AtomIndices = std::vector<AtomIndex>;
 
 using StateIndex = state_space::StateIndex;
 using StateIndices = std::vector<StateIndex>;
+using StateIndicesSet = std::unordered_set<StateIndex>;
 
 using AdjacencyList = std::unordered_map<TupleIndex, std::unordered_set<TupleIndex>>;
 
@@ -138,9 +140,8 @@ public:
     /**
      * Useful for tuple graphs.
      */
-    void reset_novelty(const TupleIndices& tuple_indices);
-    void reset_novelty(TupleIndexGenerator tuple_index_generator);
-    bool test_novelty(TupleIndex) const;
+    void reset_novelty(const TupleIndicesSet& tuple_indices);
+    TupleIndices compute_novel_tuple_indices(TupleIndexGenerator&& tuple_index_generator) const;
 
     /**
      * Useful for width-based planners.
@@ -166,6 +167,9 @@ public:
     TupleNode(TupleNode&& other);
     TupleNode& operator=(TupleNode&& other);
     ~TupleNode();
+
+    TupleIndex get_tuple_index() const;
+    const StateIndices& get_state_indices_ref() const;
 };
 
 
@@ -195,22 +199,6 @@ public:
     TupleGraph(TupleGraph&& other);
     TupleGraph& operator=(TupleGraph&& other);
     ~TupleGraph();
-};
-
-/**
- * TupleGraphBuilder separates the construction of a tuple graph
- * to clean up the tuple graph interface.
- */
-class TupleGraphBuilder {
-private:
-
-public:
-    TupleGraph make_tuple_graph(
-        std::shared_ptr<const NoveltyBase> novelty_base,
-        const state_space::StateSpace& state_space,
-        state_space::StateIndex root_state,
-        int width,
-        bool stop_if_goal) const;
 };
 
 }
