@@ -14,8 +14,8 @@ int main(int argc, char** argv) {
     for (int i = 0; i < argc; ++i) {
         std::cout << argv[i] << std::endl;
     }
-    if (argc != 11) {
-        std::cout << "User error. Expected: ./experiment_core <str:domain_filename> <str:instance_filename> <int:concept_complexity_limit> <int:role_complexity_limit> <int:boolean_complexity_limit> <int:numerical_complexity_limit> <int:time_limit> <int:features_limit> <int:limit_threads> <int:num_iterations>" << std::endl;
+    if (argc != 12) {
+        std::cout << "User error. Expected: ./experiment_core <str:domain_filename> <str:instance_filename> <int:concept_complexity_limit> <int:role_complexity_limit> <int:boolean_complexity_limit> <int:count_numerical_complexity_limit> <int:distance_numerical_complexity_limit> <int:time_limit> <int:features_limit> <int:limit_threads> <int:num_iterations>" << std::endl;
         return 1;
     }
     std::string domain_filename = argv[1];
@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
     feature_generator.set_generate_identity_role(false);
     feature_generator.set_generate_not_role(false);
     feature_generator.set_generate_or_role(false);
-    feature_generator.set_generate_top_role(false);
+    // feature_generator.set_generate_top_role(false);
     feature_generator.set_generate_transitive_reflexive_closure_role(false);
     auto feature_reprs = feature_generator.generate(
         syntactic_element_factory,
