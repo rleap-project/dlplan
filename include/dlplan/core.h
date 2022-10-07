@@ -1,20 +1,17 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_CORE_H_
 #define DLPLAN_INCLUDE_DLPLAN_CORE_H_
 
-#include <memory>
-#include <string>
-#include <vector>
-#include <unordered_set>
-#include <unordered_map>
-
-#include "types.h"
-
 #include "phmap/phmap.h"
-
 #include "utils/pimpl.h"
 #include "utils/dynamic_bitset.h"
 #include "utils/cache.h"
-#include "utils/hashing.h"
+
+#include <memory>
+#include <string>
+#include <unordered_set>
+#include <unordered_map>
+#include <vector>
+
 
 /**
  * Forward declarations and usings
@@ -37,6 +34,11 @@ namespace dlplan::core {
         class Numerical;
         class Boolean;
     }
+
+    using Name_Vec = std::vector<std::string>;
+    using Index_Vec = std::vector<int>;
+    using Index_Set = std::unordered_set<int>;
+    using IndexPair_Vec = std::vector<std::pair<int, int>>;
 
     using States = std::vector<State>;
     using StatesSet = std::unordered_set<State>;
@@ -94,7 +96,6 @@ namespace std {
 
 
 namespace dlplan::core {
-
 class ConceptDenotation {
 private:
     int m_num_objects;

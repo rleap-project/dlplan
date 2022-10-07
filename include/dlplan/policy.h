@@ -1,24 +1,26 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_POLICY_H_
 #define DLPLAN_INCLUDE_DLPLAN_POLICY_H_
 
-#include <unordered_set>
-#include <vector>
-#include <memory>
-#include <iostream>
-#include <string>
-
 #include "core.h"
+#include "utils/pimpl.h"
+
+#include <memory>
+#include <string>
+#include <vector>
+
+
+/**
+ * Forward declarations and usings
+ */
+namespace dlplan::policy {
+    class PolicyBuilder;
+    class PolicyBuilderImpl;
+    class PolicyReaderImpl;
+    class PolicyWriterImpl;
+}
 
 
 namespace dlplan::policy {
-class RuleImpl;
-class PolicyImpl;
-class PolicyBuilder;
-class PolicyBuilderImpl;
-class PolicyReaderImpl;
-class PolicyWriterImpl;
-
-
 /**
  * All different kinds of conditions.
  */

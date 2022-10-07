@@ -88,7 +88,7 @@ TupleGraph::TupleGraph(
                 }
             }
             for (auto tuple_index : novel_tuples) {
-                if (extended.find(std::make_pair(tuple_node.get_tuple_index(), tuple_index)) == tuple_node.get_state_indices_ref().size()) {
+                if (extended.find(std::make_pair(tuple_node.get_tuple_index(), tuple_index))->second.size() == tuple_node.get_state_indices_ref().size()) {
                     marked_novel_tuples.insert(tuple_index);
                 }
             }

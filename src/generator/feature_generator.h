@@ -1,11 +1,6 @@
 #ifndef DLPLAN_SRC_GENERATOR_FEATURE_GENERATOR_IMPL_H_
 #define DLPLAN_SRC_GENERATOR_FEATURE_GENERATOR_IMPL_H_
 
-#include <unordered_map>
-#include <unordered_set>
-#include <memory>
-#include <bitset>
-
 #include "rules/concepts/all.h"
 #include "rules/concepts/and.h"
 #include "rules/concepts/bot.h"
@@ -40,21 +35,19 @@
 #include "rules/booleans/inclusion.h"
 #include "rules/booleans/nullary.h"
 
-#include "../../include/dlplan/core.h"
-
-#include "types.h"
-
 #include "rules/rule.h"
 
+#include <unordered_map>
+#include <unordered_set>
+#include <memory>
+#include <bitset>
 
-namespace dlplan {
-namespace core {
-    class SyntacticElementFactory;
-}
-namespace generator {
+
+namespace dlplan::generator {
 struct GeneratorData;
 
 using Rule_Ptr = std::shared_ptr<rules::Rule>;
+using FeatureRepresentations = std::vector<std::string>;
 
 class FeatureGeneratorImpl {
 private:
@@ -106,7 +99,7 @@ private:
      * Generates all Elements with complexity 1.
      */
     void generate_base(
-        const States& states,
+        const core::States& states,
         GeneratorData& data,
         core::DenotationsCaches& caches);
 
@@ -119,7 +112,7 @@ private:
         int boolean_complexity_limit,
         int count_numerical_complexity_limit,
         int distance_numerical_complexity_limit,
-        const States& states,
+        const core::States& states,
         GeneratorData& data,
         core::DenotationsCaches& caches);
 
@@ -149,7 +142,7 @@ public:
         int time_limit,
         int feature_limit,
         int num_threads,
-        const States& states);
+        const core::States& states);
 
     /**
      * Set element generation on or off
@@ -187,7 +180,5 @@ public:
 };
 
 }
-}
-
 
 #endif

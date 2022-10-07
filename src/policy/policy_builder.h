@@ -1,11 +1,10 @@
 #ifndef DLPLAN_SRC_POLICY_POLICY_BUILDER_H_
 #define DLPLAN_SRC_POLICY_POLICY_BUILDER_H_
 
-#include <memory>
-#include <unordered_set>
-#include <vector>
-
 #include "cache.h"
+
+#include <memory>
+#include <vector>
 
 
 namespace dlplan {

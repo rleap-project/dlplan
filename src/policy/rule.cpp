@@ -1,10 +1,9 @@
 #include "../../include/dlplan/policy.h"
 
-#include <sstream>
-
-#include "algorithm"
 #include "condition.h"
 #include "effect.h"
+
+#include <sstream>
 
 
 namespace dlplan::policy {

@@ -1,13 +1,9 @@
 #ifndef DLPLAN_SRC_CORE_CACHE_H_
 #define DLPLAN_SRC_CORE_CACHE_H_
 
-#include <unordered_map>
-#include <memory>
-#include <iostream>
-#include <cassert>
-#include <mutex>
-
 #include "../../include/dlplan/core.h"
+
+#include <memory>
 
 
 namespace dlplan::core {

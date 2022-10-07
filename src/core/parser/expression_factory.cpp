@@ -1,8 +1,5 @@
 #include "expression_factory.h"
 
-#include <algorithm>
-#include <iostream>
-
 #include "expressions/booleans/empty.h"
 #include "expressions/booleans/inclusion.h"
 #include "expressions/booleans/nullary.h"
@@ -70,6 +67,9 @@
 #include "../elements/roles/top.h"
 #include "../elements/roles/transitive_closure.h"
 #include "../elements/roles/transitive_reflexive_closure.h"
+
+#include <algorithm>
+#include <stdexcept>
 
 
 namespace dlplan::core::parser {

@@ -1,10 +1,7 @@
 #include "../../include/dlplan/core.h"
 
-#include <sstream>
-
 
 namespace dlplan::core {
-
 Constant::Constant(const std::string& name, int index)
     : m_name(name), m_index(index) { }
 

@@ -1,19 +1,15 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENT_FACTORY_H_
 #define DLPLAN_SRC_CORE_ELEMENT_FACTORY_H_
 
-#include <memory>
-#include <string>
-
 #include "cache.h"
-#include "types.h"
 
 #include "../../include/dlplan/core.h"
 
+#include <memory>
+#include <string>
+
 
 namespace dlplan::core {
-class VocabularyInfoImpl;
-
-
 class SyntacticElementFactoryImpl {
 private:
     std::shared_ptr<const VocabularyInfo> m_vocabulary_info;

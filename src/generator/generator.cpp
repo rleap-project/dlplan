@@ -38,7 +38,7 @@ FeatureRepresentations FeatureGenerator::generate(
     int time_limit,
     int feature_limit,
     int num_threads,
-    const States& states) {
+    const core::States& states) {
     return m_pImpl->generate(factory, concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, count_numerical_complexity_limit, distance_numerical_complexity_limit, time_limit, feature_limit, num_threads, states);
 }
 

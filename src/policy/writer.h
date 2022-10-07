@@ -1,7 +1,7 @@
 #ifndef DLPLAN_SRC_POLICY_WRITER_H_
 #define DLPLAN_SRC_POLICY_WRITER_H_
 
-#include <ostream>
+#include <string>
 
 
 namespace dlplan::policy {

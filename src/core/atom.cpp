@@ -1,12 +1,12 @@
 #include "../../include/dlplan/core.h"
 
+#include "../utils/collections.h"
+
 #include <sstream>
 #include <cassert>
 
-#include "../utils/collections.h"
-
-
 using namespace std::string_literals;
+
 
 namespace dlplan::core {
 

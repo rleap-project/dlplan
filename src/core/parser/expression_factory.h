@@ -1,9 +1,9 @@
 #ifndef DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_FACTORY_H_
 #define DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_FACTORY_H_
 
-#include <vector>
-
 #include "types.h"
+
+#include <vector>
 
 
 namespace dlplan::core {

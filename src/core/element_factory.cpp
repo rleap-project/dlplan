@@ -1,6 +1,5 @@
 #include "element_factory.h"
-#include "parser/parser.h"
-#include "parser/expressions/expression.h"
+
 #include "elements/booleans/empty.h"
 #include "elements/booleans/inclusion.h"
 #include "elements/booleans/nullary.h"
@@ -34,10 +33,11 @@
 #include "elements/roles/top.h"
 #include "elements/roles/transitive_closure.h"
 #include "elements/roles/transitive_reflexive_closure.h"
+#include "parser/parser.h"
+#include "parser/expressions/expression.h"
 
 
 namespace dlplan::core {
-
 SyntacticElementFactoryImpl::SyntacticElementFactoryImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info)
     : m_vocabulary_info(vocabulary_info), m_caches(Caches()) {
 }
