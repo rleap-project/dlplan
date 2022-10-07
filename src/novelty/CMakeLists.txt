@@ -3,6 +3,7 @@ target_sources(dlplannovelty
     PRIVATE
         novelty_base.cpp
         novelty_table.cpp
+        novelty.cpp
         tuple_graph.cpp
         tuple_index_generator.cpp
         tuple_node.cpp

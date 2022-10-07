@@ -1,18 +1,24 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_WEISFEILER_LEHMAN_H_
 #define DLPLAN_INCLUDE_DLPLAN_WEISFEILER_LEHMAN_H_
 
+#include "state_space.h"
+
 #include <vector>
 
-#include "state_space.h"
+
+/**
+ * Forward declarations and usings
+ */
+namespace dlplan::weisfeiler_lehman {
+    class Color;
+
+    using CompressedColor = int;
+    using CompressedColors = std::vector<CompressedColor>;
+    using Colors = std::vector<Color>;
+}
 
 
 namespace dlplan::weisfeiler_lehman {
-class Color;
-
-using CompressedColor = int;
-using CompressedColors = std::vector<CompressedColor>;
-using Colors = std::vector<Color>;
-
 /**
  * Weisfeiler-Lehman (WL) is an important algorithm in the context of description logics features
  * because the subgraphs G and H of two states s_1,s_2

@@ -1,16 +1,11 @@
 #include "feature_generator.h"
 
-#include <numeric>
-#include <iostream>
-#include <cassert>
-#include <chrono>
-#include <thread>
-
 #include "generator_data.h"
 
-#include "../../include/dlplan/generator.h"
+#include "../../include/dlplan/core.h"
 #include "../utils/logging.h"
-#include "../core/elements/element.h"
+
+#include <iostream>
 
 
 namespace dlplan::generator {
@@ -103,7 +98,7 @@ FeatureRepresentations FeatureGeneratorImpl::generate(
     int time_limit,
     int feature_limit,
     int,
-    const States& states) {
+    const core::States& states) {
     // Initialize statistics in each rule.
     for (auto& r : m_primitive_rules) r->initialize();
     for (auto& r : m_concept_inductive_rules) r->initialize();
@@ -120,7 +115,7 @@ FeatureRepresentations FeatureGeneratorImpl::generate(
 }
 
 void FeatureGeneratorImpl::generate_base(
-    const States& states,
+    const core::States& states,
     GeneratorData& data,
     core::DenotationsCaches& caches) {
     utils::g_log << "Started generating base features of complexity 1." << std::endl;
@@ -139,7 +134,7 @@ void FeatureGeneratorImpl::generate_inductively(
     int boolean_complexity_limit,
     int count_numerical_complexity_limit,
     int distance_numerical_complexity_limit,
-    const States& states,
+    const core::States& states,
     GeneratorData& data,
     core::DenotationsCaches& caches) {
     utils::g_log << "Started generating composite features. " << std::endl;

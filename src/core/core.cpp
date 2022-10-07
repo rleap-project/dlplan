@@ -1,17 +1,17 @@
 #include "../../include/dlplan/core.h"
 
-#include <cassert>
-#include <iostream>
-#include <algorithm>
-
 #include "elements/concept.h"
 #include "elements/role.h"
 #include "elements/numerical.h"
 #include "elements/boolean.h"
-
 #include "element_factory.h"
 #include "elements/types.h"
 
+#include "../../include/dlplan/utils/hashing.h"
+
+#include <cassert>
+#include <iostream>
+#include <algorithm>
 
 
 namespace std {

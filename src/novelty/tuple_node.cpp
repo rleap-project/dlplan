@@ -16,4 +16,12 @@ TupleNode& TupleNode::operator=(TupleNode&& other) = default;
 
 TupleNode::~TupleNode() = default;
 
+TupleIndex TupleNode::get_tuple_index() const {
+    return m_tuple_index;
+}
+
+const StateIndices& TupleNode::get_state_indices_ref() const {
+    return m_state_indices;
+}
+
 }

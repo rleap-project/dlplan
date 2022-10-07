@@ -1,16 +1,13 @@
 #include "parser.h"
 
-#include <vector>
-#include <exception>
-#include <iostream>
-#include <algorithm>
-
 #include "expressions/expression.h"
 #include "expression_factory.h"
 
+#include <vector>
+#include <exception>
+
 
 namespace dlplan::core::parser {
-
 static TokenRegexes element_token_regexes = {
     { TokenType::COMMA, Tokenizer::build_regex(",") },
     { TokenType::OPENING_PARENTHESIS, Tokenizer::build_regex("\\(") },

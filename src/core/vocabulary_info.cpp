@@ -4,6 +4,8 @@
 
 #include "../utils/collections.h"
 
+using namespace std::string_literals;
+
 
 namespace dlplan::core {
 

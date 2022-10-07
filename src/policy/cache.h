@@ -1,17 +1,12 @@
-#ifndef GP_SRC_CACHE_H_
-#define GP_SRC_CACHE_H_
-
-#include <unordered_map>
-#include <memory>
-#include <iostream>
-#include <cassert>
-#include <mutex>
+#ifndef DLPLAN_SRC_POLICY_CACHE_H_
+#define DLPLAN_SRC_POLICY_CACHE_H_
 
 #include "../../include/dlplan/policy.h"
 
+#include <memory>
+
 
 namespace dlplan::policy {
-
 /**
  * One cache for each template instantiated element.
  */

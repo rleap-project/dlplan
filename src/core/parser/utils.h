@@ -1,19 +1,18 @@
 #ifndef DLPLAN_SRC_CORE_PARSER_UTILS_H_
 #define DLPLAN_SRC_CORE_PARSER_UTILS_H_
 
+#include "types.h"
+#include "expressions/expression.h"
+
 #include <algorithm>
 #include <vector>
 #include <string>
 #include <stdexcept>
 
-#include "types.h"
-#include "expressions/expression.h"
-
 using namespace std::string_literals;
 
 
 namespace dlplan::core::parser {
-
 int try_parse_number(const std::string& name) {
     if (!std::all_of(name.begin(), name.end(), [](char c){ return isdigit(c); })) {
         throw std::runtime_error("try_parse_number - error parsing ("s + name + ") to int.");

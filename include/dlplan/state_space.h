@@ -3,18 +3,26 @@
 
 #include "core.h"
 
+#include <unordered_map>
+#include <unordered_set>
+
+
+/**
+ * Forward declarations and usings
+ */
+namespace dlplan::state_space {
+    using StateIndex = int;
+    using StateIndices = std::unordered_set<StateIndex>;
+    using AdjacencyList = std::unordered_map<StateIndex, StateIndices>;
+    using Distance = int;
+    using Distances = std::unordered_map<StateIndex, Distance>;
+    using StateMapping = std::unordered_map<StateIndex, core::State>;
+
+    const int UNDEFINED = -1;
+}
+
 
 namespace dlplan::state_space {
-
-using StateIndex = int;
-using StateIndices = std::unordered_set<StateIndex>;
-using AdjacencyList = std::unordered_map<StateIndex, StateIndices>;
-using Distance = int;
-using Distances = std::unordered_map<StateIndex, Distance>;
-using StateMapping = std::unordered_map<StateIndex, core::State>;
-
-const int UNDEFINED = -1;
-
 /**
  * Provides access to additional derived goal distance information of a StateSpace.
  */

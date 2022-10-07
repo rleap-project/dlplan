@@ -1,11 +1,7 @@
 #include "../../include/dlplan/core.h"
 
-#include <sstream>
-#include <iostream>
-
 
 namespace dlplan::core {
-
 Predicate::Predicate(const std::string& name, int index, int arity)
     : m_name(name), m_index(index), m_arity(arity) { }
 

@@ -1,18 +1,16 @@
 #include "../../include/dlplan/core.h"
 
+#include "../utils/collections.h"
+
 #include <string>
 #include <algorithm>
 #include <iostream>
 #include <sstream>
-#include <cassert>
-
-#include "../utils/collections.h"
 
 using namespace std::string_literals;
 
 
 namespace dlplan::core {
-
 static std::string compute_atom_name(const Predicate& predicate, const std::vector<Object>& objects) {
     std::stringstream ss;
     ss << predicate.get_name_ref() << "(";

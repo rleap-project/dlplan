@@ -16,6 +16,15 @@ NoveltyTable& NoveltyTable::operator=(NoveltyTable&& other) = default;
 
 NoveltyTable::~NoveltyTable() = default;
 
+void NoveltyTable::reset_novelty(const TupleIndicesSet& tuple_indices) {
+
+}
+
+TupleIndices NoveltyTable::compute_novel_tuple_indices(TupleIndexGenerator&& tuple_index_generator) const {
+
+}
+
+
 bool NoveltyTable::insert(TupleIndexGenerator&& tuple_index_generator, bool stop_if_novel) {
     bool result = false;
     for (auto tuple_index : tuple_index_generator) {

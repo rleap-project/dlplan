@@ -1,7 +1,5 @@
 #include "reader.h"
 
-#include <sstream>
-
 #include "parser/parser.h"
 #include "parser/expressions.h"
 

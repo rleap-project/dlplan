@@ -1,13 +1,18 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_NOVELTY_H_
 #define DLPLAN_INCLUDE_DLPLAN_NOVELTY_H_
 
-#include <unordered_map>
-#include <unordered_set>
-
 #include "core.h"
 #include "state_space.h"
 
+#include <unordered_map>
+#include <unordered_set>
+#include <utility>
+#include <vector>
 
+
+/**
+ * Forward declarations and usings
+ */
 namespace dlplan::novelty {
 class TupleNode;
 
@@ -18,6 +23,7 @@ using AtomTuples = std::vector<AtomTuple>;
 using TupleIndex = int;
 using TupleIndices = std::vector<TupleIndex>;
 using TupleIndicesSet = std::unordered_set<TupleIndex>;
+using TupleEdge = std::pair<TupleIndex, TupleIndex>;
 
 using TupleNodes = std::vector<TupleNode>;
 
@@ -28,7 +34,20 @@ using StateIndices = std::vector<StateIndex>;
 using StateIndicesSet = std::unordered_set<StateIndex>;
 
 using AdjacencyList = std::unordered_map<TupleIndex, std::unordered_set<TupleIndex>>;
+}
 
+
+/**
+ * Template specializations
+ */
+namespace std {
+    template<> struct hash<dlplan::novelty::TupleEdge> {
+        size_t operator()(const dlplan::novelty::TupleEdge& edge) const noexcept;
+    };
+}
+
+
+namespace dlplan::novelty {
 /**
  * Provides functionality to map atom tuples to indices and vice versa.
  * For potential debugging purposes we add

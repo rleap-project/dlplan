@@ -1,10 +1,10 @@
 #ifndef DLPLAN_SRC_POLICY_EFFECT_H_
 #define DLPLAN_SRC_POLICY_EFFECT_H_
 
+#include "../../include/dlplan/policy.h"
+
 #include <string>
 #include <memory>
-
-#include "../../include/dlplan/policy.h"
 
 
 namespace dlplan {

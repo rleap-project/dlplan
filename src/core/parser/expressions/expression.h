@@ -1,12 +1,12 @@
 #ifndef DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_EXPRESSION_H_
 #define DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_EXPRESSION_H_
 
+#include "../../element_factory.h"
+#include "../../elements/types.h"
+
 #include <sstream>
 #include <string>
 #include <vector>
-
-#include "../../element_factory.h"
-#include "../../elements/types.h"
 
 
 namespace dlplan::core::parser {

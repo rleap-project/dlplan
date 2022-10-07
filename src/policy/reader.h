@@ -1,10 +1,7 @@
 #ifndef DLPLAN_SRC_POLICY_READER_H_
 #define DLPLAN_SRC_POLICY_READER_H_
 
-#include <deque>
-#include <istream>
-#include <vector>
-#include <memory>
+#include <string>
 
 
 namespace dlplan {

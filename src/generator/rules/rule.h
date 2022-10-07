@@ -1,30 +1,13 @@
 #ifndef DLPLAN_SRC_GENERATOR_FEATURE_GENERATOR_RULES_RULE_H_
 #define DLPLAN_SRC_GENERATOR_FEATURE_GENERATOR_RULES_RULE_H_
 
+#include "../../../include/dlplan/core.h"
+
 #include <string>
 #include <iostream>
-#include <mutex>
-#include <cassert>
-
-#include "../generator_data.h"
-#include "../types.h"
-
-#include "../../core/elements/element.h"
-#include "../../core/elements/boolean.h"
-#include "../../core/elements/numerical.h"
-#include "../../core/elements/concept.h"
-#include "../../core/elements/role.h"
 
 
-namespace dlplan {
-namespace core {
-    class Concept;
-    class Role;
-    class Numerical;
-    class Boolean;
-    class SyntacticElementFactory;
-}
-namespace generator {
+namespace dlplan::generator {
 class GeneratorData;
 namespace rules {
 
@@ -41,7 +24,7 @@ protected:
     int m_count;
 
 protected:
-    virtual void generate_impl(const States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) = 0;
+    virtual void generate_impl(const core::States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) = 0;
 
 public:
     Rule() : m_enabled(true), m_count(0) { }
@@ -54,7 +37,7 @@ public:
     /**
      * Submits tasks to threadpool.
      */
-    void generate(const States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) {
+    void generate(const core::States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) {
         if (m_enabled) {
             generate_impl(states, target_complexity, data, caches);
         }
@@ -77,7 +60,6 @@ public:
     }
 };
 
-}
 }
 }
 

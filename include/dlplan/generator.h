@@ -2,20 +2,24 @@
 #define DLPLAN_INCLUDE_DLPLAN_GENERATOR_H_
 
 #include "core.h"
+#include "utils/pimpl.h"
+
+#include <string>
+#include <vector>
+
+
+/**
+ * Forward declarations and usings
+ */
+namespace dlplan::generator {
+    class FeatureGeneratorImpl;
+
+    using States = std::vector<core::State>;
+    using FeatureRepresentations = std::vector<std::string>;
+}
 
 
 namespace dlplan::generator {
-class NumericalImpl;
-class BooleanImpl;
-class FeatureCollectionImpl;
-class FeatureCollectionWriterImpl;
-class FeatureGeneratorImpl;
-class Numerical;
-class Boolean;
-
-using States = std::vector<core::State>;
-using FeatureRepresentations = std::vector<std::string>;
-
 /**
  * FeatureGenerator exhaustively generates features up to the complexity bound or until the time limit was reached.
  */
@@ -44,7 +48,7 @@ public:
         int time_limit,
         int feature_limit,
         int num_threads,
-        const States& states);
+        const core::States& states);
 
     void set_generate_empty_boolean(bool enable);
     void set_generate_inclusion_boolean(bool enable);

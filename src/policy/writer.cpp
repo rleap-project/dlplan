@@ -1,7 +1,5 @@
 #include "writer.h"
 
-#include <ostream>
-
 #include "../../include/dlplan/policy.h"
 
 
