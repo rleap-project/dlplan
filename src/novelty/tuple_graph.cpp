@@ -50,7 +50,7 @@ TupleGraph::TupleGraph(
     bool stop_if_goal)
     : m_root_state_index(root_state) {
     assert(width >= 0);
-    NoveltyTable novelty_table(novelty_base);
+    NoveltyTable novelty_table(novelty_base->get_num_tuples());
     auto state_information = state_space.compute_state_information();
     auto distances_from_root_state = state_space.compute_distances({root_state}, true, stop_if_goal);
     std::vector<StateIndices> state_indices_by_distance;

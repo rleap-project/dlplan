@@ -38,6 +38,7 @@ private:
     std::vector<int> m_factors;
     int m_num_atoms;
     int m_width;
+    int m_num_tuples;
 
 public:
     NoveltyBase(int num_atoms, int width);
@@ -59,6 +60,7 @@ public:
      */
     int get_width() const;
     int get_dummy_atom_index() const;
+    int get_num_tuples() const;
 };
 
 
@@ -127,10 +129,10 @@ public:
 
 class NoveltyTable {
 private:
-    std::shared_ptr<const NoveltyBase> m_novelty_base;
+
     std::vector<bool> m_table;
 public:
-    explicit NoveltyTable(std::shared_ptr<const NoveltyBase> novelty_base);
+    explicit NoveltyTable(int num_tuples);
     NoveltyTable(const NoveltyTable& other);
     NoveltyTable& operator=(const NoveltyTable& other);
     NoveltyTable(NoveltyTable&& other);
