@@ -76,7 +76,7 @@ def main():
     generator.set_generate_top_role(False)
     generator.set_generate_transitive_reflexive_closure_role(False)
 
-    features = generator.generate(f, 5, 5, 10, 10, 180, 100000, 1, states)
+    features = generator.generate(f, 5, 5, 10, 10, 10, 180, 100000, 1, states)
 
     for feature in features:
         print(feature)

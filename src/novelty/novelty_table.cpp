@@ -33,7 +33,7 @@ bool NoveltyTable::insert(TupleIndexGenerator&& tuple_index_generator, bool stop
             result = true;
         }
         m_table[tuple_index] = false;
-        if (stop_if_novel) {
+        if (stop_if_novel && is_novel) {
             break;
         }
     }

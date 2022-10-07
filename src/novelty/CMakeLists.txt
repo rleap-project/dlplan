@@ -16,7 +16,7 @@ target_include_directories(dlplannovelty
 
 install(
     TARGETS
-    dlplannovelty
+        dlplannovelty
     LIBRARY DESTINATION
         ${CMAKE_INSTALL_PREFIX}/lib/dlplan)
 
