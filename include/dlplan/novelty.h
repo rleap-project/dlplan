@@ -37,16 +37,6 @@ using AdjacencyList = std::unordered_map<TupleIndex, std::unordered_set<TupleInd
 }
 
 
-/**
- * Template specializations
- */
-namespace std {
-    template<> struct hash<dlplan::novelty::TupleEdge> {
-        size_t operator()(const dlplan::novelty::TupleEdge& edge) const noexcept;
-    };
-}
-
-
 namespace dlplan::novelty {
 /**
  * Provides functionality to map atom tuples to indices and vice versa.

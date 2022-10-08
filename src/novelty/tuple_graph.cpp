@@ -1,47 +1,25 @@
 #include "../../include/dlplan/novelty.h"
 
+#include "../../include/dlplan/utils/hashing.h"
+
 #include <cassert>
+
+/**
+ * Template specializations
+ */
+namespace std {
+    template<> struct hash<dlplan::novelty::TupleEdge> {
+        size_t operator()(const dlplan::novelty::TupleEdge& edge) const noexcept {
+            std::size_t result = 0;
+            dlplan::utils::hash_combine(result, edge.first);
+            dlplan::utils::hash_combine(result, edge.second);
+            return result;
+        }
+    };
+}
 
 
 namespace dlplan::novelty {
-
-/**
- * TupleGraphBuilder separates the construction of a tuple graph
- * to clean up the tuple graph interface.
- */
-class TupleGraphBuilder {
-private:
-
-public:
-    TupleGraph make_tuple_graph(
-        std::shared_ptr<const NoveltyBase> novelty_base,
-        const state_space::StateSpace& state_space,
-        state_space::StateIndex root_state,
-        int width,
-        bool stop_if_goal) const;
-};
-
-static void add_tuple_node(
-    TupleNode&& tuple_node,
-    int distance,
-    std::vector<TupleNodes>& tuple_nodes_by_distance,
-    std::vector<StateIndices>& state_indices_by_distance) {
-    //state_indices_by_distance.resize(distance+1);
-    //tuple_nodes_by_distance.resize(distance+1);
-    //tuple_nodes_by_distance[distance].insert(std::move(tuple_node));
-}
-
-
-static void add_edge(
-    TupleIndex source,
-    TupleIndex target,
-    AdjacencyList& forward_successors,
-    AdjacencyList& backward_successors) {
-    //forward_successors[source].insert(target);
-    //backward_successors[target].insert(source);
-}
-
-
 TupleGraph::TupleGraph(
     std::shared_ptr<const NoveltyBase> novelty_base,
     const state_space::StateSpace& state_space,
