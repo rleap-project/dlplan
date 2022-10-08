@@ -57,6 +57,10 @@ int NoveltyBase::get_dummy_atom_index() const {
     return m_num_atoms;
 }
 
+int NoveltyBase::get_num_atoms() const {
+    return m_num_atoms;
+}
+
 int NoveltyBase::get_num_tuples() const {
     return m_num_tuples;
 }
