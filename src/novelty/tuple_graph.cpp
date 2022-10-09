@@ -4,21 +4,6 @@
 
 #include <cassert>
 
-/**
- * Template specializations
- */
-namespace std {
-    template<> struct hash<dlplan::novelty::TupleEdge> {
-        size_t operator()(const dlplan::novelty::TupleEdge& edge) const noexcept {
-            std::size_t result = 0;
-            dlplan::utils::hash_combine(result, edge.first);
-            dlplan::utils::hash_combine(result, edge.second);
-            return result;
-        }
-    };
-}
-
-
 using namespace dlplan::state_space;
 
 
@@ -81,19 +66,20 @@ TupleGraph::TupleGraph(
         }
         novelty_table.reset_novelty(novel_tuples);
         // Extend optimal plans
-        std::unordered_map<TupleEdge, StateIndicesSet> extended;
         for (auto& tuple_node : m_tuple_nodes_by_distance[distance - 1]) {
+            std::unordered_map<TupleIndex, StateIndicesSet> extended;
             for (auto source_index : tuple_node.get_state_indices_ref()) {
                 for (auto target_index : state_space.get_forward_successor_state_indices_ref(source_index)) {
                     for (auto target_tuple_index : state_index_to_novel_tuples.find(target_index)->second) {
-                        extended[TupleEdge(tuple_node.get_tuple_index(), target_tuple_index)].insert(source_index);
+                        extended[target_tuple_index].insert(source_index);
                     }
                 }
             }
-            for (auto tuple_index : novel_tuples) {
-                if (extended.find(TupleEdge(tuple_node.get_tuple_index(), tuple_index))->second.size() == tuple_node.get_state_indices_ref().size()) {
-                    TupleNode succ_tuple_node(tuple_index, novel_tuple_to_state_indices.at(tuple_index));
-                    tuple_node.add_successor(tuple_index);
+            for (const auto& pair : extended) {
+                if (pair.second.size() == tuple_node.get_state_indices_ref().size()) {
+                    TupleIndex succ_tuple_index = pair.first;
+                    TupleNode succ_tuple_node(succ_tuple_index, novel_tuple_to_state_indices.at(succ_tuple_index));
+                    tuple_node.add_successor(succ_tuple_index);
                     succ_tuple_node.add_predecessor(tuple_node.get_tuple_index());
                     curr_tuple_layer.push_back(std::move(succ_tuple_node));
                 }

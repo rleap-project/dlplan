@@ -23,7 +23,6 @@ using AtomTuples = std::vector<AtomTuple>;
 using TupleIndex = int;
 using TupleIndices = std::vector<TupleIndex>;
 using TupleIndicesSet = std::unordered_set<TupleIndex>;
-using TupleEdge = std::pair<TupleIndex, TupleIndex>;
 
 using TupleNodes = std::vector<TupleNode>;
 
