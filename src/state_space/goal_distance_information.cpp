@@ -6,7 +6,7 @@ namespace dlplan::state_space {
 GoalDistanceInformation::GoalDistanceInformation(
     int initial_state_index,
     Distances&& goal_distances,
-    StateIndices&& deadend_state_indices)
+    StateIndicesSet&& deadend_state_indices)
     : m_initial_state_index(initial_state_index),
       m_goal_distances(std::move(goal_distances)),
       m_deadend_state_indices(std::move(deadend_state_indices)) { }
@@ -57,7 +57,7 @@ StateIndex GoalDistanceInformation::get_initial_state_index() const {
     return m_initial_state_index;
 }
 
-const StateIndices& GoalDistanceInformation::get_deadend_state_indices_ref() const {
+const StateIndicesSet& GoalDistanceInformation::get_deadend_state_indices_ref() const {
     return m_deadend_state_indices;
 }
 

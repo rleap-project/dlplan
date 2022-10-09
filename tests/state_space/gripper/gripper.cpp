@@ -11,5 +11,6 @@ TEST(DLPTests, StateSpaceGripperTest) {
     auto state_space = StateSpaceReader().read();
     auto distance_information = state_space.compute_goal_distance_information();
     state_space.print();
+    std::cout << state_space.to_dot(0) << std::endl;
     EXPECT_EQ(distance_information.is_solvable(), true);
 }

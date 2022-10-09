@@ -37,8 +37,8 @@ void init_state_space(py::module_ &m) {
     ;
 
     py::class_<StateSpace>(m, "StateSpace")
-        .def(py::init<std::shared_ptr<const InstanceInfo>, StatesSet, StateIndex, AdjacencyList, StateIndices>())
-        .def(py::init<const StateSpace&, const StateIndices&, const StateIndices&>())
+        .def(py::init<std::shared_ptr<const InstanceInfo>, StatesSet, StateIndex, AdjacencyList, StateIndicesSet>())
+        .def(py::init<const StateSpace&, const StateIndicesSet&, const StateIndicesSet&>())
         .def("__copy__", [](const StateSpace& state_space, py::object){ return StateSpace(state_space); })
         .def("__deepcopy__", [](const StateSpace& state_space, py::object){ return StateSpace(state_space); })
         .def("merge", &StateSpace::operator|=)
@@ -49,6 +49,7 @@ void init_state_space(py::module_ &m) {
         .def("add_state", &StateSpace::add_state, py::return_value_policy::reference)
         .def("add_transition", &StateSpace::add_transition)
         .def("print", &StateSpace::print)
+        .def("to_dot", &StateSpace::to_dot)
         .def("set_initial_state_index", &StateSpace::set_initial_state_index)
         .def("set_goal_state_indices", &StateSpace::set_goal_state_indices)
         .def("compute_goal_distance_information", &StateSpace::compute_goal_distance_information)

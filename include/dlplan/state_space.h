@@ -12,8 +12,9 @@
  */
 namespace dlplan::state_space {
     using StateIndex = int;
-    using StateIndices = std::unordered_set<StateIndex>;
-    using AdjacencyList = std::unordered_map<StateIndex, StateIndices>;
+    using StateIndices = std::vector<StateIndex>;
+    using StateIndicesSet = std::unordered_set<StateIndex>;
+    using AdjacencyList = std::unordered_map<StateIndex, StateIndicesSet>;
     using Distance = int;
     using Distances = std::unordered_map<StateIndex, Distance>;
     using StateMapping = std::unordered_map<StateIndex, core::State>;
@@ -30,12 +31,12 @@ class GoalDistanceInformation {
 private:
     int m_initial_state_index;
     Distances m_goal_distances;
-    StateIndices m_deadend_state_indices;
+    StateIndicesSet m_deadend_state_indices;
 
     GoalDistanceInformation(
         int initial_state_index,
         Distances&& goal_distances,
-        StateIndices&& deadend_state_indices);
+        StateIndicesSet&& deadend_state_indices);
     friend class StateSpace;
 
 public:
@@ -59,7 +60,7 @@ public:
      * Getters.
      */
     StateIndex get_initial_state_index() const;
-    const StateIndices& get_deadend_state_indices_ref() const;
+    const StateIndicesSet& get_deadend_state_indices_ref() const;
     const Distances& get_goal_distances_ref() const;
 };
 
@@ -101,10 +102,10 @@ private:
     // Currently, state indices can be sparse.
     // If we plan on compressing them then
     // we need to provide functionality to obtain new indices.
-    StateIndices m_state_indices;
+    StateIndicesSet m_state_indices;
     StateIndex m_initial_state_index;
     AdjacencyList m_forward_successor_state_indices;
-    StateIndices m_goal_state_indices;
+    StateIndicesSet m_goal_state_indices;
 
     /* Derived information */
     // for backward search
@@ -116,7 +117,7 @@ public:
         core::StatesSet&& states,
         StateIndex initial_state_index,
         AdjacencyList&& forward_successor_state_indices,
-        StateIndices&& goal_state_indices);
+        StateIndicesSet&& goal_state_indices);
     StateSpace(const StateSpace& other);
     /**
      * Creates a copy over same InstanceInfo
@@ -124,8 +125,8 @@ public:
      */
     StateSpace(
         const StateSpace& other,
-        const StateIndices& expanded_fragment,
-        const StateIndices& generated_fragment);
+        const StateIndicesSet& expanded_fragment,
+        const StateIndicesSet& generated_fragment);
     StateSpace& operator=(const StateSpace& other);
     StateSpace(StateSpace&& other);
     StateSpace& operator=(StateSpace&& other);
@@ -140,7 +141,7 @@ public:
     /**
      * Run BrFs to compute distances.
      */
-    Distances compute_distances(const StateIndices& state_indices, bool forward, bool stop_if_goal) const;
+    Distances compute_distances(const StateIndicesSet& state_indices, bool forward, bool stop_if_goal) const;
 
     /**
      * For more readable iterations.
@@ -167,12 +168,16 @@ public:
      * Pretty printing.
      */
     void print() const;
+    /**
+     * Creates a dot representation that can be read with graphviz.
+     */
+    std::string to_dot(int verbosity_level) const;
 
     /**
      * Setters.
      */
     void set_initial_state_index(StateIndex initial_state);
-    void set_goal_state_indices(const StateIndices& goal_states);
+    void set_goal_state_indices(const StateIndicesSet& goal_states);
 
     /**
      * Getters.
@@ -180,14 +185,14 @@ public:
     GoalDistanceInformation compute_goal_distance_information() const;
     StateInformation compute_state_information() const;
     const core::StatesSet& get_states_ref() const;
-    const StateIndices& get_state_indices_ref() const;
+    const StateIndicesSet& get_state_indices_ref() const;
     int get_num_states() const;
     StateIndex get_initial_state_index() const;
     const AdjacencyList& get_forward_successor_state_indices_ref() const;
     const AdjacencyList& get_backward_successor_state_indices_ref() const;
-    const StateIndices& get_forward_successor_state_indices_ref(StateIndex state) const;
-    const StateIndices& get_backward_successor_state_indices_ref(StateIndex state) const;
-    const StateIndices& get_goal_state_indices_ref() const;
+    const StateIndicesSet& get_forward_successor_state_indices_ref(StateIndex state) const;
+    const StateIndicesSet& get_backward_successor_state_indices_ref(StateIndex state) const;
+    const StateIndicesSet& get_goal_state_indices_ref() const;
     const core::InstanceInfo& get_instance_info_ref() const;
     std::shared_ptr<const core::InstanceInfo> get_instance_info() const;
 };

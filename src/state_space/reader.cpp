@@ -122,9 +122,9 @@ static void parse_goal_atoms_file(const std::string& filename, InstanceInfo& ins
 }
 
 
-static std::pair<core::StatesSet, StateIndices> parse_states_file(const std::string& filename, std::shared_ptr<InstanceInfo> instance_info, const std::vector<int>& new_atom_indices) {
+static std::pair<core::StatesSet, StateIndicesSet> parse_states_file(const std::string& filename, std::shared_ptr<InstanceInfo> instance_info, const std::vector<int>& new_atom_indices) {
     core::StatesSet states;
-    StateIndices goal_state_indices;
+    StateIndicesSet goal_state_indices;
     std::ifstream infile(filename);
     std::string line;
     while (std::getline(infile, line)) {

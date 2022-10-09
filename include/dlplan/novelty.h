@@ -29,10 +29,6 @@ using TupleNodes = std::vector<TupleNode>;
 
 using AtomIndices = std::vector<AtomIndex>;
 
-using StateIndex = state_space::StateIndex;
-using StateIndices = std::vector<StateIndex>;
-using StateIndicesSet = std::unordered_set<StateIndex>;
-
 using AdjacencyList = std::unordered_map<TupleIndex, std::unordered_set<TupleIndex>>;
 }
 
@@ -170,18 +166,24 @@ public:
 class TupleNode {
 private:
     TupleIndex m_tuple_index;
-    StateIndices m_state_indices;
+    state_space::StateIndices m_state_indices;
+    TupleIndices m_predecessors;
+    TupleIndices m_successors;
 
 public:
-    TupleNode(TupleIndex tuple_index, StateIndices&& state_indices);
+    TupleNode(TupleIndex tuple_index, const state_space::StateIndices& state_indices);
+    TupleNode(TupleIndex tuple_index, state_space::StateIndices&& state_indices);
     TupleNode(const TupleNode& other);
     TupleNode& operator=(const TupleNode& other);
     TupleNode(TupleNode&& other);
     TupleNode& operator=(TupleNode&& other);
     ~TupleNode();
 
+    void add_predecessor(TupleIndex tuple_index);
+    void add_successor(TupleIndex tuple_index);
+
     TupleIndex get_tuple_index() const;
-    const StateIndices& get_state_indices_ref() const;
+    const state_space::StateIndices& get_state_indices_ref() const;
 };
 
 
@@ -190,12 +192,9 @@ private:
     // The novel tuples that make it into the tuple graph.
     std::vector<TupleNodes> m_tuple_nodes_by_distance;
     // The reachable states with distance at most the largest distance of a tuple node.
-    std::vector<StateIndices> m_state_indices_by_distance;
-    // successors
-    AdjacencyList m_forward_successors;
-    AdjacencyList m_backward_successors;
+    std::vector<state_space::StateIndices> m_state_indices_by_distance;
     // The root state index
-    StateIndex m_root_state_index;
+    state_space::StateIndex m_root_state_index;
     // The width
     int m_width;
 
