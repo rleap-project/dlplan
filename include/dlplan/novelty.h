@@ -18,7 +18,6 @@ class TupleNode;
 
 using AtomIndex = int;
 using AtomTuple = std::vector<AtomIndex>;
-using AtomTuples = std::vector<AtomTuple>;
 
 using TupleIndex = int;
 using TupleIndices = std::vector<TupleIndex>;
@@ -27,8 +26,6 @@ using TupleIndicesSet = std::unordered_set<TupleIndex>;
 using TupleNodes = std::vector<TupleNode>;
 
 using AtomIndices = std::vector<AtomIndex>;
-
-using AdjacencyList = std::unordered_map<TupleIndex, std::unordered_set<TupleIndex>>;
 }
 
 
@@ -145,7 +142,7 @@ public:
     ~NoveltyTable();
 
     /**
-     * Useful for tuple graphs.
+     * Useful for construction of tuple graphs.
      */
     void reset_novelty(const TupleIndicesSet& tuple_indices);
     TupleIndices compute_novel_tuple_indices(TupleIndexGenerator&& tuple_index_generator) const;
@@ -181,8 +178,13 @@ public:
     void add_predecessor(TupleIndex tuple_index);
     void add_successor(TupleIndex tuple_index);
 
+    /**
+     * Getters.
+     */
     TupleIndex get_tuple_index() const;
     const state_space::StateIndices& get_state_indices_ref() const;
+    const TupleIndices& get_predecessors_ref() const;
+    const TupleIndices& get_successors_ref() const;
 };
 
 
@@ -202,13 +204,20 @@ public:
         std::shared_ptr<const NoveltyBase> novelty_base,
         const state_space::StateSpace& state_space,
         state_space::StateIndex root_state,
-        int width,
-        bool stop_if_goal);
+        int width);
     TupleGraph(const TupleGraph& other);
     TupleGraph& operator=(const TupleGraph& other);
     TupleGraph(TupleGraph&& other);
     TupleGraph& operator=(TupleGraph&& other);
     ~TupleGraph();
+
+    /**
+     * Getters.
+     */
+    const std::vector<TupleNodes>& get_tuple_nodes_by_distance_ref() const;
+    const std::vector<state_space::StateIndices>& get_state_indices_by_distance_ref() const;
+    state_space::StateIndex get_root_state_index() const;
+    int get_width() const;
 };
 
 }

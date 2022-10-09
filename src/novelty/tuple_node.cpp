@@ -37,4 +37,12 @@ const StateIndices& TupleNode::get_state_indices_ref() const {
     return m_state_indices;
 }
 
+const TupleIndices& TupleNode::get_predecessors_ref() const {
+    return m_predecessors;
+}
+
+const TupleIndices& TupleNode::get_successors_ref() const {
+    return m_successors;
+}
+
 }
