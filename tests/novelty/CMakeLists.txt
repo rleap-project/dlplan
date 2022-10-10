@@ -1,3 +1,5 @@
+add_subdirectory(gripper)
+
 add_executable(
     novelty_tests
 )

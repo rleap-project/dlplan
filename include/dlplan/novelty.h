@@ -131,8 +131,8 @@ public:
 
 class NoveltyTable {
 private:
-
     std::vector<bool> m_table;
+
 public:
     explicit NoveltyTable(int num_tuples);
     NoveltyTable(const NoveltyTable& other);
@@ -203,8 +203,7 @@ public:
     TupleGraph(
         std::shared_ptr<const NoveltyBase> novelty_base,
         const state_space::StateSpace& state_space,
-        state_space::StateIndex root_state,
-        int width);
+        state_space::StateIndex root_state);
     TupleGraph(const TupleGraph& other);
     TupleGraph& operator=(const TupleGraph& other);
     TupleGraph(TupleGraph&& other);

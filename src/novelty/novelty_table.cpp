@@ -17,16 +17,24 @@ NoveltyTable& NoveltyTable::operator=(NoveltyTable&& other) = default;
 NoveltyTable::~NoveltyTable() = default;
 
 void NoveltyTable::reset_novelty(const TupleIndicesSet& tuple_indices) {
-
+    for (const auto tuple_index : tuple_indices) {
+        m_table[tuple_index] = false;
+    }
 }
 
 TupleIndices NoveltyTable::compute_novel_tuple_indices(TupleIndexGenerator&& tuple_index_generator) const {
-
+    TupleIndices result;
+    for (const auto tuple_index : tuple_index_generator) {
+        if (m_table[tuple_index]) {
+            result.push_back(tuple_index);
+        }
+    }
+    return result;
 }
 
 bool NoveltyTable::insert(TupleIndexGenerator&& tuple_index_generator, bool stop_if_novel) {
     bool result = false;
-    for (auto tuple_index : tuple_index_generator) {
+    for (const auto tuple_index : tuple_index_generator) {
         bool is_novel = m_table[tuple_index];
         if (!result && is_novel) {
             result = true;

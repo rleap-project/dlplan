@@ -8,8 +8,7 @@ using namespace dlplan::state_space;
 
 
 namespace dlplan::novelty {
-
-StateIndices compute_next_layer(
+static StateIndices compute_state_layer(
     const StateIndices& current_layer,
     const StateSpace& state_space,
     StateIndicesSet& visited) {
@@ -26,12 +25,103 @@ StateIndices compute_next_layer(
     return StateIndices(layer_set.begin(), layer_set.end());
 }
 
+
+static std::tuple<TupleIndicesSet, std::unordered_map<StateIndex, TupleIndices>, std::unordered_map<TupleIndex, StateIndices>>
+compute_novel_tuple_indices_layer(
+    const StateIndices& curr_state_layer,
+    const StateInformation& state_information,
+    std::shared_ptr<const NoveltyBase> novelty_base,
+    NoveltyTable& novelty_table) {
+    std::unordered_map<StateIndex, TupleIndices> state_index_to_novel_tuples;
+    std::unordered_map<TupleIndex, StateIndices> novel_tuple_to_state_indices;
+    TupleIndicesSet novel_tuples;
+    for (const auto state_index : curr_state_layer) {
+        const TupleIndices state_novel_tuples = novelty_table.compute_novel_tuple_indices(
+            TupleIndexGenerator(
+                novelty_base,
+                state_information.get_state_ref(state_index).get_atom_idxs_ref()));
+        novel_tuples.insert(state_novel_tuples.begin(), state_novel_tuples.end());
+        state_index_to_novel_tuples.emplace(state_index, state_novel_tuples);
+        for (const auto tuple_index : state_novel_tuples) {
+            novel_tuple_to_state_indices[tuple_index].push_back(state_index);
+        }
+    }
+    novelty_table.reset_novelty(novel_tuples);
+    return std::tuple<TupleIndicesSet, std::unordered_map<StateIndex, TupleIndices>, std::unordered_map<TupleIndex, StateIndices>>{novel_tuples, state_index_to_novel_tuples, novel_tuple_to_state_indices};
+}
+
+
+static std::unordered_map<TupleIndex, StateIndicesSet>
+extend_tuple_node(
+    const TupleNode& tuple_node,
+    const StateSpace& state_space,
+    const std::unordered_map<StateIndex, TupleIndices>& state_index_to_novel_tuples) {
+    std::unordered_map<TupleIndex, StateIndicesSet> extended;
+    for (const auto source_index : tuple_node.get_state_indices_ref()) {
+        for (const auto target_index : state_space.get_forward_successor_state_indices_ref(source_index)) {
+            if (state_index_to_novel_tuples.count(target_index)) {
+                for (const auto target_tuple_index : state_index_to_novel_tuples.find(target_index)->second) {
+                    extended[target_tuple_index].insert(source_index);
+                }
+            }
+        }
+    }
+    return extended;
+}
+
+
+static void
+add_extended_tuple_nodes(
+    const std::unordered_map<TupleIndex, StateIndicesSet>& extended,
+    TupleNode& tuple_node,
+    std::unordered_map<TupleIndex, TupleNode>& curr_tuple_nodes,
+    std::unordered_map<TupleIndex, StateIndices>& novel_tuple_to_state_indices) {
+    for (const auto& pair : extended) {
+        if (pair.second.size() == tuple_node.get_state_indices_ref().size()) {
+            TupleIndex succ_tuple_index = pair.first;
+            auto find = curr_tuple_nodes.find(succ_tuple_index);
+            if (find == curr_tuple_nodes.end()) {
+                curr_tuple_nodes.emplace(succ_tuple_index, TupleNode(succ_tuple_index, std::move(novel_tuple_to_state_indices.at(succ_tuple_index))));
+            }
+            tuple_node.add_successor(succ_tuple_index);
+            curr_tuple_nodes.at(succ_tuple_index).add_predecessor(tuple_node.get_tuple_index());
+        }
+    }
+}
+
+
+static TupleNodes
+compute_tuple_nodes_layer(
+    TupleNodes& prev_tuple_layer,
+    const StateSpace& state_space,
+    const std::unordered_map<StateIndex, TupleIndices>& state_index_to_novel_tuples,
+    std::unordered_map<TupleIndex, StateIndices>& novel_tuple_to_state_indices) {
+    TupleNodes curr_tuple_layer;
+    std::unordered_map<TupleIndex, TupleNode> curr_tuple_nodes;
+    for (auto& tuple_node : prev_tuple_layer) {
+        std::unordered_map<TupleIndex, StateIndicesSet> extended = extend_tuple_node(
+            tuple_node,
+            state_space,
+            state_index_to_novel_tuples);
+        add_extended_tuple_nodes(
+            extended,
+            tuple_node,
+            curr_tuple_nodes,
+            novel_tuple_to_state_indices);
+    }
+    for (auto& pair : curr_tuple_nodes) {
+        curr_tuple_layer.push_back(std::move(pair.second));
+    }
+    return curr_tuple_layer;
+}
+
+
 TupleGraph::TupleGraph(
     std::shared_ptr<const NoveltyBase> novelty_base,
     const StateSpace& state_space,
-    StateIndex root_state,
-    int width)
+    StateIndex root_state)
     : m_root_state_index(root_state) {
+    int width = novelty_base->get_width();
     if (width < 0) {
         throw std::runtime_error("TupleGraph::TupleGraph - width must be greater than or equal to 0.");
     }
@@ -51,7 +141,7 @@ TupleGraph::TupleGraph(
     // 1. Initialize root state with distance = 0
     StateIndices initial_state_layer{root_state};
     TupleNodes initial_tuple_layer;
-    for (auto tuple_index : TupleIndexGenerator(novelty_base, state_information.get_state_ref(root_state).get_atom_idxs_ref())) {
+    for (const auto tuple_index : TupleIndexGenerator(novelty_base, state_information.get_state_ref(root_state).get_atom_idxs_ref())) {
         initial_tuple_layer.push_back(TupleNode(tuple_index, StateIndices{root_state}));
     }
     m_tuple_nodes_by_distance.push_back(initial_tuple_layer);
@@ -59,52 +149,28 @@ TupleGraph::TupleGraph(
     visited_states.insert(root_state);
     // 2. Iterate distances > 0
     for (int distance = 1; ; ++distance) {
-        const StateIndices& prev_state_layer = m_state_indices_by_distance[distance-1];
-        const TupleNodes& prev_tuple_layer = m_tuple_nodes_by_distance[distance-1];
-        const StateIndices curr_state_layer = compute_next_layer(prev_state_layer, state_space, visited_states);
-        TupleNodes curr_tuple_layer;
-        // 2.1. Compute novel tuples and reset their novelty.
-        std::unordered_map<StateIndex, TupleIndices> state_index_to_novel_tuples;
-        std::unordered_map<TupleIndex, StateIndices> novel_tuple_to_state_indices;
-        TupleIndicesSet novel_tuples;
-        for (const auto state_index : curr_state_layer) {
-            const TupleIndices state_novel_tuples = novelty_table.compute_novel_tuple_indices(
-                TupleIndexGenerator(
-                    novelty_base,
-                    state_information.get_state_ref(state_index).get_atom_idxs_ref()));
-            novel_tuples.insert(state_novel_tuples.begin(), state_novel_tuples.end());
-            state_index_to_novel_tuples.emplace(state_index, state_novel_tuples);
-            for (const auto tuple_index : state_novel_tuples) {
-                novel_tuple_to_state_indices[tuple_index].push_back(state_index);
-            }
+        // 2.1. Compute unique states in curr state layer.
+        const StateIndices curr_state_layer = compute_state_layer(
+            m_state_indices_by_distance[distance-1],
+            state_space,
+            visited_states);
+        // 2.2. Compute novel tuples, mappings between states, and reset their novelty.
+        auto [novel_tuples,
+              state_index_to_novel_tuples,
+              novel_tuple_to_state_indices] = compute_novel_tuple_indices_layer(
+                  curr_state_layer,
+                  state_information,
+                  novelty_base,
+                  novelty_table);
+        if (novel_tuples.empty()) {
+            break;
         }
-        novelty_table.reset_novelty(novel_tuples);
-        // 2.2. Extend optimal plans
-        std::unordered_map<TupleIndex, TupleNode> curr_tuple_nodes;
-        for (auto& tuple_node : m_tuple_nodes_by_distance[distance - 1]) {
-            std::unordered_map<TupleIndex, StateIndicesSet> extended;
-            for (const auto source_index : tuple_node.get_state_indices_ref()) {
-                for (const auto target_index : state_space.get_forward_successor_state_indices_ref(source_index)) {
-                    for (const auto target_tuple_index : state_index_to_novel_tuples.find(target_index)->second) {
-                        extended[target_tuple_index].insert(source_index);
-                    }
-                }
-            }
-            for (const auto& pair : extended) {
-                if (pair.second.size() == tuple_node.get_state_indices_ref().size()) {
-                    TupleIndex succ_tuple_index = pair.first;
-                    auto find = curr_tuple_nodes.find(succ_tuple_index);
-                    if (find == curr_tuple_nodes.end()) {
-                        curr_tuple_nodes.emplace(succ_tuple_index, TupleNode(succ_tuple_index, std::move(novel_tuple_to_state_indices.at(succ_tuple_index))));
-                    }
-                    tuple_node.add_successor(succ_tuple_index);
-                    curr_tuple_nodes.at(succ_tuple_index).add_predecessor(tuple_node.get_tuple_index());
-                }
-            }
-        }
-        for (auto& pair : curr_tuple_nodes) {
-            curr_tuple_layer.push_back(std::move(pair.second));
-        }
+        // 2.3. Extend optimal plans
+        TupleNodes curr_tuple_layer = compute_tuple_nodes_layer(
+            m_tuple_nodes_by_distance[distance-1],
+            state_space,
+            state_index_to_novel_tuples,
+            novel_tuple_to_state_indices);
         if (curr_tuple_layer.empty()) {
             break;
         }
@@ -113,7 +179,6 @@ TupleGraph::TupleGraph(
         if (zero_width) {
             break;
         }
-        ++distance;
     }
 }
 
