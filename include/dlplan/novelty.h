@@ -178,6 +178,8 @@ public:
     void add_predecessor(TupleIndex tuple_index);
     void add_successor(TupleIndex tuple_index);
 
+    std::string str() const;
+
     /**
      * Getters.
      */
@@ -201,14 +203,16 @@ private:
 
 public:
     TupleGraph(
-        std::shared_ptr<const NoveltyBase> novelty_base,
         const state_space::StateSpace& state_space,
-        state_space::StateIndex root_state);
+        state_space::StateIndex root_state,
+        int width);
     TupleGraph(const TupleGraph& other);
     TupleGraph& operator=(const TupleGraph& other);
     TupleGraph(TupleGraph&& other);
     TupleGraph& operator=(TupleGraph&& other);
     ~TupleGraph();
+
+    std::string str() const;
 
     /**
      * Getters.

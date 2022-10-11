@@ -12,6 +12,7 @@
 #include <ostream>
 #include <string>
 #include <vector>
+#include <unordered_set>
 
 
 namespace dlplan::utils {
@@ -51,6 +52,32 @@ public:
 
 extern Log g_log;
 
+}
+
+namespace std {
+    template<class T>
+    ostream &operator<<(ostream &stream, const vector<T> &vec) {
+        stream << "[";
+        for (size_t i = 0; i < vec.size(); ++i) {
+            if (i != 0)
+                stream << ", ";
+            stream << vec[i];
+        }
+        stream << "]";
+        return stream;
+    }
+
+    template<class T>
+    ostream &operator<<(ostream &stream, const unordered_set<T> &set) {
+        stream << "{";
+        for (size_t i = 0; i < set.size(); ++i) {
+            if (i != 0)
+                stream << ", ";
+            stream << set[i];
+        }
+        stream << "}";
+        return stream;
+    }
 }
 
 #endif

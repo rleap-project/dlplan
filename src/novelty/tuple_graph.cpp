@@ -3,16 +3,18 @@
 #include "../../include/dlplan/utils/hashing.h"
 
 #include <cassert>
+#include <sstream>
 
 using namespace dlplan::state_space;
 
 
 namespace dlplan::novelty {
+
 static StateIndices compute_state_layer(
     const StateIndices& current_layer,
     const StateSpace& state_space,
     StateIndicesSet& visited) {
-    StateIndicesSet layer_set;
+    std::unordered_set<StateIndex> layer_set;
     for (const auto source_index : current_layer) {
         assert(visited.count(source_index));
         for (const auto target_index : state_space.get_forward_successor_state_indices_ref(source_index)) {
@@ -117,11 +119,11 @@ compute_tuple_nodes_layer(
 
 
 TupleGraph::TupleGraph(
-    std::shared_ptr<const NoveltyBase> novelty_base,
     const StateSpace& state_space,
-    StateIndex root_state)
-    : m_root_state_index(root_state) {
-    int width = novelty_base->get_width();
+    StateIndex root_state,
+    int width)
+    : m_root_state_index(root_state),
+      m_width(width) {
     if (width < 0) {
         throw std::runtime_error("TupleGraph::TupleGraph - width must be greater than or equal to 0.");
     }
@@ -135,6 +137,9 @@ TupleGraph::TupleGraph(
         zero_width = true;
         width = 1;
     }
+    auto novelty_base = std::make_shared<NoveltyBase>(
+        state_space.get_instance_info_ref().get_atoms_ref().size(),
+        width);
     NoveltyTable novelty_table(novelty_base->get_num_tuples());
     const auto state_information = state_space.compute_state_information();
     StateIndicesSet visited_states;
@@ -142,15 +147,16 @@ TupleGraph::TupleGraph(
     StateIndices initial_state_layer{root_state};
     TupleNodes initial_tuple_layer;
     for (const auto tuple_index : TupleIndexGenerator(novelty_base, state_information.get_state_ref(root_state).get_atom_idxs_ref())) {
-        initial_tuple_layer.push_back(TupleNode(tuple_index, StateIndices{root_state}));
+        initial_tuple_layer.emplace_back(tuple_index, StateIndices{root_state});
     }
-    m_tuple_nodes_by_distance.push_back(initial_tuple_layer);
-    m_state_indices_by_distance.push_back(initial_state_layer);
+    novelty_table.insert(TupleIndexGenerator(novelty_base, state_information.get_state_ref(root_state).get_atom_idxs_ref()), false);
+    m_tuple_nodes_by_distance.push_back(std::move(initial_tuple_layer));
+    m_state_indices_by_distance.push_back(std::move(initial_state_layer));
     visited_states.insert(root_state);
     // 2. Iterate distances > 0
     for (int distance = 1; ; ++distance) {
         // 2.1. Compute unique states in curr state layer.
-        const StateIndices curr_state_layer = compute_state_layer(
+        StateIndices curr_state_layer = compute_state_layer(
             m_state_indices_by_distance[distance-1],
             state_space,
             visited_states);
@@ -165,7 +171,7 @@ TupleGraph::TupleGraph(
         if (novel_tuples.empty()) {
             break;
         }
-        // 2.3. Extend optimal plans
+        // 2.3. Extend optimal plans of tuples from previous layer to tuples in current layer
         TupleNodes curr_tuple_layer = compute_tuple_nodes_layer(
             m_tuple_nodes_by_distance[distance-1],
             state_space,
@@ -174,8 +180,8 @@ TupleGraph::TupleGraph(
         if (curr_tuple_layer.empty()) {
             break;
         }
-        m_tuple_nodes_by_distance.push_back(curr_tuple_layer);
-        m_state_indices_by_distance.push_back(curr_state_layer);
+        m_tuple_nodes_by_distance.push_back(std::move(curr_tuple_layer));
+        m_state_indices_by_distance.push_back(std::move(curr_state_layer));
         if (zero_width) {
             break;
         }
@@ -191,6 +197,35 @@ TupleGraph::TupleGraph(TupleGraph&& other) = default;
 TupleGraph& TupleGraph::operator=(TupleGraph&& other) = default;
 
 TupleGraph::~TupleGraph() = default;
+
+std::string TupleGraph::str() const {
+    std::stringstream result;
+    result << "root state: " << m_root_state_index << "\n"
+           << "width: " << m_width << "\n";
+    result << "tuple nodes by distance:\n";
+    for (const auto& tuple_layer : m_tuple_nodes_by_distance) {
+        result << "[";
+        for (size_t i = 0; i < tuple_layer.size(); ++i) {
+            if (i != 0) {
+                result << ", ";
+            }
+            result << tuple_layer[i].str();
+        }
+        result << "]\n";
+    }
+    result << "state indices by distance:\n";
+    for (const auto& state_layer : m_state_indices_by_distance) {
+        result << "[";
+        for (size_t i = 0; i < state_layer.size(); ++i) {
+            if (i != 0) {
+                result << ", ";
+            }
+            result << state_layer[i];
+        }
+        result << "]\n";
+    }
+    return result.str();
+}
 
 const std::vector<TupleNodes>& TupleGraph::get_tuple_nodes_by_distance_ref() const {
     return m_tuple_nodes_by_distance;
