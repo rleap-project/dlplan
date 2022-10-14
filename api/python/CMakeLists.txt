@@ -19,6 +19,7 @@ target_sources(_dlplan
         src/main.cpp
         src/core.cpp
         src/generator.cpp
+        src/novelty.cpp
         src/policy.cpp
         src/state_space.cpp
         src/weisfeiler_lehman.cpp)
@@ -27,6 +28,7 @@ target_link_libraries(_dlplan
         pybind11::module
         dlplancore
         dlplangenerator
+        dlplannovelty
         dlplanpolicy
         dlplanstatespace
         dlplanweisfeilerlehman)
