@@ -210,6 +210,10 @@ const utils::DynamicBitset<unsigned>& ConceptDenotation::get_bitset_ref() const 
     return m_data;
 }
 
+utils::DynamicBitset<unsigned>& ConceptDenotation::get_bitset_ref() {
+    return m_data;
+}
+
 std::size_t ConceptDenotation::compute_hash() const {
     return std::hash<std::vector<unsigned>>()(m_data.get_blocks());
 }
@@ -371,6 +375,10 @@ std::vector<std::pair<int, int>> RoleDenotation::to_sorted_vector() const {
 }
 
 const utils::DynamicBitset<unsigned>& RoleDenotation::get_bitset_ref() const {
+    return m_data;
+}
+
+utils::DynamicBitset<unsigned>& RoleDenotation::get_bitset_ref() {
     return m_data;
 }
 

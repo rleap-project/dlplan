@@ -11,17 +11,17 @@ namespace dlplan::core::element {
 class TransitiveClosureRole : public Role {
 private:
     void compute_result(const RoleDenotation& denot, int num_objects, RoleDenotation& result) const {
-        auto role_bitset = utils::role_denot_to_bitset(denot);
+        result = denot;
+        auto& result_bitset = result.get_bitset_ref();
         for (int k = 0; k < num_objects; ++k) {
             for (int i = 0; i < num_objects; ++i) {
                 for (int j = 0; j < num_objects; ++j) {
-                    if (role_bitset.test(i * num_objects + k) && role_bitset.test(k * num_objects + j)) {
-                        role_bitset.set(i * num_objects + j);
+                    if (result_bitset.test(i * num_objects + k) && result_bitset.test(k * num_objects + j)) {
+                        result_bitset.set(i * num_objects + j);
                     }
                 }
             }
         }
-        result = utils::bitset_to_role_denotation(role_bitset, num_objects);
     }
 
     std::unique_ptr<RoleDenotation> evaluate_impl(const State& state, DenotationsCaches& caches) const override {

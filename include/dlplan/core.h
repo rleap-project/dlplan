@@ -160,6 +160,7 @@ public:
 
     std::vector<int> to_sorted_vector() const;
     const utils::DynamicBitset<unsigned>& get_bitset_ref() const;
+    utils::DynamicBitset<unsigned>& get_bitset_ref();
 
     std::size_t compute_hash() const;
 
@@ -232,6 +233,7 @@ public:
 
     std::vector<std::pair<int, int>> to_sorted_vector() const;
     const utils::DynamicBitset<unsigned>& get_bitset_ref() const;
+    utils::DynamicBitset<unsigned>& get_bitset_ref();
 
     const std::vector<unsigned>& get_blocks() const;
     std::size_t compute_hash() const;

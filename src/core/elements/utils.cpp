@@ -131,37 +131,4 @@ PairwiseDistances compute_floyd_warshall(const RoleDenotation& edges) {
     return dist;
 }
 
-
-dlplan::utils::DynamicBitset<unsigned> concept_denot_to_bitset(const ConceptDenotation& denot) {
-    dlplan::utils::DynamicBitset<unsigned> result(denot.get_num_objects());
-    for (const auto single : denot) {
-        result.set(single);
-    }
-    return result;
-}
-
-
-dlplan::utils::DynamicBitset<unsigned>role_denot_to_bitset(const RoleDenotation& denot) {
-    int num_objects = denot.get_num_objects();
-    dlplan::utils::DynamicBitset<unsigned> result(num_objects * num_objects);
-    for (const auto& pair : denot) {
-        result.set(pair.first * num_objects + pair.second);
-    }
-    return result;
-}
-
-RoleDenotation bitset_to_role_denotation(dlplan::utils::DynamicBitset<unsigned> bitset, int num_objects) {
-    RoleDenotation role_denot(num_objects);
-    int offset = 0;
-    for (int i = 0; i < num_objects; ++i) {
-        for (int j = 0; j < num_objects; ++j) {
-            if (bitset.test(offset + j)) {
-                role_denot.insert(std::make_pair(i, j));
-            }
-        }
-        offset += num_objects;
-    }
-    return role_denot;
-}
-
 }

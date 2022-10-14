@@ -21,12 +21,6 @@ extern Distances compute_multi_source_multi_target_shortest_distances(const Conc
 
 extern PairwiseDistances compute_floyd_warshall(const RoleDenotation& edges);
 
-extern dlplan::utils::DynamicBitset<unsigned> concept_denot_to_bitset(const ConceptDenotation& denot);
-
-extern dlplan::utils::DynamicBitset<unsigned> role_denot_to_bitset(const RoleDenotation& denot);
-
-extern RoleDenotation bitset_to_role_denotation(dlplan::utils::DynamicBitset<unsigned> bitset, int num_objects);
-
 }
 
 #endif

@@ -10,8 +10,8 @@ namespace dlplan::core::element {
 class ComposeRole : public Role {
 private:
     void compute_result(const RoleDenotation& left_denot, const RoleDenotation& right_denot, int num_objects, RoleDenotation& result) const {
-        const auto left_bitset = element::utils::role_denot_to_bitset(left_denot);
-        const auto right_bitset = element::utils::role_denot_to_bitset(right_denot);
+        const auto& left_bitset = left_denot.get_bitset_ref();
+        const auto& right_bitset = right_denot.get_bitset_ref();
         for (int i = 0; i < num_objects; ++i) {  // source
             for (int j = 0; j < num_objects; ++j) {  // target
                 for (int k = 0; k < num_objects; ++k) {  // middle
