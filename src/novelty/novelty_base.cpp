@@ -7,10 +7,13 @@
 
 namespace dlplan::novelty {
 
-NoveltyBase::NoveltyBase(int num_atoms, int width)
-    : m_num_atoms(num_atoms+1), m_width(width), m_num_tuples(std::pow(num_atoms+1, width)) {
-    m_factors = std::vector<int>(m_width);
-    for (int i = 0; i < m_width; ++i) {
+NoveltyBase::NoveltyBase(int num_atoms, int max_tuple_size)
+    : m_num_atoms(num_atoms+1), m_max_tuple_size(max_tuple_size), m_num_tuples(std::pow(num_atoms+1, max_tuple_size)) {
+    if (m_max_tuple_size < 0) {
+        throw std::runtime_error("NoveltyBase::NoveltyBase - max_tuple_size must be greater than or equal to 0.");
+    }
+    m_factors = std::vector<int>(m_max_tuple_size);
+    for (int i = 0; i < m_max_tuple_size; ++i) {
         m_factors[i] = std::pow(m_num_atoms, i);
     }
 }
@@ -25,20 +28,20 @@ NoveltyBase& NoveltyBase::operator=(NoveltyBase&& other) = default;
 
 NoveltyBase::~NoveltyBase() = default;
 
-TupleIndex NoveltyBase::atom_tuple_to_tuple_index(const AtomTuple& atom_tuple) const {
-    assert(static_cast<int>(atom_tuple.size()) == m_width);
+TupleIndex NoveltyBase::atom_tuple_to_tuple_index(const AtomIndices& tuple_atom_indices) const {
+    assert(static_cast<int>(tuple_atom_indices.size()) == m_max_tuple_size);
     TupleIndex result = 0;
     int i = 0;
-    for (auto atom_index : atom_tuple) {
+    for (auto atom_index : tuple_atom_indices) {
         result += m_factors[i] * atom_index;
         ++i;
     }
     return result;
 }
 
-AtomTuple NoveltyBase::tuple_index_to_atom_tuple(TupleIndex tuple_index) const {
-    AtomTuple result;
-    for (int i = m_width-1; i >= 0; --i) {
+AtomIndices NoveltyBase::tuple_index_to_atom_tuple(TupleIndex tuple_index) const {
+    AtomIndices result;
+    for (int i = m_max_tuple_size-1; i >= 0; --i) {
         int atom_index = tuple_index / m_factors[i];
         if (atom_index != get_dummy_atom_index()) {
             result.push_back(atom_index);
@@ -49,8 +52,8 @@ AtomTuple NoveltyBase::tuple_index_to_atom_tuple(TupleIndex tuple_index) const {
     return result;
 }
 
-int NoveltyBase::get_width() const {
-    return m_width;
+int NoveltyBase::get_max_tuple_size() const {
+    return m_max_tuple_size;
 }
 
 int NoveltyBase::get_dummy_atom_index() const {

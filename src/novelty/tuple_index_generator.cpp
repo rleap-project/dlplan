@@ -70,14 +70,14 @@ TupleIndexGenerator::tuple_index_iterator::tuple_index_iterator(
     m_novelty_base(novelty_base),
     m_atom_indices(pad_and_sort_atom_indices(
         atom_indices,
-        novelty_base->get_width(),
+        novelty_base->get_max_tuple_size(),
         novelty_base->get_dummy_atom_index())),
-    m_width(novelty_base->get_width()),
+    m_width(novelty_base->get_max_tuple_size()),
     m_count(end ? binomial_coefficient(
-        std::max(novelty_base->get_width(), static_cast<int>(atom_indices.size())),
-        novelty_base->get_width()) : -1),
-    m_atom_tuple(novelty_base->get_width()) {
-    assert(static_cast<int>(m_atom_indices.size()) >= novelty_base->get_width());
+        std::max(novelty_base->get_max_tuple_size(), static_cast<int>(atom_indices.size())),
+        novelty_base->get_max_tuple_size()) : -1),
+    m_tuple_atom_indices(novelty_base->get_max_tuple_size()) {
+    assert(static_cast<int>(m_atom_indices.size()) >= novelty_base->get_max_tuple_size());
     assert(std::is_sorted(m_atom_indices.begin(), m_atom_indices.end()));
     if (!end) seek_next();
 }
@@ -127,8 +127,8 @@ TupleIndexGenerator::tuple_index_iterator::operator++() {
 void TupleIndexGenerator::tuple_index_iterator::seek_next() {
     ++m_count;
     next_combination(m_atom_indices.begin(), m_atom_indices.begin() + m_width, m_atom_indices.end());
-    std::copy(m_atom_indices.begin(), m_atom_indices.begin() + m_width, m_atom_tuple.begin());
-    m_tuple_index = m_novelty_base->atom_tuple_to_tuple_index(m_atom_tuple);
+    std::copy(m_atom_indices.begin(), m_atom_indices.begin() + m_width, m_tuple_atom_indices.begin());
+    m_tuple_index = m_novelty_base->atom_tuple_to_tuple_index(m_tuple_atom_indices);
 }
 
 TupleIndexGenerator::TupleIndexGenerator(

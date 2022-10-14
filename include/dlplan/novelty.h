@@ -17,7 +17,6 @@ namespace dlplan::novelty {
 class TupleNode;
 
 using AtomIndex = int;
-using AtomTuple = std::vector<AtomIndex>;
 
 using TupleIndex = int;
 using TupleIndices = std::vector<TupleIndex>;
@@ -32,17 +31,16 @@ using AtomIndices = std::vector<AtomIndex>;
 namespace dlplan::novelty {
 /**
  * Provides functionality to map atom tuples to indices and vice versa.
- * For potential debugging purposes we add
  */
 class NoveltyBase {
 private:
     std::vector<int> m_factors;
     int m_num_atoms;
-    int m_width;
+    int m_max_tuple_size;
     int m_num_tuples;
 
 public:
-    NoveltyBase(int num_atoms, int width);
+    NoveltyBase(int num_atoms, int max_tuple_size);
     NoveltyBase(const NoveltyBase& other);
     NoveltyBase& operator=(const NoveltyBase& other);
     NoveltyBase(NoveltyBase&& other);
@@ -53,13 +51,13 @@ public:
     /**
      * Computes atom tuple to tuple index and vice versa.
      */
-    TupleIndex atom_tuple_to_tuple_index(const AtomTuple& atom_tuple) const;
-    AtomTuple tuple_index_to_atom_tuple(TupleIndex tuple_index) const;
+    TupleIndex atom_tuple_to_tuple_index(const AtomIndices& tuple_atom_indices) const;
+    AtomIndices tuple_index_to_atom_tuple(TupleIndex tuple_index) const;
 
     /**
      * Getters.
      */
-    int get_width() const;
+    int get_max_tuple_size() const;
     int get_dummy_atom_index() const;
     int get_num_atoms() const;
     int get_num_tuples() const;
@@ -68,7 +66,7 @@ public:
 
 /**
  * Generates all tuple indices of atom tuples of
- * size k of a given set of atom indices.
+ * size at most k of a given set of atom indices.
  */
 class TupleIndexGenerator {
 private:
@@ -107,7 +105,7 @@ public:
             // compact representation of atom tuple
             int m_count;
             // atom indices in current tuple
-            AtomTuple m_atom_tuple;
+            AtomIndices m_tuple_atom_indices;
             // the output, i.e., the index of the atom tuple
             TupleIndex m_tuple_index;
 
@@ -192,6 +190,7 @@ public:
 
 class TupleGraph {
 private:
+    std::shared_ptr<const NoveltyBase> m_novelty_base;
     // The novel tuples that make it into the tuple graph.
     std::vector<TupleNodes> m_tuple_nodes_by_distance;
     // The reachable states with distance at most the largest distance of a tuple node.
@@ -203,6 +202,7 @@ private:
 
 public:
     TupleGraph(
+        std::shared_ptr<const NoveltyBase> novelty_base,
         const state_space::StateSpace& state_space,
         state_space::StateIndex root_state,
         int width);

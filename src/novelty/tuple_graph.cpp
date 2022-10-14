@@ -119,13 +119,19 @@ compute_tuple_nodes_layer(
 
 
 TupleGraph::TupleGraph(
+    std::shared_ptr<const NoveltyBase> novelty_base,
     const StateSpace& state_space,
     StateIndex root_state,
     int width)
-    : m_root_state_index(root_state),
+    : m_novelty_base(novelty_base),
+      m_root_state_index(root_state),
       m_width(width) {
     if (width < 0) {
         throw std::runtime_error("TupleGraph::TupleGraph - width must be greater than or equal to 0.");
+    } else if (width == 0 && novelty_base->get_max_tuple_size() != 1) {
+        throw std::runtime_error("TupleGraph::TupleGraph - TupleGraph with width 0 requires NoveltyBase with max_tuple_size 1.");
+    } else if (width > 0 && novelty_base->get_max_tuple_size() != width) {
+        throw std::runtime_error("TupleGraph::TupleGraph - TupleGraph with width greater 0 requires NoveltyBase with equal max_tuple_size.");
     }
     /* If width is 0 then we compute a tuple graph for width 1
        and terminate after 1 step in the iteration.
@@ -137,9 +143,6 @@ TupleGraph::TupleGraph(
         zero_width = true;
         width = 1;
     }
-    auto novelty_base = std::make_shared<NoveltyBase>(
-        state_space.get_instance_info_ref().get_atoms_ref().size(),
-        width);
     NoveltyTable novelty_table(novelty_base->get_num_tuples());
     const auto state_information = state_space.compute_state_information();
     StateIndicesSet visited_states;
