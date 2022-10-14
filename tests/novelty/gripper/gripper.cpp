@@ -12,19 +12,15 @@ using namespace dlplan::novelty;
 
 TEST(DLPTests, NoveltyGripperTest) {
     StateSpaceGenerator().generate_state_space("domain.pddl", "p-1-0.pddl");
-    auto state_space = StateSpaceReader().read();
+    auto state_space = std::make_shared<StateSpace>(StateSpaceReader().read());
     std::cout << "State space:" << std::endl;
-    state_space.print();
+    std::cout << state_space->to_dot(1) << std::endl;
     auto novelty_base = std::make_shared<NoveltyBase>(
-        state_space.get_instance_info_ref().get_atoms_ref().size(),
+        state_space->get_instance_info_ref().get_atoms_ref().size(),
         1);
-    std::cout << std::endl << "Atoms:" << std::endl;
-    for (const auto& atom : state_space.get_instance_info_ref().get_atoms_ref()) {
-        std::cout << atom.get_index() << " " << atom.get_name_ref() << std::endl;
-    }
     std::cout << std::endl << "Tuple graphs:" << std::endl;
-    for (const auto state_index : state_space.get_state_indices_ref()) {
+    for (const auto state_index : state_space->get_state_indices_ref()) {
         auto tuple_graph = TupleGraph(novelty_base, state_space, state_index, 1);
-        std::cout << tuple_graph.str() << std::endl << std::endl;
+        std::cout << std::endl << tuple_graph.to_dot(1) << std::endl;
     }
 }

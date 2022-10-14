@@ -120,10 +120,11 @@ compute_tuple_nodes_layer(
 
 TupleGraph::TupleGraph(
     std::shared_ptr<const NoveltyBase> novelty_base,
-    const StateSpace& state_space,
+    std::shared_ptr<const state_space::StateSpace> state_space,
     StateIndex root_state,
     int width)
     : m_novelty_base(novelty_base),
+      m_state_space(state_space),
       m_root_state_index(root_state),
       m_width(width) {
     if (width < 0) {
@@ -144,7 +145,7 @@ TupleGraph::TupleGraph(
         width = 1;
     }
     NoveltyTable novelty_table(novelty_base->get_num_tuples());
-    const auto state_information = state_space.compute_state_information();
+    const auto state_information = m_state_space->compute_state_information();
     StateIndicesSet visited_states;
     // 1. Initialize root state with distance = 0
     StateIndices initial_state_layer{root_state};
@@ -161,7 +162,7 @@ TupleGraph::TupleGraph(
         // 2.1. Compute unique states in curr state layer.
         StateIndices curr_state_layer = compute_state_layer(
             m_state_indices_by_distance[distance-1],
-            state_space,
+            *state_space,
             visited_states);
         // 2.2. Compute novel tuples, mappings between states, and reset their novelty.
         auto [novel_tuples,
@@ -177,7 +178,7 @@ TupleGraph::TupleGraph(
         // 2.3. Extend optimal plans of tuples from previous layer to tuples in current layer
         TupleNodes curr_tuple_layer = compute_tuple_nodes_layer(
             m_tuple_nodes_by_distance[distance-1],
-            state_space,
+            *state_space,
             state_index_to_novel_tuples,
             novel_tuple_to_state_indices);
         if (curr_tuple_layer.empty()) {
@@ -227,6 +228,70 @@ std::string TupleGraph::str() const {
         }
         result << "]\n";
     }
+    return result.str();
+}
+
+std::string TupleGraph::to_dot(int verbosity_level) const {
+    auto goal_distance_information = m_state_space->compute_goal_distance_information();
+    auto state_information = m_state_space->compute_state_information();
+    std::stringstream result;
+    // 2. Header
+    result << "digraph {" << "\n"
+           << "rankdir=\"LR\"" << "\n";
+    // 3. Tuple nodes.
+    for (const auto& tuple_node : m_tuple_nodes_by_distance.front()) {
+        result << "Dangling" << tuple_node.get_tuple_index() << " [ label = \"\", style = invis ]\n";
+    }
+    for (const auto& tuple_layer : m_tuple_nodes_by_distance) {
+        for (const auto& tuple_node : tuple_layer) {
+            result << "t" << tuple_node.get_tuple_index() << "[";
+            result << "label=<";
+            result << "t_idx=" << tuple_node.get_tuple_index() << "<BR/>";
+            result << "atoms=[";
+            const auto atom_indices = m_novelty_base->tuple_index_to_atom_tuple(tuple_node.get_tuple_index());
+            for (size_t i = 0; i < atom_indices.size(); ++i) {
+                if (i != 0) {
+                    result << ",";
+                }
+                if (verbosity_level >= 1) {
+                    result << m_state_space->get_instance_info_ref().get_atom_ref(atom_indices[i]).get_name_ref();
+                } else {
+                    result << atom_indices[i];
+                }
+            }
+            result << "]<BR/>";
+            result << "states=[";
+            const auto& state_indices = tuple_node.get_state_indices_ref();
+            for (size_t i = 0; i < state_indices.size(); ++i) {
+                if (i != 0) {
+                    result << ",";
+                }
+                if (verbosity_level >= 1) {
+                    result << state_information.get_state_ref(state_indices[i]).str() << "<BR/>";
+                } else {
+                    result << state_indices[i];
+                }
+            }
+            result << "]>]\n";
+        }
+    }
+    // 4. Group states with same distance together
+    // 5. Tuple edges
+    result << "{\n";
+    for (const auto& tuple_node : m_tuple_nodes_by_distance.front()) {
+        result << "Dangling" << tuple_node.get_tuple_index() << "->t" << tuple_node.get_tuple_index() << "\n";
+    }
+    result << "}\n";
+    for (const auto& tuple_layer : m_tuple_nodes_by_distance) {
+        result << "{\n";
+        for (const auto& tuple_node : tuple_layer) {
+            for (int successor_tuple_index : tuple_node.get_successors_ref()) {
+                result << "t" << tuple_node.get_tuple_index() << "->" << "t" << successor_tuple_index << "\n";
+            }
+        }
+        result << "}\n";
+    }
+    result << "}\n";
     return result.str();
 }
 

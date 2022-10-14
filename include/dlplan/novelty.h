@@ -191,6 +191,7 @@ public:
 class TupleGraph {
 private:
     std::shared_ptr<const NoveltyBase> m_novelty_base;
+    std::shared_ptr<const state_space::StateSpace> m_state_space;
     // The novel tuples that make it into the tuple graph.
     std::vector<TupleNodes> m_tuple_nodes_by_distance;
     // The reachable states with distance at most the largest distance of a tuple node.
@@ -203,7 +204,7 @@ private:
 public:
     TupleGraph(
         std::shared_ptr<const NoveltyBase> novelty_base,
-        const state_space::StateSpace& state_space,
+        std::shared_ptr<const state_space::StateSpace> state_space,
         state_space::StateIndex root_state,
         int width);
     TupleGraph(const TupleGraph& other);
@@ -213,6 +214,7 @@ public:
     ~TupleGraph();
 
     std::string str() const;
+    std::string to_dot(int verbosity_level) const;
 
     /**
      * Getters.

@@ -289,7 +289,7 @@ std::string StateSpace::to_dot(int verbosity_level) const {
            << "{ rank = same; Dangling }\n"
            << "Dangling -> s" << m_initial_state_index << "\n"
            << "{ rank = same; s" << m_initial_state_index << "}\n";
-    // 5. TODO: group states with same distance together
+    // 5. Group states with same distane together
     for (int distance = 1; distance < static_cast<int>(layers.size()); ++distance) {
         // group states together
         result << "{ rank = same; ";
