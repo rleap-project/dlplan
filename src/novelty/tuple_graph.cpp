@@ -246,8 +246,8 @@ std::string TupleGraph::to_dot(int verbosity_level) const {
         for (const auto& tuple_node : tuple_layer) {
             result << "t" << tuple_node.get_tuple_index() << "[";
             result << "label=<";
-            result << "t_idx=" << tuple_node.get_tuple_index() << "<BR/>";
-            result << "atoms=[";
+            result << "tuple index=" << tuple_node.get_tuple_index() << "<BR/>";
+            result << "atoms={";
             const auto atom_indices = m_novelty_base->tuple_index_to_atom_tuple(tuple_node.get_tuple_index());
             for (size_t i = 0; i < atom_indices.size(); ++i) {
                 if (i != 0) {
@@ -259,20 +259,23 @@ std::string TupleGraph::to_dot(int verbosity_level) const {
                     result << atom_indices[i];
                 }
             }
-            result << "]<BR/>";
-            result << "states=[";
+            result << "}<BR/>";
+            result << "states={";
             const auto& state_indices = tuple_node.get_state_indices_ref();
             for (size_t i = 0; i < state_indices.size(); ++i) {
                 if (i != 0) {
                     result << ",";
+                    if (verbosity_level >= 1) {
+                        result << "<BR/>";
+                    }
                 }
                 if (verbosity_level >= 1) {
-                    result << state_information.get_state_ref(state_indices[i]).str() << "<BR/>";
+                    result << state_information.get_state_ref(state_indices[i]).str();
                 } else {
                     result << state_indices[i];
                 }
             }
-            result << "]>]\n";
+            result << "}>]\n";
         }
     }
     // 4. Group states with same distance together

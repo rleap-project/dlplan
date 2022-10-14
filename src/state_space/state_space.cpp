@@ -279,7 +279,7 @@ std::string StateSpace::to_dot(int verbosity_level) const {
             if (verbosity_level >= 1) {
                 result << state_information.get_state_ref(state_index).str();
             } else {
-                result << "s" << state_index;
+                result << state_index;
             }
             result << "\"]\n";
         }

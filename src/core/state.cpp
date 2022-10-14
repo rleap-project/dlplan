@@ -77,16 +77,19 @@ int State::get_index() const {
 }
 
 std::string State::str() const {
-    std::string res("{");
-    for (int i = 0; i < static_cast<int>(m_atom_idxs.size()); ++i) {
-        const auto& atom = m_instance_info->get_atom_ref(m_atom_idxs[i]);
-        res += atom.get_name_ref();
-        if (i < static_cast<int>(m_atom_idxs.size()) - 1) {
-            res += ", ";
+    std::stringstream result;
+    result << "(instance index=" << get_instance_info_ref().get_index()
+           << ", state index=" << get_index()
+           << ", atoms={";
+    for (size_t i = 0; i < m_atom_idxs.size(); ++i) {
+        if (i != 0) {
+            result << ", ";
         }
+        const auto& atom = m_instance_info->get_atom_ref(m_atom_idxs[i]);
+        result << atom.get_name_ref();
     }
-    res += "}";
-    return res;
+    result << "})";
+    return result.str();
 }
 
 size_t State::compute_hash() const {
