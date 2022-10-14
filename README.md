@@ -89,13 +89,13 @@ The subdirectory `examples/` contains a number of helpful examples that illustra
 
 You can run the C++ examples with
 ```console
-./build/examples/core/simple
-./build/examples/generator/generate_exhaustively
+./build/examples/core/core_example
+./build/examples/generator/generator_example
 ```
 The Python bindings also come with the same examples. Run them with
 ```console
-python3 examples/core/simple.py
-python3 examples/generator/generate_exhaustively.py
+python3 examples/core/core.py
+python3 examples/generator/generator.py
 ```
 
 ## 5. Running the Tests
