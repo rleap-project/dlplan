@@ -36,7 +36,7 @@ void init_state_space(py::module_ &m) {
         .def("get_state", &StateInformation::get_state_ref, py::return_value_policy::reference)
     ;
 
-    py::class_<StateSpace>(m, "StateSpace")
+    py::class_<StateSpace, std::shared_ptr<StateSpace>>(m, "StateSpace")
         .def(py::init<std::shared_ptr<const InstanceInfo>, StatesSet, StateIndex, AdjacencyList, StateIndicesSet>())
         .def(py::init<const StateSpace&, const StateIndicesSet&, const StateIndicesSet&>())
         .def("__copy__", [](const StateSpace& state_space, py::object){ return StateSpace(state_space); })

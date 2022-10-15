@@ -15,12 +15,15 @@ static StateIndices compute_state_layer(
     const StateSpace& state_space,
     StateIndicesSet& visited) {
     std::unordered_set<StateIndex> layer_set;
+    const auto& successors = state_space.get_forward_successor_state_indices_ref();
     for (const auto source_index : current_layer) {
         assert(visited.count(source_index));
-        for (const auto target_index : state_space.get_forward_successor_state_indices_ref(source_index)) {
-            if (!visited.count(target_index)) {
-                visited.insert(target_index);
-                layer_set.insert(target_index);
+        if (successors.count(source_index)) {
+            for (const auto target_index : successors.at(source_index)) {
+                if (!visited.count(target_index)) {
+                    visited.insert(target_index);
+                    layer_set.insert(target_index);
+                }
             }
         }
     }
@@ -59,11 +62,14 @@ extend_tuple_node(
     const StateSpace& state_space,
     const std::unordered_map<StateIndex, TupleIndices>& state_index_to_novel_tuples) {
     std::unordered_map<TupleIndex, StateIndicesSet> extended;
+    const auto& successors = state_space.get_forward_successor_state_indices_ref();
     for (const auto source_index : tuple_node.get_state_indices_ref()) {
-        for (const auto target_index : state_space.get_forward_successor_state_indices_ref(source_index)) {
-            if (state_index_to_novel_tuples.count(target_index)) {
-                for (const auto target_tuple_index : state_index_to_novel_tuples.find(target_index)->second) {
-                    extended[target_tuple_index].insert(source_index);
+        if (successors.count(source_index)) {
+            for (const auto target_index : successors.at(source_index)) {
+                if (state_index_to_novel_tuples.count(target_index)) {
+                    for (const auto target_tuple_index : state_index_to_novel_tuples.find(target_index)->second) {
+                        extended[target_tuple_index].insert(source_index);
+                    }
                 }
             }
         }
