@@ -93,7 +93,7 @@ def test_factory():
     p0, p1, p2, p3, p4 = vocabulary.get_predicates()
     a0, a1, a2, a3, a4, a5, a6, a7 = instance.get_atoms()
     state = State(instance, [a0, a3, a6])
-    assert str(state) == "{on(a,b), ontable(b), clear(a)}"
+    assert str(state) == "(instance index=-1, state index=-1, atoms={on(a,b), ontable(b), clear(a)})"
 
     numerical = factory.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))")
     assert numerical.compute_complexity() == 4
