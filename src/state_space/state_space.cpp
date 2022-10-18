@@ -254,15 +254,14 @@ void StateSpace::print() const {
 
 std::string StateSpace::to_dot(int verbosity_level) const {
     // 1. Precompute information for layout.
-    auto distances = compute_distances({m_initial_state_index}, true, false);
+    auto goal_distance_information = compute_goal_distance_information();
     std::vector<StateIndices> layers;
-    for (const auto& pair : distances) {
+    for (const auto& pair : goal_distance_information.get_goal_distances_ref()) {
         if (pair.second >= static_cast<int>(layers.size())) {
             layers.resize(pair.second + 1);
         }
         layers[pair.second].push_back(pair.first);
     }
-    auto goal_distance_information = compute_goal_distance_information();
     auto state_information = compute_state_information();
     std::stringstream result;
     // 2. Header
@@ -372,22 +371,6 @@ const AdjacencyList& StateSpace::get_forward_successor_state_indices_ref() const
 
 const AdjacencyList& StateSpace::get_backward_successor_state_indices_ref() const {
     return m_backward_successor_state_indices;
-}
-
-const StateIndicesSet& StateSpace::get_forward_successor_state_indices_ref(StateIndex state) const {
-    const auto& result = m_forward_successor_state_indices.find(state);
-    if (result == m_forward_successor_state_indices.end()) {
-        throw std::runtime_error("StateSpace::get_forward_successor_state_indices_ref - state out of bounds.");
-    }
-    return result->second;
-}
-
-const StateIndicesSet& StateSpace::get_backward_successor_state_indices_ref(StateIndex state) const {
-    const auto& result = m_backward_successor_state_indices.find(state);
-    if (result == m_backward_successor_state_indices.end()) {
-        throw std::runtime_error("StateSpace::get_backward_successor_state_indices_ref - state out of bounds.");
-    }
-    return result->second;
 }
 
 const StateIndicesSet& StateSpace::get_goal_state_indices_ref() const {
