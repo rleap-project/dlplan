@@ -142,6 +142,10 @@ public:
      * Run BrFs to compute distances.
      */
     Distances compute_distances(const StateIndicesSet& state_indices, bool forward, bool stop_if_goal) const;
+    /**
+     * Computes 1-step successor from state_indices with unknown distance.
+     */
+    StateIndicesSet compute_one_step_successors(const StateIndicesSet& prev_state_indices, const StateIndicesSet& curr_state_indices, bool forward) const;
 
     /**
      * For more readable iterations.
