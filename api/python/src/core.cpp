@@ -129,8 +129,17 @@ void init_core(py::module_ &m) {
         .def("get_object", &InstanceInfo::get_object_ref, py::return_value_policy::reference)
         .def("get_object_idx", &InstanceInfo::get_object_idx)
         .def("get_num_objects", &InstanceInfo::get_num_objects)
-        .def("get_vocabulary_info_ref", &InstanceInfo::get_vocabulary_info_ref, py::return_value_policy::reference)
         .def("get_vocabulary_info", &InstanceInfo::get_vocabulary_info)
+    ;
+
+    py::class_<BaseElement>(m, "BaseElement")
+        .def("__repr__", &BaseElement::compute_repr)
+        .def("__str__", &BaseElement::compute_repr)
+        .def("compute_complexity", &BaseElement::compute_complexity)
+        .def("compute_repr", &BaseElement::compute_repr)
+        .def("set_index", &BaseElement::set_index)
+        .def("get_index", &BaseElement::get_index)
+        .def("get_vocabulary_info", &BaseElement::get_vocabulary_info)
     ;
 
     py::class_<Concept>(m, "Concept")
@@ -239,7 +248,6 @@ void init_core(py::module_ &m) {
         .def("make_transitive_closure", &SyntacticElementFactory::make_transitive_closure, py::arg("role"), py::arg("index") = -1)
         .def("make_transitive_reflexive_closure", &SyntacticElementFactory::make_transitive_reflexive_closure, py::arg("role"), py::arg("index") = -1)
 
-        .def("get_vocabulary_info_ref", &SyntacticElementFactory::get_vocabulary_info_ref, py::return_value_policy::reference)
         .def("get_vocabulary_info", &SyntacticElementFactory::get_vocabulary_info)
     ;
 }

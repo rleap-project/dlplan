@@ -557,7 +557,6 @@ public:
 
 class BaseElement : public utils::Cachable {
 protected:
-protected:
     std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
     /**
      * Index can be used for external caching.

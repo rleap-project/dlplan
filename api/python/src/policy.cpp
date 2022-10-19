@@ -25,6 +25,7 @@ void init_policy(py::module_ &m) {
         .def("get_base_feature", &BaseCondition::get_base_feature)
         .def("compute_repr", &BaseCondition::compute_repr)
         .def("str", &BaseCondition::str)
+        .def("copy_to_builder", &BaseCondition::copy_to_builder)
     ;
 
     py::class_<BaseEffect, std::shared_ptr<BaseEffect>>(m, "BaseEffect")
@@ -36,6 +37,7 @@ void init_policy(py::module_ &m) {
         .def("get_base_feature", &BaseEffect::get_base_feature)
         .def("compute_repr", &BaseEffect::compute_repr)
         .def("str", &BaseEffect::str)
+        .def("copy_to_builder", &BaseEffect::copy_to_builder)
     ;
 
     py::class_<Rule, std::shared_ptr<Rule>>(m, "Rule")
@@ -50,6 +52,7 @@ void init_policy(py::module_ &m) {
         .def("get_effects", &Rule::get_effects)
         .def("compute_repr", &Rule::compute_repr)
         .def("str", &Rule::str)
+        .def("copy_to_builder", &Rule::copy_to_builder)
     ;
 
     py::class_<Policy>(m, "Policy")

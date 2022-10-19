@@ -15,9 +15,7 @@ using namespace dlplan::core;
 using namespace dlplan::state_space;
 
 
-
-void init_state_space(py::modu
-le_ &m) {
+void init_state_space(py::module_ &m) {
     py::class_<GoalDistanceInformation>(m, "GoalDistanceInformation")
         .def("__copy__", [](const GoalDistanceInformation& info, py::object){ return GoalDistanceInformation(info); })
         .def("__deepcopy__", [](const GoalDistanceInformation& info, py::object){ return GoalDistanceInformation(info); })
@@ -63,7 +61,6 @@ le_ &m) {
         .def("get_forward_successor_state_indices", &StateSpace::get_forward_successor_state_indices_ref, py::return_value_policy::reference)
         .def("get_backward_successor_state_indices", &StateSpace::get_backward_successor_state_indices_ref, py::return_value_policy::reference)
         .def("get_goal_state_indices", &StateSpace::get_goal_state_indices_ref, py::return_value_policy::reference)
-        .def("get_instance_info_ref", &StateSpace::get_instance_info_ref, py::return_value_policy::reference)
         .def("get_instance_info", &StateSpace::get_instance_info)
     ;
 
