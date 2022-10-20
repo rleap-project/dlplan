@@ -164,22 +164,6 @@ Distances StateSpace::compute_distances(const StateIndicesSet& state_indices, bo
     return distances;
 }
 
-StateIndicesSet StateSpace::compute_one_step_successors(const StateIndicesSet& prev_state_indices, const StateIndicesSet& curr_state_indices, bool forward) const {
-    const auto& successor_states = (forward) ? m_forward_successor_state_indices : m_backward_successor_state_indices;
-    StateIndicesSet one_step_successors;
-    for (int source : curr_state_indices) {
-        const auto& targets = successor_states.find(source);
-        if (targets != successor_states.end()) {
-            for (int target : targets->second) {
-                if (!prev_state_indices.count(target)) {
-                    one_step_successors.insert(target);
-                }
-            }
-        }
-    }
-    return one_step_successors;
-}
-
 void StateSpace::for_each_state_index(std::function<void(StateIndex state)>&& function) const {
     for (StateIndex state : m_state_indices) {
         function(state);

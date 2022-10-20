@@ -17,10 +17,10 @@ TEST(DLPTests, NoveltyGripperTest) {
     std::cout << state_space->to_dot(1) << std::endl;
     auto novelty_base = std::make_shared<NoveltyBase>(
         state_space->get_instance_info_ref().get_atoms_ref().size(),
-        1);
+        2);
     std::cout << std::endl << "Tuple graphs:" << std::endl;
     for (const auto state_index : state_space->get_state_indices_ref()) {
-        auto tuple_graph = TupleGraph(novelty_base, state_space, state_index, 1);
+        auto tuple_graph = TupleGraph(novelty_base, state_space, state_index, 2);
         std::cout << std::endl << tuple_graph.to_dot(1) << std::endl;
     }
 }
