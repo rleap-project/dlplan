@@ -1,19 +1,11 @@
 #include "../../include/dlplan/novelty.h"
+#include "../utils/math.h"
 
 #include <cassert>
 #include <iostream>
 
 
 namespace dlplan::novelty {
-
-// https://stackoverflow.com/questions/55421835/c-binomial-coefficient-is-too-slow
-static int binomial_coefficient(int n, int k) {
-    int result = n - k + 1;
-    for (int i = 1; i < k; ++i) {
-        result = result * (n - k + 1 + i) / (i + 1);
-    }
-    return result;
-}
 
 // https://stackoverflow.com/questions/127704/algorithm-to-return-all-combinations-of-k-elements-from-n
 template <typename Iterator>
@@ -73,10 +65,11 @@ TupleIndexGenerator::tuple_index_iterator::tuple_index_iterator(
         novelty_base->get_max_tuple_size(),
         novelty_base->get_dummy_atom_index())),
     m_width(novelty_base->get_max_tuple_size()),
-    m_count(end ? binomial_coefficient(
+    m_count(end ? utils::binomial_coefficient(
         std::max(novelty_base->get_max_tuple_size(), static_cast<int>(atom_indices.size())),
         novelty_base->get_max_tuple_size()) : -1),
     m_tuple_atom_indices(novelty_base->get_max_tuple_size()) {
+    assert(atom_indices.size() > 0);
     assert(static_cast<int>(m_atom_indices.size()) >= novelty_base->get_max_tuple_size());
     assert(std::is_sorted(m_atom_indices.begin(), m_atom_indices.end()));
     if (!end) seek_next();

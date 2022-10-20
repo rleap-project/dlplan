@@ -7,6 +7,7 @@ target_sources(dlplannovelty
         tuple_graph.cpp
         tuple_index_generator.cpp
         tuple_node.cpp
+        ../utils/math.cpp
     )
 target_link_libraries(dlplannovelty dlplanstatespace)
 target_include_directories(dlplannovelty

@@ -1,5 +1,7 @@
 #include "../../include/dlplan/novelty.h"
 
+#include "../utils/math.h"
+
 #include <vector>
 #include <cassert>
 #include <iostream>
@@ -8,13 +10,15 @@
 namespace dlplan::novelty {
 
 NoveltyBase::NoveltyBase(int num_atoms, int max_tuple_size)
-    : m_num_atoms(num_atoms+1), m_max_tuple_size(max_tuple_size), m_num_tuples(std::pow(num_atoms+1, max_tuple_size)) {
-    if (m_max_tuple_size < 0) {
-        throw std::runtime_error("NoveltyBase::NoveltyBase - max_tuple_size must be greater than or equal to 0.");
+    : m_num_atoms(num_atoms+1), m_max_tuple_size(max_tuple_size) {
+    if (m_max_tuple_size <= 0) {
+        throw std::runtime_error("NoveltyBase::NoveltyBase - max_tuple_size must be greater than 0.");
     }
     m_factors = std::vector<int>(m_max_tuple_size);
+    m_num_tuples = 0;
     for (int i = 0; i < m_max_tuple_size; ++i) {
         m_factors[i] = std::pow(m_num_atoms, i);
+        m_num_tuples += m_num_atoms * m_factors[i];
     }
 }
 
