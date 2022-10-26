@@ -90,8 +90,7 @@ static std::vector<std::shared_ptr<const Rule>> try_merge_by_condition(
     return {};
 }
 
-
-static std::vector<std::shared_ptr<const Rule>> try_merge_by_effect(
+static std::vector<std::shared_ptr<const Rule>> try_merge_by_numerical_effect(
     const Policy& policy, PolicyBuilder& builder) {
     for (const auto& rule_1 : policy.get_rules()) {
         for (const auto& rule_2 : policy.get_rules()) {
@@ -106,8 +105,7 @@ static std::vector<std::shared_ptr<const Rule>> try_merge_by_effect(
                 continue;
             }
             if (!check_feature_index_equality(symmetric_diff) ||
-                !(check_subtype_equality<BaseEffect, BooleanEffect>(symmetric_diff) ||
-                  check_subtype_equality<BaseEffect, NumericalEffect>(symmetric_diff))) {
+                !check_subtype_equality<BaseEffect, NumericalEffect>(symmetric_diff)) {
                 continue;
             }
             for (const auto& rule_3 : policy.get_rules()) {
@@ -122,8 +120,7 @@ static std::vector<std::shared_ptr<const Rule>> try_merge_by_effect(
                     continue;
                 }
                 if (!check_feature_index_equality(symmetric_diff) ||
-                    !(check_subtype_equality<BaseEffect, BooleanEffect>(symmetric_diff) ||
-                      check_subtype_equality<BaseEffect, NumericalEffect>(symmetric_diff))) {
+                    !check_subtype_equality<BaseEffect, NumericalEffect>(symmetric_diff)) {
                     continue;
                 }
                 builder.add_rule(
@@ -131,6 +128,33 @@ static std::vector<std::shared_ptr<const Rule>> try_merge_by_effect(
                     copy_to_builder(utils::set_difference(rule_1->get_effects(), symmetric_diff), builder));
                 return {rule_1, rule_2, rule_3};
             }
+        }
+    }
+    return {};
+}
+
+static std::vector<std::shared_ptr<const Rule>> try_merge_by_boolean_effect(
+    const Policy& policy, PolicyBuilder& builder) {
+    for (const auto& rule_1 : policy.get_rules()) {
+        for (const auto& rule_2 : policy.get_rules()) {
+            if (rule_1->get_index() >= rule_2->get_index()) {
+                continue;
+            }
+            if (rule_1->get_conditions() != rule_2->get_conditions()) {
+                continue;
+            }
+            std::vector<std::shared_ptr<const BaseEffect>> symmetric_diff = utils::set_symmetric_difference<std::shared_ptr<const BaseEffect>>({rule_1->get_effects(), rule_2->get_effects()});
+            if (symmetric_diff.empty()) {
+                continue;
+            }
+            if (!check_feature_index_equality(symmetric_diff) ||
+                !check_subtype_equality<BaseEffect, BooleanEffect>(symmetric_diff)) {
+                continue;
+            }
+            builder.add_rule(
+                copy_to_builder(rule_1->get_conditions(), builder),
+                copy_to_builder(utils::set_difference(rule_1->get_effects(), symmetric_diff), builder));
+            return {rule_1, rule_2};
         }
     }
     return {};
@@ -189,7 +213,10 @@ Policy PolicyMinimizer::minimize(const Policy& policy) const {
         PolicyBuilder builder;
         merged_rules = try_merge_by_condition(current_policy, builder);
         if (merged_rules.empty()) {
-            merged_rules = try_merge_by_effect(current_policy, builder);
+            merged_rules = try_merge_by_numerical_effect(current_policy, builder);
+        }
+        if (merged_rules.empty()) {
+            merged_rules = try_merge_by_boolean_effect(current_policy, builder);
         }
         copy_to_builder(utils::set_difference(current_policy.get_rules(), merged_rules), builder);
         current_policy = builder.get_result();
