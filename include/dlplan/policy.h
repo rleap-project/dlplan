@@ -4,6 +4,7 @@
 #include "core.h"
 #include "utils/pimpl.h"
 
+#include <unordered_set>
 #include <memory>
 #include <string>
 #include <vector>
@@ -17,6 +18,15 @@ namespace dlplan::policy {
     class PolicyBuilderImpl;
     class PolicyReaderImpl;
     class PolicyWriterImpl;
+    class BaseCondition;
+    class BaseEffect;
+    class Rule;
+
+    using Conditions = std::vector<std::shared_ptr<const BaseCondition>>;
+    using Effects = std::vector<std::shared_ptr<const BaseEffect>>;
+
+    using Rules = std::vector<std::shared_ptr<const Rule>>;
+    using RulesSet = std::unordered_set<std::shared_ptr<const Rule>>;
 }
 
 
