@@ -10,6 +10,8 @@
 
 namespace dlplan::policy {
 
+Policy::Policy() = default;
+
 Policy::Policy(
     const std::vector<std::shared_ptr<const core::Boolean>>& boolean_features,
     const std::vector<std::shared_ptr<const core::Numerical>>& numerical_features,

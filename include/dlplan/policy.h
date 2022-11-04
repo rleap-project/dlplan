@@ -193,6 +193,7 @@ private:
     friend class PolicyBuilderImpl;
 
 public:
+    Policy();
     Policy(const Policy& other);
     Policy& operator=(const Policy& other);
     Policy(Policy&& other);

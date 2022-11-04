@@ -15,9 +15,6 @@ using namespace dlplan::core;
 using namespace dlplan::state_space;
 
 
-PYBIND11_MAKE_OPAQUE(std::unordered_map<StateIndex, Distance>);
-
-
 void init_state_space(py::module_ &m) {
     py::class_<GoalDistanceInformation>(m, "GoalDistanceInformation")
         .def("__copy__", [](const GoalDistanceInformation& info, py::object){ return GoalDistanceInformation(info); })
