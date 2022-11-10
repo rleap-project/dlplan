@@ -51,6 +51,10 @@ private:
                 denotations->push_back(INF);
                 continue;
             }
+            if ((*concept_from_denots)[i]->intersects(*(*concept_to_denots)[i])) {
+                denotations->push_back(0);
+                continue;
+            }
             int denotation;
             compute_result(
                 *(*concept_from_denots)[i],

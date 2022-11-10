@@ -61,6 +61,9 @@ int compute_multi_source_multi_target_shortest_distance(const ConceptDenotation&
     for (int source : sources) {
         distances[source] = 0;
         queue.push_back(source);
+        if (targets.contains(source)) {
+            return 0;
+        }
     }
     while (!queue.empty()) {
         int source = queue.front();
