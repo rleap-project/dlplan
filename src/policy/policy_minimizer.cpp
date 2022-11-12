@@ -73,6 +73,15 @@ static bool check_feature_index_equality(
         );
 }
 
+template<typename T>
+static bool check_object_equality(
+    const std::vector<std::shared_ptr<const T>>& l,
+    const std::vector<std::shared_ptr<const T>>& r) {
+    std::unordered_set<std::shared_ptr<const T>> l_set(l.begin(), l.end());
+    std::unordered_set<std::shared_ptr<const T>> r_set(r.begin(), r.end());
+    return l_set == r_set;
+}
+
 
 static void try_merge_by_condition(
     PolicyBuilder& builder,
@@ -92,12 +101,19 @@ static void try_merge_by_condition(
             if (rule_1->get_effects() != rule_2->get_effects()) {
                 continue;
             }
+            // check that effects are compatible to merge
             std::vector<std::shared_ptr<const BaseCondition>> symmetric_diff = utils::set_symmetric_difference<std::shared_ptr<const BaseCondition>>({rule_1->get_conditions(), rule_2->get_conditions()});
             if (symmetric_diff.size() != 2) {
                 continue;
             }
             if (!check_feature_index_equality(symmetric_diff) ||
                 !(check_subtype_equality<BaseCondition, BooleanCondition>(symmetric_diff) || check_subtype_equality<BaseCondition, NumericalCondition>(symmetric_diff))) {
+                continue;
+            }
+            // check that other conditions are identical
+            const auto rule_1_other_conditions = utils::set_difference(rule_1->get_conditions(), symmetric_diff);
+            const auto rule_2_other_conditions = utils::set_difference(rule_2->get_conditions(), symmetric_diff);
+            if (!check_object_equality(rule_1_other_conditions, rule_2_other_conditions)) {
                 continue;
             }
             added_rules.insert(builder.add_rule(
@@ -143,12 +159,20 @@ static void try_merge_by_numerical_effect(
                 if (rule_2->get_conditions() != rule_3->get_conditions()) {
                     continue;
                 }
+                // check that effects are compatible to merge
                 symmetric_diff = utils::set_symmetric_difference<std::shared_ptr<const BaseEffect>>({rule_1->get_effects(), rule_2->get_effects(), rule_3->get_effects()});
                 if (symmetric_diff.size() != 3) {
                     continue;
                 }
                 if (!check_feature_index_equality(symmetric_diff) ||
                     !check_subtype_equality<BaseEffect, NumericalEffect>(symmetric_diff)) {
+                    continue;
+                }
+                // check that other effects are identical
+                const auto rule_1_other_effects = utils::set_difference(rule_1->get_effects(), symmetric_diff);
+                const auto rule_2_other_effects = utils::set_difference(rule_2->get_effects(), symmetric_diff);
+                const auto rule_3_other_effects = utils::set_difference(rule_3->get_effects(), symmetric_diff);
+                if (!(check_object_equality(rule_1_other_effects, rule_2_other_effects) && check_object_equality(rule_1_other_effects, rule_3_other_effects))) {
                     continue;
                 }
                 added_rules.insert(builder.add_rule(
@@ -181,12 +205,19 @@ try_merge_by_boolean_effect(
             if (rule_1->get_conditions() != rule_2->get_conditions()) {
                 continue;
             }
+            // check that effects are compatible to merge
             std::vector<std::shared_ptr<const BaseEffect>> symmetric_diff = utils::set_symmetric_difference<std::shared_ptr<const BaseEffect>>({rule_1->get_effects(), rule_2->get_effects()});
             if (symmetric_diff.size() != 2) {
                 continue;
             }
             if (!check_feature_index_equality(symmetric_diff) ||
                 !check_subtype_equality<BaseEffect, BooleanEffect>(symmetric_diff)) {
+                continue;
+            }
+            // check that other effects are identical
+            const auto rule_1_other_effects = utils::set_difference(rule_1->get_effects(), symmetric_diff);
+            const auto rule_2_other_effects = utils::set_difference(rule_2->get_effects(), symmetric_diff);
+            if (!check_object_equality(rule_1_other_effects, rule_2_other_effects)) {
                 continue;
             }
             added_rules.insert(builder.add_rule(
@@ -259,6 +290,16 @@ Policy PolicyMinimizer::minimize(const Policy& policy) const {
         try_merge_by_condition(minimization_builder, rules, merged_rule_combinations, merged_rules);
         try_merge_by_numerical_effect(minimization_builder, rules, merged_rule_combinations, merged_rules);
         try_merge_by_boolean_effect(minimization_builder, rules, merged_rule_combinations, merged_rules);
+        /*std::cout << "Rules:" << std::endl;
+        for (auto rule : rules) {
+            std::cout << rule->compute_repr() << std::endl;
+        }
+        std::cout << std::endl;
+        std::cout << "Merged rules:" << std::endl;
+        for (auto rule : merged_rules) {
+            std::cout << rule->compute_repr() << std::endl;
+        }
+        std::cout << std::endl;*/
     } while (rules.size() > old_size);
     // Remove merged rules
     rules = utils::set_difference(rules, merged_rules);

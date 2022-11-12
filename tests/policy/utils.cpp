@@ -10,6 +10,14 @@ std::shared_ptr<const VocabularyInfo> construct_vocabulary_info() {
     return vocabulary_info;
 }
 
+std::shared_ptr<const VocabularyInfo> construct_blocks_vocabulary_info() {
+    std::shared_ptr<VocabularyInfo> vocabulary_info = std::make_shared<VocabularyInfo>();
+    vocabulary_info->add_predicate("on", 2);
+    vocabulary_info->add_predicate("on_g", 2);
+    vocabulary_info->add_predicate("clear", 1);
+    return vocabulary_info;
+}
+
 std::shared_ptr<const InstanceInfo> construct_instance_info(std::shared_ptr<const VocabularyInfo> vocabulary_info) {
     std::shared_ptr<InstanceInfo> instance_info = std::make_shared<InstanceInfo>(vocabulary_info);
     instance_info->add_atom("at", {"p1", "A"});

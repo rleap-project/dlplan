@@ -67,6 +67,38 @@ TEST(DLPTests, StructuralMinimization2) {
 }
 
 
+TEST(DLPTests, StructuralMinimization3) {
+    std::string policy_textual =
+        "(:policy\n"
+        "(:boolean_features \"b_empty(r_and(r_primitive(on,0,1),r_primitive(on_g,0,1)))\")\n"
+        "(:numerical_features \"n_count(c_primitive(clear,0))\")\n"
+        "(:rule (:conditions (:c_n_gt 0) (:c_b_pos 0)) (:effects (:e_n_bot 0) (:e_b_neg 0)))\n"
+        "(:rule (:conditions (:c_n_gt 0) (:c_b_pos 0)) (:effects (:e_n_dec 0) (:e_b_neg 0)))\n"
+        "(:rule (:conditions (:c_n_gt 0) (:c_b_pos 0)) (:effects (:e_n_inc 0) (:e_b_bot 0)))\n"
+        "(:rule (:conditions (:c_n_gt 0) (:c_b_pos 0)) (:effects (:e_n_inc 0) (:e_b_neg 0)))\n"
+        ")";
+    std::string minimized_policy_textual =
+        "(:policy\n"
+        "(:boolean_features \"b_empty(r_and(r_primitive(on,0,1),r_primitive(on_g,0,1)))\")\n"
+        "(:numerical_features \"n_count(c_primitive(clear,0))\")\n"
+        "(:rule (:conditions (:c_n_gt 0) (:c_b_pos 0)) (:effects (:e_b_neg 0)))\n"
+        "(:rule (:conditions (:c_n_gt 0) (:c_b_pos 0)) (:effects (:e_n_inc 0)))\n"
+        ")";
+
+    auto vocabulary_info = construct_blocks_vocabulary_info();
+    auto syntactic_element_factory = construct_syntactic_element_factory(vocabulary_info);
+    auto input_policy = PolicyReader().read(policy_textual, syntactic_element_factory);
+    auto minimized_policy = PolicyMinimizer().minimize(input_policy);
+    std::cout << "Input policy:" << std::endl
+              << input_policy.str() << std::endl << std::endl
+              << "Minimized policy:" << std::endl
+              << minimized_policy.compute_repr() << std::endl;
+    EXPECT_EQ(minimized_policy.compute_repr(), minimized_policy_textual);
+}
+
+
+
+
 TEST(DLPTests, EmpiricalMinimization) {
     std::string policy_textual =
         "(:policy\n"
