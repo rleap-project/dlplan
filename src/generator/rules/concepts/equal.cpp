@@ -13,19 +13,25 @@ void EqualConcept::generate_impl(const core::States& states, int target_complexi
         for (int i = 1; i < target_complexity - 1; ++i) {
             int j = target_complexity - i - 1;
             for (const auto& r1 : data.m_roles_by_iteration[i]) {
-                auto primitive_role = std::dynamic_pointer_cast<const core::element::PrimitiveRole>(r1.get_element());
-                if (primitive_role) {
-                    std::string predicate_name = primitive_role->get_predicate_ref().get_name_ref();
-                    if (predicate_name.substr(predicate_name.size() - 2, 2) != "_g") {
+                auto r1_primitive_role = std::dynamic_pointer_cast<const core::element::PrimitiveRole>(r1.get_element());
+                if (r1_primitive_role) {
+                    std::string r1_predicate_name = r1_primitive_role->get_predicate_ref().get_name_ref();
+                    if (r1_predicate_name.substr(r1_predicate_name.size() - 2, 2) != "_g") {
                         continue;
                     }
                     for (const auto& r2 : data.m_roles_by_iteration[j]) {
-                        auto element = factory.make_equal_concept(r2, r1);
-                        auto denotations = element.get_element_ref().evaluate(states, caches);
-                        if (data.m_concept_hash_table.insert(denotations).second) {
-                            data.m_reprs.push_back(element.compute_repr());
-                            data.m_concepts_by_iteration[target_complexity].push_back(std::move(element));
-                            increment_generated();
+                        auto r2_primitive_role = std::dynamic_pointer_cast<const core::element::PrimitiveRole>(r2.get_element());
+                        if (r2_primitive_role) {
+                            std::string r2_predicate_name = r2_primitive_role->get_predicate_ref().get_name_ref();
+                            if (r1_predicate_name.substr(0, r1_predicate_name.size() -2) == r2_predicate_name) {
+                                auto element = factory.make_equal_concept(r2, r1);
+                                auto denotations = element.get_element_ref().evaluate(states, caches);
+                                if (data.m_concept_hash_table.insert(denotations).second) {
+                                    data.m_reprs.push_back(element.compute_repr());
+                                    data.m_concepts_by_iteration[target_complexity].push_back(std::move(element));
+                                    increment_generated();
+                                }
+                            }
                         }
                     }
                 }
