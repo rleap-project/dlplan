@@ -40,38 +40,20 @@ std::vector<T> copy_to_builder(
 }
 
 
-/**
- * Returns true iff all objects of given type PARENT_T are of type SUB_T
- */
-template<typename PARENT_T, typename SUB_T>
-static bool check_subtype_equality(
-    const std::vector<std::shared_ptr<const PARENT_T>>& objects) {
-    return std::all_of(
-        objects.begin(),
-        objects.end(),
-        [](const std::shared_ptr<const PARENT_T>& object){
-            return std::dynamic_pointer_cast<const SUB_T>(object);
-        }
-    );
-}
-
-
-/**
- * Returns true iff all objects of given type T have feature with same index.
- */
 template<typename T>
-static bool check_feature_index_equality(
+static bool check_feature_equality(
     const std::vector<std::shared_ptr<const T>>& objects) {
     if (objects.empty()) return true;
     return std::all_of(
         objects.begin(),
         objects.end(),
-        [index=(*(objects.begin()))->get_base_feature()->get_index()](
+        [feature=(*(objects.begin()))->get_base_feature()](
             const std::shared_ptr<const T>& object){
-                return object->get_base_feature()->get_index() == index;
+                return object->get_base_feature() == feature;
             }
         );
 }
+
 
 template<typename T>
 static bool check_object_equality(
@@ -106,8 +88,7 @@ static void try_merge_by_condition(
             if (symmetric_diff.size() != 2) {
                 continue;
             }
-            if (!check_feature_index_equality(symmetric_diff) ||
-                !(check_subtype_equality<BaseCondition, BooleanCondition>(symmetric_diff) || check_subtype_equality<BaseCondition, NumericalCondition>(symmetric_diff))) {
+            if (!check_feature_equality(symmetric_diff)) {
                 continue;
             }
             // check that other conditions are identical
@@ -144,8 +125,7 @@ static void try_merge_by_numerical_effect(
             if (symmetric_diff.empty()) {
                 continue;
             }
-            if (!check_feature_index_equality(symmetric_diff) ||
-                !check_subtype_equality<BaseEffect, NumericalEffect>(symmetric_diff)) {
+            if (!check_feature_equality(symmetric_diff)) {
                 continue;
             }
             for (const auto& rule_3 : rules) {
@@ -164,8 +144,7 @@ static void try_merge_by_numerical_effect(
                 if (symmetric_diff.size() != 3) {
                     continue;
                 }
-                if (!check_feature_index_equality(symmetric_diff) ||
-                    !check_subtype_equality<BaseEffect, NumericalEffect>(symmetric_diff)) {
+                if (!check_feature_equality(symmetric_diff)) {
                     continue;
                 }
                 // check that other effects are identical
@@ -210,8 +189,7 @@ try_merge_by_boolean_effect(
             if (symmetric_diff.size() != 2) {
                 continue;
             }
-            if (!check_feature_index_equality(symmetric_diff) ||
-                !check_subtype_equality<BaseEffect, BooleanEffect>(symmetric_diff)) {
+            if (!check_feature_equality(symmetric_diff)) {
                 continue;
             }
             // check that other effects are identical
