@@ -14,6 +14,8 @@ namespace dlplan::utils {
  */
 class Cachable {
 public:
+    virtual ~Cachable() { };
+
     virtual std::string compute_repr() const = 0;
 
     virtual void set_index(int index) = 0;
