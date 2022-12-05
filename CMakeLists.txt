@@ -1,5 +1,15 @@
 # We use the earliest cmake 3
 cmake_minimum_required(VERSION 3.13)
+
+# If it's available, use ccache to cache compilation results. The two ccache options
+# allow sharing compilation results between different build directories.
+find_program(CCACHE_FOUND ccache)
+if(CCACHE_FOUND AND NOT WIN32)  # Windows Github Actions find "ccache" --> ignore it.
+    message("Using ccache")
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE
+        "CCACHE_BASEDIR=${CMAKE_CURRENT_SOURCE_DIR} CCACHE_NOHASHDIR=true ccache")
+endif(CCACHE_FOUND AND NOT WIN32)
+
 project(dlplan VERSION 0.1 LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
