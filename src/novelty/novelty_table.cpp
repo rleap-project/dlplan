@@ -1,5 +1,7 @@
 #include "../../include/dlplan/novelty.h"
 
+#include "../utils/collections.h"
+
 
 namespace dlplan::novelty {
 
@@ -35,6 +37,22 @@ TupleIndices NoveltyTable::compute_novel_tuple_indices(TupleIndexGenerator&& tup
 bool NoveltyTable::insert(TupleIndexGenerator&& tuple_index_generator, bool stop_if_novel) {
     bool result = false;
     for (const auto tuple_index : tuple_index_generator) {
+        bool is_novel = m_table[tuple_index];
+        if (!result && is_novel) {
+            result = true;
+        }
+        m_table[tuple_index] = false;
+        if (stop_if_novel && is_novel) {
+            break;
+        }
+    }
+    return result;
+}
+
+bool NoveltyTable::insert(const TupleIndices& tuple_indices, bool stop_if_novel) {
+    bool result = false;
+    for (const auto tuple_index : tuple_indices) {
+        assert(utils::in_bounds(tuple_index, m_table));
         bool is_novel = m_table[tuple_index];
         if (!result && is_novel) {
             result = true;

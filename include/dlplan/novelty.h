@@ -154,6 +154,15 @@ public:
      * then iteration stopps after novelty was proven.
      */
     bool insert(TupleIndexGenerator&& tuple_index_generator, bool stop_if_novel=true);
+
+    /**
+     * Useful for width-based planners (requires expert knowledge).
+     *
+     * The above method lacks taking into consideration
+     * the atoms that were changed by operator application.
+     * Hence, the user can compute tuples and pass them in here.
+     */
+    bool insert(const TupleIndices& tuple_indices, bool stop_if_novel=true);
 };
 
 
