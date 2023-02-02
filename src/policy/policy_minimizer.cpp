@@ -55,6 +55,20 @@ static bool check_feature_equality(
 }
 
 
+template<typename T, typename T_SUB>
+static bool check_object_type(
+    const std::vector<std::shared_ptr<const T>>& objects) {
+    if (objects.empty()) return true;
+    return std::all_of(
+        objects.begin(),
+        objects.end(),
+        [](const std::shared_ptr<const T>& object){
+            return std::dynamic_pointer_cast<const T_SUB>(object) != nullptr;
+        }
+    );
+}
+
+
 template<typename T>
 static bool check_object_equality(
     const std::vector<std::shared_ptr<const T>>& l,
@@ -89,6 +103,10 @@ static void try_merge_by_condition(
                 continue;
             }
             if (!check_feature_equality(symmetric_diff)) {
+                continue;
+            }
+            if  (!check_object_type<BaseCondition, BooleanCondition>(symmetric_diff) &&
+                 !check_object_type<BaseCondition, NumericalCondition>(symmetric_diff)) {
                 continue;
             }
             // check that other conditions are identical
@@ -147,6 +165,9 @@ static void try_merge_by_numerical_effect(
                 if (!check_feature_equality(symmetric_diff)) {
                     continue;
                 }
+                if  (!check_object_type<BaseEffect, NumericalEffect>(symmetric_diff)) {
+                    continue;
+                }
                 // check that other effects are identical
                 const auto rule_1_other_effects = utils::set_difference(rule_1->get_effects(), symmetric_diff);
                 const auto rule_2_other_effects = utils::set_difference(rule_2->get_effects(), symmetric_diff);
@@ -190,6 +211,9 @@ try_merge_by_boolean_effect(
                 continue;
             }
             if (!check_feature_equality(symmetric_diff)) {
+                continue;
+            }
+            if  (!check_object_type<BaseEffect, BooleanEffect>(symmetric_diff)) {
                 continue;
             }
             // check that other effects are identical
@@ -268,7 +292,8 @@ Policy PolicyMinimizer::minimize(const Policy& policy) const {
         try_merge_by_condition(minimization_builder, rules, merged_rule_combinations, merged_rules);
         try_merge_by_numerical_effect(minimization_builder, rules, merged_rule_combinations, merged_rules);
         try_merge_by_boolean_effect(minimization_builder, rules, merged_rule_combinations, merged_rules);
-        /*std::cout << "Rules:" << std::endl;
+        /*
+        std::cout << "Rules:" << std::endl;
         for (auto rule : rules) {
             std::cout << rule->compute_repr() << std::endl;
         }
@@ -277,7 +302,8 @@ Policy PolicyMinimizer::minimize(const Policy& policy) const {
         for (auto rule : merged_rules) {
             std::cout << rule->compute_repr() << std::endl;
         }
-        std::cout << std::endl;*/
+        std::cout << std::endl;
+        */
     } while (rules.size() > old_size);
     // Remove merged rules
     rules = utils::set_difference(rules, merged_rules);
