@@ -19,7 +19,7 @@ jobs:
         run: cmake -DENABLE_TESTING:BOOL=TRUE -DBUILD_SCORPION:BOOL=TRUE -S $GITHUB_WORKSPACE -B ${{runner.workspace}}/build
 
       - name: Export include path
-        run: export CPLUS_INCLUDE_PATH="${{CPLUS_INCLUDE_PATH}}:/include/"
+        run: export CPLUS_INCLUDE_PATH="${{CPLUS_INCLUDE_PATH}}:${{runner.workspace}}/include/"
 
       - name: Build
         working-directory: ${{runner.workspace}}/build
