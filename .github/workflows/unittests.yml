@@ -18,9 +18,6 @@ jobs:
       - name: Configure CMake
         run: cmake -DENABLE_TESTING:BOOL=TRUE -DBUILD_SCORPION:BOOL=TRUE -S $GITHUB_WORKSPACE -B ${{runner.workspace}}/build
 
-      - name: Export include path
-        run: echo "{CPLUS_INCLUDE_PATH}={${{CPLUS_INCLUDE_PATH}}:${{runner.workspace}}/include/}" >> $GITHUB_ENV
-
       - name: Build
         working-directory: ${{runner.workspace}}/build
         run: export CXXFLAGS="-Werror" && cmake --build .
