@@ -12,7 +12,7 @@ protected:
     virtual std::unique_ptr<BooleanDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
 
 public:
-    explicit Boolean(const VocabularyInfo& vocabulary) : Element<bool>(vocabulary) { }
+    Boolean(const VocabularyInfo& vocabulary, bool is_static) : Element<bool>(vocabulary, is_static) { }
     ~Boolean() override = default;
 
     /**
@@ -24,15 +24,27 @@ public:
      * Evaluate with caching for a single state.
      */
     bool evaluate(const State& state, DenotationsCaches& caches) const {
-        // check if denotations is cached.
-        auto key = std::array<int, 3>({state.get_instance_info_ref().get_index(), state.get_index(), get_index()});
-        auto cached = caches.m_b_denots_mapping_per_state.find(key);
-        if (cached != caches.m_b_denots_mapping_per_state.end()) return cached->second;
-        // compute denotation
-        bool denotation = evaluate_impl(state, caches);
-        // register denotation and return it
-        caches.m_b_denots_mapping_per_state.emplace(key, denotation);
-        return denotation;
+        if (get_is_static()) {
+            // check if denotations is cached.
+            auto key = std::array<int, 2>({state.get_instance_info_ref().get_index(), get_index()});
+            auto cached = caches.m_b_denots_mapping_per_instance.find(key);
+            if (cached != caches.m_b_denots_mapping_per_instance.end()) return cached->second;
+            // compute denotation
+            bool denotation = evaluate_impl(state, caches);
+            // register denotation and return it
+            caches.m_b_denots_mapping_per_instance.emplace(key, denotation);
+            return denotation;
+        } else {
+            // check if denotations is cached.
+            auto key = std::array<int, 3>({state.get_instance_info_ref().get_index(), state.get_index(), get_index()});
+            auto cached = caches.m_b_denots_mapping_per_state.find(key);
+            if (cached != caches.m_b_denots_mapping_per_state.end()) return cached->second;
+            // compute denotation
+            bool denotation = evaluate_impl(state, caches);
+            // register denotation and return it
+            caches.m_b_denots_mapping_per_state.emplace(key, denotation);
+            return denotation;
+        }
     }
 
     /**

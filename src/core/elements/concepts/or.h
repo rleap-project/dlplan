@@ -48,7 +48,7 @@ protected:
 
 public:
     OrConcept(const VocabularyInfo& vocabulary, Concept_Ptr concept_1, Concept_Ptr concept_2)
-    : Concept(vocabulary),
+    : Concept(vocabulary, concept_1->get_is_static() && concept_2->get_is_static()),
       m_concept_left(concept_1),
       m_concept_right(concept_2) {
         if (!(concept_1 && concept_2)) {

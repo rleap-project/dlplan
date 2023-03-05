@@ -40,7 +40,7 @@ protected:
 
 public:
     OneOfConcept(const VocabularyInfo& vocabulary, const Constant& constant)
-    : Concept(vocabulary), m_constant(constant) {
+    : Concept(vocabulary, true), m_constant(constant) {
     }
 
     ConceptDenotation evaluate(const State& state) const override {

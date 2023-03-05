@@ -55,7 +55,7 @@ protected:
 
 public:
     TransitiveClosureRole(const VocabularyInfo& vocabulary, Role_Ptr role)
-    : Role(vocabulary), m_role(role) {
+    : Role(vocabulary, role->get_is_static()), m_role(role) {
         if (!role) {
             throw std::runtime_error("TransitiveClosureRole::TransitiveClosureRole - child is a nullptr.");
         }

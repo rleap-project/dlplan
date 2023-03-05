@@ -24,10 +24,15 @@ protected:
      * Index can be used for internal caching.
      */
     int m_index;
+    /**
+     * if true then element is evaluated per instance rather than per state.
+     */
+    bool m_is_static;
 
 public:
     // Elements are not copieable because they must live in the cache.
-    explicit Element(const VocabularyInfo&) : m_index(-1) { }
+    explicit Element(const VocabularyInfo&, bool is_static)
+      : m_index(-1), m_is_static(is_static) { }
     Element(const Element& other) = delete;
     Element& operator=(const Element& other) = delete;
     Element(Element&& other) = delete;
@@ -40,6 +45,10 @@ public:
 
     void set_index(int index) {
         m_index = index;
+    }
+
+    bool get_is_static() const {
+        return m_is_static;
     }
 
     virtual std::string compute_repr() const {

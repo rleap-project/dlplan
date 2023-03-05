@@ -53,7 +53,7 @@ protected:
 
 public:
     AllConcept(const VocabularyInfo& vocabulary, Role_Ptr role, Concept_Ptr concept)
-    : Concept(vocabulary), m_role(role), m_concept(concept) {
+    : Concept(vocabulary, role->get_is_static() && concept->get_is_static()), m_role(role), m_concept(concept) {
         if (!(role && concept)) {
             throw std::runtime_error("AllConcept::AllConcept - at least one child is a nullptr");
         }

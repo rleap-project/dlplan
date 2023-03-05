@@ -51,7 +51,7 @@ protected:
 
 public:
     RestrictRole(const VocabularyInfo& vocabulary, Role_Ptr role, Concept_Ptr concept)
-    : Role(vocabulary), m_role(role), m_concept(concept) {
+    : Role(vocabulary, role->get_is_static() && concept->get_is_static()), m_role(role), m_concept(concept) {
         if (!(role && concept)) {
             throw std::runtime_error("RestrictRole::RestrictRole - at least one child is a nullptr.");
         }

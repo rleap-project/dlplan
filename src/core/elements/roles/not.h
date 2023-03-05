@@ -42,7 +42,7 @@ protected:
 
 public:
     NotRole(const VocabularyInfo& vocabulary, Role_Ptr role)
-    : Role(vocabulary), m_role(role) {
+    : Role(vocabulary, role->get_is_static()), m_role(role) {
         if (!role) {
             throw std::runtime_error("NotRole::NotRole - child is a nullptr.");
         }

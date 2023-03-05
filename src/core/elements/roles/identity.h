@@ -44,7 +44,7 @@ protected:
 
 public:
     IdentityRole(const VocabularyInfo& vocabulary, Concept_Ptr concept)
-    : Role(vocabulary), m_concept(concept) {
+    : Role(vocabulary, concept->get_is_static()), m_concept(concept) {
         if (!concept) {
             throw std::runtime_error("IdentityRole::IdentityRole - child is a nullptr.");
         }

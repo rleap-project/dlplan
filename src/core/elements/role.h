@@ -12,7 +12,7 @@ protected:
     virtual std::unique_ptr<RoleDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
 
 public:
-    explicit Role(const VocabularyInfo& vocabulary) : Element<RoleDenotation>(vocabulary) { }
+    Role(const VocabularyInfo& vocabulary, bool is_static) : Element<RoleDenotation>(vocabulary, is_static) { }
     ~Role() override = default;
 
     /**
@@ -24,16 +24,29 @@ public:
      * Evaluate with caching for a single state.
      */
     RoleDenotation* evaluate(const State& state, DenotationsCaches& caches) const {
-        // check if denotations is cached.
-        std::array<int, 3> key({state.get_instance_info_ref().get_index(), state.get_index(), get_index()});
-        auto cached = caches.m_r_denots_mapping_per_state.find(key);
-        if (cached != caches.m_r_denots_mapping_per_state.end()) return cached->second;
-        // compute denotation
-        auto denotation = evaluate_impl(state, caches);
-        // register denotation and append it to denotations.
-        auto result_denotation = caches.m_r_denot_cache.insert(std::move(denotation)).first->get();
-        caches.m_r_denots_mapping_per_state.emplace(key, result_denotation);
-        return result_denotation;
+        if (get_is_static()) {
+            // check if denotations is cached.
+            std::array<int, 2> key({state.get_instance_info_ref().get_index(), get_index()});
+            auto cached = caches.m_r_denots_mapping_per_instance.find(key);
+            if (cached != caches.m_r_denots_mapping_per_instance.end()) return cached->second;
+            // compute denotation
+            auto denotation = evaluate_impl(state, caches);
+            // register denotation and append it to denotations.
+            auto result_denotation = caches.m_r_denot_cache.insert(std::move(denotation)).first->get();
+            caches.m_r_denots_mapping_per_instance.emplace(key, result_denotation);
+            return result_denotation;
+        } else {
+            // check if denotations is cached.
+            std::array<int, 3> key({state.get_instance_info_ref().get_index(), state.get_index(), get_index()});
+            auto cached = caches.m_r_denots_mapping_per_state.find(key);
+            if (cached != caches.m_r_denots_mapping_per_state.end()) return cached->second;
+            // compute denotation
+            auto denotation = evaluate_impl(state, caches);
+            // register denotation and append it to denotations.
+            auto result_denotation = caches.m_r_denot_cache.insert(std::move(denotation)).first->get();
+            caches.m_r_denots_mapping_per_state.emplace(key, result_denotation);
+            return result_denotation;
+        }
     }
 
     /**

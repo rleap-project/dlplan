@@ -46,7 +46,7 @@ protected:
 
 public:
     AndRole(const VocabularyInfo& vocabulary, Role_Ptr role_1, Role_Ptr role_2)
-    : Role(vocabulary),
+    : Role(vocabulary, role_1->get_is_static() && role_2->get_is_static()),
       m_role_left(role_1),
       m_role_right(role_2) {
         if (!(role_1 && role_2)) {

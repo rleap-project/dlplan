@@ -94,6 +94,9 @@ namespace std {
     template<> struct hash<vector<int>> {
         size_t operator()(const vector<int>& data) const noexcept;
     };
+    template<> struct hash<std::array<int, 2>> {
+        size_t operator()(const std::array<int, 2>& data) const noexcept;
+    };
     template<> struct hash<std::array<int, 3>> {
         size_t operator()(const std::array<int, 3>& data) const noexcept;
     };
@@ -277,6 +280,11 @@ struct DenotationsCaches {
     std::unordered_map<std::array<int, 3>, bool> m_b_denots_mapping_per_state;
     std::unordered_map<std::array<int, 3>, ConceptDenotation*> m_c_denots_mapping_per_state;
     std::unordered_map<std::array<int, 3>, RoleDenotation*> m_r_denots_mapping_per_state;
+    // Mapping from instance, element index to denotations
+    std::unordered_map<std::array<int, 2>, int> m_n_denots_mapping_per_instance;
+    std::unordered_map<std::array<int, 2>, bool> m_b_denots_mapping_per_instance;
+    std::unordered_map<std::array<int, 2>, ConceptDenotation*> m_c_denots_mapping_per_instance;
+    std::unordered_map<std::array<int, 2>, RoleDenotation*> m_r_denots_mapping_per_instance;
 };
 
 
@@ -312,8 +320,9 @@ private:
     std::string m_name;
     int m_index;
     int m_arity;
+    bool m_is_static;
 
-    Predicate(const std::string& name, int index, int arity);
+    Predicate(const std::string& name, int index, int arity, bool is_static=false);
     friend class VocabularyInfo;
 
 public:
@@ -332,6 +341,7 @@ public:
     int get_index() const;
     const std::string& get_name_ref() const;
     int get_arity() const;
+    bool get_is_static() const;
 };
 
 
@@ -376,7 +386,7 @@ private:
         int index,
         const Predicate& predicate,
         const std::vector<Object> &objects,
-        bool is_static);
+        bool is_static=false);
     friend class InstanceInfo;
 
 public:
@@ -460,6 +470,7 @@ public:
  */
 class VocabularyInfo {
 private:
+    // we store static and dynamic predicates together.
     std::unordered_map<std::string, unsigned> m_predicate_name_to_predicate_idx;
     std::vector<Predicate> m_predicates;
 
@@ -474,7 +485,7 @@ public:
     VocabularyInfo& operator=(VocabularyInfo&& other);
     ~VocabularyInfo();
 
-    const Predicate& add_predicate(const std::string &name, int arity);
+    const Predicate& add_predicate(const std::string &name, int arity, bool is_static=false);
 
     const Constant& add_constant(const std::string& name);
 
@@ -563,16 +574,15 @@ public:
 class BaseElement : public utils::Cachable {
 protected:
     std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
-    /**
-     * Index can be used for external caching.
-     */
+
     int m_index;
 
 protected:
-    BaseElement(std::shared_ptr<const VocabularyInfo> vocabulary_info, int index=-1);
+    BaseElement(std::shared_ptr<const VocabularyInfo> vocabulary_info);
 
 public:
     virtual ~BaseElement();
+
 
     /**
      * Returns the complexity of the element
@@ -606,7 +616,7 @@ class Concept : public BaseElement {
 private:
     std::shared_ptr<const element::Concept> m_element;
 
-    Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Concept>&& concept, int index=-1);
+    Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Concept>&& concept);
     friend class SyntacticElementFactoryImpl;
 
 public:
@@ -636,7 +646,7 @@ class Role : public BaseElement {
 private:
     std::shared_ptr<const element::Role> m_element;
 
-    Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Role>&& role, int index=-1);
+    Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Role>&& role);
     friend class SyntacticElementFactoryImpl;
 
 public:
@@ -666,7 +676,7 @@ class Numerical : public BaseElement {
 private:
     std::shared_ptr<const element::Numerical> m_element;
 
-    Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Numerical>&& numerical, int index=-1);
+    Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Numerical>&& numerical);
     friend class SyntacticElementFactoryImpl;
 
 public:
@@ -696,7 +706,7 @@ class Boolean : public BaseElement {
 private:
     std::shared_ptr<const element::Boolean> m_element;
 
-    Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Boolean>&& boolean, int index=-1);
+    Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Boolean>&& boolean);
     friend class SyntacticElementFactoryImpl;
 
 public:
@@ -741,66 +751,66 @@ public:
      * Returns a Concept if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    Concept parse_concept(const std::string &description, int index=-1);
+    Concept parse_concept(const std::string &description);
 
     /**
      * Returns a Role if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    Role parse_role(const std::string &description, int index=-1);
+    Role parse_role(const std::string &description);
 
     /**
      * Returns a Numerical if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    Numerical parse_numerical(const std::string &description, int index=-1);
+    Numerical parse_numerical(const std::string &description);
 
     /**
      * Returns a Boolean if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    Boolean parse_boolean(const std::string &description, int index=-1);
+    Boolean parse_boolean(const std::string &description);
 
 
-    Boolean make_empty_boolean(const Concept& concept, int index=-1);
-    Boolean make_empty_boolean(const Role& role, int index=-1);
-    Boolean make_inclusion_boolean(const Concept& concept_left, const Concept& concept_right, int index=-1);
-    Boolean make_inclusion_boolean(const Role& role_left, const Role& role_right, int index=-1);
-    Boolean make_nullary_boolean(const Predicate& predicate, int index=-1);
+    Boolean make_empty_boolean(const Concept& concept);
+    Boolean make_empty_boolean(const Role& role);
+    Boolean make_inclusion_boolean(const Concept& concept_left, const Concept& concept_right);
+    Boolean make_inclusion_boolean(const Role& role_left, const Role& role_right);
+    Boolean make_nullary_boolean(const Predicate& predicate);
 
-    Concept make_all_concept(const Role& role, const Concept& concept, int index=-1);
-    Concept make_and_concept(const Concept& concept_left, const Concept& concept_right, int index=-1);
-    Concept make_bot_concept(int index=-1);
-    Concept make_diff_concept(const Concept& concept_left, const Concept& concept_right, int index=-1);
-    Concept make_equal_concept(const Role& role_left, const Role& role_right, int index=-1);
-    Concept make_not_concept(const Concept& concept, int index=-1);
-    Concept make_one_of_concept(const Constant& constant, int index=-1);
-    Concept make_or_concept(const Concept& concept_left, const Concept& concept_right, int index=-1);
-    Concept make_projection_concept(const Role& role, int pos, int index=-1);
-    Concept make_primitive_concept(const Predicate& predicate, int pos, int index=-1);
-    Concept make_some_concept(const Role& role, const Concept& concept, int index=-1);
-    Concept make_subset_concept(const Role& role_left, const Role& role_right, int index=-1);
-    Concept make_top_concept(int index=-1);
+    Concept make_all_concept(const Role& role, const Concept& concept);
+    Concept make_and_concept(const Concept& concept_left, const Concept& concept_right);
+    Concept make_bot_concept();
+    Concept make_diff_concept(const Concept& concept_left, const Concept& concept_right);
+    Concept make_equal_concept(const Role& role_left, const Role& role_right);
+    Concept make_not_concept(const Concept& concept);
+    Concept make_one_of_concept(const Constant& constant);
+    Concept make_or_concept(const Concept& concept_left, const Concept& concept_right);
+    Concept make_projection_concept(const Role& role, int pos);
+    Concept make_primitive_concept(const Predicate& predicate, int pos);
+    Concept make_some_concept(const Role& role, const Concept& concept);
+    Concept make_subset_concept(const Role& role_left, const Role& role_right);
+    Concept make_top_concept();
 
-    Numerical make_concept_distance_numerical(const Concept& concept_from, const Role& role, const Concept& concept_to, int index=-1);
-    Numerical make_count_numerical(const Concept& concept, int index=-1);
-    Numerical make_count_numerical(const Role& role, int index=-1);
-    Numerical make_role_distance_numerical(const Role& role_from, const Role& role, const Role& role_to, int index=-1);
-    Numerical make_sum_concept_distance_numerical(const Concept& concept_from, const Role& role, const Concept& concept_to, int index=-1);
-    Numerical make_sum_role_distance_numerical(const Role& role_from, const Role& role, const Role& role_to, int index=-1);
+    Numerical make_concept_distance_numerical(const Concept& concept_from, const Role& role, const Concept& concept_to);
+    Numerical make_count_numerical(const Concept& concept);
+    Numerical make_count_numerical(const Role& role);
+    Numerical make_role_distance_numerical(const Role& role_from, const Role& role, const Role& role_to);
+    Numerical make_sum_concept_distance_numerical(const Concept& concept_from, const Role& role, const Concept& concept_to);
+    Numerical make_sum_role_distance_numerical(const Role& role_from, const Role& role, const Role& role_to);
 
-    Role make_and_role(const Role& role_left, const Role& role_right, int index=-1);
-    Role make_compose_role(const Role& role_left, const Role& role_right, int index=-1);
-    Role make_diff_role(const Role& role_left, const Role& role_right, int index=-1);
-    Role make_identity_role(const Concept& concept, int index=-1);
-    Role make_inverse_role(const Role& role, int index=-1);
-    Role make_not_role(const Role& role, int index=-1);
-    Role make_or_role(const Role& role_left, const Role& role_right, int index=-1);
-    Role make_primitive_role(const Predicate& predicate, int pos_1, int pos_2, int index=-1);
-    Role make_restrict_role(const Role& role, const Concept& concept, int index=-1);
-    Role make_top_role(int index=-1);
-    Role make_transitive_closure(const Role& role, int index=-1);
-    Role make_transitive_reflexive_closure(const Role& role, int index=-1);
+    Role make_and_role(const Role& role_left, const Role& role_right);
+    Role make_compose_role(const Role& role_left, const Role& role_right);
+    Role make_diff_role(const Role& role_left, const Role& role_right);
+    Role make_identity_role(const Concept& concept);
+    Role make_inverse_role(const Role& role);
+    Role make_not_role(const Role& role);
+    Role make_or_role(const Role& role_left, const Role& role_right);
+    Role make_primitive_role(const Predicate& predicate, int pos_1, int pos_2);
+    Role make_restrict_role(const Role& role, const Concept& concept);
+    Role make_top_role();
+    Role make_transitive_closure(const Role& role);
+    Role make_transitive_reflexive_closure(const Role& role);
 };
 
 }

@@ -59,7 +59,7 @@ protected:
 
 public:
     ComposeRole(const VocabularyInfo& vocabulary, Role_Ptr role_left, Role_Ptr role_right)
-    : Role(vocabulary), m_role_left(role_left), m_role_right(role_right)  {
+    : Role(vocabulary, role_left->get_is_static() && role_right->get_is_static()), m_role_left(role_left), m_role_right(role_right)  {
         if (!(role_left && role_right)) {
             throw std::runtime_error("ComposeRole::ComposeRole - at least one child is a nullptr.");
         }

@@ -43,7 +43,7 @@ protected:
 
 public:
     NotConcept(const VocabularyInfo& vocabulary, Concept_Ptr concept)
-    : Concept(vocabulary), m_concept(concept){
+    : Concept(vocabulary, concept->get_is_static()), m_concept(concept){
         if (!concept) {
             throw std::runtime_error("NotConcept::NotConcept - child is a nullptr");
         }

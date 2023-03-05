@@ -49,7 +49,9 @@ protected:
 
 public:
     InclusionBoolean(const VocabularyInfo& vocabulary, std::shared_ptr<const T> element_left, std::shared_ptr<const T> element_right)
-    : Boolean(vocabulary), m_element_left(element_left), m_element_right(element_right) {
+    : Boolean(vocabulary, element_left->get_is_static() && element_right->get_is_static()),
+      m_element_left(element_left),
+      m_element_right(element_right) {
     }
 
     bool evaluate(const State& state) const override {

@@ -29,7 +29,7 @@ private:
 
 public:
     TopConcept(const VocabularyInfo& vocabulary)
-    : Concept(vocabulary) {
+    : Concept(vocabulary, true) {
     }
 
     ConceptDenotation evaluate(const State& state) const override {

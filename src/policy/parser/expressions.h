@@ -97,7 +97,9 @@ public:
     std::vector<std::shared_ptr<const core::Boolean>> parse_boolean_features(PolicyBuilder& builder, core::SyntacticElementFactory& factory) const override {
         std::vector<std::shared_ptr<const core::Boolean>> boolean_features;
         for (size_t i = 1; i < m_children.size(); ++i) {
-            boolean_features.push_back(builder.add_boolean_feature(factory.parse_boolean(m_children.at(i)->get_name_ref(), boolean_features.size())));
+            auto boolean = factory.parse_boolean(m_children.at(i)->get_name_ref());
+            boolean.set_index(boolean_features.size());
+            boolean_features.push_back(builder.add_boolean_feature(boolean));
         }
         return boolean_features;
     }
@@ -111,7 +113,9 @@ public:
     std::vector<std::shared_ptr<const core::Numerical>> parse_numerical_features(PolicyBuilder& builder, core::SyntacticElementFactory& factory) const override {
         std::vector<std::shared_ptr<const core::Numerical>> numerical_features;
         for (size_t i = 1; i < m_children.size(); ++i) {
-            numerical_features.push_back(builder.add_numerical_feature(factory.parse_numerical(m_children.at(i)->get_name_ref(), numerical_features.size())));
+            auto numerical = factory.parse_numerical(m_children.at(i)->get_name_ref());
+            numerical.set_index(numerical_features.size());
+            numerical_features.push_back(builder.add_numerical_feature(numerical));
         }
         return numerical_features;
     }

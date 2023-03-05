@@ -13,13 +13,13 @@ using namespace std::string_literals;
 
 namespace dlplan::state_space {
 
-static void parse_predicates_file(const std::string& filename, VocabularyInfo& vocabulary_info) {
+static void parse_predicates_file(const std::string& filename, VocabularyInfo& vocabulary_info, bool is_static) {
     std::ifstream infile(filename);
     std::string name;
     int arity;
     while (infile >> name >> arity) {
-        vocabulary_info.add_predicate(name, arity);
-        vocabulary_info.add_predicate(name + "_g", arity);
+        vocabulary_info.add_predicate(name, arity, is_static);
+        vocabulary_info.add_predicate(name + "_g", arity, true);
     }
 }
 
@@ -167,7 +167,8 @@ StateSpace StateSpaceReader::read(
     int index) const {
     if (!vocabulary_info) {
         std::shared_ptr<VocabularyInfo> new_vocabulary_info = std::make_shared<core::VocabularyInfo>();
-        parse_predicates_file("predicates.txt", *new_vocabulary_info);
+        parse_predicates_file("predicates.txt", *new_vocabulary_info, false);
+        parse_predicates_file("static-predicates.txt", *new_vocabulary_info, true);
         parse_constants_file("constants.txt", *new_vocabulary_info);
         vocabulary_info = new_vocabulary_info;
     }

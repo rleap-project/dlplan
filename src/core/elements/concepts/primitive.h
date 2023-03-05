@@ -58,7 +58,7 @@ protected:
 
 public:
     PrimitiveConcept(const VocabularyInfo& vocabulary, const Predicate& predicate, int pos)
-    : Concept(vocabulary), m_predicate(predicate), m_pos(pos) {
+    : Concept(vocabulary, predicate.get_is_static()), m_predicate(predicate), m_pos(pos) {
         if (m_pos >= m_predicate.get_arity()) {
             throw std::runtime_error("PrimitiveConcept::PrimitiveConcept - object index does not match predicate arity ("s + std::to_string(m_pos) + " > " + std::to_string(predicate.get_arity()) + ").");
         }

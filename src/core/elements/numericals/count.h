@@ -41,7 +41,7 @@ protected:
 
 public:
     CountNumerical(const VocabularyInfo& vocabulary, T element)
-    : Numerical(vocabulary), m_element(element) { }
+    : Numerical(vocabulary, element->get_is_static()), m_element(element) { }
 
     int evaluate(const State& state) const override {
         int result;

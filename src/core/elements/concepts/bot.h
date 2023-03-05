@@ -27,7 +27,7 @@ private:
 
 public:
     BotConcept(const VocabularyInfo& vocabulary)
-    : Concept(vocabulary) { }
+    : Concept(vocabulary, true) { }
 
     ConceptDenotation evaluate(const State& state) const override {
         return ConceptDenotation(state.get_instance_info_ref().get_num_objects());

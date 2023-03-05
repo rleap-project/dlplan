@@ -43,7 +43,7 @@ protected:
 
 public:
     EmptyBoolean(const VocabularyInfo& vocabulary, std::shared_ptr<const T> element)
-        : Boolean(vocabulary), m_element(element) {
+        : Boolean(vocabulary, element->get_is_static()), m_element(element) {
     }
 
     bool evaluate(const State& state) const override {

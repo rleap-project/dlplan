@@ -21,8 +21,8 @@ VocabularyInfo& VocabularyInfo::operator=(VocabularyInfo&& other) = default;
 
 VocabularyInfo::~VocabularyInfo() = default;
 
-const Predicate& VocabularyInfo::add_predicate(const std::string &predicate_name, int arity) {
-    Predicate predicate = Predicate(predicate_name, m_predicates.size(), arity);
+const Predicate& VocabularyInfo::add_predicate(const std::string &predicate_name, int arity, bool is_static) {
+    Predicate predicate = Predicate(predicate_name, m_predicates.size(), arity, is_static);
     auto result = m_predicate_name_to_predicate_idx.emplace(predicate_name, m_predicates.size());
     if (!result.second) {
         return m_predicates[result.first->second];

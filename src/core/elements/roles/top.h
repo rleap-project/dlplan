@@ -29,7 +29,7 @@ private:
 
 public:
     TopRole(const VocabularyInfo& vocabulary)
-    : Role(vocabulary) {
+    : Role(vocabulary, true) {
     }
 
     RoleDenotation evaluate(const State& state) const override {
