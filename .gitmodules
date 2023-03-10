@@ -1,3 +1,3 @@
-[submodule "libs/scorpion"]
-	path = libs/scorpion
-	url = https://github.com/drexlerd/scorpion.git
+[submodule "libs/downward-sse"]
+	path = libs/downward-sse
+	url = git@github.com:drexlerd/downward-sse.git

@@ -20,6 +20,7 @@ ExitCode StateSpaceGenerator::generate_state_space(
             << " " << domain_file
             << " " << instance_file
             << " --translate-options"
+            << " --dump-static-predicates"
             << " --dump-predicates"
             << " --dump-constants"
             << " --dump-static-atoms"

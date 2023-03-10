@@ -69,7 +69,7 @@ Don't forget to update environment variable `CPLUS_INCLUDE_PATH` and `LD_LIBRARY
 ### 3.2. Additional Compile Flags
 
 - DENABLE_TESTING:BOOL=TRUE enables compilation of tests
-- DBUILD_SCORPION:BOOL=TRUE enables compilation of scorpion for required for state space component.
+- DBUILD_SSE:BOOL=TRUE enables compilation of planner for state space exploration required in the state space component.
 - DPYTHON_EXECUTABLE:FILEPATH=/path/to/python to manually set path to python interpreter to install scorpion. The path can be obtained with
 ```console
 where python

@@ -14,7 +14,7 @@ add_custom_target(generator_delivery_instance ALL
 add_custom_target(generator_delivery_instance_large ALL
     COMMAND ${CMAKE_COMMAND} -E create_symlink "${CMAKE_CURRENT_SOURCE_DIR}/instance_4_2_29.pddl" "${CMAKE_BINARY_DIR}/tests/generator/delivery/instance_4_2_29.pddl")
 add_custom_target(generator_delivery_fd ALL
-    COMMAND ${CMAKE_COMMAND} -E create_symlink "${PROJECT_SOURCE_DIR}/libs/scorpion/fast-downward.py" "${CMAKE_BINARY_DIR}/tests/generator/delivery/fast-downward.py")
+    COMMAND ${CMAKE_COMMAND} -E create_symlink "${PROJECT_SOURCE_DIR}/libs/downward-sse/planners/downward-sse/fast-downward.py" "${CMAKE_BINARY_DIR}/tests/generator/delivery/fast-downward.py")
 
 target_link_libraries(generator_delivery_tests dlplancore dlplangenerator dlplanstatespace gtest_main)
 gtest_discover_tests(generator_delivery_tests)

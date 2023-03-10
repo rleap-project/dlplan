@@ -64,16 +64,16 @@ endif()
 
 ## Compile the scorpion planer
 # https://stackoverflow.com/questions/2937128/cmake-add-custom-command-not-being-run
-if (BUILD_SCORPION)
+if (BUILD_SSE)
     find_package(Python COMPONENTS Interpreter REQUIRED)
-    message("${PROJECT_SOURCE_DIR}/libs/scorpion/build.py")
+    message("${PROJECT_SOURCE_DIR}/libs/downward-sse/planners/downward-sse/build.py")
     add_custom_command(
-    OUTPUT compile_scorpion
-    COMMAND "${PROJECT_SOURCE_DIR}/libs/scorpion/build.py"
+    OUTPUT compile_sse
+    COMMAND "${PROJECT_SOURCE_DIR}/libs/downward-sse/planners/downward-sse/build.py"
     )
     add_custom_target(
-    scorpion
-    DEPENDS compile_scorpion
+    sse
+    DEPENDS compile_sse
     )
-    add_dependencies(dlplanstatespace scorpion)
+    add_dependencies(dlplanstatespace sse)
 endif()
