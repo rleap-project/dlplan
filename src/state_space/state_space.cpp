@@ -263,6 +263,22 @@ std::string StateSpace::to_dot(int verbosity_level) const {
         }
         layers[pair.second].push_back(pair.first);
     }
+    // add deadends in next layer
+    std::unordered_set<int> all_state_indices(get_state_indices_ref().begin(), get_state_indices_ref().end());
+    std::unordered_set<int> added_deadends;
+    for (int i = 1; i < layers.size(); ++i) {
+        for (const int s_idx : layers[i]) {
+            if (m_forward_successor_state_indices.count(s_idx) > 0) {
+                for (const int s_prime_idx : m_forward_successor_state_indices.at(s_idx)) {
+                    if (goal_distance_information.is_deadend(s_prime_idx) && added_deadends.count(s_prime_idx) == 0) {
+                        layers[i-1].push_back(s_prime_idx);
+                        added_deadends.insert(s_prime_idx);
+                    }
+                }
+            }
+        }
+    }
+    // print in reverse direction
     std::reverse(layers.begin(), layers.end());
 
     auto state_information = compute_state_information();
@@ -287,10 +303,12 @@ std::string StateSpace::to_dot(int verbosity_level) const {
         }
     }
     // 4. initial state and dangling edge
-    result << "Dangling [ label = \"\", style = invis ]\n"
-           << "{ rank = same; Dangling }\n"
-           << "Dangling -> s" << m_initial_state_index << "\n"
-           << "{ rank = same; s" << m_initial_state_index << "}\n";
+    if (all_state_indices.count(m_initial_state_index)) {
+        result << "Dangling [ label = \"\", style = invis ]\n"
+            << "{ rank = same; Dangling }\n"
+            << "Dangling -> s" << m_initial_state_index << "\n"
+            << "{ rank = same; s" << m_initial_state_index << "}\n";
+    }
     // 5. Group states with same distane together
     for (int distance = 1; distance < static_cast<int>(layers.size()); ++distance) {
         // group states together
