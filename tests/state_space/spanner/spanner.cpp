@@ -6,7 +6,7 @@ using namespace dlplan::core;
 using namespace dlplan::state_space;
 
 
-TEST(DLPTests, StateSpaceGripperTest) {
+TEST(DLPTests, StateSpannerGripperTest) {
     StateSpaceGenerator().generate_state_space("domain.pddl", "problem.pddl");
     auto state_space = StateSpaceReader().read();
     state_space.set_initial_state_index(-1);
