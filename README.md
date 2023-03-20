@@ -69,18 +69,12 @@ cmake --install build
 ### 3.2. Additional Compile Flags
 
 - DENABLE_TESTING:BOOL=TRUE enables compilation of tests
-- DPYTHON_EXECUTABLE:FILEPATH=/path/to/python to manually set path to python interpreter to install scorpion. The path can be obtained with
-```console
-where python
-```
 
 ### 3.3. Building the Python Interface
 
-At the moment we recommend building and installing the Python bindings directly into a virtual environment.
-
-You can do that by issuing `pip install .` from the project root, or `pip install -e .`
-
-if you prefer an _editable_ install because you're working on the library code.
+```console
+pip install dlplan
+```
 
 ## 4. Running the Examples
 
