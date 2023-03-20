@@ -8,11 +8,10 @@ execute_process(
         "${PYTHON_EXECUTABLE}" -c "import pybind11; print(pybind11.get_cmake_dir())"
         OUTPUT_VARIABLE _tmp_dir
         OUTPUT_STRIP_TRAILING_WHITESPACE COMMAND_ECHO STDOUT)
-list(APPEND CMAKE_PREFIX_PATH "${_tmp_dir}")
+# list(APPEND CMAKE_PREFIX_PATH "${_tmp_dir}")
 
 # Now we can find pybind11
 find_package(pybind11 CONFIG REQUIRED)
-
 pybind11_add_module(_dlplan MODULE)
 target_sources(_dlplan
     PRIVATE
@@ -34,8 +33,7 @@ target_link_libraries(_dlplan
         dlplanweisfeilerlehman)
 target_compile_definitions(_dlplan PUBLIC DLPLAN_VERSION_INFO="${DLPLAN_VERSION_INFO}")
 
-# This would copy the generated dynamic library into a given path, but
-# at the moment this logic is performed by the setup script
-#add_custom_command(TARGET _dlplan POST_BUILD
-#    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:_dlplan> "${CMAKE_CURRENT_SOURCE_DIR}/src/"
-#)
+# In case of moving the library (as done in the setup.py),
+# we need the library to find the component libraries in origin directory.
+set_target_properties(_dlplan PROPERTIES INSTALL_RPATH $ORIGIN)
+set_target_properties(_dlplan PROPERTIES BUILD_WITH_INSTALL_RPATH true)

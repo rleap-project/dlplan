@@ -7,7 +7,7 @@ from pathlib import Path
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
 
-__version__ = "0.0.2"
+__version__ = "0.1.0"
 HERE = Path(__file__).resolve().parent
 
 
@@ -41,15 +41,6 @@ class CMakeBuild(build_ext):
         ]
         build_args = []
         build_args += ["--target", ext.name]
-
-        # Set CMAKE_BUILD_PARALLEL_LEVEL to control the parallel build level
-        # across all generators.
-        if "CMAKE_BUILD_PARALLEL_LEVEL" not in os.environ:
-            # self.parallel is a Python 3 only way to set parallel jobs by hand
-            # using -j in the build_ext call, not supported by pip or PyPA-build.
-            if hasattr(self, "parallel") and self.parallel:
-                # CMake 3.12+ only.
-                build_args += ["-j{}".format(self.parallel)]
 
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
