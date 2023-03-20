@@ -10,15 +10,6 @@ using namespace dlplan::state_space;
 
 
 int main() {
-    /* Note: workspace must the be directory containing the binary in the build directory
-       because StateSpaceGenerator executes ./fast-downward.py
-       from current workspace and outputs state space data files into current workspace.
-       The motivation for this is that when we run experiments on a grid
-       we need to use separate output directories to not overwrite
-       state space data files of experiments running in other threads.
-       Hence, it is less error prone to create a symbolic link to the planner
-       and setting the workspace accordingly instead of passing an absolute path to the planner.
-    */
     // Generate and read state space files.
     StateSpaceGenerator().generate_state_space("domain.pddl", "instance_2_1_0.pddl");
     auto state_space_2_1_0 = StateSpaceReader().read(nullptr, 0);

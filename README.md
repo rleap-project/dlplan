@@ -44,32 +44,31 @@ by two-variable first order logic and hence, are also indistinguishable by less 
 
 ### 3.1. Building the C++ Interface
 
+Install requirements
+```console
+pip install pybind11 pybind11-global state_space_generator
+```
+
 Run the following from the project root to build the library.
 By default, the library compiles in `Debug` mode.
 
 ```console
-
-cmake -DCMAKE_INSTALL_PREFIX=/usr/local -S . -B build
-
+cmake -S . -B build
 cmake --build build -j4
-
 ```
 To build the library in `Release` mode, run
 ```console
-
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local/ -S . -B build
+cmake -DCMAKE_BUILD_TYPE=Release -S . -B build
 cmake --build build -j4
 ```
 To install the library, run
 ```console
 cmake --install build
 ```
-Don't forget to update environment variable `CPLUS_INCLUDE_PATH` and `LD_LIBRARY_PATH` if necessary.
 
 ### 3.2. Additional Compile Flags
 
 - DENABLE_TESTING:BOOL=TRUE enables compilation of tests
-- DBUILD_SSE:BOOL=TRUE enables compilation of planner for state space exploration required in the state space component.
 - DPYTHON_EXECUTABLE:FILEPATH=/path/to/python to manually set path to python interpreter to install scorpion. The path can be obtained with
 ```console
 where python

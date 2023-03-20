@@ -77,7 +77,6 @@ for task in suites.build_suite(BENCHMARKS_DIR, SUITE):
             run.add_resource("domain", task.domain_file, symlink=True)
             run.add_resource("problem", task.problem_file, symlink=True)
             run.add_resource("experiment_generator", "experiment_generator", symlink=True)
-            run.add_resource("planner", "fast-downward.py", symlink=True)
             # 'ff' binary has to be on the PATH.
             # We could also use exp.add_resource().
             run.add_command(

@@ -1,24 +1,7 @@
 import dlplan
-import os
-
-try:
-    os.symlink("../../../libs/scorpion/fast-downward.py", "fast-downward.py")
-except FileExistsError:
-    pass
 
 
 def main():
-    """
-    Note: workspace must the be directory containing this executable
-    because StateSpaceGenerator executes ./fast-downward.py
-    from current workspace and outputs state space data files into current workspace.
-    The motivation for this is that when we run experiments on a grid
-    we need to use separate output directories to not overwrite
-    state space data files of experiments running in other threads.
-    Hence, it is less error prone to create a symbolic link to the planner
-    and setting the workspace accordingly instead of passing an absolute path to the planner.
-    """
-
     # Generate and read state space files.
     dlplan.StateSpaceGenerator().generate_state_space("domain.pddl", "instance_2_1_0.pddl")
     state_space_2_1_0 = dlplan.StateSpaceReader().read(None, 0)

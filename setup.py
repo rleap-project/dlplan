@@ -36,7 +36,6 @@ class CMakeBuild(build_ext):
             f"-DDLPLAN_VERSION_INFO={__version__}",
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}",
             f"-DPYTHON_EXECUTABLE={sys.executable}",
-            f"-DBUILD_SSE:bool=false",
             f"-DENABLE_TESTING:bool=false",
             f"-DCMAKE_BUILD_TYPE={cfg}",  # not used on MSVC, but no harm
         ]
@@ -73,6 +72,7 @@ setup(
     url="https://github.com/rleap-project/dlplan",
     description="A library for using description logics features in planning",
     long_description="",
+    install_requires=["pybind11", "pybind11-global", "state_space_generator"],
     packages=['dlplan'],
     package_dir={"": "api/python/src"},
     ext_modules=[CMakeExtension("_dlplan")],

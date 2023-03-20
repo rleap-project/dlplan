@@ -13,7 +13,5 @@ add_custom_target(state_space_delivery_example_domain ALL
     COMMAND ${CMAKE_COMMAND} -E create_symlink "${CMAKE_CURRENT_SOURCE_DIR}/instance_2_1_0.pddl" "${CMAKE_BINARY_DIR}/examples/state_space/delivery/instance_2_1_0.pddl")
 add_custom_target(state_space_delivery_example_instance_2 ALL
     COMMAND ${CMAKE_COMMAND} -E create_symlink "${CMAKE_CURRENT_SOURCE_DIR}/instance_2_2_0.pddl" "${CMAKE_BINARY_DIR}/examples/state_space/delivery/instance_2_2_0.pddl")
-add_custom_target(state_space_delivery_example_fd ALL
-    COMMAND ${CMAKE_COMMAND} -E create_symlink "${PROJECT_SOURCE_DIR}/libs/downward-sse/planners/downward-sse/fast-downward.py" "${CMAKE_BINARY_DIR}/examples/state_space/delivery/fast-downward.py")
 
 target_link_libraries(state_space_delivery_example dlplancore dlplangenerator dlplanstatespace)
