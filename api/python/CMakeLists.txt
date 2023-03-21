@@ -35,5 +35,9 @@ target_compile_definitions(_dlplan PUBLIC DLPLAN_VERSION_INFO="${DLPLAN_VERSION_
 
 # In case of moving the library (as done in the setup.py),
 # we need the library to find the component libraries in origin directory.
-set_target_properties(_dlplan PROPERTIES INSTALL_RPATH $ORIGIN)
+if (UNIX)
+    set_target_properties(_dlplan PROPERTIES INSTALL_RPATH $ORIGIN)
+elseif(APPLE)
+    set_target_properties(_dlplan PROPERTIES INSTALL_RPATH @loader_path)
+endif (UNIX)
 set_target_properties(_dlplan PROPERTIES BUILD_WITH_INSTALL_RPATH true)
