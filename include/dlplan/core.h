@@ -51,9 +51,6 @@ namespace dlplan::core {
     using RoleDenotations = std::vector<RoleDenotation*>;
     using BooleanDenotations = std::vector<bool>;
     using NumericalDenotations = std::vector<int>;
-
-    using Booleans = std::vector<std::shared_ptr<const Boolean>>;
-    using Numericals = std::vector<std::shared_ptr<const Numerical>>;
 }
 
 

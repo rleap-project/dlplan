@@ -80,7 +80,6 @@ std::string Rule::compute_repr() const {
 
 std::string Rule::str() const {
     std::stringstream ss;
-    std::stringstream ss;
     ss << "(:rule (:conditions ";
     for (const auto& c : m_conditions) {
         ss << c->compute_repr();

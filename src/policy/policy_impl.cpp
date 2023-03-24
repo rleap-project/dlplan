@@ -12,13 +12,8 @@ namespace dlplan::policy {
 
 Policy::Policy() = default;
 
-Policy::Policy(
-    const std::set<std::shared_ptr<const core::Boolean>>& boolean_features,
-    const std::set<std::shared_ptr<const core::Numerical>>& numerical_features,
-    const std::set<std::shared_ptr<const Rule>>& rules)
-    : m_boolean_features(boolean_features),
-      m_numerical_features(numerical_features),
-      m_rules(rules) { }
+Policy::Policy(Rules&& rules)
+    : m_rules(move(rules)) { }
 
 Policy::Policy(const Policy& other) = default;
 
@@ -90,16 +85,6 @@ std::shared_ptr<const Rule> Policy::evaluate_effects_lazy(const core::State& sou
 std::string Policy::compute_repr() const {
     std::stringstream ss;
     ss << "(:policy\n";
-    ss << "(:boolean_features ";
-    for (const auto& b : m_boolean_features) {
-        ss << "\"" << b->compute_repr() << "\" ";
-    }
-    ss << ")\n";
-    ss << "(:numerical_features ";
-    for (const auto& n : m_numerical_features) {
-        ss << "\"" << n->compute_repr() << "\" ";
-    }
-    ss << ")\n";
     for (const auto& r : m_rules) {
         ss << r->compute_repr() << "\n";
     }
@@ -110,16 +95,7 @@ std::string Policy::compute_repr() const {
 std::string Policy::str() const {
     std::stringstream ss;
     ss << "(:policy\n";
-    ss << "(:boolean_features ";
-    for (const auto& b : m_boolean_features) {
-        ss << "\"" << b->compute_repr() << "\" ";
-    }
-    ss << ")\n";
-    ss << "(:numerical_features ";
-    for (const auto& n : m_numerical_features) {
-        ss << "\"" << n->compute_repr() << "\" ";
-    }
-    ss << ")\n";
+    // TODO: compute mapping of feature to index
     for (const auto& r : m_rules) {
         ss << r->str() << "\n";
     }
@@ -127,16 +103,16 @@ std::string Policy::str() const {
     return ss.str();
 }
 
+void Policy::set_index(int index) {
+    m_index = index;
+}
+
+int Policy::get_index() const {
+    return m_index;
+}
+
 std::set<std::shared_ptr<const Rule>> Policy::get_rules() const {
     return m_rules;
-}
-
-std::set<std::shared_ptr<const core::Boolean>> Policy::get_boolean_features() const {
-    return m_boolean_features;
-}
-
-std::set<std::shared_ptr<const core::Numerical>> Policy::get_numerical_features() const {
-    return m_numerical_features;
 }
 
 }

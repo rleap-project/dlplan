@@ -39,6 +39,7 @@ public:
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
 
     std::string compute_repr() const override;
+    std::string str() const override;
 
     std::shared_ptr<const BaseEffect> copy_to_builder(PolicyBuilder& policy_builder) const override;
 
@@ -58,6 +59,7 @@ public:
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
 
     std::string compute_repr() const override;
+    std::string str() const override;
 
     std::shared_ptr<const BaseEffect> copy_to_builder(PolicyBuilder& policy_builder) const override;
 };
@@ -70,6 +72,7 @@ public:
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
 
     std::string compute_repr() const override;
+    std::string str() const override;
 
     std::shared_ptr<const BaseEffect> copy_to_builder(PolicyBuilder& policy_builder) const override;
 };
@@ -82,6 +85,7 @@ public:
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
 
     std::string compute_repr() const override;
+    std::string str() const override;
 
     std::shared_ptr<const BaseEffect> copy_to_builder(PolicyBuilder& policy_builder) const override;
 };
@@ -94,6 +98,7 @@ public:
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
 
     std::string compute_repr() const override;
+    std::string str() const override;
 
     std::shared_ptr<const BaseEffect> copy_to_builder(PolicyBuilder& policy_builder) const override;
 };
@@ -106,6 +111,7 @@ public:
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
 
     std::string compute_repr() const override;
+    std::string str() const override;
 
     std::shared_ptr<const BaseEffect> copy_to_builder(PolicyBuilder& policy_builder) const override;
 };

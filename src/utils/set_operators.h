@@ -7,7 +7,7 @@
 
 
 namespace dlplan::utils {
-
+/*
 template<typename T>
 bool is_subset_eq(const std::unordered_set<T> &left, const std::unordered_set<T>& right)
 {
@@ -79,6 +79,32 @@ static std::vector<T> set_symmetric_difference(
     }
     symmetric_diff.shrink_to_fit();
     return symmetric_diff;
+}
+*/
+
+template<typename Container>
+bool is_subset_eq(const Container &l, const Container& r)
+{
+    for (const auto& e : l) {
+        if (!r.count(e)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+template<typename Container>
+Container set_difference(const Container& l, const Container& r) {
+    Container result;
+    std::set_difference(l.begin(), l.end(), r.begin(), r.end(), std::inserter(result, result.begin()));
+    return result;
+}
+
+template<typename Container>
+Container set_symmetric_difference(const Container& l, const Container& r) {
+    Container result;
+    std::set_symmetric_difference(l.begin(), l.end(), r.begin(), r.end(), std::inserter(result, result.begin()));
+    return result;
 }
 
 }

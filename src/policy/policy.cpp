@@ -29,10 +29,6 @@ std::shared_ptr<const core::BaseElement> BaseCondition::get_base_feature() const
     return m_base_feature;
 }
 
-std::string BaseCondition::str() const {
-    return compute_repr();
-}
-
 
 BaseEffect::BaseEffect(std::shared_ptr<const core::BaseElement> base_feature, int index)
     : m_base_feature(base_feature), m_index(index) { }
@@ -49,10 +45,6 @@ int BaseEffect::get_index() const {
 
 std::shared_ptr<const core::BaseElement> BaseEffect::get_base_feature() const {
     return m_base_feature;
-}
-
-std::string BaseEffect::str() const {
-    return compute_repr();
 }
 
 
@@ -164,8 +156,8 @@ PolicyReader& PolicyReader::operator=(PolicyReader&& other) {
 
 PolicyReader::~PolicyReader() = default;
 
-Policy PolicyReader::read(const std::string& data, core::SyntacticElementFactory& factory) const {
-    return m_pImpl->read(data, factory);
+Policy PolicyReader::read(const std::string& data, PolicyBuilder& builder, core::SyntacticElementFactory& factory) const {
+    return m_pImpl->read(data, builder, factory);
 }
 
 

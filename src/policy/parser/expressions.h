@@ -30,15 +30,15 @@ public:
     Expression& operator=(Expression&& other) = default;
     virtual ~Expression() = default;
 
-    virtual Policy parse_policy(PolicyBuilder&, core::SyntacticElementFactory&) const {
+    virtual std::shared_ptr<const Policy> parse_policy(PolicyBuilder&, core::SyntacticElementFactory&) const {
         throw std::runtime_error("Expression::parse_policy - cannot parse expression into policy.");
     }
 
-    virtual std::set<std::shared_ptr<const core::Boolean>> parse_boolean_features(PolicyBuilder&, core::SyntacticElementFactory&) const {
+    virtual std::vector<std::shared_ptr<const core::Boolean>> parse_boolean_features(PolicyBuilder&, core::SyntacticElementFactory&) const {
         throw std::runtime_error("Expression::parse_boolean_features - cannot parse expression into Boolean features.");
     }
 
-    virtual std::set<std::shared_ptr<const core::Numerical>> parse_numerical_features(PolicyBuilder&, core::SyntacticElementFactory&) const {
+    virtual std::vector<std::shared_ptr<const core::Numerical>> parse_numerical_features(PolicyBuilder&, core::SyntacticElementFactory&) const {
         throw std::runtime_error("Expression::parse_numerical_features - cannot parse expression into numerical features.");
     }
 
@@ -71,20 +71,21 @@ public:
     PolicyExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : Expression(name, std::move(children)) { }
 
-    Policy parse_policy(PolicyBuilder& builder, core::SyntacticElementFactory& factory) const override {
+    std::shared_ptr<const Policy> parse_policy(PolicyBuilder& builder, core::SyntacticElementFactory& factory) const override {
         // Basic error checking.
         if (m_children.size() < 3) {
             throw std::runtime_error("PolicyExpression::parse_policy - insufficient number of children.");
         }
         // Parse Boolean features.
-        std::set<std::shared_ptr<const core::Boolean>> boolean_features = m_children.at(1)->parse_boolean_features(builder, factory);
+        std::vector<std::shared_ptr<const core::Boolean>> boolean_features = m_children.at(1)->parse_boolean_features(builder, factory);
         // Parse numerical features.
-        std::set<std::shared_ptr<const core::Numerical>> numerical_features = m_children.at(2)->parse_numerical_features(builder, factory);
+        std::vector<std::shared_ptr<const core::Numerical>> numerical_features = m_children.at(2)->parse_numerical_features(builder, factory);
         // Parse rules.
+        std::set<std::shared_ptr<const Rule>> rules;
         for (size_t i = 3; i < m_children.size(); ++i) {
-            m_children.at(i)->parse_rule(builder, boolean_features, numerical_features);
+            rules.insert(m_children.at(i)->parse_rule(builder, boolean_features, numerical_features));
         }
-        return builder.get_result();
+        return builder.add_policy(move(rules));
     }
 };
 
@@ -129,8 +130,8 @@ public:
         if (m_children.size() != 3) {
             throw std::runtime_error("RuleExpression::parse_rule - incorrect number of children. Should be 3.");
         }
-        std::vector<std::shared_ptr<const BaseCondition>> conditions = m_children.at(1)->parse_conditions(builder, boolean_features, numerical_features);
-        std::vector<std::shared_ptr<const BaseEffect>> effects = m_children.at(2)->parse_effects(builder, boolean_features, numerical_features);
+        std::set<std::shared_ptr<const BaseCondition>> conditions = m_children.at(1)->parse_conditions(builder, boolean_features, numerical_features);
+        std::set<std::shared_ptr<const BaseEffect>> effects = m_children.at(2)->parse_effects(builder, boolean_features, numerical_features);
         return builder.add_rule(std::move(conditions), std::move(effects));
     }
 };
@@ -140,15 +141,15 @@ public:
     ConditionsExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : Expression(name, std::move(children)) { }
 
-    std::vector<std::shared_ptr<const BaseCondition>> parse_conditions(PolicyBuilder& builder, const std::vector<std::shared_ptr<const core::Boolean>>& boolean_features, const std::vector<std::shared_ptr<const core::Numerical>>& numerical_features) const override {
+    std::set<std::shared_ptr<const BaseCondition>> parse_conditions(PolicyBuilder& builder, const std::vector<std::shared_ptr<const core::Boolean>>& boolean_features, const std::vector<std::shared_ptr<const core::Numerical>>& numerical_features) const override {
         if (m_children.size() < 1) {
             throw std::runtime_error("RuleExpression::parse_conditions - incorrect number of children. Should be greater than 0.");
         }
-        std::unordered_set<std::shared_ptr<const BaseCondition>> conditions;
+        std::set<std::shared_ptr<const BaseCondition>> conditions;
         for (size_t i = 1; i < m_children.size(); ++i) {
             conditions.insert(m_children.at(i)->parse_condition(builder, boolean_features, numerical_features));
         }
-        return std::vector<std::shared_ptr<const BaseCondition>>(conditions.begin(), conditions.end());
+        return conditions;
     }
 };
 
@@ -157,15 +158,15 @@ public:
     EffectsExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : Expression(name, std::move(children)) { }
 
-    std::vector<std::shared_ptr<const BaseEffect>> parse_effects(PolicyBuilder& builder, const std::vector<std::shared_ptr<const core::Boolean>>& boolean_features, const std::vector<std::shared_ptr<const core::Numerical>>& numerical_features) const override {
+    std::set<std::shared_ptr<const BaseEffect>> parse_effects(PolicyBuilder& builder, const std::vector<std::shared_ptr<const core::Boolean>>& boolean_features, const std::vector<std::shared_ptr<const core::Numerical>>& numerical_features) const override {
         if (m_children.size() < 1) {
             throw std::runtime_error("RuleExpression::parse_effects - incorrect number of children. Should be greater than 0.");
         }
-        std::unordered_set<std::shared_ptr<const BaseEffect>> effects;
+        std::set<std::shared_ptr<const BaseEffect>> effects;
         for (size_t i = 1; i < m_children.size(); ++i) {
             effects.insert(m_children.at(i)->parse_effect(builder, boolean_features, numerical_features));
         }
-        return std::vector<std::shared_ptr<const BaseEffect>>(effects.begin(), effects.end());
+        return effects;
     }
 };
 

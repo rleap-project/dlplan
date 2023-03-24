@@ -17,12 +17,12 @@ class BaseCondition;
 class BaseEffect;
 class Rule;
 class Policy;
-
+class PolicyBuilder;
 
 
 class PolicyReaderImpl {
 public:
-    Policy read(const std::string& data, core::SyntacticElementFactory& factory) const;
+    Policy read(const std::string& data, PolicyBuilder& builder, core::SyntacticElementFactory& factory) const;
 };
 
 }

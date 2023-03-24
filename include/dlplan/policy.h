@@ -14,6 +14,10 @@
 /**
  * Forward declarations and usings
  */
+namespace dlplan::core {
+    using Booleans = std::vector<std::shared_ptr<const Boolean>>;
+    using Numericals = std::vector<std::shared_ptr<const Numerical>>;
+}
 namespace dlplan::policy {
     class PolicyBuilder;
     class PolicyBuilderImpl;
@@ -23,11 +27,9 @@ namespace dlplan::policy {
     class BaseEffect;
     class Rule;
 
-    using Conditions = std::vector<std::shared_ptr<const BaseCondition>>;
-    using Effects = std::vector<std::shared_ptr<const BaseEffect>>;
-
-    using Rules = std::vector<std::shared_ptr<const Rule>>;
-    using RulesSet = std::unordered_set<std::shared_ptr<const Rule>>;
+    using Conditions = std::set<std::shared_ptr<const BaseCondition>>;
+    using Effects = std::set<std::shared_ptr<const BaseEffect>>;
+    using Rules = std::set<std::shared_ptr<const Rule>>;
 }
 
 
@@ -55,8 +57,7 @@ public:
     virtual bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const = 0;
 
     virtual std::string compute_repr() const = 0;
-
-    std::string str() const;
+    virtual std::string str() const = 0;
 
     /**
      * Adds the condition to the policy builder and returns it
@@ -99,8 +100,7 @@ public:
     virtual bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const = 0;
 
     virtual std::string compute_repr() const = 0;
-
-    std::string str() const;
+    virtual std::string str() const = 0;
 
     /**
      * Adds the effect to the policy builder and returns it
@@ -127,13 +127,13 @@ public:
  */
 class Rule : public utils::Cachable {
 private:
-    std::set<std::shared_ptr<const BaseCondition>> m_conditions;
-    std::set<std::shared_ptr<const BaseEffect>> m_effects;
+    Conditions m_conditions;
+    Effects m_effects;
     int m_index;
 
 private:
-    Rule(std::set<std::shared_ptr<const BaseCondition>>&& conditions,
-        std::set<std::shared_ptr<const BaseEffect>>&& effects,
+    Rule(Conditions&& conditions,
+        Effects&& effects,
         int index=-1);
     friend class PolicyBuilderImpl;
 
@@ -182,16 +182,13 @@ public:
 /**
  * A policy is a set of rules over Boolean and numerical features.
  */
-class Policy {
+class Policy : public utils::Cachable {
 private:
-    std::set<std::shared_ptr<const core::Boolean>> m_boolean_features;
-    std::set<std::shared_ptr<const core::Numerical>> m_numerical_features;
-    std::set<std::shared_ptr<const Rule>> m_rules;
+    Rules m_rules;
+    int m_index;
 
 private:
-    Policy(const std::set<std::shared_ptr<const core::Boolean>>& boolean_features,
-           const std::set<std::shared_ptr<const core::Numerical>>& numerical_features,
-           const std::set<std::shared_ptr<const Rule>>& rules);
+    explicit Policy(Rules&& rules);
     friend class PolicyBuilderImpl;
 
 public:
@@ -220,9 +217,15 @@ public:
 
     std::string str() const;
 
+    /**
+     * Setters.
+     */
+    void set_index(int index);
+    /**
+     * Getters.
+     */
+    int get_index() const;
     std::set<std::shared_ptr<const Rule>> get_rules() const;
-    std::set<std::shared_ptr<const core::Boolean>> get_boolean_features() const;
-    std::set<std::shared_ptr<const core::Numerical>> get_numerical_features() const;
 };
 
 
@@ -305,7 +308,7 @@ public:
     PolicyReader& operator=(PolicyReader&& other);
     ~PolicyReader();
 
-    Policy read(const std::string& data, core::SyntacticElementFactory& factory) const;
+    Policy read(const std::string& data, PolicyBuilder& builder, core::SyntacticElementFactory& factory) const;
 };
 
 /**
