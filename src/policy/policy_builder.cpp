@@ -64,6 +64,7 @@ std::shared_ptr<const Rule> PolicyBuilderImpl::add_rule(
 
 std::shared_ptr<const Policy> PolicyBuilderImpl::add_policy(
     std::set<std::shared_ptr<const Rule>>&& rules) {
+    // TODO: add assertion that rules in builder
     return m_caches.m_policy_cache->insert(std::unique_ptr<Policy>(new Policy(move(rules)))).first;
 }
 

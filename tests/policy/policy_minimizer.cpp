@@ -42,18 +42,14 @@ TEST(DLPTests, StructuralMinimization) {
 TEST(DLPTests, StructuralMinimization2) {
     std::string policy_textual =
         "(:policy\n"
-        "(:boolean_features \"b_empty(r_primitive(at,0,1))\")\n"
-        "(:numerical_features )\n"
-        "(:rule (:conditions (:c_b_pos 0) ) (:effects (:e_b_pos 0) ))\n"
-        "(:rule (:conditions (:c_b_neg 0) ) (:effects (:e_b_pos 0) ))\n"
-        "(:rule (:conditions (:c_b_pos 0) ) (:effects (:e_b_neg 0) ))\n"
+        "(:rule (:conditions (:c_b_pos \"b_empty(r_primitive(at,0,1))\") ) (:effects (:e_b_pos \"b_empty(r_primitive(at,0,1))\") ))\n"
+        "(:rule (:conditions (:c_b_neg \"b_empty(r_primitive(at,0,1))\") ) (:effects (:e_b_pos \"b_empty(r_primitive(at,0,1))\") ))\n"
+        "(:rule (:conditions (:c_b_pos \"b_empty(r_primitive(at,0,1))\") ) (:effects (:e_b_neg \"b_empty(r_primitive(at,0,1))\") ))\n"
         ")";
     std::string minimized_policy_textual =
         "(:policy\n"
-        "(:boolean_features \"b_empty(r_primitive(at,0,1))\")\n"
-        "(:numerical_features )\n"
-        "(:rule (:conditions (:c_b_pos 0)) (:effects ))\n"
-        "(:rule (:conditions ) (:effects (:e_b_pos 0)))\n"
+        "(:rule (:conditions ) (:effects (:e_b_pos \"b_empty(r_primitive(at,0,1))\")))\n"
+        "(:rule (:conditions (:c_b_pos \"b_empty(r_primitive(at,0,1))\")) (:effects ))\n"
         ")";
 
     auto vocabulary_info = construct_vocabulary_info();
