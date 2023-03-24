@@ -127,13 +127,13 @@ public:
  */
 class Rule : public utils::Cachable {
 private:
-    std::vector<std::shared_ptr<const BaseCondition>> m_conditions;
-    std::vector<std::shared_ptr<const BaseEffect>> m_effects;
+    std::set<std::shared_ptr<const BaseCondition>> m_conditions;
+    std::set<std::shared_ptr<const BaseEffect>> m_effects;
     int m_index;
 
 private:
-    Rule(std::vector<std::shared_ptr<const BaseCondition>>&& conditions,
-        std::vector<std::shared_ptr<const BaseEffect>>&& effects,
+    Rule(std::set<std::shared_ptr<const BaseCondition>>&& conditions,
+        std::set<std::shared_ptr<const BaseEffect>>&& effects,
         int index=-1);
     friend class PolicyBuilderImpl;
 
@@ -174,8 +174,8 @@ public:
      * Getters.
      */
     int get_index() const;
-    std::vector<std::shared_ptr<const BaseCondition>> get_conditions() const;
-    std::vector<std::shared_ptr<const BaseEffect>> get_effects() const;
+    std::set<std::shared_ptr<const BaseCondition>> get_conditions() const;
+    std::set<std::shared_ptr<const BaseEffect>> get_effects() const;
 };
 
 

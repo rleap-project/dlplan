@@ -30,15 +30,15 @@ public:
     Expression& operator=(Expression&& other) = default;
     virtual ~Expression() = default;
 
-    virtual Policy parse_general_policy(core::SyntacticElementFactory&) const {
-        throw std::runtime_error("Expression::parse_general_policy - cannot parse expression into general policy.");
+    virtual Policy parse_policy(PolicyBuilder&, core::SyntacticElementFactory&) const {
+        throw std::runtime_error("Expression::parse_policy - cannot parse expression into policy.");
     }
 
-    virtual std::vector<std::shared_ptr<const core::Boolean>> parse_boolean_features(PolicyBuilder&, core::SyntacticElementFactory&) const {
+    virtual std::set<std::shared_ptr<const core::Boolean>> parse_boolean_features(PolicyBuilder&, core::SyntacticElementFactory&) const {
         throw std::runtime_error("Expression::parse_boolean_features - cannot parse expression into Boolean features.");
     }
 
-    virtual std::vector<std::shared_ptr<const core::Numerical>> parse_numerical_features(PolicyBuilder&, core::SyntacticElementFactory&) const {
+    virtual std::set<std::shared_ptr<const core::Numerical>> parse_numerical_features(PolicyBuilder&, core::SyntacticElementFactory&) const {
         throw std::runtime_error("Expression::parse_numerical_features - cannot parse expression into numerical features.");
     }
 
@@ -46,11 +46,11 @@ public:
         throw std::runtime_error("Expression::parse_rule - cannot parse expression into rule.");
     }
 
-    virtual std::vector<std::shared_ptr<const BaseCondition>> parse_conditions(PolicyBuilder&, const std::vector<std::shared_ptr<const core::Boolean>>&, const std::vector<std::shared_ptr<const core::Numerical>>&) const {
+    virtual std::set<std::shared_ptr<const BaseCondition>> parse_conditions(PolicyBuilder&, const std::vector<std::shared_ptr<const core::Boolean>>&, const std::vector<std::shared_ptr<const core::Numerical>>&) const {
         throw std::runtime_error("Expression::parse_conditions - cannot parse expression into conditions.");
     }
 
-    virtual std::vector<std::shared_ptr<const BaseEffect>> parse_effects(PolicyBuilder&, const std::vector<std::shared_ptr<const core::Boolean>>&, const std::vector<std::shared_ptr<const core::Numerical>>&) const {
+    virtual std::set<std::shared_ptr<const BaseEffect>> parse_effects(PolicyBuilder&, const std::vector<std::shared_ptr<const core::Boolean>>&, const std::vector<std::shared_ptr<const core::Numerical>>&) const {
         throw std::runtime_error("Expression::parse_effects - cannot parse expression into effects.");
     }
 
@@ -71,16 +71,15 @@ public:
     PolicyExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : Expression(name, std::move(children)) { }
 
-    Policy parse_general_policy(core::SyntacticElementFactory& factory) const override {
-        PolicyBuilder builder;
+    Policy parse_policy(PolicyBuilder& builder, core::SyntacticElementFactory& factory) const override {
         // Basic error checking.
         if (m_children.size() < 3) {
-            throw std::runtime_error("PolicyExpression::parse_general_policy - insufficient number of children.");
+            throw std::runtime_error("PolicyExpression::parse_policy - insufficient number of children.");
         }
         // Parse Boolean features.
-        std::vector<std::shared_ptr<const core::Boolean>> boolean_features = m_children.at(1)->parse_boolean_features(builder, factory);
+        std::set<std::shared_ptr<const core::Boolean>> boolean_features = m_children.at(1)->parse_boolean_features(builder, factory);
         // Parse numerical features.
-        std::vector<std::shared_ptr<const core::Numerical>> numerical_features = m_children.at(2)->parse_numerical_features(builder, factory);
+        std::set<std::shared_ptr<const core::Numerical>> numerical_features = m_children.at(2)->parse_numerical_features(builder, factory);
         // Parse rules.
         for (size_t i = 3; i < m_children.size(); ++i) {
             m_children.at(i)->parse_rule(builder, boolean_features, numerical_features);

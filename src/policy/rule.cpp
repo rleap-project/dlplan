@@ -27,8 +27,8 @@ static std::vector<pT> sort_by_feature_index_then_repr(const std::vector<pT>& se
 }
 
 Rule::Rule(
-    std::vector<std::shared_ptr<const BaseCondition>>&& conditions,
-    std::vector<std::shared_ptr<const BaseEffect>>&& effects,
+    std::set<std::shared_ptr<const BaseCondition>>&& conditions,
+    std::set<std::shared_ptr<const BaseEffect>>&& effects,
     int index)
     : m_conditions(std::move(conditions)), m_effects(std::move(effects)), m_index(index) { }
 
@@ -67,16 +67,12 @@ std::string Rule::compute_repr() const {
     ss << "(:rule (:conditions ";
     for (const auto& c : m_conditions) {
         ss << c->compute_repr();
-        if (c != m_conditions.back()) {
-            ss << " ";
-        }
+        ss << " ";
     }
     ss << ") (:effects ";
     for (const auto& e : m_effects) {
         ss << e->compute_repr();
-        if (e != m_effects.back()) {
-            ss << " ";
-        }
+        ss << " ";
     }
     ss << "))";
     return ss.str();
@@ -84,38 +80,29 @@ std::string Rule::compute_repr() const {
 
 std::string Rule::str() const {
     std::stringstream ss;
+    std::stringstream ss;
     ss << "(:rule (:conditions ";
-    // canonical representation of conditions
-    const auto sorted_conditions = sort_by_feature_index_then_repr(m_conditions);
-    for (const auto& c : sorted_conditions) {
+    for (const auto& c : m_conditions) {
         ss << c->compute_repr();
-        if (c != sorted_conditions.back()) {
-            ss << " ";
-        }
+        ss << " ";
     }
     ss << ") (:effects ";
-    // canonical representation of effects
-    const auto sorted_effects = sort_by_feature_index_then_repr(m_effects);
-    for (const auto& e : sorted_effects) {
+    for (const auto& e : m_effects) {
         ss << e->compute_repr();
-        if (e != sorted_effects.back()) {
-            ss << " ";
-        }
+        ss << " ";
     }
     ss << "))";
     return ss.str();
 }
 
 std::shared_ptr<const Rule> Rule::copy_to_builder(PolicyBuilder& policy_builder) const {
-    std::vector<std::shared_ptr<const BaseCondition>> conditions;
-    conditions.reserve(m_conditions.size());
+    std::set<std::shared_ptr<const BaseCondition>> conditions;
     for (const auto& condition : m_conditions) {
-        conditions.push_back(condition->copy_to_builder(policy_builder));
+        conditions.insert(condition->copy_to_builder(policy_builder));
     }
-    std::vector<std::shared_ptr<const BaseEffect>> effects;
-    effects.reserve(m_effects.size());
+    std::set<std::shared_ptr<const BaseEffect>> effects;
     for (const auto& effect : m_effects) {
-        effects.push_back(effect->copy_to_builder(policy_builder));
+        effects.insert(effect->copy_to_builder(policy_builder));
     }
     return policy_builder.add_rule(std::move(conditions), std::move(effects));
 }
@@ -128,11 +115,11 @@ int Rule::get_index() const {
     return m_index;
 }
 
-std::vector<std::shared_ptr<const BaseCondition>> Rule::get_conditions() const {
+std::set<std::shared_ptr<const BaseCondition>> Rule::get_conditions() const {
     return m_conditions;
 }
 
-std::vector<std::shared_ptr<const BaseEffect>> Rule::get_effects() const {
+std::set<std::shared_ptr<const BaseEffect>> Rule::get_effects() const {
     return m_effects;
 }
 
