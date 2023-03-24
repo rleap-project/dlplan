@@ -13,9 +13,9 @@ namespace dlplan::policy {
 Policy::Policy() = default;
 
 Policy::Policy(
-    const std::vector<std::shared_ptr<const core::Boolean>>& boolean_features,
-    const std::vector<std::shared_ptr<const core::Numerical>>& numerical_features,
-    const std::vector<std::shared_ptr<const Rule>>& rules)
+    const std::set<std::shared_ptr<const core::Boolean>>& boolean_features,
+    const std::set<std::shared_ptr<const core::Numerical>>& numerical_features,
+    const std::set<std::shared_ptr<const Rule>>& rules)
     : m_boolean_features(boolean_features),
       m_numerical_features(numerical_features),
       m_rules(rules) { }
@@ -92,14 +92,12 @@ std::string Policy::compute_repr() const {
     ss << "(:policy\n";
     ss << "(:boolean_features ";
     for (const auto& b : m_boolean_features) {
-        ss << "\"" << b->compute_repr() << "\"";
-        if (b != m_boolean_features.back()) ss << " ";
+        ss << "\"" << b->compute_repr() << "\" ";
     }
     ss << ")\n";
     ss << "(:numerical_features ";
     for (const auto& n : m_numerical_features) {
-        ss << "\"" << n->compute_repr() << "\"";
-        if (n != m_numerical_features.back()) ss << " ";
+        ss << "\"" << n->compute_repr() << "\" ";
     }
     ss << ")\n";
     for (const auto& r : m_rules) {
@@ -114,14 +112,12 @@ std::string Policy::str() const {
     ss << "(:policy\n";
     ss << "(:boolean_features ";
     for (const auto& b : m_boolean_features) {
-        ss << "\"" << b->compute_repr() << "\"";
-        if (b != m_boolean_features.back()) ss << " ";
+        ss << "\"" << b->compute_repr() << "\" ";
     }
     ss << ")\n";
     ss << "(:numerical_features ";
     for (const auto& n : m_numerical_features) {
-        ss << "\"" << n->compute_repr() << "\"";
-        if (n != m_numerical_features.back()) ss << " ";
+        ss << "\"" << n->compute_repr() << "\" ";
     }
     ss << ")\n";
     for (const auto& r : m_rules) {
@@ -131,15 +127,15 @@ std::string Policy::str() const {
     return ss.str();
 }
 
-std::vector<std::shared_ptr<const Rule>> Policy::get_rules() const {
+std::set<std::shared_ptr<const Rule>> Policy::get_rules() const {
     return m_rules;
 }
 
-std::vector<std::shared_ptr<const core::Boolean>> Policy::get_boolean_features() const {
+std::set<std::shared_ptr<const core::Boolean>> Policy::get_boolean_features() const {
     return m_boolean_features;
 }
 
-std::vector<std::shared_ptr<const core::Numerical>> Policy::get_numerical_features() const {
+std::set<std::shared_ptr<const core::Numerical>> Policy::get_numerical_features() const {
     return m_numerical_features;
 }
 

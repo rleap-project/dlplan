@@ -16,13 +16,15 @@ struct Caches {
     std::shared_ptr<utils::ReferenceCountedObjectCache<std::string, BaseCondition>> m_condition_cache;
     std::shared_ptr<utils::ReferenceCountedObjectCache<std::string, BaseEffect>> m_effect_cache;
     std::shared_ptr<utils::ReferenceCountedObjectCache<std::string, Rule>> m_rule_cache;
+    std::shared_ptr<utils::ReferenceCountedObjectCache<std::string, Policy>> m_policy_cache;
 
     Caches()
         : m_boolean_cache(std::make_shared<utils::ReferenceCountedObjectCache<std::string, core::Boolean>>()),
           m_numerical_cache(std::make_shared<utils::ReferenceCountedObjectCache<std::string, core::Numerical>>()),
           m_condition_cache(std::make_shared<utils::ReferenceCountedObjectCache<std::string, BaseCondition>>()),
           m_effect_cache(std::make_shared<utils::ReferenceCountedObjectCache<std::string, BaseEffect>>()),
-          m_rule_cache(std::make_shared<utils::ReferenceCountedObjectCache<std::string, Rule>>()) { }
+          m_rule_cache(std::make_shared<utils::ReferenceCountedObjectCache<std::string, Rule>>()),
+          m_policy_cache(std::make_shared<utils::ReferenceCountedObjectCache<std::string, Policy>>()) { }
 };
 
 

@@ -5,7 +5,7 @@
 
 #include <memory>
 #include <vector>
-
+#include <set>
 
 namespace dlplan {
 namespace core {
@@ -23,12 +23,6 @@ class PolicyMinimizer;
 class PolicyBuilderImpl {
 private:
     Caches m_caches;
-
-    core::Booleans m_boolean_features;
-    core::Numericals m_numerical_features;
-
-    Rules m_rules;
-
     friend class PolicyMinimizer;
 
 public:
@@ -47,10 +41,11 @@ public:
     std::shared_ptr<const BaseEffect> add_bot_effect(std::shared_ptr<const core::Numerical> n);
 
     std::shared_ptr<const Rule> add_rule(
-        Conditions&& conditions,
-        Effects&& effects);
+        std::set<std::shared_ptr<const BaseCondition>>&& conditions,
+        std::set<std::shared_ptr<const BaseEffect>>&& effects);
 
-    Policy get_result();
+    std::shared_ptr<const Policy> add_policy(
+        std::set<std::shared_ptr<const Rule>>&& rules);
 };
 
 }

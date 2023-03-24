@@ -6,6 +6,7 @@
 
 #include <unordered_set>
 #include <memory>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -105,6 +106,7 @@ public:
      * Adds the effect to the policy builder and returns it
      */
     virtual std::shared_ptr<const BaseEffect> copy_to_builder(PolicyBuilder& policy_builder) const = 0;
+    //virtual bool is_complementary_effect(const BaseEffect& other) const = 0;
 
     /**
      * Setters.
@@ -182,14 +184,14 @@ public:
  */
 class Policy {
 private:
-    std::vector<std::shared_ptr<const core::Boolean>> m_boolean_features;
-    std::vector<std::shared_ptr<const core::Numerical>> m_numerical_features;
-    std::vector<std::shared_ptr<const Rule>> m_rules;
+    std::set<std::shared_ptr<const core::Boolean>> m_boolean_features;
+    std::set<std::shared_ptr<const core::Numerical>> m_numerical_features;
+    std::set<std::shared_ptr<const Rule>> m_rules;
 
 private:
-    Policy(const std::vector<std::shared_ptr<const core::Boolean>>& boolean_features,
-           const std::vector<std::shared_ptr<const core::Numerical>>& numerical_features,
-           const std::vector<std::shared_ptr<const Rule>>& rules);
+    Policy(const std::set<std::shared_ptr<const core::Boolean>>& boolean_features,
+           const std::set<std::shared_ptr<const core::Numerical>>& numerical_features,
+           const std::set<std::shared_ptr<const Rule>>& rules);
     friend class PolicyBuilderImpl;
 
 public:
@@ -218,9 +220,9 @@ public:
 
     std::string str() const;
 
-    std::vector<std::shared_ptr<const Rule>> get_rules() const;
-    std::vector<std::shared_ptr<const core::Boolean>> get_boolean_features() const;
-    std::vector<std::shared_ptr<const core::Numerical>> get_numerical_features() const;
+    std::set<std::shared_ptr<const Rule>> get_rules() const;
+    std::set<std::shared_ptr<const core::Boolean>> get_boolean_features() const;
+    std::set<std::shared_ptr<const core::Numerical>> get_numerical_features() const;
 };
 
 
@@ -237,13 +239,13 @@ public:
     ~PolicyBuilder();
 
     /**
-     * Uniquely adds features.
+     * Uniquely adds a feature and returns it..
      */
     std::shared_ptr<const core::Boolean> add_boolean_feature(core::Boolean b);
     std::shared_ptr<const core::Numerical> add_numerical_feature(core::Numerical n);
 
     /**
-     * Uniquely adds a condition (resp. effect) to the policy and returns it.
+     * Uniquely adds a condition (resp. effect) and returns it.
      */
     std::shared_ptr<const BaseCondition> add_pos_condition(std::shared_ptr<const core::Boolean> b);
     std::shared_ptr<const BaseCondition> add_neg_condition(std::shared_ptr<const core::Boolean> b);
@@ -257,18 +259,17 @@ public:
     std::shared_ptr<const BaseEffect> add_bot_effect(std::shared_ptr<const core::Numerical> n);
 
     /**
-     * Uniquely adds a rule to the policy and returns it.
+     * Uniquely adds a rule and returns it.
      */
     std::shared_ptr<const Rule> add_rule(
-        std::vector<std::shared_ptr<const BaseCondition>>&& conditions,
-        std::vector<std::shared_ptr<const BaseEffect>>&& effects);
+        std::set<std::shared_ptr<const BaseCondition>>&& conditions,
+        std::set<std::shared_ptr<const BaseEffect>>&& effects);
 
     /**
-     * TODO: - sort features by their runtime complexity.
-     *       - sort rules by sum of runtime complexities of underlying features.
-     *       - compute invariants
+     * Uniquely adds a policy and returns it.
      */
-    Policy get_result();
+    std::shared_ptr<const Policy> add_policy(
+        std::set<std::shared_ptr<const Rule>>&& rules);
 };
 
 
