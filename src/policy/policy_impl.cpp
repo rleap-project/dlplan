@@ -94,8 +94,23 @@ std::string Policy::compute_repr() const {
 
 std::string Policy::str() const {
     std::stringstream ss;
+    PolicyBuilder builder;
     ss << "(:policy\n";
-    // TODO: compute mapping of feature to index
+    copy_to_builder(builder);
+    const auto booleans = builder.get_booleans();
+    ss << "(:boolean_features ";
+    for (const auto& boolean : booleans) {
+        ss << "\"" << boolean->compute_repr() << "\"";
+        if (boolean != *booleans.rbegin()) ss << " ";
+    }
+    ss << ")\n";
+    const auto numericals = builder.get_numericals();
+    ss << "(:numerical_features ";
+    for (const auto& numerical : numericals) {
+        ss << "\"" << numerical->compute_repr() << "\"";
+        if (numerical != *numericals.rbegin()) ss << " ";
+    }
+    ss << ")\n";
     for (const auto& r : m_rules) {
         ss << r->str() << "\n";
     }

@@ -65,12 +65,12 @@ std::string Rule::str() const {
     std::stringstream ss;
     ss << "(:rule (:conditions ";
     for (const auto& c : m_conditions) {
-        ss << c->compute_repr();
+        ss << c->str();
         ss << " ";
     }
     ss << ") (:effects ";
     for (const auto& e : m_effects) {
-        ss << e->compute_repr();
+        ss << e->str();
         ss << " ";
     }
     ss << "))";

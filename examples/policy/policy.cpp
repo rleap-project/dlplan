@@ -60,7 +60,7 @@ int main() {
 
     // Write policy to file.
     std::cout << "Write policy:" << std::endl;
-    std::cout << policy.compute_repr() << std::endl << std::endl;
+    std::cout << policy.str() << std::endl << std::endl;
     std::ofstream ofs;
     ofs.open("test.txt", std::ofstream::out);
     ofs << PolicyWriter().write(policy);
@@ -76,5 +76,6 @@ int main() {
     std::cout << "Read policy:" << std::endl;
     std::cout << policy_in.compute_repr() << std::endl << std::endl;
 
+    std::cout << policy_in.str() << std::endl << std::endl;
     return 0;
 }

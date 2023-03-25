@@ -10,6 +10,8 @@
 namespace dlplan::policy::parser {
 
 std::unordered_map<std::string, EXPRESSION_TYPE> ExpressionFactory::m_element_name_to_expression_type = {
+    {":boolean_features", BOOLEAN_FEATURES},
+    {":numerical_features", NUMERICAL_FEATURES},
     {":policy", POLICY },
     {":rule", RULE},
     {":conditions", CONDITIONS},
@@ -54,6 +56,12 @@ Expression_Ptr ExpressionFactory::make_expression(const std::string &name, std::
             }
             case EFFECTS: {
                 return std::make_unique<EffectsExpression>(EffectsExpression(name, std::move(children)));
+            }
+            case BOOLEAN_FEATURES: {
+                return std::make_unique<BooleansExpression>(BooleansExpression(name, std::move(children)));
+            }
+            case NUMERICAL_FEATURES: {
+                return std::make_unique<NumericalsExpression>(NumericalsExpression(name, std::move(children)));
             }
             case C_B_POS: {
                 return std::make_unique<PositiveBooleanConditionExpression>(PositiveBooleanConditionExpression(name, std::move(children)));

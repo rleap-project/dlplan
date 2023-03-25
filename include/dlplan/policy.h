@@ -58,9 +58,6 @@ public:
     virtual bool evaluate(const core::State& source_state) const = 0;
     virtual bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const = 0;
 
-    /**
-     * Returns parseable string representation
-     */
     virtual std::string compute_repr() const = 0;
 
     virtual std::string str() const = 0;
@@ -104,9 +101,6 @@ public:
     virtual bool evaluate(const core::State& source_state, const core::State& target_state) const = 0;
     virtual bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const = 0;
 
-    /**
-     * Returns parseable string representation
-     */
     virtual std::string compute_repr() const = 0;
 
     virtual std::string str() const = 0;
@@ -157,9 +151,6 @@ public:
     bool evaluate_effects(const core::State& source_state, const core::State& target_state) const;
     bool evaluate_effects(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const;
 
-    /**
-     * Returns parseable string representation
-     */
     std::string compute_repr() const;
 
     std::string str() const;
@@ -217,11 +208,11 @@ public:
     std::shared_ptr<const Rule> evaluate_effects_lazy(const core::State& source_state, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules) const;
     std::shared_ptr<const Rule> evaluate_effects_lazy(const core::State& source_state, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules, core::DenotationsCaches& caches) const;
 
+    std::string compute_repr() const;
+
     /**
      * Returns parseable string representation
      */
-    std::string compute_repr() const;
-
     std::string str() const;
 
     /**
