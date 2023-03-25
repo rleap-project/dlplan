@@ -22,13 +22,16 @@ namespace dlplan::policy {
     class BaseCondition;
     class BaseEffect;
     class Rule;
+    class Policy;
+
+    using Booleans = std::set<std::shared_ptr<const dlplan::core::Boolean>>;
+    using Numericals = std::set<std::shared_ptr<const dlplan::core::Numerical>>;
 
     using Conditions = std::set<std::shared_ptr<const BaseCondition>>;
     using Effects = std::set<std::shared_ptr<const BaseEffect>>;
     using Rules = std::set<std::shared_ptr<const Rule>>;
 
-    using Booleans = std::set<std::shared_ptr<const dlplan::core::Boolean>>;
-    using Numericals = std::set<std::shared_ptr<const dlplan::core::Numerical>>;
+    using Policies = std::set<std::shared_ptr<const Policy>>;
 }
 
 

@@ -8,28 +8,7 @@
 
 namespace dlplan::policy {
 
-/**
- * For sorting conditions and effects according to their unique representation.
- */
-template<typename pT>
-static std::vector<pT> sort_by_feature_index_then_repr(const std::vector<pT>& set) {
-    std::vector<pT> result(set.begin(), set.end());
-    std::sort(
-        result.begin(),
-        result.end(),
-        [](const auto& l, const auto& r){
-            if (l->get_base_feature()->get_index() != r->get_base_feature()->get_index()) {
-                return l->get_base_feature()->get_index() < r->get_base_feature()->get_index();
-            }
-            return l->compute_repr() < r->compute_repr();
-        });
-    return result;
-}
-
-Rule::Rule(
-    std::set<std::shared_ptr<const BaseCondition>>&& conditions,
-    std::set<std::shared_ptr<const BaseEffect>>&& effects,
-    int index)
+Rule::Rule(Conditions&& conditions, Effects&& effects, int index)
     : m_conditions(std::move(conditions)), m_effects(std::move(effects)), m_index(index) { }
 
 Rule::~Rule() = default;
@@ -99,11 +78,11 @@ std::string Rule::str() const {
 }
 
 std::shared_ptr<const Rule> Rule::copy_to_builder(PolicyBuilder& policy_builder) const {
-    std::set<std::shared_ptr<const BaseCondition>> conditions;
+    Conditions conditions;
     for (const auto& condition : m_conditions) {
         conditions.insert(condition->copy_to_builder(policy_builder));
     }
-    std::set<std::shared_ptr<const BaseEffect>> effects;
+    Effects effects;
     for (const auto& effect : m_effects) {
         effects.insert(effect->copy_to_builder(policy_builder));
     }
@@ -118,11 +97,11 @@ int Rule::get_index() const {
     return m_index;
 }
 
-std::set<std::shared_ptr<const BaseCondition>> Rule::get_conditions() const {
+Conditions Rule::get_conditions() const {
     return m_conditions;
 }
 
-std::set<std::shared_ptr<const BaseEffect>> Rule::get_effects() const {
+Effects Rule::get_effects() const {
     return m_effects;
 }
 

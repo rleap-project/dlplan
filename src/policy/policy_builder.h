@@ -28,6 +28,13 @@ private:
     Booleans m_booleans;
     Numericals m_numericals;
 
+    Conditions m_conditions;
+    Effects m_effects;
+
+    Rules m_rules;
+
+    Policies m_policies;
+
 public:
     std::shared_ptr<const core::Boolean> add_boolean_feature(core::Boolean boolean);
     std::shared_ptr<const core::Numerical> add_numerical_feature(core::Numerical numerical);
