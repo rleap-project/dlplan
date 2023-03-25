@@ -268,7 +268,17 @@ PolicyMinimizer& PolicyMinimizer::operator=(PolicyMinimizer&& other) = default;
 PolicyMinimizer::~PolicyMinimizer() { }
 
 Policy PolicyMinimizer::minimize(const Policy& policy) const {
-    std::set<std::shared_ptr<const Rule>> rules;
+    // successively add simpler rules that are made up of existing rules
+    PolicyBuilder builder;
+    Policy tmp_policy = policy.copy_to_builder(builder);
+    bool changed = false;
+    do {
+
+    } while(changed);
+    // remove dominated rules and return policy.
+
+    /*
+    Rules rules;
     PolicyBuilder minimization_builder;
     // copy original rules to a fresh builder
     auto added_rules = copy_to_builder(policy.get_rules(), minimization_builder);
@@ -276,7 +286,7 @@ Policy PolicyMinimizer::minimize(const Policy& policy) const {
     // avoid merging same rules again.
     std::unordered_set<std::vector<const Rule*>> merged_rule_combinations;
     // collect rules that were merged
-    std::set<std::shared_ptr<const Rule>> merged_rules;
+    Rules merged_rules;
     size_t old_size;
     do {
         old_size = rules.size();
@@ -289,14 +299,13 @@ Policy PolicyMinimizer::minimize(const Policy& policy) const {
     // Remove dominated rule
     rules = utils::set_difference(rules, compute_dominated_rules(rules));
     PolicyBuilder result_builder;
-    rules = copy_to_builder(std::set<std::shared_ptr<const Rule>>(rules.begin(), rules.end()), result_builder);
+    rules = copy_to_builder(rules, result_builder);
     auto result = result_builder.add_policy(move(rules));
     return std::move(*result.get());
+    */
 }
 
 Policy PolicyMinimizer::minimize(const Policy& policy, const core::StatePairs& true_state_pairs, const core::StatePairs& false_state_pairs) const {
-    // TODO: avoid rechecking conditions
-    /*
     Policy current_policy = policy;
     bool minimization_success;
     do {
@@ -307,8 +316,8 @@ Policy PolicyMinimizer::minimize(const Policy& policy, const core::StatePairs& t
                 builder.add_rule(
                     copy_to_builder(utils::set_difference(rule->get_conditions(), {condition}), builder),
                     copy_to_builder(rule->get_effects(), builder));
-                copy_to_builder(utils::set_difference(current_policy.get_rules(), {rule}), builder);
-                Policy tmp_policy = builder.get_result();
+                Rules rules = copy_to_builder(utils::set_difference(current_policy.get_rules(), {rule}), builder);
+                Policy tmp_policy = *builder.add_policy(std::move(rules)).get();
                 if (check_policy_matches_classification(tmp_policy, true_state_pairs, false_state_pairs)) {
                     minimization_success = true;
                     current_policy = tmp_policy;
@@ -323,8 +332,8 @@ Policy PolicyMinimizer::minimize(const Policy& policy, const core::StatePairs& t
                 builder.add_rule(
                     copy_to_builder(rule->get_conditions(), builder),
                     copy_to_builder(utils::set_difference(rule->get_effects(), {effect}), builder));
-                copy_to_builder(utils::set_difference(current_policy.get_rules(), {rule}), builder);
-                Policy tmp_policy = builder.get_result();
+                Rules rules = copy_to_builder(utils::set_difference(current_policy.get_rules(), {rule}), builder);
+                Policy tmp_policy = *builder.add_policy(std::move(rules)).get();
                 if (check_policy_matches_classification(tmp_policy, true_state_pairs, false_state_pairs)) {
                     minimization_success = true;
                     current_policy = tmp_policy;
@@ -337,7 +346,6 @@ Policy PolicyMinimizer::minimize(const Policy& policy, const core::StatePairs& t
         }
     } while (minimization_success);
     return current_policy;
-    */
 }
 
 }

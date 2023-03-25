@@ -25,10 +25,6 @@ int BaseCondition::get_index() const {
     return m_index;
 }
 
-std::shared_ptr<const core::BaseElement> BaseCondition::get_base_feature() const {
-    return m_base_feature;
-}
-
 
 BaseEffect::BaseEffect(std::shared_ptr<const core::BaseElement> base_feature, int index)
     : m_base_feature(base_feature), m_index(index) { }
@@ -41,10 +37,6 @@ void BaseEffect::set_index(int index) {
 
 int BaseEffect::get_index() const {
     return m_index;
-}
-
-std::shared_ptr<const core::BaseElement> BaseEffect::get_base_feature() const {
-    return m_base_feature;
 }
 
 
@@ -129,6 +121,14 @@ std::shared_ptr<const Rule> PolicyBuilder::add_rule(
 std::shared_ptr<const Policy> PolicyBuilder::add_policy(
     std::set<std::shared_ptr<const Rule>>&& rules) {
     return m_pImpl->add_policy(move(rules));
+}
+
+Booleans PolicyBuilder::get_booleans() const {
+    return m_pImpl->get_booleans();
+}
+
+Numericals PolicyBuilder::get_numericals() const {
+    return m_pImpl->get_numericals();
 }
 
 

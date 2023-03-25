@@ -14,10 +14,6 @@
 /**
  * Forward declarations and usings
  */
-namespace dlplan::core {
-    using Booleans = std::vector<std::shared_ptr<const Boolean>>;
-    using Numericals = std::vector<std::shared_ptr<const Numerical>>;
-}
 namespace dlplan::policy {
     class PolicyBuilder;
     class PolicyBuilderImpl;
@@ -30,6 +26,9 @@ namespace dlplan::policy {
     using Conditions = std::set<std::shared_ptr<const BaseCondition>>;
     using Effects = std::set<std::shared_ptr<const BaseEffect>>;
     using Rules = std::set<std::shared_ptr<const Rule>>;
+
+    using Booleans = std::set<std::shared_ptr<const dlplan::core::Boolean>>;
+    using Numericals = std::set<std::shared_ptr<const dlplan::core::Numerical>>;
 }
 
 
@@ -77,7 +76,6 @@ public:
      * Getters.
      */
     int get_index() const;
-    std::shared_ptr<const core::BaseElement> get_base_feature() const;
 };
 
 
@@ -114,7 +112,6 @@ public:
      * Adds the effect to the policy builder and returns it
      */
     virtual std::shared_ptr<const BaseEffect> copy_to_builder(PolicyBuilder& policy_builder) const = 0;
-    //virtual bool is_complementary_effect(const BaseEffect& other) const = 0;
 
     /**
      * Setters.
@@ -125,7 +122,6 @@ public:
      * Getters.
      */
     int get_index() const;
-    std::shared_ptr<const core::BaseElement> get_base_feature() const;
 };
 
 
@@ -168,7 +164,7 @@ public:
     /**
      * Adds the rule to the policy builder and returns it
      */
-    virtual std::shared_ptr<const Rule> copy_to_builder(PolicyBuilder& policy_builder) const;
+    std::shared_ptr<const Rule> copy_to_builder(PolicyBuilder& policy_builder) const;
 
     /**
      * Setters.
@@ -179,8 +175,8 @@ public:
      * Getters.
      */
     int get_index() const;
-    std::set<std::shared_ptr<const BaseCondition>> get_conditions() const;
-    std::set<std::shared_ptr<const BaseEffect>> get_effects() const;
+    Conditions get_conditions() const;
+    Effects get_effects() const;
 };
 
 
@@ -226,6 +222,11 @@ public:
     std::string str() const;
 
     /**
+     * Adds the rule to the policy builder and returns it
+     */
+    Policy copy_to_builder(PolicyBuilder& policy_builder) const;
+
+    /**
      * Setters.
      */
     void set_index(int index);
@@ -233,7 +234,7 @@ public:
      * Getters.
      */
     int get_index() const;
-    std::set<std::shared_ptr<const Rule>> get_rules() const;
+    Rules get_rules() const;
 };
 
 
@@ -281,6 +282,12 @@ public:
      */
     std::shared_ptr<const Policy> add_policy(
         std::set<std::shared_ptr<const Rule>>&& rules);
+
+    /**
+     * Getters.
+    */
+    Booleans get_booleans() const;
+    Numericals get_numericals() const;
 };
 
 

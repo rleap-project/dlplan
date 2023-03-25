@@ -25,6 +25,9 @@ private:
     Caches m_caches;
     friend class PolicyMinimizer;
 
+    Booleans m_booleans;
+    Numericals m_numericals;
+
 public:
     std::shared_ptr<const core::Boolean> add_boolean_feature(core::Boolean boolean);
     std::shared_ptr<const core::Numerical> add_numerical_feature(core::Numerical numerical);
@@ -46,6 +49,9 @@ public:
 
     std::shared_ptr<const Policy> add_policy(
         std::set<std::shared_ptr<const Rule>>&& rules);
+
+    Booleans get_booleans() const;
+    Numericals get_numericals() const;
 };
 
 }

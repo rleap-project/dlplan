@@ -42,13 +42,6 @@ public:
     std::string str() const override;
 
     std::shared_ptr<const BaseEffect> copy_to_builder(PolicyBuilder& policy_builder) const override;
-
-    //bool is_complementary_effect(const BaseEffect& other) const override {
-    //    return other.is_complementary_effect(*this);
-    //}
-    //bool is_complementary_effect(const PositiveBooleanEffect& other) const { return false; }
-    //bool is_complementary_effect(const NegativeBooleanEffect& other) const { return true; }
-    //bool is_complementary_effect(const UnchangedBooleanEffect& other) const {}
 };
 
 class NegativeBooleanEffect : public BooleanEffect {
