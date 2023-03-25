@@ -8,8 +8,8 @@
 
 namespace dlplan::policy {
 
-Rule::Rule(Conditions&& conditions, Effects&& effects, int index)
-    : m_conditions(std::move(conditions)), m_effects(std::move(effects)), m_index(index) { }
+Rule::Rule(Conditions&& conditions, Effects&& effects)
+    : m_conditions(std::move(conditions)), m_effects(std::move(effects)) { }
 
 Rule::~Rule() = default;
 

@@ -45,7 +45,7 @@ private:
     int m_index;
 
 protected:
-    BaseCondition(std::shared_ptr<const core::BaseElement> base_feature, int index=-1);
+    BaseCondition(std::shared_ptr<const core::BaseElement> base_feature);
 
 public:
     // Condition is not copieable because it must live in the cache.
@@ -88,7 +88,7 @@ private:
     int m_index;
 
 protected:
-    BaseEffect(std::shared_ptr<const core::BaseElement> base_feature, int index=-1);
+    BaseEffect(std::shared_ptr<const core::BaseElement> base_feature);
 
 public:
     // Effect is not copieable because it must live in the cache.
@@ -133,9 +133,7 @@ private:
     int m_index;
 
 private:
-    Rule(Conditions&& conditions,
-        Effects&& effects,
-        int index=-1);
+    Rule(Conditions&& conditions, Effects&& effects);
     friend class PolicyBuilderImpl;
 
 public:
@@ -231,7 +229,9 @@ public:
     Rules get_rules() const;
 };
 
-
+/**
+ * PolicyBuilder for the construction of a forest of policies.
+*/
 class PolicyBuilder {
 private:
     utils::pimpl<PolicyBuilderImpl> m_pImpl;
