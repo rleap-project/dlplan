@@ -23,7 +23,6 @@ class PolicyMinimizer;
 class PolicyBuilderImpl {
 private:
     Caches m_caches;
-    friend class PolicyMinimizer;
 
     Booleans m_booleans;
     Numericals m_numericals;

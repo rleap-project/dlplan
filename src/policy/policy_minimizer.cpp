@@ -31,8 +31,22 @@ namespace dlplan::policy {
 */
 template<int size>
 struct CacheEntry {
-    dlplan::core::BaseElement* feature;
+    const dlplan::core::BaseElement* feature;
     std::array<const Rule*, size> rules;
+
+    CacheEntry(const dlplan::core::BaseElement* feature, std::array<const Rule*, size>&& rules)
+        : feature(feature), rules(std::move(rules)) { }
+
+    bool operator==(const CacheEntry& other) const {
+        if (this != &other) {
+            return (feature == other.feature && rules == other.rules);
+        }
+        return true;
+    }
+
+    bool operator!=(const CacheEntry& other) const {
+        return !(*this == other);
+    }
 };
 
 /**
@@ -98,6 +112,52 @@ PolicyMinimizer& PolicyMinimizer::operator=(PolicyMinimizer&& other) = default;
 
 PolicyMinimizer::~PolicyMinimizer() { }
 
+static bool try_merge_boolean_condition(
+    const Booleans& booleans,
+    PolicyBuilder& builder,
+    Rules& rules,
+    std::unordered_map<const BaseCondition*, std::vector<const Rule*>>& c2r,
+    std::unordered_set<CacheEntry<2>>& c_b_merged) {
+    for (const auto& boolean : booleans) {
+        const auto c_pos = builder.add_pos_condition(boolean);
+        const auto c_neg = builder.add_neg_condition(boolean);
+        for (const auto& rule1 : c2r[c_pos.get()]) {
+            for (const auto& rule2 : c2r[c_neg.get()]) {
+                CacheEntry<2> key(boolean.get(), {rule1, rule2});
+                // check merged
+                if (c_b_merged.count(key)) continue;
+                // check mergeable
+                if (!utils::is_subset_eq(rule1->get_effects(), rule2->get_effects())) continue;
+                if (!utils::is_subset_eq(utils::set_difference(rule1->get_conditions(), {c_pos}), utils::set_difference(rule2->get_conditions(), {c_neg}))) continue;
+                // merge
+                rules.insert(builder.add_rule(
+                    utils::set_difference(rule2->get_conditions(), {c_neg}),
+                    rule2->get_effects()));
+                c_b_merged.insert(key);
+                // TODO: update c2r
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+static bool try_merge_numerical_condition(
+    const Booleans& booleans,
+    PolicyBuilder& builder,
+    Rules& rules,
+    std::unordered_map<const BaseCondition*, std::vector<const Rule*>>& c2r,
+    std::unordered_set<CacheEntry<2>>& c_b_merged) {
+}
+
+static bool try_merge_boolean_effect() {
+    std::unordered_set<CacheEntry<2>> e_b_merged;
+}
+
+static bool try_merge_numerical_effect() {
+    std::unordered_set<CacheEntry<3>> e_n_merged;
+}
+
 Policy PolicyMinimizer::minimize(const Policy& policy) const {
     // successively add simpler rules that are made up of existing rules
     PolicyBuilder builder;
@@ -107,26 +167,17 @@ Policy PolicyMinimizer::minimize(const Policy& policy) const {
     Numericals numerical = builder.get_numericals();
     std::unordered_map<const BaseCondition*, std::vector<const Rule*>> c2r;
     std::unordered_map<const BaseEffect*, std::vector<const Rule*>> e2r;
+    // track successful merge operation to skip it.
     std::unordered_set<CacheEntry<2>> c_b_merged;
     std::unordered_set<CacheEntry<2>> c_n_merged;
     std::unordered_set<CacheEntry<2>> e_b_merged;
     std::unordered_set<CacheEntry<3>> e_n_merged;
-    bool changed = false;
     do {
-        for (const auto& boolean : booleans) {
-            const auto c_pos = builder.add_pos_condition(boolean);
-            const auto c_neg = builder.add_neg_condition(boolean);
-            for (const auto& rule1 : c2r[c_pos.get()]) {
-                for (const auto& rule2 : c2r[c_neg.get()]) {
-                    // check if rules can be merged, track they have been checked/merged.
-                }
-            }
-        }
-        for (const auto& numerical : numerical) {
-
-        }
-    } while(changed);
-    // remove dominated rules and return policy.
+        if (try_merge_boolean_condition(booleans, builder, rules, c2r, c_b_merged)) continue;
+        // TODO: implement other merges
+        break;
+    } while(true);
+    // TODO: copy resulting rules in new builder and return policy.
 }
 
 Policy PolicyMinimizer::minimize(const Policy& policy, const core::StatePairs& true_state_pairs, const core::StatePairs& false_state_pairs) const {
