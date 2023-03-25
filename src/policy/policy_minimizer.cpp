@@ -6,11 +6,18 @@
 
 #include "../../include/dlplan/policy.h"
 
+namespace dlplan::policy {
+template<int size>
+struct CacheEntry;
+}
+
 namespace std {
-    template<> struct hash<std::vector<const dlplan::policy::Rule*>> {
-        size_t operator()(const std::vector<const dlplan::policy::Rule*>& merged_rule_combinations) const noexcept {
-            size_t seed = merged_rule_combinations.size();
-            for (const auto& rule_ptr : merged_rule_combinations) {
+    template<int size>
+    struct hash<dlplan::policy::CacheEntry<size>> {
+        size_t operator()(const dlplan::policy::CacheEntry<size>& entry) const noexcept {
+            size_t seed = entry.rules.size();
+            dlplan::utils::hash_combine(seed, entry.feature);
+            for (const auto& rule_ptr : entry.rules) {
                 dlplan::utils::hash_combine(seed, rule_ptr);
             }
             return seed;
@@ -19,6 +26,15 @@ namespace std {
 }
 
 namespace dlplan::policy {
+/**
+ * A CacheEntry represents a set of rules that can be simplified with a given feature.
+*/
+template<int size>
+struct CacheEntry {
+    dlplan::core::BaseElement* feature;
+    std::array<const Rule*, size> rules;
+};
+
 /**
  * Copies all objects to the given PolicyBuilder and returns newly constructed objects.
  */
@@ -91,6 +107,10 @@ Policy PolicyMinimizer::minimize(const Policy& policy) const {
     Numericals numerical = builder.get_numericals();
     std::unordered_map<const BaseCondition*, std::vector<const Rule*>> c2r;
     std::unordered_map<const BaseEffect*, std::vector<const Rule*>> e2r;
+    std::unordered_set<CacheEntry<2>> c_b_merged;
+    std::unordered_set<CacheEntry<2>> c_n_merged;
+    std::unordered_set<CacheEntry<2>> e_b_merged;
+    std::unordered_set<CacheEntry<3>> e_n_merged;
     bool changed = false;
     do {
         for (const auto& boolean : booleans) {
