@@ -22,7 +22,6 @@ void init_policy(py::module_ &m) {
         .def("evaluate", py::overload_cast<const State&>(&BaseCondition::evaluate, py::const_))
         .def("evaluate",  py::overload_cast<const State&, DenotationsCaches&>(&BaseCondition::evaluate, py::const_))
         .def("get_index", &BaseCondition::get_index)
-        .def("get_base_feature", &BaseCondition::get_base_feature)
         .def("compute_repr", &BaseCondition::compute_repr)
         .def("str", &BaseCondition::str)
         .def("copy_to_builder", &BaseCondition::copy_to_builder)
@@ -34,7 +33,6 @@ void init_policy(py::module_ &m) {
         .def("evaluate", py::overload_cast<const State&, const State&>(&BaseEffect::evaluate, py::const_))
         .def("evaluate",  py::overload_cast<const State&, const State&, DenotationsCaches&>(&BaseEffect::evaluate, py::const_))
         .def("get_index", &BaseEffect::get_index)
-        .def("get_base_feature", &BaseEffect::get_base_feature)
         .def("compute_repr", &BaseEffect::compute_repr)
         .def("str", &BaseEffect::str)
         .def("copy_to_builder", &BaseEffect::copy_to_builder)
@@ -65,10 +63,9 @@ void init_policy(py::module_ &m) {
         .def("evaluate_effects_lazy", py::overload_cast<const State&, const State&, const std::vector<std::shared_ptr<const Rule>>&>(&Policy::evaluate_effects_lazy, py::const_))
         .def("evaluate_effects_lazy", py::overload_cast<const State&, const State&, const std::vector<std::shared_ptr<const Rule>>&, DenotationsCaches&>(&Policy::evaluate_effects_lazy, py::const_))
         .def("get_rules", &Policy::get_rules, py::return_value_policy::reference)
-        .def("get_boolean_features", &Policy::get_boolean_features, py::return_value_policy::reference)
-        .def("get_numerical_features", &Policy::get_numerical_features, py::return_value_policy::reference)
         .def("compute_repr", &Policy::compute_repr)
         .def("str", &Policy::str)
+        .def("copy_to_builder", &Policy::copy_to_builder)
     ;
 
     py::class_<PolicyBuilder>(m, "PolicyBuilder")
@@ -86,7 +83,9 @@ void init_policy(py::module_ &m) {
         .def("add_bot_effect", py::overload_cast<std::shared_ptr<const Boolean>>(&PolicyBuilder::add_bot_effect))
         .def("add_bot_effect", py::overload_cast<std::shared_ptr<const Numerical>>(&PolicyBuilder::add_bot_effect))
         .def("add_rule", &PolicyBuilder::add_rule)
-        .def("get_result", &PolicyBuilder::get_result)
+        .def("add_policy", &PolicyBuilder::add_policy)
+        .def("get_booleans", &PolicyBuilder::get_booleans)
+        .def("get_numericals", &PolicyBuilder::get_numericals)
     ;
 
     py::class_<PolicyMinimizer>(m, "PolicyMinimizer")
