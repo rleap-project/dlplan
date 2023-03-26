@@ -43,7 +43,3 @@ std::shared_ptr<const InstanceInfo> construct_instance_info(std::shared_ptr<cons
 SyntacticElementFactory construct_syntactic_element_factory(std::shared_ptr<const VocabularyInfo> vocabulary_info) {
     return SyntacticElementFactory(vocabulary_info);
 }
-
-PolicyBuilder construct_policy_builder() {
-    return PolicyBuilder();
-}
