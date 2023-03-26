@@ -192,7 +192,7 @@ Policy PolicyMinimizer::minimize(const Policy& policy, const core::StatePairs& t
                     copy_to_builder(utils::set_difference(rule->get_conditions(), {condition}), builder),
                     copy_to_builder(rule->get_effects(), builder));
                 Rules rules = copy_to_builder(utils::set_difference(current_policy.get_rules(), {rule}), builder);
-                Policy tmp_policy = *builder.add_policy(std::move(rules)).get();
+                Policy tmp_policy = builder.get_result();
                 if (check_policy_matches_classification(tmp_policy, true_state_pairs, false_state_pairs)) {
                     minimization_success = true;
                     current_policy = tmp_policy;
@@ -208,7 +208,7 @@ Policy PolicyMinimizer::minimize(const Policy& policy, const core::StatePairs& t
                     copy_to_builder(rule->get_conditions(), builder),
                     copy_to_builder(utils::set_difference(rule->get_effects(), {effect}), builder));
                 Rules rules = copy_to_builder(utils::set_difference(current_policy.get_rules(), {rule}), builder);
-                Policy tmp_policy = *builder.add_policy(std::move(rules)).get();
+                Policy tmp_policy = builder.get_result();
                 if (check_policy_matches_classification(tmp_policy, true_state_pairs, false_state_pairs)) {
                     minimization_success = true;
                     current_policy = tmp_policy;

@@ -96,12 +96,10 @@ std::shared_ptr<const Rule> PolicyBuilderImpl::add_rule(Conditions&& conditions,
     return *m_rules.insert(m_caches.m_rule_cache->insert(std::unique_ptr<Rule>(new Rule(move(conditions), move(effects)))).first).first;
 }
 
-std::shared_ptr<const Policy> PolicyBuilderImpl::add_policy(Rules&& rules) {
-    if (!std::all_of(rules.begin(), rules.end(), [&](const auto& rule){ return m_rules.count(rule); })) {
-        throw std::runtime_error("PolicyBuilderImpl::add_policy - tried adding policy with rule from different builder.");
-    }
-    return *m_policies.insert(m_caches.m_policy_cache->insert(std::unique_ptr<Policy>(new Policy(move(rules)))).first).first;
+Policy PolicyBuilderImpl::get_result() {
+    return Policy(std::move(m_rules));
 }
+
 
 Booleans PolicyBuilderImpl::get_booleans() const {
     return m_booleans;

@@ -83,7 +83,7 @@ void init_policy(py::module_ &m) {
         .def("add_bot_effect", py::overload_cast<std::shared_ptr<const Boolean>>(&PolicyBuilder::add_bot_effect))
         .def("add_bot_effect", py::overload_cast<std::shared_ptr<const Numerical>>(&PolicyBuilder::add_bot_effect))
         .def("add_rule", &PolicyBuilder::add_rule)
-        .def("add_policy", &PolicyBuilder::add_policy)
+        .def("get_result", &PolicyBuilder::get_result)
         .def("get_booleans", &PolicyBuilder::get_booleans)
         .def("get_numericals", &PolicyBuilder::get_numericals)
     ;

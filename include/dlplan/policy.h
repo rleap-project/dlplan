@@ -272,10 +272,9 @@ public:
         std::set<std::shared_ptr<const BaseEffect>>&& effects);
 
     /**
-     * Uniquely adds a policy and returns it.
+     * Returns the policy.
      */
-    std::shared_ptr<const Policy> add_policy(
-        std::set<std::shared_ptr<const Rule>>&& rules);
+    Policy get_result();
 
     /**
      * Getters.
@@ -317,7 +316,7 @@ public:
     PolicyReader& operator=(PolicyReader&& other);
     ~PolicyReader();
 
-    Policy read(const std::string& data, PolicyBuilder& builder, core::SyntacticElementFactory& factory) const;
+    Policy read(const std::string& data, core::SyntacticElementFactory& factory) const;
 };
 
 /**

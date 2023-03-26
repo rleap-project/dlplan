@@ -66,12 +66,16 @@ std::string Rule::str() const {
     ss << "(:rule (:conditions ";
     for (const auto& c : m_conditions) {
         ss << c->str();
-        ss << " ";
+        if (c != *m_conditions.rbegin()) {
+            ss << " ";
+        }
     }
     ss << ") (:effects ";
     for (const auto& e : m_effects) {
         ss << e->str();
-        ss << " ";
+        if (e != *m_effects.rbegin()) {
+            ss << " ";
+        }
     }
     ss << "))";
     return ss.str();

@@ -34,7 +34,7 @@ int main() {
         {b_neg_condition_0, n_gt_condition_0},
         {b_bot_effect_0, n_dec_effect_0}
     );
-    Policy policy = *builder.add_policy(Rules{rule}).get();
+    Policy policy = builder.get_result();
 
     // Construct InstanceInfo and States
     std::shared_ptr<dlplan::core::InstanceInfo> instance_info = std::make_shared<dlplan::core::InstanceInfo>(vocabulary_info);
@@ -71,7 +71,7 @@ int main() {
     ifs.open("test.txt", std::ifstream::in);
     std::stringstream ss;
     ss << ifs.rdbuf();
-    Policy policy_in = PolicyReader().read(ss.str(), builder, factory);
+    Policy policy_in = PolicyReader().read(ss.str(), factory);
     ifs.close();
     std::cout << "Read policy:" << std::endl;
     std::cout << policy_in.compute_repr() << std::endl << std::endl;

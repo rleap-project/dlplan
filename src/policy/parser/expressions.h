@@ -32,7 +32,7 @@ public:
     Expression& operator=(Expression&& other) = default;
     virtual ~Expression() = default;
 
-    virtual std::shared_ptr<const Policy> parse_policy(PolicyBuilder&, core::SyntacticElementFactory&) const {
+    virtual Policy parse_policy(core::SyntacticElementFactory&) const {
         throw std::runtime_error("Expression::parse_policy - cannot parse expression into policy.");
     }
 
@@ -73,7 +73,8 @@ public:
     PolicyExpression(const std::string &name, std::vector<Expression_Ptr> &&children)
     : Expression(name, std::move(children)) { }
 
-    std::shared_ptr<const Policy> parse_policy(PolicyBuilder& builder, core::SyntacticElementFactory& factory) const override {
+    Policy parse_policy(core::SyntacticElementFactory& factory) const override {
+        PolicyBuilder builder;
         // Basic error checking.
         if (m_children.size() < 3) {
             throw std::runtime_error("PolicyExpression::parse_policy - insufficient number of children.");
@@ -83,11 +84,10 @@ public:
         // Parse numerical features.
         const auto numericals = m_children.at(2)->parse_numericals(builder, factory);
         // Parse rules.
-        Rules rules;
         for (size_t i = 3; i < m_children.size(); ++i) {
-            rules.insert(m_children.at(i)->parse_rule(builder, booleans, numericals));
+            m_children.at(i)->parse_rule(builder, booleans, numericals);
         }
-        return builder.add_policy(move(rules));
+        return builder.get_result();
     }
 };
 

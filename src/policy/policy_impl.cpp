@@ -123,7 +123,7 @@ Policy Policy::copy_to_builder(PolicyBuilder& policy_builder) const {
     for (const auto& rule : m_rules) {
         rules.insert(rule->copy_to_builder(policy_builder));
     }
-    return *policy_builder.add_policy(std::move(rules)).get();
+    return policy_builder.get_result();
 }
 
 void Policy::set_index(int index) {
