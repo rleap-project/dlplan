@@ -151,10 +151,12 @@ static bool try_merge_boolean_condition(
                 rules_result.insert(result_rule.get());
                 c_b_merged.insert(key);
                 insert_rules_to_mapping(result_rule.get(), c2r, e2r);
+                /*
                 std::cout << "try_merge_boolean_condition" << std::endl;
                 std::cout << "rule1: " << rule1->str() << std::endl;
                 std::cout << "rule2: " << rule2->str() << std::endl;
                 std::cout << "rule_result: " << result_rule->str() << std::endl;
+                */
                 return true;
             }
         }
@@ -190,10 +192,12 @@ static bool try_merge_numerical_condition(
                 rules_result.insert(result_rule.get());
                 c_n_merged.insert(key);
                 insert_rules_to_mapping(result_rule.get(), c2r, e2r);
+                /*
                 std::cout << "try_merge_numerical_condition" << std::endl;
                 std::cout << "rule1: " << rule1->str() << std::endl;
                 std::cout << "rule2: " << rule2->str() << std::endl;
                 std::cout << "rule_result: " << result_rule->str() << std::endl;
+                */
                 return true;
             }
         }
@@ -230,10 +234,12 @@ static bool try_merge_boolean_effect(
                 rules_result.insert(result_rule.get());
                 e_b_merged.insert(key);
                 insert_rules_to_mapping(result_rule.get(), c2r, e2r);
+                /*
                 std::cout << "try_merge_boolean_effect" << std::endl;
                 std::cout << "rule1: " << rule1->str() << std::endl;
                 std::cout << "rule2: " << rule2->str() << std::endl;
                 std::cout << "rule_result: " << result_rule->str() << std::endl;
+                */
                 return true;
             }
         }
@@ -254,10 +260,12 @@ static bool try_merge_boolean_effect(
                 rules_result.insert(result_rule.get());
                 e_b_merged.insert(key);
                 insert_rules_to_mapping(result_rule.get(), c2r, e2r);
+                /*
                 std::cout << "try_merge_boolean_effect" << std::endl;
                 std::cout << "rule1: " << rule1->str() << std::endl;
                 std::cout << "rule2: " << rule2->str() << std::endl;
                 std::cout << "rule_result: " << result_rule->str() << std::endl;
+                */
                 return true;
             }
         }
@@ -278,10 +286,12 @@ static bool try_merge_boolean_effect(
                 rules_result.insert(result_rule.get());
                 e_b_merged.insert(key);
                 insert_rules_to_mapping(result_rule.get(), c2r, e2r);
+                /*
                 std::cout << "try_merge_boolean_effect" << std::endl;
                 std::cout << "rule1: " << rule1->str() << std::endl;
                 std::cout << "rule2: " << rule2->str() << std::endl;
                 std::cout << "rule_result: " << result_rule->str() << std::endl;
+                */
                 return true;
             }
         }
@@ -312,7 +322,7 @@ static bool try_merge_numerical_effect(
                     if (e_n_merged.count(key)) continue;
                     // check mergeable
                     if (!utils::is_supset_eq(rule1->get_conditions(), rule3->get_conditions())) continue;
-                    if (!utils::is_supset_eq(utils::set_difference(rule1->get_effects(), {e_inc}), utils::set_difference(rule2->get_effects(), {e_bot}))) continue;
+                    if (!utils::is_supset_eq(utils::set_difference(rule1->get_effects(), {e_inc}), utils::set_difference(rule3->get_effects(), {e_bot}))) continue;
                     // merge
                     std::shared_ptr<const Rule> result_rule = builder.add_rule(
                         rule1->get_conditions(),
@@ -322,11 +332,13 @@ static bool try_merge_numerical_effect(
                     rules_result.insert(result_rule.get());
                     e_n_merged.insert(key);
                     insert_rules_to_mapping(result_rule.get(), c2r, e2r);
+                    /*
                     std::cout << "try_merge_numerical_effect" << std::endl;
                     std::cout << "rule1: " << rule1->str() << std::endl;
                     std::cout << "rule2: " << rule2->str() << std::endl;
                     std::cout << "rule3: " << rule3->str() << std::endl;
                     std::cout << "rule_result: " << result_rule->str() << std::endl;
+                    */
                     return true;
                 }
             }
