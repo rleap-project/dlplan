@@ -36,7 +36,6 @@ TEST(DLPTests, StructuralMinimization) {
               << "Minimized policy:" << std::endl
               << minimized_policy.str() << std::endl;
     EXPECT_EQ(minimized_policy.compute_repr(), result_policy.compute_repr());
-    EXPECT_EQ(minimized_policy.str(), result_policy.str());
 }
 
 
@@ -67,7 +66,6 @@ TEST(DLPTests, StructuralMinimization2) {
               << "Minimized policy:" << std::endl
               << minimized_policy.str() << std::endl;
     EXPECT_EQ(minimized_policy.compute_repr(), result_policy.compute_repr());
-    EXPECT_EQ(minimized_policy.str(), result_policy.str());
 }
 
 
@@ -99,7 +97,6 @@ TEST(DLPTests, StructuralMinimization3) {
               << "Minimized policy:" << std::endl
               << minimized_policy.str() << std::endl;
     EXPECT_EQ(minimized_policy.compute_repr(), result_policy.compute_repr());
-    EXPECT_EQ(minimized_policy.str(), result_policy.str());
 }
 
 
@@ -129,7 +126,6 @@ TEST(DLPTests, StructuralMinimization4) {
               << "Minimized policy:" << std::endl
               << minimized_policy.str() << std::endl;
     EXPECT_EQ(minimized_policy.compute_repr(), result_policy.compute_repr());
-    EXPECT_EQ(minimized_policy.str(), result_policy.str());
 }
 
 
@@ -181,5 +177,4 @@ TEST(DLPTests, EmpiricalMinimization) {
               << "Minimized policy:" << std::endl
               << minimized_policy.compute_repr() << std::endl;
     EXPECT_EQ(minimized_policy.compute_repr(), result_policy.compute_repr());
-    EXPECT_EQ(minimized_policy.str(), result_policy.str());
 }

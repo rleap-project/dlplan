@@ -208,10 +208,14 @@ public:
     std::shared_ptr<const Rule> evaluate_effects_lazy(const core::State& source_state, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules) const;
     std::shared_ptr<const Rule> evaluate_effects_lazy(const core::State& source_state, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules, core::DenotationsCaches& caches) const;
 
+    /**
+     * Returns a string that uniquely identifies the policy.
+     */
     std::string compute_repr() const;
 
     /**
-     * Returns parseable string representation
+     * Returns parseable string representation that is not necessarily unique.
+     * The feature lists can possible be ordered differently.
      */
     std::string str() const;
 
