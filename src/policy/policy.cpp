@@ -21,6 +21,11 @@ void BaseCondition::set_index(int index) {
     m_index = index;
 }
 
+std::shared_ptr<const core::BaseElement> BaseCondition::get_base_feature() const {
+    return m_base_feature;
+}
+
+
 int BaseCondition::get_index() const {
     return m_index;
 }
@@ -33,6 +38,10 @@ BaseEffect::~BaseEffect() = default;
 
 void BaseEffect::set_index(int index) {
     m_index = index;
+}
+
+std::shared_ptr<const core::BaseElement> BaseEffect::get_base_feature() const {
+    return m_base_feature;
 }
 
 int BaseEffect::get_index() const {

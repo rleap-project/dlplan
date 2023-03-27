@@ -30,11 +30,13 @@ TEST(DLPTests, StructuralMinimization) {
     auto syntactic_element_factory = construct_syntactic_element_factory(vocabulary_info);
     auto input_policy = PolicyReader().read(policy_textual, syntactic_element_factory);
     auto minimized_policy = PolicyMinimizer().minimize(input_policy);
+    auto result_policy = PolicyReader().read(minimized_policy_textual, syntactic_element_factory);
     std::cout << "Input policy:" << std::endl
               << input_policy.str() << std::endl << std::endl
               << "Minimized policy:" << std::endl
-              << minimized_policy.compute_repr() << std::endl;
-    EXPECT_EQ(minimized_policy.compute_repr(), minimized_policy_textual);
+              << minimized_policy.str() << std::endl;
+    EXPECT_EQ(minimized_policy.compute_repr(), result_policy.compute_repr());
+    EXPECT_EQ(minimized_policy.str(), result_policy.str());
 }
 
 
@@ -59,11 +61,13 @@ TEST(DLPTests, StructuralMinimization2) {
     auto syntactic_element_factory = construct_syntactic_element_factory(vocabulary_info);
     auto input_policy = PolicyReader().read(policy_textual, syntactic_element_factory);
     auto minimized_policy = PolicyMinimizer().minimize(input_policy);
+    auto result_policy = PolicyReader().read(minimized_policy_textual, syntactic_element_factory);
     std::cout << "Input policy:" << std::endl
               << input_policy.str() << std::endl << std::endl
               << "Minimized policy:" << std::endl
-              << minimized_policy.compute_repr() << std::endl;
-    EXPECT_EQ(minimized_policy.compute_repr(), minimized_policy_textual);
+              << minimized_policy.str() << std::endl;
+    EXPECT_EQ(minimized_policy.compute_repr(), result_policy.compute_repr());
+    EXPECT_EQ(minimized_policy.str(), result_policy.str());
 }
 
 
@@ -89,11 +93,13 @@ TEST(DLPTests, StructuralMinimization3) {
     auto syntactic_element_factory = construct_syntactic_element_factory(vocabulary_info);
     auto input_policy = PolicyReader().read(policy_textual, syntactic_element_factory);
     auto minimized_policy = PolicyMinimizer().minimize(input_policy);
+    auto result_policy = PolicyReader().read(minimized_policy_textual, syntactic_element_factory);
     std::cout << "Input policy:" << std::endl
               << input_policy.str() << std::endl << std::endl
               << "Minimized policy:" << std::endl
-              << minimized_policy.compute_repr() << std::endl;
-    EXPECT_EQ(minimized_policy.compute_repr(), minimized_policy_textual);
+              << minimized_policy.str() << std::endl;
+    EXPECT_EQ(minimized_policy.compute_repr(), result_policy.compute_repr());
+    EXPECT_EQ(minimized_policy.str(), result_policy.str());
 }
 
 
@@ -113,16 +119,17 @@ TEST(DLPTests, StructuralMinimization4) {
         "(:rule (:conditions (:c_n_gt 0)) (:effects (:e_n_dec 0)))\n"
         "(:rule (:conditions ) (:effects (:e_n_inc 0)))\n"
         ")";
-
     auto vocabulary_info = construct_blocks_vocabulary_info();
     auto syntactic_element_factory = construct_syntactic_element_factory(vocabulary_info);
     auto input_policy = PolicyReader().read(policy_textual, syntactic_element_factory);
     auto minimized_policy = PolicyMinimizer().minimize(input_policy);
+    auto result_policy = PolicyReader().read(minimized_policy_textual, syntactic_element_factory);
     std::cout << "Input policy:" << std::endl
               << input_policy.str() << std::endl << std::endl
               << "Minimized policy:" << std::endl
-              << minimized_policy.compute_repr() << std::endl;
-    EXPECT_EQ(minimized_policy.compute_repr(), minimized_policy_textual);
+              << minimized_policy.str() << std::endl;
+    EXPECT_EQ(minimized_policy.compute_repr(), result_policy.compute_repr());
+    EXPECT_EQ(minimized_policy.str(), result_policy.str());
 }
 
 
@@ -167,11 +174,12 @@ TEST(DLPTests, EmpiricalMinimization) {
 
     auto syntactic_element_factory = construct_syntactic_element_factory(vocabulary_info);
     auto input_policy = PolicyReader().read(policy_textual, syntactic_element_factory);
-
     auto minimized_policy = PolicyMinimizer().minimize(input_policy, true_state_pairs, false_state_pairs);
+    auto result_policy = PolicyReader().read(minimized_policy_textual, syntactic_element_factory);
     std::cout << "Input policy:" << std::endl
               << input_policy.str() << std::endl << std::endl
               << "Minimized policy:" << std::endl
               << minimized_policy.compute_repr() << std::endl;
-    EXPECT_EQ(minimized_policy.compute_repr(), minimized_policy_textual);
+    EXPECT_EQ(minimized_policy.compute_repr(), result_policy.compute_repr());
+    EXPECT_EQ(minimized_policy.str(), result_policy.str());
 }

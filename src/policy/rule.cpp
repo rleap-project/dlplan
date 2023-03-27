@@ -44,16 +44,32 @@ bool Rule::evaluate_effects(const core::State& source_state, const core::State& 
 std::string Rule::compute_repr() const {
     std::stringstream ss;
     ss << "(:rule (:conditions ";
-    for (const auto& c : m_conditions) {
+    // sort conditions by index then repr to obtain canonical representation
+    std::vector<std::shared_ptr<const BaseCondition>> conditions(m_conditions.begin(), m_conditions.end());
+    std::sort(conditions.begin(), conditions.end(), [&](const auto& l, const auto& r){
+        if (l->get_base_feature()->get_index() == r->get_base_feature()->get_index()) {
+            return l->compute_repr() < r->compute_repr();
+        }
+        return l->get_base_feature()->get_index() < r->get_base_feature()->get_index();
+    });
+    for (const auto& c : conditions) {
         ss << c->compute_repr();
-        if (c != *m_conditions.rbegin()) {
+        if (c != *conditions.rbegin()) {
             ss << " ";
         }
     }
     ss << ") (:effects ";
-    for (const auto& e : m_effects) {
+    // sort conditions by index then repr to obtain canonical representation
+    std::vector<std::shared_ptr<const BaseEffect>> effects(m_effects.begin(), m_effects.end());
+    std::sort(effects.begin(), effects.end(), [&](const auto& l, const auto& r){
+        if (l->get_base_feature()->get_index() == r->get_base_feature()->get_index()) {
+            return l->compute_repr() < r->compute_repr();
+        }
+        return l->get_base_feature()->get_index() < r->get_base_feature()->get_index();
+    });
+    for (const auto& e : effects) {
         ss << e->compute_repr();
-        if (e != *m_effects.rbegin()) {
+        if (e != *effects.rbegin()) {
             ss << " ";
         }
     }
@@ -64,16 +80,32 @@ std::string Rule::compute_repr() const {
 std::string Rule::str() const {
     std::stringstream ss;
     ss << "(:rule (:conditions ";
-    for (const auto& c : m_conditions) {
+    // sort conditions by index then repr to obtain canonical representation
+    std::vector<std::shared_ptr<const BaseCondition>> conditions(m_conditions.begin(), m_conditions.end());
+    std::sort(conditions.begin(), conditions.end(), [&](const auto& l, const auto& r){
+        if (l->get_base_feature()->get_index() == r->get_base_feature()->get_index()) {
+            return l->compute_repr() < r->compute_repr();
+        }
+        return l->get_base_feature()->get_index() < r->get_base_feature()->get_index();
+    });
+    for (const auto& c : conditions) {
         ss << c->str();
-        if (c != *m_conditions.rbegin()) {
+        if (c != *conditions.rbegin()) {
             ss << " ";
         }
     }
     ss << ") (:effects ";
-    for (const auto& e : m_effects) {
+    // sort conditions by index then repr to obtain canonical representation
+    std::vector<std::shared_ptr<const BaseEffect>> effects(m_effects.begin(), m_effects.end());
+    std::sort(effects.begin(), effects.end(), [&](const auto& l, const auto& r){
+        if (l->get_base_feature()->get_index() == r->get_base_feature()->get_index()) {
+            return l->compute_repr() < r->compute_repr();
+        }
+        return l->get_base_feature()->get_index() < r->get_base_feature()->get_index();
+    });
+    for (const auto& e : effects) {
         ss << e->str();
-        if (e != *m_effects.rbegin()) {
+        if (e != *effects.rbegin()) {
             ss << " ";
         }
     }

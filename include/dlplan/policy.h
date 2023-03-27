@@ -75,6 +75,7 @@ public:
     /**
      * Getters.
      */
+    std::shared_ptr<const core::BaseElement> get_base_feature() const;
     int get_index() const;
 };
 
@@ -118,6 +119,7 @@ public:
     /**
      * Getters.
      */
+    std::shared_ptr<const core::BaseElement> get_base_feature() const;
     int get_index() const;
 };
 

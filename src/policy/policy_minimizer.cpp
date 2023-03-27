@@ -69,9 +69,9 @@ std::set<T> copy_to_builder(
 }
 
 
-static std::set<std::shared_ptr<const Rule>> compute_dominated_rules(
-    const std::set<std::shared_ptr<const Rule>>& rules) {
-    std::set<std::shared_ptr<const Rule>> dominated_rules;
+static std::unordered_set<const Rule*> compute_dominated_rules(
+    const std::unordered_set<const Rule*>& rules) {
+    std::unordered_set<const Rule*> dominated_rules;
     for (const auto& rule_1 : rules) {
         for (const auto& rule_2 : rules) {
             if (rule_1 == rule_2) {
@@ -80,7 +80,6 @@ static std::set<std::shared_ptr<const Rule>> compute_dominated_rules(
             }
             if (utils::is_subset_eq(rule_1->get_conditions(), rule_2->get_conditions()) && utils::is_subset_eq(rule_1->get_effects(), rule_2->get_effects())) {
                 dominated_rules.insert(rule_2);
-                break;
             }
         }
     }
@@ -153,9 +152,9 @@ static bool try_merge_boolean_condition(
                 c_b_merged.insert(key);
                 insert_rules_to_mapping(result_rule.get(), c2r, e2r);
                 std::cout << "try_merge_boolean_condition" << std::endl;
-                std::cout << "rule1: " << rule1->compute_repr() << std::endl;
-                std::cout << "rule2: " << rule2->compute_repr() << std::endl;
-                std::cout << "rule_result: " << result_rule->compute_repr() << std::endl;
+                std::cout << "rule1: " << rule1->str() << std::endl;
+                std::cout << "rule2: " << rule2->str() << std::endl;
+                std::cout << "rule_result: " << result_rule->str() << std::endl;
                 return true;
             }
         }
@@ -192,33 +191,9 @@ static bool try_merge_numerical_condition(
                 c_n_merged.insert(key);
                 insert_rules_to_mapping(result_rule.get(), c2r, e2r);
                 std::cout << "try_merge_numerical_condition" << std::endl;
-                std::cout << "rule1: " << rule1->compute_repr() << std::endl;
-                std::cout << "rule2: " << rule2->compute_repr() << std::endl;
-                std::cout << "rule_result: " << result_rule->compute_repr() << std::endl;
-                return true;
-            }
-        }
-        for (const auto& rule2 : c2r[c_gt.get()]) {
-            for (const auto& rule1 : c2r[c_eq.get()]) {
-                CacheEntry<2> key(numerical.get(), {rule1, rule2});
-                // check merged
-                if (c_n_merged.count(key)) continue;
-                // check mergeable
-                if (!utils::is_subset_eq(rule1->get_effects(), rule2->get_effects())) continue;
-                if (!utils::is_subset_eq(utils::set_difference(rule1->get_conditions(), {c_eq}), utils::set_difference(rule2->get_conditions(), {c_gt}))) continue;
-                // merge
-                std::shared_ptr<const Rule> result_rule = builder.add_rule(
-                    utils::set_difference(rule2->get_conditions(), {c_gt}),
-                    rule2->get_effects());
-                rules.insert(result_rule);
-                rules_result.erase(rule2);
-                rules_result.insert(result_rule.get());
-                c_n_merged.insert(key);
-                insert_rules_to_mapping(result_rule.get(), c2r, e2r);
-                std::cout << "try_merge_numerical_condition" << std::endl;
-                std::cout << "rule1: " << rule1->compute_repr() << std::endl;
-                std::cout << "rule2: " << rule2->compute_repr() << std::endl;
-                std::cout << "rule_result: " << result_rule->compute_repr() << std::endl;
+                std::cout << "rule1: " << rule1->str() << std::endl;
+                std::cout << "rule2: " << rule2->str() << std::endl;
+                std::cout << "rule_result: " << result_rule->str() << std::endl;
                 return true;
             }
         }
@@ -237,6 +212,7 @@ static bool try_merge_boolean_effect(
     for (const auto& boolean : booleans) {
         const auto e_pos = builder.add_pos_effect(boolean);
         const auto e_neg = builder.add_neg_effect(boolean);
+        const auto e_bot = builder.add_bot_effect(boolean);
         for (const auto& rule1 : e2r[e_pos.get()]) {
             for (const auto& rule2 : e2r[e_neg.get()]) {
                 CacheEntry<2> key(boolean.get(), {rule1, rule2});
@@ -255,13 +231,60 @@ static bool try_merge_boolean_effect(
                 e_b_merged.insert(key);
                 insert_rules_to_mapping(result_rule.get(), c2r, e2r);
                 std::cout << "try_merge_boolean_effect" << std::endl;
-                std::cout << "rule1: " << rule1->compute_repr() << std::endl;
-                std::cout << "rule2: " << rule2->compute_repr() << std::endl;
-                std::cout << "rule_result: " << result_rule->compute_repr() << std::endl;
+                std::cout << "rule1: " << rule1->str() << std::endl;
+                std::cout << "rule2: " << rule2->str() << std::endl;
+                std::cout << "rule_result: " << result_rule->str() << std::endl;
                 return true;
             }
         }
-        // TODO: other combination of effects are mergeable as well.
+        for (const auto& rule1 : e2r[e_pos.get()]) {
+            for (const auto& rule2 : e2r[e_bot.get()]) {
+                CacheEntry<2> key(boolean.get(), {rule1, rule2});
+                // check merged
+                if (e_b_merged.count(key)) continue;
+                // check mergeable
+                if (!utils::is_subset_eq(rule1->get_conditions(), rule2->get_conditions())) continue;
+                if (!utils::is_subset_eq(utils::set_difference(rule1->get_effects(), {e_pos}), utils::set_difference(rule2->get_effects(), {e_bot}))) continue;
+                // merge
+                std::shared_ptr<const Rule> result_rule = builder.add_rule(
+                    rule2->get_conditions(),
+                    utils::set_difference(rule2->get_effects(), {e_bot}));
+                rules.insert(result_rule);
+                rules_result.erase(rule2);
+                rules_result.insert(result_rule.get());
+                e_b_merged.insert(key);
+                insert_rules_to_mapping(result_rule.get(), c2r, e2r);
+                std::cout << "try_merge_boolean_effect" << std::endl;
+                std::cout << "rule1: " << rule1->str() << std::endl;
+                std::cout << "rule2: " << rule2->str() << std::endl;
+                std::cout << "rule_result: " << result_rule->str() << std::endl;
+                return true;
+            }
+        }
+        for (const auto& rule1 : e2r[e_neg.get()]) {
+            for (const auto& rule2 : e2r[e_bot.get()]) {
+                CacheEntry<2> key(boolean.get(), {rule1, rule2});
+                // check merged
+                if (e_b_merged.count(key)) continue;
+                // check mergeable
+                if (!utils::is_subset_eq(rule1->get_conditions(), rule2->get_conditions())) continue;
+                if (!utils::is_subset_eq(utils::set_difference(rule1->get_effects(), {e_neg}), utils::set_difference(rule2->get_effects(), {e_bot}))) continue;
+                // merge
+                std::shared_ptr<const Rule> result_rule = builder.add_rule(
+                    rule2->get_conditions(),
+                    utils::set_difference(rule2->get_effects(), {e_bot}));
+                rules.insert(result_rule);
+                rules_result.erase(rule2);
+                rules_result.insert(result_rule.get());
+                e_b_merged.insert(key);
+                insert_rules_to_mapping(result_rule.get(), c2r, e2r);
+                std::cout << "try_merge_boolean_effect" << std::endl;
+                std::cout << "rule1: " << rule1->str() << std::endl;
+                std::cout << "rule2: " << rule2->str() << std::endl;
+                std::cout << "rule_result: " << result_rule->str() << std::endl;
+                return true;
+            }
+        }
     }
     return false;
 }
@@ -300,10 +323,10 @@ static bool try_merge_numerical_effect(
                     e_n_merged.insert(key);
                     insert_rules_to_mapping(result_rule.get(), c2r, e2r);
                     std::cout << "try_merge_numerical_effect" << std::endl;
-                    std::cout << "rule1: " << rule1->compute_repr() << std::endl;
-                    std::cout << "rule2: " << rule2->compute_repr() << std::endl;
-                    std::cout << "rule3: " << rule3->compute_repr() << std::endl;
-                    std::cout << "rule_result: " << result_rule->compute_repr() << std::endl;
+                    std::cout << "rule1: " << rule1->str() << std::endl;
+                    std::cout << "rule2: " << rule2->str() << std::endl;
+                    std::cout << "rule3: " << rule3->str() << std::endl;
+                    std::cout << "rule_result: " << result_rule->str() << std::endl;
                     return true;
                 }
             }
@@ -336,10 +359,13 @@ Policy PolicyMinimizer::minimize(const Policy& policy) const {
         if (try_merge_numerical_condition(numericals, builder, rules, rules_result, c2r, e2r, c_n_merged)) continue;
         if (try_merge_boolean_effect(booleans, builder, rules, rules_result, c2r, e2r, e_b_merged)) continue;
         if (try_merge_numerical_effect(numericals, builder, rules, rules_result, c2r, e2r, e_n_merged)) continue;
-        // TODO: implement other merges
         break;
     } while(true);
-    // TODO: copy resulting rules in new builder and return policy.
+    // Erase dominated rules
+    for (const auto& rule : compute_dominated_rules(rules_result)) {
+        rules_result.erase(rule);
+    }
+    // Copy resulting rules in new builder and return policy.
     PolicyBuilder result_builder;
     std::for_each(rules.begin(), rules.end(), [&](const auto& rule){
         if (rules_result.count(rule.get())) {

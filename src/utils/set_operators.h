@@ -106,6 +106,7 @@ bool is_supset_eq(const Container &l, const Container& r)
 
 template<typename Container>
 Container set_difference(const Container& l, const Container& r) {
+    assert(std::is_sorted(l) && std::is_sorted(r));
     Container result;
     std::set_difference(l.begin(), l.end(), r.begin(), r.end(), std::inserter(result, result.begin()));
     return result;
@@ -113,10 +114,12 @@ Container set_difference(const Container& l, const Container& r) {
 
 template<typename Container>
 Container set_symmetric_difference(const Container& l, const Container& r) {
+    assert(std::is_sorted(l) && std::is_sorted(r));
     Container result;
     std::set_symmetric_difference(l.begin(), l.end(), r.begin(), r.end(), std::inserter(result, result.begin()));
     return result;
 }
+
 
 }
 
