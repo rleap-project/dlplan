@@ -1,6 +1,5 @@
 
 import os
-import sys
 import subprocess
 from pathlib import Path
 
@@ -30,12 +29,10 @@ class CMakeBuild(build_ext):
 
         cfg = "Debug" if self.debug else "Release"
 
-        # Set Python_EXECUTABLE instead if you use PYBIND11_FINDPYTHON
         cmake_args = [
             "-DDLPLAN_PYTHON=On",
             f"-DDLPLAN_VERSION_INFO={__version__}",
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}",
-            f"-DPYTHON_EXECUTABLE={sys.executable}",
             f"-DENABLE_TESTING:bool=false",
             f"-DCMAKE_BUILD_TYPE={cfg}",  # not used on MSVC, but no harm
         ]
@@ -68,5 +65,10 @@ setup(
     package_dir={"": "api/python/src"},
     ext_modules=[CMakeExtension("_dlplan")],
     cmdclass={"build_ext": CMakeBuild},
-    zip_safe=False
+    zip_safe=False,
+    extras_require={
+        'test': [
+            'pytest',
+        ],
+    }
 )
