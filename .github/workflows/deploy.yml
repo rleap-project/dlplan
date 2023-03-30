@@ -10,6 +10,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Set up Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+
       - name: Build manylinux Python wheels
         uses: RalfG/python-wheels-manylinux-build@v0.4.2-manylinux2014_x86_64
         with:
