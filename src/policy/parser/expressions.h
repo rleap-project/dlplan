@@ -64,7 +64,7 @@ public:
         throw std::runtime_error("Expression::parse_effect - cannot parse expression into effect.");
     }
 
-    const std::string& get_name_ref() const { return m_name; }
+    const std::string& get_name() const { return m_name; }
     const std::vector<Expression_Ptr>& get_children() const { return m_children; }
 };
 
@@ -100,7 +100,7 @@ public:
     std::vector<std::shared_ptr<const core::Boolean>> parse_booleans(PolicyBuilder& builder, core::SyntacticElementFactory& factory) const override {
         std::vector<std::shared_ptr<const core::Boolean>> boolean_features;
         for (size_t i = 1; i < m_children.size(); ++i) {
-            auto boolean = factory.parse_boolean(m_children.at(i)->get_name_ref());
+            auto boolean = factory.parse_boolean(m_children.at(i)->get_name());
             boolean.set_index(boolean_features.size());
             boolean_features.push_back(builder.add_boolean_feature(boolean));
         }
@@ -116,7 +116,7 @@ public:
     std::vector<std::shared_ptr<const core::Numerical>> parse_numericals(PolicyBuilder& builder, core::SyntacticElementFactory& factory) const override {
         std::vector<std::shared_ptr<const core::Numerical>> numerical_features;
         for (size_t i = 1; i < m_children.size(); ++i) {
-            auto numerical = factory.parse_numerical(m_children.at(i)->get_name_ref());
+            auto numerical = factory.parse_numerical(m_children.at(i)->get_name());
             numerical.set_index(numerical_features.size());
             numerical_features.push_back(builder.add_numerical_feature(numerical));
         }
@@ -185,7 +185,7 @@ public:
         if (m_children.size() != 2) {
             throw std::runtime_error("BooleanConditionExpression::parse_condition - incorrect number of children. Should be 2.");
         }
-        int b_idx = try_parse_number(m_children.at(1)->get_name_ref());
+        int b_idx = try_parse_number(m_children.at(1)->get_name());
         if (b_idx < 0 && b_idx >= static_cast<int>(booleans.size())) {
             throw std::runtime_error("BooleanConditionExpression::parse_effect - Boolean feature index out of range.");
         }
@@ -205,7 +205,7 @@ public:
         if (m_children.size() != 2) {
             throw std::runtime_error("BooleanEffectExpression::parse_effect - incorrect number of children. Should be 2.");
         }
-        int b_idx = try_parse_number(m_children.at(1)->get_name_ref());
+        int b_idx = try_parse_number(m_children.at(1)->get_name());
         if (b_idx < 0 && b_idx >= static_cast<int>(booleans.size())) {
             throw std::runtime_error("BooleanEffectExpression::parse_effect - Boolean feature index out of range.");
         }
@@ -225,7 +225,7 @@ public:
         if (m_children.size() != 2) {
             throw std::runtime_error("NumericalConditionExpression::parse_condition - incorrect number of children. Should be 2.");
         }
-        int n_idx = try_parse_number(m_children.at(1)->get_name_ref());
+        int n_idx = try_parse_number(m_children.at(1)->get_name());
         if (n_idx < 0 && n_idx >= static_cast<int>(numericals.size())) {
             throw std::runtime_error("NumericalConditionExpression::parse_condition - Boolean feature index out of range.");
         }
@@ -245,7 +245,7 @@ public:
         if (m_children.size() != 2) {
             throw std::runtime_error("NumericalEffectExpression::parse_effect - incorrect number of children. Should be 2.");
         }
-        int n_idx = try_parse_number(m_children.at(1)->get_name_ref());
+        int n_idx = try_parse_number(m_children.at(1)->get_name());
         if (n_idx < 0 && n_idx >= static_cast<int>(numericals.size())) {
             throw std::runtime_error("NumericalEffectExpression::parse_effect - Boolean feature index out of range.");
         }

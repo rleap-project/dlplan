@@ -16,8 +16,7 @@ Constant& Constant::operator=(Constant&& other) = default;
 Constant::~Constant() = default;
 
 bool Constant::operator==(const Constant& other) const {
-    // our construction ensures that there are not two constants with same index and same root.
-    return get_index() == other.get_index();
+    return (get_name() == other.get_name()) && (get_index() == other.get_index());
 }
 
 bool Constant::operator!=(const Constant& other) const {
@@ -28,7 +27,7 @@ int Constant::get_index() const {
     return m_index;
 }
 
-const std::string& Constant::get_name_ref() const {
+const std::string& Constant::get_name() const {
     return m_name;
 }
 

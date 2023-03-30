@@ -15,7 +15,7 @@ private:
 
     std::unique_ptr<ConceptDenotation> evaluate_impl(const State& state, DenotationsCaches& caches) const override {
         auto denotation = std::make_unique<ConceptDenotation>(
-            ConceptDenotation(state.get_instance_info_ref().get_num_objects()));
+            ConceptDenotation(state.get_instance_info()->get_objects().size()));
         denotation->set();
         compute_result(
             *m_concept_left->evaluate(state, caches),
@@ -31,7 +31,7 @@ private:
         auto concept_right_denotations = m_concept_right->evaluate(states, caches);
         for (size_t i = 0; i < states.size(); ++i) {
             const auto& state = states[i];
-            int num_objects = state.get_instance_info_ref().get_num_objects();
+            int num_objects = state.get_instance_info()->get_objects().size();
             auto denotation = std::make_unique<ConceptDenotation>(ConceptDenotation(num_objects));
             compute_result(
                 *(*concept_left_denotations)[i],
@@ -48,7 +48,7 @@ protected:
 
 public:
     AndConcept(const VocabularyInfo& vocabulary, Concept_Ptr concept_1, Concept_Ptr concept_2)
-    : Concept(vocabulary, concept_1->get_is_static() && concept_2->get_is_static()),
+    : Concept(vocabulary, concept_1->is_static() && concept_2->is_static()),
       m_concept_left(concept_1),
       m_concept_right(concept_2) {
         if (!(concept_1 && concept_2)) {
@@ -62,7 +62,7 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        ConceptDenotation result(state.get_instance_info_ref().get_num_objects());
+        ConceptDenotation result(state.get_instance_info()->get_objects().size());
         compute_result(
             m_concept_left->evaluate(state),
             m_concept_right->evaluate(state),

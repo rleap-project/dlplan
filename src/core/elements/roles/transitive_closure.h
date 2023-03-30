@@ -10,26 +10,27 @@ namespace dlplan::core::element {
 // https://stackoverflow.com/questions/3517524/what-is-the-best-known-transitive-closure-algorithm-for-a-directed-graph
 class TransitiveClosureRole : public Role {
 private:
-    void compute_result(const RoleDenotation& denot, int num_objects, RoleDenotation& result) const {
+    void compute_result(const RoleDenotation& denot, RoleDenotation& result) const {
         result = denot;
-        auto& result_bitset = result.get_bitset_ref();
-        for (int k = 0; k < num_objects; ++k) {
-            for (int i = 0; i < num_objects; ++i) {
-                for (int j = 0; j < num_objects; ++j) {
-                    if (result_bitset.test(i * num_objects + k) && result_bitset.test(k * num_objects + j)) {
-                        result_bitset.set(i * num_objects + j);
+        bool changed = false;
+        do {
+            RoleDenotation tmp_result = result;
+            for (const auto pair_1 : tmp_result) {
+                for (const auto pair_2 : tmp_result) {
+                    if (pair_1.second == pair_2.first) {
+                        result.insert(std::make_pair(pair_1.first, pair_2.second));
                     }
                 }
             }
-        }
+            changed = (result.size() != tmp_result.size());
+        } while (changed);
     }
 
     std::unique_ptr<RoleDenotation> evaluate_impl(const State& state, DenotationsCaches& caches) const override {
         auto denotation = std::make_unique<RoleDenotation>(
-            RoleDenotation(state.get_instance_info_ref().get_num_objects()));
+            RoleDenotation(state.get_instance_info()->get_objects().size()));
         compute_result(
             *m_role->evaluate(state, caches),
-            state.get_instance_info_ref().get_num_objects(),
             *denotation);
         return denotation;
     }
@@ -40,10 +41,9 @@ private:
         auto role_denotations = m_role->evaluate(states, caches);
         for (size_t i = 0; i < states.size(); ++i) {
             auto denotation = std::make_unique<RoleDenotation>(
-                RoleDenotation(states[i].get_instance_info_ref().get_num_objects()));
+                RoleDenotation(states[i].get_instance_info()->get_objects().size()));
             compute_result(
                 *(*role_denotations)[i],
-                states[i].get_instance_info_ref().get_num_objects(),
                 *denotation);
             denotations->push_back(caches.m_r_denot_cache.insert(std::move(denotation)).first->get());
         }
@@ -55,18 +55,16 @@ protected:
 
 public:
     TransitiveClosureRole(const VocabularyInfo& vocabulary, Role_Ptr role)
-    : Role(vocabulary, role->get_is_static()), m_role(role) {
+    : Role(vocabulary, role->is_static()), m_role(role) {
         if (!role) {
             throw std::runtime_error("TransitiveClosureRole::TransitiveClosureRole - child is a nullptr.");
         }
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        int num_objects = state.get_instance_info_ref().get_num_objects();
-        RoleDenotation result(num_objects);
+        RoleDenotation result(state.get_instance_info()->get_objects().size());
         compute_result(
             m_role->evaluate(state),
-            num_objects,
             result);
         return result;
     }

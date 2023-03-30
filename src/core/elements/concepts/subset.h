@@ -19,7 +19,7 @@ private:
 
     std::unique_ptr<ConceptDenotation> evaluate_impl(const State& state, DenotationsCaches& caches) const override {
         auto denotation = std::make_unique<ConceptDenotation>(
-            ConceptDenotation(state.get_instance_info_ref().get_num_objects()));
+            ConceptDenotation(state.get_instance_info()->get_objects().size()));
         compute_result(
             *m_role_left->evaluate(state, caches),
             *m_role_right->evaluate(state, caches),
@@ -34,7 +34,7 @@ private:
         auto role_right_denotations = m_role_right->evaluate(states, caches);
         for (size_t i = 0; i < states.size(); ++i) {
             auto denotation = std::make_unique<ConceptDenotation>(
-                ConceptDenotation(states[i].get_instance_info_ref().get_num_objects()));
+                ConceptDenotation(states[i].get_instance_info()->get_objects().size()));
             compute_result(
                 *(*role_left_denotations)[i],
                 *(*role_right_denotations)[i],
@@ -51,7 +51,7 @@ protected:
 
 public:
     SubsetConcept(const VocabularyInfo& vocabulary, Role_Ptr role_left, Role_Ptr role_right)
-    : Concept(vocabulary, role_left->get_is_static() && role_right->get_is_static()),
+    : Concept(vocabulary, role_left->is_static() && role_right->is_static()),
       m_role_left(role_left), m_role_right(role_right) {
         if (!(role_left && role_right)) {
             throw std::runtime_error("SubsetConcept::SubsetConcept - at least one child is a nullptr");
@@ -59,7 +59,7 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        auto denotation = ConceptDenotation(state.get_instance_info_ref().get_num_objects());
+        auto denotation = ConceptDenotation(state.get_instance_info()->get_objects().size());
         compute_result(
             m_role_left->evaluate(state),
             m_role_right->evaluate(state),

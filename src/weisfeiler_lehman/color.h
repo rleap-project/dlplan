@@ -18,7 +18,7 @@ public:
      * During compression we store Color in an unordered_map.
      * Hence, we need to be able to compute a hash value.
      */
-    std::size_t compute_hash() const;
+    std::size_t hash() const;
 };
 
 }
@@ -31,7 +31,7 @@ namespace std {
      */
     template<> struct hash<dlplan::weisfeiler_lehman::Color> {
         std::size_t operator()(const dlplan::weisfeiler_lehman::Color& color) const noexcept {
-            return color.compute_hash();
+            return color.hash();
         }
     };
 }

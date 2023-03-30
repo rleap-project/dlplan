@@ -10,19 +10,19 @@ namespace dlplan::core::element {
 class NullaryBoolean : public Boolean {
 private:
     void compute_result(const State& state, bool& result) const {
-        const auto& atoms = state.get_instance_info_ref().get_atoms_ref();
-        for (int atom_idx : state.get_atom_idxs_ref()) {
+        const auto& atoms = state.get_instance_info()->get_atoms();
+        for (int atom_idx : state.get_atom_idxs()) {
             const auto& atom = atoms[atom_idx];
-            if (atom.get_predicate_ref().get_index() == m_predicate.get_index()) {
+            if (atom.get_predicate_idx() == m_predicate.get_index()) {
                 result = true;
                 return;
             }
         }
-        const auto& per_predicate_idx_static_atom_idxs = state.get_instance_info_ref().get_per_predicate_idx_static_atom_idxs_ref();
-        auto it = per_predicate_idx_static_atom_idxs.find(m_predicate.get_index());
-        if (it != per_predicate_idx_static_atom_idxs.end()) {
-            result = !it->second.empty();
-            return;
+        for (const auto &atom : state.get_instance_info()->get_static_atoms()) {
+            if (atom.get_predicate_idx() == m_predicate.get_index()) {
+                result = true;
+                return;
+            }
         }
         result = false;
     }
@@ -45,12 +45,9 @@ protected:
 
 public:
     NullaryBoolean(const VocabularyInfo& vocabulary, const Predicate& predicate)
-    : Boolean(vocabulary, predicate.get_is_static()), m_predicate(predicate) {
+    : Boolean(vocabulary, predicate.is_static()), m_predicate(predicate) {
         if (predicate.get_arity() != 0) {
             throw std::runtime_error("NullaryBoolean::NullaryBoolean - expected predicate with arity 0.");
-        }
-        if (!vocabulary.exists_predicate(predicate)) {
-            throw std::runtime_error("NullaryBoolean::NullaryBoolean - predicate does not exist in VocabularyInfo.");
         }
     }
 
@@ -65,7 +62,7 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << get_name() << "(" << m_predicate.get_name_ref() << ")";
+        out << get_name() << "(" << m_predicate.get_name() << ")";
     }
 
     static std::string get_name() {

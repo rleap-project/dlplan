@@ -5,7 +5,7 @@ def main():
     # Generate and read state space files.
     dlplan.StateSpaceGenerator().generate_state_space("domain.pddl", "instance_2_1_0.pddl")
     state_space_2_1_0 = dlplan.StateSpaceReader().read(None, 0)
-    vocabulary_info = state_space_2_1_0.get_instance_info_ref().get_vocabulary_info()
+    vocabulary_info = state_space_2_1_0.get_instance_info()->get_vocabulary_info()
     print("State space of instance_2_1_0:")
     state_space_2_1_0.print()
     # Generate and read state space files over same VocabularyInfo.

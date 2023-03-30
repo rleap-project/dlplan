@@ -11,7 +11,7 @@ class CountNumerical : public Numerical {
 private:
     template<typename DENOTATION_TYPE>
     void compute_result(const DENOTATION_TYPE& denot, int& result) const {
-        result = denot.count();
+        result = denot.size();
     }
 
     int evaluate_impl(const State& state, DenotationsCaches& caches) const override {
@@ -41,7 +41,7 @@ protected:
 
 public:
     CountNumerical(const VocabularyInfo& vocabulary, T element)
-    : Numerical(vocabulary, element->get_is_static()), m_element(element) { }
+    : Numerical(vocabulary, element->is_static()), m_element(element) { }
 
     int evaluate(const State& state) const override {
         int result;

@@ -16,7 +16,7 @@ private:
 
     std::unique_ptr<RoleDenotation> evaluate_impl(const State& state, DenotationsCaches& caches) const override {
         auto denotation = std::make_unique<RoleDenotation>(
-            RoleDenotation(state.get_instance_info_ref().get_num_objects()));
+            RoleDenotation(state.get_instance_info()->get_objects().size()));
         compute_result(
             *m_role->evaluate(state, caches),
             *denotation);
@@ -29,7 +29,7 @@ private:
         auto role_denotations = m_role->evaluate(states, caches);
         for (size_t i = 0; i < states.size(); ++i) {
             auto denotation = std::make_unique<RoleDenotation>(
-                RoleDenotation(states[i].get_instance_info_ref().get_num_objects()));
+                RoleDenotation(states[i].get_instance_info()->get_objects().size()));
             compute_result(
                 *(*role_denotations)[i],
                 *denotation);
@@ -43,14 +43,14 @@ protected:
 
 public:
     InverseRole(const VocabularyInfo& vocabulary, Role_Ptr role)
-    : Role(vocabulary, role->get_is_static()), m_role(role) {
+    : Role(vocabulary, role->is_static()), m_role(role) {
         if (!role) {
             throw std::runtime_error("InverseRole::InverseRole - child is a nullptr.");
         }
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        RoleDenotation denotation(state.get_instance_info_ref().get_num_objects());
+        RoleDenotation denotation(state.get_instance_info()->get_objects().size());
         compute_result(
             m_role->evaluate(state),
             denotation);

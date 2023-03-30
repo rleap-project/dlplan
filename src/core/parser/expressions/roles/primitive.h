@@ -18,7 +18,7 @@ protected:
         int pos_1 = try_parse_number(m_children[1]->get_name());
         int pos_2 = try_parse_number(m_children[2]->get_name());
         // 2. Construct element
-        return std::make_unique<element::PrimitiveRole>(vocabulary, vocabulary.get_predicate_ref(vocabulary.get_predicate_idx(predicate_name)), pos_1, pos_2);
+        return std::make_unique<element::PrimitiveRole>(vocabulary, vocabulary.get_predicate(predicate_name), pos_1, pos_2);
     }
 
 public:

@@ -49,6 +49,7 @@ struct CacheEntry {
     }
 };
 
+
 /**
  * Copies all objects to the given PolicyBuilder and returns newly constructed objects.
  */

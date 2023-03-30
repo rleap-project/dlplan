@@ -145,7 +145,7 @@ TEST(DLPTests, EmpiricalMinimization) {
 
     auto vocabulary_info = construct_vocabulary_info();
     auto instance_info = construct_instance_info(vocabulary_info);
-    const auto& atoms = instance_info->get_atoms_ref();
+    const auto& atoms = instance_info->get_atoms();
     auto at_p1_A = atoms[0];
     auto at_p1_B = atoms[1];
     auto at_p2_A = atoms[2];

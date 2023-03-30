@@ -9,16 +9,11 @@ namespace dlplan::core::element {
 
 class ComposeRole : public Role {
 private:
-    void compute_result(const RoleDenotation& left_denot, const RoleDenotation& right_denot, int num_objects, RoleDenotation& result) const {
-        const auto& left_bitset = left_denot.get_bitset_ref();
-        const auto& right_bitset = right_denot.get_bitset_ref();
-        for (int i = 0; i < num_objects; ++i) {  // source
-            for (int j = 0; j < num_objects; ++j) {  // target
-                for (int k = 0; k < num_objects; ++k) {  // middle
-                    if (left_bitset.test(i * num_objects + k) && right_bitset.test(k * num_objects + j)) {
-                        result.insert(std::make_pair(i, j));
-                        break;
-                    }
+    void compute_result(const RoleDenotation& left_denot, const RoleDenotation& right_denot, RoleDenotation& result) const {
+        for (const auto& left_pair : left_denot) {  // source
+            for (const auto& right_pair : right_denot) {  // target
+                if (left_pair.second == right_pair.first) {
+                    result.insert(std::make_pair(left_pair.first, right_pair.second));
                 }
             }
         }
@@ -26,11 +21,10 @@ private:
 
     std::unique_ptr<RoleDenotation> evaluate_impl(const State& state, DenotationsCaches& caches) const override {
         auto denotation = std::make_unique<RoleDenotation>(
-            RoleDenotation(state.get_instance_info_ref().get_num_objects()));
+            RoleDenotation(state.get_instance_info()->get_objects().size()));
         compute_result(
             *m_role_left->evaluate(state, caches),
             *m_role_right->evaluate(state, caches),
-            state.get_instance_info_ref().get_num_objects(),
             *denotation);
         return denotation;
     }
@@ -42,11 +36,10 @@ private:
         auto role_right_denotations = m_role_right->evaluate(states, caches);
         for (size_t i = 0; i < states.size(); ++i) {
             auto denotation = std::make_unique<RoleDenotation>(
-                RoleDenotation(states[i].get_instance_info_ref().get_num_objects()));
+                RoleDenotation(states[i].get_instance_info()->get_objects().size()));
             compute_result(
                 *(*role_left_denotations)[i],
                 *(*role_right_denotations)[i],
-                states[i].get_instance_info_ref().get_num_objects(),
                 *denotation);
             denotations->push_back(caches.m_r_denot_cache.insert(std::move(denotation)).first->get());
         }
@@ -59,19 +52,17 @@ protected:
 
 public:
     ComposeRole(const VocabularyInfo& vocabulary, Role_Ptr role_left, Role_Ptr role_right)
-    : Role(vocabulary, role_left->get_is_static() && role_right->get_is_static()), m_role_left(role_left), m_role_right(role_right)  {
+    : Role(vocabulary, role_left->is_static() && role_right->is_static()), m_role_left(role_left), m_role_right(role_right)  {
         if (!(role_left && role_right)) {
             throw std::runtime_error("ComposeRole::ComposeRole - at least one child is a nullptr.");
         }
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        int num_objects = state.get_instance_info_ref().get_num_objects();
-        RoleDenotation denotation(num_objects);
+        RoleDenotation denotation(state.get_instance_info()->get_objects().size());
         compute_result(
             m_role_left->evaluate(state),
             m_role_right->evaluate(state),
-            num_objects,
             denotation);
         return denotation;
     }

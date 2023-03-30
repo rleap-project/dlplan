@@ -43,15 +43,15 @@ TupleIndex TupleNode::get_tuple_index() const {
     return m_tuple_index;
 }
 
-const StateIndices& TupleNode::get_state_indices_ref() const {
+const StateIndices& TupleNode::get_state_indices() const {
     return m_state_indices;
 }
 
-const TupleIndices& TupleNode::get_predecessors_ref() const {
+const TupleIndices& TupleNode::get_predecessors() const {
     return m_predecessors;
 }
 
-const TupleIndices& TupleNode::get_successors_ref() const {
+const TupleIndices& TupleNode::get_successors() const {
     return m_successors;
 }
 

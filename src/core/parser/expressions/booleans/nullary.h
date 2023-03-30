@@ -17,7 +17,7 @@ protected:
         // 1. Parse children
         const std::string& predicate_name = m_children[0]->get_name();
         // 2. Construct element
-        return std::make_unique<element::NullaryBoolean>(vocabulary, vocabulary.get_predicate_ref(vocabulary.get_predicate_idx(predicate_name)));
+        return std::make_unique<element::NullaryBoolean>(vocabulary, vocabulary.get_predicate(predicate_name));
     }
 
 public:

@@ -24,9 +24,9 @@ public:
      * Evaluate with caching for a single state.
      */
     bool evaluate(const State& state, DenotationsCaches& caches) const {
-        if (get_is_static()) {
+        if (is_static()) {
             // check if denotations is cached.
-            auto key = std::array<int, 2>({state.get_instance_info_ref().get_index(), get_index()});
+            auto key = std::array<int, 2>({state.get_instance_info()->get_index(), get_index()});
             auto cached = caches.m_b_denots_mapping_per_instance.find(key);
             if (cached != caches.m_b_denots_mapping_per_instance.end()) return cached->second;
             // compute denotation
@@ -36,7 +36,7 @@ public:
             return denotation;
         } else {
             // check if denotations is cached.
-            auto key = std::array<int, 3>({state.get_instance_info_ref().get_index(), state.get_index(), get_index()});
+            auto key = std::array<int, 3>({state.get_instance_info()->get_index(), state.get_index(), get_index()});
             auto cached = caches.m_b_denots_mapping_per_state.find(key);
             if (cached != caches.m_b_denots_mapping_per_state.end()) return cached->second;
             // compute denotation

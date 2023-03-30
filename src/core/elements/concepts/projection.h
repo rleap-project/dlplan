@@ -20,7 +20,7 @@ private:
 
     std::unique_ptr<ConceptDenotation> evaluate_impl(const State& state, DenotationsCaches& caches) const override {
         auto denotation = std::make_unique<ConceptDenotation>(
-            ConceptDenotation(state.get_instance_info_ref().get_num_objects()));
+            ConceptDenotation(state.get_instance_info()->get_objects().size()));
         compute_result(
             *m_role->evaluate(state, caches),
             *denotation);
@@ -33,7 +33,7 @@ private:
         auto role_denotations = m_role->evaluate(states, caches);
         for (size_t i = 0; i < states.size(); ++i) {
             auto denotation = std::make_unique<ConceptDenotation>(
-                ConceptDenotation(states[i].get_instance_info_ref().get_num_objects()));
+                ConceptDenotation(states[i].get_instance_info()->get_objects().size()));
             compute_result(
                 *(*role_denotations)[i],
                 *denotation);
@@ -48,7 +48,7 @@ protected:
 
 public:
     ProjectionConcept(const VocabularyInfo& vocabulary, const Role_Ptr& role, int pos)
-    : Concept(vocabulary, role->get_is_static()), m_role(role), m_pos(pos) {
+    : Concept(vocabulary, role->is_static()), m_role(role), m_pos(pos) {
         if (pos < 0 || pos > 1) {
             throw std::runtime_error("ProjectionConcept::ProjectionConcept - projection index out of range, should be 0 or 1 ("s + std::to_string(pos) + ")");
         }
@@ -58,7 +58,7 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        ConceptDenotation denotation(state.get_instance_info_ref().get_num_objects());
+        ConceptDenotation denotation(state.get_instance_info()->get_objects().size());
         compute_result(
             m_role->evaluate(state),
             denotation);

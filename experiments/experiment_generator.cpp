@@ -35,8 +35,8 @@ int main(int argc, char** argv) {
     auto state_space = state_space::StateSpaceReader().read(nullptr, 0);
     std::cout << "Started generating features" << std::endl;
     std::cout << "Number of states: " << state_space.get_num_states() << std::endl;
-    std::cout << "Number of dynamic atoms: " << state_space.get_instance_info_ref().get_atoms_ref().size() << std::endl;
-    std::cout << "Number of static atoms: " << state_space.get_instance_info_ref().get_static_atoms_ref().size() << std::endl;
+    std::cout << "Number of dynamic atoms: " << state_space.get_instance_info()->get_atoms().size() << std::endl;
+    std::cout << "Number of static atoms: " << state_space.get_instance_info()->get_static_atoms().size() << std::endl;
 
     auto syntactic_element_factory = core::SyntacticElementFactory(state_space.get_instance_info()->get_vocabulary_info());
     auto feature_generator = generator::FeatureGenerator();
@@ -62,7 +62,7 @@ int main(int argc, char** argv) {
         time_limit,
         feature_limit,
         threads_limit,
-        core::States(state_space.get_states_ref().begin(), state_space.get_states_ref().end()));
+        core::States(state_space.get_states().begin(), state_space.get_states().end()));
 
     std::vector<core::Boolean> boolean_features;
     std::vector<core::Numerical> numerical_features;
@@ -81,7 +81,7 @@ int main(int argc, char** argv) {
     {
         auto start = std::chrono::steady_clock::now();
         for (int i = 0; i < num_iterations; ++i) {
-            for (const auto& state : state_space.get_states_ref()) {
+            for (const auto& state : state_space.get_states()) {
                 for (const auto& boolean : boolean_features) {
                     boolean.evaluate(state);
                 }
@@ -100,7 +100,7 @@ int main(int argc, char** argv) {
         auto start = std::chrono::steady_clock::now();
         core::DenotationsCaches caches;
         for (int i = 0; i < std::atoi(argv[10]); ++i) {
-            for (const auto& state : state_space.get_states_ref()) {
+            for (const auto& state : state_space.get_states()) {
                 for (const auto& boolean : boolean_features) {
                     boolean.evaluate(state, caches);
                 }
@@ -118,7 +118,7 @@ int main(int argc, char** argv) {
     {
         auto start = std::chrono::steady_clock::now();
         core::DenotationsCaches caches;
-        core::States states_vec(state_space.get_states_ref().begin(), state_space.get_states_ref().end());
+        core::States states_vec(state_space.get_states().begin(), state_space.get_states().end());
         for (int i = 0; i < std::atoi(argv[10]); ++i) {
             for (const auto& boolean : boolean_features) {
                 boolean.evaluate(states_vec, caches);

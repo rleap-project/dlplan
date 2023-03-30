@@ -26,14 +26,14 @@ void init_state_space(py::module_ &m) {
         .def("is_solvable", &GoalDistanceInformation::is_solvable)
         .def("is_trivially_solvable", &GoalDistanceInformation::is_trivially_solvable)
         .def("get_initial_state_index", &GoalDistanceInformation::get_initial_state_index)
-        .def("get_deadend_state_indices", &GoalDistanceInformation::get_deadend_state_indices_ref, py::return_value_policy::reference)
-        .def("get_goal_distances", &GoalDistanceInformation::get_goal_distances_ref, py::return_value_policy::reference)
+        .def("get_deadend_state_indices", &GoalDistanceInformation::get_deadend_state_indices, py::return_value_policy::reference)
+        .def("get_goal_distances", &GoalDistanceInformation::get_goal_distances, py::return_value_policy::reference)
     ;
 
     py::class_<StateInformation>(m, "StateInformation")
         .def("__copy__", [](const StateInformation& info, py::object){ return StateInformation(info); })
         .def("__deepcopy__", [](const StateInformation& info, py::object){ return StateInformation(info); })
-        .def("get_state", &StateInformation::get_state_ref, py::return_value_policy::reference)
+        .def("get_state", &StateInformation::get_state, py::return_value_policy::reference)
     ;
 
     py::class_<StateSpace, std::shared_ptr<StateSpace>>(m, "StateSpace")
@@ -54,13 +54,13 @@ void init_state_space(py::module_ &m) {
         .def("set_goal_state_indices", &StateSpace::set_goal_state_indices)
         .def("compute_goal_distance_information", &StateSpace::compute_goal_distance_information)
         .def("compute_state_information", &StateSpace::compute_state_information)
-        .def("get_states", &StateSpace::get_states_ref, py::return_value_policy::reference)
-        .def("get_state_indices", &StateSpace::get_state_indices_ref, py::return_value_policy::reference)
+        .def("get_states", &StateSpace::get_states, py::return_value_policy::reference)
+        .def("get_state_indices", &StateSpace::get_state_indices, py::return_value_policy::reference)
         .def("get_num_states", &StateSpace::get_num_states)
         .def("get_initial_state_index", &StateSpace::get_initial_state_index)
-        .def("get_forward_successor_state_indices", &StateSpace::get_forward_successor_state_indices_ref, py::return_value_policy::reference)
-        .def("get_backward_successor_state_indices", &StateSpace::get_backward_successor_state_indices_ref, py::return_value_policy::reference)
-        .def("get_goal_state_indices", &StateSpace::get_goal_state_indices_ref, py::return_value_policy::reference)
+        .def("get_forward_successor_state_indices", &StateSpace::get_forward_successor_state_indices, py::return_value_policy::reference)
+        .def("get_backward_successor_state_indices", &StateSpace::get_backward_successor_state_indices, py::return_value_policy::reference)
+        .def("get_goal_state_indices", &StateSpace::get_goal_state_indices, py::return_value_policy::reference)
         .def("get_instance_info", &StateSpace::get_instance_info)
     ;
 

@@ -47,40 +47,51 @@ def test_vocabulary():
     assert p4.get_name() == "clear"
     assert p4.get_index() == 4
     assert p4.get_arity() == 1
-    assert vocabulary.exists_predicate_name("on")
-    assert not vocabulary.exists_predicate_name("foo")
 
 
 def test_instance():
     """ Exhaustively test InstanceInfo
     """
     vocabulary = generate_bw_vocabulary()
-    p0, p1, p2, p3, p4 = vocabulary.get_predicates()
     instance = generate_bw_instance(vocabulary)
 
+    predicates = vocabulary.get_predicates()
+    p0, p1, p2, p3, p4 = vocabulary.get_predicates()
+
+    atoms = instance.get_atoms()
     a0, a1, a2, a3, a4, a5, a6, a7 = instance.get_atoms()
+
+    objects = instance.get_objects()
     o0, o1 = instance.get_objects()
 
     assert a0.get_name() == "on(a,b)"
     assert a0.get_index() == 0
-    assert a0.get_predicate().get_name() == "on"
-    assert a0.get_predicate() == p0
-    assert a0.get_objects() == [o0, o1]
+    assert predicates[a0.get_predicate_idx()].get_name() == "on"
+    assert [objects[obj].get_name() for obj in a0.get_object_idxs()] == ["a", "b"]
     assert a1.get_name() == "on(b,a)"
     assert a1.get_index() == 1
-    assert a1.get_predicate().get_name() == "on"
-    assert a1.get_predicate() == p0
-    assert a1.get_objects() == [o1, o0]
+    assert predicates[a1.get_predicate_idx()].get_name() == "on"
+    assert [objects[obj].get_name() for obj in a1.get_object_idxs()] == ["b", "a"]
     assert a2.get_name() == "ontable(a)"
     assert a2.get_index() == 2
-    assert a2.get_predicate().get_name() == "ontable"
-    assert a2.get_predicate() == p2
-    assert a2.get_objects() == [o0]
+    assert predicates[a2.get_predicate_idx()].get_name() == "ontable"
+    assert [objects[obj].get_name() for obj in a2.get_object_idxs()] == ["a"]
 
     assert o0.get_name() == "a"
     assert o0.get_index() == 0
     assert o1.get_name() == "b"
     assert o1.get_index() == 1
+
+    assert p0.get_name() == "on"
+    assert p0.get_index() == 0
+    assert p1.get_name() == "on_g"
+    assert p1.get_index() == 1
+    assert p2.get_name() == "ontable"
+    assert p2.get_index() == 2
+    assert p3.get_name() == "holding"
+    assert p3.get_index() == 3
+    assert p4.get_name() == "clear"
+    assert p4.get_index() == 4
 
 
 def test_factory():

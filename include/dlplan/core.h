@@ -18,16 +18,12 @@
  */
 namespace dlplan::core {
     class SyntacticElementFactoryImpl;
-    class InstanceInfoImpl;
-    class VocabularyInfoImpl;
     class SyntacticElementFactory;
     class InstanceInfo;
     class VocabularyInfo;
     class State;
     class ConceptDenotation;
     class RoleDenotation;
-    class Boolean;
-    class Numerical;
     namespace element {
         template<typename T>
         class Element;
@@ -158,16 +154,13 @@ public:
     void erase(int value);
 
     int size() const;
-    int count() const;
     bool empty() const;
     bool intersects(const ConceptDenotation& other) const;
     bool is_subset_of(const ConceptDenotation& other) const;
 
     std::vector<int> to_sorted_vector() const;
-    const utils::DynamicBitset<unsigned>& get_bitset_ref() const;
-    utils::DynamicBitset<unsigned>& get_bitset_ref();
 
-    std::size_t compute_hash() const;
+    std::size_t hash() const;
 
     int get_num_objects() const;
 };
@@ -231,17 +224,13 @@ public:
     void erase(const std::pair<int, int>& value);
 
     int size() const;
-    int count() const;
     bool empty() const;
     bool intersects(const RoleDenotation& other) const;
     bool is_subset_of(const RoleDenotation& other) const;
 
     std::vector<std::pair<int, int>> to_sorted_vector() const;
-    const utils::DynamicBitset<unsigned>& get_bitset_ref() const;
-    utils::DynamicBitset<unsigned>& get_bitset_ref();
 
-    const std::vector<unsigned>& get_blocks() const;
-    std::size_t compute_hash() const;
+    std::size_t hash() const;
 
     int get_num_objects() const;
 };
@@ -305,7 +294,7 @@ public:
     bool operator!=(const Constant& other) const;
 
     int get_index() const;
-    const std::string& get_name_ref() const;
+    const std::string& get_name() const;
 };
 
 
@@ -336,9 +325,9 @@ public:
      * Getters.
      */
     int get_index() const;
-    const std::string& get_name_ref() const;
+    const std::string& get_name() const;
     int get_arity() const;
-    bool get_is_static() const;
+    bool is_static() const;
 };
 
 
@@ -364,7 +353,7 @@ public:
     bool operator!=(const Object& other) const;
 
     int get_index() const;
-    const std::string& get_name_ref() const;
+    const std::string& get_name() const;
 };
 
 
@@ -375,14 +364,14 @@ class Atom {
 private:
     std::string m_name;
     int m_index;
-    Predicate m_predicate;
-    std::vector<Object> m_objects;
+    int m_predicate_idx;
+    std::vector<int> m_object_idxs;
     bool m_is_static;
 
     Atom(const std::string& name,
         int index,
-        const Predicate& predicate,
-        const std::vector<Object> &objects,
+        int m_predicate_idx,
+        const std::vector<int> &object_idxs,
         bool is_static=false);
     friend class InstanceInfo;
 
@@ -399,21 +388,14 @@ public:
     /**
      * Getters.
      */
-    const std::string& get_name_ref() const;
+    const std::string& get_name() const;
     int get_index() const;
-    const Predicate& get_predicate_ref() const;
-    const std::vector<Object>& get_objects_ref() const;
-    const Object& get_object_ref(int pos) const;
-    bool get_is_static() const;
+    int get_predicate_idx() const;
+    const std::vector<int>& get_object_idxs() const;
+    bool is_static() const;
 };
 
 
-/**
- * A State contains consists of atoms including all static atoms.
- * TODO: Think of switching to Bitset as underlying datastructure.
- * If there are small number of atoms this is more memory efficient.
- * per_predicate_idx_to_atom_idxs requires |A¦*|P| many bits.
- */
 class State {
 private:
     std::shared_ptr<const InstanceInfo> m_instance_info;
@@ -422,10 +404,6 @@ private:
 
 public:
     State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms, int index=-1);
-    /**
-     * Expert interface to construct states without the overhead
-     * of copying Atoms but instead working on indices directly.
-     */
     State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs, int index=-1);
     State(const State& other);
     State& operator=(const State& other);
@@ -444,7 +422,7 @@ public:
     /**
      * Compute a 64-Bit hash value.
      */
-    size_t compute_hash() const;
+    size_t hash() const;
 
     /**
      * Setters.
@@ -454,10 +432,8 @@ public:
     /**
      * Getters.
      */
-    const InstanceInfo& get_instance_info_ref() const;
     std::shared_ptr<const InstanceInfo> get_instance_info() const;
-    const Index_Vec& get_atom_idxs_ref() const;
-    Index_Vec compute_sorted_atom_idxs() const;
+    const Index_Vec& get_atom_idxs() const;
     int get_index() const;
 };
 
@@ -468,10 +444,10 @@ public:
 class VocabularyInfo {
 private:
     // we store static and dynamic predicates together.
-    std::unordered_map<std::string, unsigned> m_predicate_name_to_predicate_idx;
+    std::unordered_map<std::string, unsigned> m_predicate_name_to_idx;
     std::vector<Predicate> m_predicates;
 
-    std::unordered_map<std::string, unsigned> m_constant_name_to_constant_idx;
+    std::unordered_map<std::string, unsigned> m_constant_name_to_idx;
     std::vector<Constant> m_constants;
 
 public:
@@ -483,19 +459,14 @@ public:
     ~VocabularyInfo();
 
     const Predicate& add_predicate(const std::string &name, int arity, bool is_static=false);
-
     const Constant& add_constant(const std::string& name);
 
-    bool exists_predicate(const Predicate& predicate) const;
-    bool exists_predicate_name(const std::string& name) const;
-    const std::vector<Predicate>& get_predicates_ref() const;
-    int get_predicate_idx(const std::string& name) const;
-    const Predicate& get_predicate_ref(int index) const;
-    bool exists_constant(const Constant& constant) const;
-    bool exists_constant_name(const std::string& name) const;
-    int get_constant_idx(const std::string& name) const;
-    const Constant& get_constant_ref(int index) const;
-    const std::vector<Constant>& get_constants_ref() const;
+    const std::vector<Predicate>& get_predicates() const;
+    const std::vector<Constant>& get_constants() const;
+
+    // needed for parsing.
+    const Predicate& get_predicate(const std::string& name) const;
+    const Constant& get_constant(const std::string& name) const;
 };
 
 
@@ -507,18 +478,18 @@ private:
     std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
     int m_index;
 
-    std::unordered_map<std::string, unsigned> m_atom_name_to_atom_idx;
+    std::unordered_map<std::string, unsigned> m_atom_name_to_idx;
     std::vector<Atom> m_atoms;
 
-    std::unordered_map<std::string, unsigned> m_static_atom_name_to_static_atom_idx;
+    std::unordered_map<std::string, unsigned> m_static_atom_name_to_idx;
     std::vector<Atom> m_static_atoms;
-    phmap::flat_hash_map<int, std::vector<int>> m_per_predicate_idx_static_atom_idxs;
 
-    std::unordered_map<std::string, unsigned> m_object_name_to_object_idx;
+    std::unordered_map<std::string, unsigned> m_object_name_to_idx;
     std::vector<Object> m_objects;
 
-    const Atom& add_atom(const std::string &predicate_name, const Name_Vec &object_names, bool is_static);
+    const Atom& add_atom(int predicate_idx, const Index_Vec& object_idxs, bool is_static);
     const Atom& add_atom(const Predicate& predicate, const std::vector<Object>& objects, bool is_static);
+    const Atom& add_atom(const std::string& predicate_name, const std::vector<std::string>& object_names, bool is_static);
 
 public:
     InstanceInfo() = delete;
@@ -529,18 +500,23 @@ public:
     InstanceInfo& operator=(InstanceInfo&& other);
     ~InstanceInfo();
 
+    const Object& add_object(const std::string& object_name);
+
     /**
      * Alternative 1 to add atoms.
      */
-    const Object& add_object(const std::string& object_name);
     const Atom& add_atom(const Predicate& predicate, const std::vector<Object>& objects);
     const Atom& add_static_atom(const Predicate& predicate, const std::vector<Object>& objects);
-
     /**
      * Alternative 2 to add atoms.
      */
-    const Atom& add_atom(const std::string& predicate_name, const Name_Vec& object_names);
-    const Atom& add_static_atom(const std::string& predicate_name, const Name_Vec& object_names);
+    const Atom& add_atom(int predicate_idx, const std::vector<int>& object_idxs);
+    const Atom& add_static_atom(int predicate_idx, const std::vector<int>& object_idxs);
+    /**
+     * Alternative 3 to add atoms.
+     */
+    const Atom& add_atom(const std::string& predicate_name, const std::vector<std::string>& object_names);
+    const Atom& add_static_atom(const std::string& predicate_name, const std::vector<std::string>& object_names);
 
     /**
      * Setters.
@@ -550,21 +526,14 @@ public:
     /**
      * Getters.
      */
-    int get_index() const;
-    bool exists_atom(const Atom& atom) const;
-    const std::vector<Atom>& get_atoms_ref() const;
-    const std::vector<Atom>& get_static_atoms_ref() const;
-    const Atom& get_atom_ref(int index) const;
-    int get_atom_idx(const std::string& name) const;
-    bool exists_object(const Object& object) const;
-    bool exists_object(const std::string name) const;
-    const std::vector<Object>& get_objects_ref() const;
-    const Object& get_object_ref(int index) const;
-    int get_object_idx(const std::string& name) const;
-    int get_num_objects() const;
-    const VocabularyInfo& get_vocabulary_info_ref() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
-    const phmap::flat_hash_map<int, std::vector<int>>& get_per_predicate_idx_static_atom_idxs_ref() const;
+    int get_index() const;
+    const std::vector<Atom>& get_atoms() const;
+    const std::vector<Atom>& get_static_atoms() const;
+    const std::vector<Object>& get_objects() const;
+    // convenience functions.
+    const Atom& get_atom(const std::string& name) const;
+    const Object& get_object(const std::string& name) const;
 };
 
 
@@ -575,7 +544,7 @@ protected:
     int m_index;
 
 protected:
-    BaseElement(std::shared_ptr<const VocabularyInfo> vocabulary_info);
+    explicit BaseElement(std::shared_ptr<const VocabularyInfo> vocabulary_info);
 
 public:
     virtual ~BaseElement();
@@ -601,7 +570,6 @@ public:
      * Getters.
      */
     int get_index() const;
-    const VocabularyInfo& get_vocabulary_info_ref() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
 };
 
@@ -631,7 +599,6 @@ public:
 
     std::string compute_repr() const override;
 
-    const element::Concept& get_element_ref() const;
     std::shared_ptr<const element::Concept> get_element() const;
 };
 
@@ -661,7 +628,6 @@ public:
 
     std::string compute_repr() const override;
 
-    const element::Role& get_element_ref() const;
     std::shared_ptr<const element::Role> get_element() const;
 };
 
@@ -691,7 +657,6 @@ public:
 
     std::string compute_repr() const override;
 
-    const element::Numerical& get_element_ref() const;
     std::shared_ptr<const element::Numerical> get_element() const;
 };
 
@@ -721,7 +686,6 @@ public:
 
     std::string compute_repr() const override;
 
-    const element::Boolean& get_element_ref() const;
     std::shared_ptr<const element::Boolean> get_element() const;
 };
 
@@ -741,7 +705,6 @@ public:
     SyntacticElementFactory& operator=(SyntacticElementFactory&& other);
     ~SyntacticElementFactory();
 
-    const VocabularyInfo& get_vocabulary_info_ref() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
 
     /**

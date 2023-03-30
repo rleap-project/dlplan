@@ -40,7 +40,7 @@ StateSpace::StateSpace(
       m_goal_state_indices(std::move(goal_state_indices)) {
     // assert states
     if (!std::all_of(m_states.begin(), m_states.end(),
-        [this](const auto& state){ return &state.get_instance_info_ref() == &this->get_instance_info_ref(); })) {
+        [this](const auto& state){ return state.get_instance_info() == this->get_instance_info(); })) {
         throw std::runtime_error("StateSpace::StateSpace - not all states come from the given InstanceInfo.");
     }
     // compute state indices
@@ -257,14 +257,14 @@ std::string StateSpace::to_dot(int verbosity_level) const {
     // 1. Precompute information for layout.
     auto goal_distance_information = compute_goal_distance_information();
     std::vector<StateIndices> layers;
-    for (const auto& pair : goal_distance_information.get_goal_distances_ref()) {
+    for (const auto& pair : goal_distance_information.get_goal_distances()) {
         if (pair.second >= static_cast<int>(layers.size())) {
             layers.resize(pair.second + 1);
         }
         layers[pair.second].push_back(pair.first);
     }
     // add deadends in next layer
-    std::unordered_set<int> all_state_indices(get_state_indices_ref().begin(), get_state_indices_ref().end());
+    std::unordered_set<int> all_state_indices(get_state_indices().begin(), get_state_indices().end());
     std::unordered_set<int> added_deadends;
     for (int i = 1; i < layers.size(); ++i) {
         for (const int s_idx : layers[i]) {
@@ -295,7 +295,7 @@ std::string StateSpace::to_dot(int verbosity_level) const {
             }
             result << "label=\"";
             if (verbosity_level >= 1) {
-                result << state_information.get_state_ref(state_index).str();
+                result << state_information.get_state(state_index).str();
             } else {
                 result << state_index;
             }
@@ -370,11 +370,11 @@ void StateSpace::set_goal_state_indices(const StateIndicesSet& goal_states) {
     m_goal_state_indices = goal_states;
 }
 
-const core::StatesSet& StateSpace::get_states_ref() const {
+const core::StatesSet& StateSpace::get_states() const {
     return m_states;
 }
 
-const StateIndicesSet& StateSpace::get_state_indices_ref() const {
+const StateIndicesSet& StateSpace::get_state_indices() const {
     return m_state_indices;
 }
 
@@ -386,20 +386,16 @@ StateIndex StateSpace::get_initial_state_index() const {
     return m_initial_state_index;
 }
 
-const AdjacencyList& StateSpace::get_forward_successor_state_indices_ref() const {
+const AdjacencyList& StateSpace::get_forward_successor_state_indices() const {
     return m_forward_successor_state_indices;
 }
 
-const AdjacencyList& StateSpace::get_backward_successor_state_indices_ref() const {
+const AdjacencyList& StateSpace::get_backward_successor_state_indices() const {
     return m_backward_successor_state_indices;
 }
 
-const StateIndicesSet& StateSpace::get_goal_state_indices_ref() const {
+const StateIndicesSet& StateSpace::get_goal_state_indices() const {
     return m_goal_state_indices;
-}
-
-const core::InstanceInfo& StateSpace::get_instance_info_ref() const {
-    return *m_instance_info;
 }
 
 std::shared_ptr<const InstanceInfo> StateSpace::get_instance_info() const {

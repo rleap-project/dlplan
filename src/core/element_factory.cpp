@@ -43,19 +43,19 @@ SyntacticElementFactoryImpl::SyntacticElementFactoryImpl(std::shared_ptr<const V
 }
 
 Concept SyntacticElementFactoryImpl::parse_concept(const std::string &description) {
-    return Concept(m_vocabulary_info, parser::Parser().parse(*m_vocabulary_info, description)->parse_concept(*m_vocabulary_info, m_caches));
+    return Concept(m_vocabulary_info, parser::Parser().parse(description)->parse_concept(*m_vocabulary_info, m_caches));
 }
 
 Role SyntacticElementFactoryImpl::parse_role(const std::string &description) {
-    return Role(m_vocabulary_info, parser::Parser().parse(*m_vocabulary_info, description)->parse_role(*m_vocabulary_info, m_caches));
+    return Role(m_vocabulary_info, parser::Parser().parse(description)->parse_role(*m_vocabulary_info, m_caches));
 }
 
 Numerical SyntacticElementFactoryImpl::parse_numerical(const std::string &description) {
-    return Numerical(m_vocabulary_info, parser::Parser().parse(*m_vocabulary_info, description)->parse_numerical(*m_vocabulary_info, m_caches));
+    return Numerical(m_vocabulary_info, parser::Parser().parse(description)->parse_numerical(*m_vocabulary_info, m_caches));
 }
 
 Boolean SyntacticElementFactoryImpl::parse_boolean(const std::string &description) {
-    return Boolean(m_vocabulary_info, parser::Parser().parse(*m_vocabulary_info, description)->parse_boolean(*m_vocabulary_info, m_caches));
+    return Boolean(m_vocabulary_info, parser::Parser().parse(description)->parse_boolean(*m_vocabulary_info, m_caches));
 }
 
 Boolean SyntacticElementFactoryImpl::make_empty_boolean(const Concept& concept) {
@@ -234,10 +234,6 @@ Role SyntacticElementFactoryImpl::make_transitive_closure(const Role& role) {
 Role SyntacticElementFactoryImpl::make_transitive_reflexive_closure(const Role& role) {
     return Role(m_vocabulary_info, m_caches.m_role_cache->insert(
         std::make_unique<element::TransitiveReflexiveClosureRole>(*m_vocabulary_info, role.get_element())).first);
-}
-
-const VocabularyInfo& SyntacticElementFactoryImpl::get_vocabulary_info_ref() const {
-    return *m_vocabulary_info;
 }
 
 std::shared_ptr<const VocabularyInfo> SyntacticElementFactoryImpl::get_vocabulary_info() const {

@@ -16,10 +16,10 @@ StateInformation& StateInformation::operator=(StateInformation&& other) = defaul
 
 StateInformation::~StateInformation() = default;
 
-const core::State& StateInformation::get_state_ref(StateIndex state) const {
+const core::State& StateInformation::get_state(StateIndex state) const {
     auto result = m_state_mapping.find(state);
     if (result == m_state_mapping.end()) {
-        throw std::runtime_error("StateInformation::get_state_ref - state out of bounds.");
+        throw std::runtime_error("StateInformation::get_state - state out of bounds.");
     }
     return result->second;
 }

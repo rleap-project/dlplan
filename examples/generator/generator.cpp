@@ -47,7 +47,7 @@ int main() {
     SyntacticElementFactory factory(v);
 
     // 4. Construct a bunch of states
-    const auto& atoms = i->get_atoms_ref();
+    const auto& atoms = i->get_atoms();
     const Atom& a0 = atoms[0];
     const Atom& a1 = atoms[1];
     const Atom& a2 = atoms[2];

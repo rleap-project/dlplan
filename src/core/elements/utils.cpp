@@ -69,7 +69,7 @@ int compute_multi_source_multi_target_shortest_distance(const ConceptDenotation&
         int source = queue.front();
         queue.pop_front();
         for (int target = 0; target < num_objects; ++target) {
-            if (edges.get_bitset_ref().test(source * num_objects + target)) {
+            if (edges.contains(std::make_pair(source,target))) {
                 int alt = distances[source] + 1;
                 if (distances[target] > alt) {
                     if (targets.contains(target)) {
@@ -97,7 +97,7 @@ Distances compute_multi_source_multi_target_shortest_distances(const ConceptDeno
         int source = queue.front();
         queue.pop_front();
         for (int target = 0; target < num_objects; ++target) {
-            if (edges.get_bitset_ref().test(source * num_objects + target)) {
+            if (edges.contains(std::make_pair(source, target))) {
                 int alt = distances[source] + 1;
                 if (distances[target] > alt) {
                     queue.push_back(target);

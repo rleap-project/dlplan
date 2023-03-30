@@ -60,8 +60,8 @@ public:
      * Getters.
      */
     StateIndex get_initial_state_index() const;
-    const StateIndicesSet& get_deadend_state_indices_ref() const;
-    const Distances& get_goal_distances_ref() const;
+    const StateIndicesSet& get_deadend_state_indices() const;
+    const Distances& get_goal_distances() const;
 };
 
 
@@ -81,7 +81,7 @@ public:
     StateInformation& operator=(StateInformation&& other);
     ~StateInformation();
 
-    const core::State& get_state_ref(StateIndex state) const;
+    const core::State& get_state(StateIndex state) const;
 };
 
 
@@ -184,14 +184,13 @@ public:
      */
     GoalDistanceInformation compute_goal_distance_information() const;
     StateInformation compute_state_information() const;
-    const core::StatesSet& get_states_ref() const;
-    const StateIndicesSet& get_state_indices_ref() const;
+    const core::StatesSet& get_states() const;
+    const StateIndicesSet& get_state_indices() const;
     int get_num_states() const;
     StateIndex get_initial_state_index() const;
-    const AdjacencyList& get_forward_successor_state_indices_ref() const;
-    const AdjacencyList& get_backward_successor_state_indices_ref() const;
-    const StateIndicesSet& get_goal_state_indices_ref() const;
-    const core::InstanceInfo& get_instance_info_ref() const;
+    const AdjacencyList& get_forward_successor_state_indices() const;
+    const AdjacencyList& get_backward_successor_state_indices() const;
+    const StateIndicesSet& get_goal_state_indices() const;
     std::shared_ptr<const core::InstanceInfo> get_instance_info() const;
 };
 

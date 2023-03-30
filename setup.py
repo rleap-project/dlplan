@@ -7,7 +7,7 @@ from pathlib import Path
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 HERE = Path(__file__).resolve().parent
 
 

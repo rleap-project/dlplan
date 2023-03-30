@@ -191,9 +191,9 @@ public:
      * Getters.
      */
     TupleIndex get_tuple_index() const;
-    const state_space::StateIndices& get_state_indices_ref() const;
-    const TupleIndices& get_predecessors_ref() const;
-    const TupleIndices& get_successors_ref() const;
+    const state_space::StateIndices& get_state_indices() const;
+    const TupleIndices& get_predecessors() const;
+    const TupleIndices& get_successors() const;
 };
 
 
@@ -228,8 +228,8 @@ public:
     /**
      * Getters.
      */
-    const std::vector<TupleNodes>& get_tuple_nodes_by_distance_ref() const;
-    const std::vector<state_space::StateIndices>& get_state_indices_by_distance_ref() const;
+    const std::vector<TupleNodes>& get_tuple_nodes_by_distance() const;
+    const std::vector<state_space::StateIndices>& get_state_indices_by_distance() const;
     state_space::StateIndex get_root_state_index() const;
     int get_width() const;
 };

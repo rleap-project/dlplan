@@ -57,11 +57,11 @@ StateIndex GoalDistanceInformation::get_initial_state_index() const {
     return m_initial_state_index;
 }
 
-const StateIndicesSet& GoalDistanceInformation::get_deadend_state_indices_ref() const {
+const StateIndicesSet& GoalDistanceInformation::get_deadend_state_indices() const {
     return m_deadend_state_indices;
 }
 
-const Distances& GoalDistanceInformation::get_goal_distances_ref() const {
+const Distances& GoalDistanceInformation::get_goal_distances() const {
     return m_goal_distances;
 }
 

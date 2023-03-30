@@ -74,8 +74,7 @@
 
 namespace dlplan::core::parser {
 
-Expression_Ptr ExpressionFactory::make_expression(const VocabularyInfo& vocabulary_info, const std::string& name, std::vector<Expression_Ptr> &&children) {
-    // case 1: name is in alphabet of elements
+Expression_Ptr ExpressionFactory::make_expression(const std::string& name, std::vector<Expression_Ptr> &&children) {
     if (name == element::EmptyBoolean<int>::get_name()) {
         return std::make_unique<EmptyBoolean>(EmptyBoolean(name, std::move(children)));
     } else if (name == element::InclusionBoolean<int>::get_name()) {
@@ -143,20 +142,7 @@ Expression_Ptr ExpressionFactory::make_expression(const VocabularyInfo& vocabula
     } else if (name == element::TransitiveReflexiveClosureRole::get_name()) {
         return std::make_unique<TransitiveReflexiveClosureRole>(TransitiveReflexiveClosureRole(name, std::move(children)));
     }
-    // case 2: name is in alphabet of VocabularyInfo
-    else if (vocabulary_info.exists_predicate_name(name)) {
-        return std::make_unique<Expression>(Expression(name, std::move(children)));
-    }
-    // case 3: name is constant in VocabularyInfo
-    else if (vocabulary_info.exists_constant_name(name)) {
-        return std::make_unique<Expression>(Expression(name, std::move(children)));
-    }
-    // case 3: name is an integer indicating projection
-    else if (is_number(name)) {
-        return std::make_unique<Expression>(Expression(name, std::move(children)));
-    }
-    // case 4: wrong syntax
-    throw std::runtime_error("ExpressionFactory::make_expression - No implementation available for ("s + name + ").");
+    return std::make_unique<Expression>(Expression(name, std::move(children)));
 }
 
 

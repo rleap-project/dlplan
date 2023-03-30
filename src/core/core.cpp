@@ -16,13 +16,13 @@
 
 namespace std {
     size_t hash<dlplan::core::State>::operator()(const dlplan::core::State& state) const noexcept {
-        return state.compute_hash();
+        return state.hash();
     }
     size_t hash<unique_ptr<dlplan::core::ConceptDenotation>>::operator()(const unique_ptr<dlplan::core::ConceptDenotation>& denotation) const noexcept {
-        return denotation->compute_hash();
+        return denotation->hash();
     }
     size_t hash<unique_ptr<dlplan::core::RoleDenotation>>::operator()(const unique_ptr<dlplan::core::RoleDenotation>& denotation) const noexcept {
-        return denotation->compute_hash();
+        return denotation->hash();
     }
     size_t hash<unique_ptr<dlplan::core::ConceptDenotations>>::operator()(const unique_ptr<dlplan::core::ConceptDenotations>& denotations) const noexcept {
         size_t seed = 0;
@@ -184,10 +184,6 @@ void ConceptDenotation::erase(int value) {
 }
 
 int ConceptDenotation::size() const {
-    return m_data.size();
-}
-
-int ConceptDenotation::count() const {
     return m_data.count();
 }
 
@@ -213,15 +209,7 @@ std::vector<int> ConceptDenotation::to_sorted_vector() const {
     return result;
 }
 
-const utils::DynamicBitset<unsigned>& ConceptDenotation::get_bitset_ref() const {
-    return m_data;
-}
-
-utils::DynamicBitset<unsigned>& ConceptDenotation::get_bitset_ref() {
-    return m_data;
-}
-
-std::size_t ConceptDenotation::compute_hash() const {
+std::size_t ConceptDenotation::hash() const {
     return std::hash<std::vector<unsigned>>()(m_data.get_blocks());
 }
 
@@ -348,10 +336,6 @@ void RoleDenotation::erase(const std::pair<int, int>& value) {
 }
 
 int RoleDenotation::size() const {
-    return m_data.size();
-}
-
-int RoleDenotation::count() const {
     return m_data.count();
 }
 
@@ -381,19 +365,7 @@ std::vector<std::pair<int, int>> RoleDenotation::to_sorted_vector() const {
     return result;
 }
 
-const utils::DynamicBitset<unsigned>& RoleDenotation::get_bitset_ref() const {
-    return m_data;
-}
-
-utils::DynamicBitset<unsigned>& RoleDenotation::get_bitset_ref() {
-    return m_data;
-}
-
-const std::vector<unsigned>& RoleDenotation::get_blocks() const {
-    return m_data.get_blocks();
-}
-
-std::size_t RoleDenotation::compute_hash() const {
+std::size_t RoleDenotation::hash() const {
     return std::hash<std::vector<unsigned>>()(m_data.get_blocks());
 }
 
@@ -413,10 +385,6 @@ void BaseElement::set_index(int index) {
 
 int BaseElement::get_index() const {
     return m_index;
-}
-
-const VocabularyInfo& BaseElement::get_vocabulary_info_ref() const {
-    return *m_vocabulary_info;
 }
 
 std::shared_ptr<const VocabularyInfo> BaseElement::get_vocabulary_info() const {
@@ -442,7 +410,7 @@ Concept& Concept::operator=(Concept&& other) = default;
 Concept::~Concept() = default;
 
 ConceptDenotation Concept::evaluate(const State& state) const {
-    if (&state.get_instance_info_ref().get_vocabulary_info_ref() != &get_vocabulary_info_ref()) {
+    if (state.get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
         throw std::runtime_error("Concept::evaluate - mismatched vocabularies of Concept and State.");
     }
     return m_element->evaluate(state);
@@ -462,10 +430,6 @@ int Concept::compute_complexity() const {
 
 std::string Concept::compute_repr() const {
     return m_element->compute_repr();
-}
-
-const element::Concept& Concept::get_element_ref() const {
-    return *m_element;
 }
 
 std::shared_ptr<const element::Concept> Concept::get_element() const {
@@ -491,7 +455,7 @@ Role& Role::operator=(Role&& other) = default;
 Role::~Role() = default;
 
 RoleDenotation Role::evaluate(const State& state) const {
-    if (&state.get_instance_info_ref().get_vocabulary_info_ref() != &get_vocabulary_info_ref()) {
+    if (state.get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
         throw std::runtime_error("Role::evaluate - mismatched vocabularies of Role and State.");
     }
     return m_element->evaluate(state);
@@ -511,10 +475,6 @@ int Role::compute_complexity() const {
 
 std::string Role::compute_repr() const {
     return m_element->compute_repr();
-}
-
-const element::Role& Role::get_element_ref() const {
-    return *m_element;
 }
 
 std::shared_ptr<const element::Role> Role::get_element() const {
@@ -540,7 +500,7 @@ Numerical& Numerical::operator=(Numerical&& other) = default;
 Numerical::~Numerical() = default;
 
 int Numerical::evaluate(const State& state) const {
-    if (&state.get_instance_info_ref().get_vocabulary_info_ref() != &get_vocabulary_info_ref()) {
+    if (state.get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
         throw std::runtime_error("Numerical::evaluate - mismatched vocabularies of Numerical and State.");
     }
     return m_element->evaluate(state);
@@ -561,10 +521,6 @@ int Numerical::compute_complexity() const {
 
 std::string Numerical::compute_repr() const {
     return m_element->compute_repr();
-}
-
-const element::Numerical& Numerical::get_element_ref() const {
-    return *m_element;
 }
 
 std::shared_ptr<const element::Numerical> Numerical::get_element() const {
@@ -590,7 +546,7 @@ Boolean& Boolean::operator=(Boolean&& other) = default;
 Boolean::~Boolean() = default;
 
 bool Boolean::evaluate(const State& state) const {
-    if (&state.get_instance_info_ref().get_vocabulary_info_ref() != &get_vocabulary_info_ref()) {
+    if (state.get_instance_info()->get_vocabulary_info() != get_vocabulary_info()) {
         throw std::runtime_error("Boolean::evaluate - mismatched vocabularies of Boolean and State.");
     }
     return m_element->evaluate(state);
@@ -611,10 +567,6 @@ int Boolean::compute_complexity() const {
 
 std::string Boolean::compute_repr() const {
     return m_element->compute_repr();
-}
-
-const element::Boolean& Boolean::get_element_ref() const {
-    return *m_element;
 }
 
 std::shared_ptr<const element::Boolean> Boolean::get_element() const {
@@ -644,10 +596,6 @@ SyntacticElementFactory& SyntacticElementFactory::operator=(SyntacticElementFact
 }
 
 SyntacticElementFactory::~SyntacticElementFactory() = default;
-
-const VocabularyInfo& SyntacticElementFactory::get_vocabulary_info_ref() const {
-    return m_pImpl->get_vocabulary_info_ref();
-}
 
 std::shared_ptr<const VocabularyInfo> SyntacticElementFactory::get_vocabulary_info() const {
     return m_pImpl->get_vocabulary_info();

@@ -15,7 +15,7 @@ private:
 
     std::unique_ptr<RoleDenotation> evaluate_impl(const State& state, DenotationsCaches& caches) const override {
         auto denotation = std::make_unique<RoleDenotation>(
-            RoleDenotation(state.get_instance_info_ref().get_num_objects()));
+            RoleDenotation(state.get_instance_info()->get_objects().size()));
         compute_result(
             *m_role_left->evaluate(state, caches),
             *m_role_right->evaluate(state, caches),
@@ -30,7 +30,7 @@ private:
         auto role_right_denotations = m_role_right->evaluate(states, caches);
         for (size_t i = 0; i < states.size(); ++i) {
             auto denotation = std::make_unique<RoleDenotation>(
-                RoleDenotation(states[i].get_instance_info_ref().get_num_objects()));
+                RoleDenotation(states[i].get_instance_info()->get_objects().size()));
             compute_result(
                 *(*role_left_denotations)[i],
                 *(*role_right_denotations)[i],
@@ -46,7 +46,7 @@ protected:
 
 public:
     OrRole(const VocabularyInfo& vocabulary, Role_Ptr role_1, Role_Ptr role_2)
-    : Role(vocabulary, role_1->get_is_static() && role_2->get_is_static()),
+    : Role(vocabulary, role_1->is_static() && role_2->is_static()),
       m_role_left(role_1),
       m_role_right(role_2) {
         if (!(role_1 && role_2)) {
@@ -60,7 +60,7 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        RoleDenotation denotation(state.get_instance_info_ref().get_num_objects());
+        RoleDenotation denotation(state.get_instance_info()->get_objects().size());
         compute_result(
             m_role_left->evaluate(state),
             m_role_right->evaluate(state),

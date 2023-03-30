@@ -41,7 +41,7 @@ Expression_Ptr Parser::parse_expressions_tree(Tokens &tokens) const {
         if (tokens.empty()) throw std::runtime_error("Parser::parse_expressions_tree - Expected ')' is missing.");
         tokens.pop_front();
         if (children.empty()) throw std::runtime_error("Parser::parse_expressions_tree - Empty list ().");
-        std::string name = children.at(0)->get_name_ref();
+        std::string name = children.at(0)->get_name();
         // Construct an expression that can be parsed into an element if the description is correct.
         return ExpressionFactory().make_expression(name, std::move(children));
     } else if (token.second == ")") {

@@ -9,6 +9,8 @@
 
 #include "types.h"
 
+#include "../../utils/collections.h"
+
 #include "../../../include/dlplan/utils/cache.h"
 #include "../../../include/dlplan/core.h"
 
@@ -47,7 +49,7 @@ public:
         m_index = index;
     }
 
-    bool get_is_static() const {
+    bool is_static() const {
         return m_is_static;
     }
 

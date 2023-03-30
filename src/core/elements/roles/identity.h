@@ -17,7 +17,7 @@ private:
 
     std::unique_ptr<RoleDenotation> evaluate_impl(const State& state, DenotationsCaches& caches) const override {
         auto denotation = std::make_unique<RoleDenotation>(
-            RoleDenotation(state.get_instance_info_ref().get_num_objects()));
+            RoleDenotation(state.get_instance_info()->get_objects().size()));
         compute_result(
             *m_concept->evaluate(state, caches),
             *denotation);
@@ -30,7 +30,7 @@ private:
         auto concept_denotations = m_concept->evaluate(states, caches);
         for (size_t i = 0; i < states.size(); ++i) {
             auto denotation = std::make_unique<RoleDenotation>(
-                RoleDenotation(states[i].get_instance_info_ref().get_num_objects()));
+                RoleDenotation(states[i].get_instance_info()->get_objects().size()));
             compute_result(
                 *(*concept_denotations)[i],
                 *denotation);
@@ -44,14 +44,14 @@ protected:
 
 public:
     IdentityRole(const VocabularyInfo& vocabulary, Concept_Ptr concept)
-    : Role(vocabulary, concept->get_is_static()), m_concept(concept) {
+    : Role(vocabulary, concept->is_static()), m_concept(concept) {
         if (!concept) {
             throw std::runtime_error("IdentityRole::IdentityRole - child is a nullptr.");
         }
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        RoleDenotation denotation(state.get_instance_info_ref().get_num_objects());
+        RoleDenotation denotation(state.get_instance_info()->get_objects().size());
         compute_result(
             m_concept->evaluate(state),
             denotation);

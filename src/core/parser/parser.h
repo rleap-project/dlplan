@@ -29,7 +29,7 @@ private:
     /**
      * Parses tokens into an abstract syntax tree.
      */
-    Expression_Ptr parse_expressions_tree(const VocabularyInfo& vocabulary_info, Tokens &tokens) const;
+    Expression_Ptr parse_expressions_tree(Tokens &tokens) const;
 
 public:
     Parser();
@@ -37,7 +37,7 @@ public:
     /**
      * Parses a textual description into an abstract syntax tree.
      */
-    Expression_Ptr parse(const VocabularyInfo& vocabulary_info, const std::string &description) const;
+    Expression_Ptr parse(const std::string &description) const;
 };
 
 }

@@ -3,7 +3,7 @@
 
 namespace dlplan::weisfeiler_lehman {
 
-std::size_t Color::compute_hash() const {
+std::size_t Color::hash() const {
     // TODO: return 0;
 }
 

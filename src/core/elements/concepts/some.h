@@ -20,7 +20,7 @@ private:
 
     std::unique_ptr<ConceptDenotation> evaluate_impl(const State& state, DenotationsCaches& caches) const override {
         auto denotation = std::make_unique<ConceptDenotation>(
-            ConceptDenotation(state.get_instance_info_ref().get_num_objects()));
+            ConceptDenotation(state.get_instance_info()->get_objects().size()));
         compute_result(
             *m_role->evaluate(state, caches),
             *m_concept->evaluate(state, caches),
@@ -35,7 +35,7 @@ private:
         auto concept_denotations = m_concept->evaluate(states, caches);
         for (size_t i = 0; i < states.size(); ++i) {
             auto denotation = std::make_unique<ConceptDenotation>(
-                ConceptDenotation(states[i].get_instance_info_ref().get_num_objects()));
+                ConceptDenotation(states[i].get_instance_info()->get_objects().size()));
             compute_result(
                 *(*role_denotations)[i],
                 *(*concept_denotations)[i],
@@ -51,7 +51,7 @@ protected:
 
 public:
     SomeConcept(const VocabularyInfo& vocabulary, Role_Ptr role, Concept_Ptr concept)
-    : Concept(vocabulary, role->get_is_static() && concept->get_is_static()),
+    : Concept(vocabulary, role->is_static() && concept->is_static()),
       m_role(role), m_concept(concept) {
         if (!(role && concept)) {
             throw std::runtime_error("SomeConcept::SomeConcept - at least one child is a nullptr");
@@ -59,7 +59,7 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        auto denotation = ConceptDenotation(state.get_instance_info_ref().get_num_objects());
+        auto denotation = ConceptDenotation(state.get_instance_info()->get_objects().size());
         compute_result(
             m_role->evaluate(state),
             m_concept->evaluate(state),
