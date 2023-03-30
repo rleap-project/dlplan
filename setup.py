@@ -68,10 +68,5 @@ setup(
     package_dir={"": "api/python/src"},
     ext_modules=[CMakeExtension("_dlplan")],
     cmdclass={"build_ext": CMakeBuild},
-    zip_safe=False,
-    extras_require={
-        'test': [
-            'pytest',
-        ],
-    }
+    zip_safe=False
 )
