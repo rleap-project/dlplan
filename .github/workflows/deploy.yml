@@ -15,6 +15,7 @@ jobs:
         with:
           python-versions: 'cp37-cp37m'
           build-requirements: 'pybind11 pybind11-global state_space_generator'
+          system-requirements: 'python3-devel'
 
       - uses: actions/upload-artifact@master
         with:
