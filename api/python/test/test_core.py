@@ -66,16 +66,16 @@ def test_instance():
 
     assert a0.get_name() == "on(a,b)"
     assert a0.get_index() == 0
-    assert predicates[a0.get_predicate_idx()].get_name() == "on"
-    assert [objects[obj].get_name() for obj in a0.get_object_idxs()] == ["a", "b"]
+    assert predicates[a0.get_predicate_index()].get_name() == "on"
+    assert [objects[obj].get_name() for obj in a0.get_object_indices()] == ["a", "b"]
     assert a1.get_name() == "on(b,a)"
     assert a1.get_index() == 1
-    assert predicates[a1.get_predicate_idx()].get_name() == "on"
-    assert [objects[obj].get_name() for obj in a1.get_object_idxs()] == ["b", "a"]
+    assert predicates[a1.get_predicate_index()].get_name() == "on"
+    assert [objects[obj].get_name() for obj in a1.get_object_indices()] == ["b", "a"]
     assert a2.get_name() == "ontable(a)"
     assert a2.get_index() == 2
-    assert predicates[a2.get_predicate_idx()].get_name() == "ontable"
-    assert [objects[obj].get_name() for obj in a2.get_object_idxs()] == ["a"]
+    assert predicates[a2.get_predicate_index()].get_name() == "ontable"
+    assert [objects[obj].get_name() for obj in a2.get_object_indices()] == ["a"]
 
     assert o0.get_name() == "a"
     assert o0.get_index() == 0

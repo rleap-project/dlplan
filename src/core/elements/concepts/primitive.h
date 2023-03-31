@@ -12,17 +12,17 @@ private:
     void compute_result(const State& state, ConceptDenotation& result) const {
         const auto& instance_info = *state.get_instance_info();
         const auto& atoms = instance_info.get_atoms();
-        for (int atom_idx : state.get_atom_idxs()) {
+        for (int atom_idx : state.get_atom_indices()) {
             const auto& atom = atoms[atom_idx];
-            if (atom.get_predicate_idx() == m_predicate.get_index()) {
-                assert(dlplan::utils::in_bounds(m_pos, atom.get_object_idxs()));
-                result.insert(atom.get_object_idxs()[m_pos]);
+            if (atom.get_predicate_index() == m_predicate.get_index()) {
+                assert(dlplan::utils::in_bounds(m_pos, atom.get_object_indices()));
+                result.insert(atom.get_object_indices()[m_pos]);
             }
         }
         for (const auto &atom : state.get_instance_info()->get_static_atoms()) {
-            if (atom.get_predicate_idx() == m_predicate.get_index()) {
-                assert(dlplan::utils::in_bounds(m_pos, atom.get_object_idxs()));
-                result.insert(atom.get_object_idxs()[m_pos]);
+            if (atom.get_predicate_index() == m_predicate.get_index()) {
+                assert(dlplan::utils::in_bounds(m_pos, atom.get_object_indices()));
+                result.insert(atom.get_object_indices()[m_pos]);
             }
         }
     }

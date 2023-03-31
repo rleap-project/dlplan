@@ -11,15 +11,15 @@ class NullaryBoolean : public Boolean {
 private:
     void compute_result(const State& state, bool& result) const {
         const auto& atoms = state.get_instance_info()->get_atoms();
-        for (int atom_idx : state.get_atom_idxs()) {
+        for (int atom_idx : state.get_atom_indices()) {
             const auto& atom = atoms[atom_idx];
-            if (atom.get_predicate_idx() == m_predicate.get_index()) {
+            if (atom.get_predicate_index() == m_predicate.get_index()) {
                 result = true;
                 return;
             }
         }
         for (const auto &atom : state.get_instance_info()->get_static_atoms()) {
-            if (atom.get_predicate_idx() == m_predicate.get_index()) {
+            if (atom.get_predicate_index() == m_predicate.get_index()) {
                 result = true;
                 return;
             }

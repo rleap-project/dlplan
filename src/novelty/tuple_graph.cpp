@@ -44,7 +44,7 @@ compute_novel_tuple_indices_layer(
         const TupleIndices state_novel_tuples = novelty_table.compute_novel_tuple_indices(
             TupleIndexGenerator(
                 novelty_base,
-                state_information.get_state(state_index).get_atom_idxs()));
+                state_information.get_state(state_index).get_atom_indices()));
         novel_tuples.insert(state_novel_tuples.begin(), state_novel_tuples.end());
         state_index_to_novel_tuples.emplace(state_index, state_novel_tuples);
         for (const auto tuple_index : state_novel_tuples) {
@@ -156,10 +156,10 @@ TupleGraph::TupleGraph(
     // 1. Initialize root state with distance = 0
     StateIndices initial_state_layer{root_state};
     TupleNodes initial_tuple_layer;
-    for (const auto tuple_index : TupleIndexGenerator(novelty_base, state_information.get_state(root_state).get_atom_idxs())) {
+    for (const auto tuple_index : TupleIndexGenerator(novelty_base, state_information.get_state(root_state).get_atom_indices())) {
         initial_tuple_layer.emplace_back(tuple_index, StateIndices{root_state});
     }
-    novelty_table.insert(TupleIndexGenerator(novelty_base, state_information.get_state(root_state).get_atom_idxs()), false);
+    novelty_table.insert(TupleIndexGenerator(novelty_base, state_information.get_state(root_state).get_atom_indices()), false);
     m_tuple_nodes_by_distance.push_back(std::move(initial_tuple_layer));
     m_state_indices_by_distance.push_back(std::move(initial_state_layer));
     visited_states.insert(root_state);

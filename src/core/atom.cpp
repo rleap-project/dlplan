@@ -17,7 +17,7 @@ Atom::Atom(
     const std::vector<int> &object_idxs,
     bool is_static)
     : m_name(name), m_index(index),
-      m_predicate_idx(predicate_idx), m_object_idxs(object_idxs), m_is_static(is_static) {
+      m_predicate_index(predicate_idx), m_object_indices(object_idxs), m_is_static(is_static) {
 }
 
 Atom::Atom(const Atom& other) = default;
@@ -46,12 +46,12 @@ int Atom::get_index() const {
     return m_index;
 }
 
-int Atom::get_predicate_idx() const {
-    return m_predicate_idx;
+int Atom::get_predicate_index() const {
+    return m_predicate_index;
 }
 
-const std::vector<int>& Atom::get_object_idxs() const {
-    return m_object_idxs;
+const std::vector<int>& Atom::get_object_indices() const {
+    return m_object_indices;
 }
 
 

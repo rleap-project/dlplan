@@ -23,7 +23,7 @@ VocabularyInfo::~VocabularyInfo() = default;
 
 const Predicate& VocabularyInfo::add_predicate(const std::string &predicate_name, int arity, bool is_static) {
     Predicate predicate = Predicate(predicate_name, m_predicates.size(), arity, is_static);
-    auto result = m_predicate_name_to_idx.emplace(predicate_name, m_predicates.size());
+    auto result = m_predicate_name_to_index.emplace(predicate_name, m_predicates.size());
     if (!result.second) {
         return m_predicates[result.first->second];
     }
@@ -33,7 +33,7 @@ const Predicate& VocabularyInfo::add_predicate(const std::string &predicate_name
 
 const Constant& VocabularyInfo::add_constant(const std::string& constant_name) {
     Constant constant = Constant(constant_name, m_constants.size());
-    auto result = m_constant_name_to_idx.emplace(constant_name, m_constants.size());
+    auto result = m_constant_name_to_index.emplace(constant_name, m_constants.size());
     if (!result.second) {
         return m_constants[result.first->second];
     }
@@ -50,17 +50,17 @@ const std::vector<Constant>& VocabularyInfo::get_constants() const {
 }
 
 const Predicate& VocabularyInfo::get_predicate(const std::string& name) const {
-    if (m_predicate_name_to_idx.count(name) == 0) {
+    if (m_predicate_name_to_index.count(name) == 0) {
         throw std::runtime_error("VocabularyInfo::get_predicate - predicate " + name + " does not exist.");
     }
-    return m_predicates[m_predicate_name_to_idx.at(name)];
+    return m_predicates[m_predicate_name_to_index.at(name)];
 }
 
 const Constant& VocabularyInfo::get_constant(const std::string& name) const {
-    if (m_constant_name_to_idx.count(name) == 0) {
+    if (m_constant_name_to_index.count(name) == 0) {
         throw std::runtime_error("VocabularyInfo::get_constant - constant " + name + " does not exist.");
     }
-    return m_constants[m_constant_name_to_idx.at(name)];
+    return m_constants[m_constant_name_to_index.at(name)];
 }
 
 }

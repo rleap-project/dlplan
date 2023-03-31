@@ -71,8 +71,8 @@ void init_core(py::module_ &m) {
         .def("__str__", &Atom::get_name, py::return_value_policy::reference)
         .def("get_index", &Atom::get_index)
         .def("get_name", &Atom::get_name, py::return_value_policy::reference)
-        .def("get_predicate_idx", &Atom::get_predicate_idx, py::return_value_policy::reference)
-        .def("get_object_idxs", &Atom::get_object_idxs, py::return_value_policy::reference)
+        .def("get_predicate_index", &Atom::get_predicate_index, py::return_value_policy::reference)
+        .def("get_object_indices", &Atom::get_object_indices, py::return_value_policy::reference)
         .def("is_static", &Atom::is_static)
     ;
 
@@ -87,7 +87,7 @@ void init_core(py::module_ &m) {
         .def("__str__", &State::str)
         .def("set_index", &State::set_index)
         .def("get_index", &State::get_index)
-        .def("get_atom_idxs", &State::get_atom_idxs, py::return_value_policy::reference)
+        .def("get_atom_indices", &State::get_atom_indices, py::return_value_policy::reference)
         .def("get_instance_info", &State::get_instance_info)
     ;
 

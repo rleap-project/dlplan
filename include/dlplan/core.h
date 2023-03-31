@@ -364,14 +364,14 @@ class Atom {
 private:
     std::string m_name;
     int m_index;
-    int m_predicate_idx;
-    std::vector<int> m_object_idxs;
+    int m_predicate_index;
+    std::vector<int> m_object_indices;
     bool m_is_static;
 
     Atom(const std::string& name,
         int index,
-        int m_predicate_idx,
-        const std::vector<int> &object_idxs,
+        int predicate_index,
+        const std::vector<int> &object_indices,
         bool is_static=false);
     friend class InstanceInfo;
 
@@ -390,8 +390,8 @@ public:
      */
     const std::string& get_name() const;
     int get_index() const;
-    int get_predicate_idx() const;
-    const std::vector<int>& get_object_idxs() const;
+    int get_predicate_index() const;
+    const std::vector<int>& get_object_indices() const;
     bool is_static() const;
 };
 
@@ -399,12 +399,12 @@ public:
 class State {
 private:
     std::shared_ptr<const InstanceInfo> m_instance_info;
-    Index_Vec m_atom_idxs;
+    Index_Vec m_atom_indices;
     int m_index;
 
 public:
     State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms, int index=-1);
-    State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs, int index=-1);
+    State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_indices, int index=-1);
     State(const State& other);
     State& operator=(const State& other);
     State(State&& other);
@@ -433,7 +433,7 @@ public:
      * Getters.
      */
     std::shared_ptr<const InstanceInfo> get_instance_info() const;
-    const Index_Vec& get_atom_idxs() const;
+    const Index_Vec& get_atom_indices() const;
     int get_index() const;
 };
 
@@ -444,10 +444,10 @@ public:
 class VocabularyInfo {
 private:
     // we store static and dynamic predicates together.
-    std::unordered_map<std::string, unsigned> m_predicate_name_to_idx;
+    std::unordered_map<std::string, int> m_predicate_name_to_index;
     std::vector<Predicate> m_predicates;
 
-    std::unordered_map<std::string, unsigned> m_constant_name_to_idx;
+    std::unordered_map<std::string, int> m_constant_name_to_index;
     std::vector<Constant> m_constants;
 
 public:
@@ -478,16 +478,16 @@ private:
     std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
     int m_index;
 
-    std::unordered_map<std::string, unsigned> m_atom_name_to_idx;
+    std::unordered_map<std::string, int> m_atom_name_to_index;
     std::vector<Atom> m_atoms;
 
-    std::unordered_map<std::string, unsigned> m_static_atom_name_to_idx;
+    std::unordered_map<std::string, int> m_static_atom_name_to_index;
     std::vector<Atom> m_static_atoms;
 
-    std::unordered_map<std::string, unsigned> m_object_name_to_idx;
+    std::unordered_map<std::string, int> m_object_name_to_index;
     std::vector<Object> m_objects;
 
-    const Atom& add_atom(int predicate_idx, const Index_Vec& object_idxs, bool is_static);
+    const Atom& add_atom(int predicate_index, const Index_Vec& object_indices, bool is_static);
     const Atom& add_atom(const Predicate& predicate, const std::vector<Object>& objects, bool is_static);
     const Atom& add_atom(const std::string& predicate_name, const std::vector<std::string>& object_names, bool is_static);
 
@@ -510,8 +510,8 @@ public:
     /**
      * Alternative 2 to add atoms.
      */
-    const Atom& add_atom(int predicate_idx, const std::vector<int>& object_idxs);
-    const Atom& add_static_atom(int predicate_idx, const std::vector<int>& object_idxs);
+    const Atom& add_atom(int predicate_index, const std::vector<int>& object_indices);
+    const Atom& add_static_atom(int predicate_index, const std::vector<int>& object_indices);
     /**
      * Alternative 3 to add atoms.
      */
