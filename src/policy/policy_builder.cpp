@@ -97,7 +97,7 @@ std::shared_ptr<const Rule> PolicyBuilderImpl::add_rule(Conditions&& conditions,
 }
 
 Policy PolicyBuilderImpl::get_result() {
-    return Policy(std::move(m_rules));
+    return Policy(Rules(m_rules));
 }
 
 
