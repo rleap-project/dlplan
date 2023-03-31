@@ -2,6 +2,7 @@
 #include <pybind11/stl.h>  // Necessary for automatic conversion of e.g. std::vectors
 #include <pybind11/iostream.h>
 #include <pybind11/functional.h>
+#include <pybind11/embed.h> // everything needed for embedding
 
 #define STRINGIFY(x) #x
 #define MACRO_STRINGIFY(x) STRINGIFY(x)
@@ -64,7 +65,10 @@ void init_state_space(py::module_ &m) {
         .def(py::init<>())
         .def("__copy__", [](const StateSpaceGenerator& generator, py::object){ return StateSpaceGenerator(generator); })
         .def("__deepcopy__", [](const StateSpaceGenerator& generator, py::object){ return StateSpaceGenerator(generator); })
-        .def("generate_state_space", &StateSpaceGenerator::generate_state_space)
+        .def("generate_state_space", [](const StateSpaceGenerator& generator, const std::string& domain_file, const std::string& instance_file){
+            py::module_ state_space_generator = py::module_::import("state_space_generator.state_space_generator");
+            state_space_generator.attr("generate_state_space")(domain_file, instance_file);
+        })
     ;
 
     py::class_<StateSpaceReader>(m, "StateSpaceReader")
