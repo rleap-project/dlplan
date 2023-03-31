@@ -142,7 +142,7 @@ static bool try_merge_boolean_condition(
                 // merge
                 std::shared_ptr<const Rule> result_rule = builder.add_rule(
                     utils::set_difference(rule2->get_conditions(), {c_neg}),
-                    rule2->get_effects());
+                    Effects(rule2->get_effects()));
                 // was merged before
                 if (rules.count(result_rule)) continue;
                 // compute result
@@ -182,7 +182,7 @@ static bool try_merge_numerical_condition(
                 // merge
                 std::shared_ptr<const Rule> result_rule = builder.add_rule(
                     utils::set_difference(rule2->get_conditions(), {c_eq}),
-                    rule2->get_effects());
+                    Effects(rule2->get_effects()));
                 // was merged before
                 if (rules.count(result_rule)) continue;
                 // compute result
@@ -221,7 +221,7 @@ static bool try_merge_boolean_effect(
                 if (!utils::is_subset_eq(utils::set_difference(rule1->get_effects(), {e_pos}), utils::set_difference(rule2->get_effects(), {e_neg}))) continue;
                 // merge
                 std::shared_ptr<const Rule> result_rule = builder.add_rule(
-                    rule2->get_conditions(),
+                    Conditions(rule2->get_conditions()),
                     utils::set_difference(rule2->get_effects(), {e_neg}));
                 // was merged before
                 if (rules.count(result_rule)) continue;
@@ -247,7 +247,7 @@ static bool try_merge_boolean_effect(
                 if (!utils::is_subset_eq(utils::set_difference(rule1->get_effects(), {e_pos}), utils::set_difference(rule2->get_effects(), {e_bot}))) continue;
                 // merge
                 std::shared_ptr<const Rule> result_rule = builder.add_rule(
-                    rule2->get_conditions(),
+                    Conditions(rule2->get_conditions()),
                     utils::set_difference(rule2->get_effects(), {e_bot}));
                 // was merged before
                 if (rules.count(result_rule)) continue;
@@ -274,7 +274,7 @@ static bool try_merge_boolean_effect(
                 if (!utils::is_subset_eq(utils::set_difference(rule1->get_effects(), {e_neg}), utils::set_difference(rule2->get_effects(), {e_bot}))) continue;
                 // merge
                 std::shared_ptr<const Rule> result_rule = builder.add_rule(
-                    rule2->get_conditions(),
+                    Conditions(rule2->get_conditions()),
                     utils::set_difference(rule2->get_effects(), {e_bot}));
                 // was merged before
                 if (rules.count(result_rule)) continue;
@@ -319,7 +319,7 @@ static bool try_merge_numerical_effect(
                     if (!utils::is_supset_eq(utils::set_difference(rule1->get_effects(), {e_inc}), utils::set_difference(rule3->get_effects(), {e_bot}))) continue;
                     // merge
                     std::shared_ptr<const Rule> result_rule = builder.add_rule(
-                        rule1->get_conditions(),
+                        Conditions(rule1->get_conditions()),
                         utils::set_difference(rule1->get_effects(), {e_inc}));
                     // was merged before
                     if (rules.count(result_rule)) continue;

@@ -23,9 +23,6 @@ void init_state_space(py::module_ &m) {
         .def("is_nongoal", &GoalDistanceInformation::is_nongoal)
         .def("is_deadend", &GoalDistanceInformation::is_deadend)
         .def("is_alive", &GoalDistanceInformation::is_alive)
-        .def("is_solvable", &GoalDistanceInformation::is_solvable)
-        .def("is_trivially_solvable", &GoalDistanceInformation::is_trivially_solvable)
-        .def("get_initial_state_index", &GoalDistanceInformation::get_initial_state_index)
         .def("get_deadend_state_indices", &GoalDistanceInformation::get_deadend_state_indices, py::return_value_policy::reference)
         .def("get_goal_distances", &GoalDistanceInformation::get_goal_distances, py::return_value_policy::reference)
     ;
@@ -45,7 +42,6 @@ void init_state_space(py::module_ &m) {
         .def("compute_distances", &StateSpace::compute_distances)
         .def("is_goal", &StateSpace::is_goal)
         .def("is_nongoal", &StateSpace::is_nongoal)
-        .def("is_trivially_solvable", &StateSpace::is_trivially_solvable)
         .def("add_state", &StateSpace::add_state, py::return_value_policy::reference)
         .def("add_transition", &StateSpace::add_transition)
         .def("print", &StateSpace::print)
@@ -62,17 +58,6 @@ void init_state_space(py::module_ &m) {
         .def("get_backward_successor_state_indices", &StateSpace::get_backward_successor_state_indices, py::return_value_policy::reference)
         .def("get_goal_state_indices", &StateSpace::get_goal_state_indices, py::return_value_policy::reference)
         .def("get_instance_info", &StateSpace::get_instance_info)
-    ;
-
-    py::enum_<ExitCode>(m, "ExitCode")
-        .value("SUCCESS", ExitCode::SUCCESS)
-        .value("SEARCH_UNSOLVABLE", ExitCode::SEARCH_UNSOLVABLE)
-        .value("SEARCH_UNSOLVED_INCOMPLETE", ExitCode::SEARCH_UNSOLVED_INCOMPLETE)
-        .value("SEARCH_OUT_OF_MEMORY", ExitCode::SEARCH_OUT_OF_MEMORY)
-        .value("SEARCH_OUT_OF_TIME", ExitCode::SEARCH_OUT_OF_TIME)
-        .value("SEARCH_CRITICAL_ERROR", ExitCode::SEARCH_CRITICAL_ERROR)
-        .value("SEARCH_INPUT_ERROR", ExitCode::SEARCH_INPUT_ERROR)
-        .value("SEARCH_UNSUPPORTED", ExitCode::SEARCH_UNSUPPORTED)
     ;
 
     py::class_<StateSpaceGenerator>(m, "StateSpaceGenerator")

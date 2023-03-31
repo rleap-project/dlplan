@@ -134,7 +134,7 @@ int Policy::get_index() const {
     return m_index;
 }
 
-std::set<std::shared_ptr<const Rule>> Policy::get_rules() const {
+const Rules& Policy::get_rules() const {
     return m_rules;
 }
 

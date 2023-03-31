@@ -12,5 +12,5 @@ TEST(DLPTests, StateSpaceGripperTest) {
     auto distance_information = state_space.compute_goal_distance_information();
     state_space.print();
     std::cout << state_space.to_dot(0) << std::endl;
-    EXPECT_EQ(distance_information.is_solvable(), true);
+    EXPECT_EQ(distance_information.is_alive(state_space.get_initial_state_index()), true);
 }

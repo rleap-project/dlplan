@@ -20,7 +20,6 @@ void init_novelty(py::module_ &m) {
         .def("atom_tuple_to_tuple_index", &NoveltyBase::atom_tuple_to_tuple_index)
         .def("tuple_index_to_atom_tuple", &NoveltyBase::tuple_index_to_atom_tuple)
         .def("get_max_tuple_size", &NoveltyBase::get_max_tuple_size)
-        .def("get_dummy_atom_index", &NoveltyBase::get_dummy_atom_index)
         .def("get_num_atoms", &NoveltyBase::get_num_atoms)
         .def("get_num_tuples", &NoveltyBase::get_num_tuples)
     ;

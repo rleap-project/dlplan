@@ -63,7 +63,7 @@ TupleIndexGenerator::tuple_index_iterator::tuple_index_iterator(
     m_atom_indices(pad_and_sort_atom_indices(
         atom_indices,
         novelty_base->get_max_tuple_size(),
-        novelty_base->get_dummy_atom_index())),
+        novelty_base->get_num_atoms())),  // index of dummy atom
     m_width(novelty_base->get_max_tuple_size()),
     m_count(end ? utils::binomial_coefficient(
         std::max(novelty_base->get_max_tuple_size(), static_cast<int>(atom_indices.size())),

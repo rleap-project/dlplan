@@ -169,8 +169,8 @@ public:
      * Getters.
      */
     int get_index() const;
-    Conditions get_conditions() const;
-    Effects get_effects() const;
+    const Conditions& get_conditions() const;
+    const Effects& get_effects() const;
 };
 
 
@@ -232,7 +232,7 @@ public:
      * Getters.
      */
     int get_index() const;
-    Rules get_rules() const;
+    const Rules& get_rules() const;
 };
 
 /**

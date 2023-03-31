@@ -16,14 +16,12 @@ using namespace std::string_literals;
 
 namespace dlplan::state_space {
 
-ExitCode StateSpaceGenerator::generate_state_space(
+void StateSpaceGenerator::generate_state_space(
     const std::string& domain_file,
     const std::string& instance_file) const {
     py::scoped_interpreter guard{};
     py::module_ state_space_generator = py::module_::import("state_space_generator.state_space_generator");
     state_space_generator.attr("generate_state_space")(domain_file, instance_file);
-    // TODO: set exitcode correctly
-    return ExitCode(0);
 }
 
 }

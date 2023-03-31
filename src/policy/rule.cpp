@@ -133,11 +133,11 @@ int Rule::get_index() const {
     return m_index;
 }
 
-Conditions Rule::get_conditions() const {
+const Conditions& Rule::get_conditions() const {
     return m_conditions;
 }
 
-Effects Rule::get_effects() const {
+const Effects& Rule::get_effects() const {
     return m_effects;
 }
 

@@ -195,10 +195,6 @@ bool StateSpace::is_nongoal(StateIndex state) const {
     return !is_goal(state);
 }
 
-bool StateSpace::is_trivially_solvable() const {
-    return is_goal(m_initial_state_index);
-}
-
 const core::State& StateSpace::add_state(const core::State& state) {
     auto result = m_states.insert(state);
     if (!result.second) {
@@ -348,7 +344,7 @@ GoalDistanceInformation StateSpace::compute_goal_distance_information() const {
             deadend_state_indices.insert(state);
         }
     }
-    return GoalDistanceInformation(m_initial_state_index, std::move(goal_distances), std::move(deadend_state_indices));
+    return GoalDistanceInformation(std::move(goal_distances), std::move(deadend_state_indices));
 }
 
 StateInformation StateSpace::compute_state_information() const {

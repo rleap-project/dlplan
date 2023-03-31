@@ -58,7 +58,6 @@ public:
      * Getters.
      */
     int get_max_tuple_size() const;
-    int get_dummy_atom_index() const;
     int get_num_atoms() const;
     int get_num_tuples() const;
 };

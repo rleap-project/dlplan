@@ -47,7 +47,7 @@ AtomIndices NoveltyBase::tuple_index_to_atom_tuple(TupleIndex tuple_index) const
     AtomIndices result;
     for (int i = m_max_tuple_size-1; i >= 0; --i) {
         int atom_index = tuple_index / m_factors[i];
-        if (atom_index != get_dummy_atom_index()) {
+        if (atom_index != get_num_atoms()) {  // index of dummy atom
             result.push_back(atom_index);
         }
         tuple_index -= atom_index * m_factors[i];
@@ -58,10 +58,6 @@ AtomIndices NoveltyBase::tuple_index_to_atom_tuple(TupleIndex tuple_index) const
 
 int NoveltyBase::get_max_tuple_size() const {
     return m_max_tuple_size;
-}
-
-int NoveltyBase::get_dummy_atom_index() const {
-    return m_num_atoms;
 }
 
 int NoveltyBase::get_num_atoms() const {

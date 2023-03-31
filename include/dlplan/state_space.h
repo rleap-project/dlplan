@@ -29,12 +29,10 @@ namespace dlplan::state_space {
  */
 class GoalDistanceInformation {
 private:
-    int m_initial_state_index;
     Distances m_goal_distances;
     StateIndicesSet m_deadend_state_indices;
 
     GoalDistanceInformation(
-        int initial_state_index,
         Distances&& goal_distances,
         StateIndicesSet&& deadend_state_indices);
     friend class StateSpace;
@@ -53,13 +51,10 @@ public:
     bool is_nongoal(StateIndex state) const;
     bool is_deadend(StateIndex state) const;
     bool is_alive(StateIndex state) const;
-    bool is_solvable() const;
-    bool is_trivially_solvable() const;
 
     /**
      * Getters.
      */
-    StateIndex get_initial_state_index() const;
     const StateIndicesSet& get_deadend_state_indices() const;
     const Distances& get_goal_distances() const;
 };
@@ -99,14 +94,10 @@ private:
     /* Required information. */
     std::shared_ptr<const core::InstanceInfo> m_instance_info;
     core::StatesSet m_states;
-    // Currently, state indices can be sparse.
-    // If we plan on compressing them then
-    // we need to provide functionality to obtain new indices.
     StateIndicesSet m_state_indices;
     StateIndex m_initial_state_index;
     AdjacencyList m_forward_successor_state_indices;
     StateIndicesSet m_goal_state_indices;
-
     /* Derived information */
     // for backward search
     AdjacencyList m_backward_successor_state_indices;
@@ -152,7 +143,6 @@ public:
 
     bool is_goal(StateIndex state) const;
     bool is_nongoal(StateIndex state) const;
-    bool is_trivially_solvable() const;
 
     /**
      * Uniquely adds as a state and returns a reference to the stored state.
@@ -195,37 +185,12 @@ public:
 };
 
 /**
- * ExitCodes from the scorpion planner.
- */
-enum class ExitCode {
-    /*
-      For a full list of exit codes, please see driver/returncodes.py. Here,
-      we only list codes that are used by the search component of the planner.
-    */
-    // 0-9: exit codes denoting a plan was found
-    SUCCESS = 0,
-
-    // 10-19: exit codes denoting no plan was found (without any error)
-    SEARCH_UNSOLVABLE = 11,  // Task is provably unsolvable with given bound.
-    SEARCH_UNSOLVED_INCOMPLETE = 12,  // Search ended without finding a solution.
-
-    // 20-29: "expected" failures
-    SEARCH_OUT_OF_MEMORY = 22,
-    SEARCH_OUT_OF_TIME = 23,
-
-    // 30-39: unrecoverable errors
-    SEARCH_CRITICAL_ERROR = 32,
-    SEARCH_INPUT_ERROR = 33,
-    SEARCH_UNSUPPORTED = 34
-};
-
-/**
  * Generates files parsable by the StateSpaceReader
  * from given PDDL domain and instance files.
  */
 class StateSpaceGenerator {
 public:
-    ExitCode generate_state_space(
+    void generate_state_space(
         const std::string& domain_file,
         const std::string& instance_file) const;
 };
