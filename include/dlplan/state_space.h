@@ -185,23 +185,13 @@ public:
 };
 
 /**
- * Generates files parsable by the StateSpaceReader
- * from given PDDL domain and instance files.
+ * Generate a state space from PDDL input files.
  */
-class StateSpaceGenerator {
-public:
-    void generate_state_space(
-        const std::string& domain_file,
-        const std::string& instance_file) const;
-};
-
-/**
- * Parses StateSpaceGenerator output files into StateSpace.
- */
-class StateSpaceReader {
-public:
-    StateSpace read(std::shared_ptr<const core::VocabularyInfo> vocabulary_info=nullptr, int index=-1) const;
-};
+extern StateSpace generate_state_space(
+    const std::string& domain_file,
+    const std::string& instance_file,
+    std::shared_ptr<const core::VocabularyInfo> vocabulary_info=nullptr,
+    int index=-1);
 
 }
 

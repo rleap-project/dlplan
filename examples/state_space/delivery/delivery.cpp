@@ -11,14 +11,12 @@ using namespace dlplan::state_space;
 
 int main() {
     // Generate and read state space files.
-    StateSpaceGenerator().generate_state_space("domain.pddl", "instance_2_1_0.pddl");
-    auto state_space_2_1_0 = StateSpaceReader().read(nullptr, 0);
+    auto state_space_2_1_0 = generate_state_space("domain.pddl", "instance_2_1_0.pddl", nullptr, 0);
     auto vocabulary_info = state_space_2_1_0.get_instance_info()->get_vocabulary_info();
     std::cout << "State space of instance_2_1_0:" << std::endl;
     state_space_2_1_0.print();
     // Generate and read state space files over same VocabularyInfo.
-    StateSpaceGenerator().generate_state_space("domain.pddl", "instance_2_1_0.pddl");
-    auto state_space_2_2_0 = StateSpaceReader().read(vocabulary_info, 1);
+    auto state_space_2_2_0 = generate_state_space("domain.pddl", "instance_2_1_0.pddl", vocabulary_info, 1);
     std::cout << "State space of instance_2_2_0:" << std::endl;
     state_space_2_2_0.print();
     std::cout << std::endl;

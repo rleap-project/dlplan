@@ -16,7 +16,7 @@ void init_generator(py::module_ &m) {
         .def(py::init<>())
         .def("__copy__", [](const FeatureGenerator& generator, py::object){ return FeatureGenerator(generator); })
         .def("__deepcopy__", [](const FeatureGenerator& generator, py::object){ return FeatureGenerator(generator); })
-        .def("generate", &FeatureGenerator::generate)
+        .def("generate", &FeatureGenerator::generate, py::arg("factory"), py::arg("states"), py::arg("concept_complexity_limit") = 9, py::arg("role_complexity_limit") = 9, py::arg("boolean_complexity_limit") = 9, py::arg("count_numerical_complexity_limit") = 9, py::arg("distance_numerical_complexity_limit") = 9, py::arg("time_limit") = 9, py::arg("feature_limit") = 9)
         .def("set_generate_empty_boolean", &FeatureGenerator::set_generate_empty_boolean)
         .def("set_generate_inclusion_boolean", &FeatureGenerator::set_generate_inclusion_boolean)
         .def("set_generate_nullary_boolean", &FeatureGenerator::set_generate_nullary_boolean)

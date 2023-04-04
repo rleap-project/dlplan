@@ -40,15 +40,14 @@ public:
      */
     FeatureRepresentations generate(
         core::SyntacticElementFactory& factory,
-        int concept_complexity_limit,
-        int role_complexity_limit,
-        int boolean_complexity_limit,
-        int count_numerical_complexity_limit,
-        int distance_numerical_complexity_limit,
-        int time_limit,
-        int feature_limit,
-        int num_threads,
-        const core::States& states);
+        const core::States& states,
+        int concept_complexity_limit=9,
+        int role_complexity_limit=9,
+        int boolean_complexity_limit=9,
+        int count_numerical_complexity_limit=9,
+        int distance_numerical_complexity_limit=9,
+        int time_limit=3600,
+        int feature_limit=10000);
 
     void set_generate_empty_boolean(bool enable);
     void set_generate_inclusion_boolean(bool enable);

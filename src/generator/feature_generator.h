@@ -107,12 +107,12 @@ private:
      * Inductively generate Elements of higher complexity.
      */
     void generate_inductively(
+        const core::States& states,
         int concept_complexity_limit,
         int role_complexity_limit,
         int boolean_complexity_limit,
         int count_numerical_complexity_limit,
         int distance_numerical_complexity_limit,
-        const core::States& states,
         GeneratorData& data,
         core::DenotationsCaches& caches);
 
@@ -134,15 +134,14 @@ public:
      */
     FeatureRepresentations generate(
         core::SyntacticElementFactory& factory,
+        const core::States& states,
         int concept_complexity_limit,
         int role_complexity_limit,
         int boolean_complexity_limit,
         int count_numerical_complexity_limit,
         int distance_numerical_complexity_limit,
         int time_limit,
-        int feature_limit,
-        int num_threads,
-        const core::States& states);
+        int feature_limit);
 
     /**
      * Set element generation on or off

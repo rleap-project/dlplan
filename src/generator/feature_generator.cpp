@@ -90,15 +90,14 @@ FeatureGeneratorImpl::~FeatureGeneratorImpl() = default;
 
 FeatureRepresentations FeatureGeneratorImpl::generate(
     core::SyntacticElementFactory& factory,
+    const core::States& states,
     int concept_complexity_limit,
     int role_complexity_limit,
     int boolean_complexity_limit,
     int count_numerical_complexity_limit,
     int distance_numerical_complexity_limit,
     int time_limit,
-    int feature_limit,
-    int,
-    const core::States& states) {
+    int feature_limit) {
     // Initialize statistics in each rule.
     for (auto& r : m_primitive_rules) r->initialize();
     for (auto& r : m_concept_inductive_rules) r->initialize();
@@ -110,7 +109,7 @@ FeatureRepresentations FeatureGeneratorImpl::generate(
     // Initialize cache.
     core::DenotationsCaches caches;
     generate_base(states, data, caches);
-    generate_inductively(concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, count_numerical_complexity_limit, distance_numerical_complexity_limit, states, data, caches);
+    generate_inductively(states, concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, count_numerical_complexity_limit, distance_numerical_complexity_limit, data, caches);
     return data.m_reprs;
 }
 
@@ -129,12 +128,12 @@ void FeatureGeneratorImpl::generate_base(
 }
 
 void FeatureGeneratorImpl::generate_inductively(
+    const core::States& states,
     int concept_complexity_limit,
     int role_complexity_limit,
     int boolean_complexity_limit,
     int count_numerical_complexity_limit,
     int distance_numerical_complexity_limit,
-    const core::States& states,
     GeneratorData& data,
     core::DenotationsCaches& caches) {
     utils::g_log << "Started generating composite features. " << std::endl;

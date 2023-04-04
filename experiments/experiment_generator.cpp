@@ -31,8 +31,7 @@ int main(int argc, char** argv) {
     int num_iterations = std::atoi(argv[11]);
     std::cout << "Number of iterations: " << num_iterations << std::endl;
 
-    state_space::StateSpaceGenerator().generate_state_space(domain_filename, instance_filename);
-    auto state_space = state_space::StateSpaceReader().read(nullptr, 0);
+    auto state_space =  state_space::generate_state_space(domain_filename, instance_filename, nullptr, 0);
     std::cout << "Started generating features" << std::endl;
     std::cout << "Number of states: " << state_space.get_num_states() << std::endl;
     std::cout << "Number of dynamic atoms: " << state_space.get_instance_info()->get_atoms().size() << std::endl;
@@ -54,15 +53,14 @@ int main(int argc, char** argv) {
     feature_generator.set_generate_transitive_reflexive_closure_role(false);
     auto feature_reprs = feature_generator.generate(
         syntactic_element_factory,
+        core::States(state_space.get_states().begin(), state_space.get_states().end()),
         concept_complexity_limit,
         role_complexity_limit,
         boolean_complexity_limit,
         count_numerical_complexity_limit,
         distance_numerical_complexity_limit,
         time_limit,
-        feature_limit,
-        threads_limit,
-        core::States(state_space.get_states().begin(), state_space.get_states().end()));
+        feature_limit);
 
     std::vector<core::Boolean> boolean_features;
     std::vector<core::Numerical> numerical_features;

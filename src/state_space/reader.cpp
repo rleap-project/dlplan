@@ -11,7 +11,7 @@
 using namespace dlplan::core;
 using namespace std::string_literals;
 
-namespace dlplan::state_space {
+namespace dlplan::state_space::reader {
 
 static void parse_predicates_file(const std::string& filename, VocabularyInfo& vocabulary_info, bool is_static) {
     std::ifstream infile(filename);
@@ -161,10 +161,7 @@ static AdjacencyList parse_transitions_file(const std::string& filename) {
     return adjacency_list;
 }
 
-
-StateSpace StateSpaceReader::read(
-    std::shared_ptr<const VocabularyInfo> vocabulary_info,
-    int index) const {
+StateSpace read(std::shared_ptr<const VocabularyInfo> vocabulary_info, int index) {
     if (!vocabulary_info) {
         std::shared_ptr<VocabularyInfo> new_vocabulary_info = std::make_shared<core::VocabularyInfo>();
         parse_predicates_file("predicates.txt", *new_vocabulary_info, false);

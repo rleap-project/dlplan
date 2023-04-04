@@ -61,20 +61,5 @@ void init_state_space(py::module_ &m) {
         .def("get_instance_info", &StateSpace::get_instance_info)
     ;
 
-    py::class_<StateSpaceGenerator>(m, "StateSpaceGenerator")
-        .def(py::init<>())
-        .def("__copy__", [](const StateSpaceGenerator& generator, py::object){ return StateSpaceGenerator(generator); })
-        .def("__deepcopy__", [](const StateSpaceGenerator& generator, py::object){ return StateSpaceGenerator(generator); })
-        .def("generate_state_space", [](const StateSpaceGenerator& generator, const std::string& domain_file, const std::string& instance_file){
-            py::module_ state_space_generator = py::module_::import("state_space_generator.state_space_generator");
-            state_space_generator.attr("generate_state_space")(domain_file, instance_file);
-        })
-    ;
-
-    py::class_<StateSpaceReader>(m, "StateSpaceReader")
-        .def(py::init<>())
-        .def("__copy__", [](const StateSpaceReader& reader, py::object){ return StateSpaceReader(reader); })
-        .def("__deepcopy__", [](const StateSpaceReader& reader, py::object){ return StateSpaceReader(reader); })
-        .def("read", &StateSpaceReader::read, py::arg("vocabulary_info") = nullptr, py::arg("index") = -1)
-    ;
+    m.def("generate_state_space", generate_state_space, py::arg("domain_file"), py::arg("instance_file"), py::arg("vocabulary_info") = nullptr, py::arg("index") = -1);
 }
