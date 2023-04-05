@@ -70,6 +70,6 @@ void init_state_space(py::module_ &m) {
             py::module_ state_space_generator = py::module_::import("state_space_generator.state_space_generator");
             state_space_generator.attr("generate_state_space")(domain_file, instance_file);
             return reader::read(vocabulary_info, index);
-        }
+        }, py::arg("domain_file"), py::arg("instance_file"), py::arg("vocabulary_info") = nullptr, py::arg("index") = -1
     );
 }

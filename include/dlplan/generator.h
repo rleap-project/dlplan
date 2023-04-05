@@ -13,7 +13,6 @@
  */
 namespace dlplan::generator {
     class FeatureGeneratorImpl;
-
     using States = std::vector<core::State>;
     using FeatureRepresentations = std::vector<std::string>;
 }
@@ -82,6 +81,46 @@ public:
 };
 
 
+extern FeatureRepresentations generate_features(
+    core::SyntacticElementFactory& factory,
+    const core::States& states,
+    int concept_complexity_limit=9,
+    int role_complexity_limit=9,
+    int boolean_complexity_limit=9,
+    int count_numerical_complexity_limit=9,
+    int distance_numerical_complexity_limit=9,
+    int time_limit=3600,
+    int feature_limit=10000,
+    bool generate_empty_boolean=true,
+    bool generate_inclusion_boolean=false,
+    bool generate_nullary_boolean=true,
+    bool generate_all_concept=true,
+    bool generate_and_concept=true,
+    bool generate_bot_concept=true,
+    bool generate_diff_concept=false,
+    bool generate_equal_concept=true,
+    bool generate_not_concept=true,
+    bool generate_one_of_concept=true,
+    bool generate_or_concept=false,
+    bool generate_primitive_concept=true,
+    bool generate_projection_concept=false,
+    bool generate_some_concept=true,
+    bool generate_subset_concept=false,
+    bool generate_top_concept=true,
+    bool generate_concept_distance_numerical=true,
+    bool generate_count_numerical=true,
+    bool generate_and_role=true,
+    bool generate_compose_role=false,
+    bool generate_diff_role=false,
+    bool generate_identity_role=false,
+    bool generate_inverse_role=true,
+    bool generate_not_role=false,
+    bool generate_or_role=false,
+    bool generate_primitive_role=true,
+    bool generate_restrict_role=true,
+    bool generate_top_role=false,
+    bool generate_transitive_closure_role=true,
+    bool generate_transitive_reflexive_closure_role=false);
 }
 
 #endif
