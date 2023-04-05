@@ -16,16 +16,16 @@ void init_core(py::module_ &m) {
         .def("__copy__", [](const ConceptDenotation& denotation, py::object){ return ConceptDenotation(denotation); })
         .def("__deepcopy__", [](const ConceptDenotation& denotation, py::object){ return ConceptDenotation(denotation); })
         .def("to_sorted_vector", &ConceptDenotation::to_sorted_vector)
-        .def("__str__", &ConceptDenotation::to_sorted_vector)
-        .def("__repr__", &ConceptDenotation::to_sorted_vector)
+        .def("__str__", &ConceptDenotation::str)
+        .def("__repr__", &ConceptDenotation::str)
     ;
 
     py::class_<RoleDenotation>(m, "RoleDenotation")
         .def("__copy__", [](const RoleDenotation& denotation, py::object){ return RoleDenotation(denotation); })
         .def("__deepcopy__", [](const RoleDenotation& denotation, py::object){ return RoleDenotation(denotation); })
         .def("to_sorted_vector", &RoleDenotation::to_sorted_vector)
-        .def("__str__", &RoleDenotation::to_sorted_vector)
-        .def("__repr__", &RoleDenotation::to_sorted_vector)
+        .def("__str__", &RoleDenotation::str)
+        .def("__repr__", &RoleDenotation::str)
     ;
 
     py::class_<DenotationsCaches>(m, "DenotationsCaches")

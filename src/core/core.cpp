@@ -213,6 +213,18 @@ std::size_t ConceptDenotation::hash() const {
     return std::hash<std::vector<unsigned>>()(m_data.get_blocks());
 }
 
+std::string ConceptDenotation::str() const {
+    std::stringstream ss;
+    ss << "{";
+    std::vector<int> object_idxs = to_sorted_vector();
+    for (int i : object_idxs) {
+        ss << i;
+        if (i != object_idxs.back()) ss << ", ";
+    }
+    ss << "}";
+    return ss.str();
+}
+
 int ConceptDenotation::get_num_objects() const {
     return m_num_objects;
 }
@@ -367,6 +379,18 @@ std::vector<std::pair<int, int>> RoleDenotation::to_sorted_vector() const {
 
 std::size_t RoleDenotation::hash() const {
     return std::hash<std::vector<unsigned>>()(m_data.get_blocks());
+}
+
+std::string RoleDenotation::str() const {
+    std::stringstream ss;
+    ss << "{";
+    std::vector<std::pair<int, int>> object_pair_idxs = to_sorted_vector();
+    for (const auto& p : object_pair_idxs) {
+        ss << "(" << p.first << ", " << p.second << ")";
+        if (p != object_pair_idxs.back()) ss << ", ";
+    }
+    ss << "}";
+    return ss.str();
 }
 
 int RoleDenotation::get_num_objects() const {

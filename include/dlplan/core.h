@@ -162,6 +162,8 @@ public:
 
     std::size_t hash() const;
 
+    std::string str() const;
+
     int get_num_objects() const;
 };
 
@@ -231,6 +233,8 @@ public:
     std::vector<std::pair<int, int>> to_sorted_vector() const;
 
     std::size_t hash() const;
+
+    std::string str() const;
 
     int get_num_objects() const;
 };
