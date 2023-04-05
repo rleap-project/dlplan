@@ -8,6 +8,7 @@
 #define MACRO_STRINGIFY(x) STRINGIFY(x)
 
 #include "../../../include/dlplan/state_space.h"
+#include "../../../src/state_space/reader.h"
 
 
 namespace py = pybind11;
@@ -61,5 +62,14 @@ void init_state_space(py::module_ &m) {
         .def("get_instance_info", &StateSpace::get_instance_info)
     ;
 
-    m.def("generate_state_space", generate_state_space, py::arg("domain_file"), py::arg("instance_file"), py::arg("vocabulary_info") = nullptr, py::arg("index") = -1);
+    m.def("generate_state_space", [](
+        const std::string& domain_file,
+        const std::string& instance_file,
+        std::shared_ptr<const VocabularyInfo> vocabulary_info=nullptr,
+        int index=-1){
+            py::module_ state_space_generator = py::module_::import("state_space_generator.state_space_generator");
+            state_space_generator.attr("generate_state_space")(domain_file, instance_file);
+            reader::read(vocabulary_info, index);
+        }
+    );
 }
