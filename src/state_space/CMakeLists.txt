@@ -4,9 +4,7 @@ add_library(dlplanstatespace SHARED)
 target_sources(dlplanstatespace
     PRIVATE
         generator.cpp
-        goal_distance_information.cpp
         reader.cpp
-        state_information.cpp
         state_space.cpp)
 
 target_link_libraries(dlplanstatespace dlplancore pybind11::embed)

@@ -11,7 +11,7 @@ void init_generator(py::module_ &);
 void init_novelty(py::module_ &);
 void init_policy(py::module_ &);
 void init_state_space(py::module_ &);
-void init_weisfeiler_lehman(py::module_ &);
+//void init_weisfeiler_lehman(py::module_ &);
 
 PYBIND11_MODULE(_dlplan, m) {
     m.doc() = "Python bindings for the dlplan description logics first-order features for planning";
@@ -21,7 +21,7 @@ PYBIND11_MODULE(_dlplan, m) {
     init_novelty(m);
     init_policy(m);
     init_state_space(m);
-    init_weisfeiler_lehman(m);
+    //init_weisfeiler_lehman(m);
 
 #ifdef VERSION_INFO
     m.attr("__version__") = MACRO_STRINGIFY(VERSION_INFO);

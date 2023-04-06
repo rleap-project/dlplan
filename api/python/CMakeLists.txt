@@ -7,8 +7,7 @@ target_sources(_dlplan
         src/generator.cpp
         src/novelty.cpp
         src/policy.cpp
-        src/state_space.cpp
-        src/weisfeiler_lehman.cpp)
+        src/state_space.cpp)
 target_link_libraries(_dlplan
     PRIVATE
         pybind11::module
@@ -16,8 +15,7 @@ target_link_libraries(_dlplan
         dlplangenerator
         dlplannovelty
         dlplanpolicy
-        dlplanstatespace
-        dlplanweisfeilerlehman)
+        dlplanstatespace)
 target_compile_definitions(_dlplan PUBLIC DLPLAN_VERSION_INFO="${DLPLAN_VERSION_INFO}")
 
 # In case of moving the library (as done in the setup.py),

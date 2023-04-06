@@ -30,7 +30,8 @@ TEST(DLPTests, GeneratorDeliveryTest) {
     feature_generator.set_generate_top_role(false);
     feature_generator.set_generate_transitive_reflexive_closure_role(false);
     SyntacticElementFactory syntactic_element_factory(vocabulary_info);
-    States states(state_space.get_states().begin(), state_space.get_states().end());
+    States states;
+    std::for_each(state_space.get_states().begin(), state_space.get_states().end(), [&](const auto& pair){states.push_back(pair.second); });
     auto feature_reprs = feature_generator.generate(syntactic_element_factory, states, 9, 9, 9, 9, 15, 1000, 100000);
     std::vector<Boolean> generated_boolean_features;
     std::vector<Numerical> generated_numerical_features;

@@ -116,8 +116,8 @@ static void parse_goal_atoms_file(const std::string& filename, InstanceInfo& ins
 }
 
 
-static std::pair<core::StatesSet, StateIndicesSet> parse_states_file(const std::string& filename, std::shared_ptr<InstanceInfo> instance_info, const std::vector<int>& new_atom_indices) {
-    core::StatesSet states;
+static std::pair<StateMapping, StateIndicesSet> parse_states_file(const std::string& filename, std::shared_ptr<InstanceInfo> instance_info, const std::vector<int>& new_atom_indices) {
+    StateMapping states;
     StateIndicesSet goal_state_indices;
     std::ifstream infile(filename);
     std::string line;
@@ -141,7 +141,7 @@ static std::pair<core::StatesSet, StateIndicesSet> parse_states_file(const std::
                 atom_indices.push_back(new_atom_index);
             }
         }
-        auto result = states.emplace(core::State(instance_info, atom_indices, state_index));
+        auto result = states.emplace(state_index, core::State(instance_info, atom_indices, state_index));
         if (!result.second) {
             throw std::runtime_error("StateSpaceGenerator::parse_states_file - tried parsing duplicate states.");
         }

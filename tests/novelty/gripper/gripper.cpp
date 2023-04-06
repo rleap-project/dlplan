@@ -18,8 +18,8 @@ TEST(DLPTests, NoveltyGripperTest) {
         state_space->get_instance_info()->get_atoms().size(),
         2);
     std::cout << std::endl << "Tuple graphs:" << std::endl;
-    for (const auto state_index : state_space->get_state_indices()) {
-        auto tuple_graph = TupleGraph(novelty_base, state_space, state_index, 2);
+    for (const auto& pair : state_space->get_states()) {
+        auto tuple_graph = TupleGraph(novelty_base, state_space, pair.first, 2);
         std::cout << std::endl << tuple_graph.to_dot(1) << std::endl;
     }
 }

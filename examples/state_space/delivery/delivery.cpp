@@ -22,24 +22,24 @@ int main() {
     std::cout << std::endl;
 
     // Compute goal distances
-    GoalDistanceInformation goal_distance_info = state_space_2_1_0.compute_goal_distance_information();
+    Distances goal_distance_info = state_space_2_1_0.compute_goal_distances();
     std::cout << "Goal distance information of instance_2_1_0:" << std::endl;
     std::cout << "Goal distances:" << std::endl;
-    for (const auto& pair : goal_distance_info.get_goal_distances()) {
+    for (const auto& pair : goal_distance_info) {
         std::cout << "state_index=" << pair.first << " distance=" << pair.second << std::endl;
     }
     std::cout << "Deadends:" << std::endl;
-    for (const int deadend : goal_distance_info.get_deadend_state_indices()) {
-        std::cout << deadend << " ";
+    for (const auto& pair : state_space_2_1_0.get_states()) {
+        if (!goal_distance_info.count(pair.first)) {
+            std::cout << pair.first << " ";
+        }
     }
     std::cout << std::endl << std::endl;
 
     // State information to obtain states by index
-    StateInformation state_information = state_space_2_1_0.compute_state_information();
     std::cout << "State information of instance_2_1_0:" << std::endl;
-    for (auto state_index : state_space_2_1_0.get_state_indices()) {
-        const auto& state = state_information.get_state(state_index);
-        std::cout << "state_index=" << state.get_index() << " atoms=" << state.str() << std::endl;
+    for (const auto& pair : state_space_2_1_0.get_states()) {
+        std::cout << "state_index=" << pair.first << " atoms=" << pair.second.str() << std::endl;
     }
 
     // Compute forward distances from states with options forward=true, stop_if_goal=false
