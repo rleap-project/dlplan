@@ -235,6 +235,7 @@ std::string StateSpace::to_dot(int verbosity_level) const {
         if (pair.second >= static_cast<int>(layers.size())) {
             layers.resize(pair.second + 1);
         }
+        std::cout << pair.first << " " << pair.second << std::endl;
         layers[pair.second].push_back(pair.first);
     }
     // add deadends in next layer
@@ -245,7 +246,7 @@ std::string StateSpace::to_dot(int verbosity_level) const {
         for (const int s_idx : layers[i]) {
             if (m_forward_successor_state_indices.count(s_idx) > 0) {
                 for (const int s_prime_idx : m_forward_successor_state_indices.at(s_idx)) {
-                    if (goal_distances.count(s_prime_idx) && added_deadends.count(s_prime_idx) == 0) {
+                    if (!goal_distances.count(s_prime_idx) && added_deadends.count(s_prime_idx) == 0) {
                         layers[i-1].push_back(s_prime_idx);
                         added_deadends.insert(s_prime_idx);
                     }
