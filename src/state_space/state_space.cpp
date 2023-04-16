@@ -235,7 +235,6 @@ std::string StateSpace::to_dot(int verbosity_level) const {
         if (pair.second >= static_cast<int>(layers.size())) {
             layers.resize(pair.second + 1);
         }
-        std::cout << pair.first << " " << pair.second << std::endl;
         layers[pair.second].push_back(pair.first);
     }
     // add deadends in next layer
