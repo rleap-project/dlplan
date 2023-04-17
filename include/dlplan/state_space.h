@@ -59,8 +59,7 @@ public:
      */
     StateSpace(
         const StateSpace& other,
-        const StateIndicesSet& expanded_fragment,
-        const StateIndicesSet& generated_fragment);
+        const StateIndicesSet& state_indices);
     StateSpace& operator=(const StateSpace& other);
     StateSpace(StateSpace&& other);
     StateSpace& operator=(StateSpace&& other);

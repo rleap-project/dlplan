@@ -85,35 +85,34 @@ StateSpace::StateSpace(const StateSpace& other) = default;
 
 StateSpace::StateSpace(
     const StateSpace& other,
-    const StateIndicesSet& expanded_fragment,
-    const StateIndicesSet& generated_fragment)
+    const StateIndicesSet& state_indices)
     : m_instance_info(other.m_instance_info) {
     // set state_index_to_state
     for (const auto& pair : other.m_states) {
         StateIndex state_index = pair.first;
-        if (generated_fragment.count(state_index)) {
+        if (state_indices.count(state_index)) {
             m_states.insert(pair);
         }
     }
     // set initial_state_index
-    if (!generated_fragment.count(other.m_initial_state_index)) {
+    if (!state_indices.count(other.m_initial_state_index)) {
         m_initial_state_index = UNDEFINED;
     } else {
         m_initial_state_index = other.m_initial_state_index;
     }
     // set goal_state_indices
     for (StateIndex goal_state : other.m_goal_state_indices) {
-        if (generated_fragment.count(goal_state)) {
+        if (state_indices.count(goal_state)) {
             m_goal_state_indices.insert(goal_state);
         }
     }
     // set forward_successor_state_indices
     for (const auto& pair : other.m_forward_successor_state_indices) {
         StateIndex source = pair.first;
-        if (expanded_fragment.count(source)) {
+        if (state_indices.count(source)) {
             const auto& successors = pair.second;
             for (StateIndex successor : successors) {
-                if (generated_fragment.count(successor)) {
+                if (state_indices.count(successor)) {
                     m_forward_successor_state_indices[source].insert(successor);
                 }
             }
@@ -228,33 +227,44 @@ void StateSpace::print() const {
 }
 
 std::string StateSpace::to_dot(int verbosity_level) const {
-    // 1. Precompute information for layout.
+    /* 1. Precompute information for layout.
+       Align nodes by their goal distance and then by their forward distance.
+    */
     auto goal_distances = compute_goal_distances();
     std::vector<StateIndices> layers;
+    std::deque<int> queue;
     for (const auto& pair : goal_distances) {
         if (pair.second >= static_cast<int>(layers.size())) {
             layers.resize(pair.second + 1);
         }
         layers[pair.second].push_back(pair.first);
+        queue.push_back(pair.first);
     }
-    // add deadends in next layer
-    std::unordered_set<int> all_state_indices;
-    std::for_each(m_states.begin(), m_states.end(), [&](const auto& pair){ all_state_indices.insert(pair.first); });
-    std::unordered_set<int> added_deadends;
-    for (int i = 1; i < layers.size(); ++i) {
-        for (const int s_idx : layers[i]) {
-            if (m_forward_successor_state_indices.count(s_idx) > 0) {
-                for (const int s_prime_idx : m_forward_successor_state_indices.at(s_idx)) {
-                    if (!goal_distances.count(s_prime_idx) && added_deadends.count(s_prime_idx) == 0) {
-                        layers[i-1].push_back(s_prime_idx);
-                        added_deadends.insert(s_prime_idx);
+    std::reverse(layers.begin(), layers.end());
+    std::unordered_map<int, int> state_index_to_layer_index;
+    for (int i = 0; i < static_cast<int>(layers.size()); ++i) {
+        for (int s_idx : layers[i]) {
+            state_index_to_layer_index.emplace(s_idx, i);
+        }
+    }
+    while (!queue.empty()) {
+        int s_idx = queue.front();
+        queue.pop_front();
+        int layer_index = state_index_to_layer_index.at(s_idx);
+        if (m_forward_successor_state_indices.count(s_idx)) {
+            for (int s_prime_idx : m_forward_successor_state_indices.at(s_idx)) {
+                if (!state_index_to_layer_index.count(s_prime_idx)) {
+                    int new_layer_index = layer_index + 1;
+                    state_index_to_layer_index.emplace(s_prime_idx, new_layer_index);
+                    if (new_layer_index >= static_cast<int>(layers.size())) {
+                        layers.resize(new_layer_index + 1);
                     }
+                    layers[new_layer_index].push_back(s_prime_idx);
+                    queue.push_back(s_prime_idx);
                 }
             }
         }
     }
-    // print in reverse direction
-    std::reverse(layers.begin(), layers.end());
 
     std::stringstream result;
     // 2. Header
@@ -277,7 +287,7 @@ std::string StateSpace::to_dot(int verbosity_level) const {
         }
     }
     // 4. initial state and dangling edge
-    if (all_state_indices.count(m_initial_state_index)) {
+    if (state_index_to_layer_index.count(m_initial_state_index)) {
         result << "Dangling [ label = \"\", style = invis ]\n"
             << "{ rank = same; Dangling }\n"
             << "Dangling -> s" << m_initial_state_index << "\n"
