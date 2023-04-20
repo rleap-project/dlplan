@@ -83,9 +83,12 @@ std::shared_ptr<const Rule> Policy::evaluate_effects_lazy(const core::State& sou
 
 
 std::string Policy::compute_repr() const {
+    // Canonical representation
     std::stringstream ss;
     ss << "(:policy\n";
-    for (const auto& r : m_rules) {
+    std::vector<std::shared_ptr<const Rule>> sorted_rules(m_rules.begin(), m_rules.end());
+    std::sort(sorted_rules.begin(), sorted_rules.end(), [](const auto& r1, const auto& r2){ return r1->compute_repr() < r2->compute_repr(); });
+    for (const auto& r : sorted_rules) {
         ss << r->compute_repr() << "\n";
     }
     ss << ")";
@@ -93,25 +96,32 @@ std::string Policy::compute_repr() const {
 }
 
 std::string Policy::str() const {
+    // Canonical representation
     std::stringstream ss;
     PolicyBuilder builder;
     ss << "(:policy\n";
     copy_to_builder(builder);
     const auto booleans = builder.get_booleans();
+    std::vector<std::shared_ptr<const core::Boolean>> sorted_booleans(booleans.begin(), booleans.end());
+    std::sort(sorted_booleans.begin(), sorted_booleans.end(), [](const auto& b1, const auto& b2){ return b1->get_index() < b2->get_index(); });
     ss << "(:boolean_features ";
-    for (const auto& boolean : booleans) {
+    for (const auto& boolean : sorted_booleans) {
         ss << "\"" << boolean->compute_repr() << "\"";
         if (boolean != *booleans.rbegin()) ss << " ";
     }
     ss << ")\n";
     const auto numericals = builder.get_numericals();
+    std::vector<std::shared_ptr<const core::Numerical>> sorted_numericals(numericals.begin(), numericals.end());
+    std::sort(sorted_numericals.begin(), sorted_numericals.end(), [](const auto& n1, const auto& n2){ return n1->get_index() < n2->get_index(); });
     ss << "(:numerical_features ";
-    for (const auto& numerical : numericals) {
+    for (const auto& numerical : sorted_numericals) {
         ss << "\"" << numerical->compute_repr() << "\"";
         if (numerical != *numericals.rbegin()) ss << " ";
     }
     ss << ")\n";
-    for (const auto& r : m_rules) {
+    std::vector<std::shared_ptr<const Rule>> sorted_rules(m_rules.begin(), m_rules.end());
+    std::sort(sorted_rules.begin(), sorted_rules.end(), [](const auto& r1, const auto& r2){ return r1->compute_repr() < r2->compute_repr(); });
+    for (const auto& r : sorted_rules) {
         ss << r->str() << "\n";
     }
     ss << ")";
