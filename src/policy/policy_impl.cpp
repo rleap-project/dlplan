@@ -98,6 +98,9 @@ std::string Policy::compute_repr() const {
 std::string Policy::str() const {
     // Canonical representation
     std::stringstream ss;
+    // Parse everything into a builder to be able to print boolean, numerical,
+    // and rules from builder with correct indexing since parsing policy into builder
+    // changes indices of features in features and rules.
     PolicyBuilder builder;
     ss << "(:policy\n";
     copy_to_builder(builder);
@@ -119,7 +122,8 @@ std::string Policy::str() const {
         if (numerical != *numericals.rbegin()) ss << " ";
     }
     ss << ")\n";
-    std::vector<std::shared_ptr<const Rule>> sorted_rules(m_rules.begin(), m_rules.end());
+    const auto rules = builder.get_result().get_rules();
+    std::vector<std::shared_ptr<const Rule>> sorted_rules(rules.begin(), rules.end());
     std::sort(sorted_rules.begin(), sorted_rules.end(), [](const auto& r1, const auto& r2){ return r1->compute_repr() < r2->compute_repr(); });
     for (const auto& r : sorted_rules) {
         ss << r->str() << "\n";
