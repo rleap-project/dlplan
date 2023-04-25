@@ -1,28 +1,30 @@
-name: Build
+name: CI Build and Test
 
 on: [push, pull_request]
 
 jobs:
-  build_wheels:
-    name: Build wheels on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+  build:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-22.04]
-
+        python-version: [3.6, 3.7, 3.8, 3.9]
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Build wheels
-        uses: pypa/cibuildwheel@v2.12.3
-        # env:
-        #   CIBW_SOME_OPTION: value
-        #    ...
-        # with:
-        #   package-dir: .
-        #   output-dir: wheelhouse
-        #   config-file: "{package}/pyproject.toml"
-
-      - uses: actions/upload-artifact@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
         with:
-          path: ./wheelhouse/*.whl
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Build wheels
+        run: |
+          pip install cibuildwheel
+          cibuildwheel --output-dir dist/
+      - name: Test with Pytest
+        run: pytest
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: wheel
+          path: dist/*
