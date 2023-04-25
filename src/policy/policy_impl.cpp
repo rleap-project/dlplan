@@ -110,7 +110,7 @@ std::string Policy::str() const {
     ss << "(:boolean_features ";
     for (const auto& boolean : sorted_booleans) {
         ss << "\"" << boolean->compute_repr() << "\"";
-        if (boolean != *booleans.rbegin()) ss << " ";
+        if (boolean != *sorted_booleans.rbegin()) ss << " ";
     }
     ss << ")\n";
     const auto numericals = builder.get_numericals();
@@ -119,7 +119,7 @@ std::string Policy::str() const {
     ss << "(:numerical_features ";
     for (const auto& numerical : sorted_numericals) {
         ss << "\"" << numerical->compute_repr() << "\"";
-        if (numerical != *numericals.rbegin()) ss << " ";
+        if (numerical != *sorted_numericals.rbegin()) ss << " ";
     }
     ss << ")\n";
     const auto rules = builder.get_result().get_rules();
