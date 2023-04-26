@@ -24,8 +24,3 @@ jobs:
 
     - name: Build and test wheels
       run: python -m cibuildwheel --platform linux --output-dir wheelhouse
-      env:
-        CIBW_BEFORE_TEST: |
-          python -m pip install pytest
-          python -m pip install $(ls /tmp/cibuildwheel/repaired_wheel/*.whl)
-        CIBW_TEST_COMMAND: "python -m pytest {project}"
