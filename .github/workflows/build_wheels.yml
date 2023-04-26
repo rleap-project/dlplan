@@ -3,7 +3,7 @@ name: Build Wheels
 on:
   push:
     branches:
-      - main  # Adjust this to the branch you want to build on push
+      - main
   pull_request:
 
 jobs:
