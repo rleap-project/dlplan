@@ -1,10 +1,6 @@
 name: Build Wheels
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
+on: [push, pull_request]
 
 jobs:
   build_wheels:
@@ -27,7 +23,7 @@ jobs:
       run: python -m pip install -r requirements.txt
 
     - name: Build wheels
-      run: python -m cibuildwheel --output-dir wheelhouse
+      run: python -m cibuildwheel --platform linux --output-dir wheelhouse
       #env:
       #  CIBW_BUILD: cp${{ matrix.python-version }}-*
       #  CIBW_SKIP: "*-dev"
