@@ -9,6 +9,6 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [tool.cibuildwheel.linux]
-build = "cp3*-*"
+build = "cp37-*"
 manylinux-x86_64-image = "manylinux2014"
 

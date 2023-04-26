@@ -7,19 +7,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform:
-#         Would be good to work on windows support at some point, but we're not there yet
-#          - windows-latest
-          - macos-latest
-          - ubuntu-latest
-        python-version: ["3.8", "3.9"]
+        os: [ubuntu-latest, macos-latest]
+        python-version: [3.7, 3.8, 3.9, 3.10, 3.11]
 
-    runs-on: ${{ matrix.platform }}
+    runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: 'true'
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
       - uses: actions/setup-python@v2
         with:

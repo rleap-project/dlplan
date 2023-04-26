@@ -60,7 +60,7 @@ setup(
     url="https://github.com/rleap-project/dlplan",
     description="A library for using description logics features in planning",
     long_description="",
-    install_requires=["pybind11", "pybind11-global", "state_space_generator"],
+    install_requires=["cibuildwheel", "pybind11", "pybind11-global", "state_space_generator"],
     packages=['dlplan'],
     package_dir={"": "api/python/src"},
     ext_modules=[CMakeExtension("_dlplan")],
