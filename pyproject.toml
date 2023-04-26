@@ -11,31 +11,10 @@ build-backend = "setuptools.build_meta"
 
 [tool.cibuildwheel]
 build = "cp3*-*"
-skip = ""
-test-skip = ""
-
 archs = "auto64"
-build-frontend = "default"
-config-settings = {}
-dependency-versions = "pinned"
-environment = {}
-environment-pass = []
-build-verbosity = ""
-
-before-all = ""
-before-build = ""
-repair-wheel-command = ""
-
-test-command = "pytest {project}/api/python/test"
-before-test = ""
-test-requires = "pytest"
-test-extras = []
-
 container-engine = "docker"
-
 manylinux-x86_64-image = "manylinux2014"
 manylinux-i686-image = "manylinux2014"
-
 
 [tool.cibuildwheel.linux]
 repair-wheel-command = "auditwheel repair -w {dest_dir} {wheel}"
