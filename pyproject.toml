@@ -26,10 +26,10 @@ before-all = ""
 before-build = ""
 repair-wheel-command = ""
 
-test-command = ""
+test-command = "pytest {project}/api/python/test"
 before-test = ""
 test-requires = "pytest"
-test-command = "pytest {project}/api/python/test"
+test-extras = []
 
 container-engine = "docker"
 
