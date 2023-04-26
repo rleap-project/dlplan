@@ -1,4 +1,3 @@
-cibuildwheel
 pybind11
 pybind11-global
 state_space_generator
