@@ -19,8 +19,11 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Install requirements
-      run: python -m pip install -r requirements.txt
+    - name: Install dependencies and requirements
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install setuptools wheel twine
+        python -m pip install -r requirements.txt
 
     - name: Build wheels
       run: python -m cibuildwheel --platform linux --output-dir wheelhouse
@@ -29,3 +32,9 @@ jobs:
       run: |
         python -m pip install --no-index -f wheelhouse/ dlplan
         python -m pytest api/
+
+    - name: Upload to PyPI
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+      run: twine upload --skip-existing --repository-url https://pypi.org/project/dlplan/ wheelhouse/*

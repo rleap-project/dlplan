@@ -1,0 +1,31 @@
+name: Build Source Distribution
+
+on: [push]
+
+jobs:
+  build_wheels:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.9"
+
+    - name: Install dependencies and requirements
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install setuptools wheel twine
+        python -m pip install -r requirements.txt
+
+    - name: Build source distribution
+      run: python setup.py sdist
+
+    - name: Upload to PyPI
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+      run: twine upload --skip-existing --repository-url https://pypi.org/project/dlplan/ dist/*
