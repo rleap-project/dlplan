@@ -27,5 +27,7 @@ jobs:
       env:
         CIBW_BUILD: cp${{ matrix.python-version }}-*
         CIBW_SKIP: "*-dev"
-        CIBW_BEFORE_TEST: "python -m pip install pytest"
+        CIBW_BEFORE_TEST: |
+          python -m pip install pytest
+          python -m pip install {wheel}
         CIBW_TEST_COMMAND: "python -m pytest {project}"
