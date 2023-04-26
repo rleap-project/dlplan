@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
 
     steps:
     - name: Checkout repository
@@ -25,7 +25,5 @@ jobs:
     - name: Build and test wheels
       run: python -m cibuildwheel --platform linux --output-dir wheelhouse
       env:
-        CIBW_BUILD: cp${{ matrix.python-version }}-*
-        CIBW_SKIP: "*-dev"
         CIBW_BEFORE_TEST: "python -m pip install pytest"
         CIBW_TEST_COMMAND: "python -m pytest {project}"
