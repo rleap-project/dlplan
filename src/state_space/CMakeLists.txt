@@ -1,5 +1,3 @@
-find_package(pybind11 REQUIRED)
-
 add_library(dlplanstatespace SHARED)
 target_sources(dlplanstatespace
     PRIVATE
