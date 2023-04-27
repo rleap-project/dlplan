@@ -12,7 +12,7 @@ namespace dlplan::core::element {
 class ProjectionConcept : public Concept {
 private:
     void compute_result(const RoleDenotation& denot, ConceptDenotation& result) const {
-        for (const auto pair : denot) {
+        for (const auto& pair : denot) {
             if (m_pos == 0) result.insert(pair.first);
             else if (m_pos == 1) result.insert(pair.second);
         }
