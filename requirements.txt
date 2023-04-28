@@ -1,2 +1,4 @@
-pybind11
-pybind11-global
+pybind11==2.10.4
+pybind11-global==2.10.4
+state_space_generator==0.1.4
+cmake>=3.16.3

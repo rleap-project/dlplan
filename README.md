@@ -67,6 +67,9 @@ cmake --install build
 ### 3.3. Building the Python Interface
 
 ```console
+python3 -m venv --prompt dlplan .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 pip install dlplan
 ```
 
