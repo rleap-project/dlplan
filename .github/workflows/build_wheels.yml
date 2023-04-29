@@ -26,8 +26,8 @@ jobs:
 
     - name: Build wheels
       run: cibuildwheel --platform linux --output-dir wheelhouse
-        env:
-          CIBW_BUILD_VERBOSITY: "1"
+      env:
+        CIBW_BUILD_VERBOSITY: "1"
 
     - name: Upload to PyPI
       env:
