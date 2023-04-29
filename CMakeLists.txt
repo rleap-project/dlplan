@@ -28,13 +28,6 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
         STRING "Choose the type of build." FORCE)
 endif()
 
-OPTION(ENABLE_SPARSE "Enables sparse representation for ConceptDenotation and RoleDenotation" OFF)
-if (ENABLE_SPARSE)
-    MESSAGE("Building with sparse set representation. Recommended for large number of objects.")
-else()
-    MESSAGE("Building with bitset representation. Recommended for small number of objects.")
-endif()
-
 OPTION(ENABLE_TESTING "Enables compilation of tests." OFF)
 if (ENABLE_TESTING)
     MESSAGE("Building tests enabled.")

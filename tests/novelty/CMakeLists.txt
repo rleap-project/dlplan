@@ -8,5 +8,9 @@ target_sources(
     PRIVATE
         tuple_index_generator.cpp
 )
-target_link_libraries(novelty_tests dlplannovelty gtest_main)
-gtest_discover_tests(novelty_tests)
+target_link_libraries(novelty_tests 
+    PRIVATE
+        dlplannovelty 
+        GTest::GTest)
+
+add_test(novelty_gtests novelty_tests)

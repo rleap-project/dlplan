@@ -8,5 +8,9 @@ target_sources(
         policy_minimizer.cpp
         utils.cpp
 )
-target_link_libraries(policy_tests dlplanpolicy gtest_main)
-gtest_discover_tests(policy_tests)
+target_link_libraries(policy_tests 
+    PRIVATE
+        dlplanpolicy 
+        GTest::GTest)
+
+add_test(policy_gtests policy_tests)

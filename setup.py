@@ -1,12 +1,13 @@
 
 import os
+import sys
 import subprocess
 from pathlib import Path
 
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
 
-__version__ = "0.2.4"
+__version__ = "0.2.5"
 HERE = Path(__file__).resolve().parent
 
 
@@ -34,6 +35,7 @@ class CMakeBuild(build_ext):
             f"-DDLPLAN_VERSION_INFO={__version__}",
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}",
             f"-DENABLE_TESTING:bool=false",
+            f"-DPYTHON_EXECUTABLE={sys.executable}",
             f"-DCMAKE_BUILD_TYPE={cfg}",  # not used on MSVC, but no harm
         ]
         build_args = []
