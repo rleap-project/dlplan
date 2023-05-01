@@ -4,10 +4,10 @@ import sys
 import subprocess
 from pathlib import Path
 
-from setuptools import setup, Extension, find_packages
+from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 
-__version__ = "0.2.8"
+__version__ = "0.2.9"
 HERE = Path(__file__).resolve().parent
 
 
