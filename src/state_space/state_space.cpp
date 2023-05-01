@@ -355,12 +355,13 @@ std::shared_ptr<const InstanceInfo> StateSpace::get_instance_info() const {
     return m_instance_info;
 }
 
-StateSpace generate_state_space(
+GeneratorResult generate_state_space(
     const std::string& domain_file,
     const std::string& instance_file,
     std::shared_ptr<const core::VocabularyInfo> vocabulary_info,
-    int index) {
-    generator::generate_state_space_files(domain_file, instance_file);
+    int index,
+    int max_time) {
+    generator::generate_state_space_files(domain_file, instance_file, max_time);
     return reader::read(vocabulary_info, index);
 }
 

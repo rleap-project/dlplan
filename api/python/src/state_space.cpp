@@ -39,6 +39,15 @@ void init_state_space(py::module_ &m) {
         .def("get_instance_info", &StateSpace::get_instance_info)
     ;
 
-    m.def("generate_state_space", generate_state_space, py::arg("domain_file"), py::arg("instance_file"), py::arg("vocabulary_info") = nullptr, py::arg("index") = -1
-    );
+    py::enum_<GeneratorExitCode>(m, "GeneratorExitCode")
+        .value("COMPLETE", GeneratorExitCode::COMPLETE)
+        .value("INCOMPLETE", GeneratorExitCode::INCOMPLETE)
+        .value("FAIL", GeneratorExitCode::FAIL);
+
+    py::class_<GeneratorResult>(m, "GeneratorResult")
+        .def(py::init<GeneratorExitCode, StateSpace>())
+        .def_readwrite("exit_code", &GeneratorResult::exit_code)
+        .def_readwrite("state_space", &GeneratorResult::state_space);
+
+    m.def("generate_state_space", generate_state_space, py::arg("domain_file"), py::arg("instance_file"), py::arg("vocabulary_info") = nullptr, py::arg("index") = -1, py::arg("max_time") = std::numeric_limits<int>::max());
 }

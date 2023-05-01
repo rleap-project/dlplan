@@ -1,4 +1,3 @@
-
 from dlplan import VocabularyInfo, InstanceInfo, SyntacticElementFactory, State
 
 

@@ -7,7 +7,8 @@ using namespace dlplan::state_space;
 
 
 TEST(DLPTests, StateSpaceSpannerTest) {
-    auto state_space = generate_state_space("domain.pddl", "problem.pddl");
+    auto result = generate_state_space("domain.pddl", "problem.pddl");
+    auto state_space = result.state_space;
     auto goal_distances = state_space.compute_goal_distances();
     state_space.print();
     std::cout << state_space.to_dot(1) << std::endl;

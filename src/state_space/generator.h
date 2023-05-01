@@ -7,6 +7,7 @@ namespace dlplan::state_space::generator {
 
 extern void generate_state_space_files(
     const std::string& domain_file,
-    const std::string& instance_file);
+    const std::string& instance_file,
+    int max_time);
 
 }

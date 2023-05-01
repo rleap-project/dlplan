@@ -108,13 +108,28 @@ public:
 };
 
 /**
+ * Flag providing additional information regarding the generated state space
+*/
+enum class GeneratorExitCode {
+    COMPLETE,
+    INCOMPLETE,
+    FAIL,
+};
+
+struct GeneratorResult {
+    GeneratorExitCode exit_code;
+    StateSpace state_space;
+};
+
+/**
  * Generate a state space from PDDL input files.
  */
-extern StateSpace generate_state_space(
+extern GeneratorResult generate_state_space(
     const std::string& domain_file,
     const std::string& instance_file,
     std::shared_ptr<const core::VocabularyInfo> vocabulary_info=nullptr,
-    int index=-1);
+    int index=-1,
+    int max_time=std::numeric_limits<int>::max());
 
 }
 

@@ -161,7 +161,30 @@ static AdjacencyList parse_transitions_file(const std::string& filename) {
     return adjacency_list;
 }
 
-StateSpace read(std::shared_ptr<const VocabularyInfo> vocabulary_info, int index) {
+static GeneratorExitCode parse_run_file(const std::string& filename) {
+    std::ifstream infile(filename);
+    std::string line;
+    while (std::getline(infile, line)) {
+        // [t=0.00182678s, 11492 KB] Time limit reached. Abort search.
+        if (std::regex_search(line, std::regex("Time limit reached\\. Abort search\\.", std::regex_constants::ECMAScript))) {
+            return GeneratorExitCode::INCOMPLETE;
+        }
+        // [t=0.000984712s, 11492 KB] Finished dumping the reachable state space.
+        else if (std::regex_search(line, std::regex("Finished dumping the reachable state space\\.", std::regex_constants::ECMAScript))) {
+            return GeneratorExitCode::COMPLETE;
+        }
+    }
+    return GeneratorExitCode::FAIL;
+}
+
+GeneratorResult read(std::shared_ptr<const VocabularyInfo> vocabulary_info, int index) {
+    auto exit_code = parse_run_file("run.log");
+    if (exit_code == GeneratorExitCode::FAIL) {
+        return GeneratorResult{ 
+            exit_code,
+            std::move(StateSpace(nullptr, {}, 0, {}, {}))
+        };
+    }
     if (!vocabulary_info) {
         std::shared_ptr<VocabularyInfo> new_vocabulary_info = std::make_shared<core::VocabularyInfo>();
         parse_predicates_file("predicates.txt", *new_vocabulary_info, false);
@@ -178,7 +201,10 @@ StateSpace read(std::shared_ptr<const VocabularyInfo> vocabulary_info, int index
     auto goal_state_indices = std::move(parse_states_result.second);
     auto adjacency_list = parse_transitions_file("transitions.txt");
     // initial state has id 0 in scorpion
-    return StateSpace(std::move(instance_info), std::move(states), 0, std::move(adjacency_list), std::move(goal_state_indices));
+    return GeneratorResult{
+        exit_code, 
+        std::move(StateSpace(std::move(instance_info), std::move(states), 0, std::move(adjacency_list), std::move(goal_state_indices)))
+    };
 }
 
 }

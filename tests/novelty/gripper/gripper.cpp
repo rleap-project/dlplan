@@ -11,7 +11,8 @@ using namespace dlplan::novelty;
 
 
 TEST(DLPTests, NoveltyGripperTest) {
-    auto state_space = std::make_shared<StateSpace>(generate_state_space("domain.pddl", "p-1-0.pddl"));
+    auto result = generate_state_space("domain.pddl", "p-1-0.pddl");
+    auto state_space = std::make_shared<StateSpace>(std::move(result.state_space));
     std::cout << "State space:" << std::endl;
     std::cout << state_space->to_dot(1) << std::endl;
     auto novelty_base = std::make_shared<NoveltyBase>(
