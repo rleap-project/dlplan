@@ -10,8 +10,6 @@
 namespace dlplan::policy::parser {
 
 enum EXPRESSION_TYPE {
-    BOOLEAN_FEATURES,
-    NUMERICAL_FEATURES,
     CONDITIONS,
     EFFECTS,
     C_B_POS,

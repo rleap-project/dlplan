@@ -34,7 +34,7 @@ int main() {
         {b_neg_condition_0, n_gt_condition_0},
         {b_bot_effect_0, n_dec_effect_0}
     );
-    Policy policy = builder.get_result();
+    std::shared_ptr<const Policy> policy = builder.add_policy({rule});
 
     // Construct InstanceInfo and States
     std::shared_ptr<dlplan::core::InstanceInfo> instance_info = std::make_shared<dlplan::core::InstanceInfo>(vocabulary_info);
@@ -48,22 +48,23 @@ int main() {
     dlplan::core::DenotationsCaches caches;
 
     // Evaluate the policy using the cache
-    assert(policy.evaluate_lazy(s2, s1, caches));
-    assert(!policy.evaluate_lazy(s2, s0, caches));
-    assert(!policy.evaluate_lazy(s1, s2, caches));
-    assert(!policy.evaluate_lazy(s0, s2, caches));
+    assert(policy->evaluate_lazy(s2, s1, caches));
+    assert(!policy->evaluate_lazy(s2, s0, caches));
+    assert(!policy->evaluate_lazy(s1, s2, caches));
+    assert(!policy->evaluate_lazy(s0, s2, caches));
     // Evaluate the policy without the cache
-    assert(policy.evaluate_lazy(s2, s1));
-    assert(!policy.evaluate_lazy(s2, s0));
-    assert(!policy.evaluate_lazy(s1, s2));
-    assert(!policy.evaluate_lazy(s0, s2));
+    assert(policy->evaluate_lazy(s2, s1));
+    assert(!policy->evaluate_lazy(s2, s0));
+    assert(!policy->evaluate_lazy(s1, s2));
+    assert(!policy->evaluate_lazy(s0, s2));
 
     // Write policy to file.
     std::cout << "Write policy:" << std::endl;
-    std::cout << policy.str() << std::endl << std::endl;
+    std::cout << policy->compute_repr() << std::endl << std::endl;
+    std::cout << policy->str() << std::endl << std::endl;
     std::ofstream ofs;
     ofs.open("test.txt", std::ofstream::out);
-    ofs << PolicyWriter().write(policy);
+    ofs << PolicyWriter().write(*policy);
     ofs.close();
 
     // Read policy from file.
@@ -71,11 +72,10 @@ int main() {
     ifs.open("test.txt", std::ifstream::in);
     std::stringstream ss;
     ss << ifs.rdbuf();
-    Policy policy_in = PolicyReader().read(ss.str(), factory);
+    std::shared_ptr<const Policy> policy_in = PolicyReader().read(ss.str(), builder, factory);
     ifs.close();
     std::cout << "Read policy:" << std::endl;
-    std::cout << policy_in.compute_repr() << std::endl << std::endl;
-
-    std::cout << policy_in.str() << std::endl << std::endl;
+    std::cout << policy_in->compute_repr() << std::endl << std::endl;
+    std::cout << policy_in->str() << std::endl << std::endl;
     return 0;
 }

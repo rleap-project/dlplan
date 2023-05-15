@@ -127,16 +127,9 @@ std::shared_ptr<const Rule> PolicyBuilder::add_rule(
     return m_pImpl->add_rule(std::move(conditions), std::move(effects));
 }
 
-Policy PolicyBuilder::get_result() {
-    return m_pImpl->get_result();
-}
-
-Booleans PolicyBuilder::get_booleans() const {
-    return m_pImpl->get_booleans();
-}
-
-Numericals PolicyBuilder::get_numericals() const {
-    return m_pImpl->get_numericals();
+std::shared_ptr<const Policy> PolicyBuilder::add_policy(
+    std::set<std::shared_ptr<const Rule>>&& rules) {
+    return m_pImpl->add_policy(std::move(rules));
 }
 
 
@@ -164,8 +157,8 @@ PolicyReader& PolicyReader::operator=(PolicyReader&& other) {
 
 PolicyReader::~PolicyReader() = default;
 
-Policy PolicyReader::read(const std::string& data, core::SyntacticElementFactory& factory) const {
-    return m_pImpl->read(data, factory);
+std::shared_ptr<const Policy> PolicyReader::read(const std::string& data, PolicyBuilder& builder, core::SyntacticElementFactory& factory) const {
+    return m_pImpl->read(data, builder, factory);
 }
 
 

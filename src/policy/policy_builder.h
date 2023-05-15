@@ -32,6 +32,8 @@ private:
 
     Rules m_rules;
 
+    Policies m_policies;
+
 public:
     std::shared_ptr<const core::Boolean> add_boolean_feature(core::Boolean boolean);
     std::shared_ptr<const core::Numerical> add_numerical_feature(core::Numerical numerical);
@@ -49,10 +51,8 @@ public:
 
     std::shared_ptr<const Rule> add_rule(Conditions&& conditions, Effects&& effects);
 
-    Policy get_result();
-
-    Booleans get_booleans() const;
-    Numericals get_numericals() const;
+    std::shared_ptr<const Policy> add_policy(
+        std::set<std::shared_ptr<const Rule>>&& rules);
 };
 
 }

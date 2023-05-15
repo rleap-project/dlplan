@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "utils.h"
+#include "../utils/domain.h"
 
-#include "../include/dlplan/policy.h"
+#include "../../include/dlplan/policy.h"
 
 using namespace std;
 using namespace dlplan::core;
@@ -10,7 +10,7 @@ using namespace dlplan::policy;
 
 
 TEST(DLPTests, PolicyBuilderTest) {
-    auto vocabulary_info = construct_vocabulary_info();
+    auto vocabulary_info = gripper::construct_vocabulary_info();
     auto syntactic_element_factory = construct_syntactic_element_factory(vocabulary_info);
     PolicyBuilder builder;
     // add some features
@@ -31,21 +31,10 @@ TEST(DLPTests, PolicyBuilderTest) {
     // Test something here
     // E.g. canonicity
     builder.add_rule({c_b_pos_2}, {e_b_neg_1});
-    Policy policy = builder.get_result();
-    EXPECT_EQ(policy.str(),
+    auto policy = builder.add_policy({builder.add_rule({c_b_pos_2}, {e_b_neg_1})});
+    EXPECT_EQ(policy->compute_repr(),
         "(:policy\n"
-        "(:boolean_features \"b_empty(c_primitive(package,0))\" \"b_empty(r_primitive(at,0,1))\")\n"
-        "(:numerical_features )\n"
-        "(:rule (:conditions (:c_b_pos 0)) (:effects (:e_b_neg 1)))\n"
+        "(:rule (:conditions (:c_b_pos \"b_empty(c_primitive(package,0))\")) (:effects (:e_b_neg \"b_empty(r_primitive(at,0,1))\")))\n"
         ")"
     );
-    PolicyBuilder builder2;
-    policy.copy_to_builder(builder2);
-    Policy policy2 = builder2.get_result();
-    EXPECT_EQ(policy2.str(),
-        "(:policy\n"
-        "(:boolean_features \"b_empty(c_primitive(package,0))\" \"b_empty(r_primitive(at,0,1))\")\n"
-        "(:numerical_features )\n"
-        "(:rule (:conditions (:c_b_pos 0)) (:effects (:e_b_neg 1)))\n"
-        ")");
 }

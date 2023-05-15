@@ -70,9 +70,9 @@ std::set<T> copy_to_builder(
 }
 
 
-static std::unordered_set<const Rule*> compute_dominated_rules(
-    const std::unordered_set<const Rule*>& rules) {
-    std::unordered_set<const Rule*> dominated_rules;
+static Rules compute_dominated_rules(
+    const Rules& rules) {
+    Rules dominated_rules;
     for (const auto& rule_1 : rules) {
         for (const auto& rule_2 : rules) {
             if (rule_1 == rule_2) {
@@ -113,14 +113,14 @@ PolicyMinimizer& PolicyMinimizer::operator=(PolicyMinimizer&& other) = default;
 PolicyMinimizer::~PolicyMinimizer() { }
 
 static void insert_rules_to_mapping(
-    const Rule* rule,
-    std::unordered_map<const BaseCondition*, std::vector<const Rule*>>& c2r,
-    std::unordered_map<const BaseEffect*, std::vector<const Rule*>>& e2r) {
+    const std::shared_ptr<const Rule>& rule,
+    std::unordered_map<std::shared_ptr<const BaseCondition>, std::vector<std::shared_ptr<const Rule>>>& c2r,
+    std::unordered_map<std::shared_ptr<const BaseEffect>, std::vector<std::shared_ptr<const Rule>>>& e2r) {
     for (const auto& condition : rule->get_conditions()) {
-        c2r[condition.get()].push_back(rule);
+        c2r[condition].push_back(rule);
     }
     for (const auto& effect : rule->get_effects()) {
-        e2r[effect.get()].push_back(rule);
+        e2r[effect].push_back(rule);
     }
 }
 
@@ -128,14 +128,14 @@ static bool try_merge_boolean_condition(
     const Booleans& booleans,
     PolicyBuilder& builder,
     Rules& rules,
-    std::unordered_set<const Rule*>& rules_result,
-    std::unordered_map<const BaseCondition*, std::vector<const Rule*>>& c2r,
-    std::unordered_map<const BaseEffect*, std::vector<const Rule*>>& e2r) {
+    Rules& rules_result,
+    std::unordered_map<std::shared_ptr<const BaseCondition>, std::vector<std::shared_ptr<const Rule>>>& c2r,
+    std::unordered_map<std::shared_ptr<const BaseEffect>, std::vector<std::shared_ptr<const Rule>>>& e2r) {
     for (const auto& boolean : booleans) {
         const auto c_pos = builder.add_pos_condition(boolean);
         const auto c_neg = builder.add_neg_condition(boolean);
-        for (const auto& rule1 : c2r[c_pos.get()]) {
-            for (const auto& rule2 : c2r[c_neg.get()]) {
+        for (const auto& rule1 : c2r[c_pos]) {
+            for (const auto& rule2 : c2r[c_neg]) {
                 // check mergeable
                 if (!utils::is_subset_eq(rule1->get_effects(), rule2->get_effects())) continue;
                 if (!utils::is_subset_eq(utils::set_difference(rule1->get_conditions(), {c_pos}), utils::set_difference(rule2->get_conditions(), {c_neg}))) continue;
@@ -149,8 +149,8 @@ static bool try_merge_boolean_condition(
                 rules.insert(result_rule);
 
                 rules_result.erase(rule2);
-                rules_result.insert(result_rule.get());
-                insert_rules_to_mapping(result_rule.get(), c2r, e2r);
+                rules_result.insert(result_rule);
+                insert_rules_to_mapping(result_rule, c2r, e2r);
                 /*
                 std::cout << "try_merge_boolean_condition" << std::endl;
                 std::cout << "rule1: " << rule1->str() << std::endl;
@@ -168,14 +168,14 @@ static bool try_merge_numerical_condition(
     const Numericals& numericals,
     PolicyBuilder& builder,
     Rules& rules,
-    std::unordered_set<const Rule*>& rules_result,
-    std::unordered_map<const BaseCondition*, std::vector<const Rule*>>& c2r,
-    std::unordered_map<const BaseEffect*, std::vector<const Rule*>>& e2r) {
+    Rules& rules_result,
+    std::unordered_map<std::shared_ptr<const BaseCondition>, std::vector<std::shared_ptr<const Rule>>>& c2r,
+    std::unordered_map<std::shared_ptr<const BaseEffect>, std::vector<std::shared_ptr<const Rule>>>& e2r) {
     for (const auto& numerical : numericals) {
         const auto c_gt = builder.add_gt_condition(numerical);
         const auto c_eq = builder.add_eq_condition(numerical);
-        for (const auto& rule1 : c2r[c_gt.get()]) {
-            for (const auto& rule2 : c2r[c_eq.get()]) {
+        for (const auto& rule1 : c2r[c_gt]) {
+            for (const auto& rule2 : c2r[c_eq]) {
                 // check mergeable
                 if (!utils::is_subset_eq(rule1->get_effects(), rule2->get_effects())) continue;
                 if (!utils::is_subset_eq(utils::set_difference(rule1->get_conditions(), {c_gt}), utils::set_difference(rule2->get_conditions(), {c_eq}))) continue;
@@ -188,8 +188,8 @@ static bool try_merge_numerical_condition(
                 // compute result
                 rules.insert(result_rule);
                 rules_result.erase(rule2);
-                rules_result.insert(result_rule.get());
-                insert_rules_to_mapping(result_rule.get(), c2r, e2r);
+                rules_result.insert(result_rule);
+                insert_rules_to_mapping(result_rule, c2r, e2r);
                 /*
                 std::cout << "try_merge_numerical_condition" << std::endl;
                 std::cout << "rule1: " << rule1->str() << std::endl;
@@ -207,15 +207,15 @@ static bool try_merge_boolean_effect(
     const Booleans& booleans,
     PolicyBuilder& builder,
     Rules& rules,
-    std::unordered_set<const Rule*>& rules_result,
-    std::unordered_map<const BaseCondition*, std::vector<const Rule*>>& c2r,
-    std::unordered_map<const BaseEffect*, std::vector<const Rule*>>& e2r) {
+    Rules& rules_result,
+    std::unordered_map<std::shared_ptr<const BaseCondition>, std::vector<std::shared_ptr<const Rule>>>& c2r,
+    std::unordered_map<std::shared_ptr<const BaseEffect>, std::vector<std::shared_ptr<const Rule>>>& e2r) {
     for (const auto& boolean : booleans) {
         const auto e_pos = builder.add_pos_effect(boolean);
         const auto e_neg = builder.add_neg_effect(boolean);
         const auto e_bot = builder.add_bot_effect(boolean);
-        for (const auto& rule1 : e2r[e_pos.get()]) {
-            for (const auto& rule2 : e2r[e_neg.get()]) {
+        for (const auto& rule1 : e2r[e_pos]) {
+            for (const auto& rule2 : e2r[e_neg]) {
                 // check mergeable
                 if (!utils::is_subset_eq(rule1->get_conditions(), rule2->get_conditions())) continue;
                 if (!utils::is_subset_eq(utils::set_difference(rule1->get_effects(), {e_pos}), utils::set_difference(rule2->get_effects(), {e_neg}))) continue;
@@ -229,8 +229,8 @@ static bool try_merge_boolean_effect(
                 rules.insert(result_rule);
 
                 rules_result.erase(rule2);
-                rules_result.insert(result_rule.get());
-                insert_rules_to_mapping(result_rule.get(), c2r, e2r);
+                rules_result.insert(result_rule);
+                insert_rules_to_mapping(result_rule, c2r, e2r);
                 /*
                 std::cout << "try_merge_boolean_effect" << std::endl;
                 std::cout << "rule1: " << rule1->str() << std::endl;
@@ -240,8 +240,8 @@ static bool try_merge_boolean_effect(
                 return true;
             }
         }
-        for (const auto& rule1 : e2r[e_pos.get()]) {
-            for (const auto& rule2 : e2r[e_bot.get()]) {
+        for (const auto& rule1 : e2r[e_pos]) {
+            for (const auto& rule2 : e2r[e_bot]) {
                 // check mergeable
                 if (!utils::is_subset_eq(rule1->get_conditions(), rule2->get_conditions())) continue;
                 if (!utils::is_subset_eq(utils::set_difference(rule1->get_effects(), {e_pos}), utils::set_difference(rule2->get_effects(), {e_bot}))) continue;
@@ -255,8 +255,8 @@ static bool try_merge_boolean_effect(
                 rules.insert(result_rule);
 
                 rules_result.erase(rule2);
-                rules_result.insert(result_rule.get());
-                insert_rules_to_mapping(result_rule.get(), c2r, e2r);
+                rules_result.insert(result_rule);
+                insert_rules_to_mapping(result_rule, c2r, e2r);
                 /*
                 std::cout << "try_merge_boolean_effect" << std::endl;
                 std::cout << "rule1: " << rule1->str() << std::endl;
@@ -266,9 +266,8 @@ static bool try_merge_boolean_effect(
                 return true;
             }
         }
-        for (const auto& rule1 : e2r[e_neg.get()]) {
-            for (const auto& rule2 : e2r[e_bot.get()]) {
-                CacheEntry<2> key(boolean.get(), {rule1, rule2});
+        for (const auto& rule1 : e2r[e_neg]) {
+            for (const auto& rule2 : e2r[e_bot]) {
                 // check mergeable
                 if (!utils::is_subset_eq(rule1->get_conditions(), rule2->get_conditions())) continue;
                 if (!utils::is_subset_eq(utils::set_difference(rule1->get_effects(), {e_neg}), utils::set_difference(rule2->get_effects(), {e_bot}))) continue;
@@ -282,8 +281,8 @@ static bool try_merge_boolean_effect(
                 rules.insert(result_rule);
 
                 rules_result.erase(rule2);
-                rules_result.insert(result_rule.get());
-                insert_rules_to_mapping(result_rule.get(), c2r, e2r);
+                rules_result.insert(result_rule);
+                insert_rules_to_mapping(result_rule, c2r, e2r);
                 /*
                 std::cout << "try_merge_boolean_effect" << std::endl;
                 std::cout << "rule1: " << rule1->str() << std::endl;
@@ -301,19 +300,19 @@ static bool try_merge_numerical_effect(
     const Numericals& numericals,
     PolicyBuilder& builder,
     Rules& rules,
-    std::unordered_set<const Rule*>& rules_result,
-    std::unordered_map<const BaseCondition*, std::vector<const Rule*>>& c2r,
-    std::unordered_map<const BaseEffect*, std::vector<const Rule*>>& e2r) {
+    Rules& rules_result,
+    std::unordered_map<std::shared_ptr<const BaseCondition>, std::vector<std::shared_ptr<const Rule>>>& c2r,
+    std::unordered_map<std::shared_ptr<const BaseEffect>, std::vector<std::shared_ptr<const Rule>>>& e2r) {
     for (const auto& numerical : numericals) {
         const auto e_inc = builder.add_inc_effect(numerical);
         const auto e_dec = builder.add_dec_effect(numerical);
         const auto e_bot = builder.add_bot_effect(numerical);
-        for (const auto& rule1 : e2r[e_inc.get()]) {
-            for (const auto& rule2 : e2r[e_dec.get()]) {
+        for (const auto& rule1 : e2r[e_inc]) {
+            for (const auto& rule2 : e2r[e_dec]) {
                 // check mergeable
                 if (!utils::is_supset_eq(rule1->get_conditions(), rule2->get_conditions())) continue;
                 if (!utils::is_supset_eq(utils::set_difference(rule1->get_effects(), {e_inc}), utils::set_difference(rule2->get_effects(), {e_dec}))) continue;
-                for (const auto& rule3 : e2r[e_bot.get()]) {
+                for (const auto& rule3 : e2r[e_bot]) {
                     // check mergeable
                     if (!utils::is_supset_eq(rule1->get_conditions(), rule3->get_conditions())) continue;
                     if (!utils::is_supset_eq(utils::set_difference(rule1->get_effects(), {e_inc}), utils::set_difference(rule3->get_effects(), {e_bot}))) continue;
@@ -326,8 +325,8 @@ static bool try_merge_numerical_effect(
                     // compute result
                     rules.insert(result_rule);
                     rules_result.erase(rule1);
-                    rules_result.insert(result_rule.get());
-                    insert_rules_to_mapping(result_rule.get(), c2r, e2r);
+                    rules_result.insert(result_rule);
+                    insert_rules_to_mapping(result_rule, c2r, e2r);
                     /*
                     std::cout << "try_merge_numerical_effect" << std::endl;
                     std::cout << "rule1: " << rule1->str() << std::endl;
@@ -343,19 +342,17 @@ static bool try_merge_numerical_effect(
     return false;
 }
 
-Policy PolicyMinimizer::minimize(const Policy& policy) const {
+std::shared_ptr<const Policy> PolicyMinimizer::minimize(const std::shared_ptr<const Policy>& policy, PolicyBuilder& builder) const {
     // successively add simpler rules that are made up of existing rules
-    PolicyBuilder builder;
-    Policy tmp_policy = policy.copy_to_builder(builder);
-    Rules rules = tmp_policy.get_rules();
-    std::unordered_set<const Rule*> rules_result;
-    std::for_each(rules.begin(), rules.end(), [&](const auto& rule){ rules_result.insert(rule.get()); });
-    Booleans booleans = builder.get_booleans();
-    Numericals numericals = builder.get_numericals();
-    std::unordered_map<const BaseCondition*, std::vector<const Rule*>> c2r;
-    std::unordered_map<const BaseEffect*, std::vector<const Rule*>> e2r;
+    auto tmp_policy = policy->copy_to_builder(builder);
+    Rules rules = tmp_policy->get_rules();
+    Rules rules_result = rules;
+    Booleans booleans = tmp_policy->get_booleans();
+    Numericals numericals = tmp_policy->get_numericals();
+    std::unordered_map<std::shared_ptr<const BaseCondition>, std::vector<std::shared_ptr<const Rule>>> c2r;
+    std::unordered_map<std::shared_ptr<const BaseEffect>, std::vector<std::shared_ptr<const Rule>>> e2r;
     for (const auto& rule : rules) {
-        insert_rules_to_mapping(rule.get(), c2r, e2r);
+        insert_rules_to_mapping(rule, c2r, e2r);
     }
     do {
         if (try_merge_boolean_condition(booleans, builder, rules, rules_result, c2r, e2r)) continue;
@@ -364,34 +361,22 @@ Policy PolicyMinimizer::minimize(const Policy& policy) const {
         if (try_merge_numerical_effect(numericals, builder, rules, rules_result, c2r, e2r)) continue;
         break;
     } while(true);
-    // Erase dominated rules
-    for (const auto& rule : compute_dominated_rules(rules_result)) {
-        rules_result.erase(rule);
-    }
-    // Copy resulting rules in new builder and return policy.
-    PolicyBuilder result_builder;
-    std::for_each(rules.begin(), rules.end(), [&](const auto& rule){
-        if (rules_result.count(rule.get())) {
-            rule->copy_to_builder(result_builder);
-        }
-    });
-    return result_builder.get_result();
+    return builder.add_policy(utils::set_difference(rules_result, compute_dominated_rules(rules_result)));
 }
 
-Policy PolicyMinimizer::minimize(const Policy& policy, const core::StatePairs& true_state_pairs, const core::StatePairs& false_state_pairs) const {
-    Policy current_policy = policy;
+std::shared_ptr<const Policy> PolicyMinimizer::minimize(const std::shared_ptr<const Policy>& policy, const core::StatePairs& true_state_pairs, const core::StatePairs& false_state_pairs, PolicyBuilder& builder) const {
+    auto current_policy = policy;
     bool minimization_success;
     do {
         minimization_success = false;
-        for (const auto& rule : current_policy.get_rules()) {
+        for (const auto& rule : current_policy->get_rules()) {
             for (const auto& condition : rule->get_conditions()) {
-                PolicyBuilder builder;
-                builder.add_rule(
+                Rules rules;
+                rules.insert(builder.add_rule(
                     copy_to_builder(utils::set_difference(rule->get_conditions(), {condition}), builder),
-                    copy_to_builder(rule->get_effects(), builder));
-                Rules rules = copy_to_builder(utils::set_difference(current_policy.get_rules(), {rule}), builder);
-                Policy tmp_policy = builder.get_result();
-                if (check_policy_matches_classification(tmp_policy, true_state_pairs, false_state_pairs)) {
+                    copy_to_builder(rule->get_effects(), builder)));
+                auto tmp_policy = builder.add_policy(std::move(rules));
+                if (check_policy_matches_classification(*tmp_policy, true_state_pairs, false_state_pairs)) {
                     minimization_success = true;
                     current_policy = tmp_policy;
                     break;
@@ -401,13 +386,12 @@ Policy PolicyMinimizer::minimize(const Policy& policy, const core::StatePairs& t
                 break;
             }
             for (const auto& effect : rule->get_effects()) {
-                PolicyBuilder builder;
-                builder.add_rule(
+                Rules rules;
+                rules.insert(builder.add_rule(
                     copy_to_builder(rule->get_conditions(), builder),
-                    copy_to_builder(utils::set_difference(rule->get_effects(), {effect}), builder));
-                Rules rules = copy_to_builder(utils::set_difference(current_policy.get_rules(), {rule}), builder);
-                Policy tmp_policy = builder.get_result();
-                if (check_policy_matches_classification(tmp_policy, true_state_pairs, false_state_pairs)) {
+                    copy_to_builder(utils::set_difference(rule->get_effects(), {effect}), builder)));
+                auto tmp_policy = builder.add_policy(std::move(rules));
+                if (check_policy_matches_classification(*tmp_policy, true_state_pairs, false_state_pairs)) {
                     minimization_success = true;
                     current_policy = tmp_policy;
                     break;

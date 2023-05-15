@@ -76,6 +76,8 @@ public:
      * Getters.
      */
     std::shared_ptr<const core::BaseElement> get_base_feature() const;
+    virtual std::shared_ptr<const core::Boolean> get_boolean() const = 0;
+    virtual std::shared_ptr<const core::Numerical> get_numerical() const = 0;
     int get_index() const;
 };
 
@@ -119,8 +121,10 @@ public:
     /**
      * Getters.
      */
-    std::shared_ptr<const core::BaseElement> get_base_feature() const;
     int get_index() const;
+    std::shared_ptr<const core::BaseElement> get_base_feature() const;
+    virtual std::shared_ptr<const core::Boolean> get_boolean() const = 0;
+    virtual std::shared_ptr<const core::Numerical> get_numerical() const = 0;
 };
 
 
@@ -179,6 +183,8 @@ public:
  */
 class Policy : public utils::Cachable {
 private:
+    Booleans m_booleans;
+    Numericals m_numericals;
     Rules m_rules;
     int m_index;
 
@@ -209,20 +215,19 @@ public:
     std::shared_ptr<const Rule> evaluate_effects_lazy(const core::State& source_state, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules, core::DenotationsCaches& caches) const;
 
     /**
-     * Returns a string that uniquely identifies the policy.
+     * Returns a canonical string representation that can be parsed.
      */
     std::string compute_repr() const;
 
     /**
-     * Returns parseable string representation that is not necessarily unique.
-     * The feature lists can possible be ordered differently.
+     * Returns a more readable string representation that is not necessarily canonical.
      */
     std::string str() const;
 
     /**
      * Adds the rule to the policy builder and returns it
      */
-    Policy copy_to_builder(PolicyBuilder& policy_builder) const;
+    std::shared_ptr<const Policy> copy_to_builder(PolicyBuilder& policy_builder) const;
 
     /**
      * Setters.
@@ -232,6 +237,8 @@ public:
      * Getters.
      */
     int get_index() const;
+    const Booleans& get_booleans() const;
+    const Numericals& get_numericals() const;
     const Rules& get_rules() const;
 };
 
@@ -278,15 +285,10 @@ public:
         std::set<std::shared_ptr<const BaseEffect>>&& effects);
 
     /**
-     * Returns the policy.
+     * Uniquely adds a policy and returns it.
      */
-    Policy get_result();
-
-    /**
-     * Getters.
-    */
-    Booleans get_booleans() const;
-    Numericals get_numericals() const;
+    std::shared_ptr<const Policy> add_policy(
+        std::set<std::shared_ptr<const Rule>>&& rules);
 };
 
 
@@ -302,8 +304,8 @@ public:
     PolicyMinimizer& operator=(PolicyMinimizer&& other);
     ~PolicyMinimizer();
 
-    Policy minimize(const Policy& policy) const;
-    Policy minimize(const Policy& policy, const core::StatePairs& true_state_pairs, const core::StatePairs& false_state_pairs) const;
+    std::shared_ptr<const Policy> minimize(const std::shared_ptr<const Policy>& policy, PolicyBuilder& builder) const;
+    std::shared_ptr<const Policy> minimize(const std::shared_ptr<const Policy>& policy, const core::StatePairs& true_state_pairs, const core::StatePairs& false_state_pairs, PolicyBuilder& builder) const;
 };
 
 
@@ -322,7 +324,7 @@ public:
     PolicyReader& operator=(PolicyReader&& other);
     ~PolicyReader();
 
-    Policy read(const std::string& data, core::SyntacticElementFactory& factory) const;
+    std::shared_ptr<const Policy> read(const std::string& data, PolicyBuilder& builder, core::SyntacticElementFactory& factory) const;
 };
 
 /**

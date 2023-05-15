@@ -15,6 +15,9 @@ protected:
 
 protected:
     BooleanCondition(std::shared_ptr<const core::Boolean> boolean);
+
+    std::shared_ptr<const core::Boolean> get_boolean() const override;
+    std::shared_ptr<const core::Numerical> get_numerical() const override;
 };
 
 
@@ -24,6 +27,9 @@ protected:
 
 protected:
     NumericalCondition(std::shared_ptr<const core::Numerical> numerical);
+
+    std::shared_ptr<const core::Boolean> get_boolean() const override;
+    std::shared_ptr<const core::Numerical> get_numerical() const override;
 };
 
 

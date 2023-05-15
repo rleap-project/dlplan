@@ -8,8 +8,8 @@
 
 namespace dlplan::policy {
 
-Policy PolicyReaderImpl::read(const std::string& data, core::SyntacticElementFactory& factory) const {
-    return parser::Parser().parse(data)->parse_policy(factory);
+std::shared_ptr<const Policy> PolicyReaderImpl::read(const std::string& data, PolicyBuilder& builder, core::SyntacticElementFactory& factory) const {
+    return parser::Parser().parse(data)->parse_policy(builder, factory);
 }
 
 }

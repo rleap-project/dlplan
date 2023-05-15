@@ -19,6 +19,9 @@ protected:
 
 protected:
     BooleanEffect(std::shared_ptr<const core::Boolean> boolean);
+
+    std::shared_ptr<const core::Boolean> get_boolean() const override;
+    std::shared_ptr<const core::Numerical> get_numerical() const override;
 };
 
 
@@ -28,6 +31,9 @@ protected:
 
 protected:
     NumericalEffect(std::shared_ptr<const core::Numerical> numerical);
+
+    std::shared_ptr<const core::Boolean> get_boolean() const override;
+    std::shared_ptr<const core::Numerical> get_numerical() const override;
 };
 
 

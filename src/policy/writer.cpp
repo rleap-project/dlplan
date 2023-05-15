@@ -6,7 +6,7 @@
 namespace dlplan::policy {
 
 std::string PolicyWriterImpl::write(const Policy& policy) const {
-    return policy.str();
+    return policy.compute_repr();
 }
 
 }
