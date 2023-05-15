@@ -51,3 +51,13 @@ build
 libdlp.so.1
 
 **/.vscode
+
+*.txt
+output.sas
+run.log
+*.pddl
+*.dot
+
+__pycache__
+
+.venv
