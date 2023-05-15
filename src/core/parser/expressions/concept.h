@@ -3,7 +3,10 @@
 
 #include "expression.h"
 
-#include "../../elements/concept.h"
+
+namespace dlplan::core {
+class Concept;
+}
 
 namespace dlplan::core::parser {
 
@@ -12,7 +15,7 @@ protected:
     /**
      * Construct the Concept.
      */
-    virtual std::unique_ptr<element::Concept> parse_concept_impl(const VocabularyInfo& vocabulary, Caches &caches) const = 0;
+    virtual std::unique_ptr<dlplan::core::Concept> parse_concept_impl(std::shared_ptr<const VocabularyInfo> vocabulary_info, Caches &caches) const = 0;
 
 public:
     Concept(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
@@ -21,8 +24,8 @@ public:
     /**
      * Construct or retrieve the Concept.
      */
-    virtual element::Concept_Ptr parse_concept(const VocabularyInfo& vocabulary, Caches &caches) const {
-        return caches.m_concept_cache->insert(parse_concept_impl(vocabulary, caches)).first;
+    virtual std::shared_ptr<const dlplan::core::Concept> parse_concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, Caches &caches) const {
+        return caches.m_concept_cache->insert(parse_concept_impl(vocabulary_info, caches)).first;
     }
 };
 

@@ -1,13 +1,14 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_PROJECTION_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_PROJECTION_H_
 
+#include "../../../../include/dlplan/core.h"
+
 #include <sstream>
 
-#include "../concept.h"
-#include "../role.h"
+using namespace std::string_literals;
 
 
-namespace dlplan::core::element {
+namespace dlplan::core {
 
 class ProjectionConcept : public Concept {
 private:
@@ -43,12 +44,12 @@ private:
     }
 
 protected:
-    const Role_Ptr m_role;
+    const std::shared_ptr<const Role> m_role;
     const int m_pos;
 
 public:
-    ProjectionConcept(const VocabularyInfo& vocabulary, const Role_Ptr& role, int pos)
-    : Concept(vocabulary, role->is_static()), m_role(role), m_pos(pos) {
+    ProjectionConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, const std::shared_ptr<const Role>& role, int pos)
+    : Concept(vocabulary_info, role->is_static()), m_role(role), m_pos(pos) {
         if (pos < 0 || pos > 1) {
             throw std::runtime_error("ProjectionConcept::ProjectionConcept - projection index out of range, should be 0 or 1 ("s + std::to_string(pos) + ")");
         }

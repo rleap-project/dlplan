@@ -1,11 +1,14 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_EQUAL_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_EQUAL_H_
 
-#include "../concept.h"
-#include "../role.h"
+#include "../../../../include/dlplan/core.h"
+
+#include <sstream>
+
+using namespace std::string_literals;
 
 
-namespace dlplan::core::element {
+namespace dlplan::core {
 
 class EqualConcept : public Concept {
 private:
@@ -49,12 +52,12 @@ private:
     }
 
 protected:
-    const Role_Ptr m_role_left;
-    const Role_Ptr m_role_right;
+    const std::shared_ptr<const Role> m_role_left;
+    const std::shared_ptr<const Role> m_role_right;
 
 public:
-    EqualConcept(const VocabularyInfo& vocabulary, Role_Ptr role_left, Role_Ptr role_right)
-    : Concept(vocabulary, role_left->is_static() && role_right->is_static()),
+    EqualConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role_left, std::shared_ptr<const Role> role_right)
+    : Concept(vocabulary_info, role_left->is_static() && role_right->is_static()),
       m_role_left(role_left), m_role_right(role_right) {
         if (!(role_left && role_right)) {
             throw std::runtime_error("EqualConcept::EqualConcept - at least one child is a nullptr");

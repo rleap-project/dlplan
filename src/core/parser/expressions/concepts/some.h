@@ -8,18 +8,18 @@ namespace dlplan::core::parser {
 
 class SomeConcept : public Concept {
 protected:
-    std::unique_ptr<element::Concept> parse_concept_impl(const VocabularyInfo& vocabulary, Caches &cache) const override {
+    std::unique_ptr<dlplan::core::Concept> parse_concept_impl(std::shared_ptr<const VocabularyInfo> vocabulary_info, Caches &cache) const override {
         if (m_children.size() != 2) {
             throw std::runtime_error("SomeConcept::parse_concept_impl - number of children ("s + std::to_string(m_children.size()) + " != 2).");
         }
         // 1. Parse children
-        element::Role_Ptr role = m_children[0]->parse_role(vocabulary, cache);
-        element::Concept_Ptr concept = m_children[1]->parse_concept(vocabulary, cache);
+        std::shared_ptr<const dlplan::core::Role> role = m_children[0]->parse_role(vocabulary_info, cache);
+        std::shared_ptr<const dlplan::core::Concept> concept = m_children[1]->parse_concept(vocabulary_info, cache);
         if (!(role && concept)) {
             throw std::runtime_error("SomeConcept::parse_concept_impl - at least one children is a nullptr");
         }
         // 2. Construct element
-        return std::make_unique<element::SomeConcept>(vocabulary, role, concept);
+        return std::make_unique<dlplan::core::SomeConcept>(vocabulary_info, role, concept);
     }
 
 public:

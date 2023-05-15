@@ -16,7 +16,7 @@ TEST(DLPTests, NumericalSumRoleDistance) {
     Predicate p3 = vocabulary->add_predicate("start2", 2);
     Predicate p4 = vocabulary->add_predicate("end2", 2);
     Predicate p5 = vocabulary->add_predicate("start3", 2);
-    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary, 0);
+    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary_info, 0);
     // Add state atoms
     Atom a0 = instance->add_atom("conn", {"A", "B"});
     Atom a1 = instance->add_atom("conn", {"B", "C"});
@@ -37,24 +37,24 @@ TEST(DLPTests, NumericalSumRoleDistance) {
 
     State state(instance, {a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13}, 0);
 
-    SyntacticElementFactory factory(vocabulary);
+    SyntacticElementFactory factory(vocabulary_info);
     DenotationsCaches caches;
 
     // All distances are finite
-    Numerical numerical = factory.parse_numerical("n_sum_role_distance(r_primitive(start,0,1),r_primitive(conn,0,1),r_primitive(end,0,1))");
-    EXPECT_EQ(numerical.evaluate(state), 3);
-    EXPECT_EQ(numerical.evaluate(state, caches), 3);
-    EXPECT_EQ(numerical.evaluate({state}, caches), 3);
+    std::shared_ptr<const Numerical> numerical = factory.parse_numerical("n_sum_role_distance(r_primitive(start,0,1),r_primitive(conn,0,1),r_primitive(end,0,1))");
+    EXPECT_EQ(numerical->evaluate(state), 3);
+    EXPECT_EQ(numerical->evaluate(state, caches), 3);
+    EXPECT_EQ(numerical->evaluate({state}, caches), 3);
 
     // If for at least one source there is no reachable target then the sum is defined as infinity
-    Numerical numerical2 = factory.parse_numerical("n_sum_role_distance(r_primitive(start2,0,1),r_primitive(conn,0,1),r_primitive(end2,0,1))");
-    EXPECT_EQ(numerical2.evaluate(state), std::numeric_limits<int>::max());
-    EXPECT_EQ(numerical2.evaluate(state, caches), std::numeric_limits<int>::max());
-    EXPECT_EQ(numerical2.evaluate({state}, caches), std::numeric_limits<int>::max());
+    std::shared_ptr<const Numerical> numerical2 = factory.parse_numerical("n_sum_role_distance(r_primitive(start2,0,1),r_primitive(conn,0,1),r_primitive(end2,0,1))");
+    EXPECT_EQ(numerical2->evaluate(state), std::numeric_limits<int>::max());
+    EXPECT_EQ(numerical2->evaluate(state, caches), std::numeric_limits<int>::max());
+    EXPECT_EQ(numerical2->evaluate({state}, caches), std::numeric_limits<int>::max());
 
     // SumRoleDistance with no sources is defined as 0
-    Numerical numerical3 = factory.parse_numerical("n_sum_role_distance(r_primitive(start3,0,1),r_primitive(conn,0,1),r_primitive(end2,0,1))");
-    EXPECT_EQ(numerical3.evaluate(state), std::numeric_limits<int>::max());
-    EXPECT_EQ(numerical3.evaluate(state, caches), std::numeric_limits<int>::max());
-    EXPECT_EQ(numerical3.evaluate({state}, caches), std::numeric_limits<int>::max());
+    std::shared_ptr<const Numerical> numerical3 = factory.parse_numerical("n_sum_role_distance(r_primitive(start3,0,1),r_primitive(conn,0,1),r_primitive(end2,0,1))");
+    EXPECT_EQ(numerical3->evaluate(state), std::numeric_limits<int>::max());
+    EXPECT_EQ(numerical3->evaluate(state, caches), std::numeric_limits<int>::max());
+    EXPECT_EQ(numerical3->evaluate({state}, caches), std::numeric_limits<int>::max());
 }

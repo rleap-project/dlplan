@@ -20,7 +20,7 @@ void NotConcept::generate_impl(const core::States& states, int target_complexity
 }
 
 std::string NotConcept::get_name() const {
-    return core::element::NotConcept::get_name();
+    return core::NotConcept::get_name();
 }
 
 }

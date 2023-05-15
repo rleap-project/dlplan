@@ -1,13 +1,15 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_NUMERICAL_SUM_ROLE_DISTANCE_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_NUMERICAL_SUM_ROLE_DISTANCE_H_
 
-#include "../numerical.h"
-#include "../concept.h"
-#include "../role.h"
+#include "../../../../include/dlplan/core.h"
 #include "../utils.h"
 
+#include <sstream>
 
-namespace dlplan::core::element {
+using namespace std::string_literals;
+
+
+namespace dlplan::core {
 
 class SumRoleDistanceNumerical : public Numerical {
 private:
@@ -72,13 +74,13 @@ private:
     }
 
 protected:
-    const Role_Ptr m_role_from;
-    const Role_Ptr m_role;
-    const Role_Ptr m_role_to;
+    const std::shared_ptr<const Role> m_role_from;
+    const std::shared_ptr<const Role> m_role;
+    const std::shared_ptr<const Role> m_role_to;
 
 public:
-    SumRoleDistanceNumerical(const VocabularyInfo& vocabulary, Role_Ptr role_from, Role_Ptr role, Role_Ptr role_to)
-    : Numerical(vocabulary, role_from->is_static() && role->is_static() && role_to->is_static()),
+    SumRoleDistanceNumerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role_from, std::shared_ptr<const Role> role, std::shared_ptr<const Role> role_to)
+    : Numerical(vocabulary_info, role_from->is_static() && role->is_static() && role_to->is_static()),
       m_role_from(role_from), m_role(role), m_role_to(role_to) {
         if (!(role_from && role && role_to)) {
             throw std::runtime_error("SumRoleDistanceNumerical::SumRoleDistanceNumerical - child is not of type Role, Role, Role.");

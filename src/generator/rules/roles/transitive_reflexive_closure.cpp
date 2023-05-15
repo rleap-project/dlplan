@@ -22,7 +22,7 @@ void TransitiveReflexiveClosureRole::generate_impl(const core::States& states, i
 }
 
 std::string TransitiveReflexiveClosureRole::get_name() const {
-    return core::element::TransitiveReflexiveClosureRole::get_name();
+    return core::TransitiveReflexiveClosureRole::get_name();
 }
 
 }

@@ -1,11 +1,14 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_ROLES_RESTRICT_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_ROLES_RESTRICT_H_
 
-#include "../role.h"
-#include "../concept.h"
+#include "../../../../include/dlplan/core.h"
+
+#include <sstream>
+
+using namespace std::string_literals;
 
 
-namespace dlplan::core::element {
+namespace dlplan::core {
 
 class RestrictRole : public Role {
 private:
@@ -46,12 +49,12 @@ private:
     }
 
 protected:
-    const Role_Ptr m_role;
-    const Concept_Ptr m_concept;
+    const std::shared_ptr<const Role> m_role;
+    const std::shared_ptr<const Concept> m_concept;
 
 public:
-    RestrictRole(const VocabularyInfo& vocabulary, Role_Ptr role, Concept_Ptr concept)
-    : Role(vocabulary, role->is_static() && concept->is_static()), m_role(role), m_concept(concept) {
+    RestrictRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept)
+    : Role(vocabulary_info, role->is_static() && concept->is_static()), m_role(role), m_concept(concept) {
         if (!(role && concept)) {
             throw std::runtime_error("RestrictRole::RestrictRole - at least one child is a nullptr.");
         }

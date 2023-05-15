@@ -25,7 +25,7 @@ void OrRole::generate_impl(const core::States& states, int target_complexity, Ge
 }
 
 std::string OrRole::get_name() const {
-    return core::element::OrRole::get_name();
+    return core::OrRole::get_name();
 }
 
 }

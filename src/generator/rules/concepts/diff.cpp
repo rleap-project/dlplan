@@ -25,7 +25,7 @@ void DiffConcept::generate_impl(const core::States& states, int target_complexit
 }
 
 std::string DiffConcept::get_name() const {
-    return core::element::DiffConcept::get_name();
+    return core::DiffConcept::get_name();
 }
 
 }

@@ -13,14 +13,14 @@ void EqualConcept::generate_impl(const core::States& states, int target_complexi
         for (int i = 1; i < target_complexity - 1; ++i) {
             int j = target_complexity - i - 1;
             for (const auto& r1 : data.m_roles_by_iteration[i]) {
-                auto r1_primitive_role = std::dynamic_pointer_cast<const core::element::PrimitiveRole>(r1.get_element());
+                auto r1_primitive_role = std::dynamic_pointer_cast<const core::PrimitiveRole>(r1.get_element());
                 if (r1_primitive_role) {
                     std::string r1_predicate_name = r1_primitive_role->get_predicate().get_name();
                     if (r1_predicate_name.substr(r1_predicate_name.size() - 2, 2) != "_g") {
                         continue;
                     }
                     for (const auto& r2 : data.m_roles_by_iteration[j]) {
-                        auto r2_primitive_role = std::dynamic_pointer_cast<const core::element::PrimitiveRole>(r2.get_element());
+                        auto r2_primitive_role = std::dynamic_pointer_cast<const core::PrimitiveRole>(r2.get_element());
                         if (r2_primitive_role) {
                             std::string r2_predicate_name = r2_primitive_role->get_predicate().get_name();
                             if (r1_predicate_name.substr(0, r1_predicate_name.size() -2) == r2_predicate_name) {
@@ -41,7 +41,7 @@ void EqualConcept::generate_impl(const core::States& states, int target_complexi
 }
 
 std::string EqualConcept::get_name() const {
-    return core::element::EqualConcept::get_name();
+    return core::EqualConcept::get_name();
 }
 
 }

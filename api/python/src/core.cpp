@@ -139,8 +139,8 @@ void init_core(py::module_ &m) {
     ;
 
     py::class_<Concept>(m, "Concept")
-        .def("__copy__", [](const Concept& concept, py::object){ return Concept(concept); })
-        .def("__deepcopy__", [](const Concept& concept, py::object){ return Concept(concept); })
+        .def("__copy__", [](const std::shared_ptr<const Concept>& concept, py::object){ return Concept(concept); })
+        .def("__deepcopy__", [](const std::shared_ptr<const Concept>& concept, py::object){ return Concept(concept); })
         .def("__repr__", &Concept::compute_repr)
         .def("__str__", &Concept::compute_repr)
         .def("evaluate", py::overload_cast<const State&>(&Concept::evaluate, py::const_))

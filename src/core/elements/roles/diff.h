@@ -1,10 +1,14 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_ROLES_DIFF_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_ROLES_DIFF_H_
 
-#include "../role.h"
+#include "../../../../include/dlplan/core.h"
+
+#include <sstream>
+
+using namespace std::string_literals;
 
 
-namespace dlplan::core::element {
+namespace dlplan::core {
 
 class DiffRole : public Role {
 private:
@@ -41,12 +45,12 @@ private:
     }
 
 protected:
-    const Role_Ptr m_role_left;
-    const Role_Ptr m_role_right;
+    const std::shared_ptr<const Role> m_role_left;
+    const std::shared_ptr<const Role> m_role_right;
 
 public:
-    DiffRole(const VocabularyInfo& vocabulary, Role_Ptr role_left, Role_Ptr role_right)
-    : Role(vocabulary, role_left->is_static() && role_right->is_static()), m_role_left(role_left), m_role_right(role_right)  {
+    DiffRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role_left, std::shared_ptr<const Role> role_right)
+    : Role(vocabulary_info, (role_left->is_static() && role_right->is_static())), m_role_left(role_left), m_role_right(role_right)  {
         if (!(role_left && role_right)) {
             throw std::runtime_error("DiffRole::DiffRole - at least one child is a nullptr.");
         }

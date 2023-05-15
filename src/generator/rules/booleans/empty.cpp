@@ -29,7 +29,7 @@ void EmptyBoolean::generate_impl(const core::States& states, int target_complexi
 }
 
 std::string EmptyBoolean::get_name() const {
-    return core::element::EmptyBoolean<int>::get_name();
+    return core::EmptyBoolean<int>::get_name();
 }
 
 }

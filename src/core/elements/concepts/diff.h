@@ -1,10 +1,14 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_DIFF_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_DIFF_H_
 
-#include "../concept.h"
+#include "../../../../include/dlplan/core.h"
+
+#include <sstream>
+
+using namespace std::string_literals;
 
 
-namespace dlplan::core::element {
+namespace dlplan::core {
 
 class DiffConcept : public Concept {
 private:
@@ -41,12 +45,12 @@ private:
     }
 
 protected:
-    const Concept_Ptr m_concept_left;
-    const Concept_Ptr m_concept_right;
+    const std::shared_ptr<const Concept> m_concept_left;
+    const std::shared_ptr<const Concept> m_concept_right;
 
 public:
-    DiffConcept(const VocabularyInfo& vocabulary, Concept_Ptr concept_1, Concept_Ptr concept_2)
-    : Concept(vocabulary, concept_1->is_static() && concept_2->is_static()), m_concept_left(concept_1), m_concept_right(concept_2) {
+    DiffConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept_1, std::shared_ptr<const Concept> concept_2)
+    : Concept(vocabulary_info, concept_1->is_static() && concept_2->is_static()), m_concept_left(concept_1), m_concept_right(concept_2) {
         if (!(concept_1 && concept_2)) {
             throw std::runtime_error("DiffConcept::DiffConcept - at least one child is a nullptr.");
         }

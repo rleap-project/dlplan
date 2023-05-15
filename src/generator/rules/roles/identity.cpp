@@ -20,7 +20,7 @@ void IdentityRole::generate_impl(const core::States& states, int target_complexi
 }
 
 std::string IdentityRole::get_name() const {
-    return core::element::IdentityRole::get_name();
+    return core::IdentityRole::get_name();
 }
 
 }

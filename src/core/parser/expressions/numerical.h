@@ -3,7 +3,9 @@
 
 #include "expression.h"
 
-#include "../../elements/numerical.h"
+namespace dlplan::core {
+class Numerical;
+}
 
 
 namespace dlplan::core::parser {
@@ -13,7 +15,7 @@ protected:
     /**
      * Construct the Numerical.
      */
-    virtual std::unique_ptr<element::Numerical> parse_numerical_impl(const VocabularyInfo& vocabulary, Caches &caches) const = 0;
+    virtual std::unique_ptr<dlplan::core::Numerical> parse_numerical_impl(std::shared_ptr<const VocabularyInfo> vocabulary_info, Caches &caches) const = 0;
 
 public:
     Numerical(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
@@ -22,8 +24,8 @@ public:
     /**
      * Construct or retrieve the Numerical.
      */
-    virtual element::Numerical_Ptr parse_numerical(const VocabularyInfo& vocabulary, Caches &caches) const {
-        return caches.m_numerical_cache->insert(parse_numerical_impl(vocabulary, caches)).first;
+    virtual std::shared_ptr<const dlplan::core::Numerical> parse_numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, Caches &caches) const {
+        return caches.m_numerical_cache->insert(parse_numerical_impl(vocabulary_info, caches)).first;
     }
 };
 

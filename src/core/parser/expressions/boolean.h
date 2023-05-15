@@ -3,8 +3,10 @@
 
 #include "expression.h"
 
-#include "../../elements/boolean.h"
 
+namespace dlplan::core {
+class Boolean;
+}
 
 namespace dlplan::core::parser {
 
@@ -13,7 +15,7 @@ protected:
     /**
      * Construct the Boolean.
      */
-    virtual std::unique_ptr<element::Boolean> parse_boolean_impl(const VocabularyInfo& vocabulary, Caches &caches) const = 0;
+    virtual std::unique_ptr<dlplan::core::Boolean> parse_boolean_impl(std::shared_ptr<const VocabularyInfo> vocabulary_info, Caches &caches) const = 0;
 
 public:
     Boolean(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
@@ -22,8 +24,8 @@ public:
     /**
      * Construct or retrieve the Boolean.
      */
-    virtual element::Boolean_Ptr parse_boolean(const VocabularyInfo& vocabulary, Caches &caches) const {
-        return caches.m_boolean_cache->insert(parse_boolean_impl(vocabulary, caches)).first;
+    virtual std::shared_ptr<const dlplan::core::Boolean> parse_boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, Caches &caches) const {
+        return caches.m_boolean_cache->insert(parse_boolean_impl(vocabulary_info, caches)).first;
     }
 };
 

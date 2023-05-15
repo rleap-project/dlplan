@@ -1,11 +1,14 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_BOOLEANS_NULLARY_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_BOOLEANS_NULLARY_H_
 
-#include "../boolean.h"
+#include "../../../../include/dlplan/core.h"
+
+#include <sstream>
+
+using namespace std::string_literals;
 
 
-
-namespace dlplan::core::element {
+namespace dlplan::core {
 
 class NullaryBoolean : public Boolean {
 private:
@@ -44,8 +47,8 @@ protected:
     const Predicate m_predicate;
 
 public:
-    NullaryBoolean(const VocabularyInfo& vocabulary, const Predicate& predicate)
-    : Boolean(vocabulary, predicate.is_static()), m_predicate(predicate) {
+    NullaryBoolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, const Predicate& predicate)
+    : Boolean(vocabulary_info, predicate.is_static()), m_predicate(predicate) {
         if (predicate.get_arity() != 0) {
             throw std::runtime_error("NullaryBoolean::NullaryBoolean - expected predicate with arity 0.");
         }

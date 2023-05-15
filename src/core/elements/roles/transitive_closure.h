@@ -1,11 +1,15 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_ROLES_TRANSITIVE_CLOSURE_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_ROLES_TRANSITIVE_CLOSURE_H_
 
-#include "../role.h"
+#include "../../../../include/dlplan/core.h"
 #include "../utils.h"
 
+#include <sstream>
 
-namespace dlplan::core::element {
+using namespace std::string_literals;
+
+
+namespace dlplan::core {
 
 // https://stackoverflow.com/questions/3517524/what-is-the-best-known-transitive-closure-algorithm-for-a-directed-graph
 class TransitiveClosureRole : public Role {
@@ -51,11 +55,11 @@ private:
     }
 
 protected:
-    const Role_Ptr m_role;
+    const std::shared_ptr<const Role> m_role;
 
 public:
-    TransitiveClosureRole(const VocabularyInfo& vocabulary, Role_Ptr role)
-    : Role(vocabulary, role->is_static()), m_role(role) {
+    TransitiveClosureRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role)
+    : Role(vocabulary_info, role->is_static()), m_role(role) {
         if (!role) {
             throw std::runtime_error("TransitiveClosureRole::TransitiveClosureRole - child is a nullptr.");
         }

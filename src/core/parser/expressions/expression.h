@@ -2,7 +2,6 @@
 #define DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_EXPRESSION_H_
 
 #include "../../element_factory.h"
-#include "../../elements/types.h"
 
 #include <sstream>
 #include <string>
@@ -50,7 +49,7 @@ public:
      * Tries to parse the Expression into a Concept.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual element::Concept_Ptr parse_concept(const VocabularyInfo&, Caches&) const {
+    virtual std::shared_ptr<const dlplan::core::Concept> parse_concept(std::shared_ptr<const VocabularyInfo>, Caches&) const {
         return nullptr;
     }
 
@@ -58,7 +57,7 @@ public:
      * Tries to parse the Expression into a Role.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual element::Role_Ptr parse_role(const VocabularyInfo&, Caches&) const {
+    virtual std::shared_ptr<const dlplan::core::Role> parse_role(std::shared_ptr<const VocabularyInfo>, Caches&) const {
         return nullptr;
     }
 
@@ -66,7 +65,7 @@ public:
      * Tries to parse the Expression into a Numerical.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual element::Numerical_Ptr parse_numerical(const VocabularyInfo&, Caches&) const {
+    virtual std::shared_ptr<const dlplan::core::Numerical> parse_numerical(std::shared_ptr<const VocabularyInfo>, Caches&) const {
         return nullptr;
     }
 
@@ -74,7 +73,7 @@ public:
      * Tries to parse the Expression into a Boolean.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual element::Boolean_Ptr parse_boolean(const VocabularyInfo&, Caches&) const {
+    virtual std::shared_ptr<const dlplan::core::Boolean> parse_boolean(std::shared_ptr<const VocabularyInfo>, Caches&) const {
         return nullptr;
     }
 };

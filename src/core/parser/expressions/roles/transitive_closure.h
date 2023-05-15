@@ -8,17 +8,17 @@ namespace dlplan::core::parser {
 
 class TransitiveClosureRole : public Role {
 protected:
-    std::unique_ptr<element::Role> parse_role_impl(const VocabularyInfo& vocabulary, Caches &cache) const override {
+    std::unique_ptr<dlplan::core::Role> parse_role_impl(std::shared_ptr<const VocabularyInfo> vocabulary_info, Caches &cache) const override {
         if (m_children.size() != 1) {
             throw std::runtime_error("TransitiveClosureRole::parse_role_impl - number of children ("s + std::to_string(m_children.size()) + " != 1).");
         }
         // 1. Parse children
-        element::Role_Ptr role = m_children[0]->parse_role(vocabulary, cache);
+        std::shared_ptr<const dlplan::core::Role> role = m_children[0]->parse_role(vocabulary_info, cache);
         if (!role) {
             throw std::runtime_error("TransitiveClosureRole::parse_role_impl - child is not of type Role.");
         }
         // 2. Construct element
-        return std::make_unique<element::TransitiveClosureRole>(vocabulary, role);
+        return std::make_unique<dlplan::core::TransitiveClosureRole>(vocabulary_info, role);
     }
 
 public:

@@ -56,13 +56,13 @@ int main() {
     State state(i, {a0, a3, a6});
 
     // 5. Parse and evaluate elements.
-    Numerical numerical = f.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))");
+    std::shared_ptr<const Numerical> numerical = f.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))");
     std::cout << "repr: " << numerical.compute_repr() << std::endl;
-    std::cout << "value: " << numerical.evaluate(state) << std::endl;
+    std::cout << "value: " << numerical->evaluate(state) << std::endl;
 
-    Boolean boolean = f.parse_boolean("b_empty(c_and(c_primitive(on_g,0),c_primitive(on,0)))");
+    std::shared_ptr<const Boolean> boolean = f.parse_boolean("b_empty(c_and(c_primitive(on_g,0),c_primitive(on,0)))");
     std::cout << "repr: " << boolean.compute_repr() << std::endl;
-    std::cout << "value: " << boolean.evaluate(state) << std::endl;
+    std::cout << "value: " << boolean->evaluate(state) << std::endl;
 
     return 0;
 }

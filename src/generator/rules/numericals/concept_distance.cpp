@@ -76,7 +76,7 @@ void ConceptDistanceNumerical::generate_impl(const core::States& states, int tar
 
 
 std::string ConceptDistanceNumerical::get_name() const {
-    return core::element::ConceptDistanceNumerical::get_name();
+    return core::ConceptDistanceNumerical::get_name();
 }
 
 }

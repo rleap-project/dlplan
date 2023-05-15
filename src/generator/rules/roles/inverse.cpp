@@ -20,6 +20,6 @@ void InverseRole::generate_impl(const core::States& states, int target_complexit
 }
 
 std::string InverseRole::get_name() const {
-    return core::element::InverseRole::get_name();
+    return core::InverseRole::get_name();
 }
 }

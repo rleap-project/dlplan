@@ -1,10 +1,14 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_ROLES_OR_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_ROLES_OR_H_
 
-#include "../role.h"
+#include "../../../../include/dlplan/core.h"
+
+#include <sstream>
+
+using namespace std::string_literals;
 
 
-namespace dlplan::core::element {
+namespace dlplan::core {
 
 class OrRole : public Role {
 private:
@@ -41,12 +45,12 @@ private:
     }
 
 protected:
-    Role_Ptr m_role_left;
-    Role_Ptr m_role_right;
+    std::shared_ptr<const Role> m_role_left;
+    std::shared_ptr<const Role> m_role_right;
 
 public:
-    OrRole(const VocabularyInfo& vocabulary, Role_Ptr role_1, Role_Ptr role_2)
-    : Role(vocabulary, role_1->is_static() && role_2->is_static()),
+    OrRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role_1, std::shared_ptr<const Role> role_2)
+    : Role(vocabulary_info, role_1->is_static() && role_2->is_static()),
       m_role_left(role_1),
       m_role_right(role_2) {
         if (!(role_1 && role_2)) {

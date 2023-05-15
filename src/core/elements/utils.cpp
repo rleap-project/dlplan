@@ -6,7 +6,7 @@
 #include "../../../include/dlplan/core.h"
 
 
-namespace dlplan::core::element::utils {
+namespace dlplan::core::utils {
 
 using AdjList = std::vector<std::vector<int>>;
 

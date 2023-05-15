@@ -9,12 +9,12 @@ namespace dlplan::core::parser {
 
 class OneOfConcept : public Concept {
 protected:
-    std::unique_ptr<element::Concept> parse_concept_impl(const VocabularyInfo& vocabulary, Caches &) const override {
+    std::unique_ptr<dlplan::core::Concept> parse_concept_impl(std::shared_ptr<const VocabularyInfo> vocabulary_info, Caches &) const override {
         if (m_children.size() != 1) {
             throw std::runtime_error("OneOfConcept::parse_concept_impl - number of children ("s + std::to_string(m_children.size()) + " != 1).");
         }
         std::string constant_name = m_children[0]->get_name();
-        return std::make_unique<element::OneOfConcept>(vocabulary, vocabulary.get_constant(constant_name));
+        return std::make_unique<dlplan::core::OneOfConcept>(vocabulary_info, vocabulary_info->get_constant(constant_name));
     }
 
 public:

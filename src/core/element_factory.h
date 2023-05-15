@@ -19,50 +19,50 @@ private:
 public:
     SyntacticElementFactoryImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info);
 
-    Concept parse_concept(const std::string &description);
-    Role parse_role(const std::string &description);
-    Numerical parse_numerical(const std::string &description);
-    Boolean parse_boolean(const std::string &description);
+    std::shared_ptr<const Concept> parse_concept(const std::string &description);
+    std::shared_ptr<const Role> parse_role(const std::string &description);
+    std::shared_ptr<const Numerical> parse_numerical(const std::string &description);
+    std::shared_ptr<const Boolean> parse_boolean(const std::string &description);
 
-    Boolean make_empty_boolean(const Concept& concept);
-    Boolean make_empty_boolean(const Role& role);
-    Boolean make_inclusion_boolean(const Concept& concept_left, const Concept& concept_right);
-    Boolean make_inclusion_boolean(const Role& role_left, const Role& role_right);
-    Boolean make_nullary_boolean(const Predicate& predicate);
+    std::shared_ptr<const Boolean> make_empty_boolean(const std::shared_ptr<const Concept>& concept);
+    std::shared_ptr<const Boolean> make_empty_boolean(const std::shared_ptr<const Role>& role);
+    std::shared_ptr<const Boolean> make_inclusion_boolean(const std::shared_ptr<const Concept>& concept_left, const std::shared_ptr<const Concept>& concept_right);
+    std::shared_ptr<const Boolean> make_inclusion_boolean(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right);
+    std::shared_ptr<const Boolean> make_nullary_boolean(const Predicate& predicate);
 
-    Concept make_all_concept(const Role& role, const Concept& concept);
-    Concept make_and_concept(const Concept& concept_left, const Concept& concept_right);
-    Concept make_bot_concept();
-    Concept make_diff_concept(const Concept& concept_left, const Concept& concept_right);
-    Concept make_equal_concept(const Role& role_left, const Role& role_right);
-    Concept make_not_concept(const Concept& concept);
-    Concept make_one_of_concept(const Constant& constant);
-    Concept make_or_concept(const Concept& concept_left, const Concept& concept_right);
-    Concept make_projection_concept(const Role& role, int pos);
-    Concept make_primitive_concept(const Predicate& predicate, int pos);
-    Concept make_some_concept(const Role& role, const Concept& concept);
-    Concept make_subset_concept(const Role& role_left, const Role& role_right);
-    Concept make_top_concept();
+    std::shared_ptr<const Concept> make_all_concept(const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept);
+    std::shared_ptr<const Concept> make_and_concept(const std::shared_ptr<const Concept>& concept_left, const std::shared_ptr<const Concept>& concept_right);
+    std::shared_ptr<const Concept> make_bot_concept();
+    std::shared_ptr<const Concept> make_diff_concept(const std::shared_ptr<const Concept>& concept_left, const std::shared_ptr<const Concept>& concept_right);
+    std::shared_ptr<const Concept> make_equal_concept(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right);
+    std::shared_ptr<const Concept> make_not_concept(const std::shared_ptr<const Concept>& concept);
+    std::shared_ptr<const Concept> make_one_of_concept(const Constant& constant);
+    std::shared_ptr<const Concept> make_or_concept(const std::shared_ptr<const Concept>& concept_left, const std::shared_ptr<const Concept>& concept_right);
+    std::shared_ptr<const Concept> make_projection_concept(const std::shared_ptr<const Role>& role, int pos);
+    std::shared_ptr<const Concept> make_primitive_concept(const Predicate& predicate, int pos);
+    std::shared_ptr<const Concept> make_some_concept(const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept);
+    std::shared_ptr<const Concept> make_subset_concept(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right);
+    std::shared_ptr<const Concept> make_top_concept();
 
-    Numerical make_concept_distance_numerical(const Concept& concept_from, const Role& role, const Concept& concept_to);
-    Numerical make_count_numerical(const Concept& concept);
-    Numerical make_count_numerical(const Role& role);
-    Numerical make_role_distance_numerical(const Role& role_from, const Role& role, const Role& role_to);
-    Numerical make_sum_concept_distance_numerical(const Concept& concept_from, const Role& role, const Concept& concept_to);
-    Numerical make_sum_role_distance_numerical(const Role& role_from, const Role& role, const Role& role_to);
+    std::shared_ptr<const Numerical> make_concept_distance_numerical(const std::shared_ptr<const Concept>& concept_from, const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept_to);
+    std::shared_ptr<const Numerical> make_count_numerical(const std::shared_ptr<const Concept>& concept);
+    std::shared_ptr<const Numerical> make_count_numerical(const std::shared_ptr<const Role>& role);
+    std::shared_ptr<const Numerical> make_role_distance_numerical(const std::shared_ptr<const Role>& role_from, const std::shared_ptr<const Role>& role, const std::shared_ptr<const Role>& role_to);
+    std::shared_ptr<const Numerical> make_sum_concept_distance_numerical(const std::shared_ptr<const Concept>& concept_from, const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept_to);
+    std::shared_ptr<const Numerical> make_sum_role_distance_numerical(const std::shared_ptr<const Role>& role_from, const std::shared_ptr<const Role>& role, const std::shared_ptr<const Role>& role_to);
 
-    Role make_and_role(const Role& role_left, const Role& role_right);
-    Role make_compose_role(const Role& role_left, const Role& role_right);
-    Role make_diff_role(const Role& role_left, const Role& role_right);
-    Role make_identity_role(const Concept& concept);
-    Role make_inverse_role(const Role& role);
-    Role make_not_role(const Role& role);
-    Role make_or_role(const Role& role_left, const Role& role_right);
-    Role make_primitive_role(const Predicate& predicate, int pos_1, int pos_2);
-    Role make_restrict_role(const Role& role, const Concept& concept);
-    Role make_top_role();
-    Role make_transitive_closure(const Role& role);
-    Role make_transitive_reflexive_closure(const Role& role);
+    std::shared_ptr<const Role> make_and_role(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right);
+    std::shared_ptr<const Role> make_compose_role(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right);
+    std::shared_ptr<const Role> make_diff_role(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right);
+    std::shared_ptr<const Role> make_identity_role(const std::shared_ptr<const Concept>& concept);
+    std::shared_ptr<const Role> make_inverse_role(const std::shared_ptr<const Role>& role);
+    std::shared_ptr<const Role> make_not_role(const std::shared_ptr<const Role>& role);
+    std::shared_ptr<const Role> make_or_role(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right);
+    std::shared_ptr<const Role> make_primitive_role(const Predicate& predicate, int pos_1, int pos_2);
+    std::shared_ptr<const Role> make_restrict_role(const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept);
+    std::shared_ptr<const Role> make_top_role();
+    std::shared_ptr<const Role> make_transitive_closure(const std::shared_ptr<const Role>& role);
+    std::shared_ptr<const Role> make_transitive_reflexive_closure(const std::shared_ptr<const Role>& role);
 
     /**
      * Getters.

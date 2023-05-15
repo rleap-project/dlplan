@@ -15,7 +15,7 @@ TEST(DLPTests, MultiInstance) {
     Predicate p2 = vocabulary->add_predicate("end", 1);
 
     // Instance with graph consisting of nodes A,B,C,D and edges A->C,C->B,B->D
-    std::shared_ptr<InstanceInfo> instance1 = std::make_shared<InstanceInfo>(vocabulary, 0);
+    std::shared_ptr<InstanceInfo> instance1 = std::make_shared<InstanceInfo>(vocabulary_info, 0);
     Atom a1_0 = instance1->add_static_atom("conn", {"A", "C"});
     Atom a1_1 = instance1->add_static_atom("conn", {"C", "B"});
     Atom a1_2 = instance1->add_static_atom("conn", {"B", "D"});
@@ -24,7 +24,7 @@ TEST(DLPTests, MultiInstance) {
     State state1(instance1, {a1_3, a1_4});
 
     // Instance with graph consisting of nodes A,B,C,D and edges A->B,B->C,C->D
-    std::shared_ptr<InstanceInfo> instance2 = std::make_shared<InstanceInfo>(vocabulary, 1);
+    std::shared_ptr<InstanceInfo> instance2 = std::make_shared<InstanceInfo>(vocabulary_info, 1);
     Atom a2_0 = instance2->add_static_atom("conn", {"A", "B"});
     Atom a2_1 = instance2->add_static_atom("conn", {"B", "C"});
     Atom a2_2 = instance2->add_static_atom("conn", {"C", "D"});
@@ -33,7 +33,7 @@ TEST(DLPTests, MultiInstance) {
     State state2(instance2, {a2_3, a2_4});
 
     // Instance where all atoms of instance1 and instance2 are added
-    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary, 2);
+    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary_info, 2);
     Atom a0 = instance->add_static_atom("conn", {"A", "C"});
     Atom a1 = instance->add_static_atom("conn", {"C", "B"});
     Atom a2 = instance->add_static_atom("conn", {"B", "D"});
@@ -44,11 +44,11 @@ TEST(DLPTests, MultiInstance) {
     Atom a7 = instance->add_atom("end", {"D"});
     State state(instance, {a6, a7});
 
-    SyntacticElementFactory factory(vocabulary);
+    SyntacticElementFactory factory(vocabulary_info);
 
-    Numerical numerical = factory.parse_numerical("n_concept_distance(c_primitive(start,0), r_primitive(conn,0,1), c_primitive(end,0))");
-    EXPECT_EQ(numerical.evaluate(state1), 3);
-    EXPECT_EQ(numerical.evaluate(state2), 3);
+    std::shared_ptr<const Numerical> numerical = factory.parse_numerical("n_concept_distance(c_primitive(start,0), r_primitive(conn,0,1), c_primitive(end,0))");
+    EXPECT_EQ(numerical->evaluate(state1), 3);
+    EXPECT_EQ(numerical->evaluate(state2), 3);
     // Shortest distance in union of graphs reduces to 2
-    EXPECT_EQ(numerical.evaluate(state), 2);
+    EXPECT_EQ(numerical->evaluate(state), 2);
 }

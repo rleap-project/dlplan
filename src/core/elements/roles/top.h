@@ -1,10 +1,14 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_ROLES_TOP_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_ROLES_TOP_H_
 
-#include "../role.h"
+#include "../../../../include/dlplan/core.h"
+
+#include <sstream>
+
+using namespace std::string_literals;
 
 
-namespace dlplan::core::element {
+namespace dlplan::core {
 
 class TopRole : public Role {
 private:
@@ -28,8 +32,8 @@ private:
     }
 
 public:
-    TopRole(const VocabularyInfo& vocabulary)
-    : Role(vocabulary, true) {
+    TopRole(std::shared_ptr<const VocabularyInfo> vocabulary_info)
+    : Role(vocabulary_info, true) {
     }
 
     RoleDenotation evaluate(const State& state) const override {

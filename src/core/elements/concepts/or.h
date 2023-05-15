@@ -1,10 +1,14 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_OR_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_OR_H_
 
-#include "../concept.h"
+#include "../../../../include/dlplan/core.h"
+
+#include <sstream>
+
+using namespace std::string_literals;
 
 
-namespace dlplan::core::element {
+namespace dlplan::core {
 
 class OrConcept : public Concept {
 private:
@@ -43,12 +47,12 @@ private:
     }
 
 protected:
-    Concept_Ptr m_concept_left;
-    Concept_Ptr m_concept_right;
+    std::shared_ptr<const Concept> m_concept_left;
+    std::shared_ptr<const Concept> m_concept_right;
 
 public:
-    OrConcept(const VocabularyInfo& vocabulary, Concept_Ptr concept_1, Concept_Ptr concept_2)
-    : Concept(vocabulary, concept_1->is_static() && concept_2->is_static()),
+    OrConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept_1, std::shared_ptr<const Concept> concept_2)
+    : Concept(vocabulary_info, concept_1->is_static() && concept_2->is_static()),
       m_concept_left(concept_1),
       m_concept_right(concept_2) {
         if (!(concept_1 && concept_2)) {

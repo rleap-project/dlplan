@@ -24,14 +24,6 @@ namespace dlplan::core {
     class State;
     class ConceptDenotation;
     class RoleDenotation;
-    namespace element {
-        template<typename T>
-        class Element;
-        class Concept;
-        class Role;
-        class Numerical;
-        class Boolean;
-    }
 
     using Name_Vec = std::vector<std::string>;
     using Index_Vec = std::vector<int>;
@@ -546,9 +538,13 @@ protected:
     std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
 
     int m_index;
+    /**
+     * if true then element is evaluated per instance rather than per state.
+     */
+    bool m_is_static;
 
 protected:
-    explicit BaseElement(std::shared_ptr<const VocabularyInfo> vocabulary_info);
+    explicit BaseElement(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
 
 public:
     virtual ~BaseElement();
@@ -563,7 +559,8 @@ public:
     /**
      * Returns a canonical string representation.
      */
-    virtual std::string compute_repr() const = 0;
+    virtual std::string compute_repr() const;
+    virtual void compute_repr(std::stringstream& out) const = 0;
 
     /**
      * Setters.
@@ -575,6 +572,7 @@ public:
      */
     int get_index() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
+    bool is_static() const;
 };
 
 
@@ -582,11 +580,12 @@ public:
  * Concept evaluates to ConceptDenotation.
  */
 class Concept : public BaseElement {
-private:
-    std::shared_ptr<const element::Concept> m_element;
-
-    Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Concept>&& concept);
+protected:
+    Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
     friend class SyntacticElementFactoryImpl;
+
+    virtual std::unique_ptr<ConceptDenotation> evaluate_impl(const State& state, DenotationsCaches& caches) const = 0;
+    virtual std::unique_ptr<ConceptDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
 
 public:
     Concept(const Concept& other);
@@ -595,15 +594,9 @@ public:
     Concept& operator=(Concept&& other);
     ~Concept() override;
 
-    ConceptDenotation evaluate(const State& state) const;
+    virtual ConceptDenotation evaluate(const State& state) const = 0;
     ConceptDenotation* evaluate(const State& state, DenotationsCaches& caches) const;
     ConceptDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
-
-    int compute_complexity() const override;
-
-    std::string compute_repr() const override;
-
-    std::shared_ptr<const element::Concept> get_element() const;
 };
 
 
@@ -611,11 +604,12 @@ public:
  * Concept evaluates to RoleDenotation.
  */
 class Role : public BaseElement {
-private:
-    std::shared_ptr<const element::Role> m_element;
-
-    Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Role>&& role);
+protected:
+    Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
     friend class SyntacticElementFactoryImpl;
+
+    virtual std::unique_ptr<RoleDenotation> evaluate_impl(const State& state, DenotationsCaches& caches) const = 0;
+    virtual std::unique_ptr<RoleDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
 
 public:
     Role(const Role& other);
@@ -624,15 +618,9 @@ public:
     Role& operator=(Role&& other);
     ~Role() override;
 
-    RoleDenotation evaluate(const State& state) const;
+    virtual RoleDenotation evaluate(const State& state) const = 0;
     RoleDenotation* evaluate(const State& state, DenotationsCaches& caches) const;
     RoleDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
-
-    int compute_complexity() const override;
-
-    std::string compute_repr() const override;
-
-    std::shared_ptr<const element::Role> get_element() const;
 };
 
 
@@ -640,11 +628,12 @@ public:
  * Numerical evaluates to int.
  */
 class Numerical : public BaseElement {
-private:
-    std::shared_ptr<const element::Numerical> m_element;
-
-    Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Numerical>&& numerical);
+protected:
+    Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
     friend class SyntacticElementFactoryImpl;
+
+    virtual int evaluate_impl(const State& state, DenotationsCaches& caches) const = 0;
+    virtual std::unique_ptr<NumericalDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
 
 public:
     Numerical(const Numerical& other);
@@ -653,15 +642,9 @@ public:
     Numerical& operator=(Numerical&& other);
     ~Numerical() override;
 
-    int evaluate(const State& state) const;
+    virtual int evaluate(const State& state) const = 0;
     int evaluate(const State& state, DenotationsCaches& caches) const;
     NumericalDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
-
-    int compute_complexity() const override;
-
-    std::string compute_repr() const override;
-
-    std::shared_ptr<const element::Numerical> get_element() const;
 };
 
 
@@ -669,11 +652,12 @@ public:
  * Boolean evaluates to bool.
  */
 class Boolean : public BaseElement {
-private:
-    std::shared_ptr<const element::Boolean> m_element;
-
-    Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const element::Boolean>&& boolean);
+protected:
+    Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
     friend class SyntacticElementFactoryImpl;
+
+    virtual bool evaluate_impl(const State& state, DenotationsCaches& caches) const = 0;
+    virtual std::unique_ptr<BooleanDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
 
 public:
     Boolean(const Boolean& other);
@@ -682,15 +666,9 @@ public:
     Boolean& operator=(Boolean&& other);
     ~Boolean() override;
 
-    bool evaluate(const State& state) const;
+    virtual bool evaluate(const State& state) const = 0;
     bool evaluate(const State& state, DenotationsCaches& caches) const;
     BooleanDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
-
-    int compute_complexity() const override;
-
-    std::string compute_repr() const override;
-
-    std::shared_ptr<const element::Boolean> get_element() const;
 };
 
 
@@ -715,66 +693,66 @@ public:
      * Returns a Concept if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    Concept parse_concept(const std::string &description);
+    std::shared_ptr<const Concept> parse_concept(const std::string &description);
 
     /**
      * Returns a Role if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    Role parse_role(const std::string &description);
+    std::shared_ptr<const Role> parse_role(const std::string &description);
 
     /**
      * Returns a Numerical if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    Numerical parse_numerical(const std::string &description);
+    std::shared_ptr<const Numerical> parse_numerical(const std::string &description);
 
     /**
      * Returns a Boolean if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    Boolean parse_boolean(const std::string &description);
+    std::shared_ptr<const Boolean> parse_boolean(const std::string &description);
 
 
-    Boolean make_empty_boolean(const Concept& concept);
-    Boolean make_empty_boolean(const Role& role);
-    Boolean make_inclusion_boolean(const Concept& concept_left, const Concept& concept_right);
-    Boolean make_inclusion_boolean(const Role& role_left, const Role& role_right);
-    Boolean make_nullary_boolean(const Predicate& predicate);
+    std::shared_ptr<const Boolean> make_empty_boolean(const std::shared_ptr<const Concept>& concept);
+    std::shared_ptr<const Boolean> make_empty_boolean(const std::shared_ptr<const Role>& role);
+    std::shared_ptr<const Boolean> make_inclusion_boolean(const std::shared_ptr<const Concept>& concept_left, const std::shared_ptr<const Concept>& concept_right);
+    std::shared_ptr<const Boolean> make_inclusion_boolean(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right);
+    std::shared_ptr<const Boolean> make_nullary_boolean(const Predicate& predicate);
 
-    Concept make_all_concept(const Role& role, const Concept& concept);
-    Concept make_and_concept(const Concept& concept_left, const Concept& concept_right);
-    Concept make_bot_concept();
-    Concept make_diff_concept(const Concept& concept_left, const Concept& concept_right);
-    Concept make_equal_concept(const Role& role_left, const Role& role_right);
-    Concept make_not_concept(const Concept& concept);
-    Concept make_one_of_concept(const Constant& constant);
-    Concept make_or_concept(const Concept& concept_left, const Concept& concept_right);
-    Concept make_projection_concept(const Role& role, int pos);
-    Concept make_primitive_concept(const Predicate& predicate, int pos);
-    Concept make_some_concept(const Role& role, const Concept& concept);
-    Concept make_subset_concept(const Role& role_left, const Role& role_right);
-    Concept make_top_concept();
+    std::shared_ptr<const Concept> make_all_concept(const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept);
+    std::shared_ptr<const Concept> make_and_concept(const std::shared_ptr<const Concept>& concept_left, const std::shared_ptr<const Concept>& concept_right);
+    std::shared_ptr<const Concept> make_bot_concept();
+    std::shared_ptr<const Concept> make_diff_concept(const std::shared_ptr<const Concept>& concept_left, const std::shared_ptr<const Concept>& concept_right);
+    std::shared_ptr<const Concept> make_equal_concept(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right);
+    std::shared_ptr<const Concept> make_not_concept(const std::shared_ptr<const Concept>& concept);
+    std::shared_ptr<const Concept> make_one_of_concept(const Constant& constant);
+    std::shared_ptr<const Concept> make_or_concept(const std::shared_ptr<const Concept>& concept_left, const std::shared_ptr<const Concept>& concept_right);
+    std::shared_ptr<const Concept> make_projection_concept(const std::shared_ptr<const Role>& role, int pos);
+    std::shared_ptr<const Concept> make_primitive_concept(const Predicate& predicate, int pos);
+    std::shared_ptr<const Concept> make_some_concept(const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept);
+    std::shared_ptr<const Concept> make_subset_concept(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right);
+    std::shared_ptr<const Concept> make_top_concept();
 
-    Numerical make_concept_distance_numerical(const Concept& concept_from, const Role& role, const Concept& concept_to);
-    Numerical make_count_numerical(const Concept& concept);
-    Numerical make_count_numerical(const Role& role);
-    Numerical make_role_distance_numerical(const Role& role_from, const Role& role, const Role& role_to);
-    Numerical make_sum_concept_distance_numerical(const Concept& concept_from, const Role& role, const Concept& concept_to);
-    Numerical make_sum_role_distance_numerical(const Role& role_from, const Role& role, const Role& role_to);
+    std::shared_ptr<const Numerical> make_concept_distance_numerical(const std::shared_ptr<const Concept>& concept_from, const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept_to);
+    std::shared_ptr<const Numerical> make_count_numerical(const std::shared_ptr<const Concept>& concept);
+    std::shared_ptr<const Numerical> make_count_numerical(const std::shared_ptr<const Role>& role);
+    std::shared_ptr<const Numerical> make_role_distance_numerical(const std::shared_ptr<const Role>& role_from, const std::shared_ptr<const Role>& role, const std::shared_ptr<const Role>& role_to);
+    std::shared_ptr<const Numerical> make_sum_concept_distance_numerical(const std::shared_ptr<const Concept>& concept_from, const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept_to);
+    std::shared_ptr<const Numerical> make_sum_role_distance_numerical(const std::shared_ptr<const Role>& role_from, const std::shared_ptr<const Role>& role, const std::shared_ptr<const Role>& role_to);
 
-    Role make_and_role(const Role& role_left, const Role& role_right);
-    Role make_compose_role(const Role& role_left, const Role& role_right);
-    Role make_diff_role(const Role& role_left, const Role& role_right);
-    Role make_identity_role(const Concept& concept);
-    Role make_inverse_role(const Role& role);
-    Role make_not_role(const Role& role);
-    Role make_or_role(const Role& role_left, const Role& role_right);
-    Role make_primitive_role(const Predicate& predicate, int pos_1, int pos_2);
-    Role make_restrict_role(const Role& role, const Concept& concept);
-    Role make_top_role();
-    Role make_transitive_closure(const Role& role);
-    Role make_transitive_reflexive_closure(const Role& role);
+    std::shared_ptr<const Role> make_and_role(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right);
+    std::shared_ptr<const Role> make_compose_role(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right);
+    std::shared_ptr<const Role> make_diff_role(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right);
+    std::shared_ptr<const Role> make_identity_role(const std::shared_ptr<const Concept>& concept);
+    std::shared_ptr<const Role> make_inverse_role(const std::shared_ptr<const Role>& role);
+    std::shared_ptr<const Role> make_not_role(const std::shared_ptr<const Role>& role);
+    std::shared_ptr<const Role> make_or_role(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right);
+    std::shared_ptr<const Role> make_primitive_role(const Predicate& predicate, int pos_1, int pos_2);
+    std::shared_ptr<const Role> make_restrict_role(const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept);
+    std::shared_ptr<const Role> make_top_role();
+    std::shared_ptr<const Role> make_transitive_closure(const std::shared_ptr<const Role>& role);
+    std::shared_ptr<const Role> make_transitive_reflexive_closure(const std::shared_ptr<const Role>& role);
 };
 
 }

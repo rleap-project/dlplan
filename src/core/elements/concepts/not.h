@@ -1,10 +1,14 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_NOT_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_NOT_H_
 
-#include "../concept.h"
+#include "../../../../include/dlplan/core.h"
+
+#include <sstream>
+
+using namespace std::string_literals;
 
 
-namespace dlplan::core::element {
+namespace dlplan::core {
 
 class NotConcept : public Concept {
 private:
@@ -39,11 +43,11 @@ private:
     }
 
 protected:
-    const Concept_Ptr m_concept;
+    const std::shared_ptr<const Concept> m_concept;
 
 public:
-    NotConcept(const VocabularyInfo& vocabulary, Concept_Ptr concept)
-    : Concept(vocabulary, concept->is_static()), m_concept(concept){
+    NotConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept)
+    : Concept(vocabulary_info, concept->is_static()), m_concept(concept){
         if (!concept) {
             throw std::runtime_error("NotConcept::NotConcept - child is a nullptr");
         }

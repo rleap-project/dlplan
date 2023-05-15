@@ -1,12 +1,14 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_ALL_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_ALL_H_
 
-#include "../concept.h"
-#include "../role.h"
-#include "../types.h"
+#include "../../../../include/dlplan/core.h"
+
+#include <sstream>
+
+using namespace std::string_literals;
 
 
-namespace dlplan::core::element {
+namespace dlplan::core {
 
 class AllConcept : public Concept {
 private:
@@ -48,12 +50,12 @@ private:
     }
 
 protected:
-    const Role_Ptr m_role;
-    const Concept_Ptr m_concept;
+    const std::shared_ptr<const Role> m_role;
+    const std::shared_ptr<const Concept> m_concept;
 
 public:
-    AllConcept(const VocabularyInfo& vocabulary, Role_Ptr role, Concept_Ptr concept)
-    : Concept(vocabulary, role->is_static() && concept->is_static()), m_role(role), m_concept(concept) {
+    AllConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept)
+    : Concept(vocabulary_info, role->is_static() && concept->is_static()), m_role(role), m_concept(concept) {
         if (!(role && concept)) {
             throw std::runtime_error("AllConcept::AllConcept - at least one child is a nullptr");
         }

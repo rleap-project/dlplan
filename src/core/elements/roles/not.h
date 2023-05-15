@@ -1,10 +1,14 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_ROLES_NOT_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_ROLES_NOT_H_
 
-#include "../role.h"
+#include "../../../../include/dlplan/core.h"
+
+#include <sstream>
+
+using namespace std::string_literals;
 
 
-namespace dlplan::core::element {
+namespace dlplan::core {
 
 class NotRole : public Role {
 private:
@@ -38,11 +42,11 @@ private:
     }
 
 protected:
-    const Role_Ptr m_role;
+    const std::shared_ptr<const Role> m_role;
 
 public:
-    NotRole(const VocabularyInfo& vocabulary, Role_Ptr role)
-    : Role(vocabulary, role->is_static()), m_role(role) {
+    NotRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role)
+    : Role(vocabulary_info, role->is_static()), m_role(role) {
         if (!role) {
             throw std::runtime_error("NotRole::NotRole - child is a nullptr.");
         }

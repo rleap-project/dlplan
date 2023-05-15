@@ -19,7 +19,7 @@ void BotConcept::generate_impl(const core::States& states, int target_complexity
 }
 
 std::string BotConcept::get_name() const {
-    return core::element::BotConcept::get_name();
+    return core::BotConcept::get_name();
 }
 
 }

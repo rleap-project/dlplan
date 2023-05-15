@@ -10,17 +10,17 @@ namespace dlplan::core::parser {
 
 class IdentityRole : public Role {
 protected:
-    std::unique_ptr<element::Role> parse_role_impl(const VocabularyInfo& vocabulary, Caches &cache) const override {
+    std::unique_ptr<dlplan::core::Role> parse_role_impl(std::shared_ptr<const VocabularyInfo> vocabulary_info, Caches &cache) const override {
         if (m_children.size() != 1) {
             throw std::runtime_error("IdentityRole::parse_role_impl - number of children ("s + std::to_string(m_children.size()) + " != 1).");
         }
         // 1. Parse children
-        element::Concept_Ptr concept = m_children[0]->parse_concept(vocabulary, cache);
+        std::shared_ptr<const dlplan::core::Concept> concept = m_children[0]->parse_concept(vocabulary_info, cache);
         if (!concept) {
             throw std::runtime_error("IdentityRole::parse_role_impl - child is not of type concept");
         }
         // 2. Construct element
-        return std::make_unique<element::IdentityRole>(vocabulary, concept);
+        return std::make_unique<dlplan::core::IdentityRole>(vocabulary_info, concept);
     }
 
 public:

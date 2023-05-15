@@ -1,11 +1,14 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_ROLES_IDENTITY_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_ROLES_IDENTITY_H_
 
-#include "../role.h"
-#include "../concept.h"
+#include "../../../../include/dlplan/core.h"
+
+#include <sstream>
+
+using namespace std::string_literals;
 
 
-namespace dlplan::core::element {
+namespace dlplan::core {
 
 class IdentityRole : public Role {
 private:
@@ -40,11 +43,11 @@ private:
     }
 
 protected:
-    const Concept_Ptr m_concept;
+    const std::shared_ptr<const Concept> m_concept;
 
 public:
-    IdentityRole(const VocabularyInfo& vocabulary, Concept_Ptr concept)
-    : Role(vocabulary, concept->is_static()), m_concept(concept) {
+    IdentityRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept)
+    : Role(vocabulary_info, concept->is_static()), m_concept(concept) {
         if (!concept) {
             throw std::runtime_error("IdentityRole::IdentityRole - child is a nullptr.");
         }

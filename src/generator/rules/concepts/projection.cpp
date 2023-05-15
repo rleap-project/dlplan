@@ -22,7 +22,7 @@ void ProjectionConcept::generate_impl(const core::States& states, int target_com
 }
 
 std::string ProjectionConcept::get_name() const {
-    return core::element::ProjectionConcept::get_name();
+    return core::ProjectionConcept::get_name();
 }
 
 }

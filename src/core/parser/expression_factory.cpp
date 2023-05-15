@@ -75,71 +75,71 @@
 namespace dlplan::core::parser {
 
 Expression_Ptr ExpressionFactory::make_expression(const std::string& name, std::vector<Expression_Ptr> &&children) {
-    if (name == element::EmptyBoolean<int>::get_name()) {
+    if (name == dlplan::core::EmptyBoolean<int>::get_name()) {
         return std::make_unique<EmptyBoolean>(EmptyBoolean(name, std::move(children)));
-    } else if (name == element::InclusionBoolean<int>::get_name()) {
+    } else if (name == dlplan::core::InclusionBoolean<int>::get_name()) {
         return std::make_unique<InclusionBoolean>(InclusionBoolean(name, std::move(children)));
-    } else if (name == element::NullaryBoolean::get_name()) {
+    } else if (name == dlplan::core::NullaryBoolean::get_name()) {
         return std::make_unique<NullaryBoolean>(NullaryBoolean(name, std::move(children)));
-    } else if (name == element::AllConcept::get_name()) {
+    } else if (name == dlplan::core::AllConcept::get_name()) {
         return std::make_unique<AllConcept>(AllConcept(name, std::move(children)));
-    } else if (name == element::AndConcept::get_name()) {
+    } else if (name == dlplan::core::AndConcept::get_name()) {
         return std::make_unique<AndConcept>(AndConcept(name, std::move(children)));
-    } else if (name == element::BotConcept::get_name()) {
+    } else if (name == dlplan::core::BotConcept::get_name()) {
         return std::make_unique<BotConcept>(BotConcept(name, std::move(children)));
-    } else if (name == element::DiffConcept::get_name()) {
+    } else if (name == dlplan::core::DiffConcept::get_name()) {
         return std::make_unique<DiffConcept>(DiffConcept(name, std::move(children)));
-    } else if (name == element::EqualConcept::get_name()) {
+    } else if (name == dlplan::core::EqualConcept::get_name()) {
         return std::make_unique<EqualConcept>(EqualConcept(name, std::move(children)));
-    } else if (name == element::NotConcept::get_name()) {
+    } else if (name == dlplan::core::NotConcept::get_name()) {
         return std::make_unique<NotConcept>(NotConcept(name, std::move(children)));
-    } else if (name == element::OneOfConcept::get_name()) {
+    } else if (name == dlplan::core::OneOfConcept::get_name()) {
         return std::make_unique<OneOfConcept>(OneOfConcept(name, std::move(children)));
-    } else if (name == element::OrConcept::get_name()) {
+    } else if (name == dlplan::core::OrConcept::get_name()) {
         return std::make_unique<OrConcept>(OrConcept(name, std::move(children)));
-    } else if (name == element::PrimitiveConcept::get_name()) {
+    } else if (name == dlplan::core::PrimitiveConcept::get_name()) {
         return std::make_unique<PrimitiveConcept>(PrimitiveConcept(name, std::move(children)));
-    } else if (name == element::ProjectionConcept::get_name()) {
+    } else if (name == dlplan::core::ProjectionConcept::get_name()) {
         return std::make_unique<ProjectionConcept>(ProjectionConcept(name, std::move(children)));
-    } else if (name == element::SomeConcept::get_name()) {
+    } else if (name == dlplan::core::SomeConcept::get_name()) {
         return std::make_unique<SomeConcept>(SomeConcept(name, std::move(children)));
-    } else if (name == element::SubsetConcept::get_name()) {
+    } else if (name == dlplan::core::SubsetConcept::get_name()) {
         return std::make_unique<SubsetConcept>(SubsetConcept(name, std::move(children)));
-    } else if (name == element::TopConcept::get_name()) {
+    } else if (name == dlplan::core::TopConcept::get_name()) {
         return std::make_unique<TopConcept>(TopConcept(name, std::move(children)));
-    } else if (name == element::ConceptDistanceNumerical::get_name()) {
+    } else if (name == dlplan::core::ConceptDistanceNumerical::get_name()) {
         return std::make_unique<ConceptDistanceNumerical>(ConceptDistanceNumerical(name, std::move(children)));
-    } else if (name == element::CountNumerical<int>::get_name()) {
+    } else if (name == dlplan::core::CountNumerical<int>::get_name()) {
         return std::make_unique<CountNumerical>(CountNumerical(name, std::move(children)));
-    } else if (name == element::RoleDistanceNumerical::get_name()) {
+    } else if (name == dlplan::core::RoleDistanceNumerical::get_name()) {
         return std::make_unique<RoleDistanceNumerical>(RoleDistanceNumerical(name, std::move(children)));
-    } else if (name == element::SumConceptDistanceNumerical::get_name()) {
+    } else if (name == dlplan::core::SumConceptDistanceNumerical::get_name()) {
         return std::make_unique<SumConceptDistanceNumerical>(SumConceptDistanceNumerical(name, std::move(children)));
-    } else if (name == element::SumRoleDistanceNumerical::get_name()) {
+    } else if (name == dlplan::core::SumRoleDistanceNumerical::get_name()) {
         return std::make_unique<SumRoleDistanceNumerical>(SumRoleDistanceNumerical(name, std::move(children)));
-    } else if (name == element::AndRole::get_name()) {
+    } else if (name == dlplan::core::AndRole::get_name()) {
         return std::make_unique<AndRole>(AndRole(name, std::move(children)));
-    } else if (name == element::ComposeRole::get_name()) {
+    } else if (name == dlplan::core::ComposeRole::get_name()) {
         return std::make_unique<ComposeRole>(ComposeRole(name, std::move(children)));
-    } else if (name == element::DiffRole::get_name()) {
+    } else if (name == dlplan::core::DiffRole::get_name()) {
         return std::make_unique<DiffRole>(DiffRole(name, std::move(children)));
-    } else if (name == element::IdentityRole::get_name()) {
+    } else if (name == dlplan::core::IdentityRole::get_name()) {
         return std::make_unique<IdentityRole>(IdentityRole(name, std::move(children)));
-    } else if (name == element::InverseRole::get_name()) {
+    } else if (name == dlplan::core::InverseRole::get_name()) {
         return std::make_unique<InverseRole>(InverseRole(name, std::move(children)));
-    } else if (name == element::NotRole::get_name()) {
+    } else if (name == dlplan::core::NotRole::get_name()) {
         return std::make_unique<NotRole>(NotRole(name, std::move(children)));
-    } else if (name == element::OrRole::get_name()) {
+    } else if (name == dlplan::core::OrRole::get_name()) {
         return std::make_unique<OrRole>(OrRole(name, std::move(children)));
-    } else if (name == element::PrimitiveRole::get_name()) {
+    } else if (name == dlplan::core::PrimitiveRole::get_name()) {
         return std::make_unique<PrimitiveRole>(PrimitiveRole(name, std::move(children)));
-    } else if (name == element::RestrictRole::get_name()) {
+    } else if (name == dlplan::core::RestrictRole::get_name()) {
         return std::make_unique<RestrictRole>(RestrictRole(name, std::move(children)));
-    } else if (name == element::TopRole::get_name()) {
+    } else if (name == dlplan::core::TopRole::get_name()) {
         return std::make_unique<TopRole>(TopRole(name, std::move(children)));
-    } else if (name == element::TransitiveClosureRole::get_name()) {
+    } else if (name == dlplan::core::TransitiveClosureRole::get_name()) {
         return std::make_unique<TransitiveClosureRole>(TransitiveClosureRole(name, std::move(children)));
-    } else if (name == element::TransitiveReflexiveClosureRole::get_name()) {
+    } else if (name == dlplan::core::TransitiveReflexiveClosureRole::get_name()) {
         return std::make_unique<TransitiveReflexiveClosureRole>(TransitiveReflexiveClosureRole(name, std::move(children)));
     }
     return std::make_unique<Expression>(Expression(name, std::move(children)));

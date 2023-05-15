@@ -1,14 +1,12 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_UTILS_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_UTILS_H_
 
-#include "types.h"
-
 #include "../../../include/dlplan/core.h"
 
 
 const int INF = std::numeric_limits<int>::max();
 
-namespace dlplan::core::element::utils {
+namespace dlplan::core::utils {
 
 using Distances = std::vector<int>;
 using PairwiseDistances = std::vector<Distances>;

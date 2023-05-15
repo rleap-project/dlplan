@@ -84,10 +84,10 @@ int main(int argc, char** argv) {
         for (int i = 0; i < num_iterations; ++i) {
             for (const auto& pair : state_space.get_states()) {
                 for (const auto& boolean : boolean_features) {
-                    boolean.evaluate(pair.second);
+                    boolean->evaluate(pair.second);
                 }
                 for (const auto& numerical : numerical_features) {
-                    numerical.evaluate(pair.second);
+                    numerical->evaluate(pair.second);
                 }
             }
         }
@@ -103,10 +103,10 @@ int main(int argc, char** argv) {
         for (int i = 0; i < std::atoi(argv[10]); ++i) {
             for (const auto& pair : state_space.get_states()) {
                 for (const auto& boolean : boolean_features) {
-                    boolean.evaluate(pair.second, caches);
+                    boolean->evaluate(pair.second, caches);
                 }
                 for (const auto& numerical : numerical_features) {
-                    numerical.evaluate(pair.second, caches);
+                    numerical->evaluate(pair.second, caches);
                 }
             }
         }
@@ -121,10 +121,10 @@ int main(int argc, char** argv) {
         core::DenotationsCaches caches;
         for (int i = 0; i < std::atoi(argv[10]); ++i) {
             for (const auto& boolean : boolean_features) {
-                boolean.evaluate(states, caches);
+                boolean->evaluate(states, caches);
             }
             for (const auto& numerical : numerical_features) {
-                numerical.evaluate(states, caches);
+                numerical->evaluate(states, caches);
             }
         }
         auto end = std::chrono::steady_clock::now();

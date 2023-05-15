@@ -25,7 +25,7 @@ void AllConcept::generate_impl(const core::States& states, int target_complexity
 }
 
 std::string AllConcept::get_name() const {
-    return core::element::AllConcept::get_name();
+    return core::AllConcept::get_name();
 }
 
 }

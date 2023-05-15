@@ -39,7 +39,7 @@ void InclusionBoolean::generate_impl(const core::States& states, int target_comp
 }
 
 std::string InclusionBoolean::get_name() const {
-    return core::element::InclusionBoolean<int>::get_name();
+    return core::InclusionBoolean<int>::get_name();
 }
 
 }

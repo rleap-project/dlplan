@@ -1,10 +1,14 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_BOT_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_BOT_H_
 
-#include "../concept.h"
+#include "../../../../include/dlplan/core.h"
+
+#include <sstream>
+
+using namespace std::string_literals;
 
 
-namespace dlplan::core::element {
+namespace dlplan::core {
 
 class BotConcept : public Concept {
 private:
@@ -26,8 +30,8 @@ private:
     }
 
 public:
-    BotConcept(const VocabularyInfo& vocabulary)
-    : Concept(vocabulary, true) { }
+    BotConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info)
+    : Concept(vocabulary_info, true) { }
 
     ConceptDenotation evaluate(const State& state) const override {
         return ConceptDenotation(state.get_instance_info()->get_objects().size());

@@ -1,11 +1,15 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_ROLES_COMPOSE_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_ROLES_COMPOSE_H_
 
-#include "../role.h"
+#include "../../../../include/dlplan/core.h"
 #include "../utils.h"
 
+#include <sstream>
 
-namespace dlplan::core::element {
+using namespace std::string_literals;
+
+
+namespace dlplan::core {
 
 class ComposeRole : public Role {
 private:
@@ -47,12 +51,12 @@ private:
     }
 
 protected:
-    const Role_Ptr m_role_left;
-    const Role_Ptr m_role_right;
+    const std::shared_ptr<const Role> m_role_left;
+    const std::shared_ptr<const Role> m_role_right;
 
 public:
-    ComposeRole(const VocabularyInfo& vocabulary, Role_Ptr role_left, Role_Ptr role_right)
-    : Role(vocabulary, role_left->is_static() && role_right->is_static()), m_role_left(role_left), m_role_right(role_right)  {
+    ComposeRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role_left, std::shared_ptr<const Role> role_right)
+    : Role(vocabulary_info, role_left->is_static() && role_right->is_static()), m_role_left(role_left), m_role_right(role_right)  {
         if (!(role_left && role_right)) {
             throw std::runtime_error("ComposeRole::ComposeRole - at least one child is a nullptr.");
         }

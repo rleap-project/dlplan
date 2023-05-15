@@ -19,7 +19,7 @@ void TopConcept::generate_impl(const core::States& states, int target_complexity
 }
 
 std::string TopConcept::get_name() const {
-    return core::element::TopConcept::get_name();
+    return core::TopConcept::get_name();
 }
 
 }

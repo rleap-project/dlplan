@@ -25,7 +25,7 @@ void OrConcept::generate_impl(const core::States& states, int target_complexity,
 }
 
 std::string OrConcept::get_name() const {
-    return core::element::OrConcept::get_name();
+    return core::OrConcept::get_name();
 }
 
 }

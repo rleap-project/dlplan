@@ -10,18 +10,18 @@ namespace dlplan::core::parser {
 
 class RestrictRole : public Role {
 protected:
-    std::unique_ptr<element::Role> parse_role_impl(const VocabularyInfo& vocabulary, Caches &cache) const override {
+    std::unique_ptr<dlplan::core::Role> parse_role_impl(std::shared_ptr<const VocabularyInfo> vocabulary_info, Caches &cache) const override {
         if (m_children.size() != 2) {
             throw std::runtime_error("RestrictRole::parse_role_impl - number of children ("s + std::to_string(m_children.size()) + " != 2).");
         }
         // 1. Parse children
-        element::Role_Ptr role = m_children[0]->parse_role(vocabulary, cache);
-        element::Concept_Ptr concept = m_children[1]->parse_concept(vocabulary, cache);
+        std::shared_ptr<const dlplan::core::Role> role = m_children[0]->parse_role(vocabulary_info, cache);
+        std::shared_ptr<const dlplan::core::Concept> concept = m_children[1]->parse_concept(vocabulary_info, cache);
         if (!(role && concept)) {
             throw std::runtime_error("RestrictRole::parse_role_impl - children are not of type Role.");
         }
         // 2. Construct element
-        return std::make_unique<element::RestrictRole>(vocabulary, role, concept);
+        return std::make_unique<dlplan::core::RestrictRole>(vocabulary_info, role, concept);
     }
 
 public:

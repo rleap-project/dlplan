@@ -1,11 +1,14 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_PRIMITIVE_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_PRIMITIVE_H_
 
+#include "../../../../include/dlplan/core.h"
+
 #include <sstream>
 
-#include "../concept.h"
+using namespace std::string_literals;
 
-namespace dlplan::core::element {
+
+namespace dlplan::core {
 
 class PrimitiveConcept : public Concept {
 private:
@@ -55,8 +58,8 @@ protected:
     const int m_pos;
 
 public:
-    PrimitiveConcept(const VocabularyInfo& vocabulary, const Predicate& predicate, int pos)
-    : Concept(vocabulary, predicate.is_static()), m_predicate(predicate), m_pos(pos) {
+    PrimitiveConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, const Predicate& predicate, int pos)
+    : Concept(vocabulary_info, predicate.is_static()), m_predicate(predicate), m_pos(pos) {
         if (m_pos >= m_predicate.get_arity()) {
             throw std::runtime_error("PrimitiveConcept::PrimitiveConcept - object index does not match predicate arity ("s + std::to_string(m_pos) + " > " + std::to_string(predicate.get_arity()) + ").");
         }

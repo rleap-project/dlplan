@@ -42,198 +42,164 @@ SyntacticElementFactoryImpl::SyntacticElementFactoryImpl(std::shared_ptr<const V
     : m_vocabulary_info(vocabulary_info), m_caches(Caches()) {
 }
 
-Concept SyntacticElementFactoryImpl::parse_concept(const std::string &description) {
-    return Concept(m_vocabulary_info, parser::Parser().parse(description)->parse_concept(*m_vocabulary_info, m_caches));
+std::shared_ptr<const Concept> SyntacticElementFactoryImpl::parse_concept(const std::string &description) {
+    return parser::Parser().parse(description)->parse_concept(m_vocabulary_info, m_caches);
 }
 
-Role SyntacticElementFactoryImpl::parse_role(const std::string &description) {
-    return Role(m_vocabulary_info, parser::Parser().parse(description)->parse_role(*m_vocabulary_info, m_caches));
+std::shared_ptr<const Role> SyntacticElementFactoryImpl::parse_role(const std::string &description) {
+    return parser::Parser().parse(description)->parse_role(m_vocabulary_info, m_caches);
 }
 
-Numerical SyntacticElementFactoryImpl::parse_numerical(const std::string &description) {
-    return Numerical(m_vocabulary_info, parser::Parser().parse(description)->parse_numerical(*m_vocabulary_info, m_caches));
+std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::parse_numerical(const std::string &description) {
+    return parser::Parser().parse(description)->parse_numerical(m_vocabulary_info, m_caches);
 }
 
-Boolean SyntacticElementFactoryImpl::parse_boolean(const std::string &description) {
-    return Boolean(m_vocabulary_info, parser::Parser().parse(description)->parse_boolean(*m_vocabulary_info, m_caches));
+std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::parse_boolean(const std::string &description) {
+    return parser::Parser().parse(description)->parse_boolean(m_vocabulary_info, m_caches);
 }
 
-Boolean SyntacticElementFactoryImpl::make_empty_boolean(const Concept& concept) {
-    return Boolean(m_vocabulary_info, m_caches.m_boolean_cache->insert(
-        std::make_unique<element::EmptyBoolean<element::Concept>>(*m_vocabulary_info, concept.get_element())).first);
+std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::make_empty_boolean(const std::shared_ptr<const Concept>& concept) {
+    return m_caches.m_boolean_cache->insert(std::make_unique<EmptyBoolean<Concept>>(m_vocabulary_info, concept)).first;
 }
 
-Boolean SyntacticElementFactoryImpl::make_empty_boolean(const Role& role) {
-    return Boolean(m_vocabulary_info, m_caches.m_boolean_cache->insert(
-        std::make_unique<element::EmptyBoolean<element::Role>>(*m_vocabulary_info, role.get_element())).first);
+std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::make_empty_boolean(const std::shared_ptr<const Role>& role) {
+    return m_caches.m_boolean_cache->insert(std::make_unique<EmptyBoolean<Role>>(m_vocabulary_info, role)).first;
 }
 
-Boolean SyntacticElementFactoryImpl::make_inclusion_boolean(const Concept& concept_left, const Concept& concept_right) {
-    return Boolean(m_vocabulary_info, m_caches.m_boolean_cache->insert(
-        std::make_unique<element::InclusionBoolean<element::Concept>>(*m_vocabulary_info, concept_left.get_element(), concept_right.get_element())).first);
+std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::make_inclusion_boolean(const std::shared_ptr<const Concept>& concept_left, const std::shared_ptr<const Concept>& concept_right) {
+    return m_caches.m_boolean_cache->insert(std::make_unique<InclusionBoolean<Concept>>(m_vocabulary_info, concept_left, concept_right)).first;
 }
 
-Boolean SyntacticElementFactoryImpl::make_inclusion_boolean(const Role& role_left, const Role& role_right) {
-    return Boolean(m_vocabulary_info, m_caches.m_boolean_cache->insert(
-        std::make_unique<element::InclusionBoolean<element::Role>>(*m_vocabulary_info, role_left.get_element(), role_right.get_element())).first);
+std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::make_inclusion_boolean(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right) {
+    return m_caches.m_boolean_cache->insert(std::make_unique<InclusionBoolean<Role>>(m_vocabulary_info, role_left, role_right)).first;
 }
 
-Boolean SyntacticElementFactoryImpl::make_nullary_boolean(const Predicate& predicate) {
-    return Boolean(m_vocabulary_info, m_caches.m_boolean_cache->insert(
-        std::make_unique<element::NullaryBoolean>(*m_vocabulary_info, predicate)).first);
+std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::make_nullary_boolean(const Predicate& predicate) {
+    return m_caches.m_boolean_cache->insert(std::make_unique<NullaryBoolean>(m_vocabulary_info, predicate)).first;
 }
 
-Concept SyntacticElementFactoryImpl::make_all_concept(const Role& role, const Concept& concept) {
-    return Concept(m_vocabulary_info, m_caches.m_concept_cache->insert(
-        std::make_unique<element::AllConcept>(*m_vocabulary_info, role.get_element(), concept.get_element())).first);
+std::shared_ptr<const Concept> SyntacticElementFactoryImpl::make_all_concept(const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept) {
+    return m_caches.m_concept_cache->insert(std::make_unique<AllConcept>(m_vocabulary_info, role, concept)).first;
 }
 
-Concept SyntacticElementFactoryImpl::make_and_concept(const Concept& concept_left, const Concept& concept_right) {
-    return Concept(m_vocabulary_info, m_caches.m_concept_cache->insert(
-        std::make_unique<element::AndConcept>(*m_vocabulary_info, concept_left.get_element(), concept_right.get_element())).first);
+std::shared_ptr<const Concept> SyntacticElementFactoryImpl::make_and_concept(const std::shared_ptr<const Concept>& concept_left, const std::shared_ptr<const Concept>& concept_right) {
+    return m_caches.m_concept_cache->insert(std::make_unique<AndConcept>(m_vocabulary_info, concept_left, concept_right)).first;
 }
 
-Concept SyntacticElementFactoryImpl::make_bot_concept() {
-    return Concept(m_vocabulary_info, m_caches.m_concept_cache->insert(
-        std::make_unique<element::BotConcept>(*m_vocabulary_info)).first);
+std::shared_ptr<const Concept> SyntacticElementFactoryImpl::make_bot_concept() {
+    return m_caches.m_concept_cache->insert(std::make_unique<BotConcept>(m_vocabulary_info)).first;
 }
 
-Concept SyntacticElementFactoryImpl::make_diff_concept(const Concept& concept_left, const Concept& concept_right) {
-    return Concept(m_vocabulary_info, m_caches.m_concept_cache->insert(
-        std::make_unique<element::DiffConcept>(*m_vocabulary_info, concept_left.get_element(), concept_right.get_element())).first);
+std::shared_ptr<const Concept> SyntacticElementFactoryImpl::make_diff_concept(const std::shared_ptr<const Concept>& concept_left, const std::shared_ptr<const Concept>& concept_right) {
+    return m_caches.m_concept_cache->insert(std::make_unique<DiffConcept>(m_vocabulary_info, concept_left, concept_right)).first;
 }
 
-Concept SyntacticElementFactoryImpl::make_equal_concept(const Role& role_left, const Role& role_right) {
-    return Concept(m_vocabulary_info, m_caches.m_concept_cache->insert(
-        std::make_unique<element::EqualConcept>(*m_vocabulary_info, role_left.get_element(), role_right.get_element())).first);
+std::shared_ptr<const Concept> SyntacticElementFactoryImpl::make_equal_concept(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right) {
+    return m_caches.m_concept_cache->insert(std::make_unique<EqualConcept>(m_vocabulary_info, role_left, role_right)).first;
 }
 
-Concept SyntacticElementFactoryImpl::make_not_concept(const Concept& concept) {
-    return Concept(m_vocabulary_info, m_caches.m_concept_cache->insert(std::make_unique<element::NotConcept>(*m_vocabulary_info, concept.get_element())).first);
+std::shared_ptr<const Concept> SyntacticElementFactoryImpl::make_not_concept(const std::shared_ptr<const Concept>& concept) {
+    return m_caches.m_concept_cache->insert(std::make_unique<NotConcept>(m_vocabulary_info, concept)).first;
 }
 
-Concept SyntacticElementFactoryImpl::make_one_of_concept(const Constant& constant) {
-    return Concept(m_vocabulary_info, m_caches.m_concept_cache->insert(
-        std::make_unique<element::OneOfConcept>(*m_vocabulary_info, constant)).first);
+std::shared_ptr<const Concept> SyntacticElementFactoryImpl::make_one_of_concept(const Constant& constant) {
+    return m_caches.m_concept_cache->insert(std::make_unique<OneOfConcept>(m_vocabulary_info, constant)).first;
 }
 
-Concept SyntacticElementFactoryImpl::make_or_concept(const Concept& concept_left, const Concept& concept_right) {
-    return Concept(m_vocabulary_info, m_caches.m_concept_cache->insert(std::make_unique<element::OrConcept>(*m_vocabulary_info, concept_left.get_element(), concept_right.get_element())).first);
+std::shared_ptr<const Concept> SyntacticElementFactoryImpl::make_or_concept(const std::shared_ptr<const Concept>& concept_left, const std::shared_ptr<const Concept>& concept_right) {
+    return m_caches.m_concept_cache->insert(std::make_unique<OrConcept>(m_vocabulary_info, concept_left, concept_right)).first;
 }
 
-Concept SyntacticElementFactoryImpl::make_projection_concept(const Role& role, int pos) {
-    return Concept(m_vocabulary_info, m_caches.m_concept_cache->insert(
-        std::make_unique<element::ProjectionConcept>(*m_vocabulary_info, role.get_element(), pos)).first);
+std::shared_ptr<const Concept> SyntacticElementFactoryImpl::make_projection_concept(const std::shared_ptr<const Role>& role, int pos) {
+    return m_caches.m_concept_cache->insert(std::make_unique<ProjectionConcept>(m_vocabulary_info, role, pos)).first;
 }
 
-Concept SyntacticElementFactoryImpl::make_primitive_concept(const Predicate& predicate, int pos) {
-    return Concept(m_vocabulary_info, m_caches.m_concept_cache->insert(
-        std::make_unique<element::PrimitiveConcept>(*m_vocabulary_info, predicate, pos)).first);
+std::shared_ptr<const Concept> SyntacticElementFactoryImpl::make_primitive_concept(const Predicate& predicate, int pos) {
+    return m_caches.m_concept_cache->insert(std::make_unique<PrimitiveConcept>(m_vocabulary_info, predicate, pos)).first;
 }
 
-Concept SyntacticElementFactoryImpl::make_some_concept(const Role& role, const Concept& concept) {
-    return Concept(m_vocabulary_info, m_caches.m_concept_cache->insert(
-        std::make_unique<element::SomeConcept>(*m_vocabulary_info, role.get_element(), concept.get_element())).first);
+std::shared_ptr<const Concept> SyntacticElementFactoryImpl::make_some_concept(const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept) {
+    return m_caches.m_concept_cache->insert(std::make_unique<SomeConcept>(m_vocabulary_info, role, concept)).first;
 }
 
-Concept SyntacticElementFactoryImpl::make_subset_concept(const Role& role_left, const Role& role_right) {
-    return Concept(m_vocabulary_info, m_caches.m_concept_cache->insert(
-        std::make_unique<element::SubsetConcept>(*m_vocabulary_info, role_left.get_element(), role_right.get_element())).first);
+std::shared_ptr<const Concept> SyntacticElementFactoryImpl::make_subset_concept(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right) {
+    return m_caches.m_concept_cache->insert(std::make_unique<SubsetConcept>(m_vocabulary_info, role_left, role_right)).first;
 }
 
-Concept SyntacticElementFactoryImpl::make_top_concept() {
-    return Concept(m_vocabulary_info, m_caches.m_concept_cache->insert(
-        std::make_unique<element::TopConcept>(*m_vocabulary_info)).first);
+std::shared_ptr<const Concept> SyntacticElementFactoryImpl::make_top_concept() {
+    return m_caches.m_concept_cache->insert(std::make_unique<TopConcept>(m_vocabulary_info)).first;
 }
 
-Numerical SyntacticElementFactoryImpl::make_concept_distance_numerical(const Concept& concept_from, const Role& role, const Concept& concept_to) {
-    return Numerical(m_vocabulary_info, m_caches.m_numerical_cache->insert(
-        std::make_unique<element::ConceptDistanceNumerical>(*m_vocabulary_info, concept_from.get_element(), role.get_element(), concept_to.get_element())).first);
+std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::make_concept_distance_numerical(const std::shared_ptr<const Concept>& concept_from, const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept_to) {
+    return m_caches.m_numerical_cache->insert(std::make_unique<ConceptDistanceNumerical>(m_vocabulary_info, concept_from, role, concept_to)).first;
 }
 
-Numerical SyntacticElementFactoryImpl::make_count_numerical(const Concept& concept) {
-    return Numerical(m_vocabulary_info, m_caches.m_numerical_cache->insert(
-        std::make_unique<element::CountNumerical<element::Concept_Ptr>>(*m_vocabulary_info, concept.get_element())).first);
+std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::make_count_numerical(const std::shared_ptr<const Concept>& concept) {
+    return m_caches.m_numerical_cache->insert(std::make_unique<CountNumerical<Concept>>(m_vocabulary_info, concept)).first;
 }
 
-Numerical SyntacticElementFactoryImpl::make_count_numerical(const Role& role) {
-    return Numerical(m_vocabulary_info, m_caches.m_numerical_cache->insert(
-        std::make_unique<element::CountNumerical<element::Role_Ptr>>(*m_vocabulary_info, role.get_element())).first);
+std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::make_count_numerical(const std::shared_ptr<const Role>& role) {
+    return m_caches.m_numerical_cache->insert(std::make_unique<CountNumerical<Role>>(m_vocabulary_info, role)).first;
 }
 
-Numerical SyntacticElementFactoryImpl::make_role_distance_numerical(const Role& role_from, const Role& role, const Role& role_to) {
-    return Numerical(m_vocabulary_info, m_caches.m_numerical_cache->insert(
-        std::make_unique<element::RoleDistanceNumerical>(*m_vocabulary_info, role_from.get_element(), role.get_element(), role_to.get_element())).first);
+std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::make_role_distance_numerical(const std::shared_ptr<const Role>& role_from, const std::shared_ptr<const Role>& role, const std::shared_ptr<const Role>& role_to) {
+    return m_caches.m_numerical_cache->insert(std::make_unique<RoleDistanceNumerical>(m_vocabulary_info, role_from, role, role_to)).first;
 }
 
-Numerical SyntacticElementFactoryImpl::make_sum_concept_distance_numerical(const Concept& concept_from, const Role& role, const Concept& concept_to) {
-    return Numerical(m_vocabulary_info, m_caches.m_numerical_cache->insert(
-        std::make_unique<element::SumConceptDistanceNumerical>(*m_vocabulary_info, concept_from.get_element(), role.get_element(), concept_to.get_element())).first);
+std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::make_sum_concept_distance_numerical(const std::shared_ptr<const Concept>& concept_from, const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept_to) {
+    return m_caches.m_numerical_cache->insert(std::make_unique<SumConceptDistanceNumerical>(m_vocabulary_info, concept_from, role, concept_to)).first;
 }
 
-Numerical SyntacticElementFactoryImpl::make_sum_role_distance_numerical(const Role& role_from, const Role& role, const Role& role_to) {
-    return Numerical(m_vocabulary_info, m_caches.m_numerical_cache->insert(
-        std::make_unique<element::SumRoleDistanceNumerical>(*m_vocabulary_info, role_from.get_element(), role.get_element(), role_to.get_element())).first);
+std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::make_sum_role_distance_numerical(const std::shared_ptr<const Role>& role_from, const std::shared_ptr<const Role>& role, const std::shared_ptr<const Role>& role_to) {
+    return m_caches.m_numerical_cache->insert(std::make_unique<SumRoleDistanceNumerical>(m_vocabulary_info, role_from, role, role_to)).first;
 }
 
-Role SyntacticElementFactoryImpl::make_and_role(const Role& role_left, const Role& role_right) {
-    return Role(m_vocabulary_info, m_caches.m_role_cache->insert(
-        std::make_unique<element::AndRole>(*m_vocabulary_info, role_left.get_element(), role_right.get_element())).first);
+std::shared_ptr<const Role> SyntacticElementFactoryImpl::make_and_role(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right) {
+    return m_caches.m_role_cache->insert(std::make_unique<AndRole>(m_vocabulary_info, role_left, role_right)).first;
 }
 
-Role SyntacticElementFactoryImpl::make_compose_role(const Role& role_left, const Role& role_right) {
-    return Role(m_vocabulary_info, m_caches.m_role_cache->insert(
-        std::make_unique<element::ComposeRole>(*m_vocabulary_info, role_left.get_element(), role_right.get_element())).first);
+std::shared_ptr<const Role> SyntacticElementFactoryImpl::make_compose_role(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right) {
+    return m_caches.m_role_cache->insert(std::make_unique<ComposeRole>(m_vocabulary_info, role_left, role_right)).first;
 }
 
-Role SyntacticElementFactoryImpl::make_diff_role(const Role& role_left, const Role& role_right) {
-    return Role(m_vocabulary_info, m_caches.m_role_cache->insert(
-        std::make_unique<element::DiffRole>(*m_vocabulary_info, role_left.get_element(), role_right.get_element())).first);
+std::shared_ptr<const Role> SyntacticElementFactoryImpl::make_diff_role(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right) {
+    return m_caches.m_role_cache->insert(std::make_unique<DiffRole>(m_vocabulary_info, role_left, role_right)).first;
 }
 
-Role SyntacticElementFactoryImpl::make_identity_role(const Concept& concept) {
-    return Role(m_vocabulary_info, m_caches.m_role_cache->insert(
-        std::make_unique<element::IdentityRole>(*m_vocabulary_info, concept.get_element())).first);
+std::shared_ptr<const Role> SyntacticElementFactoryImpl::make_identity_role(const std::shared_ptr<const Concept>& concept) {
+    return m_caches.m_role_cache->insert(std::make_unique<IdentityRole>(m_vocabulary_info, concept)).first;
 }
 
-Role SyntacticElementFactoryImpl::make_inverse_role(const Role& role) {
-    return Role(m_vocabulary_info, m_caches.m_role_cache->insert(
-        std::make_unique<element::InverseRole>(*m_vocabulary_info, role.get_element())).first);
+std::shared_ptr<const Role> SyntacticElementFactoryImpl::make_inverse_role(const std::shared_ptr<const Role>& role) {
+    return m_caches.m_role_cache->insert(std::make_unique<InverseRole>(m_vocabulary_info, role)).first;
 }
 
-Role SyntacticElementFactoryImpl::make_not_role(const Role& role) {
-    return Role(m_vocabulary_info, m_caches.m_role_cache->insert(
-        std::make_unique<element::NotRole>(*m_vocabulary_info, role.get_element())).first);
+std::shared_ptr<const Role> SyntacticElementFactoryImpl::make_not_role(const std::shared_ptr<const Role>& role) {
+    return m_caches.m_role_cache->insert(std::make_unique<NotRole>(m_vocabulary_info, role)).first;
 }
 
-Role SyntacticElementFactoryImpl::make_or_role(const Role& role_left, const Role& role_right) {
-    return Role(m_vocabulary_info, m_caches.m_role_cache->insert(
-        std::make_unique<element::OrRole>(*m_vocabulary_info, role_left.get_element(), role_right.get_element())).first);
+std::shared_ptr<const Role> SyntacticElementFactoryImpl::make_or_role(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right) {
+    return m_caches.m_role_cache->insert(std::make_unique<OrRole>(m_vocabulary_info, role_left, role_right)).first;
 }
 
-Role SyntacticElementFactoryImpl::make_primitive_role(const Predicate& predicate, int pos_1, int pos_2) {
-    return Role(m_vocabulary_info, m_caches.m_role_cache->insert(
-        std::make_unique<element::PrimitiveRole>(*m_vocabulary_info, predicate, pos_1, pos_2)).first);
+std::shared_ptr<const Role> SyntacticElementFactoryImpl::make_primitive_role(const Predicate& predicate, int pos_1, int pos_2) {
+    return m_caches.m_role_cache->insert(std::make_unique<PrimitiveRole>(m_vocabulary_info, predicate, pos_1, pos_2)).first;
 }
 
-Role SyntacticElementFactoryImpl::make_restrict_role(const Role& role, const Concept& concept) {
-    return Role(m_vocabulary_info, m_caches.m_role_cache->insert(
-        std::make_unique<element::RestrictRole>(*m_vocabulary_info, role.get_element(), concept.get_element())).first);
+std::shared_ptr<const Role> SyntacticElementFactoryImpl::make_restrict_role(const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept) {
+    return m_caches.m_role_cache->insert(std::make_unique<RestrictRole>(m_vocabulary_info, role, concept)).first;
 }
 
-Role SyntacticElementFactoryImpl::make_top_role() {
-    return Role(m_vocabulary_info, m_caches.m_role_cache->insert(
-        std::make_unique<element::TopRole>(*m_vocabulary_info)).first);
+std::shared_ptr<const Role> SyntacticElementFactoryImpl::make_top_role() {
+    return m_caches.m_role_cache->insert(std::make_unique<TopRole>(m_vocabulary_info)).first;
 }
 
-Role SyntacticElementFactoryImpl::make_transitive_closure(const Role& role) {
-    return Role(m_vocabulary_info, m_caches.m_role_cache->insert(
-        std::make_unique<element::TransitiveClosureRole>(*m_vocabulary_info, role.get_element())).first);
+std::shared_ptr<const Role> SyntacticElementFactoryImpl::make_transitive_closure(const std::shared_ptr<const Role>& role) {
+    return m_caches.m_role_cache->insert(std::make_unique<TransitiveClosureRole>(m_vocabulary_info, role)).first;
 }
 
-Role SyntacticElementFactoryImpl::make_transitive_reflexive_closure(const Role& role) {
-    return Role(m_vocabulary_info, m_caches.m_role_cache->insert(
-        std::make_unique<element::TransitiveReflexiveClosureRole>(*m_vocabulary_info, role.get_element())).first);
+std::shared_ptr<const Role> SyntacticElementFactoryImpl::make_transitive_reflexive_closure(const std::shared_ptr<const Role>& role) {
+    return m_caches.m_role_cache->insert(std::make_unique<TransitiveReflexiveClosureRole>(m_vocabulary_info, role)).first;
 }
 
 std::shared_ptr<const VocabularyInfo> SyntacticElementFactoryImpl::get_vocabulary_info() const {

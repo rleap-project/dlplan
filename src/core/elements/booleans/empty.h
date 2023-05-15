@@ -1,11 +1,14 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_BOOLEAN_EMPTY_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_BOOLEAN_EMPTY_H_
 
-#include "../boolean.h"
+#include "../../../../include/dlplan/core.h"
+
+#include <sstream>
+
+using namespace std::string_literals;
 
 
-namespace dlplan::core::element {
-
+namespace dlplan::core {
 
 template<typename T>
 class EmptyBoolean : public Boolean {
@@ -42,8 +45,8 @@ protected:
     const std::shared_ptr<const T> m_element;
 
 public:
-    EmptyBoolean(const VocabularyInfo& vocabulary, std::shared_ptr<const T> element)
-        : Boolean(vocabulary, element->is_static()), m_element(element) {
+    EmptyBoolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const T> element)
+        : Boolean(vocabulary_info, element->is_static()), m_element(element) {
     }
 
     bool evaluate(const State& state) const override {

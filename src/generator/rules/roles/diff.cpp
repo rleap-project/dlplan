@@ -25,7 +25,7 @@ void DiffRole::generate_impl(const core::States& states, int target_complexity, 
 }
 
 std::string DiffRole::get_name() const {
-    return core::element::DiffRole::get_name();
+    return core::DiffRole::get_name();
 }
 
 }

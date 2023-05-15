@@ -8,12 +8,12 @@ namespace dlplan::core::parser {
 
 class TopConcept : public Concept {
 protected:
-    std::unique_ptr<element::Concept> parse_concept_impl(const VocabularyInfo& vocabulary, Caches &) const override {
+    std::unique_ptr<dlplan::core::Concept> parse_concept_impl(std::shared_ptr<const VocabularyInfo> vocabulary_info, Caches &) const override {
         if (m_children.size() != 0) {
             throw std::runtime_error("TopConcept::parse_concept_impl - number of children ("s + std::to_string(m_children.size()) + " != 0).");
         }
         // 2. Construct element
-        return std::make_unique<element::TopConcept>(vocabulary);
+        return std::make_unique<dlplan::core::TopConcept>(vocabulary_info);
     }
 
 public:

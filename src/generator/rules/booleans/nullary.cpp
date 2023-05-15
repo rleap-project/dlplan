@@ -23,7 +23,7 @@ void NullaryBoolean::generate_impl(const core::States& states, int target_comple
 }
 
 std::string NullaryBoolean::get_name() const {
-    return core::element::NullaryBoolean::get_name();
+    return core::NullaryBoolean::get_name();
 }
 
 }

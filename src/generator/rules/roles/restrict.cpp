@@ -27,7 +27,7 @@ void RestrictRole::generate_impl(const core::States& states, int target_complexi
 }
 
 std::string RestrictRole::get_name() const {
-    return core::element::RestrictRole::get_name();
+    return core::RestrictRole::get_name();
 }
 
 }

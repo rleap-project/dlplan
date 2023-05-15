@@ -1,13 +1,15 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_NUMERICAL_CONCEPT_DISTANCE_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_NUMERICAL_CONCEPT_DISTANCE_H_
 
-#include "../numerical.h"
-#include "../concept.h"
-#include "../role.h"
+#include "../../../../include/dlplan/core.h"
 #include "../utils.h"
 
+#include <sstream>
 
-namespace dlplan::core::element {
+using namespace std::string_literals;
+
+
+namespace dlplan::core {
 
 class ConceptDistanceNumerical : public Numerical {
 private:
@@ -67,13 +69,13 @@ private:
     }
 
 protected:
-    const Concept_Ptr m_concept_from;
-    const Role_Ptr m_role;
-    const Concept_Ptr m_concept_to;
+    const std::shared_ptr<const Concept> m_concept_from;
+    const std::shared_ptr<const Role> m_role;
+    const std::shared_ptr<const Concept> m_concept_to;
 
 public:
-    ConceptDistanceNumerical(const VocabularyInfo& vocabulary, Concept_Ptr concept_from, Role_Ptr role, Concept_Ptr concept_to)
-    : Numerical(vocabulary, concept_from->is_static() && role->is_static() && concept_to->is_static()),
+    ConceptDistanceNumerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept_from, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept_to)
+    : Numerical(vocabulary_info, concept_from->is_static() && role->is_static() && concept_to->is_static()),
       m_concept_from(concept_from), m_role(role), m_concept_to(concept_to) {
         if (!(concept_from && role && concept_to)) {
             throw std::runtime_error("ConceptDistanceNumerical::ConceptDistanceNumerical - child is not of type Concept, Role, Concept.");

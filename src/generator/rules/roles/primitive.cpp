@@ -23,7 +23,7 @@ void PrimitiveRole::generate_impl(const core::States& states, int target_complex
 }
 
 std::string PrimitiveRole::get_name() const {
-    return core::element::PrimitiveRole::get_name();
+    return core::PrimitiveRole::get_name();
 }
 
 }

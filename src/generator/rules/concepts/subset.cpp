@@ -27,6 +27,6 @@ void SubsetConcept::generate_impl(const core::States& states, int target_complex
 }
 
 std::string SubsetConcept::get_name() const {
-    return core::element::SubsetConcept::get_name();
+    return core::SubsetConcept::get_name();
 }
 }

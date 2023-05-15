@@ -3,7 +3,9 @@
 
 #include "expression.h"
 
-#include "../../elements/role.h"
+namespace dlplan::core {
+class Role;
+}
 
 
 namespace dlplan::core::parser {
@@ -13,7 +15,7 @@ protected:
     /**
      * Construct the Role.
      */
-    virtual std::unique_ptr<element::Role> parse_role_impl(const VocabularyInfo& vocabulary, Caches &caches) const = 0;
+    virtual std::unique_ptr<dlplan::core::Role> parse_role_impl(std::shared_ptr<const VocabularyInfo> vocabulary_info, Caches &caches) const = 0;
 
 public:
     Role(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
@@ -22,8 +24,8 @@ public:
     /**
      * Construct or retrieve the Role.
      */
-    virtual element::Role_Ptr parse_role(const VocabularyInfo& vocabulary, Caches &caches) const {
-        return caches.m_role_cache->insert(parse_role_impl(vocabulary, caches)).first;
+    virtual std::shared_ptr<const dlplan::core::Role> parse_role(std::shared_ptr<const VocabularyInfo> vocabulary_info, Caches &caches) const {
+        return caches.m_role_cache->insert(parse_role_impl(vocabulary_info, caches)).first;
     }
 };
 

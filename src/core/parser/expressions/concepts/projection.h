@@ -10,11 +10,11 @@ namespace dlplan::core::parser {
 
 class ProjectionConcept : public Concept {
 protected:
-    std::unique_ptr<element::Concept> parse_concept_impl(const VocabularyInfo& vocabulary, Caches &caches) const override {
+    std::unique_ptr<dlplan::core::Concept> parse_concept_impl(std::shared_ptr<const VocabularyInfo> vocabulary_info, Caches &caches) const override {
         if (m_children.size() != 2) {
             throw std::runtime_error("ProjectionConcept::parse_concept_impl - number of children ("s + std::to_string(m_children.size()) + " != 1).");
         }
-        element::Role_Ptr role = m_children[0]->parse_role(vocabulary, caches);
+        std::shared_ptr<const dlplan::core::Role> role = m_children[0]->parse_role(vocabulary_info, caches);
         if (!role) {
             throw std::runtime_error("ProjectionConcept::parse_concept_impl - child is a nullptr.");
         }
@@ -22,7 +22,7 @@ protected:
         if (pos < 0 || pos > 1) {
             throw std::runtime_error("ProjectionConcept::parse_concept_impl - projection index out of range, should be 0 or 1 ("s + std::to_string(pos) + ")");
         }
-        return std::make_unique<element::ProjectionConcept>(vocabulary, role, pos);
+        return std::make_unique<dlplan::core::ProjectionConcept>(vocabulary_info, role, pos);
     }
 
 public:

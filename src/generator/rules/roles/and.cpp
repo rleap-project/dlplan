@@ -25,7 +25,7 @@ void AndRole::generate_impl(const core::States& states, int target_complexity, G
 }
 
 std::string AndRole::get_name() const {
-    return core::element::AndRole::get_name();
+    return core::AndRole::get_name();
 }
 
 }

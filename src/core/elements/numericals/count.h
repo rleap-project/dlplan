@@ -1,10 +1,14 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_NUMERICAL_COUNT_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_NUMERICAL_COUNT_H_
 
-#include "../numerical.h"
+#include "../../../../include/dlplan/core.h"
+
+#include <sstream>
+
+using namespace std::string_literals;
 
 
-namespace dlplan::core::element {
+namespace dlplan::core {
 
 template<typename T>
 class CountNumerical : public Numerical {
@@ -37,11 +41,11 @@ private:
     }
 
 protected:
-    const T m_element;
+    const std::shared_ptr<const T> m_element;
 
 public:
-    CountNumerical(const VocabularyInfo& vocabulary, T element)
-    : Numerical(vocabulary, element->is_static()), m_element(element) { }
+    CountNumerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const T> element)
+    : Numerical(vocabulary_info, element->is_static()), m_element(element) { }
 
     int evaluate(const State& state) const override {
         int result;

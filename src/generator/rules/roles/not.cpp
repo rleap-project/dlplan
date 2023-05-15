@@ -21,7 +21,7 @@ void NotRole::generate_impl(const core::States& states, int target_complexity, G
 }
 
 std::string NotRole::get_name() const {
-    return core::element::NotRole::get_name();
+    return core::NotRole::get_name();
 }
 
 }

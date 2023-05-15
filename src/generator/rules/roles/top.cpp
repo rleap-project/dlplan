@@ -20,7 +20,7 @@ void TopRole::generate_impl(const core::States& states, int target_complexity, G
 }
 
 std::string TopRole::get_name() const {
-    return core::element::TopRole::get_name();
+    return core::TopRole::get_name();
 }
 
 }

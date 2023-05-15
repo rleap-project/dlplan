@@ -1,10 +1,14 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_ONE_OF_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_ONE_OF_H_
 
-#include "../concept.h"
+#include "../../../../include/dlplan/core.h"
+
+#include <sstream>
+
+using namespace std::string_literals;
 
 
-namespace dlplan::core::element {
+namespace dlplan::core {
 
 class OneOfConcept : public Concept {
 private:
@@ -49,8 +53,8 @@ protected:
     const Constant m_constant;
 
 public:
-    OneOfConcept(const VocabularyInfo& vocabulary, const Constant& constant)
-    : Concept(vocabulary, true), m_constant(constant) {
+    OneOfConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, const Constant& constant)
+    : Concept(vocabulary_info, true), m_constant(constant) {
     }
 
     ConceptDenotation evaluate(const State& state) const override {

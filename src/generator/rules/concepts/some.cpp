@@ -25,7 +25,7 @@ void SomeConcept::generate_impl(const core::States& states, int target_complexit
 }
 
 std::string SomeConcept::get_name() const {
-    return core::element::SomeConcept::get_name();
+    return core::SomeConcept::get_name();
 }
 
 }

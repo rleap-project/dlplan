@@ -21,7 +21,7 @@ void OneOfConcept::generate_impl(const core::States& states, int target_complexi
 }
 
 std::string OneOfConcept::get_name() const {
-    return core::element::OneOfConcept::get_name();
+    return core::OneOfConcept::get_name();
 }
 
 }

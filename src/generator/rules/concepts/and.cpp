@@ -25,7 +25,7 @@ void AndConcept::generate_impl(const core::States& states, int target_complexity
 }
 
 std::string AndConcept::get_name() const {
-    return core::element::AndConcept::get_name();
+    return core::AndConcept::get_name();
 }
 
 }
