@@ -2,11 +2,16 @@ add_library(dlplancore SHARED)
 target_sources(dlplancore
     PRIVATE
         atom.cpp
+        base_element.cpp
+        boolean.cpp
+        concept.cpp
+        role.cpp
         state.cpp
         constant.cpp
         core.cpp
         element_factory.cpp
         instance_info.cpp
+        numerical.cpp
         vocabulary_info.cpp
         predicate.cpp
         object.cpp

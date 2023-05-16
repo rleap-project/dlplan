@@ -9,7 +9,7 @@ TEST(DLPTests, RoleTransitiveClosure) {
     // Add predicates
     std::shared_ptr<VocabularyInfo> vocabulary = std::make_shared<VocabularyInfo>();
     Predicate p0 = vocabulary->add_predicate("conn", 2);
-    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary_info, 0);
+    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary, 0);
     // Add state atoms
     Atom a0 = instance->add_atom("conn", {"A", "B"});
     Atom a1 = instance->add_atom("conn", {"B", "C"});
@@ -19,7 +19,7 @@ TEST(DLPTests, RoleTransitiveClosure) {
 
     State state(instance, {a0, a1, a2, a3, a4}, 0);
 
-    SyntacticElementFactory factory(vocabulary_info);
+    SyntacticElementFactory factory(vocabulary);
     DenotationsCaches caches;
 
     std::shared_ptr<const Role> role1 = factory.parse_role("r_primitive(conn,0,1)");

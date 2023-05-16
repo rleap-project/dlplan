@@ -92,14 +92,14 @@ namespace dlplan::core {
 class ConceptDenotation {
 private:
     int m_num_objects;
-    utils::DynamicBitset<unsigned> m_data;
+    dlplan::utils::DynamicBitset<unsigned> m_data;
 
 public:
     // Special iterator for bitset representing set of integers
     class const_iterator {
         public:
             using iterator_category = std::forward_iterator_tag;
-            using value_type        = utils::DynamicBitset<unsigned>;
+            using value_type        = dlplan::utils::DynamicBitset<unsigned>;
             using const_reference   = const value_type&;
 
             const_iterator(const_reference data, int num_objects, bool end=false);
@@ -163,14 +163,14 @@ public:
 class RoleDenotation {
 private:
     int m_num_objects;
-    utils::DynamicBitset<unsigned> m_data;
+    dlplan::utils::DynamicBitset<unsigned> m_data;
 
 public:
     // Special iterator for bitset representing set of pairs of ints.
     class const_iterator {
         public:
             using iterator_category = std::forward_iterator_tag;
-            using value_type        = utils::DynamicBitset<unsigned>;
+            using value_type        = dlplan::utils::DynamicBitset<unsigned>;
             using const_reference   = const value_type&;
 
             const_iterator(const_reference data, int num_objects, bool end=false);
@@ -533,7 +533,7 @@ public:
 };
 
 
-class BaseElement : public utils::Cachable {
+class BaseElement : public dlplan::utils::Cachable {
 protected:
     std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
 
@@ -677,7 +677,7 @@ public:
  */
 class SyntacticElementFactory {
 private:
-    utils::pimpl<SyntacticElementFactoryImpl> m_pImpl;
+    dlplan::utils::pimpl<SyntacticElementFactoryImpl> m_pImpl;
 
 public:
     SyntacticElementFactory(std::shared_ptr<const VocabularyInfo> vocabulary_info);

@@ -72,8 +72,6 @@ void init_policy(py::module_ &m) {
 
     py::class_<PolicyBuilder>(m, "PolicyBuilder")
         .def(py::init<>())
-        .def("add_boolean_feature", &PolicyBuilder::add_boolean_feature)
-        .def("add_numerical_feature", &PolicyBuilder::add_numerical_feature)
         .def("add_pos_condition", &PolicyBuilder::add_pos_condition)
         .def("add_neg_condition", &PolicyBuilder::add_neg_condition)
         .def("add_gt_condition", &PolicyBuilder::add_gt_condition)

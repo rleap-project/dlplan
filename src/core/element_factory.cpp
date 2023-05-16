@@ -43,19 +43,35 @@ SyntacticElementFactoryImpl::SyntacticElementFactoryImpl(std::shared_ptr<const V
 }
 
 std::shared_ptr<const Concept> SyntacticElementFactoryImpl::parse_concept(const std::string &description) {
-    return parser::Parser().parse(description)->parse_concept(m_vocabulary_info, m_caches);
+    auto concept = parser::Parser().parse(description)->parse_concept(m_vocabulary_info, m_caches);
+    if (!concept) {
+        throw std::runtime_error("SyntacticElementFactoryImpl::parse_concept - Unable to parse concept.");
+    }
+    return concept;
 }
 
 std::shared_ptr<const Role> SyntacticElementFactoryImpl::parse_role(const std::string &description) {
-    return parser::Parser().parse(description)->parse_role(m_vocabulary_info, m_caches);
+    auto role = parser::Parser().parse(description)->parse_role(m_vocabulary_info, m_caches);
+    if (!role) {
+        throw std::runtime_error("SyntacticElementFactoryImpl::parse_role - Unable to parse role.");
+    }
+    return role;
 }
 
 std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::parse_numerical(const std::string &description) {
-    return parser::Parser().parse(description)->parse_numerical(m_vocabulary_info, m_caches);
+    auto numerical = parser::Parser().parse(description)->parse_numerical(m_vocabulary_info, m_caches);
+    if (!numerical) {
+        throw std::runtime_error("SyntacticElementFactoryImpl::parse_numerical - Unable to parse numerical.");
+    }
+    return numerical;
 }
 
 std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::parse_boolean(const std::string &description) {
-    return parser::Parser().parse(description)->parse_boolean(m_vocabulary_info, m_caches);
+    auto boolean = parser::Parser().parse(description)->parse_boolean(m_vocabulary_info, m_caches);
+    if (!boolean) {
+        throw std::runtime_error("SyntacticElementFactoryImpl::parse_boolean - Unable to parse boolean.");
+    }
+    return boolean;
 }
 
 std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::make_empty_boolean(const std::shared_ptr<const Concept>& concept) {

@@ -16,7 +16,7 @@ TEST(DLPTests, NumericalSumRoleDistance) {
     Predicate p3 = vocabulary->add_predicate("start2", 2);
     Predicate p4 = vocabulary->add_predicate("end2", 2);
     Predicate p5 = vocabulary->add_predicate("start3", 2);
-    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary_info, 0);
+    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary, 0);
     // Add state atoms
     Atom a0 = instance->add_atom("conn", {"A", "B"});
     Atom a1 = instance->add_atom("conn", {"B", "C"});
@@ -37,7 +37,7 @@ TEST(DLPTests, NumericalSumRoleDistance) {
 
     State state(instance, {a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13}, 0);
 
-    SyntacticElementFactory factory(vocabulary_info);
+    SyntacticElementFactory factory(vocabulary);
     DenotationsCaches caches;
 
     // All distances are finite

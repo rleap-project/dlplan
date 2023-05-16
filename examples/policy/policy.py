@@ -5,13 +5,10 @@ def main():
     vocabulary_info = dlplan.VocabularyInfo()
     vocabulary_info.add_predicate("unary", 1)
     factory = dlplan.SyntacticElementFactory(vocabulary_info)
-    boolean = factory.parse_boolean("b_empty(c_primitive(unary,0))")
-    numerical = factory.parse_numerical("n_count(c_primitive(unary,0))")
+    b = factory.parse_boolean("b_empty(c_primitive(unary,0))")
+    n = factory.parse_numerical("n_count(c_primitive(unary,0))")
 
     builder = dlplan.PolicyBuilder()
-    b = builder.add_boolean_feature(boolean)
-    n = builder.add_numerical_feature(numerical)
-
     b_neg_condition_0 = builder.add_neg_condition(b)
     b_bot_effect_0 = builder.add_bot_effect(b)
     n_gt_condition_0 = builder.add_gt_condition(n)

@@ -11,7 +11,7 @@ TEST(DLPTests, ConceptInclusion) {
     Predicate p0 = vocabulary->add_predicate("concept_1", 1);
     Predicate p1 = vocabulary->add_predicate("concept_2", 1);
 
-    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary_info, 0);
+    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary, 0);
     // Add state atoms
     Atom a0 = instance->add_atom("concept_1", {"A"});
     Atom a1 = instance->add_atom("concept_1", {"B"});
@@ -22,7 +22,7 @@ TEST(DLPTests, ConceptInclusion) {
     State s1(instance, {a1, a2, a3}, 0);  // {B} subseteq {B, C}
     State s2(instance, {a0, a1, a2, a3}, 1);  // {A, B} not subseteq {B, C}
 
-    SyntacticElementFactory factory(vocabulary_info);
+    SyntacticElementFactory factory(vocabulary);
     DenotationsCaches caches;
 
     std::shared_ptr<const Boolean> boolean = factory.parse_boolean("b_inclusion(c_primitive(concept_1,0),c_primitive(concept_2,0))");

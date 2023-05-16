@@ -10,7 +10,7 @@ TEST(DLPTests, RoleCompose) {
     std::shared_ptr<VocabularyInfo> vocabulary = std::make_shared<VocabularyInfo>();
     Predicate p0 = vocabulary->add_predicate("conn_1", 2);
     Predicate p1 = vocabulary->add_predicate("conn_2", 2);
-    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary_info, 0);
+    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary, 0);
     // Add state atoms
     Atom a0 = instance->add_atom("conn_1", {"A", "X"});
     Atom a1 = instance->add_atom("conn_1", {"B", "X"});
@@ -22,7 +22,7 @@ TEST(DLPTests, RoleCompose) {
 
     State state(instance, {a0, a1, a2, a3, a4, a5}, 0);
 
-    SyntacticElementFactory factory(vocabulary_info);
+    SyntacticElementFactory factory(vocabulary);
     DenotationsCaches caches;
 
     std::shared_ptr<const Role> role1 = factory.parse_role("r_compose(r_primitive(conn_1,0,1),r_primitive(conn_2,0,1))");

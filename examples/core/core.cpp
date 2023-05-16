@@ -57,11 +57,11 @@ int main() {
 
     // 5. Parse and evaluate elements.
     std::shared_ptr<const Numerical> numerical = f.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))");
-    std::cout << "repr: " << numerical.compute_repr() << std::endl;
+    std::cout << "repr: " << numerical->compute_repr() << std::endl;
     std::cout << "value: " << numerical->evaluate(state) << std::endl;
 
     std::shared_ptr<const Boolean> boolean = f.parse_boolean("b_empty(c_and(c_primitive(on_g,0),c_primitive(on,0)))");
-    std::cout << "repr: " << boolean.compute_repr() << std::endl;
+    std::cout << "repr: " << boolean->compute_repr() << std::endl;
     std::cout << "value: " << boolean->evaluate(state) << std::endl;
 
     return 0;

@@ -140,7 +140,7 @@ public:
         if (m_children.size() != 2) {
             throw std::runtime_error("BooleanConditionExpression::parse_condition - incorrect number of children. Should be 2.");
         }
-        return parse_condition_impl(builder, builder.add_boolean_feature(factory.parse_boolean(m_children.at(1)->get_name())));
+        return parse_condition_impl(builder, factory.parse_boolean(m_children.at(1)->get_name()));
     }
 };
 
@@ -156,7 +156,7 @@ public:
         if (m_children.size() != 2) {
             throw std::runtime_error("BooleanEffectExpression::parse_effect - incorrect number of children. Should be 2.");
         }
-        return parse_effect_impl(builder, builder.add_boolean_feature(factory.parse_boolean(m_children.at(1)->get_name())));
+        return parse_effect_impl(builder, factory.parse_boolean(m_children.at(1)->get_name()));
     }
 };
 
@@ -172,7 +172,7 @@ public:
         if (m_children.size() != 2) {
             throw std::runtime_error("NumericalConditionExpression::parse_condition - incorrect number of children. Should be 2.");
         }
-        return parse_condition_impl(builder, builder.add_numerical_feature(factory.parse_numerical(m_children.at(1)->get_name())));
+        return parse_condition_impl(builder, factory.parse_numerical(m_children.at(1)->get_name()));
     }
 };
 
@@ -188,7 +188,7 @@ public:
         if (m_children.size() != 2) {
             throw std::runtime_error("NumericalEffectExpression::parse_effect - incorrect number of children. Should be 2.");
         }
-        return parse_effect_impl(builder, builder.add_numerical_feature(factory.parse_numerical(m_children.at(1)->get_name())));
+        return parse_effect_impl(builder, factory.parse_numerical(m_children.at(1)->get_name()));
     }
 };
 

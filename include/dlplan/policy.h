@@ -258,12 +258,6 @@ public:
     ~PolicyBuilder();
 
     /**
-     * Uniquely adds a feature and returns it..
-     */
-    std::shared_ptr<const core::Boolean> add_boolean_feature(core::Boolean b);
-    std::shared_ptr<const core::Numerical> add_numerical_feature(core::Numerical n);
-
-    /**
      * Uniquely adds a condition (resp. effect) and returns it.
      */
     std::shared_ptr<const BaseCondition> add_pos_condition(std::shared_ptr<const core::Boolean> b);

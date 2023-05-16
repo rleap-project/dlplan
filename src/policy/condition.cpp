@@ -48,7 +48,7 @@ std::string PositiveBooleanCondition::str() const {
 }
 
 std::shared_ptr<const BaseCondition> PositiveBooleanCondition::copy_to_builder(PolicyBuilder& policy_builder) const {
-    return policy_builder.add_pos_condition(policy_builder.add_boolean_feature(*m_boolean));
+    return policy_builder.add_pos_condition(m_boolean);
 }
 
 
@@ -72,7 +72,7 @@ std::string NegativeBooleanCondition::str() const {
 }
 
 std::shared_ptr<const BaseCondition> NegativeBooleanCondition::copy_to_builder(PolicyBuilder& policy_builder) const {
-    return policy_builder.add_neg_condition(policy_builder.add_boolean_feature(*m_boolean));
+    return policy_builder.add_neg_condition(m_boolean);
 }
 
 
@@ -96,7 +96,7 @@ std::string EqualNumericalCondition::str() const {
 }
 
 std::shared_ptr<const BaseCondition> EqualNumericalCondition::copy_to_builder(PolicyBuilder& policy_builder) const {
-    return policy_builder.add_eq_condition(policy_builder.add_numerical_feature(*m_numerical));
+    return policy_builder.add_eq_condition(m_numerical);
 }
 
 
@@ -120,7 +120,7 @@ std::string GreaterNumericalCondition::str() const {
 }
 
 std::shared_ptr<const BaseCondition> GreaterNumericalCondition::copy_to_builder(PolicyBuilder& policy_builder) const {
-    return policy_builder.add_gt_condition(policy_builder.add_numerical_feature(*m_numerical));
+    return policy_builder.add_gt_condition(m_numerical);
 }
 
 }

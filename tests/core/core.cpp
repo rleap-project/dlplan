@@ -10,7 +10,7 @@ TEST(DLPTests, SyntacticErrorHandling) {
     std::shared_ptr<VocabularyInfo> vocabulary = std::make_shared<VocabularyInfo>();
     auto clear = vocabulary->add_predicate("on", 2);
 
-    SyntacticElementFactory factory(vocabulary_info);
+    SyntacticElementFactory factory(vocabulary);
 
     ASSERT_THROW(factory.parse_numerical("hello world!"), std::runtime_error);
     ASSERT_THROW(factory.parse_concept("bye world!"), std::runtime_error);
@@ -35,7 +35,7 @@ TEST(DLPTests, InstanceCreation) {
     Predicate p2 = vocabulary->add_predicate("holding", 1);
     Predicate p3 = vocabulary->add_predicate("on_g", 2);
     std::vector<Predicate> predicates({p0, p1, p2, p3});
-    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary_info, 0);
+    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary, 0);
     // Add state atoms
     Atom a0 = instance->add_atom("on", {"A", "B"});
     Atom a1 = instance->add_atom("on", {"B", "A"});
@@ -46,10 +46,10 @@ TEST(DLPTests, InstanceCreation) {
     // Add goal atoms
     Atom a6 = instance->add_static_atom("on_g", {"A", "B"});
 
-    SyntacticElementFactory factory(vocabulary_info);
+    SyntacticElementFactory factory(vocabulary);
 
     std::shared_ptr<const Numerical> numerical = factory.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))");
-    EXPECT_EQ(numerical.compute_complexity(), 4);
+    EXPECT_EQ(numerical->compute_complexity(), 4);
 
     State state1(instance, {a0, a3});
     State state2(instance, {0, 3});

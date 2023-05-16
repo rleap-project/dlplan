@@ -14,8 +14,8 @@ TEST(DLPTests, PolicyBuilderTest) {
     auto syntactic_element_factory = construct_syntactic_element_factory(vocabulary_info);
     PolicyBuilder builder;
     // add some features
-    std::shared_ptr<const Boolean> boolean_1 = builder.add_boolean_feature(syntactic_element_factory.parse_boolean("b_empty(r_primitive(at,0,1))"));
-    std::shared_ptr<const Boolean> boolean_2 = builder.add_boolean_feature(syntactic_element_factory.parse_boolean("b_empty(c_primitive(package, 0))"));
+    std::shared_ptr<const Boolean> boolean_1 = syntactic_element_factory.parse_boolean("b_empty(r_primitive(at,0,1))");
+    std::shared_ptr<const Boolean> boolean_2 = syntactic_element_factory.parse_boolean("b_empty(c_primitive(package, 0))");
     // add some conditions
     std::shared_ptr<const BaseCondition> c_b_pos_1 = builder.add_pos_condition(boolean_1);
     std::shared_ptr<const BaseCondition> c_b_pos_2 = builder.add_pos_condition(boolean_2);

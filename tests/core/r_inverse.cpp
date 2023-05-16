@@ -9,14 +9,14 @@ TEST(DLPTests, RoleInverse) {
     // Add predicates
     std::shared_ptr<VocabularyInfo> vocabulary = std::make_shared<VocabularyInfo>();
     Predicate p0 = vocabulary->add_predicate("role", 2);
-    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary_info, 0);
+    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary, 0);
     // Add state atoms
     Atom a0 = instance->add_atom("role", {"A", "B"});
     Atom a1 = instance->add_atom("role", {"C", "D"});
 
     State state(instance, {a0, a1}, 0);
 
-    SyntacticElementFactory factory(vocabulary_info);
+    SyntacticElementFactory factory(vocabulary);
     DenotationsCaches caches;
 
     std::shared_ptr<const Role> role = factory.parse_role("r_inverse(r_primitive(role,0,1))");

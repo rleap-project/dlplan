@@ -12,14 +12,14 @@ TEST(DLPTests, BooleanEmpty) {
     Predicate p1 = vocabulary->add_predicate("concept_1", 1);
     Predicate p2 = vocabulary->add_predicate("role_0", 2);
     Predicate p3 = vocabulary->add_predicate("role_1", 2);
-    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary_info, 0);
+    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary, 0);
     // Add state atoms
     Atom a0 = instance->add_atom("concept_0", {"A"});
     Atom a1 = instance->add_atom("role_0", {"A", "B"});
 
     State state(instance, {a0, a1}, 0);
 
-    SyntacticElementFactory factory(vocabulary_info);
+    SyntacticElementFactory factory(vocabulary);
     DenotationsCaches caches;
 
     std::shared_ptr<const Boolean> boolean1 = factory.parse_boolean("b_empty(c_primitive(concept_0,0))");

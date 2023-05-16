@@ -10,7 +10,7 @@ TEST(DLPTests, ConceptAnd) {
     std::shared_ptr<VocabularyInfo> vocabulary = std::make_shared<VocabularyInfo>();
     Predicate p0 = vocabulary->add_predicate("concept_1", 1);
     Predicate p1 = vocabulary->add_predicate("concept_2", 1);
-    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary_info, 0);
+    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary, 0);
     // Add state atoms
     Atom a0 = instance->add_atom("concept_1", {"A"});
     Atom a1 = instance->add_atom("concept_1", {"B"});
@@ -20,7 +20,7 @@ TEST(DLPTests, ConceptAnd) {
 
     State state(instance, {a0, a1, a2, a3}, 0);
 
-    SyntacticElementFactory factory(vocabulary_info);
+    SyntacticElementFactory factory(vocabulary);
     DenotationsCaches caches;
 
     std::shared_ptr<const Concept> concept = factory.parse_concept("c_and(c_primitive(concept_1,0),c_primitive(concept_2,0))");

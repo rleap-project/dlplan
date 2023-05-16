@@ -36,8 +36,8 @@ TEST(DLPTests, GeneratorDeliveryTest) {
     auto feature_reprs = feature_generator.generate(syntactic_element_factory, states, 9, 9, 9, 9, 15, 1000, 100000);
     std::vector<std::shared_ptr<const Boolean>> generated_boolean_features;
     std::vector<std::shared_ptr<const Numerical>> generated_numerical_features;
-    std::vector<Concept> generated_concept_features;
-    std::vector<Role> generated_role_features;
+    std::vector<std::shared_ptr<const Concept>> generated_concept_features;
+    std::vector<std::shared_ptr<const Role>> generated_role_features;
     for (const auto& repr : feature_reprs) {
         if (repr.substr(0, 2) == "b_") {
             generated_boolean_features.push_back(syntactic_element_factory.parse_boolean(repr));
@@ -67,19 +67,19 @@ TEST(DLPTests, GeneratorDeliveryTest) {
         generated_role_denotations.push_back(role->evaluate(states, caches));
     }
 
-    std::vector<Boolean> required_boolean_features = {
+    std::vector<std::shared_ptr<const Boolean>> required_boolean_features = {
         syntactic_element_factory.parse_boolean("b_empty(c_primitive(empty,0))")
     };
-    std::vector<Numerical> required_numerical_features = {
+    std::vector<std::shared_ptr<const Numerical>> required_numerical_features = {
         syntactic_element_factory.parse_numerical("n_count(c_not(c_equal(r_primitive(at_g,0,1),r_primitive(at,0,1))))"),
         syntactic_element_factory.parse_numerical("n_concept_distance(c_some(r_inverse(r_primitive(at,0,1)),c_primitive(truck,0)), r_primitive(adjacent,0,1), c_primitive(at_g,1))"),
         syntactic_element_factory.parse_numerical("n_concept_distance(c_some(r_inverse(r_primitive(at,0,1)),c_primitive(truck,0)), r_primitive(adjacent,0,1), c_and(c_all(r_inverse(r_primitive(at_g,0,1)),c_bot),c_some(r_inverse(r_primitive(at,0,1)),c_primitive(package,0))))"),
     };
-    std::vector<Concept> required_concept_features = {
+    std::vector<std::shared_ptr<const Concept>> required_concept_features = {
         syntactic_element_factory.parse_concept("c_and(c_all(r_inverse(r_primitive(at_g,0,1)),c_bot),c_some(r_inverse(r_primitive(at,0,1)),c_primitive(package,0)))"),
         syntactic_element_factory.parse_concept("c_not(c_all(r_inverse(r_primitive(at,0,1)),c_equal(r_primitive(at,0,1),r_primitive(at_g,0,1))))")
     };
-    std::vector<Role> required_role_features = {
+    std::vector<std::shared_ptr<const Role>> required_role_features = {
 
     };
     std::vector<BooleanDenotations*> required_boolean_denotations;
@@ -106,8 +106,8 @@ TEST(DLPTests, GeneratorDeliveryTest) {
             const auto& generated_denotations = generated_boolean_denotations[j];
             if (required_denotations == generated_denotations) {
                 found = true;
-                std::cout << "required: " << required_boolean_features[i].compute_repr() << "\n"
-                          << "generated: " << generated_boolean_features[j].compute_repr() << "\n";
+                std::cout << "required: " << required_boolean_features[i]->compute_repr() << "\n"
+                          << "generated: " << generated_boolean_features[j]->compute_repr() << "\n";
             }
         }
         EXPECT_EQ(found, true);
@@ -119,8 +119,8 @@ TEST(DLPTests, GeneratorDeliveryTest) {
             const auto& generated_denotations = generated_numerical_denotations[j];
             if (required_denotations == generated_denotations) {
                 found = true;
-                std::cout << "required: " << required_numerical_features[i].compute_repr() << "\n"
-                          << "generated: " << generated_numerical_features[j].compute_repr() << "\n";
+                std::cout << "required: " << required_numerical_features[i]->compute_repr() << "\n"
+                          << "generated: " << generated_numerical_features[j]->compute_repr() << "\n";
             }
         }
         EXPECT_EQ(found, true);
@@ -132,8 +132,8 @@ TEST(DLPTests, GeneratorDeliveryTest) {
             const auto& generated_denotations = generated_concept_denotations[j];
             if (required_denotations == generated_denotations) {
                 found = true;
-                std::cout << "required: " << required_concept_features[i].compute_repr() << "\n"
-                          << "generated: " << generated_concept_features[j].compute_repr() << "\n";
+                std::cout << "required: " << required_concept_features[i]->compute_repr() << "\n"
+                          << "generated: " << generated_concept_features[j]->compute_repr() << "\n";
             }
         }
         EXPECT_EQ(found, true);
@@ -145,8 +145,8 @@ TEST(DLPTests, GeneratorDeliveryTest) {
             const auto& generated_denotations = generated_role_denotations[j];
             if (required_denotations == generated_denotations) {
                 found = true;
-                std::cout << "required: " << required_role_features[i].compute_repr() << "\n"
-                          << "generated: " << generated_role_features[j].compute_repr() << "\n";
+                std::cout << "required: " << required_role_features[i]->compute_repr() << "\n"
+                          << "generated: " << generated_role_features[j]->compute_repr() << "\n";
             }
         }
         EXPECT_EQ(found, true);

@@ -65,8 +65,8 @@ int main(int argc, char** argv) {
         time_limit,
         feature_limit);
 
-    std::vector<core::Boolean> boolean_features;
-    std::vector<core::Numerical> numerical_features;
+    std::vector<std::shared_ptr<const core::Boolean>> boolean_features;
+    std::vector<std::shared_ptr<const core::Numerical>> numerical_features;
     for (const auto& repr : feature_reprs) {
         if (repr.substr(0, 2) == "b_") {
             boolean_features.push_back(syntactic_element_factory.parse_boolean(repr));

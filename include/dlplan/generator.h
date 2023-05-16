@@ -24,7 +24,7 @@ namespace dlplan::generator {
  */
 class FeatureGenerator {
 private:
-    utils::pimpl<FeatureGeneratorImpl> m_pImpl;
+    dlplan::utils::pimpl<FeatureGeneratorImpl> m_pImpl;
 
 public:
     FeatureGenerator();

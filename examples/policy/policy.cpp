@@ -16,14 +16,11 @@ int main() {
     vocabulary_info->add_predicate("unary", 1);
 
     dlplan::core::SyntacticElementFactory factory(vocabulary_info);
-    dlplan::core::Boolean boolean = factory.parse_boolean("b_empty(c_primitive(unary,0))");
-    dlplan::core::Numerical numerical = factory.parse_numerical("n_count(c_primitive(unary,0))");
+    std::shared_ptr<const Boolean> b = factory.parse_boolean("b_empty(c_primitive(unary,0))");
+    std::shared_ptr<const Numerical> n = factory.parse_numerical("n_count(c_primitive(unary,0))");
 
     // Construct the empty policy.
     PolicyBuilder builder;
-    // Add features.
-    std::shared_ptr<const Boolean> b = builder.add_boolean_feature(boolean);
-    std::shared_ptr<const Numerical> n = builder.add_numerical_feature(numerical);
     // Add conditions and effects the rule.
     std::shared_ptr<const BaseCondition> b_neg_condition_0 = builder.add_neg_condition(b);
     std::shared_ptr<const BaseEffect> b_bot_effect_0 = builder.add_bot_effect(b);

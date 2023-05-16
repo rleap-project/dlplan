@@ -73,14 +73,6 @@ PolicyBuilder& PolicyBuilder::operator=(PolicyBuilder&& other) {
 
 PolicyBuilder::~PolicyBuilder() = default;
 
-std::shared_ptr<const core::Boolean> PolicyBuilder::add_boolean_feature(core::Boolean boolean) {
-    return m_pImpl->add_boolean_feature(boolean);
-}
-
-std::shared_ptr<const core::Numerical> PolicyBuilder::add_numerical_feature(core::Numerical numerical) {
-    return m_pImpl->add_numerical_feature(numerical);
-}
-
 std::shared_ptr<const BaseCondition> PolicyBuilder::add_pos_condition(std::shared_ptr<const core::Boolean> b) {
     return m_pImpl->add_pos_condition(b);
 }

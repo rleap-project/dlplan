@@ -24,9 +24,6 @@ class PolicyBuilderImpl {
 private:
     Caches m_caches;
 
-    Booleans m_booleans;
-    Numericals m_numericals;
-
     Conditions m_conditions;
     Effects m_effects;
 
@@ -35,9 +32,6 @@ private:
     Policies m_policies;
 
 public:
-    std::shared_ptr<const core::Boolean> add_boolean_feature(core::Boolean boolean);
-    std::shared_ptr<const core::Numerical> add_numerical_feature(core::Numerical numerical);
-
     std::shared_ptr<const BaseCondition> add_pos_condition(std::shared_ptr<const core::Boolean> b);
     std::shared_ptr<const BaseCondition> add_neg_condition(std::shared_ptr<const core::Boolean> b);
     std::shared_ptr<const BaseCondition> add_gt_condition(std::shared_ptr<const core::Numerical> n);
