@@ -3,6 +3,8 @@
 
 #include "../../../../include/dlplan/core.h"
 
+#include "../../../utils/collections.h"
+
 #include <sstream>
 
 using namespace std::string_literals;

@@ -24,6 +24,10 @@ namespace dlplan::core {
     class State;
     class ConceptDenotation;
     class RoleDenotation;
+    class Concept;
+    class Role;
+    class Boolean;
+    class Numerical;
 
     using Name_Vec = std::vector<std::string>;
     using Index_Vec = std::vector<int>;
