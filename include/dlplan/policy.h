@@ -39,7 +39,7 @@ namespace dlplan::policy {
 /**
  * All different kinds of conditions.
  */
-class BaseCondition : public utils::Cachable {
+class BaseCondition : public dlplan::utils::Cachable {
 private:
     std::shared_ptr<const core::BaseElement> m_base_feature;
     int m_index;
@@ -85,7 +85,7 @@ public:
 /**
  * All different kinds of effects.
  */
-class BaseEffect : public utils::Cachable {
+class BaseEffect : public dlplan::utils::Cachable {
 private:
     std::shared_ptr<const core::BaseElement> m_base_feature;
     int m_index;
@@ -132,7 +132,7 @@ public:
  * A rule over Boolean and numerical features has form C -> E
  * where C is set of feature conditions and E is set of feature effects
  */
-class Rule : public utils::Cachable {
+class Rule : public dlplan::utils::Cachable {
 private:
     Conditions m_conditions;
     Effects m_effects;
@@ -181,7 +181,7 @@ public:
 /**
  * A policy is a set of rules over Boolean and numerical features.
  */
-class Policy : public utils::Cachable {
+class Policy : public dlplan::utils::Cachable {
 private:
     Booleans m_booleans;
     Numericals m_numericals;
@@ -247,7 +247,7 @@ public:
 */
 class PolicyBuilder {
 private:
-    utils::pimpl<PolicyBuilderImpl> m_pImpl;
+    dlplan::utils::pimpl<PolicyBuilderImpl> m_pImpl;
 
 public:
     PolicyBuilder();
@@ -260,16 +260,16 @@ public:
     /**
      * Uniquely adds a condition (resp. effect) and returns it.
      */
-    std::shared_ptr<const BaseCondition> add_pos_condition(std::shared_ptr<const core::Boolean> b);
-    std::shared_ptr<const BaseCondition> add_neg_condition(std::shared_ptr<const core::Boolean> b);
-    std::shared_ptr<const BaseCondition> add_gt_condition(std::shared_ptr<const core::Numerical> n);
-    std::shared_ptr<const BaseCondition> add_eq_condition(std::shared_ptr<const core::Numerical> n);
-    std::shared_ptr<const BaseEffect> add_pos_effect(std::shared_ptr<const core::Boolean> b);
-    std::shared_ptr<const BaseEffect> add_neg_effect(std::shared_ptr<const core::Boolean> b);
-    std::shared_ptr<const BaseEffect> add_bot_effect(std::shared_ptr<const core::Boolean> b);
-    std::shared_ptr<const BaseEffect> add_inc_effect(std::shared_ptr<const core::Numerical> n);
-    std::shared_ptr<const BaseEffect> add_dec_effect(std::shared_ptr<const core::Numerical> n);
-    std::shared_ptr<const BaseEffect> add_bot_effect(std::shared_ptr<const core::Numerical> n);
+    std::shared_ptr<const BaseCondition> add_pos_condition(const std::shared_ptr<const core::Boolean>& boolean);
+    std::shared_ptr<const BaseCondition> add_neg_condition(const std::shared_ptr<const core::Boolean>& boolean);
+    std::shared_ptr<const BaseCondition> add_gt_condition(const std::shared_ptr<const core::Numerical>& numerical);
+    std::shared_ptr<const BaseCondition> add_eq_condition(const std::shared_ptr<const core::Numerical>& numerical);
+    std::shared_ptr<const BaseEffect> add_pos_effect(const std::shared_ptr<const core::Boolean>& boolean);
+    std::shared_ptr<const BaseEffect> add_neg_effect(const std::shared_ptr<const core::Boolean>& boolean);
+    std::shared_ptr<const BaseEffect> add_bot_effect(const std::shared_ptr<const core::Boolean>& boolean);
+    std::shared_ptr<const BaseEffect> add_inc_effect(const std::shared_ptr<const core::Numerical>& numerical);
+    std::shared_ptr<const BaseEffect> add_dec_effect(const std::shared_ptr<const core::Numerical>& numerical);
+    std::shared_ptr<const BaseEffect> add_bot_effect(const std::shared_ptr<const core::Numerical>& numerical);
 
     /**
      * Uniquely adds a rule and returns it.
@@ -308,7 +308,7 @@ public:
  */
 class PolicyReader {
 private:
-    utils::pimpl<PolicyReaderImpl> m_pImpl;
+    dlplan::utils::pimpl<PolicyReaderImpl> m_pImpl;
 
 public:
     PolicyReader();
@@ -325,7 +325,7 @@ public:
  * PolicyWriter for writing general policy to bytestream.
  */
 class PolicyWriter {
-    utils::pimpl<PolicyWriterImpl> m_pImpl;
+    dlplan::utils::pimpl<PolicyWriterImpl> m_pImpl;
 
 public:
     PolicyWriter();
