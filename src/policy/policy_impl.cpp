@@ -122,13 +122,13 @@ std::string Policy::compute_repr() const {
 std::string Policy::str() const {
     std::stringstream ss;
     ss << "(:policy\n";
-    ss << "(:boolean_features ";
+    ss << "(:booleans ";
     for (const auto& boolean : m_booleans) {
         ss << "(" << boolean->get_index() << " \"" << boolean->compute_repr() << "\")";
         if (boolean != *m_booleans.rbegin()) ss << " ";
     }
     ss << ")\n";
-    ss << "(:numerical_features ";
+    ss << "(:numericals ";
     for (const auto& numerical : m_numericals) {
         ss << "(" << numerical->get_index() << " \"" << numerical->compute_repr() << "\")";
         if (numerical != *m_numericals.rbegin()) ss << " ";

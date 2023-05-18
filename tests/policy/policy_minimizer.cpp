@@ -11,15 +11,19 @@ using namespace dlplan::policy;
 TEST(DLPTests, StructuralMinimization) {
     std::string policy_textual =
         "(:policy\n"
-        "(:rule (:conditions (:c_b_pos \"b_empty(r_primitive(at,0,1))\") (:c_b_pos \"b_empty(c_primitive(package, 0))\") (:c_n_gt \"n_count(r_primitive(at,0,1))\") (:c_n_gt \"n_count(c_primitive(package, 0))\")) (:effects (:e_b_neg \"b_empty(r_primitive(at,0,1))\") (:e_b_neg \"b_empty(c_primitive(package, 0))\") (:e_n_dec \"n_count(r_primitive(at,0,1))\")))\n"  // 1) rule 1 and rule 2 can be merged by condition
-        "(:rule (:conditions (:c_b_pos \"b_empty(r_primitive(at,0,1))\") (:c_b_pos \"b_empty(c_primitive(package, 0))\") (:c_n_gt \"n_count(r_primitive(at,0,1))\") (:c_n_eq \"n_count(c_primitive(package, 0))\")) (:effects (:e_b_neg \"b_empty(r_primitive(at,0,1))\") (:e_b_neg \"b_empty(c_primitive(package, 0))\") (:e_n_dec \"n_count(r_primitive(at,0,1))\")))\n"
-        "(:rule (:conditions (:c_b_pos \"b_empty(r_primitive(at,0,1))\") (:c_b_pos \"b_empty(c_primitive(package, 0))\") (:c_n_gt \"n_count(r_primitive(at,0,1))\"))             (:effects (:e_b_bot \"b_empty(c_primitive(package,0))\") (:e_b_neg \"b_empty(c_primitive(package, 0))\") (:e_n_dec \"n_count(r_primitive(at,0,1))\")))\n"
-        "(:rule (:conditions (:c_b_pos \"b_empty(r_primitive(at,0,1))\") (:c_b_pos \"b_empty(c_primitive(package, 0))\") (:c_n_gt \"n_count(r_primitive(at,0,1))\"))             (:effects (:e_b_pos \"b_empty(c_primitive(package,0))\") (:e_b_neg \"b_empty(c_primitive(package, 0))\") (:e_n_dec \"n_count(r_primitive(at,0,1))\")))\n"  // 2) after 1) we can merge by effects
-        "(:rule (:conditions (:c_b_pos \"b_empty(r_primitive(at,0,1))\") (:c_b_pos \"b_empty(c_primitive(package, 0))\") (:c_n_gt \"n_count(r_primitive(at,0,1))\"))             (:effects (:e_n_dec \"n_count(r_primitive(at,0,1))\") (:e_b_neg \"b_empty(c_primitive(package, 0))\")              (:e_n_dec \"n_count(c_primitive(package, 0))\")))\n"  // 3) after 2) we can removed dominated rule
+        "(:booleans (0 \"b_empty(r_primitive(at,0,1))\") (1 \"b_empty(c_primitive(package, 0))\"))\n"
+        "(:numericals (0 \"n_count(r_primitive(at,0,1))\") (1 \"n_count(c_primitive(package, 0))\"))\n"
+        "(:rule (:conditions (:c_b_pos 0) (:c_b_pos 1) (:c_n_gt 0) (:c_n_gt 1)) (:effects (:e_b_neg 0) (:e_b_neg 1) (:e_n_dec 0)))\n"  // 1) rule 1 and rule 2 can be merged by condition
+        "(:rule (:conditions (:c_b_pos 0) (:c_b_pos 1) (:c_n_gt 0) (:c_n_eq 1)) (:effects (:e_b_neg 0) (:e_b_neg 1) (:e_n_dec 0)))\n"
+        "(:rule (:conditions (:c_b_pos 0) (:c_b_pos 1) (:c_n_gt 0))             (:effects (:e_b_bot 0) (:e_b_neg 1) (:e_n_dec 0)))\n"
+        "(:rule (:conditions (:c_b_pos 0) (:c_b_pos 1) (:c_n_gt 0))             (:effects (:e_b_pos 0) (:e_b_neg 1) (:e_n_dec 0)))\n"  // 2) after 1) we can merge by effects
+        "(:rule (:conditions (:c_b_pos 0) (:c_b_pos 1) (:c_n_gt 0))             (:effects (:e_n_dec 0) (:e_b_neg 1)              (:e_n_dec 1)))\n"  // 3) after 2) we can removed dominated rule
         ")";
     std::string minimized_policy_textual =
         "(:policy\n"
-        "(:rule (:conditions (:c_b_pos \"b_empty(c_primitive(package,0))\") (:c_b_pos \"b_empty(r_primitive(at,0,1))\") (:c_n_gt \"n_count(r_primitive(at,0,1))\")) (:effects (:e_b_neg \"b_empty(c_primitive(package,0))\") (:e_n_dec \"n_count(r_primitive(at,0,1))\")))\n"
+        "(:booleans (0 \"b_empty(c_primitive(package,0))\") (1 \"b_empty(r_primitive(at,0,1))\"))\n"
+        "(:numericals (0 \"n_count(r_primitive(at,0,1))\"))\n"
+        "(:rule (:conditions (:c_b_pos 0) (:c_b_pos 1) (:c_n_gt 0)) (:effects (:e_b_neg 0) (:e_n_dec 0)))\n"
         ")";
 
     auto vocabulary_info = gripper::construct_vocabulary_info();
@@ -39,14 +43,18 @@ TEST(DLPTests, StructuralMinimization) {
 TEST(DLPTests, StructuralMinimization2) {
     std::string policy_textual =
         "(:policy\n"
-        "(:rule (:conditions (:c_b_pos \"b_empty(r_primitive(at,0,1))\")) (:effects (:e_b_pos \"b_empty(r_primitive(at,0,1))\")))\n"
-        "(:rule (:conditions (:c_b_neg \"b_empty(r_primitive(at,0,1))\")) (:effects (:e_b_pos \"b_empty(r_primitive(at,0,1))\")))\n"
-        "(:rule (:conditions (:c_b_pos \"b_empty(r_primitive(at,0,1))\")) (:effects (:e_b_neg \"b_empty(r_primitive(at,0,1))\")))\n"
+        "(:booleans (0 \"b_empty(r_primitive(at,0,1))\"))\n"
+        "(:numericals )\n"
+        "(:rule (:conditions (:c_b_pos 0)) (:effects (:e_b_pos 0)))\n"
+        "(:rule (:conditions (:c_b_neg 0)) (:effects (:e_b_pos 0)))\n"
+        "(:rule (:conditions (:c_b_pos 0)) (:effects (:e_b_neg 0)))\n"
         ")";
     std::string minimized_policy_textual =
         "(:policy\n"
-        "(:rule (:conditions ) (:effects (:e_b_pos \"b_empty(r_primitive(at,0,1))\")))\n"
-        "(:rule (:conditions (:c_b_pos \"b_empty(r_primitive(at,0,1))\")) (:effects ))\n"
+        "(:booleans (0 \"b_empty(r_primitive(at,0,1))\"))\n"
+        "(:numericals )\n"
+        "(:rule (:conditions ) (:effects (:e_b_pos 0)))\n"
+        "(:rule (:conditions (:c_b_pos 0)) (:effects ))\n"
         ")";
 
     auto vocabulary_info = gripper::construct_vocabulary_info();
@@ -66,15 +74,19 @@ TEST(DLPTests, StructuralMinimization2) {
 TEST(DLPTests, StructuralMinimization3) {
     std::string policy_textual =
         "(:policy\n"
-        "(:rule (:conditions (:c_n_gt \"n_count(c_primitive(clear,0))\") (:c_b_pos \"b_empty(r_and(r_primitive(on,0,1),r_primitive(on_g,0,1)))\")) (:effects (:e_n_bot \"n_count(c_primitive(clear,0))\") (:e_b_neg \"b_empty(r_and(r_primitive(on,0,1),r_primitive(on_g,0,1)))\")))\n"
-        "(:rule (:conditions (:c_n_gt \"n_count(c_primitive(clear,0))\") (:c_b_pos \"b_empty(r_and(r_primitive(on,0,1),r_primitive(on_g,0,1)))\")) (:effects (:e_n_dec \"n_count(c_primitive(clear,0))\") (:e_b_neg \"b_empty(r_and(r_primitive(on,0,1),r_primitive(on_g,0,1)))\")))\n"
-        "(:rule (:conditions (:c_n_gt \"n_count(c_primitive(clear,0))\") (:c_b_pos \"b_empty(r_and(r_primitive(on,0,1),r_primitive(on_g,0,1)))\")) (:effects (:e_n_inc \"n_count(c_primitive(clear,0))\") (:e_b_bot \"b_empty(r_and(r_primitive(on,0,1),r_primitive(on_g,0,1)))\")))\n"
-        "(:rule (:conditions (:c_n_gt \"n_count(c_primitive(clear,0))\") (:c_b_pos \"b_empty(r_and(r_primitive(on,0,1),r_primitive(on_g,0,1)))\")) (:effects (:e_n_inc \"n_count(c_primitive(clear,0))\") (:e_b_neg \"b_empty(r_and(r_primitive(on,0,1),r_primitive(on_g,0,1)))\")))\n"
+        "(:booleans (0 \"b_empty(r_and(r_primitive(on,0,1),r_primitive(on_g,0,1)))\"))\n"
+        "(:numericals (0 \"n_count(c_primitive(clear,0))\"))\n"
+        "(:rule (:conditions (:c_n_gt 0) (:c_b_pos 0)) (:effects (:e_n_bot 0) (:e_b_neg 0)))\n"
+        "(:rule (:conditions (:c_n_gt 0) (:c_b_pos 0)) (:effects (:e_n_dec 0) (:e_b_neg 0)))\n"
+        "(:rule (:conditions (:c_n_gt 0) (:c_b_pos 0)) (:effects (:e_n_inc 0) (:e_b_bot 0)))\n"
+        "(:rule (:conditions (:c_n_gt 0) (:c_b_pos 0)) (:effects (:e_n_inc 0) (:e_b_neg 0)))\n"
         ")";
     std::string minimized_policy_textual =
         "(:policy\n"
-        "(:rule (:conditions (:c_n_gt \"n_count(c_primitive(clear,0))\") (:c_b_pos \"b_empty(r_and(r_primitive(on,0,1),r_primitive(on_g,0,1)))\")) (:effects (:e_b_neg \"b_empty(r_and(r_primitive(on,0,1),r_primitive(on_g,0,1)))\")))\n"
-        "(:rule (:conditions (:c_n_gt \"n_count(c_primitive(clear,0))\") (:c_b_pos \"b_empty(r_and(r_primitive(on,0,1),r_primitive(on_g,0,1)))\")) (:effects (:e_n_inc \"n_count(c_primitive(clear,0))\")))\n"
+        "(:booleans (0 \"b_empty(r_and(r_primitive(on,0,1),r_primitive(on_g,0,1)))\"))\n"
+        "(:numericals (0 \"n_count(c_primitive(clear,0))\"))\n"
+        "(:rule (:conditions (:c_n_gt 0) (:c_b_pos 0)) (:effects (:e_b_neg 0)))\n"
+        "(:rule (:conditions (:c_n_gt 0) (:c_b_pos 0)) (:effects (:e_n_inc 0)))\n"
         ")";
 
     auto vocabulary_info = gripper::construct_blocks_vocabulary_info();
@@ -94,14 +106,18 @@ TEST(DLPTests, StructuralMinimization3) {
 TEST(DLPTests, StructuralMinimization4) {
     std::string policy_textual =
         "(:policy\n"
-        "(:rule (:conditions (:c_n_eq \"n_count(c_primitive(clear,0))\")) (:effects (:e_n_inc \"n_count(c_primitive(clear,0))\")))\n"
-        "(:rule (:conditions (:c_n_gt \"n_count(c_primitive(clear,0))\")) (:effects (:e_n_dec \"n_count(c_primitive(clear,0))\")))\n"
-        "(:rule (:conditions (:c_n_gt \"n_count(c_primitive(clear,0))\")) (:effects (:e_n_inc \"n_count(c_primitive(clear,0))\")))\n"
+        "(:booleans )\n"
+        "(:numericals (0 \"n_count(c_primitive(clear,0))\"))\n"
+        "(:rule (:conditions (:c_n_eq 0)) (:effects (:e_n_inc 0)))\n"
+        "(:rule (:conditions (:c_n_gt 0)) (:effects (:e_n_dec 0)))\n"
+        "(:rule (:conditions (:c_n_gt 0)) (:effects (:e_n_inc 0)))\n"
         ")";
     std::string minimized_policy_textual =
         "(:policy\n"
-        "(:rule (:conditions (:c_n_gt \"n_count(c_primitive(clear,0))\")) (:effects (:e_n_dec \"n_count(c_primitive(clear,0))\")))\n"
-        "(:rule (:conditions ) (:effects (:e_n_inc \"n_count(c_primitive(clear,0))\")))\n"
+        "(:booleans )\n"
+        "(:numericals (0 \"n_count(c_primitive(clear,0))\"))\n"
+        "(:rule (:conditions (:c_n_gt 0)) (:effects (:e_n_dec 0)))\n"
+        "(:rule (:conditions ) (:effects (:e_n_inc 0)))\n"
         ")";
     auto vocabulary_info = gripper::construct_blocks_vocabulary_info();
     auto syntactic_element_factory = construct_syntactic_element_factory(vocabulary_info);
@@ -120,11 +136,15 @@ TEST(DLPTests, StructuralMinimization4) {
 TEST(DLPTests, EmpiricalMinimization) {
     std::string policy_textual =
         "(:policy\n"
-        "(:rule (:conditions (:c_n_gt \"n_count(c_primitive(holding,0))\") (:c_n_gt \"n_count(c_equal(r_primitive(at,0,1),r_primitive(at_g,0,1)))\") (:c_n_gt \"n_count(r_and(r_primitive(at,0,1),r_primitive(at_g,0,1)))\")) (:effects (:e_n_inc \"n_count(c_primitive(holding,0))\") (:e_n_bot \"n_count(c_equal(r_primitive(at,0,1),r_primitive(at_g,0,1)))\") (:e_n_bot \"n_count(r_and(r_primitive(at,0,1),r_primitive(at_g,0,1)))\"))))\n"
+        "(:booleans )\n"
+        "(:numericals (0 \"n_count(c_primitive(holding,0))\") (1 \"n_count(c_equal(r_primitive(at,0,1),r_primitive(at_g,0,1)))\") (2 \"n_count(r_and(r_primitive(at,0,1),r_primitive(at_g,0,1)))\"))\n"
+        "(:rule (:conditions (:c_n_gt 0) (:c_n_gt 1) (:c_n_gt 2)) (:effects (:e_n_inc 0) (:e_n_bot 1) (:e_n_bot 2))))\n"
         ")";
     std::string minimized_policy_textual =
         "(:policy\n"
-        "(:rule (:conditions ) (:effects (:e_n_inc \"n_count(c_primitive(holding,0))\")))\n"
+        "(:booleans )\n"
+        "(:numericals (0 \"n_count(c_primitive(holding,0))\"))\n"
+        "(:rule (:conditions ) (:effects (:e_n_inc 0)))\n"
         ")";
 
     auto vocabulary_info = gripper::construct_vocabulary_info();
