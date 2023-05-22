@@ -2,7 +2,6 @@
 
 import dlplan
 
-
 def construct_vocabulary_info():
     v = dlplan.core.VocabularyInfo()
     # Add predicates and constants of the domain.

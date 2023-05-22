@@ -1,2 +1,1 @@
-# bindings
-from .core import VocabularyInfo
+from _dlplan import VocabularyInfo
