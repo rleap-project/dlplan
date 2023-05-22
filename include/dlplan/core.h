@@ -122,7 +122,6 @@ public:
             int m_num_objects;
             int m_index;
 
-        private:
             void seek_next();
     };
 
@@ -158,6 +157,11 @@ public:
 
     std::size_t hash() const;
 
+    /**
+     * @brief Get a string representation of the object.
+     *
+     * @return A string representation of the object.
+     */
     std::string str() const;
 
     int get_num_objects() const;
@@ -716,7 +720,6 @@ public:
      * If description is incorrect, throw an error with human readable information.
      */
     std::shared_ptr<const Boolean> parse_boolean(const std::string &description);
-
 
     std::shared_ptr<const Boolean> make_empty_boolean(const std::shared_ptr<const Concept>& concept);
     std::shared_ptr<const Boolean> make_empty_boolean(const std::shared_ptr<const Role>& role);
