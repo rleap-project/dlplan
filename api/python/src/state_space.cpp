@@ -8,7 +8,6 @@
 #define MACRO_STRINGIFY(x) STRINGIFY(x)
 
 #include "../../../include/dlplan/state_space.h"
-#include "../../../src/state_space/reader.h"
 
 
 namespace py = pybind11;

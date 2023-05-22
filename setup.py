@@ -63,8 +63,11 @@ setup(
     description="A library for using description logics features in planning",
     long_description="",
     install_requires=["pybind11==2.10.4", "pybind11-global==2.10.4", "state_space_generator==0.1.7", "cmake>=3.16.3"],
-    packages=['dlplan'],
+    packages=["dlplan"],
     package_dir={"": "api/python/src"},
+    package_data={
+        "": ["*.pyi"],
+    },
     ext_modules=[CMakeExtension("_dlplan")],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
