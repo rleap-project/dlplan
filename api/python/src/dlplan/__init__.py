@@ -1,2 +1,4 @@
-from _dlplan import *
-from _dlplan import VocabularyInfo
+# For backward compatibility
+# from _dlplan import *
+
+from . import core

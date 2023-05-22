@@ -12,4 +12,3 @@ recursive-include experiments/ *
 recursive-include include/ *
 recursive-include src/ *
 recursive-include tests/ *
-

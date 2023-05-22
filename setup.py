@@ -4,7 +4,7 @@ import sys
 import subprocess
 from pathlib import Path
 
-from setuptools import setup, Extension
+from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
 __version__ = "0.2.15"
@@ -63,7 +63,7 @@ setup(
     description="A library for using description logics features in planning",
     long_description="",
     install_requires=["pybind11==2.10.4", "pybind11-global==2.10.4", "state_space_generator==0.1.7", "cmake>=3.16.3"],
-    packages=["dlplan"],
+    packages=find_packages(where="api/python/src"),
     package_dir={"": "api/python/src"},
     package_data={
         "": ["*.pyi"],

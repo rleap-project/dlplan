@@ -4,7 +4,7 @@ import dlplan
 
 
 def construct_vocabulary_info():
-    v = dlplan.VocabularyInfo()
+    v = dlplan.core.VocabularyInfo()
     # Add predicates and constants of the domain.
     # Note that there are no constants in Blocksworld.
     v.add_predicate("on", 2)
