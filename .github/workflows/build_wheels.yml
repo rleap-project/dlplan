@@ -1,6 +1,10 @@
 name: Build Wheels
 
-on: [push]
+on: 
+  push:
+    branches:
+      - main
+      - master
 
 jobs:
   build_wheels:
@@ -9,6 +13,8 @@ jobs:
       matrix:
         os: [ubuntu-latest]
 
+    if: github.repository_owner == 'rleap-project'
+    
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2

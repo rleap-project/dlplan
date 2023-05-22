@@ -1,10 +1,16 @@
 name: Build Source Distribution
 
-on: [push]
+on: 
+  push:
+    branches:
+      - main
+      - master
 
 jobs:
   build_wheels:
     runs-on: ubuntu-latest
+
+    if: github.repository_owner == 'rleap-project'
 
     steps:
     - name: Checkout repository
