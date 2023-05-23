@@ -11,11 +11,9 @@ namespace py = pybind11;
 using namespace dlplan::generator;
 
 
-void init_generator(py::module_ &m) {
-    py::class_<FeatureGenerator, std::shared_ptr<FeatureGenerator>>(m, "FeatureGenerator")
+void init_generator(py::module_ &m_generator) {
+    py::class_<FeatureGenerator, std::shared_ptr<FeatureGenerator>>(m_generator, "FeatureGenerator")
         .def(py::init<>())
-        .def("__copy__", [](const FeatureGenerator& generator, py::object){ return FeatureGenerator(generator); })
-        .def("__deepcopy__", [](const FeatureGenerator& generator, py::object){ return FeatureGenerator(generator); })
         .def("generate", &FeatureGenerator::generate, py::arg("factory"), py::arg("states"), py::arg("concept_complexity_limit") = 9, py::arg("role_complexity_limit") = 9, py::arg("boolean_complexity_limit") = 9, py::arg("count_numerical_complexity_limit") = 9, py::arg("distance_numerical_complexity_limit") = 9, py::arg("time_limit") = 3600, py::arg("feature_limit") = 10000)
         .def("set_generate_empty_boolean", &FeatureGenerator::set_generate_empty_boolean)
         .def("set_generate_inclusion_boolean", &FeatureGenerator::set_generate_inclusion_boolean)
@@ -49,7 +47,7 @@ void init_generator(py::module_ &m) {
         .def("set_generate_transitive_reflexive_closure_role", &FeatureGenerator::set_generate_transitive_reflexive_closure_role)
     ;
 
-    m.def("generate_features", generate_features,
+    m_generator.def("generate_features", generate_features,
         py::arg("factory"),
         py::arg("states"),
         py::arg("concept_complexity_limit") = 9,

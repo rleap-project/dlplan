@@ -15,8 +15,8 @@ using namespace dlplan::core;
 using namespace dlplan::policy;
 
 
-void init_policy(py::module_ &m) {
-    py::class_<BaseCondition, std::shared_ptr<BaseCondition>>(m, "BaseCondition")
+void init_policy(py::module_ &m_policy) {
+    py::class_<BaseCondition, std::shared_ptr<BaseCondition>>(m_policy, "BaseCondition")
         .def("__repr__", &BaseCondition::compute_repr)
         .def("__str__", &BaseCondition::str)
         .def("evaluate", py::overload_cast<const State&>(&BaseCondition::evaluate, py::const_))
@@ -30,7 +30,7 @@ void init_policy(py::module_ &m) {
         .def("get_numerical", &BaseCondition::get_numerical)
     ;
 
-    py::class_<BaseEffect, std::shared_ptr<BaseEffect>>(m, "BaseEffect")
+    py::class_<BaseEffect, std::shared_ptr<BaseEffect>>(m_policy, "BaseEffect")
         .def("__repr__", &BaseEffect::compute_repr)
         .def("__str__", &BaseEffect::str)
         .def("evaluate", py::overload_cast<const State&, const State&>(&BaseEffect::evaluate, py::const_))
@@ -44,7 +44,7 @@ void init_policy(py::module_ &m) {
         .def("get_numerical", &BaseEffect::get_numerical)
     ;
 
-    py::class_<Rule, std::shared_ptr<Rule>>(m, "Rule")
+    py::class_<Rule, std::shared_ptr<Rule>>(m_policy, "Rule")
         .def("__repr__", &Rule::compute_repr)
         .def("__str__", &Rule::str)
         .def("evaluate_conditions", py::overload_cast<const State&>(&Rule::evaluate_conditions, py::const_))
@@ -59,7 +59,7 @@ void init_policy(py::module_ &m) {
         .def("copy_to_builder", &Rule::copy_to_builder)
     ;
 
-    py::class_<Policy, std::shared_ptr<Policy>>(m, "Policy")
+    py::class_<Policy, std::shared_ptr<Policy>>(m_policy, "Policy")
         .def("__repr__", &Policy::compute_repr)
         .def("__str__", &Policy::str)
         .def("evaluate_lazy", py::overload_cast<const State&, const State&>(&Policy::evaluate_lazy, py::const_))
@@ -76,7 +76,7 @@ void init_policy(py::module_ &m) {
         .def("copy_to_builder", &Policy::copy_to_builder)
     ;
 
-    py::class_<PolicyBuilder>(m, "PolicyBuilder")
+    py::class_<PolicyBuilder>(m_policy, "PolicyBuilder")
         .def(py::init<>())
         .def("add_pos_condition", &PolicyBuilder::add_pos_condition)
         .def("add_neg_condition", &PolicyBuilder::add_neg_condition)
@@ -92,18 +92,18 @@ void init_policy(py::module_ &m) {
         .def("add_policy", &PolicyBuilder::add_policy)
     ;
 
-    py::class_<PolicyMinimizer>(m, "PolicyMinimizer")
+    py::class_<PolicyMinimizer>(m_policy, "PolicyMinimizer")
         .def(py::init<>())
         .def("minimize", py::overload_cast<const std::shared_ptr<const Policy>&, PolicyBuilder&>(&PolicyMinimizer::minimize, py::const_))
         .def("minimize", py::overload_cast<const std::shared_ptr<const Policy>&, const StatePairs&, const StatePairs&, PolicyBuilder&>(&PolicyMinimizer::minimize, py::const_))
     ;
 
-    py::class_<PolicyReader>(m, "PolicyReader")
+    py::class_<PolicyReader>(m_policy, "PolicyReader")
         .def(py::init<>())
         .def("read", &PolicyReader::read)
     ;
 
-    py::class_<PolicyWriter>(m, "PolicyWriter")
+    py::class_<PolicyWriter>(m_policy, "PolicyWriter")
         .def(py::init<>())
         .def("write", &PolicyWriter::write)
     ;

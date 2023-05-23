@@ -23,12 +23,10 @@ struct GeneratorResultWrapper {
     std::shared_ptr<StateSpace> state_space;
 };
 
-void init_state_space(py::module_ &m) {
-    py::class_<StateSpace, std::shared_ptr<StateSpace>>(m, "StateSpace")
+void init_state_space(py::module_ &m_state_space) {
+    py::class_<StateSpace, std::shared_ptr<StateSpace>>(m_state_space, "StateSpace")
         .def(py::init<std::shared_ptr<const InstanceInfo>, StateMapping, StateIndex, AdjacencyList, StateIndicesSet>())
         .def(py::init<const StateSpace&, const StateIndicesSet&>())
-        .def("__copy__", [](const StateSpace& state_space, py::object){ return StateSpace(state_space); })
-        .def("__deepcopy__", [](const StateSpace& state_space, py::object){ return StateSpace(state_space); })
         .def("compute_distances", &StateSpace::compute_distances)
         .def("compute_goal_distances", &StateSpace::compute_goal_distances)
         .def("is_goal", &StateSpace::is_goal)
@@ -45,17 +43,17 @@ void init_state_space(py::module_ &m) {
         .def("get_instance_info", &StateSpace::get_instance_info)
     ;
 
-    py::enum_<GeneratorExitCode>(m, "GeneratorExitCode")
+    py::enum_<GeneratorExitCode>(m_state_space, "GeneratorExitCode")
         .value("COMPLETE", GeneratorExitCode::COMPLETE)
         .value("INCOMPLETE", GeneratorExitCode::INCOMPLETE)
         .value("FAIL", GeneratorExitCode::FAIL);
 
-    py::class_<GeneratorResultWrapper>(m, "GeneratorResult")
+    py::class_<GeneratorResultWrapper>(m_state_space, "GeneratorResult")
         .def_readwrite("exit_code", &GeneratorResultWrapper::exit_code)
         .def_readwrite("state_space", &GeneratorResultWrapper::state_space)
     ;
 
-    m.def("generate_state_space", [](
+    m_state_space.def("generate_state_space", [](
         const std::string& domain_file,
         const std::string& instance_file,
         std::shared_ptr<const VocabularyInfo> vocabulary_info,

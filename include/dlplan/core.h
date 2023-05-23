@@ -93,6 +93,7 @@ namespace std {
 
 
 namespace dlplan::core {
+/// @brief Represents a set of objects from an instance.
 class ConceptDenotation {
 private:
     int m_num_objects;
@@ -153,15 +154,17 @@ public:
     bool intersects(const ConceptDenotation& other) const;
     bool is_subset_of(const ConceptDenotation& other) const;
 
+    /// @brief Compute and return a sparse and continuous
+    ///        representation of the objects in the set.
+    ///
+    /// @return A vector of indices of the objects in the set.
     std::vector<int> to_sorted_vector() const;
 
     std::size_t hash() const;
 
-    /**
-     * @brief Get a string representation of the object.
-     *
-     * @return A string representation of the object.
-     */
+    /// @brief Get a string representation of the object.
+    ///
+    /// @return A string representation of the object.
     std::string str() const;
 
     int get_num_objects() const;
