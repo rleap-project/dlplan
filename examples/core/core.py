@@ -16,7 +16,7 @@ def construct_vocabulary_info():
 
 
 def construct_instance_info(v):
-    i = dlplan.InstanceInfo(v)
+    i = dlplan.core.InstanceInfo(v)
     # Add dynamic atoms
     i.add_atom("on", ["a", "b"])
     i.add_atom("on", ["b", "a"])
@@ -41,7 +41,7 @@ def main():
     # 2. Initialize InstanceInfo
     i = construct_instance_info(v)
     # 3. Initialize SyntacticElementFactory
-    f = dlplan.SyntacticElementFactory(v)
+    f = dlplan.core.SyntacticElementFactory(v)
 
     # 4. Construct a state.
     atoms = i.get_atoms()
@@ -49,8 +49,8 @@ def main():
     a1 = atoms[1]
     a3 = atoms[3]
     a6 = atoms[6]
-    state = dlplan.State(i, [a0, a3, a6])
-    state2 = dlplan.State(i, [a1, a3, a6])
+    state = dlplan.core.State(i, [a0, a3, a6])
+    state2 = dlplan.core.State(i, [a1, a3, a6])
 
     # 5. Parse and evaluate elements.
     numerical = f.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))")
@@ -61,9 +61,9 @@ def main():
     print(f"repr: {boolean.compute_repr()}")
     print(f"value: {boolean.evaluate(state)}")
 
-    denotations_caches = dlplan.DenotationsCaches()
+    denotations_caches = dlplan.core.DenotationsCaches()
     concept = f.parse_concept("c_and(c_primitive(on_g,0),c_primitive(on,0))")
-    evaluations = concept.evaluate([state, state, state2], denotations_caches)
+    evaluations = concept.evaluate([state, state2], denotations_caches)
     for eval in evaluations:
         print(eval.to_sorted_vector())
 

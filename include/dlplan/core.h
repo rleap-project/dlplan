@@ -339,6 +339,38 @@ public:
 
 
 /**
+ * VocabularyInfo stores information related to the planning domain.
+ */
+class VocabularyInfo {
+private:
+    // we store static and dynamic predicates together.
+    std::unordered_map<std::string, int> m_predicate_name_to_index;
+    std::vector<Predicate> m_predicates;
+
+    std::unordered_map<std::string, int> m_constant_name_to_index;
+    std::vector<Constant> m_constants;
+
+public:
+    VocabularyInfo();
+    VocabularyInfo(const VocabularyInfo& other);
+    VocabularyInfo& operator=(const VocabularyInfo& other);
+    VocabularyInfo(VocabularyInfo&& other);
+    VocabularyInfo& operator=(VocabularyInfo&& other);
+    ~VocabularyInfo();
+
+    const Predicate& add_predicate(const std::string &name, int arity, bool is_static=false);
+    const Constant& add_constant(const std::string& name);
+
+    const std::vector<Predicate>& get_predicates() const;
+    const std::vector<Constant>& get_constants() const;
+
+    // needed for parsing.
+    const Predicate& get_predicate(const std::string& name) const;
+    const Constant& get_constant(const std::string& name) const;
+};
+
+
+/**
  * An Object belongs to a specific instance.
  */
 class Object {
@@ -400,80 +432,6 @@ public:
     int get_predicate_index() const;
     const std::vector<int>& get_object_indices() const;
     bool is_static() const;
-};
-
-
-class State {
-private:
-    std::shared_ptr<const InstanceInfo> m_instance_info;
-    Index_Vec m_atom_indices;
-    int m_index;
-
-public:
-    State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms, int index=-1);
-    State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_indices, int index=-1);
-    State(const State& other);
-    State& operator=(const State& other);
-    State(State&& other);
-    State& operator=(State&& other);
-    ~State();
-
-    bool operator==(const State& other) const;
-    bool operator!=(const State& other) const;
-
-    /**
-     * Computes string-like representation of the state.
-     */
-    std::string str() const;
-
-    /**
-     * Compute a 64-Bit hash value.
-     */
-    size_t hash() const;
-
-    /**
-     * Setters.
-     */
-    void set_index(int index);
-
-    /**
-     * Getters.
-     */
-    std::shared_ptr<const InstanceInfo> get_instance_info() const;
-    const Index_Vec& get_atom_indices() const;
-    int get_index() const;
-};
-
-
-/**
- * VocabularyInfo stores information related to the planning domain.
- */
-class VocabularyInfo {
-private:
-    // we store static and dynamic predicates together.
-    std::unordered_map<std::string, int> m_predicate_name_to_index;
-    std::vector<Predicate> m_predicates;
-
-    std::unordered_map<std::string, int> m_constant_name_to_index;
-    std::vector<Constant> m_constants;
-
-public:
-    VocabularyInfo();
-    VocabularyInfo(const VocabularyInfo& other);
-    VocabularyInfo& operator=(const VocabularyInfo& other);
-    VocabularyInfo(VocabularyInfo&& other);
-    VocabularyInfo& operator=(VocabularyInfo&& other);
-    ~VocabularyInfo();
-
-    const Predicate& add_predicate(const std::string &name, int arity, bool is_static=false);
-    const Constant& add_constant(const std::string& name);
-
-    const std::vector<Predicate>& get_predicates() const;
-    const std::vector<Constant>& get_constants() const;
-
-    // needed for parsing.
-    const Predicate& get_predicate(const std::string& name) const;
-    const Constant& get_constant(const std::string& name) const;
 };
 
 
@@ -541,6 +499,48 @@ public:
     // convenience functions.
     const Atom& get_atom(const std::string& name) const;
     const Object& get_object(const std::string& name) const;
+};
+
+
+class State {
+private:
+    std::shared_ptr<const InstanceInfo> m_instance_info;
+    Index_Vec m_atom_indices;
+    int m_index;
+
+public:
+    State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms, int index=-1);
+    State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_indices, int index=-1);
+    State(const State& other);
+    State& operator=(const State& other);
+    State(State&& other);
+    State& operator=(State&& other);
+    ~State();
+
+    bool operator==(const State& other) const;
+    bool operator!=(const State& other) const;
+
+    /**
+     * Computes string-like representation of the state.
+     */
+    std::string str() const;
+
+    /**
+     * Compute a 64-Bit hash value.
+     */
+    size_t hash() const;
+
+    /**
+     * Setters.
+     */
+    void set_index(int index);
+
+    /**
+     * Getters.
+     */
+    std::shared_ptr<const InstanceInfo> get_instance_info() const;
+    const Index_Vec& get_atom_indices() const;
+    int get_index() const;
 };
 
 
