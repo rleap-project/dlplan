@@ -4,7 +4,7 @@
 namespace dlplan::policy {
 
 BooleanCondition::BooleanCondition(std::shared_ptr<const core::Boolean> boolean)
-    : BaseCondition(boolean), m_boolean(boolean) { }
+    : BaseCondition(), m_boolean(boolean) { }
 
 std::shared_ptr<const core::Boolean> BooleanCondition::get_boolean() const {
     return m_boolean;
@@ -16,7 +16,7 @@ std::shared_ptr<const core::Numerical> BooleanCondition::get_numerical() const {
 
 
 NumericalCondition::NumericalCondition(std::shared_ptr<const core::Numerical> numerical)
-    : BaseCondition(numerical), m_numerical(numerical) { }
+    : BaseCondition(), m_numerical(numerical) { }
 
 std::shared_ptr<const core::Boolean> NumericalCondition::get_boolean() const {
     return nullptr;

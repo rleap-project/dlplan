@@ -41,11 +41,10 @@ namespace dlplan::policy {
  */
 class BaseCondition : public dlplan::utils::Cachable {
 private:
-    std::shared_ptr<const core::BaseElement> m_base_feature;
     int m_index;
 
 protected:
-    BaseCondition(std::shared_ptr<const core::BaseElement> base_feature);
+    BaseCondition();
 
 public:
     // Condition is not copieable because it must live in the cache.
@@ -81,11 +80,10 @@ public:
  */
 class BaseEffect : public dlplan::utils::Cachable {
 private:
-    std::shared_ptr<const core::BaseElement> m_base_feature;
     int m_index;
 
 protected:
-    BaseEffect(std::shared_ptr<const core::BaseElement> base_feature);
+    BaseEffect();
 
 public:
     // Effect is not copieable because it must live in the cache.
