@@ -141,14 +141,6 @@ std::string Policy::str() const {
     return ss.str();
 }
 
-std::shared_ptr<const Policy> Policy::copy_to_builder(PolicyBuilder& policy_builder) const {
-    Rules rules;
-    for (const auto& rule : m_rules) {
-        rules.insert(rule->copy_to_builder(policy_builder));
-    }
-    return policy_builder.add_policy(std::move(rules));
-}
-
 void Policy::set_index(int index) {
     m_index = index;
 }

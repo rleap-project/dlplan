@@ -46,8 +46,6 @@ public:
 
     std::string compute_repr() const override;
     std::string str() const override;
-
-    std::shared_ptr<const BaseEffect> copy_to_builder(PolicyBuilder& policy_builder) const override;
 };
 
 class NegativeBooleanEffect : public BooleanEffect {
@@ -59,8 +57,6 @@ public:
 
     std::string compute_repr() const override;
     std::string str() const override;
-
-    std::shared_ptr<const BaseEffect> copy_to_builder(PolicyBuilder& policy_builder) const override;
 };
 
 class UnchangedBooleanEffect : public BooleanEffect {
@@ -72,8 +68,6 @@ public:
 
     std::string compute_repr() const override;
     std::string str() const override;
-
-    std::shared_ptr<const BaseEffect> copy_to_builder(PolicyBuilder& policy_builder) const override;
 };
 
 class IncrementNumericalEffect : public NumericalEffect {
@@ -85,8 +79,6 @@ public:
 
     std::string compute_repr() const override;
     std::string str() const override;
-
-    std::shared_ptr<const BaseEffect> copy_to_builder(PolicyBuilder& policy_builder) const override;
 };
 
 class DecrementNumericalEffect : public NumericalEffect {
@@ -98,8 +90,6 @@ public:
 
     std::string compute_repr() const override;
     std::string str() const override;
-
-    std::shared_ptr<const BaseEffect> copy_to_builder(PolicyBuilder& policy_builder) const override;
 };
 
 class UnchangedNumericalEffect : public NumericalEffect {
@@ -111,8 +101,6 @@ public:
 
     std::string compute_repr() const override;
     std::string str() const override;
-
-    std::shared_ptr<const BaseEffect> copy_to_builder(PolicyBuilder& policy_builder) const override;
 };
 
 }

@@ -50,26 +50,6 @@ struct CacheEntry {
 };
 
 
-/**
- * Copies all objects to the given PolicyBuilder and returns newly constructed objects.
- */
-template<typename T>
-std::set<T> copy_to_builder(
-    const std::set<T>& old_objects,
-    PolicyBuilder& builder) {
-    std::set<T> new_objects;
-    std::transform(
-        old_objects.begin(),
-        old_objects.end(),
-        std::inserter(new_objects, new_objects.begin()),
-        [&builder](const auto& object){
-            return object->copy_to_builder(builder);
-        }
-    );
-    return new_objects;
-}
-
-
 static Rules compute_dominated_rules(
     const Rules& rules) {
     Rules dominated_rules;
@@ -344,7 +324,7 @@ static bool try_merge_numerical_effect(
 
 std::shared_ptr<const Policy> PolicyMinimizer::minimize(const std::shared_ptr<const Policy>& policy, PolicyBuilder& builder) const {
     // successively add simpler rules that are made up of existing rules
-    auto tmp_policy = policy->copy_to_builder(builder);
+    auto tmp_policy = builder.add_policy(Rules(policy->get_rules()));
     Rules rules = tmp_policy->get_rules();
     Rules rules_result = rules;
     Booleans booleans = tmp_policy->get_booleans();
@@ -372,9 +352,10 @@ std::shared_ptr<const Policy> PolicyMinimizer::minimize(const std::shared_ptr<co
         for (const auto& rule : current_policy->get_rules()) {
             for (const auto& condition : rule->get_conditions()) {
                 Rules rules;
-                rules.insert(builder.add_rule(
-                    copy_to_builder(utils::set_difference(rule->get_conditions(), {condition}), builder),
-                    copy_to_builder(rule->get_effects(), builder)));
+                rules.insert(
+                    builder.add_rule(
+                        utils::set_difference(rule->get_conditions(), {condition}), 
+                        Effects(rule->get_effects())));
                 auto tmp_policy = builder.add_policy(std::move(rules));
                 if (check_policy_matches_classification(*tmp_policy, true_state_pairs, false_state_pairs)) {
                     minimization_success = true;
@@ -387,9 +368,10 @@ std::shared_ptr<const Policy> PolicyMinimizer::minimize(const std::shared_ptr<co
             }
             for (const auto& effect : rule->get_effects()) {
                 Rules rules;
-                rules.insert(builder.add_rule(
-                    copy_to_builder(rule->get_conditions(), builder),
-                    copy_to_builder(utils::set_difference(rule->get_effects(), {effect}), builder)));
+                rules.insert(
+                    builder.add_rule(
+                        Conditions(rule->get_conditions()),
+                        utils::set_difference(rule->get_effects(), {effect})));
                 auto tmp_policy = builder.add_policy(std::move(rules));
                 if (check_policy_matches_classification(*tmp_policy, true_state_pairs, false_state_pairs)) {
                     minimization_success = true;

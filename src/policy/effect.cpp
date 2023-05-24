@@ -46,10 +46,6 @@ std::string PositiveBooleanEffect::str() const {
     return "(:e_b_pos " + std::to_string(m_boolean->get_index()) + ")";
 }
 
-std::shared_ptr<const BaseEffect> PositiveBooleanEffect::copy_to_builder(PolicyBuilder& policy_builder) const {
-    return policy_builder.add_pos_effect(m_boolean);
-}
-
 
 NegativeBooleanEffect::NegativeBooleanEffect(std::shared_ptr<const core::Boolean> boolean_feature)
     : BooleanEffect(boolean_feature) {}
@@ -68,10 +64,6 @@ std::string NegativeBooleanEffect::compute_repr() const{
 
 std::string NegativeBooleanEffect::str() const {
     return "(:e_b_neg " + std::to_string(m_boolean->get_index()) + ")";
-}
-
-std::shared_ptr<const BaseEffect> NegativeBooleanEffect::copy_to_builder(PolicyBuilder& policy_builder) const {
-    return policy_builder.add_neg_effect(m_boolean);
 }
 
 
@@ -94,10 +86,6 @@ std::string UnchangedBooleanEffect::str() const {
     return "(:e_b_bot " + std::to_string(m_boolean->get_index()) + ")";
 }
 
-std::shared_ptr<const BaseEffect> UnchangedBooleanEffect::copy_to_builder(PolicyBuilder& policy_builder) const {
-    return policy_builder.add_bot_effect(m_boolean);
-}
-
 
 IncrementNumericalEffect::IncrementNumericalEffect(std::shared_ptr<const core::Numerical> numerical_feature)
     : NumericalEffect(numerical_feature) {}
@@ -116,10 +104,6 @@ std::string IncrementNumericalEffect::compute_repr() const{
 
 std::string IncrementNumericalEffect::str() const {
     return "(:e_n_inc " + std::to_string(m_numerical->get_index()) + ")";
-}
-
-std::shared_ptr<const BaseEffect> IncrementNumericalEffect::copy_to_builder(PolicyBuilder& policy_builder) const {
-    return policy_builder.add_inc_effect(m_numerical);
 }
 
 
@@ -142,10 +126,6 @@ std::string DecrementNumericalEffect::str() const {
     return "(:e_n_dec " + std::to_string(m_numerical->get_index()) + ")";
 }
 
-std::shared_ptr<const BaseEffect> DecrementNumericalEffect::copy_to_builder(PolicyBuilder& policy_builder) const {
-    return policy_builder.add_dec_effect(m_numerical);
-}
-
 
 UnchangedNumericalEffect::UnchangedNumericalEffect(std::shared_ptr<const core::Numerical> numerical_feature)
     : NumericalEffect(numerical_feature) {}
@@ -164,10 +144,6 @@ std::string UnchangedNumericalEffect::compute_repr() const{
 
 std::string UnchangedNumericalEffect::str() const {
     return "(:e_n_bot " + std::to_string(m_numerical->get_index()) + ")";
-}
-
-std::shared_ptr<const BaseEffect> UnchangedNumericalEffect::copy_to_builder(PolicyBuilder& policy_builder) const {
-    return policy_builder.add_bot_effect(m_numerical);
 }
 
 }

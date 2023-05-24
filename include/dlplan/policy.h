@@ -63,11 +63,6 @@ public:
     virtual std::string str() const = 0;
 
     /**
-     * Adds the condition to the policy builder and returns it
-     */
-    virtual std::shared_ptr<const BaseCondition> copy_to_builder(PolicyBuilder& policy_builder) const = 0;
-
-    /**
      * Setters.
      */
     void set_index(int index);
@@ -75,7 +70,6 @@ public:
     /**
      * Getters.
      */
-    std::shared_ptr<const core::BaseElement> get_base_feature() const;
     virtual std::shared_ptr<const core::Boolean> get_boolean() const = 0;
     virtual std::shared_ptr<const core::Numerical> get_numerical() const = 0;
     int get_index() const;
@@ -109,11 +103,6 @@ public:
     virtual std::string str() const = 0;
 
     /**
-     * Adds the effect to the policy builder and returns it
-     */
-    virtual std::shared_ptr<const BaseEffect> copy_to_builder(PolicyBuilder& policy_builder) const = 0;
-
-    /**
      * Setters.
      */
     void set_index(int index);
@@ -122,7 +111,6 @@ public:
      * Getters.
      */
     int get_index() const;
-    std::shared_ptr<const core::BaseElement> get_base_feature() const;
     virtual std::shared_ptr<const core::Boolean> get_boolean() const = 0;
     virtual std::shared_ptr<const core::Numerical> get_numerical() const = 0;
 };
@@ -158,11 +146,6 @@ public:
     std::string compute_repr() const;
 
     std::string str() const;
-
-    /**
-     * Adds the rule to the policy builder and returns it
-     */
-    std::shared_ptr<const Rule> copy_to_builder(PolicyBuilder& policy_builder) const;
 
     /**
      * Setters.
@@ -223,11 +206,6 @@ public:
      * Returns a more readable string representation that is not necessarily canonical.
      */
     std::string str() const;
-
-    /**
-     * Adds the rule to the policy builder and returns it
-     */
-    std::shared_ptr<const Policy> copy_to_builder(PolicyBuilder& policy_builder) const;
 
     /**
      * Setters.
