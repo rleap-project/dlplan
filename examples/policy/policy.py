@@ -30,19 +30,19 @@ def main():
 
     caches = DenotationsCaches()
 
-    assert policy.evaluate_lazy(s2, s1, caches)
-    assert not policy.evaluate_lazy(s2, s0, caches)
-    assert not policy.evaluate_lazy(s1, s2, caches)
-    assert not policy.evaluate_lazy(s0, s2, caches)
+    assert policy.evaluate(s2, s1, caches)
+    assert not policy.evaluate(s2, s0, caches)
+    assert not policy.evaluate(s1, s2, caches)
+    assert not policy.evaluate(s0, s2, caches)
 
-    assert policy.evaluate_lazy(s2, s1)
-    assert not policy.evaluate_lazy(s2, s0)
-    assert not policy.evaluate_lazy(s1, s2)
-    assert not policy.evaluate_lazy(s0, s2)
+    assert policy.evaluate(s2, s1)
+    assert not policy.evaluate(s2, s0)
+    assert not policy.evaluate(s1, s2)
+    assert not policy.evaluate(s0, s2)
 
     print("Write policy:")
-    print(policy.compute_repr())
-    print(policy.str())
+    print(repr(policy))
+    print(str(policy))
     print()
     with open("policy.txt", "w") as f:
         f.write(PolicyWriter().write(policy))
@@ -50,8 +50,8 @@ def main():
     print("Read policy:")
     with open("policy.txt", "r") as f:
         policy_in = PolicyReader().read("\n".join(f.readlines()), builder, factory)
-    print(policy_in.compute_repr())
-    print(policy_in.str())
+    print(repr(policy_in))
+    print(str(policy_in))
     print()
 
 

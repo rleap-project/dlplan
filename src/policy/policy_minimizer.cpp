@@ -95,8 +95,8 @@ static bool check_policy_matches_classification(
     const Policy& policy,
     const core::StatePairs& true_state_pairs,
     const core::StatePairs& false_state_pairs) {
-    return std::all_of(true_state_pairs.begin(), true_state_pairs.end(), [&policy](const core::StatePair& state_pair){ return policy.evaluate_lazy(state_pair.first, state_pair.second); }) &&
-           std::all_of(false_state_pairs.begin(), false_state_pairs.end(), [&policy](const core::StatePair& state_pair){ return !policy.evaluate_lazy(state_pair.first, state_pair.second); });
+    return std::all_of(true_state_pairs.begin(), true_state_pairs.end(), [&policy](const core::StatePair& state_pair){ return policy.evaluate(state_pair.first, state_pair.second); }) &&
+           std::all_of(false_state_pairs.begin(), false_state_pairs.end(), [&policy](const core::StatePair& state_pair){ return !policy.evaluate(state_pair.first, state_pair.second); });
 }
 
 

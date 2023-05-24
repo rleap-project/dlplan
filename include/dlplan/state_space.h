@@ -79,12 +79,11 @@ public:
     void for_each_backward_successor_state_index(std::function<void(int)>&& function, StateIndex state) const;
 
     bool is_goal(StateIndex state) const;
-    bool is_nongoal(StateIndex state) const;
 
     /**
-     * Pretty printing.
+     * Creates a string representations
      */
-    void print() const;
+    std::string str() const;
     /**
      * Creates a dot representation that can be read with graphviz.
      */

@@ -45,15 +45,15 @@ int main() {
     dlplan::core::DenotationsCaches caches;
 
     // Evaluate the policy using the cache
-    assert(policy->evaluate_lazy(s2, s1, caches));
-    assert(!policy->evaluate_lazy(s2, s0, caches));
-    assert(!policy->evaluate_lazy(s1, s2, caches));
-    assert(!policy->evaluate_lazy(s0, s2, caches));
+    assert(policy->evaluate(s2, s1, caches));
+    assert(!policy->evaluate(s2, s0, caches));
+    assert(!policy->evaluate(s1, s2, caches));
+    assert(!policy->evaluate(s0, s2, caches));
     // Evaluate the policy without the cache
-    assert(policy->evaluate_lazy(s2, s1));
-    assert(!policy->evaluate_lazy(s2, s0));
-    assert(!policy->evaluate_lazy(s1, s2));
-    assert(!policy->evaluate_lazy(s0, s2));
+    assert(policy->evaluate(s2, s1));
+    assert(!policy->evaluate(s2, s0));
+    assert(!policy->evaluate(s1, s2));
+    assert(!policy->evaluate(s0, s2));
 
     // Write policy to file.
     std::cout << "Write policy:" << std::endl;

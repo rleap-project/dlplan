@@ -54,11 +54,11 @@ def main():
 
     # 5. Parse and evaluate elements.
     numerical = f.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))")
-    print(f"repr: {numerical.compute_repr()}")
+    print(f"repr: {repr(numerical)}")
     print(f"value: {numerical.evaluate(state)}")
 
     boolean = f.parse_boolean("b_empty(c_and(c_primitive(on_g,0),c_primitive(on,0)))")
-    print(f"repr: {boolean.compute_repr()}")
+    print(f"repr: {repr(boolean)}")
     print(f"value: {boolean.evaluate(state)}")
 
     denotations_caches = DenotationsCaches()

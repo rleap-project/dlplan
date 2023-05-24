@@ -187,43 +187,40 @@ bool StateSpace::is_goal(StateIndex state) const {
     return m_goal_state_indices.count(state);
 }
 
-bool StateSpace::is_nongoal(StateIndex state) const {
-    return !is_goal(state);
-}
-
-void StateSpace::print() const {
-    std::cout << "Initial state index: " << m_initial_state_index << std::endl;
-    std::cout << "States: " << std::to_string(m_states.size()) << std::endl;
+std::string StateSpace::str() const {
+    std::stringstream ss;
+    ss << "Initial state index: " << m_initial_state_index << std::endl;
+    ss << "States: " << std::to_string(m_states.size()) << std::endl;
     for (const auto& pair : m_states) {
-        std::cout << "    " << std::to_string(pair.first) << ":" << pair.second.str() << std::endl;
+        ss << "    " << std::to_string(pair.first) << ":" << pair.second.str() << std::endl;
     }
-    std::cout << "Forward successors:" << std::endl;
+    ss << "Forward successors:" << std::endl;
     for_each_state(
-        [this](const auto& source){
-            std::cout << "    " << source.get_index() << ": ";
+        [&](const auto& source){
+            ss << "    " << source.get_index() << ": ";
             for_each_forward_successor_state_index(
-                [](StateIndex target){
-                    std::cout << target << " ";
+                [&](StateIndex target){
+                    ss << target << " ";
                 }, source.get_index());
-            std::cout << std::endl;
+            ss << std::endl;
         }
     );
-    std::cout << "Backward successors:" << std::endl;
+    ss << "Backward successors:" << std::endl;
     for_each_state(
-        [this](const auto& source){
-            std::cout << "    " << source.get_index() << ": ";
+        [&](const auto& source){
+            ss << "    " << source.get_index() << ": ";
             for_each_backward_successor_state_index(
-                [](StateIndex target){
-                    std::cout << target << " ";
+                [&](StateIndex target){
+                    ss << target << " ";
                 }, source.get_index());
-            std::cout << std::endl;
+            ss << std::endl;
         }
     );
-    std::cout << "Goal state indices: ";
+    ss << "Goal state indices: ";
     for (const auto goal_state : m_goal_state_indices) {
-        std::cout << goal_state << " ";
+        ss << goal_state << " ";
     }
-    std::cout << std::endl;
+    return ss.str();
 }
 
 std::string StateSpace::to_dot(int verbosity_level) const {

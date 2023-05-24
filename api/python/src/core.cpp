@@ -115,7 +115,6 @@ void init_core(py::module_ &m_core) {
         .def("__repr__", [](const BaseElement &element) { return element.compute_repr(); })
         .def("__str__", [](const BaseElement &element) { return element.compute_repr(); })
         .def("compute_complexity", &BaseElement::compute_complexity)
-        .def("compute_repr", [](const BaseElement &element) { return element.compute_repr(); })
         .def("set_index", &BaseElement::set_index)
         .def("get_index", &BaseElement::get_index)
         .def("get_vocabulary_info", &BaseElement::get_vocabulary_info)

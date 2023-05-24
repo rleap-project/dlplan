@@ -33,14 +33,13 @@ void init_novelty(py::module_ &m_novelty) {
         .def("reset_novelty", &NoveltyTable::reset_novelty)
         .def("compute_novel_tuple_indices", [](NoveltyTable& self, TupleIndexGenerator generator){ return self.compute_novel_tuple_indices(std::move(generator));})
         .def("insert", [](NoveltyTable& self, TupleIndexGenerator generator, bool stop_if_novel){ return self.insert(std::move(generator), stop_if_novel);}, py::arg("tuple_index_generator"), py::arg("stop_if_novel") = true)
-    ;
+        .def("insert", [](NoveltyTable& self, const TupleIndices& tuple_indices, bool stop_if_novel){ return self.insert(tuple_indices, stop_if_novel);}, py::arg("tuple_index_generator"), py::arg("stop_if_novel") = true)
+    ;        
 
     py::class_<TupleNode>(m_novelty, "TupleNode")
         .def(py::init<TupleIndex, const StateIndices&>())
         .def(py::init<TupleIndex, StateIndices&&>())
         .def("__str__", &TupleNode::str)
-        .def("add_predecessor", &TupleNode::add_predecessor)
-        .def("add_successor", &TupleNode::add_successor)
         .def("get_tuple_index", &TupleNode::get_tuple_index)
         .def("get_state_indices", &TupleNode::get_state_indices, py::return_value_policy::reference)
         .def("get_predecessors", &TupleNode::get_predecessors, py::return_value_policy::reference)

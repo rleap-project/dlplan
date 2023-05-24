@@ -49,7 +49,7 @@ Policy& Policy::operator=(Policy&& other) = default;
 
 Policy::~Policy() = default;
 
-std::shared_ptr<const Rule> Policy::evaluate_lazy(const core::State& source_state, const core::State& target_state) const {
+std::shared_ptr<const Rule> Policy::evaluate(const core::State& source_state, const core::State& target_state) const {
     for (const auto& r : m_rules) {
         if (r->evaluate_conditions(source_state) && r->evaluate_effects(source_state, target_state)) {
             return r;
@@ -58,7 +58,7 @@ std::shared_ptr<const Rule> Policy::evaluate_lazy(const core::State& source_stat
     return nullptr;
 }
 
-std::shared_ptr<const Rule> Policy::evaluate_lazy(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
+std::shared_ptr<const Rule> Policy::evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
     for (const auto& r : m_rules) {
         if (r->evaluate_conditions(source_state, caches) && r->evaluate_effects(source_state, target_state, caches)) {
             return r;
@@ -67,7 +67,7 @@ std::shared_ptr<const Rule> Policy::evaluate_lazy(const core::State& source_stat
     return nullptr;
 }
 
-std::vector<std::shared_ptr<const Rule>> Policy::evaluate_conditions_eager(const core::State& source_state) const {
+std::vector<std::shared_ptr<const Rule>> Policy::evaluate_conditions(const core::State& source_state) const {
     std::vector<std::shared_ptr<const Rule>> result;
     for (const auto& r : m_rules) {
         if (r->evaluate_conditions(source_state)) {
@@ -77,7 +77,7 @@ std::vector<std::shared_ptr<const Rule>> Policy::evaluate_conditions_eager(const
     return result;
 }
 
-std::vector<std::shared_ptr<const Rule>> Policy::evaluate_conditions_eager(const core::State& source_state, core::DenotationsCaches& caches) const {
+std::vector<std::shared_ptr<const Rule>> Policy::evaluate_conditions(const core::State& source_state, core::DenotationsCaches& caches) const {
     std::vector<std::shared_ptr<const Rule>> result;
     for (const auto& r : m_rules) {
         if (r->evaluate_conditions(source_state, caches)) {
@@ -87,7 +87,7 @@ std::vector<std::shared_ptr<const Rule>> Policy::evaluate_conditions_eager(const
     return result;
 }
 
-std::shared_ptr<const Rule> Policy::evaluate_effects_lazy(const core::State& source_state, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules) const {
+std::shared_ptr<const Rule> Policy::evaluate_effects(const core::State& source_state, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules) const {
     for (const auto& r : rules) {
         if (r->evaluate_effects(source_state, target_state)) {
             return r;
@@ -96,7 +96,7 @@ std::shared_ptr<const Rule> Policy::evaluate_effects_lazy(const core::State& sou
     return nullptr;
 }
 
-std::shared_ptr<const Rule> Policy::evaluate_effects_lazy(const core::State& source_state, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules, core::DenotationsCaches& caches) const {
+std::shared_ptr<const Rule> Policy::evaluate_effects(const core::State& source_state, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules, core::DenotationsCaches& caches) const {
     for (const auto& r : rules) {
         if (r->evaluate_effects(source_state, target_state, caches)) {
             return r;
