@@ -4,7 +4,7 @@ import dlplan
 
 
 def construct_vocabulary_info():
-    v = dlplan.VocabularyInfo()
+    v = dlplan.core.VocabularyInfo()
     # Add predicates and constants of the domain.
     # Note that there are no constants in Blocksworld.
     v.add_predicate("on", 2)
@@ -17,7 +17,7 @@ def construct_vocabulary_info():
 
 
 def construct_instance_info(v):
-    i = dlplan.InstanceInfo(v)
+    i = dlplan.core.InstanceInfo(v)
     # Add dynamic atoms
     i.add_atom("on", ["a", "b"])
     i.add_atom("on", ["b", "a"])
@@ -41,7 +41,7 @@ def main():
     # 2. Initialize InstanceInfo
     i = construct_instance_info(v)
     # 3. Initialize SyntacticElementFactory
-    f = dlplan.SyntacticElementFactory(v)
+    f = dlplan.core.SyntacticElementFactory(v)
 
     # 4. Construct a bunch of states
     atoms = i.get_atoms()
@@ -54,15 +54,15 @@ def main():
     a6 = atoms[6]
     a7 = atoms[7]
     a8 = atoms[8]
-    s0 = dlplan.State(i, [a0, a3, a6, a8])
-    s1 = dlplan.State(i, [a1, a2, a7, a8])
-    s2 = dlplan.State(i, [a2, a3, a6, a7, a8])
-    s3 = dlplan.State(i, [a3, a4, a7])
-    s4 = dlplan.State(i, [a2, a5, a6])
+    s0 = dlplan.core.State(i, [a0, a3, a6, a8])
+    s1 = dlplan.core.State(i, [a1, a2, a7, a8])
+    s2 = dlplan.core.State(i, [a2, a3, a6, a7, a8])
+    s3 = dlplan.core.State(i, [a3, a4, a7])
+    s4 = dlplan.core.State(i, [a2, a5, a6])
     states = [s0, s1, s2, s3, s4]
 
     # 5. Generate features up to complexity 4 with at most 180 seconds and at most 100000 features in total
-    generator = dlplan.FeatureGenerator()
+    generator = dlplan.generator.FeatureGenerator()
     generator.set_generate_inclusion_boolean(False)
     generator.set_generate_diff_concept(False)
     generator.set_generate_or_concept(False)

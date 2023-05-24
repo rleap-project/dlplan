@@ -595,8 +595,8 @@ protected:
     Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
     friend class SyntacticElementFactoryImpl;
 
-    virtual std::unique_ptr<ConceptDenotation> evaluate_impl(const State& state, DenotationsCaches& caches) const = 0;
-    virtual std::unique_ptr<ConceptDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
+    virtual ConceptDenotation evaluate_impl(const State& state, DenotationsCaches& caches) const = 0;
+    virtual ConceptDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
 
 public:
     Concept(const Concept& other);
@@ -619,8 +619,8 @@ protected:
     Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
     friend class SyntacticElementFactoryImpl;
 
-    virtual std::unique_ptr<RoleDenotation> evaluate_impl(const State& state, DenotationsCaches& caches) const = 0;
-    virtual std::unique_ptr<RoleDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
+    virtual RoleDenotation evaluate_impl(const State& state, DenotationsCaches& caches) const = 0;
+    virtual RoleDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
 
 public:
     Role(const Role& other);

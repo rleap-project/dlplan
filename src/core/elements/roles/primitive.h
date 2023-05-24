@@ -34,25 +34,23 @@ private:
         }
     }
 
-    std::unique_ptr<RoleDenotation> evaluate_impl(const State& state, DenotationsCaches&) const override {
-        auto denotation = std::make_unique<RoleDenotation>(
-            RoleDenotation(state.get_instance_info()->get_objects().size()));
+    RoleDenotation evaluate_impl(const State& state, DenotationsCaches&) const override {
+        RoleDenotation denotation(state.get_instance_info()->get_objects().size());
         compute_result(
             state,
-            *denotation);
+            denotation);
         return denotation;
     }
 
-    std::unique_ptr<RoleDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const override {
-        auto denotations = std::make_unique<RoleDenotations>();
-        denotations->reserve(states.size());
+    RoleDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const override {
+        RoleDenotations denotations;
+        denotations.reserve(states.size());
         for (size_t i = 0; i < states.size(); ++i) {
-            auto denotation = std::make_unique<RoleDenotation>(
-                RoleDenotation(states[i].get_instance_info()->get_objects().size()));
+            RoleDenotation denotation(states[i].get_instance_info()->get_objects().size());
             compute_result(
                 states[i],
-                *denotation);
-            denotations->push_back(caches.m_r_denot_cache.insert(std::move(denotation)).first->get());
+                denotation);
+            denotations.push_back(caches.m_r_denot_cache.insert(std::make_unique<RoleDenotation>(std::move(denotation))).first->get());
         }
         return denotations;
     }

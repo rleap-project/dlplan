@@ -27,7 +27,7 @@ ConceptDenotation* Concept::evaluate(const State& state, DenotationsCaches& cach
         // compute denotation
         auto denotation = evaluate_impl(state, caches);
         // register denotation and append it to denotations.
-        auto result_denotation = caches.m_c_denot_cache.insert(std::move(denotation)).first->get();
+        auto result_denotation = caches.m_c_denot_cache.insert(std::make_unique<ConceptDenotation>(std::move(denotation))).first->get();
         caches.m_c_denots_mapping_per_instance.emplace(key, result_denotation);
         return result_denotation;
     } else {
@@ -38,7 +38,7 @@ ConceptDenotation* Concept::evaluate(const State& state, DenotationsCaches& cach
         // compute denotation
         auto denotation = evaluate_impl(state, caches);
         // register denotation and append it to denotations.
-        auto result_denotation = caches.m_c_denot_cache.insert(std::move(denotation)).first->get();
+        auto result_denotation = caches.m_c_denot_cache.insert(std::make_unique<ConceptDenotation>(std::move(denotation))).first->get();
         caches.m_c_denots_mapping_per_state.emplace(key, result_denotation);
         return result_denotation;
     }
@@ -51,7 +51,7 @@ ConceptDenotations* Concept::evaluate(const States& states, DenotationsCaches& c
     // compute denotations
     auto denotations = evaluate_impl(states, caches);
     // register denotations and return it.
-    auto result_denotations = caches.m_c_denots_cache.insert(std::move(denotations)).first->get();
+    auto result_denotations = caches.m_c_denots_cache.insert(std::make_unique<ConceptDenotations>(std::move(denotations))).first->get();
     caches.m_c_denots_mapping.emplace(get_index(), result_denotations);
     return result_denotations;
 }

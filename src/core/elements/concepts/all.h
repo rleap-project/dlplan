@@ -22,29 +22,27 @@ private:
         }
     }
 
-    std::unique_ptr<ConceptDenotation> evaluate_impl(const State& state, DenotationsCaches& caches) const override {
-        auto denotation = std::make_unique<ConceptDenotation>(
-            ConceptDenotation(state.get_instance_info()->get_objects().size()));
+    ConceptDenotation evaluate_impl(const State& state, DenotationsCaches& caches) const override {
+        ConceptDenotation denotation(state.get_instance_info()->get_objects().size());
         compute_result(
             *m_role->evaluate(state, caches),
             *m_concept->evaluate(state, caches),
-            *denotation);
+            denotation);
         return denotation;
     }
 
-    std::unique_ptr<ConceptDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const override {
-        auto denotations = std::make_unique<ConceptDenotations>();
-        denotations->reserve(states.size());
+    ConceptDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const override {
+        ConceptDenotations denotations;
+        denotations.reserve(states.size());
         auto role_denotations = m_role->evaluate(states, caches);
         auto concept_denotations = m_concept->evaluate(states, caches);
         for (size_t i = 0; i < states.size(); ++i) {
-            auto denotation = std::make_unique<ConceptDenotation>(
-                ConceptDenotation(states[i].get_instance_info()->get_objects().size()));
+            ConceptDenotation denotation(states[i].get_instance_info()->get_objects().size());
             compute_result(
                 *(*role_denotations)[i],
                 *(*concept_denotations)[i],
-                *denotation);
-            denotations->push_back(caches.m_c_denot_cache.insert(std::move(denotation)).first->get());
+                denotation);
+            denotations.push_back(caches.m_c_denot_cache.insert(std::make_unique<ConceptDenotation>(std::move(denotation))).first->get());
         }
         return denotations;
     }

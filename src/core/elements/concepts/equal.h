@@ -23,30 +23,28 @@ private:
         }
     }
 
-    std::unique_ptr<ConceptDenotation> evaluate_impl(const State& state, DenotationsCaches& caches) const override {
-        auto denotation = std::make_unique<ConceptDenotation>(
-            ConceptDenotation(state.get_instance_info()->get_objects().size()));
+    ConceptDenotation evaluate_impl(const State& state, DenotationsCaches& caches) const override {
+        ConceptDenotation denotation(state.get_instance_info()->get_objects().size());
         compute_result(
             *m_role_left->evaluate(state, caches),
             *m_role_right->evaluate(state, caches),
-            *denotation);
+            denotation);
         return denotation;
     }
 
-    std::unique_ptr<ConceptDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const override {
-        auto denotations = std::make_unique<ConceptDenotations>();
-        denotations->reserve(states.size());
+    ConceptDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const override {
+        ConceptDenotations denotations;
+        denotations.reserve(states.size());
         auto role_left_denotations = m_role_left->evaluate(states, caches);
         auto role_right_denotations = m_role_right->evaluate(states, caches);
         for (size_t i = 0; i < states.size(); ++i) {
-            auto denotation = std::make_unique<ConceptDenotation>(
-                ConceptDenotation(states[i].get_instance_info()->get_objects().size()));
+            ConceptDenotation denotation(states[i].get_instance_info()->get_objects().size());
             compute_result(
                 *(*role_left_denotations)[i],
                 *(*role_right_denotations)[i],
-                *denotation);
+                denotation);
             // register denotation and append it to denotations.
-            denotations->push_back(caches.m_c_denot_cache.insert(std::move(denotation)).first->get());
+            denotations.push_back(caches.m_c_denot_cache.insert(std::make_unique<ConceptDenotation>(std::move(denotation))).first->get());
         }
         return denotations;
     }
