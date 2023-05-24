@@ -56,7 +56,7 @@ void init_generator(py::module_ &m_generator) {
         py::arg("count_numerical_complexity_limit") = 9,
         py::arg("distance_numerical_complexity_limit") = 9,
         py::arg("time_limit") = 3600,
-        py::arg("feature_limit") = 100000,
+        py::arg("feature_limit") = 10000,
         py::arg("generate_empty_boolean") = true,
         py::arg("generate_inclusion_boolean") = false,
         py::arg("generate_nullary_boolean") = true,

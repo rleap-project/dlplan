@@ -1,4 +1,4 @@
-from dlplan import VocabularyInfo, InstanceInfo, SyntacticElementFactory, State
+from dlplan.core import VocabularyInfo, InstanceInfo, SyntacticElementFactory, State
 
 
 def generate_bw_vocabulary():

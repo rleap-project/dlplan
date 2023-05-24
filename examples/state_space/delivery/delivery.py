@@ -1,14 +1,14 @@
-import dlplan
+from dlplan.state_space import generate_state_space
 
 
 def main():
     # Generate and read state space files.
-    state_space_2_1_0 = dlplan.generate_state_space("domain.pddl", "instance_2_1_0.pddl").state_space
+    state_space_2_1_0 = generate_state_space("domain.pddl", "instance_2_1_0.pddl").state_space
     vocabulary_info = state_space_2_1_0.get_instance_info().get_vocabulary_info()
     print("State space of instance_2_1_0:")
     state_space_2_1_0.print()
     # Generate and read state space files over same VocabularyInfo.
-    state_space_2_2_0 = dlplan.generate_state_space("domain.pddl", "instance_2_1_0.pddl").state_space
+    state_space_2_2_0 = generate_state_space("domain.pddl", "instance_2_1_0.pddl").state_space
     print("State space of instance_2_2_0:")
     state_space_2_2_0.print()
     print()

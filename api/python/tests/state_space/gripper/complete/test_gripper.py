@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from dlplan import generate_state_space, GeneratorExitCode
+from dlplan.state_space import generate_state_space, GeneratorExitCode
 
 
 HERE = Path(__file__).resolve().parent
