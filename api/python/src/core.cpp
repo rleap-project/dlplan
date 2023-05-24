@@ -5,6 +5,7 @@
 #define MACRO_STRINGIFY(x) STRINGIFY(x)
 
 #include "../../../include/dlplan/core.h"
+#include "../../../docstrings.h"
 
 namespace py = pybind11;
 
@@ -28,13 +29,13 @@ void init_core(py::module_ &m_core) {
         .def(py::init<>())
     ;
 
-    py::class_<Constant>(m_core, "Constant")
-        .def("__eq__", &Constant::operator==)
-        .def("__neq__", &Constant::operator!=)
-        .def("__repr__", &Constant::get_name)
-        .def("__str__", &Constant::get_name)
-        .def("get_index", &Constant::get_index)
-        .def("get_name", &Constant::get_name)
+    py::class_<Constant>(m_core, "Constant", DOC(dlplan, core, Constant))
+        .def("__eq__", &Constant::operator==, DOC(dlplan, core, Constant, operator_eq))
+        .def("__neq__", &Constant::operator!=, DOC(dlplan, core, Constant, operator_ne))
+        .def("__repr__", &Constant::get_name, DOC(dlplan, core, Constant, get_name))
+        .def("__str__", &Constant::get_name, DOC(dlplan, core, Constant, get_name))
+        .def("get_index", &Constant::get_index, DOC(dlplan, core, Constant, get_index))
+        .def("get_name", &Constant::get_name, DOC(dlplan, core, Constant, get_name))
     ;
 
     py::class_<Predicate>(m_core, "Predicate")

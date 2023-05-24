@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from dlplan.core import VocabularyInfo, InstanceInfo, State, SyntacticElementFactory, DenotationsCaches
+import dlplan
 
 def construct_vocabulary_info():
     vocabulary = VocabularyInfo()

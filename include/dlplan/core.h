@@ -281,9 +281,20 @@ struct DenotationsCaches {
 };
 
 
+/// @brief A Constant is a special element from the universe.
+///
+/// A Constant is a special element from the universe. That is, specific
+/// Elements can refer directly to Constants.
+/// In the context of planning, a Constant is an element that occurs in every
+/// problem instance.
+///
+/// The Constant class provides methods to retrieve the name and index of a
+/// Constant, and supports comparison operators for equality and inequality.
 class Constant {
 private:
+    ///< The name of the constant.
     std::string m_name;
+    ///< The index of the constant.
     int m_index;
 
     Constant(const std::string& name, int index);
@@ -297,17 +308,27 @@ public:
     Constant& operator=(Constant&& other);
     ~Constant();
 
+    /// @brief Checks if this constant is equal to another constant.
+    /// @param other The constant to compare against.
+    /// @return True if the constants are equal, false otherwise.
     bool operator==(const Constant& other) const;
+
+    /// @brief Checks if this constant is not equal to another constant.
+    /// @param other The constant to compare against.
+    /// @return True if the constants are not equal, false otherwise.
     bool operator!=(const Constant& other) const;
 
+    /// @brief Retrieves the index of the constant.
+    /// @return The index of the constant.
     int get_index() const;
+
+    /// @brief Retrieves the name of the constant.
+    /// @return The name of the constant.
     const std::string& get_name() const;
 };
 
 
-/**
- * A Predicate belongs to a specific vocabulary of a planning domain.
- */
+/// @brief A Predicate is a name for a relation
 class Predicate {
 private:
     std::string m_name;
