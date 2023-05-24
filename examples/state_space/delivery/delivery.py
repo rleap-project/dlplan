@@ -4,7 +4,7 @@ from dlplan.state_space import generate_state_space
 def main():
     # Generate and read state space files.
     state_space_2_1_0 = generate_state_space("domain.pddl", "instance_2_1_0.pddl").state_space
-    vocabulary_info = state_space_2_1_0.get_instance_info().get_vocabulary_info()
+    vocabulary = state_space_2_1_0.get_instance_info().get_vocabulary_info()
     print("State space of instance_2_1_0:")
     print(str(state_space_2_1_0))
     # Generate and read state space files over same VocabularyInfo.

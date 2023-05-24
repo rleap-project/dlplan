@@ -16,44 +16,44 @@ int main() {
     vocabulary_info->add_predicate("unary", 1);
 
     dlplan::core::SyntacticElementFactory factory(vocabulary_info);
-    std::shared_ptr<const Boolean> b = factory.parse_boolean("b_empty(c_primitive(unary,0))");
-    std::shared_ptr<const Numerical> n = factory.parse_numerical("n_count(c_primitive(unary,0))");
+    std::shared_ptr<const Boolean> boolean_1 = factory.parse_boolean("b_empty(c_primitive(unary,0))");
+    std::shared_ptr<const Numerical> numerical_1 = factory.parse_numerical("n_count(c_primitive(unary,0))");
 
     // Construct the empty policy.
     PolicyBuilder builder;
     // Add conditions and effects the rule.
-    std::shared_ptr<const BaseCondition> b_neg_condition_0 = builder.add_neg_condition(b);
-    std::shared_ptr<const BaseEffect> b_bot_effect_0 = builder.add_bot_effect(b);
-    std::shared_ptr<const BaseCondition> n_gt_condition_0 = builder.add_gt_condition(n);
-    std::shared_ptr<const BaseEffect> n_dec_effect_0 = builder.add_dec_effect(n);
+    std::shared_ptr<const BaseCondition> b_neg_condition_0 = builder.add_neg_condition(boolean_1);
+    std::shared_ptr<const BaseEffect> b_bot_effect_0 = builder.add_bot_effect(boolean_1);
+    std::shared_ptr<const BaseCondition> n_gt_condition_0 = builder.add_gt_condition(numerical_1);
+    std::shared_ptr<const BaseEffect> n_dec_effect_0 = builder.add_dec_effect(numerical_1);
     // Add rule.
-    std::shared_ptr<const Rule> rule = builder.add_rule(
+    std::shared_ptr<const Rule> rule_1 = builder.add_rule(
         {b_neg_condition_0, n_gt_condition_0},
         {b_bot_effect_0, n_dec_effect_0}
     );
-    std::shared_ptr<const Policy> policy = builder.add_policy({rule});
+    std::shared_ptr<const Policy> policy = builder.add_policy({rule_1});
 
     // Construct InstanceInfo and States
     std::shared_ptr<dlplan::core::InstanceInfo> instance_info = std::make_shared<dlplan::core::InstanceInfo>(vocabulary_info);
-    const auto a0 = instance_info->add_atom("unary", {"A"});
-    const auto a1 = instance_info->add_atom("unary", {"B"});
-    dlplan::core::State s0(instance_info, std::vector<dlplan::core::Atom>(), 0);
-    dlplan::core::State s1(instance_info, {a0}, 1);
-    dlplan::core::State s2(instance_info, {a0, a1}, 2);
+    const auto atom_0 = instance_info->add_atom("unary", {"A"});
+    const auto atom_1 = instance_info->add_atom("unary", {"B"});
+    dlplan::core::State state_1(instance_info, std::vector<dlplan::core::Atom>(), 0);
+    dlplan::core::State state_2(instance_info, {atom_0}, 1);
+    dlplan::core::State state_3(instance_info, {atom_0, atom_1}, 2);
 
     // Construct a cache to avoid redundant reevaluations
     dlplan::core::DenotationsCaches caches;
 
     // Evaluate the policy using the cache
-    assert(policy->evaluate(s2, s1, caches));
-    assert(!policy->evaluate(s2, s0, caches));
-    assert(!policy->evaluate(s1, s2, caches));
-    assert(!policy->evaluate(s0, s2, caches));
+    assert(policy->evaluate(state_3, state_2, caches));
+    assert(!policy->evaluate(state_3, state_1, caches));
+    assert(!policy->evaluate(state_2, state_3, caches));
+    assert(!policy->evaluate(state_1, state_3, caches));
     // Evaluate the policy without the cache
-    assert(policy->evaluate(s2, s1));
-    assert(!policy->evaluate(s2, s0));
-    assert(!policy->evaluate(s1, s2));
-    assert(!policy->evaluate(s0, s2));
+    assert(policy->evaluate(state_3, state_2));
+    assert(!policy->evaluate(state_3, state_1));
+    assert(!policy->evaluate(state_2, state_3));
+    assert(!policy->evaluate(state_1, state_3));
 
     // Write policy to file.
     std::cout << "Write policy:" << std::endl;

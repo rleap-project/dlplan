@@ -6,63 +6,63 @@ using namespace dlplan::core;
 using namespace dlplan::generator;
 
 static std::shared_ptr<VocabularyInfo> construct_vocabulary_info() {
-    std::shared_ptr<VocabularyInfo> v = std::make_shared<VocabularyInfo>();
+    std::shared_ptr<VocabularyInfo> vocabulary = std::make_shared<VocabularyInfo>();
     // Add predicates and constants of the domain.
     // Note that there are no constants in Blocksworld.
-    v->add_predicate("on", 2);
-    v->add_predicate("on_g", 2);
-    v->add_predicate("ontable", 1);
-    v->add_predicate("holding", 1);
-    v->add_predicate("clear", 1);
-    v->add_predicate("arm-empty", 0);
-    return v;
+    vocabulary->add_predicate("on", 2);
+    vocabulary->add_predicate("on_g", 2);
+    vocabulary->add_predicate("ontable", 1);
+    vocabulary->add_predicate("holding", 1);
+    vocabulary->add_predicate("clear", 1);
+    vocabulary->add_predicate("arm-empty", 0);
+    return vocabulary;
 }
 
-static std::shared_ptr<InstanceInfo> construct_instance_info(std::shared_ptr<VocabularyInfo> v) {
-    std::shared_ptr<InstanceInfo> i = std::make_shared<InstanceInfo>(v);
+static std::shared_ptr<InstanceInfo> construct_instance_info(const std::shared_ptr<VocabularyInfo>& vocabulary) {
+    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary);
     // Add dynamic atoms
-    i->add_atom("on", {"a", "b"});
-    i->add_atom("on", {"b", "a"});
-    i->add_atom("ontable", {"a"});
-    i->add_atom("ontable", {"b"});
-    i->add_atom("holding", {"a"});
-    i->add_atom("holding", {"b"});
-    i->add_atom("clear", {"a"});
-    i->add_atom("clear", {"b"});
-    i->add_atom("arm-empty", {});
+    instance->add_atom("on", {"a", "b"});
+    instance->add_atom("on", {"b", "a"});
+    instance->add_atom("ontable", {"a"});
+    instance->add_atom("ontable", {"b"});
+    instance->add_atom("holding", {"a"});
+    instance->add_atom("holding", {"b"});
+    instance->add_atom("clear", {"a"});
+    instance->add_atom("clear", {"b"});
+    instance->add_atom("arm-empty", {});
     // Add static goal atoms
-    i->add_static_atom("on_g", {"a", "b"});
+    instance->add_static_atom("on_g", {"a", "b"});
     // Add static atoms
     // Note that there are no static atoms in Blocksworld.
-    return i;
+    return instance;
 }
 
 
 int main() {
     // 1. Initialize VocabularyInfo
-    auto v = construct_vocabulary_info();
+    auto vocabulary = construct_vocabulary_info();
     // 2. Initialize InstanceInfo
-    auto i = construct_instance_info(v);
+    auto instance = construct_instance_info(vocabulary);
     // 3. Initialize SyntacticElementFactory
-    SyntacticElementFactory factory(v);
+    SyntacticElementFactory factory(vocabulary);
 
     // 4. Construct a bunch of states
-    const auto& atoms = i->get_atoms();
-    const Atom& a0 = atoms[0];
-    const Atom& a1 = atoms[1];
-    const Atom& a2 = atoms[2];
-    const Atom& a3 = atoms[3];
-    const Atom& a4 = atoms[4];
-    const Atom& a5 = atoms[5];
-    const Atom& a6 = atoms[6];
-    const Atom& a7 = atoms[7];
-    const Atom& a8 = atoms[8];
-    State s0(i, {a0, a3, a6, a8});
-    State s1(i, {a1, a2, a7, a8});
-    State s2(i, {a2, a3, a6, a7, a8});
-    State s3(i, {a3, a4, a7});
-    State s4(i, {a2, a5, a6});
-    States states({s0, s1, s2, s3, s4});
+    const auto& atoms = instance->get_atoms();
+    const Atom& atom_0 = atoms[0];
+    const Atom& atom_1 = atoms[1];
+    const Atom& atom_2 = atoms[2];
+    const Atom& atom_3 = atoms[3];
+    const Atom& atom_4 = atoms[4];
+    const Atom& atom_5 = atoms[5];
+    const Atom& atom_6 = atoms[6];
+    const Atom& atom_7 = atoms[7];
+    const Atom& atom_8 = atoms[8];
+    State state_1(instance, {atom_0, atom_3, atom_6, atom_8});
+    State state_2(instance, {atom_1, atom_2, atom_7, atom_8});
+    State state_3(instance, {atom_2, atom_3, atom_6, atom_7, atom_8});
+    State state_4(instance, {atom_3, atom_4, atom_7});
+    State state_5(instance, {atom_2, atom_5, atom_6});
+    States states({state_1, state_2, state_3, state_4, state_5});
 
     // 5. Generate features up to complexity 4 with at most 180 seconds and at most 100000 features in total
     FeatureGenerator generator;

@@ -5,35 +5,35 @@
 using namespace dlplan::core;
 
 static std::shared_ptr<VocabularyInfo> construct_vocabulary_info() {
-    std::shared_ptr<VocabularyInfo> v = std::make_shared<VocabularyInfo>();
+    std::shared_ptr<VocabularyInfo> vocabulary = std::make_shared<VocabularyInfo>();
     // Add predicates and constants of the domain.
     // Note that there are no constants in Blocksworld.
-    v->add_predicate("on", 2);
-    v->add_predicate("on_g", 2);
-    v->add_predicate("ontable", 1);
-    v->add_predicate("holding", 1);
-    v->add_predicate("clear", 1);
-    v->add_predicate("arm-empty", 0);
-    return v;
+    vocabulary->add_predicate("on", 2);
+    vocabulary->add_predicate("on_g", 2);
+    vocabulary->add_predicate("ontable", 1);
+    vocabulary->add_predicate("holding", 1);
+    vocabulary->add_predicate("clear", 1);
+    vocabulary->add_predicate("arm-empty", 0);
+    return vocabulary;
 }
 
-static std::shared_ptr<InstanceInfo> construct_instance_info(std::shared_ptr<VocabularyInfo> v) {
-    std::shared_ptr<InstanceInfo> i = std::make_shared<InstanceInfo>(v);
+static std::shared_ptr<InstanceInfo> construct_instance_info(const std::shared_ptr<VocabularyInfo>& vocabulary) {
+    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary);
     // Add dynamic atoms
-    i->add_atom("on", {"a", "b"});
-    i->add_atom("on", {"b", "a"});
-    i->add_atom("ontable", {"a"});
-    i->add_atom("ontable", {"b"});
-    i->add_atom("holding", {"a"});
-    i->add_atom("holding", {"b"});
-    i->add_atom("clear", {"a"});
-    i->add_atom("clear", {"b"});
-    i->add_atom("arm-empty", {});
+    instance->add_atom("on", {"a", "b"});
+    instance->add_atom("on", {"b", "a"});
+    instance->add_atom("ontable", {"a"});
+    instance->add_atom("ontable", {"b"});
+    instance->add_atom("holding", {"a"});
+    instance->add_atom("holding", {"b"});
+    instance->add_atom("clear", {"a"});
+    instance->add_atom("clear", {"b"});
+    instance->add_atom("arm-empty", {});
     // Add static goal atoms
-    i->add_static_atom("on_g", {"a", "b"});
+    instance->add_static_atom("on_g", {"a", "b"});
     // Add static atoms
     // Note that there are no static atoms in Blocksworld.
-    return i;
+    return instance;
 }
 
 
@@ -42,25 +42,25 @@ static std::shared_ptr<InstanceInfo> construct_instance_info(std::shared_ptr<Voc
  */
 int main() {
     // 1. Initialize VocabularyInfo
-    auto v = construct_vocabulary_info();
+    auto vocabulary = construct_vocabulary_info();
     // 2. Initialize InstanceInfo
-    auto i = construct_instance_info(v);
+    auto instance = construct_instance_info(vocabulary);
     // 3. Initialize SyntacticElementFactory
-    SyntacticElementFactory f(v);
+    SyntacticElementFactory factory(vocabulary);
 
     // 4. Construct a state.
-    const auto& atoms = i->get_atoms();
-    const Atom& a0 = atoms[0];
-    const Atom& a3 = atoms[3];
-    const Atom& a6 = atoms[6];
-    State state(i, {a0, a3, a6});
+    const auto& atoms = instance->get_atoms();
+    const Atom& atom_0 = atoms[0];
+    const Atom& atom_3 = atoms[3];
+    const Atom& atom_6 = atoms[6];
+    State state(instance, {atom_0, atom_3, atom_6});
 
     // 5. Parse and evaluate elements.
-    std::shared_ptr<const Numerical> numerical = f.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))");
+    std::shared_ptr<const Numerical> numerical = factory.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))");
     std::cout << "repr: " << numerical->compute_repr() << std::endl;
     std::cout << "value: " << numerical->evaluate(state) << std::endl;
 
-    std::shared_ptr<const Boolean> boolean = f.parse_boolean("b_empty(c_and(c_primitive(on_g,0),c_primitive(on,0)))");
+    std::shared_ptr<const Boolean> boolean = factory.parse_boolean("b_empty(c_and(c_primitive(on_g,0),c_primitive(on,0)))");
     std::cout << "repr: " << boolean->compute_repr() << std::endl;
     std::cout << "value: " << boolean->evaluate(state) << std::endl;
 
