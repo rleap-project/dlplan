@@ -31,6 +31,7 @@ static std::shared_ptr<VocabularyInfo> construct_vocabulary_info() {
 /// @return the InstanceInfo
 static std::shared_ptr<InstanceInfo> construct_instance_info(
     const std::shared_ptr<VocabularyInfo>& vocabulary) {
+    // User must ensure that each InstanceInfo gets its unique index for caching.
     auto instance = std::make_shared<InstanceInfo>(vocabulary, 0);
     instance->add_atom("on", {"a", "b"});
     instance->add_atom("on", {"b", "a"});
@@ -61,6 +62,7 @@ int main() {
     const auto& atom_1 = atoms[1];
     const auto& atom_3 = atoms[3];
     const auto& atom_6 = atoms[6];
+    // User must ensure that each State gets its unique index for caching.
     State state_1(instance, {atom_0, atom_3, atom_6}, 1);
     State state_2(instance, {atom_1, atom_3, atom_6}, 2);
     States states{state_1, state_2};

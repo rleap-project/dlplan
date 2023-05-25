@@ -32,7 +32,7 @@ def construct_instance_info(vocabulary):
 
     Returns: the InstanceInfo
     """
-    # User must ensure that each index gets its unique index for caching.
+    # User must ensure that each InstanceInfo gets its unique index for caching.
     instance = InstanceInfo(vocabulary, index=0)
     instance.add_atom("on", ["a", "b"])
     instance.add_atom("on", ["b", "a"])
@@ -63,6 +63,7 @@ def main():
     atom_1 = atoms[1]
     atom_3 = atoms[3]
     atom_6 = atoms[6]
+    # User must ensure that each State gets its unique index for caching.
     state_1 = State(instance, [atom_0, atom_3, atom_6], 1)
     state_2 = State(instance, [atom_1, atom_3, atom_6], 2)
     states = [state_1, state_2]
