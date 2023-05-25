@@ -29,13 +29,10 @@ namespace dlplan::core {
     class Boolean;
     class Numerical;
 
-    using Name_Vec = std::vector<std::string>;
     using Index_Vec = std::vector<int>;
-    using Index_Set = std::unordered_set<int>;
     using IndexPair_Vec = std::vector<std::pair<int, int>>;
 
     using States = std::vector<State>;
-    using StatesSet = std::unordered_set<State>;
     using StatePair = std::pair<State, State>;
     using StatePairs = std::vector<StatePair>;
 
@@ -93,7 +90,12 @@ namespace std {
 
 
 namespace dlplan::core {
-/// @brief Represents a set of objects from an instance.
+/// @brief Represents the result of the evaluation of a concept on a state.
+///
+/// The result of an evaluation of a concept is a set of object indices. The 
+/// set of object indices represent the elements in the unary relation of the 
+/// concept that are true in a given state. Each object index also represent an
+/// object of a common instance info.
 class ConceptDenotation {
 private:
     int m_num_objects;
@@ -171,6 +173,12 @@ public:
 };
 
 
+/// @brief Represents the result of the evaluation of a role on a state.
+///
+/// The result of an evaluation of a role is a set of pairs of object indices.
+/// The set of pairs of object indices represent the elements in the binary 
+/// relation of the role that are true in a given state. Each object index 
+/// also represent an object of a common instance info.
 class RoleDenotation {
 private:
     int m_num_objects;
