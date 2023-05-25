@@ -180,7 +180,7 @@ static GeneratorExitCode parse_run_file(const std::string& filename) {
 GeneratorResult read(std::shared_ptr<const VocabularyInfo> vocabulary_info, int index) {
     auto exit_code = parse_run_file("run.log");
     if (exit_code == GeneratorExitCode::FAIL) {
-        return GeneratorResult{ 
+        return GeneratorResult{
             exit_code,
             std::move(StateSpace(nullptr, {}, 0, {}, {}))
         };
@@ -188,7 +188,12 @@ GeneratorResult read(std::shared_ptr<const VocabularyInfo> vocabulary_info, int 
     if (!vocabulary_info) {
         std::shared_ptr<VocabularyInfo> new_vocabulary_info = std::make_shared<core::VocabularyInfo>();
         parse_predicates_file("predicates.txt", *new_vocabulary_info, false);
-        parse_predicates_file("static-predicates.txt", *new_vocabulary_info, true);
+        /*
+         we parse static predicates as non static ones because
+         we want to ensure we cannot deduce this information from
+         a spefic instance of the domain
+        */
+        parse_predicates_file("static-predicates.txt", *new_vocabulary_info, false);
         parse_constants_file("constants.txt", *new_vocabulary_info);
         vocabulary_info = new_vocabulary_info;
     }
@@ -202,7 +207,7 @@ GeneratorResult read(std::shared_ptr<const VocabularyInfo> vocabulary_info, int 
     auto adjacency_list = parse_transitions_file("transitions.txt");
     // initial state has id 0 in scorpion
     return GeneratorResult{
-        exit_code, 
+        exit_code,
         std::move(StateSpace(std::move(instance_info), std::move(states), 0, std::move(adjacency_list), std::move(goal_state_indices)))
     };
 }

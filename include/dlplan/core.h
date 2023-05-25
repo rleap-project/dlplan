@@ -13,9 +13,7 @@
 #include <vector>
 
 
-/**
- * Forward declarations and usings
- */
+/// Forward declarations and usings
 namespace dlplan::core {
     class SyntacticElementFactoryImpl;
     class SyntacticElementFactory;
@@ -43,9 +41,7 @@ namespace dlplan::core {
 }
 
 
-/**
- * Template specializations
- */
+/// Template specializations of std::hash
 namespace std {
     template<> struct hash<dlplan::core::State> {
         size_t operator()(const dlplan::core::State& state) const noexcept;
@@ -92,9 +88,9 @@ namespace std {
 namespace dlplan::core {
 /// @brief Represents the result of the evaluation of a concept on a state.
 ///
-/// The result of an evaluation of a concept is a set of object indices. The 
-/// set of object indices represent the elements in the unary relation of the 
-/// concept that are true in a given state. Each object index also represent an
+/// The result of an evaluation of a concept is a set of object indices. The
+/// set of object indices represent the elements in the unary relation of the
+/// concept that are true in a given state. Each object index refers to an
 /// object of a common instance info.
 class ConceptDenotation {
 private:
@@ -176,9 +172,9 @@ public:
 /// @brief Represents the result of the evaluation of a role on a state.
 ///
 /// The result of an evaluation of a role is a set of pairs of object indices.
-/// The set of pairs of object indices represent the elements in the binary 
-/// relation of the role that are true in a given state. Each object index 
-/// also represent an object of a common instance info.
+/// The set of pairs of object indices represent the elements in the binary
+/// relation of the role that are true in a given state. Each object index
+/// refers to an object of a common instance info.
 class RoleDenotation {
 private:
     int m_num_objects;
@@ -252,25 +248,23 @@ public:
 
 
 struct DenotationsCaches {
-    /**
-     * Compares two std::unique_ptr<T>
-     * by comparing objects T.
-     */
+    /// @brief Compares two std::unique_ptr<T> by comparing objects T.
+    /// @tparam T the nested type
     template<typename T>
     struct DerefEqual {
-        bool operator()(const T& left, const T& right) const {
+        bool operator()(const std::unique_ptr<T>& left, const std::unique_ptr<T>& right) const {
             return *left == *right;
         }
     };
 
     // Cache for single denotations.
-    std::unordered_set<std::unique_ptr<ConceptDenotation>, std::hash<std::unique_ptr<ConceptDenotation>>, DerefEqual<std::unique_ptr<ConceptDenotation>>> m_c_denot_cache;
-    std::unordered_set<std::unique_ptr<RoleDenotation>, std::hash<std::unique_ptr<RoleDenotation>>, DerefEqual<std::unique_ptr<RoleDenotation>>> m_r_denot_cache;
+    std::unordered_set<std::unique_ptr<ConceptDenotation>, std::hash<std::unique_ptr<ConceptDenotation>>, DerefEqual<ConceptDenotation>> m_c_denot_cache;
+    std::unordered_set<std::unique_ptr<RoleDenotation>, std::hash<std::unique_ptr<RoleDenotation>>, DerefEqual<RoleDenotation>> m_r_denot_cache;
     // Cache for collections of denotations.
-    std::unordered_set<std::unique_ptr<BooleanDenotations>, std::hash<std::unique_ptr<BooleanDenotations>>, DerefEqual<std::unique_ptr<BooleanDenotations>>> m_b_denots_cache;
-    std::unordered_set<std::unique_ptr<NumericalDenotations>, std::hash<std::unique_ptr<NumericalDenotations>>, DerefEqual<std::unique_ptr<NumericalDenotations>>> m_n_denots_cache;
-    std::unordered_set<std::unique_ptr<ConceptDenotations>, std::hash<std::unique_ptr<ConceptDenotations>>, DerefEqual<std::unique_ptr<ConceptDenotations>>> m_c_denots_cache;
-    std::unordered_set<std::unique_ptr<RoleDenotations>, std::hash<std::unique_ptr<RoleDenotations>>, DerefEqual<std::unique_ptr<RoleDenotations>>> m_r_denots_cache;
+    std::unordered_set<std::unique_ptr<BooleanDenotations>, std::hash<std::unique_ptr<BooleanDenotations>>, DerefEqual<BooleanDenotations>> m_b_denots_cache;
+    std::unordered_set<std::unique_ptr<NumericalDenotations>, std::hash<std::unique_ptr<NumericalDenotations>>, DerefEqual<NumericalDenotations>> m_n_denots_cache;
+    std::unordered_set<std::unique_ptr<ConceptDenotations>, std::hash<std::unique_ptr<ConceptDenotations>>, DerefEqual<ConceptDenotations>> m_c_denots_cache;
+    std::unordered_set<std::unique_ptr<RoleDenotations>, std::hash<std::unique_ptr<RoleDenotations>>, DerefEqual<RoleDenotations>> m_r_denots_cache;
     // Mapping from element index to denotations.
     std::unordered_map<int, BooleanDenotations*> m_b_denots_mapping;
     std::unordered_map<int, NumericalDenotations*> m_n_denots_mapping;
@@ -289,15 +283,16 @@ struct DenotationsCaches {
 };
 
 
-/// @brief A Constant is a special element from the universe.
+/// @brief Represents that an object with the same name is a constant.
 ///
-/// A Constant is a special element from the universe. That is, specific
-/// Elements can refer directly to Constants.
-/// In the context of planning, a Constant is an element that occurs in every
-/// problem instance.
-///
-/// The Constant class provides methods to retrieve the name and index of a
-/// Constant, and supports comparison operators for equality and inequality.
+/// A constant allows us to directly refer to a specfic object during the
+/// evaluation of elements. While the goal of the elements is to generalize to
+/// arbitrary-sized problem instances, we cannot refer to all objects directly.
+/// However, we want to be able to refer to some special objects directly. For
+/// example, consider that an instance from a common planning domain contains a
+/// set of natural numbers from 0 to n. Declaring 0 as constant allows us to
+/// define a concept `c_one_of(0)` that always evaluates to 0 for any given
+/// state.
 class Constant {
 private:
     ///< The name of the constant.
@@ -336,7 +331,12 @@ public:
 };
 
 
-/// @brief A Predicate is a name for a relation
+/// @brief Represents the name for a relation.
+///
+/// Planning domains define a set of predicates. Each predicate is a name for
+/// a relation with variable-sized arity. A predicate can also be defined as
+/// static with meaning that the ground atoms in all instances over the
+/// the common planning domain will also be static.
 class Predicate {
 private:
     std::string m_name;
@@ -367,9 +367,13 @@ public:
 };
 
 
-/**
- * VocabularyInfo stores information related to the planning domain.
- */
+/// @brief Represents a set of constants and predicates.
+///
+/// A vocabulary info defines information related to the predicates and
+/// and constants of a planning domain. We usually also want to add
+/// goal versions of predicates with an additional suffix _g. This allows us
+/// to add static atoms for the atoms that are true in the goal and refer to
+/// the goal during the evaluation of elements.
 class VocabularyInfo {
 private:
     // we store static and dynamic predicates together.
@@ -399,9 +403,7 @@ public:
 };
 
 
-/**
- * An Object belongs to a specific instance.
- */
+/// @brief Represents an object from a universe.
 class Object {
 private:
     std::string m_name;
@@ -425,9 +427,7 @@ public:
 };
 
 
-/**
- * An Atom belongs to a specific instance.
- */
+/// @brief Represent an element in a relation defined by predicate.
 class Atom {
 private:
     std::string m_name;
@@ -464,9 +464,7 @@ public:
 };
 
 
-/**
- * InstanceInfo stores information related to the planning instance.
- */
+/// @brief Represents a set of objects, atoms, static atoms over a vocabulary.
 class InstanceInfo {
 private:
     std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
@@ -531,6 +529,7 @@ public:
 };
 
 
+/// @brief Represents a set of atoms from an instance info.
 class State {
 private:
     std::shared_ptr<const InstanceInfo> m_instance_info;
@@ -573,6 +572,7 @@ public:
 };
 
 
+/// @brief Represents an element that can be evaluated for a given state.
 class BaseElement : public dlplan::utils::Cachable {
 protected:
     std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
@@ -616,9 +616,8 @@ public:
 };
 
 
-/**
- * Concept evaluates to ConceptDenotation.
- */
+/// @brief Represents a concept element that evaluates to a ConceptDenotation
+///        for a given state.
 class Concept : public BaseElement {
 protected:
     Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
@@ -640,9 +639,8 @@ public:
 };
 
 
-/**
- * Concept evaluates to RoleDenotation.
- */
+/// @brief Represents a role element that evaluates to a RoleDenotation
+///        for a given state.
 class Role : public BaseElement {
 protected:
     Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
@@ -664,9 +662,8 @@ public:
 };
 
 
-/**
- * Numerical evaluates to int.
- */
+/// @brief Represents a numerical element that evaluates to the natural numbers
+///        for a given state.
 class Numerical : public BaseElement {
 protected:
     Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
@@ -688,9 +685,8 @@ public:
 };
 
 
-/**
- * Boolean evaluates to bool.
- */
+/// @brief Represents a Boolean element that evaluates to an either true or
+///        false for a given state.
 class Boolean : public BaseElement {
 protected:
     Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
@@ -712,9 +708,8 @@ public:
 };
 
 
-/**
- * The SyntacticElementFactory for creation of syntactically unique elements.
- */
+/// @brief Represents a factory for uniquely constructing concept, role,
+///        Boolean, and numerical elements.
 class SyntacticElementFactory {
 private:
     dlplan::utils::pimpl<SyntacticElementFactoryImpl> m_pImpl;
