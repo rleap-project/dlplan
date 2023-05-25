@@ -5,7 +5,7 @@ Example illustrating the generator component.
 """
 
 from dlplan.core import VocabularyInfo, InstanceInfo, State, SyntacticElementFactory
-from dlplan.generator import FeatureGenerator
+from dlplan.generator import generate_features
 
 
 def construct_vocabulary_info():
@@ -48,6 +48,9 @@ def construct_instance_info(vocabulary):
 
 
 def main():
+    """ Example illustrating the generator component on a fragment of a planning
+    problem over the Blocks domain.
+    """
     vocabulary = construct_vocabulary_info()
     instance = construct_instance_info(vocabulary)
     factory = SyntacticElementFactory(vocabulary)
@@ -62,28 +65,15 @@ def main():
     atom_6 = atoms[6]
     atom_7 = atoms[7]
     atom_8 = atoms[8]
-    state_1 = State(instance, [atom_0, atom_3, atom_6, atom_8])
-    state_2 = State(instance, [atom_1, atom_2, atom_7, atom_8])
-    state_3 = State(instance, [atom_2, atom_3, atom_6, atom_7, atom_8])
-    state_4 = State(instance, [atom_3, atom_4, atom_7])
-    state_5 = State(instance, [atom_2, atom_5, atom_6])
+    # User must ensure that each State gets its unique index for caching.
+    state_1 = State(instance, [atom_0, atom_3, atom_6, atom_8], 1)  # a on b
+    state_2 = State(instance, [atom_1, atom_2, atom_7, atom_8], 2)  # b on a
+    state_3 = State(instance, [atom_2, atom_3, atom_6, atom_7, atom_8], 3)  # a,b on table
+    state_4 = State(instance, [atom_3, atom_4, atom_7], 4)  # holding a, b on table
+    state_5 = State(instance, [atom_2, atom_5, atom_6], 5)  # holding b, a on table
     states = [state_1, state_2, state_3, state_4, state_5]
 
-    generator = FeatureGenerator()
-    generator.set_generate_inclusion_boolean(False)
-    generator.set_generate_diff_concept(False)
-    generator.set_generate_or_concept(False)
-    generator.set_generate_subset_concept(False)
-    generator.set_generate_and_role(False)
-    generator.set_generate_compose_role(False)
-    generator.set_generate_diff_role(False)
-    generator.set_generate_identity_role(False)
-    generator.set_generate_not_role(False)
-    generator.set_generate_or_role(False)
-    generator.set_generate_top_role(False)
-    generator.set_generate_transitive_reflexive_closure_role(False)
-
-    features = generator.generate(factory, states, 5, 5, 10, 10, 10, 180, 100000)
+    features = generate_features(factory, states, 5, 5, 10, 10, 10, 180, 100000)
 
     for feature in features:
         print(feature)

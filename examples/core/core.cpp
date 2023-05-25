@@ -50,8 +50,9 @@ static std::shared_ptr<InstanceInfo> construct_instance_info(
 /// @brief Example illustrating the core component on a fragment of a planning
 ///        problem over the Blocks domain.
 ///
-/// Create VocabularyInfo, InstanceInfo, Elements, States, DenotationCaches
-/// followed by evaluating the elements on a state using the cache.
+/// The example illustrates the creation of VocabularyInfo, InstanceInfo,
+/// State, Element, and the evaluation of Element on a State using
+/// DenotationsCaches.
 int main() {
     auto vocabulary = construct_vocabulary_info();
     auto instance = construct_instance_info(vocabulary);
@@ -63,8 +64,8 @@ int main() {
     const auto& atom_3 = atoms[3];
     const auto& atom_6 = atoms[6];
     // User must ensure that each State gets its unique index for caching.
-    State state_1(instance, {atom_0, atom_3, atom_6}, 1);
-    State state_2(instance, {atom_1, atom_3, atom_6}, 2);
+    State state_1(instance, {atom_0, atom_3, atom_6}, 1);  // a on b
+    State state_2(instance, {atom_1, atom_3, atom_6}, 2);  // b on a
     States states{state_1, state_2};
 
     auto numerical = factory.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))");

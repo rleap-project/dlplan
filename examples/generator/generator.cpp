@@ -1,3 +1,6 @@
+/// Example illustrating the generator component.
+
+
 #include "../../include/dlplan/generator.h"
 
 #include <iostream>
@@ -5,10 +8,14 @@
 using namespace dlplan::core;
 using namespace dlplan::generator;
 
+
+/// @brief Construct a VocabularyInfo for the Blocks domain.
+///
+/// Create an empty VocabularyInfo and then add predicates, and constants.
+///
+/// @return the VocabularyInfo
 static std::shared_ptr<VocabularyInfo> construct_vocabulary_info() {
-    std::shared_ptr<VocabularyInfo> vocabulary = std::make_shared<VocabularyInfo>();
-    // Add predicates and constants of the domain.
-    // Note that there are no constants in Blocksworld.
+    auto vocabulary = std::make_shared<VocabularyInfo>();
     vocabulary->add_predicate("on", 2);
     vocabulary->add_predicate("on_g", 2);
     vocabulary->add_predicate("ontable", 1);
@@ -18,9 +25,16 @@ static std::shared_ptr<VocabularyInfo> construct_vocabulary_info() {
     return vocabulary;
 }
 
-static std::shared_ptr<InstanceInfo> construct_instance_info(const std::shared_ptr<VocabularyInfo>& vocabulary) {
-    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary);
-    // Add dynamic atoms
+/// @brief Construct an InstanceInfo over the Blocks domain.
+///
+/// Create an empty InstanceInfo and then add objects, atoms, and static atoms.
+///
+/// @param vocabulary the VocabularyInfo initialized for Blocks
+/// @return the InstanceInfo
+static std::shared_ptr<InstanceInfo> construct_instance_info(
+    const std::shared_ptr<VocabularyInfo>& vocabulary) {
+    // User must ensure that each InstanceInfo gets its unique index for caching.
+    auto instance = std::make_shared<InstanceInfo>(vocabulary, 0);
     instance->add_atom("on", {"a", "b"});
     instance->add_atom("on", {"b", "a"});
     instance->add_atom("ontable", {"a"});
@@ -30,23 +44,18 @@ static std::shared_ptr<InstanceInfo> construct_instance_info(const std::shared_p
     instance->add_atom("clear", {"a"});
     instance->add_atom("clear", {"b"});
     instance->add_atom("arm-empty", {});
-    // Add static goal atoms
     instance->add_static_atom("on_g", {"a", "b"});
-    // Add static atoms
-    // Note that there are no static atoms in Blocksworld.
     return instance;
 }
 
 
+/// @brief Example illustrating the generator component on a fragment of a planning
+///        problem over the Blocks domain.
 int main() {
-    // 1. Initialize VocabularyInfo
     auto vocabulary = construct_vocabulary_info();
-    // 2. Initialize InstanceInfo
     auto instance = construct_instance_info(vocabulary);
-    // 3. Initialize SyntacticElementFactory
     SyntacticElementFactory factory(vocabulary);
 
-    // 4. Construct a bunch of states
     const auto& atoms = instance->get_atoms();
     const Atom& atom_0 = atoms[0];
     const Atom& atom_1 = atoms[1];
@@ -57,28 +66,15 @@ int main() {
     const Atom& atom_6 = atoms[6];
     const Atom& atom_7 = atoms[7];
     const Atom& atom_8 = atoms[8];
-    State state_1(instance, {atom_0, atom_3, atom_6, atom_8});
-    State state_2(instance, {atom_1, atom_2, atom_7, atom_8});
-    State state_3(instance, {atom_2, atom_3, atom_6, atom_7, atom_8});
-    State state_4(instance, {atom_3, atom_4, atom_7});
-    State state_5(instance, {atom_2, atom_5, atom_6});
+    // User must ensure that each State gets its unique index for caching.
+    State state_1(instance, {atom_0, atom_3, atom_6, atom_8}, 1);  // a on b
+    State state_2(instance, {atom_1, atom_2, atom_7, atom_8}, 2);  // b on a
+    State state_3(instance, {atom_2, atom_3, atom_6, atom_7, atom_8}, 3);  // a,b on table
+    State state_4(instance, {atom_3, atom_4, atom_7}, 4);  // holding a, b on table
+    State state_5(instance, {atom_2, atom_5, atom_6}, 5);  // holding b, a on table
     States states({state_1, state_2, state_3, state_4, state_5});
 
-    // 5. Generate features up to complexity 4 with at most 180 seconds and at most 100000 features in total
-    FeatureGenerator generator;
-    generator.set_generate_inclusion_boolean(false);
-    generator.set_generate_diff_concept(false);
-    generator.set_generate_or_concept(false);
-    generator.set_generate_subset_concept(false);
-    generator.set_generate_and_role(false);
-    generator.set_generate_compose_role(false);
-    generator.set_generate_diff_role(false);
-    generator.set_generate_identity_role(false);
-    generator.set_generate_not_role(false);
-    generator.set_generate_or_role(false);
-    generator.set_generate_top_role(false);
-    generator.set_generate_transitive_reflexive_closure_role(false);
-    FeatureRepresentations features = generator.generate(factory, states, 5, 5, 10, 10, 10, 180, 100000);
+    FeatureRepresentations features = generate_features(factory, states, 5, 5, 10, 10, 10, 180, 100000);
 
     for (const auto& feature : features) {
         std::cout << feature << std::endl;

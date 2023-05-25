@@ -5,10 +5,12 @@
 #include "../../../include/dlplan/core.h"
 #include "../../../include/dlplan/state_space.h"
 
-using namespace dlplan::core;
+/// Example illustrating the state_space component.
+
 using namespace dlplan::state_space;
 
 
+/// @brief
 int main() {
     // Generate and read state space files.
     auto result = generate_state_space("domain.pddl", "instance_2_1_0.pddl", nullptr, 0);
