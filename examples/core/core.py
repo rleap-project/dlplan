@@ -65,23 +65,23 @@ def main():
     atom_3 = atoms[3]
     atom_6 = atoms[6]
     # User must ensure that each State gets its unique index for caching.
-    state_1 = State(instance, [atom_0, atom_3, atom_6], 1)  # a on b
-    state_2 = State(instance, [atom_1, atom_3, atom_6], 2)  # b on a
-    states = [state_1, state_2]
+    state_0 = State(instance, [atom_0, atom_3, atom_6], 0)  # a on b
+    state_1 = State(instance, [atom_1, atom_3, atom_6], 1)  # b on a
+    states = [state_0, state_1]
 
     numerical = factory.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))")
     print("Element repr:", repr(numerical))
     print()
 
     print("Evaluate for single state without cache.")
-    print("State:", str(state_1))
-    print("Value:", numerical.evaluate(state_1))
+    print("State:", str(state_0))
+    print("Value:", numerical.evaluate(state_0))
     print()
 
     caches = DenotationsCaches()
     print("Evaluate for single state with cache.")
-    print("State:", str(state_2))
-    print("Value:", numerical.evaluate(state_2, caches))
+    print("State:", str(state_1))
+    print("Value:", numerical.evaluate(state_1, caches))
     print()
 
     print("Evaluate for multiple states with cache.")

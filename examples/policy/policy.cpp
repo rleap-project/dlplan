@@ -52,6 +52,30 @@ static std::shared_ptr<InstanceInfo> construct_instance_info(
 }
 
 
+/// @brief Writes string to a file.
+/// @param filename the name of the file to be written to.
+/// @param content the content to be written.
+static void write_to_file(const std::string& filename, const std::string& content) {
+    std::ofstream ofs;
+    ofs.open(filename, std::ofstream::out);
+    ofs << content;
+    ofs.close();
+}
+
+
+/// @brief Reads string from a file.
+/// @param filename the name of the file to be read from.
+/// @return the contents of the file.
+static std::string read_from_file(const std::string& filename) {
+    std::ifstream ifs;
+    ifs.open(filename, std::ifstream::in);
+    std::stringstream ss;
+    ss << ifs.rdbuf();
+    ifs.close();
+    return ss.str();
+}
+
+
 /// @brief Example illustrating the policy component on a fragment of a planning
 ///        problem over the Blocks domain.
 ///
@@ -83,41 +107,30 @@ int main() {
     const Atom& atom_1 = atoms[1];
     const Atom& atom_2 = atoms[2];
     const Atom& atom_3 = atoms[3];
-    const Atom& atom_4 = atoms[4];
-    const Atom& atom_5 = atoms[5];
     const Atom& atom_6 = atoms[6];
     const Atom& atom_7 = atoms[7];
     const Atom& atom_8 = atoms[8];
     // User must ensure that each State gets its unique index for caching.
-    State state_1(instance, {atom_0, atom_3, atom_6, atom_8}, 1);  // a on b
-    State state_2(instance, {atom_1, atom_2, atom_7, atom_8}, 2);  // b on a
-    State state_3(instance, {atom_2, atom_3, atom_6, atom_7, atom_8}, 3);  // a,b on table
-    State state_4(instance, {atom_3, atom_4, atom_7}, 4);  // holding a, b on table
-    State state_5(instance, {atom_2, atom_5, atom_6}, 5);  // holding b, a on table
+    State state_0(instance, {atom_0, atom_3, atom_6, atom_8}, 0);  // a on b
+    State state_1(instance, {atom_1, atom_2, atom_7, atom_8}, 1);  // b on a
+    State state_2(instance, {atom_2, atom_3, atom_6, atom_7, atom_8}, 2);  // a,b on table
 
     dlplan::core::DenotationsCaches caches;
-    assert(policy->evaluate(state_1, state_3, caches));
-    assert(policy->evaluate(state_2, state_3, caches));
-    assert(!policy->evaluate(state_3, state_1, caches));
-    assert(!policy->evaluate(state_3, state_2, caches));
+    assert(policy->evaluate(state_0, state_2, caches));
+    assert(policy->evaluate(state_1, state_2, caches));
+    assert(!policy->evaluate(state_2, state_0, caches));
+    assert(!policy->evaluate(state_2, state_1, caches));
 
     std::cout << "Write policy:" << std::endl;
     std::cout << policy->compute_repr() << std::endl << std::endl;
     std::cout << policy->str() << std::endl << std::endl;
-    std::ofstream ofs;
-    ofs.open("test.txt", std::ofstream::out);
-    ofs << PolicyWriter().write(*policy);
-    ofs.close();
 
-    std::ifstream ifs;
-    ifs.open("test.txt", std::ifstream::in);
-    std::stringstream ss;
-    ss << ifs.rdbuf();
-    auto policy_in = PolicyReader().read(ss.str(), builder, factory);
-    ifs.close();
+    write_to_file("policy.txt", PolicyWriter().write(*policy));
+    auto policy_in = PolicyReader().read(read_from_file("policy.txt"), builder, factory);
+
     std::cout << "Read policy:" << std::endl;
     std::cout << policy_in->compute_repr() << std::endl << std::endl;
     std::cout << policy_in->str() << std::endl << std::endl;
-    assert(policy->compute_repr() == policy_in->compute_repr());
+
     return 0;
 }

@@ -64,21 +64,21 @@ int main() {
     const auto& atom_3 = atoms[3];
     const auto& atom_6 = atoms[6];
     // User must ensure that each State gets its unique index for caching.
-    State state_1(instance, {atom_0, atom_3, atom_6}, 1);  // a on b
-    State state_2(instance, {atom_1, atom_3, atom_6}, 2);  // b on a
-    States states{state_1, state_2};
+    State state_0(instance, {atom_0, atom_3, atom_6}, 0);  // a on b
+    State state_1(instance, {atom_1, atom_3, atom_6}, 1);  // b on a
+    States states{state_0, state_1};
 
     auto numerical = factory.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))");
     std::cout << "Element repr: " << numerical->compute_repr() << std::endl << std::endl;
 
     std::cout << "Evaluate for single state without cache." << std::endl;
-    std::cout << "State: " << state_1.str() << std::endl;
-    std::cout << "Value: " << numerical->evaluate(state_1) << std::endl << std::endl;
+    std::cout << "State: " << state_0.str() << std::endl;
+    std::cout << "Value: " << numerical->evaluate(state_0) << std::endl << std::endl;
 
     DenotationsCaches caches;
     std::cout << "Evaluate for single state with cache." << std::endl;
-    std::cout << "State: " << state_2.str() << std::endl;
-    std::cout << "Value: " << numerical->evaluate(state_2, caches) << std::endl << std::endl;
+    std::cout << "State: " << state_1.str() << std::endl;
+    std::cout << "Value: " << numerical->evaluate(state_1, caches) << std::endl << std::endl;
 
     std::cout << "Evaluate for multiple states with cache." << std::endl;
     auto denotations = numerical->evaluate(states, caches);
