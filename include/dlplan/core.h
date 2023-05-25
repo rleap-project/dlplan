@@ -617,7 +617,7 @@ public:
 
 
 /// @brief Represents a concept element that evaluates to a ConceptDenotation
-///        for a given state.
+///        on a given state.
 class Concept : public BaseElement {
 protected:
     Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
@@ -640,7 +640,7 @@ public:
 
 
 /// @brief Represents a role element that evaluates to a RoleDenotation
-///        for a given state.
+///        on a given state.
 class Role : public BaseElement {
 protected:
     Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
@@ -663,7 +663,7 @@ public:
 
 
 /// @brief Represents a numerical element that evaluates to the natural numbers
-///        for a given state.
+///        on a given state.
 class Numerical : public BaseElement {
 protected:
     Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
@@ -686,7 +686,7 @@ public:
 
 
 /// @brief Represents a Boolean element that evaluates to an either true or
-///        false for a given state.
+///        false on a given state.
 class Boolean : public BaseElement {
 protected:
     Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
