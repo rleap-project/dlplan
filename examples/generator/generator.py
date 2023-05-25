@@ -1,13 +1,21 @@
 #!/usr/bin/python3
 
+"""
+Example illustrating the generator component.
+"""
+
 from dlplan.core import VocabularyInfo, InstanceInfo, State, SyntacticElementFactory
 from dlplan.generator import FeatureGenerator
 
 
 def construct_vocabulary_info():
+    """ Construct a VocabularyInfo for the Blocks domain.
+
+    Create an empty VocabularyInfo and then add predicates, and constants.
+
+    Returns: the VocabularyInfo
+    """
     vocabulary = VocabularyInfo()
-    # Add predicates and constants of the domain.
-    # Note that there are no constants in Blocksworld.
     vocabulary.add_predicate("on", 2)
     vocabulary.add_predicate("on_g", 2)
     vocabulary.add_predicate("ontable", 1)
@@ -18,8 +26,14 @@ def construct_vocabulary_info():
 
 
 def construct_instance_info(vocabulary):
-    instance = InstanceInfo(vocabulary)
-    # Add dynamic atoms
+    """ Construct an InstanceInfo over the Blocks domain.
+
+    Create an empty InstanceInfo and then add objects, atoms, and static atoms.
+
+    Returns: the InstanceInfo
+    """
+    # User must ensure that each index gets its unique index for caching.
+    instance = InstanceInfo(vocabulary, index=0)
     instance.add_atom("on", ["a", "b"])
     instance.add_atom("on", ["b", "a"])
     instance.add_atom("ontable", ["a"])
@@ -29,22 +43,15 @@ def construct_instance_info(vocabulary):
     instance.add_atom("clear", ["a"])
     instance.add_atom("clear", ["b"])
     instance.add_atom("arm-empty", [])
-    # Add static goal atoms
     instance.add_static_atom("on_g", ["a", "b"])
-    # Add static atoms
-    # Note that there are no static atoms in Blocksworld.
     return instance
 
 
 def main():
-    # 1. Initialize VocabularyInfo
     vocabulary = construct_vocabulary_info()
-    # 2. Initialize InstanceInfo
     instance = construct_instance_info(vocabulary)
-    # 3. Initialize SyntacticElementFactory
     factory = SyntacticElementFactory(vocabulary)
 
-    # 4. Construct a bunch of states
     atoms = instance.get_atoms()
     atom_0 = atoms[0]
     atom_1 = atoms[1]
@@ -62,7 +69,6 @@ def main():
     state_5 = State(instance, [atom_2, atom_5, atom_6])
     states = [state_1, state_2, state_3, state_4, state_5]
 
-    # 5. Generate features up to complexity 4 with at most 180 seconds and at most 100000 features in total
     generator = FeatureGenerator()
     generator.set_generate_inclusion_boolean(False)
     generator.set_generate_diff_concept(False)

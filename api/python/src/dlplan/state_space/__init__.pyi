@@ -1,19 +1,19 @@
 from enum import Enum
 
-from typing import Dict, List, MutableSet
+from typing import Overload, Dict, List, MutableSet
 
 from ..core import VocabularyInfo, InstanceInfo, State
 
 
 class StateSpace:
-    @overload 
-    def __init__(self, 
-        instance_info: InstanceInfo, 
-        states: Dict[int, State], 
-        initial_state_index: int, 
+    @overload
+    def __init__(self,
+        instance_info: InstanceInfo,
+        states: Dict[int, State],
+        initial_state_index: int,
         forward_successor_state_indices: Dict[int, MutableSet[int]],
         goal_state_indices: MutableSet[int]) -> None: ...
-    @overlaod 
+    @overload
     def __init__(self, state_space: "StateSpace", state_indices: MutableSet[int]) -> None: ...
     def __str__(self) -> str: ...
     def compute_distances(self, state_indices: MutableSet[int], forward: bool, stop_if_goal: bool) -> Dict[int, int]: ...
@@ -41,4 +41,4 @@ class GeneratorResult:
     state_space: StateSpace
 
 
-def generate_state_space(domain_file: str, instance_file: str, vocabulary_info: VocabularyInfo = None, index: int = -1, max_time: int = 1000000) -> GeneratorResultWrapper: ...
+def generate_state_space(domain_file: str, instance_file: str, vocabulary_info: VocabularyInfo = None, index: int = -1, max_time: int = 1000000) -> GeneratorResult: ...

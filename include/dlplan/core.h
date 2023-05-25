@@ -251,18 +251,18 @@ public:
 };
 
 
-/**
- * Compares two std::unique_ptr<T>
- * by comparing objects T.
- */
-template<typename T>
-struct DerefEqual {
-    bool operator()(const T& left, const T& right) const {
-        return *left == *right;
-    }
-};
-
 struct DenotationsCaches {
+    /**
+     * Compares two std::unique_ptr<T>
+     * by comparing objects T.
+     */
+    template<typename T>
+    struct DerefEqual {
+        bool operator()(const T& left, const T& right) const {
+            return *left == *right;
+        }
+    };
+
     // Cache for single denotations.
     std::unordered_set<std::unique_ptr<ConceptDenotation>, std::hash<std::unique_ptr<ConceptDenotation>>, DerefEqual<std::unique_ptr<ConceptDenotation>>> m_c_denot_cache;
     std::unordered_set<std::unique_ptr<RoleDenotation>, std::hash<std::unique_ptr<RoleDenotation>>, DerefEqual<std::unique_ptr<RoleDenotation>>> m_r_denot_cache;

@@ -1,4 +1,11 @@
-from dlplan.core import VocabularyInfo, InstanceInfo, State, SyntacticElementFactory, DenotationsCaches
+#!/usr/bin/python3
+
+"""
+Example illustrating the policy component.
+"""
+
+from dlplan.core import VocabularyInfo, InstanceInfo, State, SyntacticElementFactory, \
+    DenotationsCaches
 from dlplan.policy import PolicyBuilder, PolicyWriter, PolicyReader
 
 
@@ -44,11 +51,11 @@ def main():
     print(repr(policy))
     print(str(policy))
     print()
-    with open("policy.txt", "w") as file:
+    with open("policy.txt", "w", encoding="iso8859-1") as file:
         file.write(PolicyWriter().write(policy))
 
     print("Read policy:")
-    with open("policy.txt", "r") as file:
+    with open("policy.txt", "r", encoding="iso8859-1") as file:
         policy_in = PolicyReader().read("\n".join(file.readlines()), builder, factory)
     print(repr(policy_in))
     print(str(policy_in))
