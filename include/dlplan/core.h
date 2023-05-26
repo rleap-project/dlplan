@@ -46,28 +46,20 @@ namespace std {
         size_t operator()(const dlplan::core::State& state) const noexcept;
     };
     template<>
-    struct hash<unique_ptr<dlplan::core::ConceptDenotation>> {
-        size_t operator()(const unique_ptr<dlplan::core::ConceptDenotation>& denotation) const noexcept;
+    struct hash<dlplan::core::ConceptDenotation> {
+        size_t operator()(const dlplan::core::ConceptDenotation& denotation) const noexcept;
     };
     template<>
-    struct hash<unique_ptr<dlplan::core::RoleDenotation>> {
-        size_t operator()(const unique_ptr<dlplan::core::RoleDenotation>& denotation) const noexcept;
+    struct hash<dlplan::core::RoleDenotation> {
+        size_t operator()(const dlplan::core::RoleDenotation& denotation) const noexcept;
     };
     template<>
-    struct hash<unique_ptr<dlplan::core::ConceptDenotations>> {
-        size_t operator()(const unique_ptr<dlplan::core::ConceptDenotations>& denotations) const noexcept;
+    struct hash<dlplan::core::ConceptDenotations> {
+        size_t operator()(const dlplan::core::ConceptDenotations& denotations) const noexcept;
     };
     template<>
-    struct hash<unique_ptr<dlplan::core::RoleDenotations>> {
-        size_t operator()(const unique_ptr<dlplan::core::RoleDenotations>& denotations) const noexcept;
-    };
-    template<>
-    struct hash<unique_ptr<dlplan::core::BooleanDenotations>> {
-        size_t operator()(const unique_ptr<dlplan::core::BooleanDenotations>& denotations) const noexcept;
-    };
-    template<>
-    struct hash<unique_ptr<dlplan::core::NumericalDenotations>> {
-        size_t operator()(const unique_ptr<dlplan::core::NumericalDenotations>& denotations) const noexcept;
+    struct hash<dlplan::core::RoleDenotations> {
+        size_t operator()(const dlplan::core::RoleDenotations& denotations) const noexcept;
     };
     template<> struct hash<vector<unsigned>> {
         size_t operator()(const vector<unsigned>& data) const noexcept;
@@ -122,7 +114,7 @@ public:
 
             void seek_next();
     };
-
+    ConceptDenotation();
     explicit ConceptDenotation(int num_objects);
     ConceptDenotation(const ConceptDenotation& other);
     ConceptDenotation& operator=(const ConceptDenotation& other);
@@ -207,7 +199,7 @@ public:
         private:
             void seek_next();
     };
-
+    RoleDenotation();
     explicit RoleDenotation(int num_objects);
     RoleDenotation(const RoleDenotation& other);
     RoleDenotation& operator=(const RoleDenotation& other);
@@ -250,19 +242,10 @@ class DenotationsCaches {
 private:
     template<typename U>
     struct Cache {
-        /// @brief Compares two std::unique_ptr<T> by comparing objects T.
-        /// @tparam T the nested type
-        template<typename T>
-        struct DerefEqual {
-            bool operator()(const std::unique_ptr<T>& left, const std::unique_ptr<T>& right) const {
-                return *left == *right;
-            }
-        };
-
-        std::unordered_set<std::unique_ptr<U>, std::hash<std::unique_ptr<U>>, DerefEqual<U>> m_uniqueness_cache;
+        std::unordered_set<U, std::hash<U>> m_uniqueness_cache;
         std::unordered_map<int, U*> m_per_element;
-        std::unordered_map<std::array<int, 2>, U> m_per_element_instance;
-        std::unordered_map<std::array<int, 3>, U> m_per_element_instance_state;
+        std::unordered_map<std::array<int, 2>, U*> m_per_element_instance;
+        std::unordered_map<std::array<int, 3>, U*> m_per_element_instance_state;
     };
 
     Cache<ConceptDenotation> m_concept_denotation_cache;

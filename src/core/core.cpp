@@ -1,6 +1,5 @@
 #include "../../include/dlplan/core.h"
 
-#include "denotations_caches_impl.h"
 #include "element_factory.h"
 #include "../utils/hashing.h"
 
@@ -14,31 +13,25 @@ namespace std {
     size_t hash<dlplan::core::State>::operator()(const dlplan::core::State& state) const noexcept {
         return state.hash();
     }
-    size_t hash<unique_ptr<dlplan::core::ConceptDenotation>>::operator()(const unique_ptr<dlplan::core::ConceptDenotation>& denotation) const noexcept {
-        return denotation->hash();
+    size_t hash<dlplan::core::ConceptDenotation>::operator()(const dlplan::core::ConceptDenotation& denotation) const noexcept {
+        return denotation.hash();
     }
-    size_t hash<unique_ptr<dlplan::core::RoleDenotation>>::operator()(const unique_ptr<dlplan::core::RoleDenotation>& denotation) const noexcept {
-        return denotation->hash();
+    size_t hash<dlplan::core::RoleDenotation>::operator()(const dlplan::core::RoleDenotation& denotation) const noexcept {
+        return denotation.hash();
     }
-    size_t hash<unique_ptr<dlplan::core::ConceptDenotations>>::operator()(const unique_ptr<dlplan::core::ConceptDenotations>& denotations) const noexcept {
+    size_t hash<dlplan::core::ConceptDenotations>::operator()(const dlplan::core::ConceptDenotations& denotations) const noexcept {
         size_t seed = 0;
-        for (const auto denot_ptr : *denotations) {
+        for (const auto denot_ptr : denotations) {
             dlplan::utils::hash_combine(seed, denot_ptr);
         }
         return seed;
     }
-    size_t hash<unique_ptr<dlplan::core::RoleDenotations>>::operator()(const unique_ptr<dlplan::core::RoleDenotations>& denotations) const noexcept {
+    size_t hash<dlplan::core::RoleDenotations>::operator()(const dlplan::core::RoleDenotations& denotations) const noexcept {
         size_t seed = 0;
-        for (const auto denot_ptr : *denotations) {
+        for (const auto denot_ptr : denotations) {
             dlplan::utils::hash_combine(seed, denot_ptr);
         }
         return seed;
-    }
-    size_t hash<unique_ptr<dlplan::core::BooleanDenotations>>::operator()(const unique_ptr<dlplan::core::BooleanDenotations>& denotations) const noexcept {
-        return hash<dlplan::core::BooleanDenotations>()(*denotations);
-    }
-    size_t hash<unique_ptr<dlplan::core::NumericalDenotations>>::operator()(const unique_ptr<dlplan::core::NumericalDenotations>& denotations) const noexcept {
-        return hash<dlplan::core::NumericalDenotations>()(*denotations);
     }
     size_t hash<vector<unsigned>>::operator()(const vector<unsigned>& data) const noexcept {
         size_t seed = data.size();
@@ -72,6 +65,9 @@ namespace std {
 
 
 namespace dlplan::core {
+
+ConceptDenotation::ConceptDenotation()
+    : m_num_objects(0), m_data(utils::DynamicBitset<unsigned>(0)) { }
 
 ConceptDenotation::ConceptDenotation(int num_objects)
     : m_num_objects(num_objects), m_data(utils::DynamicBitset<unsigned>(num_objects)) { }
@@ -225,6 +221,8 @@ int ConceptDenotation::get_num_objects() const {
     return m_num_objects;
 }
 
+RoleDenotation::RoleDenotation()
+    : m_num_objects(0), m_data(utils::DynamicBitset<unsigned>(0)) { }
 
 RoleDenotation::RoleDenotation(int num_objects)
     : m_num_objects(num_objects), m_data(utils::DynamicBitset<unsigned>(num_objects * num_objects)) { }
