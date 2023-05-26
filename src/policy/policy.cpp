@@ -8,6 +8,8 @@
 
 #include "../../include/dlplan/policy.h"
 
+#include <iostream>
+
 
 namespace dlplan::policy {
 

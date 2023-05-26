@@ -2,6 +2,7 @@
 #include "effect.h"
 
 #include "../utils/set_operators.h"
+#include "../utils/hashing.h"
 
 #include "../../include/dlplan/policy.h"
 

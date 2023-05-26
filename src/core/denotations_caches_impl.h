@@ -39,11 +39,6 @@ private:
     std::unordered_map<std::array<int, 3>, bool> m_b_denots_mapping_per_state;
     std::unordered_map<std::array<int, 3>, ConceptDenotation*> m_c_denots_mapping_per_state;
     std::unordered_map<std::array<int, 3>, RoleDenotation*> m_r_denots_mapping_per_state;
-    // Mapping from instance, element index to denotations
-    std::unordered_map<std::array<int, 2>, int> m_n_denots_mapping_per_instance;
-    std::unordered_map<std::array<int, 2>, bool> m_b_denots_mapping_per_instance;
-    std::unordered_map<std::array<int, 2>, ConceptDenotation*> m_c_denots_mapping_per_instance;
-    std::unordered_map<std::array<int, 2>, RoleDenotation*> m_r_denots_mapping_per_instance;
 
 public:
     DenotationsCachesImpl();
@@ -51,30 +46,50 @@ public:
     DenotationsCachesImpl(DenotationsCachesImpl&& other);
     DenotationsCachesImpl& operator=(DenotationsCachesImpl&& other);
 
-    const ConceptDenotation* insert(ConceptDenotation&& denotation);
-    const RoleDenotation* insert(RoleDenotation&& denotation);
-    const ConceptDenotations* insert(ConceptDenotations&& denotations);
-    const RoleDenotations* insert(RoleDenotations&& denotations);
-    const BooleanDenotations* insert(BooleanDenotations&& denotations);
-    const NumericalDenotations* insert(NumericalDenotations&& denotations);
+    /// Caches concept and role denotations for ensuring uniqueness.
+    template<typename T>
+    const T* insert_denotation(T&& denotation) {
+        static_assert(std::is_same<T, ConceptDenotation>::value ||
+                      std::is_same<T, RoleDenotation>::value ,
+                      "Unsupported type for insert_denotation method.");
+    }
 
-    const ConceptDenotations* get_concept_denotations(int element_index);
-    void insert(int element_index, const ConceptDenotations* denotation);
-    const RoleDenotations* get_role_denotations(int element_index);
-    void insert(int element_index, const RoleDenotations* denotation);
-    const BooleanDenotations* get_boolean_denotations(int element_index);
-    void insert(int element_index, const BooleanDenotations* denotation);
-    const NumericalDenotations* get_numerical_denotations(int element_index);
-    void insert(int element_index, const NumericalDenotations* denotation);
+    /// @brief Caches a collection of denotations per element.
+    template<typename T>
+    void insert_denotations(int element_index, const T* denotations) {
+        static_assert(std::is_same<T, ConceptDenotations>::value  ||
+                      std::is_same<T, RoleDenotations>::value  ||
+                      std::is_same<T, BooleanDenotations>::value  ||
+                      std::is_same<T, NumericalDenotations>::value ,
+                      "Unsupported type for insert_denotations method.");
+    }
 
-    const ConceptDenotation* get_concept_denotation(int element_index, int instance_index, int state_index);
-    void insert(int element_index, int instance_index, int state_index, const ConceptDenotation* denotation);
-    const RoleDenotation* get_role_denotation(int element_index, int instance_index, int state_index);
-    void insert(int element_index, int instance_index, int state_index, const RoleDenotation* denotation);
-    bool get_boolean_denotation(int element_index, int instance_index, int state_index);
-    void insert(int element_index, int instance_index, int state_index, bool denotation);
-    int get_numerical_denotation(int element_index, int instance_index, int state_index);
-    void insert(int element_index, int instance_index, int state_index, int denotation);
+    template<typename T>
+    const T* get_denotations(int element_index) const {
+        static_assert(std::is_same<T, ConceptDenotations>::value  ||
+                      std::is_same<T, RoleDenotations>::value  ||
+                      std::is_same<T, BooleanDenotations>::value  ||
+                      std::is_same<T, NumericalDenotations>::value ,
+                      "Unsupported type for get_denotations method.");
+    }
+
+    /// @brief Caches a single denotation per element, instance, and state.
+    template<typename T>
+    void insert_denotation(int element_index, int instance_index, int state_index, const T* denotation) {
+        static_assert(std::is_same<T, ConceptDenotation>::value  ||
+                      std::is_same<T, RoleDenotation>::value  ||
+                      std::is_same<T, bool>::value  ||
+                      std::is_same<T, int>::value ,
+                      "Unsupported type for insert_denotations method.");
+    }
+    template<typename T>
+    const T* get_denotation(int element_index, int instance_index, int state_index) const {
+        static_assert(std::is_same<T, ConceptDenotation>::value  ||
+                      std::is_same<T, RoleDenotation>::value  ||
+                      std::is_same<T, bool>::value  ||
+                      std::is_same<T, int>::value ,
+                      "Unsupported type for get_denotation method.");
+    }
 };
 
 }

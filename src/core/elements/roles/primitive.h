@@ -50,7 +50,7 @@ private:
             compute_result(
                 states[i],
                 denotation);
-            denotations.push_back(caches.insert(std::move(denotation)));
+            denotations.push_back(caches.insert_denotation(std::move(denotation)));
         }
         return denotations;
     }

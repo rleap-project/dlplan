@@ -6,6 +6,7 @@
 #include <fstream>
 #include <cassert>
 #include <sstream>
+#include <iostream>
 
 
 using namespace dlplan::policy;

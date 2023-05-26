@@ -37,7 +37,54 @@ using ConceptDenotations = std::vector<const ConceptDenotation*>;
 using RoleDenotations = std::vector<const RoleDenotation*>;
 using BooleanDenotations = std::vector<bool>;
 using NumericalDenotations = std::vector<int>;
+}
 
+
+/// Template specializations of std::hash
+namespace std {
+    template<> struct hash<dlplan::core::State> {
+        size_t operator()(const dlplan::core::State& state) const noexcept;
+    };
+    template<>
+    struct hash<unique_ptr<dlplan::core::ConceptDenotation>> {
+        size_t operator()(const unique_ptr<dlplan::core::ConceptDenotation>& denotation) const noexcept;
+    };
+    template<>
+    struct hash<unique_ptr<dlplan::core::RoleDenotation>> {
+        size_t operator()(const unique_ptr<dlplan::core::RoleDenotation>& denotation) const noexcept;
+    };
+    template<>
+    struct hash<unique_ptr<dlplan::core::ConceptDenotations>> {
+        size_t operator()(const unique_ptr<dlplan::core::ConceptDenotations>& denotations) const noexcept;
+    };
+    template<>
+    struct hash<unique_ptr<dlplan::core::RoleDenotations>> {
+        size_t operator()(const unique_ptr<dlplan::core::RoleDenotations>& denotations) const noexcept;
+    };
+    template<>
+    struct hash<unique_ptr<dlplan::core::BooleanDenotations>> {
+        size_t operator()(const unique_ptr<dlplan::core::BooleanDenotations>& denotations) const noexcept;
+    };
+    template<>
+    struct hash<unique_ptr<dlplan::core::NumericalDenotations>> {
+        size_t operator()(const unique_ptr<dlplan::core::NumericalDenotations>& denotations) const noexcept;
+    };
+    template<> struct hash<vector<unsigned>> {
+        size_t operator()(const vector<unsigned>& data) const noexcept;
+    };
+    template<> struct hash<vector<int>> {
+        size_t operator()(const vector<int>& data) const noexcept;
+    };
+    template<> struct hash<std::array<int, 2>> {
+        size_t operator()(const std::array<int, 2>& data) const noexcept;
+    };
+    template<> struct hash<std::array<int, 3>> {
+        size_t operator()(const std::array<int, 3>& data) const noexcept;
+    };
+}
+
+
+namespace dlplan::core {
 /// @brief Represents the result of the evaluation of a concept on a state.
 ///
 /// The result of an evaluation of a concept is a set of object indices. The
@@ -201,7 +248,32 @@ public:
 
 class DenotationsCaches {
 private:
-    dlplan::utils::pimpl<DenotationsCachesImpl> m_pImpl;
+    template<typename U>
+    struct Cache {
+        /// @brief Compares two std::unique_ptr<T> by comparing objects T.
+        /// @tparam T the nested type
+        template<typename T>
+        struct DerefEqual {
+            bool operator()(const std::unique_ptr<T>& left, const std::unique_ptr<T>& right) const {
+                return *left == *right;
+            }
+        };
+
+        std::unordered_set<std::unique_ptr<U>, std::hash<std::unique_ptr<U>>, DerefEqual<U>> m_uniqueness_cache;
+        std::unordered_map<int, U*> m_per_element;
+        std::unordered_map<std::array<int, 2>, U> m_per_element_instance;
+        std::unordered_map<std::array<int, 3>, U> m_per_element_instance_state;
+    };
+
+    Cache<ConceptDenotation> m_concept_denotation_cache;
+    Cache<RoleDenotation> m_role_denotation_cache;
+    Cache<bool> m_boolean_denotation_cache;
+    Cache<int> m_numerical_denotation_cache;
+
+    Cache<ConceptDenotations> m_concept_denotations_cache;
+    Cache<RoleDenotations> m_role_denotations_cache;
+    Cache<BooleanDenotations> m_boolean_denotations_cache;
+    Cache<NumericalDenotations> m_numerical_denotations_cache;
 
     DenotationsCaches(const DenotationsCaches& other) = delete;
     DenotationsCaches& operator=(const DenotationsCaches& other) = delete;
@@ -212,38 +284,20 @@ public:
     DenotationsCaches& operator=(DenotationsCaches&& other);
 
     /// Caches concept and role denotations for ensuring uniqueness.
-    const ConceptDenotation* insert(ConceptDenotation&& denotation);
-    const RoleDenotation* insert(RoleDenotation&& denotation);
-    const ConceptDenotations* insert(ConceptDenotations&& denotations);
-    const RoleDenotations* insert(RoleDenotations&& denotations);
-    const BooleanDenotations* insert(BooleanDenotations&& denotations);
-    const NumericalDenotations* insert(NumericalDenotations&& denotations);
+    template<typename T>
+    const T* insert_denotation(T&& denotation);
 
     /// @brief Caches a collection of denotations per element.
-    /// @param element_index
-    /// @return
-    const ConceptDenotations* get_concept_denotations(int element_index);
-    void insert(int element_index, const ConceptDenotations* denotation);
-    const RoleDenotations* get_role_denotations(int element_index);
-    void insert(int element_index, const RoleDenotations* denotation);
-    const BooleanDenotations* get_boolean_denotations(int element_index);
-    void insert(int element_index, const BooleanDenotations* denotation);
-    const NumericalDenotations* get_numerical_denotations(int element_index);
-    void insert(int element_index, const NumericalDenotations* denotation);
+    template<typename T>
+    void insert_denotations(int element_index, const T* denotations);
+    template<typename T>
+    const T* get_denotations(int element_index) const;
 
     /// @brief Caches a single denotation per element, instance, and state.
-    /// @param element_index
-    /// @param instance_index
-    /// @param state_index
-    /// @return
-    const ConceptDenotation* get_concept_denotation(int element_index, int instance_index, int state_index);
-    void insert(int element_index, int instance_index, int state_index, const ConceptDenotation* denotation);
-    const RoleDenotation* get_role_denotation(int element_index, int instance_index, int state_index);
-    void insert(int element_index, int instance_index, int state_index, const RoleDenotation* denotation);
-    bool get_boolean_denotation(int element_index, int instance_index, int state_index);
-    void insert(int element_index, int instance_index, int state_index, bool denotation);
-    int get_numerical_denotation(int element_index, int instance_index, int state_index);
-    void insert(int element_index, int instance_index, int state_index, int denotation);
+    template<typename T>
+    void insert_denotation(int element_index, int instance_index, int state_index, const T* denotation);
+    template<typename T>
+    const T* get_denotation(int element_index, int instance_index, int state_index) const;
 };
 
 
@@ -754,5 +808,7 @@ public:
 };
 
 }
+
+#include "core.tpp"
 
 #endif

@@ -19,26 +19,26 @@ Numerical& Numerical::operator=(Numerical&& other) = default;
 Numerical::~Numerical() = default;
 
 int Numerical::evaluate(const State& state, DenotationsCaches& caches) const {
-    auto cached = caches.get_numerical_denotation(
+    const int* cached = caches.get_denotation<int>(
         get_index(),
         state.get_instance_info()->get_index(),
         is_static() ? -1 : get_index());
-    if (cached) return cached;
-    int denotation = evaluate_impl(state, caches);
-    caches.insert(
+    if (cached) return *cached;
+    const int* denotation = caches.insert_denotation(evaluate_impl(state, caches));
+    caches.insert_denotation(
         get_index(),
         state.get_instance_info()->get_index(),
         is_static() ? -1 : get_index(),
         denotation);
-    return denotation;
+    return *denotation;
 }
 
 const NumericalDenotations* Numerical::evaluate(const States& states, DenotationsCaches& caches) const {
-    auto cached = caches.get_numerical_denotations(get_index());
+    auto cached = caches.get_denotations<NumericalDenotations>(get_index());
     if (cached) return cached;
     auto denotations = evaluate_impl(states, caches);
-    auto result_denotations = caches.insert(std::move(denotations));
-    caches.insert(get_index(), result_denotations);
+    auto result_denotations = caches.insert_denotation(std::move(denotations));
+    caches.insert_denotations(get_index(), result_denotations);
     return result_denotations;
 }
 
