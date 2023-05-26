@@ -66,9 +66,6 @@ namespace std {
 
 namespace dlplan::core {
 
-ConceptDenotation::ConceptDenotation()
-    : m_num_objects(0), m_data(utils::DynamicBitset<unsigned>(0)) { }
-
 ConceptDenotation::ConceptDenotation(int num_objects)
     : m_num_objects(num_objects), m_data(utils::DynamicBitset<unsigned>(num_objects)) { }
 
@@ -221,8 +218,6 @@ int ConceptDenotation::get_num_objects() const {
     return m_num_objects;
 }
 
-RoleDenotation::RoleDenotation()
-    : m_num_objects(0), m_data(utils::DynamicBitset<unsigned>(0)) { }
 
 RoleDenotation::RoleDenotation(int num_objects)
     : m_num_objects(num_objects), m_data(utils::DynamicBitset<unsigned>(num_objects * num_objects)) { }

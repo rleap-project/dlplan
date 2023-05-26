@@ -52,7 +52,7 @@ private:
                 *(*role_denotations)[i],
                 states[i].get_instance_info()->get_objects().size(),
                 denotation);
-            denotations.push_back(caches.insert_denotation(std::move(denotation)));
+            denotations.push_back(caches.get_role_denotation_cache().insert_denotation(std::move(denotation)));
         }
        return denotations;
     }

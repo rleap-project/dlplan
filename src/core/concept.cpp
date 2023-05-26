@@ -19,13 +19,13 @@ Concept& Concept::operator=(Concept&& other) = default;
 Concept::~Concept() = default;
 
 const ConceptDenotation* Concept::evaluate(const State& state, DenotationsCaches& caches) const {
-    auto cached = caches.get_denotation<ConceptDenotation>(
+    auto cached = caches.get_concept_denotation_cache().get_denotation(
         get_index(),
         state.get_instance_info()->get_index(),
         is_static() ? -1 : get_index());
     if (cached) return cached;
-    const ConceptDenotation* denotation = caches.insert_denotation(evaluate_impl(state, caches));
-    caches.insert_denotation(
+    const ConceptDenotation* denotation = caches.get_concept_denotation_cache().insert_denotation(evaluate_impl(state, caches));
+    caches.get_concept_denotation_cache().insert_denotation(
         get_index(),
         state.get_instance_info()->get_index(),
         is_static() ? -1 : get_index(),
@@ -34,11 +34,11 @@ const ConceptDenotation* Concept::evaluate(const State& state, DenotationsCaches
 }
 
 const ConceptDenotations* Concept::evaluate(const States& states, DenotationsCaches& caches) const {
-    auto cached = caches.get_denotations<ConceptDenotations>(get_index());
+    auto cached = caches.get_concept_denotations_cache().get_denotation(get_index());
     if (cached) return cached;
     auto denotations = evaluate_impl(states, caches);
-    auto result_denotations = caches.insert_denotation(std::move(denotations));
-    caches.insert_denotations(get_index(), result_denotations);
+    auto result_denotations = caches.get_concept_denotations_cache().insert_denotation(std::move(denotations));
+    caches.get_concept_denotations_cache().insert_denotation(get_index(), result_denotations);
     return result_denotations;
 }
 

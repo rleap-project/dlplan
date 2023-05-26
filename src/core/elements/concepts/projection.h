@@ -36,7 +36,7 @@ private:
             compute_result(
                 *(*role_denotations)[i],
                 denotation);
-            denotations.push_back(caches.insert_denotation(std::move(denotation)));
+            denotations.push_back(caches.get_concept_denotation_cache().insert_denotation(std::move(denotation)));
         }
        return denotations;
     }
