@@ -21,13 +21,13 @@ const RoleDenotation* Role::evaluate(const State& state, DenotationsCaches& cach
     auto cached = caches.get_role_denotation_cache().get_denotation(
         get_index(),
         state.get_instance_info()->get_index(),
-        is_static() ? -1 : get_index());
+        is_static() ? -1 : state.get_index());
     if (cached) return cached;
     const RoleDenotation* denotation = caches.get_role_denotation_cache().insert_denotation(evaluate_impl(state, caches));
     caches.get_role_denotation_cache().insert_denotation(
         get_index(),
         state.get_instance_info()->get_index(),
-        is_static() ? -1 : get_index(),
+        is_static() ? -1 : state.get_index(),
         denotation);
     return denotation;
 }
