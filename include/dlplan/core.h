@@ -255,28 +255,34 @@ private:
         };
 
         // We use unique_ptr such that other raw pointers do not become invalid.
-        std::unordered_set<std::unique_ptr<const T>, UniquePtrHash, UniquePtrEqual> m_uniqueness_cache;
-        std::unordered_map<int, const T*> m_per_element;
-        std::unordered_map<std::array<int, 3>, const T*> m_per_element_instance_state;
+        std::unordered_set<std::unique_ptr<const T>, UniquePtrHash, UniquePtrEqual> m_uniqueness;
+        std::unordered_map<std::array<int, 3>, const T*> m_per_element_instance_state_mapping;
 
         /// @brief Inserts denotation uniquely and returns it raw pointer.
         /// @param denotation
         /// @return
-        const T* insert_denotation(T&& denotation);
-
-        /// @brief Inserts raw pointer of denotation into mapping from element.
-        /// @param element_index
-        /// @param denotations
-        void insert_denotation(int element_index, const T* denotations);
-        const T* get_denotation(int element_index) const;
+        const T* insert_denotation(T&& denotation) {
+            return m_uniqueness.insert(std::make_unique<T>(std::move(denotation))).first->get();
+        }
 
         /// @brief Inserts raw pointer of denotation into mapping from element, instance, and state.
         /// @param element_index
         /// @param instance_index
         /// @param state_index
         /// @param denotation
-        void insert_denotation(int element_index, int instance_index, int state_index, const T* denotation);
-        const T* get_denotation(int element_index, int instance_index, int state_index) const;
+        void insert_denotation(int element_index, int instance_index, int state_index, const T* denotation) {
+            std::array<int, 3> key{element_index, instance_index, state_index};
+            m_per_element_instance_state_mapping.emplace(key, denotation);
+        }
+
+        const T* get_denotation(int element_index, int instance_index, int state_index) const {
+            std::array<int, 3> key{element_index, instance_index, state_index};
+            auto iter = m_per_element_instance_state_mapping.find(key);
+            if (iter != m_per_element_instance_state_mapping.end()) {
+                return iter->second;
+            }
+            return nullptr;
+        }
     };
 
     Cache<ConceptDenotation> m_concept_denotation_cache;

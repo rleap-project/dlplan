@@ -34,11 +34,11 @@ int Numerical::evaluate(const State& state, DenotationsCaches& caches) const {
 }
 
 const NumericalDenotations* Numerical::evaluate(const States& states, DenotationsCaches& caches) const {
-    auto cached = caches.get_numerical_denotations_cache().get_denotation(get_index());
+    auto cached = caches.get_numerical_denotations_cache().get_denotation(get_index(), -1, -1);
     if (cached) return cached;
     auto denotations = evaluate_impl(states, caches);
     auto result_denotations = caches.get_numerical_denotations_cache().insert_denotation(std::move(denotations));
-    caches.get_numerical_denotations_cache().insert_denotation(get_index(), result_denotations);
+    caches.get_numerical_denotations_cache().insert_denotation(get_index(), -1, -1, result_denotations);
     return result_denotations;
 }
 
