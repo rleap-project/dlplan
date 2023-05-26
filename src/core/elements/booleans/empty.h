@@ -27,16 +27,16 @@ private:
         return denotation;
     }
 
-    std::unique_ptr<BooleanDenotations>
+    BooleanDenotations
     evaluate_impl(const States& states, DenotationsCaches& caches) const override {
-        auto denotations = std::make_unique<BooleanDenotations>();
+        BooleanDenotations denotations;
         auto element_denotations = m_element->evaluate(states, caches);
         for (size_t i = 0; i < states.size(); ++i) {
             bool denotation;
             compute_result(
                 *(*element_denotations)[i],
                 denotation);
-            denotations->push_back(denotation);
+            denotations.push_back(denotation);
         }
         return denotations;
     }

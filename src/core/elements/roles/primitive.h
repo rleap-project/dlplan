@@ -50,7 +50,7 @@ private:
             compute_result(
                 states[i],
                 denotation);
-            denotations.push_back(caches.m_r_denot_cache.insert(std::make_unique<RoleDenotation>(std::move(denotation))).first->get());
+            denotations.push_back(caches.insert(std::move(denotation)));
         }
         return denotations;
     }

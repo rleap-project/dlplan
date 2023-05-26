@@ -1,7 +1,7 @@
 #include "../../include/dlplan/core.h"
 
 #include "../utils/collections.h"
-#include "../../include/dlplan/utils/hashing.h"
+#include "../utils/hashing.h"
 
 #include <algorithm>
 #include <stdexcept>

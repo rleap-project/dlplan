@@ -25,7 +25,7 @@ public:
      * Construct or retrieve the Numerical.
      */
     virtual std::shared_ptr<const dlplan::core::Numerical> parse_numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, Caches &caches) const {
-        return caches.m_numerical_cache->insert(parse_numerical_impl(vocabulary_info, caches)).first;
+        return caches.insert(parse_numerical_impl(vocabulary_info, caches));
     }
 };
 

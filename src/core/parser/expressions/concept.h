@@ -25,7 +25,7 @@ public:
      * Construct or retrieve the Concept.
      */
     virtual std::shared_ptr<const dlplan::core::Concept> parse_concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, Caches &caches) const {
-        return caches.m_concept_cache->insert(parse_concept_impl(vocabulary_info, caches)).first;
+        return caches.insert(parse_concept_impl(vocabulary_info, caches));
     }
 };
 

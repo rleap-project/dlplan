@@ -41,7 +41,7 @@ private:
                 *(*role_right_denotations)[i],
                 denotation);
             // register denotation and append it to denotations.
-            denotations.push_back(caches.m_c_denot_cache.insert(std::make_unique<ConceptDenotation>(std::move(denotation))).first->get());
+            denotations.push_back(caches.insert(std::move(denotation)));
         }
         return denotations;
     }

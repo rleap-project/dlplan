@@ -39,7 +39,7 @@ namespace dlplan::policy {
 /**
  * All different kinds of conditions.
  */
-class BaseCondition : public dlplan::utils::Cachable {
+class BaseCondition {
 private:
     int m_index;
 
@@ -78,7 +78,7 @@ public:
 /**
  * All different kinds of effects.
  */
-class BaseEffect : public dlplan::utils::Cachable {
+class BaseEffect {
 private:
     int m_index;
 
@@ -118,7 +118,7 @@ public:
  * A rule over Boolean and numerical features has form C -> E
  * where C is set of feature conditions and E is set of feature effects
  */
-class Rule : public dlplan::utils::Cachable {
+class Rule {
 private:
     Conditions m_conditions;
     Effects m_effects;
@@ -162,7 +162,7 @@ public:
 /**
  * A policy is a set of rules over Boolean and numerical features.
  */
-class Policy : public dlplan::utils::Cachable {
+class Policy {
 private:
     Booleans m_booleans;
     Numericals m_numericals;

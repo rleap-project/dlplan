@@ -4,7 +4,6 @@
 #include "phmap/phmap.h"
 #include "utils/pimpl.h"
 #include "utils/dynamic_bitset.h"
-#include "utils/cache.h"
 
 #include <memory>
 #include <string>
@@ -13,79 +12,32 @@
 #include <vector>
 
 
-/// Forward declarations and usings
 namespace dlplan::core {
-    class SyntacticElementFactoryImpl;
-    class SyntacticElementFactory;
-    class InstanceInfo;
-    class VocabularyInfo;
-    class State;
-    class ConceptDenotation;
-    class RoleDenotation;
-    class Concept;
-    class Role;
-    class Boolean;
-    class Numerical;
+class SyntacticElementFactoryImpl;
+class SyntacticElementFactory;
+class InstanceInfo;
+class VocabularyInfo;
+class State;
+class ConceptDenotation;
+class RoleDenotation;
+class Concept;
+class Role;
+class Boolean;
+class Numerical;
+class DenotationsCachesImpl;
 
-    using Index_Vec = std::vector<int>;
-    using IndexPair_Vec = std::vector<std::pair<int, int>>;
+using Index_Vec = std::vector<int>;
+using IndexPair_Vec = std::vector<std::pair<int, int>>;
 
-    using States = std::vector<State>;
-    using StatePair = std::pair<State, State>;
-    using StatePairs = std::vector<StatePair>;
+using States = std::vector<State>;
+using StatePair = std::pair<State, State>;
+using StatePairs = std::vector<StatePair>;
 
-    using ConceptDenotations = std::vector<ConceptDenotation*>;
-    using RoleDenotations = std::vector<RoleDenotation*>;
-    using BooleanDenotations = std::vector<bool>;
-    using NumericalDenotations = std::vector<int>;
-}
+using ConceptDenotations = std::vector<const ConceptDenotation*>;
+using RoleDenotations = std::vector<const RoleDenotation*>;
+using BooleanDenotations = std::vector<bool>;
+using NumericalDenotations = std::vector<int>;
 
-
-/// Template specializations of std::hash
-namespace std {
-    template<> struct hash<dlplan::core::State> {
-        size_t operator()(const dlplan::core::State& state) const noexcept;
-    };
-    template<>
-    struct hash<unique_ptr<dlplan::core::ConceptDenotation>> {
-        size_t operator()(const unique_ptr<dlplan::core::ConceptDenotation>& denotation) const noexcept;
-    };
-    template<>
-    struct hash<unique_ptr<dlplan::core::RoleDenotation>> {
-        size_t operator()(const unique_ptr<dlplan::core::RoleDenotation>& denotation) const noexcept;
-    };
-    template<>
-    struct hash<unique_ptr<dlplan::core::ConceptDenotations>> {
-        size_t operator()(const unique_ptr<dlplan::core::ConceptDenotations>& denotations) const noexcept;
-    };
-    template<>
-    struct hash<unique_ptr<dlplan::core::RoleDenotations>> {
-        size_t operator()(const unique_ptr<dlplan::core::RoleDenotations>& denotations) const noexcept;
-    };
-    template<>
-    struct hash<unique_ptr<dlplan::core::BooleanDenotations>> {
-        size_t operator()(const unique_ptr<dlplan::core::BooleanDenotations>& denotations) const noexcept;
-    };
-    template<>
-    struct hash<unique_ptr<dlplan::core::NumericalDenotations>> {
-        size_t operator()(const unique_ptr<dlplan::core::NumericalDenotations>& denotations) const noexcept;
-    };
-    template<> struct hash<vector<unsigned>> {
-        size_t operator()(const vector<unsigned>& data) const noexcept;
-    };
-    template<> struct hash<vector<int>> {
-        size_t operator()(const vector<int>& data) const noexcept;
-    };
-    template<> struct hash<std::array<int, 2>> {
-        size_t operator()(const std::array<int, 2>& data) const noexcept;
-    };
-    template<> struct hash<std::array<int, 3>> {
-        size_t operator()(const std::array<int, 3>& data) const noexcept;
-    };
-}
-
-
-namespace dlplan::core {
 /// @brief Represents the result of the evaluation of a concept on a state.
 ///
 /// The result of an evaluation of a concept is a set of object indices. The
@@ -247,39 +199,51 @@ public:
 };
 
 
-struct DenotationsCaches {
-    /// @brief Compares two std::unique_ptr<T> by comparing objects T.
-    /// @tparam T the nested type
-    template<typename T>
-    struct DerefEqual {
-        bool operator()(const std::unique_ptr<T>& left, const std::unique_ptr<T>& right) const {
-            return *left == *right;
-        }
-    };
+class DenotationsCaches {
+private:
+    dlplan::utils::pimpl<DenotationsCachesImpl> m_pImpl;
 
-    // Cache for single denotations.
-    std::unordered_set<std::unique_ptr<ConceptDenotation>, std::hash<std::unique_ptr<ConceptDenotation>>, DerefEqual<ConceptDenotation>> m_c_denot_cache;
-    std::unordered_set<std::unique_ptr<RoleDenotation>, std::hash<std::unique_ptr<RoleDenotation>>, DerefEqual<RoleDenotation>> m_r_denot_cache;
-    // Cache for collections of denotations.
-    std::unordered_set<std::unique_ptr<BooleanDenotations>, std::hash<std::unique_ptr<BooleanDenotations>>, DerefEqual<BooleanDenotations>> m_b_denots_cache;
-    std::unordered_set<std::unique_ptr<NumericalDenotations>, std::hash<std::unique_ptr<NumericalDenotations>>, DerefEqual<NumericalDenotations>> m_n_denots_cache;
-    std::unordered_set<std::unique_ptr<ConceptDenotations>, std::hash<std::unique_ptr<ConceptDenotations>>, DerefEqual<ConceptDenotations>> m_c_denots_cache;
-    std::unordered_set<std::unique_ptr<RoleDenotations>, std::hash<std::unique_ptr<RoleDenotations>>, DerefEqual<RoleDenotations>> m_r_denots_cache;
-    // Mapping from element index to denotations.
-    std::unordered_map<int, BooleanDenotations*> m_b_denots_mapping;
-    std::unordered_map<int, NumericalDenotations*> m_n_denots_mapping;
-    std::unordered_map<int, ConceptDenotations*> m_c_denots_mapping;
-    std::unordered_map<int, RoleDenotations*> m_r_denots_mapping;
-    // Mapping from instance, state, element index to denotations
-    std::unordered_map<std::array<int, 3>, int> m_n_denots_mapping_per_state;
-    std::unordered_map<std::array<int, 3>, bool> m_b_denots_mapping_per_state;
-    std::unordered_map<std::array<int, 3>, ConceptDenotation*> m_c_denots_mapping_per_state;
-    std::unordered_map<std::array<int, 3>, RoleDenotation*> m_r_denots_mapping_per_state;
-    // Mapping from instance, element index to denotations
-    std::unordered_map<std::array<int, 2>, int> m_n_denots_mapping_per_instance;
-    std::unordered_map<std::array<int, 2>, bool> m_b_denots_mapping_per_instance;
-    std::unordered_map<std::array<int, 2>, ConceptDenotation*> m_c_denots_mapping_per_instance;
-    std::unordered_map<std::array<int, 2>, RoleDenotation*> m_r_denots_mapping_per_instance;
+    DenotationsCaches(const DenotationsCaches& other) = delete;
+    DenotationsCaches& operator=(const DenotationsCaches& other) = delete;
+public:
+    DenotationsCaches();
+    ~DenotationsCaches();
+    DenotationsCaches(DenotationsCaches&& other);
+    DenotationsCaches& operator=(DenotationsCaches&& other);
+
+    /// Caches concept and role denotations for ensuring uniqueness.
+    const ConceptDenotation* insert(ConceptDenotation&& denotation);
+    const RoleDenotation* insert(RoleDenotation&& denotation);
+    const ConceptDenotations* insert(ConceptDenotations&& denotations);
+    const RoleDenotations* insert(RoleDenotations&& denotations);
+    const BooleanDenotations* insert(BooleanDenotations&& denotations);
+    const NumericalDenotations* insert(NumericalDenotations&& denotations);
+
+    /// @brief Caches a collection of denotations per element.
+    /// @param element_index
+    /// @return
+    const ConceptDenotations* get_concept_denotations(int element_index);
+    void insert(int element_index, const ConceptDenotations* denotation);
+    const RoleDenotations* get_role_denotations(int element_index);
+    void insert(int element_index, const RoleDenotations* denotation);
+    const BooleanDenotations* get_boolean_denotations(int element_index);
+    void insert(int element_index, const BooleanDenotations* denotation);
+    const NumericalDenotations* get_numerical_denotations(int element_index);
+    void insert(int element_index, const NumericalDenotations* denotation);
+
+    /// @brief Caches a single denotation per element, instance, and state.
+    /// @param element_index
+    /// @param instance_index
+    /// @param state_index
+    /// @return
+    const ConceptDenotation* get_concept_denotation(int element_index, int instance_index, int state_index);
+    void insert(int element_index, int instance_index, int state_index, const ConceptDenotation* denotation);
+    const RoleDenotation* get_role_denotation(int element_index, int instance_index, int state_index);
+    void insert(int element_index, int instance_index, int state_index, const RoleDenotation* denotation);
+    bool get_boolean_denotation(int element_index, int instance_index, int state_index);
+    void insert(int element_index, int instance_index, int state_index, bool denotation);
+    int get_numerical_denotation(int element_index, int instance_index, int state_index);
+    void insert(int element_index, int instance_index, int state_index, int denotation);
 };
 
 
@@ -573,7 +537,7 @@ public:
 
 
 /// @brief Represents an element that can be evaluated for a given state.
-class BaseElement : public dlplan::utils::Cachable {
+class BaseElement {
 protected:
     std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
 
@@ -634,8 +598,8 @@ public:
     ~Concept() override;
 
     virtual ConceptDenotation evaluate(const State& state) const = 0;
-    ConceptDenotation* evaluate(const State& state, DenotationsCaches& caches) const;
-    ConceptDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
+    const ConceptDenotation* evaluate(const State& state, DenotationsCaches& caches) const;
+    const ConceptDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
 };
 
 
@@ -657,8 +621,8 @@ public:
     ~Role() override;
 
     virtual RoleDenotation evaluate(const State& state) const = 0;
-    RoleDenotation* evaluate(const State& state, DenotationsCaches& caches) const;
-    RoleDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
+    const RoleDenotation* evaluate(const State& state, DenotationsCaches& caches) const;
+    const RoleDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
 };
 
 
@@ -670,7 +634,7 @@ protected:
     friend class SyntacticElementFactoryImpl;
 
     virtual int evaluate_impl(const State& state, DenotationsCaches& caches) const = 0;
-    virtual std::unique_ptr<NumericalDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
+    virtual NumericalDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
 
 public:
     Numerical(const Numerical& other);
@@ -681,7 +645,7 @@ public:
 
     virtual int evaluate(const State& state) const = 0;
     int evaluate(const State& state, DenotationsCaches& caches) const;
-    NumericalDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
+    const NumericalDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
 };
 
 
@@ -693,7 +657,7 @@ protected:
     friend class SyntacticElementFactoryImpl;
 
     virtual bool evaluate_impl(const State& state, DenotationsCaches& caches) const = 0;
-    virtual std::unique_ptr<BooleanDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
+    virtual BooleanDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
 
 public:
     Boolean(const Boolean& other);
@@ -704,7 +668,7 @@ public:
 
     virtual bool evaluate(const State& state) const = 0;
     bool evaluate(const State& state, DenotationsCaches& caches) const;
-    BooleanDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
+    const BooleanDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
 };
 
 

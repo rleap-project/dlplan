@@ -2,7 +2,6 @@
 #include "effect.h"
 
 #include "../utils/set_operators.h"
-#include "../../include/dlplan/utils/hashing.h"
 
 #include "../../include/dlplan/policy.h"
 
@@ -354,7 +353,7 @@ std::shared_ptr<const Policy> PolicyMinimizer::minimize(const std::shared_ptr<co
                 Rules rules;
                 rules.insert(
                     builder.add_rule(
-                        utils::set_difference(rule->get_conditions(), {condition}), 
+                        utils::set_difference(rule->get_conditions(), {condition}),
                         Effects(rule->get_effects())));
                 auto tmp_policy = builder.add_policy(std::move(rules));
                 if (check_policy_matches_classification(*tmp_policy, true_state_pairs, false_state_pairs)) {

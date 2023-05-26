@@ -17,41 +17,27 @@ Role& Role::operator=(Role&& other) = default;
 
 Role::~Role() = default;
 
-RoleDenotation* Role::evaluate(const State& state, DenotationsCaches& caches) const {
-    if (is_static()) {
-        // check if denotations is cached.
-        std::array<int, 2> key({state.get_instance_info()->get_index(), get_index()});
-        auto cached = caches.m_r_denots_mapping_per_instance.find(key);
-        if (cached != caches.m_r_denots_mapping_per_instance.end()) return cached->second;
-        // compute denotation
-        auto denotation = evaluate_impl(state, caches);
-        // register denotation and append it to denotations.
-        auto result_denotation = caches.m_r_denot_cache.insert(std::make_unique<RoleDenotation>(std::move(denotation))).first->get();
-        caches.m_r_denots_mapping_per_instance.emplace(key, result_denotation);
-        return result_denotation;
-    } else {
-        // check if denotations is cached.
-        std::array<int, 3> key({state.get_instance_info()->get_index(), state.get_index(), get_index()});
-        auto cached = caches.m_r_denots_mapping_per_state.find(key);
-        if (cached != caches.m_r_denots_mapping_per_state.end()) return cached->second;
-        // compute denotation
-        auto denotation = evaluate_impl(state, caches);
-        // register denotation and append it to denotations.
-        auto result_denotation = caches.m_r_denot_cache.insert(std::make_unique<RoleDenotation>(std::move(denotation))).first->get();
-        caches.m_r_denots_mapping_per_state.emplace(key, result_denotation);
-        return result_denotation;
-    }
+const RoleDenotation* Role::evaluate(const State& state, DenotationsCaches& caches) const {
+    auto cached = caches.get_role_denotation(
+        get_index(),
+        state.get_instance_info()->get_index(),
+        is_static() ? -1 : get_index());
+    if (cached) return cached;
+    const RoleDenotation* denotation = caches.insert(evaluate_impl(state, caches));
+    caches.insert(
+        get_index(),
+        state.get_instance_info()->get_index(),
+        is_static() ? -1 : get_index(),
+        denotation);
+    return denotation;
 }
 
-RoleDenotations* Role::evaluate(const States& states, DenotationsCaches& caches) const {
-    // check if denotations is cached.
-    auto cached = caches.m_r_denots_mapping.find(get_index());
-    if (cached != caches.m_r_denots_mapping.end()) return cached->second;
-    // compute denotations
+const RoleDenotations* Role::evaluate(const States& states, DenotationsCaches& caches) const {
+    auto cached = caches.get_role_denotations(get_index());
+    if (cached) return cached;
     auto denotations = evaluate_impl(states, caches);
-    // register denotations and return it.
-    auto result_denotations = caches.m_r_denots_cache.insert(std::make_unique<RoleDenotations>(std::move(denotations))).first->get();
-    caches.m_r_denots_mapping.emplace(get_index(), result_denotations);
+    auto result_denotations = caches.insert(std::move(denotations));
+    caches.insert(get_index(), result_denotations);
     return result_denotations;
 }
 

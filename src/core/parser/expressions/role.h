@@ -25,7 +25,7 @@ public:
      * Construct or retrieve the Role.
      */
     virtual std::shared_ptr<const dlplan::core::Role> parse_role(std::shared_ptr<const VocabularyInfo> vocabulary_info, Caches &caches) const {
-        return caches.m_role_cache->insert(parse_role_impl(vocabulary_info, caches)).first;
+        return caches.insert(parse_role_impl(vocabulary_info, caches));
     }
 };
 

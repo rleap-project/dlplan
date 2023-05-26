@@ -1,7 +1,5 @@
 #include "../../include/dlplan/novelty.h"
 
-#include "../../include/dlplan/utils/hashing.h"
-
 #include <cassert>
 #include <sstream>
 

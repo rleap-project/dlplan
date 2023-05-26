@@ -8,17 +8,14 @@
 #include <vector>
 
 
-/**
- * Forward declarations and usings
- */
+/// @brief The generator component provides functionality for automatically
+///        generating state features based on description logics that are
+///        distinguishable on a finite set of states.
 namespace dlplan::generator {
-    class FeatureGeneratorImpl;
-    using States = std::vector<core::State>;
-    using FeatureRepresentations = std::vector<std::string>;
-}
+class FeatureGeneratorImpl;
+using States = std::vector<core::State>;
+using FeatureRepresentations = std::vector<std::string>;
 
-
-namespace dlplan::generator {
 /**
  * FeatureGenerator exhaustively generates features up to the complexity bound or until the time limit was reached.
  */

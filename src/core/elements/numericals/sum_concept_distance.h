@@ -42,19 +42,19 @@ private:
         return denotation;
     }
 
-    std::unique_ptr<NumericalDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const override {
-        auto denotations = std::make_unique<NumericalDenotations>();
-        denotations->reserve(states.size());
+    NumericalDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const override {
+        NumericalDenotations denotations;
+        denotations.reserve(states.size());
         auto concept_from_denots = m_concept_from->evaluate(states, caches);
         auto role_denots = m_role->evaluate(states, caches);
         auto concept_to_denots = m_concept_to->evaluate(states, caches);
         for (size_t i = 0; i < states.size(); ++i) {
             if ((*concept_from_denots)[i]->empty()) {
-                denotations->push_back(INF);
+                denotations.push_back(INF);
                 continue;
             }
             if ((*concept_to_denots)[i]->empty()) {
-                denotations->push_back(INF);
+                denotations.push_back(INF);
                 continue;
             }
             int denotation;
@@ -63,7 +63,7 @@ private:
                 *(*role_denots)[i],
                 *(*concept_to_denots)[i],
                 denotation);
-            denotations->push_back(denotation);
+            denotations.push_back(denotation);
         }
         return denotations;
     }

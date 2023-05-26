@@ -26,16 +26,16 @@ private:
         return denotation;
     }
 
-    std::unique_ptr<NumericalDenotations> evaluate_impl(const States& states, DenotationsCaches& caches) const override {
-        auto denotations = std::make_unique<NumericalDenotations>();
-        denotations->reserve(states.size());
+    NumericalDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const override {
+        NumericalDenotations denotations;
+        denotations.reserve(states.size());
         auto element_denotations = m_element->evaluate(states, caches);
         for (size_t i = 0; i < states.size(); ++i) {
             int denotation;
             compute_result(
                 *(*element_denotations)[i],
                 denotation);
-            denotations->push_back(denotation);
+            denotations.push_back(denotation);
         }
         return denotations;
     }

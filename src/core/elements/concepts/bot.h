@@ -21,7 +21,7 @@ private:
         denotations.reserve(states.size());
         for (size_t i = 0; i < states.size(); ++i) {
             ConceptDenotation denotation(states[i].get_instance_info()->get_objects().size());
-            denotations.push_back(caches.m_c_denot_cache.insert(std::make_unique<ConceptDenotation>(std::move(denotation))).first->get());
+            denotations.push_back(caches.insert(std::move(denotation)));
         }
         return denotations;
     }

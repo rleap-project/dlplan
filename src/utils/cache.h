@@ -1,5 +1,7 @@
-#ifndef DLPLAN_INCLUDE_DLPLAN_UTILS_CACHE_H_
-#define DLPLAN_INCLUDE_DLPLAN_UTILS_CACHE_H_
+#ifndef DLPLAN_SRC_UTILS_CACHE_H_
+#define DLPLAN_SRC_UTILS_CACHE_H_
+
+#include "hash_spezializations.h"
 
 #include <unordered_map>
 #include <memory>
@@ -8,18 +10,6 @@
 
 
 namespace dlplan::utils {
-
-/**
- * Interface for a cachable object.
- */
-class Cachable {
-public:
-    virtual ~Cachable() { };
-
-    virtual std::string compute_repr() const = 0;
-
-    virtual void set_index(int index) = 0;
-};
 
 /**
  * A thread-safe reference-counted object cache.
