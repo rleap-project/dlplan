@@ -39,7 +39,10 @@ using BooleanDenotations = std::vector<bool>;
 using NumericalDenotations = std::vector<int>;
 }
 
-
+/// @brief Provides functionality for the construction an evaluation of
+///        domain-general state features based on description logics
+///        for a collection of classical planning instances over a common
+///        planning domain.
 namespace dlplan::core {
 template<typename T>
 struct hash {
@@ -89,7 +92,8 @@ struct hash<std::vector<int>> {
 };
 
 
-/// @brief Represents the result of the evaluation of a concept on a state.
+/// @brief Encapsulates the result of the evaluation of a concept on a state
+///        and provides functionality to access and modify it.
 ///
 /// The result of an evaluation of a concept is a set of object indices. The
 /// set of object indices represent the elements in the unary relation of the
@@ -114,9 +118,7 @@ public:
             bool operator==(const const_iterator& other) const;
 
             const int& operator*() const;
-            // Postfix increment
             const_iterator operator++(int);
-            // Prefix increment
             const_iterator& operator++();
 
         private:
@@ -155,24 +157,15 @@ public:
     bool intersects(const ConceptDenotation& other) const;
     bool is_subset_of(const ConceptDenotation& other) const;
 
-    /// @brief Compute and return a sparse and continuous
-    ///        representation of the objects in the set.
-    ///
-    /// @return A vector of indices of the objects in the set.
     std::vector<int> to_sorted_vector() const;
-
     std::size_t hash() const;
-
-    /// @brief Get a string representation of the object.
-    ///
-    /// @return A string representation of the object.
     std::string str() const;
-
     int get_num_objects() const;
 };
 
 
-/// @brief Represents the result of the evaluation of a role on a state.
+/// @brief Encapsulates the result of the evaluation of a role on a state
+///        and provides functionality to access and modify it.
 ///
 /// The result of an evaluation of a role is a set of pairs of object indices.
 /// The set of pairs of object indices represent the elements in the binary
@@ -198,9 +191,7 @@ public:
 
             const std::pair<int, int>& operator*() const;
             std::pair<int, int>* operator->();
-            // Postfix increment
             const_iterator operator++(int);
-            // Prefix increment
             const_iterator& operator++();
 
         private:
@@ -241,29 +232,27 @@ public:
     bool is_subset_of(const RoleDenotation& other) const;
 
     std::vector<std::pair<int, int>> to_sorted_vector() const;
-
     std::size_t hash() const;
-
     std::string str() const;
-
     int get_num_objects() const;
 };
 
 
+/// @brief Encapsulates caches for denotations and provides functionality to
+///        insert and retrieve denotations into or from the cache.
 class DenotationsCaches {
 private:
     struct Key {
         int element_index;
         int instance_index;
         int state_index;
+
+        bool operator==(const Key& other) const;
+        bool operator!=(const Key& other) const;
     };
 
     struct KeyHash  {
         std::size_t operator()(const Key& key) const;
-    };
-
-    struct KeyEqual {
-        bool operator()(const Key& key1, const Key& key2) const;
     };
 
     template<typename T>
@@ -282,7 +271,7 @@ private:
 
         // We use unique_ptr such that other raw pointers do not become invalid.
         std::unordered_set<std::unique_ptr<const T>, UniquePtrHash, UniquePtrEqual> m_uniqueness;
-        std::unordered_map<Key, const T*, KeyHash, KeyEqual> m_per_element_instance_state_mapping;
+        std::unordered_map<Key, const T*, KeyHash> m_per_element_instance_state_mapping;
 
         /// @brief Inserts denotation uniquely and returns it raw pointer.
         /// @param denotation
@@ -311,11 +300,13 @@ private:
         }
     };
 
+    /// @brief Cache single denotations
     Cache<ConceptDenotation> m_concept_denotation_cache;
     Cache<RoleDenotation> m_role_denotation_cache;
     Cache<bool> m_boolean_denotation_cache;
     Cache<int> m_numerical_denotation_cache;
 
+    /// @brief Cache collection of denotations
     Cache<ConceptDenotations> m_concept_denotations_cache;
     Cache<RoleDenotations> m_role_denotations_cache;
     Cache<BooleanDenotations> m_boolean_denotations_cache;
@@ -342,7 +333,8 @@ public:
 };
 
 
-/// @brief Represents that an object with the same name is a constant.
+/// @brief Encapsulates the representation of a constant and provides
+///        functionality to access it.
 ///
 /// A constant allows us to directly refer to a specfic object during the
 /// evaluation of elements. While the goal of the elements is to generalize to
@@ -390,7 +382,8 @@ public:
 };
 
 
-/// @brief Represents the name for a relation.
+/// @brief Encapsulates the representation of a relation and provides
+///        functionality to access it.
 ///
 /// Planning domains define a set of predicates. Each predicate is a name for
 /// a relation with variable-sized arity. A predicate can also be defined as
@@ -416,9 +409,6 @@ public:
     bool operator==(const Predicate& other) const;
     bool operator!=(const Predicate& other) const;
 
-    /**
-     * Getters.
-     */
     int get_index() const;
     const std::string& get_name() const;
     int get_arity() const;
@@ -426,7 +416,8 @@ public:
 };
 
 
-/// @brief Represents a set of constants and predicates.
+/// @brief Encapsulates domain-general data and provides functionality
+///        to access it.
 ///
 /// A vocabulary info defines information related to the predicates and
 /// and constants of a planning domain. We usually also want to add
@@ -456,13 +447,13 @@ public:
     const std::vector<Predicate>& get_predicates() const;
     const std::vector<Constant>& get_constants() const;
 
-    // needed for parsing.
     const Predicate& get_predicate(const std::string& name) const;
     const Constant& get_constant(const std::string& name) const;
 };
 
 
-/// @brief Represents an object from a universe.
+/// @brief Encapsulates the representation of an object and provides
+///        functionality to access it.
 class Object {
 private:
     std::string m_name;
@@ -486,7 +477,8 @@ public:
 };
 
 
-/// @brief Represent an element in a relation defined by predicate.
+/// @brief Encapsulates the representation of an element in the relation
+///        of a predicate and provides functionality to access it.
 class Atom {
 private:
     std::string m_name;
@@ -512,9 +504,6 @@ public:
     bool operator==(const Atom& other) const;
     bool operator!=(const Atom& other) const;
 
-    /**
-     * Getters.
-     */
     const std::string& get_name() const;
     int get_index() const;
     int get_predicate_index() const;
@@ -523,7 +512,8 @@ public:
 };
 
 
-/// @brief Represents a set of objects, atoms, static atoms over a vocabulary.
+/// @brief Encapsulates instance specific data and provides functionality
+///        to access it.
 class InstanceInfo {
 private:
     std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
@@ -569,26 +559,19 @@ public:
     const Atom& add_atom(const std::string& predicate_name, const std::vector<std::string>& object_names);
     const Atom& add_static_atom(const std::string& predicate_name, const std::vector<std::string>& object_names);
 
-    /**
-     * Setters.
-     */
     void set_index(int index);
-
-    /**
-     * Getters.
-     */
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
     int get_index() const;
     const std::vector<Atom>& get_atoms() const;
     const std::vector<Atom>& get_static_atoms() const;
     const std::vector<Object>& get_objects() const;
-    // convenience functions.
     const Atom& get_atom(const std::string& name) const;
     const Object& get_object(const std::string& name) const;
 };
 
 
-/// @brief Represents a set of atoms from an instance info.
+/// @brief Encapsulates the atoms that are considered to be true and provides
+///        functionality to access it.
 class State {
 private:
     std::shared_ptr<const InstanceInfo> m_instance_info;
@@ -607,31 +590,17 @@ public:
     bool operator==(const State& other) const;
     bool operator!=(const State& other) const;
 
-    /**
-     * Computes string-like representation of the state.
-     */
     std::string str() const;
-
-    /**
-     * Compute a 64-Bit hash value.
-     */
     size_t hash() const;
-
-    /**
-     * Setters.
-     */
     void set_index(int index);
-
-    /**
-     * Getters.
-     */
     std::shared_ptr<const InstanceInfo> get_instance_info() const;
     const Index_Vec& get_atom_indices() const;
     int get_index() const;
 };
 
 
-/// @brief Represents an element that can be evaluated for a given state.
+/// @brief Represents the abstract base class of an element with functionality
+///        for computing string representations and its complexity.
 class BaseElement {
 protected:
     std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
@@ -648,7 +617,6 @@ protected:
 public:
     virtual ~BaseElement();
 
-
     /**
      * Returns the complexity of the element
      * measured in the size of the abstract syntax tree.
@@ -661,22 +629,15 @@ public:
     virtual std::string compute_repr() const;
     virtual void compute_repr(std::stringstream& out) const = 0;
 
-    /**
-     * Setters.
-     */
     void set_index(int index);
-
-    /**
-     * Getters.
-     */
     int get_index() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
     bool is_static() const;
 };
 
 
-/// @brief Represents a concept element that evaluates to a ConceptDenotation
-///        on a given state.
+/// @brief Represents a concept element that evaluates to a concept denotation
+///        on a given state. It can also make us of a cache during evaluation.
 class Concept : public BaseElement {
 protected:
     Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
@@ -698,8 +659,8 @@ public:
 };
 
 
-/// @brief Represents a role element that evaluates to a RoleDenotation
-///        on a given state.
+/// @brief Represents a role element that evaluates to a role denotation
+///        on a given state. It can also make us of a cache during evaluation.
 class Role : public BaseElement {
 protected:
     Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
@@ -721,8 +682,8 @@ public:
 };
 
 
-/// @brief Represents a numerical element that evaluates to the natural numbers
-///        on a given state.
+/// @brief Represents a numerical element that evaluates to an natural number
+///        on a given state. It can also make us of a cache during evaluation.
 class Numerical : public BaseElement {
 protected:
     Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
@@ -744,8 +705,8 @@ public:
 };
 
 
-/// @brief Represents a Boolean element that evaluates to an either true or
-///        false on a given state.
+/// @brief Represents a Boolean element that evaluates to either true or false
+///        on a given state. It can also make us of a cache during evaluation.
 class Boolean : public BaseElement {
 protected:
     Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
@@ -767,8 +728,7 @@ public:
 };
 
 
-/// @brief Represents a factory for uniquely constructing concept, role,
-///        Boolean, and numerical elements.
+/// @brief Provides functionality for the syntactically unique creation of elements.
 class SyntacticElementFactory {
 private:
     dlplan::utils::pimpl<SyntacticElementFactoryImpl> m_pImpl;

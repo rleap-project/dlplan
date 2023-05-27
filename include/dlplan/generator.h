@@ -8,17 +8,17 @@
 #include <vector>
 
 
-/// @brief The generator component provides functionality for automatically
-///        generating state features based on description logics that are
-///        distinguishable on a finite set of states.
+/// @brief Provides functionality for automatically generating domain-general
+///        state features based on description logics for a collection of
+///        classical planning instances over a common planning domain
+///        that are distinguishable on a finite set of states.
 namespace dlplan::generator {
 class FeatureGeneratorImpl;
 using States = std::vector<core::State>;
 using FeatureRepresentations = std::vector<std::string>;
 
-/**
- * FeatureGenerator exhaustively generates features up to the complexity bound or until the time limit was reached.
- */
+/// @brief Provides functionality for automatically generating state features
+///        that are distinguishable on a finite set of states.
 class FeatureGenerator {
 private:
     dlplan::utils::pimpl<FeatureGeneratorImpl> m_pImpl;
@@ -31,9 +31,6 @@ public:
     FeatureGenerator& operator=(FeatureGenerator&& other);
     ~FeatureGenerator();
 
-    /**
-     * Exhaustively generates features with pairwise disjoint feature evaluations on the states.
-     */
     FeatureRepresentations generate(
         core::SyntacticElementFactory& factory,
         const core::States& states,
@@ -78,6 +75,7 @@ public:
 };
 
 
+/// @brief Generates state features that are distinguishable on a finite set of states.
 extern FeatureRepresentations generate_features(
     core::SyntacticElementFactory& factory,
     const core::States& states,

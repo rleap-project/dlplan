@@ -10,9 +10,7 @@
 #include <vector>
 
 
-/**
- * Forward declarations and usings
- */
+/// @brief Provides functionality for width-based planning and learning.
 namespace dlplan::novelty {
 class TupleNode;
 
@@ -25,13 +23,10 @@ using TupleIndicesSet = std::unordered_set<TupleIndex>;
 using TupleNodes = std::vector<TupleNode>;
 
 using AtomIndices = std::vector<AtomIndex>;
-}
 
 
-namespace dlplan::novelty {
-/**
- * Provides functionality to map atom tuples to indices and vice versa.
- */
+/// @brief Encapsulates mappings betweens tuples of atom indices and tuple indices, and
+///        provides functionality to map from one to the other.
 class NoveltyBase {
 private:
     std::vector<int> m_factors;
@@ -54,19 +49,14 @@ public:
     TupleIndex atom_tuple_to_tuple_index(const AtomIndices& tuple_atom_indices) const;
     AtomIndices tuple_index_to_atom_tuple(TupleIndex tuple_index) const;
 
-    /**
-     * Getters.
-     */
     int get_max_tuple_size() const;
     int get_num_atoms() const;
     int get_num_tuples() const;
 };
 
 
-/**
- * Generates all tuple indices of atom tuples of
- * size at most k of a given set of atom indices.
- */
+/// @brief Implements an iterator over all tuples of atom indices of size k
+///        from a given set of atom indices.
 class TupleIndexGenerator {
 private:
     std::shared_ptr<const NoveltyBase> m_novelty_base;
@@ -126,6 +116,8 @@ public:
 };
 
 
+/// @brief Implements a novelty table for the manipulation and querying of the
+///        novelty status of a tuple with its representing index.
 class NoveltyTable {
 private:
     std::vector<bool> m_table;
@@ -165,6 +157,8 @@ public:
 };
 
 
+/// @brief Encapsulates data related to a node in a tuple graph and provides
+///        functionality to access it.
 class TupleNode {
 private:
     TupleIndex m_tuple_index;
@@ -185,10 +179,6 @@ public:
     void add_successor(TupleIndex tuple_index);
 
     std::string str() const;
-
-    /**
-     * Getters.
-     */
     TupleIndex get_tuple_index() const;
     const state_space::StateIndices& get_state_indices() const;
     const TupleIndices& get_predecessors() const;
@@ -196,6 +186,8 @@ public:
 };
 
 
+/// @brief Implements a tuple graph and provides functionality for the
+///        construction and for accessing the data.
 class TupleGraph {
 private:
     std::shared_ptr<const NoveltyBase> m_novelty_base;
@@ -223,10 +215,6 @@ public:
 
     std::string str() const;
     std::string to_dot(int verbosity_level) const;
-
-    /**
-     * Getters.
-     */
     const std::vector<TupleNodes>& get_tuple_nodes_by_distance() const;
     const std::vector<state_space::StateIndices>& get_state_indices_by_distance() const;
     state_space::StateIndex get_root_state_index() const;

@@ -420,20 +420,23 @@ DenotationsCaches::Cache<NumericalDenotations>& DenotationsCaches::get_numerical
 }
 
 
+bool DenotationsCaches::Key::operator==(const Key& other) const {
+    return (element_index == other.element_index) &&
+           (instance_index == other.instance_index) &&
+           (state_index == other.state_index);
+}
+
+bool DenotationsCaches::Key::operator!=(const Key& other) const {
+    return !(*this == other);
+}
+
+
 std::size_t DenotationsCaches::KeyHash::operator()(const Key& key) const {
     std::size_t seed = key.element_index;
     dlplan::utils::hash_combine(seed, key.instance_index);
     dlplan::utils::hash_combine(seed, key.state_index);
     return seed;
 }
-
-
-bool DenotationsCaches::KeyEqual::operator()(const Key& key1, const Key& key2) const {
-    return (key1.element_index == key2.element_index) &&
-           (key1.instance_index == key2.instance_index) &&
-           (key1.state_index == key2.state_index);
-}
-
 
 
 SyntacticElementFactory::SyntacticElementFactory(std::shared_ptr<const VocabularyInfo> vocabulary_info) : m_pImpl(SyntacticElementFactoryImpl(vocabulary_info)) { }

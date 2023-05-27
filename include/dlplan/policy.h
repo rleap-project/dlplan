@@ -10,13 +10,10 @@
 #include <string>
 #include <vector>
 
-
-/**
- * Forward declarations and usings
- */
+/// @brief Provides functionality for the construction and evaluation of a
+///        collection of policies for a classical planning domain.
 namespace dlplan::policy {
-    class PolicyBuilder;
-    class PolicyBuilderImpl;
+class PolicyBuilderImpl;
     class PolicyReaderImpl;
     class PolicyWriterImpl;
     class BaseCondition;
@@ -26,19 +23,15 @@ namespace dlplan::policy {
 
     using Booleans = std::set<std::shared_ptr<const dlplan::core::Boolean>>;
     using Numericals = std::set<std::shared_ptr<const dlplan::core::Numerical>>;
-
     using Conditions = std::set<std::shared_ptr<const BaseCondition>>;
     using Effects = std::set<std::shared_ptr<const BaseEffect>>;
     using Rules = std::set<std::shared_ptr<const Rule>>;
-
     using Policies = std::set<std::shared_ptr<const Policy>>;
-}
 
 
-namespace dlplan::policy {
-/**
- * All different kinds of conditions.
- */
+/// @brief Represents the abstract base class of a feature condition and
+///        provides functionality to access its underlying data and for
+///        the evaluation on a state.
 class BaseCondition {
 private:
     int m_index;
@@ -47,7 +40,6 @@ protected:
     BaseCondition();
 
 public:
-    // Condition is not copieable because it must live in the cache.
     BaseCondition(const BaseCondition& other) = delete;
     BaseCondition& operator=(const BaseCondition& other) = delete;
     BaseCondition(BaseCondition&& other) = delete;
@@ -58,26 +50,17 @@ public:
     virtual bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const = 0;
 
     virtual std::string compute_repr() const = 0;
-
     virtual std::string str() const = 0;
-
-    /**
-     * Setters.
-     */
     void set_index(int index);
-
-    /**
-     * Getters.
-     */
     virtual std::shared_ptr<const core::Boolean> get_boolean() const = 0;
     virtual std::shared_ptr<const core::Numerical> get_numerical() const = 0;
     int get_index() const;
 };
 
 
-/**
- * All different kinds of effects.
- */
+/// @brief Represents the abstract base class of a feature effect and
+///        provides functionality to access its underlying data and for
+///        the evaluation on a pair of states.
 class BaseEffect {
 private:
     int m_index;
@@ -86,7 +69,6 @@ protected:
     BaseEffect();
 
 public:
-    // Effect is not copieable because it must live in the cache.
     BaseEffect(const BaseEffect& other) = delete;
     BaseEffect& operator=(const BaseEffect& other) = delete;
     BaseEffect(BaseEffect&& other) = delete;
@@ -97,27 +79,18 @@ public:
     virtual bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const = 0;
 
     virtual std::string compute_repr() const = 0;
-
     virtual std::string str() const = 0;
-
-    /**
-     * Setters.
-     */
     void set_index(int index);
-
-    /**
-     * Getters.
-     */
     int get_index() const;
     virtual std::shared_ptr<const core::Boolean> get_boolean() const = 0;
     virtual std::shared_ptr<const core::Numerical> get_numerical() const = 0;
 };
 
 
-/**
- * A rule over Boolean and numerical features has form C -> E
- * where C is set of feature conditions and E is set of feature effects
- */
+/// @brief Implements a policy rule of the form C->E with where C is a set of
+///        feature conditions and E is a set of feature effects. Provides
+///        functionality to access its underlying data and for the evaluation
+///        on a pair of states.
 class Rule {
 private:
     Conditions m_conditions;
@@ -129,7 +102,6 @@ private:
     friend class PolicyBuilderImpl;
 
 public:
-    // Rule is not copieable because it must live in the cache.
     Rule(const Rule& other) = delete;
     Rule& operator=(const Rule& other) = delete;
     Rule(Rule&& other) = delete;
@@ -142,26 +114,18 @@ public:
     bool evaluate_effects(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const;
 
     std::string compute_repr() const;
-
     std::string str() const;
-
-    /**
-     * Setters.
-     */
     void set_index(int index);
-
-    /**
-     * Getters.
-     */
     int get_index() const;
     const Conditions& get_conditions() const;
     const Effects& get_effects() const;
 };
 
 
-/**
- * A policy is a set of rules over Boolean and numerical features.
- */
+/// @brief Implements a policy consisting of a set of rules over a set of
+///        Boolean and a set of numerical features. Provides functionality
+///        to access its underlying data and for the evaluation on a pair of
+///        states.
 class Policy {
 private:
     Booleans m_booleans;
@@ -195,32 +159,18 @@ public:
     std::shared_ptr<const Rule> evaluate_effects(const core::State& source_state, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules) const;
     std::shared_ptr<const Rule> evaluate_effects(const core::State& source_state, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules, core::DenotationsCaches& caches) const;
 
-    /**
-     * Returns a canonical string representation that can be parsed.
-     */
     std::string compute_repr() const;
-
-    /**
-     * Returns a more readable string representation that is not necessarily canonical.
-     */
     std::string str() const;
-
-    /**
-     * Setters.
-     */
     void set_index(int index);
-    /**
-     * Getters.
-     */
     int get_index() const;
     const Booleans& get_booleans() const;
     const Numericals& get_numericals() const;
     const Rules& get_rules() const;
 };
 
-/**
- * PolicyBuilder for the construction of a forest of policies.
-*/
+
+/// @brief Provides functionality for the syntactically unique creation of
+///        conditions, effects, rules, and policies.
 class PolicyBuilder {
 private:
     dlplan::utils::pimpl<PolicyBuilderImpl> m_pImpl;
@@ -262,9 +212,8 @@ public:
 };
 
 
-/**
- * PolicyMinimizer provides methods to minimize the number of rules in a policy.
- */
+/// @brief Provides functionality for the syntactic and empirical minimization
+///        of policies.
 class PolicyMinimizer {
 public:
     PolicyMinimizer();
@@ -279,9 +228,8 @@ public:
 };
 
 
-/**
- * PolicyReader for reading general policy from bytestream.
- */
+/// @brief Provides functionality for reading the output of the policy writer
+///        into a policy.
 class PolicyReader {
 private:
     dlplan::utils::pimpl<PolicyReaderImpl> m_pImpl;
@@ -297,9 +245,9 @@ public:
     std::shared_ptr<const Policy> read(const std::string& data, PolicyBuilder& builder, core::SyntacticElementFactory& factory) const;
 };
 
-/**
- * PolicyWriter for writing general policy to bytestream.
- */
+
+/// @brief Provides functionality for creating string representation that
+///        the reader can translate back into a policy.
 class PolicyWriter {
     dlplan::utils::pimpl<PolicyWriterImpl> m_pImpl;
 
