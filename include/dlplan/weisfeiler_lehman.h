@@ -1,3 +1,5 @@
+/// @brief This module is work in progress and is not ready to be used.
+
 #ifndef DLPLAN_INCLUDE_DLPLAN_WEISFEILER_LEHMAN_H_
 #define DLPLAN_INCLUDE_DLPLAN_WEISFEILER_LEHMAN_H_
 
@@ -6,7 +8,6 @@
 #include <vector>
 
 
-/// @brief This module is work in progress and is not ready to be used.
 namespace dlplan::weisfeiler_lehman {
 class Color;
 

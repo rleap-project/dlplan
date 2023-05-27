@@ -1,3 +1,6 @@
+/// @brief Provides functionality for the construction and evaluation of a
+///        collection of policies for a classical planning domain.
+
 #ifndef DLPLAN_INCLUDE_DLPLAN_POLICY_H_
 #define DLPLAN_INCLUDE_DLPLAN_POLICY_H_
 
@@ -10,8 +13,7 @@
 #include <string>
 #include <vector>
 
-/// @brief Provides functionality for the construction and evaluation of a
-///        collection of policies for a classical planning domain.
+
 namespace dlplan::policy {
 class PolicyBuilderImpl;
     class PolicyReaderImpl;

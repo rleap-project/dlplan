@@ -1,3 +1,5 @@
+/// @brief Provides functionality for width-based planning and learning.
+
 #ifndef DLPLAN_INCLUDE_DLPLAN_NOVELTY_H_
 #define DLPLAN_INCLUDE_DLPLAN_NOVELTY_H_
 
@@ -10,7 +12,6 @@
 #include <vector>
 
 
-/// @brief Provides functionality for width-based planning and learning.
 namespace dlplan::novelty {
 class TupleNode;
 

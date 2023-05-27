@@ -1,13 +1,15 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_STATE_SPACE_H_
 #define DLPLAN_INCLUDE_DLPLAN_STATE_SPACE_H_
 
+/// Provides functionality for generating state spaces from PDDL and
+/// commonly used functionality to work with state spaces.
+
 #include "core.h"
 
 #include <unordered_map>
 #include <unordered_set>
 
-/// Provides functionality for generating state spaces from PDDL and
-/// commonly used functionality to work with state spaces.
+
 namespace dlplan::state_space {
 using StateIndex = int;
 using StateIndices = std::vector<StateIndex>;

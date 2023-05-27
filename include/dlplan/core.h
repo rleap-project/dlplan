@@ -1,3 +1,8 @@
+/// @brief Provides functionality for the construction an evaluation of
+///        domain-general state features based on description logics
+///        for a collection of classical planning instances over a common
+///        planning domain.
+
 #ifndef DLPLAN_INCLUDE_DLPLAN_CORE_H_
 #define DLPLAN_INCLUDE_DLPLAN_CORE_H_
 
@@ -37,13 +42,8 @@ using ConceptDenotations = std::vector<const ConceptDenotation*>;
 using RoleDenotations = std::vector<const RoleDenotation*>;
 using BooleanDenotations = std::vector<bool>;
 using NumericalDenotations = std::vector<int>;
-}
 
-/// @brief Provides functionality for the construction an evaluation of
-///        domain-general state features based on description logics
-///        for a collection of classical planning instances over a common
-///        planning domain.
-namespace dlplan::core {
+
 template<typename T>
 struct hash {
     std::size_t operator()(const T& value) const noexcept {
