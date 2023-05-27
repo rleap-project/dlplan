@@ -6,27 +6,15 @@
 #include <vector>
 
 
-/**
- * Forward declarations and usings
- */
+/// @brief This module is work in progress and is not ready to be used.
 namespace dlplan::weisfeiler_lehman {
-    class Color;
+class Color;
 
-    using CompressedColor = int;
-    using CompressedColors = std::vector<CompressedColor>;
-    using Colors = std::vector<Color>;
-}
+using CompressedColor = int;
+using CompressedColors = std::vector<CompressedColor>;
+using Colors = std::vector<Color>;
 
 
-namespace dlplan::weisfeiler_lehman {
-/**
- * Weisfeiler-Lehman (WL) is an important algorithm in the context of description logics features
- * because the subgraphs G and H of two states s_1,s_2
- * that are isomorphic according to WL, i.e., have the same color,
- * cannot be distinguished by formulas in two-variable first order logic.
- * Hence a description logics that is as most as expressive as two-variable first order logic
- * cannot distinguish G and H as well.
- */
 class WeisfeilerLehman {
 public:
     WeisfeilerLehman();
