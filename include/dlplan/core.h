@@ -40,37 +40,53 @@ using NumericalDenotations = std::vector<int>;
 }
 
 
-/// Template specializations of std::hash
-namespace std {
-    template<> struct hash<dlplan::core::State> {
-        size_t operator()(const dlplan::core::State& state) const noexcept;
-    };
-    template<>
-    struct hash<dlplan::core::ConceptDenotation> {
-        size_t operator()(const dlplan::core::ConceptDenotation& denotation) const noexcept;
-    };
-    template<>
-    struct hash<dlplan::core::RoleDenotation> {
-        size_t operator()(const dlplan::core::RoleDenotation& denotation) const noexcept;
-    };
-    template<>
-    struct hash<dlplan::core::ConceptDenotations> {
-        size_t operator()(const dlplan::core::ConceptDenotations& denotations) const noexcept;
-    };
-    template<>
-    struct hash<dlplan::core::RoleDenotations> {
-        size_t operator()(const dlplan::core::RoleDenotations& denotations) const noexcept;
-    };
-    template<> struct hash<vector<unsigned>> {
-        size_t operator()(const vector<unsigned>& data) const noexcept;
-    };
-    template<> struct hash<vector<int>> {
-        size_t operator()(const vector<int>& data) const noexcept;
-    };
-}
-
-
 namespace dlplan::core {
+template<typename T>
+struct hash {
+    std::size_t operator()(const T& value) const noexcept;
+};
+template<>
+struct hash<dlplan::core::State> {
+    size_t operator()(const dlplan::core::State& state) const noexcept;
+};
+template<>
+struct hash<dlplan::core::ConceptDenotation> {
+    size_t operator()(const dlplan::core::ConceptDenotation& denotation) const noexcept;
+};
+template<>
+struct hash<dlplan::core::RoleDenotation> {
+    size_t operator()(const dlplan::core::RoleDenotation& denotation) const noexcept;
+};
+template<>
+struct hash<bool> {
+    size_t operator()(const bool& value) const noexcept;
+};
+template<>
+struct hash<int> {
+    size_t operator()(const int& value) const noexcept;
+};
+template<>
+struct hash<dlplan::core::ConceptDenotations> {
+    size_t operator()(const dlplan::core::ConceptDenotations& denotations) const noexcept;
+};
+template<>
+struct hash<dlplan::core::RoleDenotations> {
+    size_t operator()(const dlplan::core::RoleDenotations& denotations) const noexcept;
+};
+template<>
+struct hash<std::vector<bool>> {
+    size_t operator()(const std::vector<bool>& data) const noexcept;
+};
+template<>
+struct hash<std::vector<unsigned>> {
+    size_t operator()(const std::vector<unsigned>& data) const noexcept;
+};
+template<>
+struct hash<std::vector<int>> {
+    size_t operator()(const std::vector<int>& data) const noexcept;
+};
+
+
 /// @brief Represents the result of the evaluation of a concept on a state.
 ///
 /// The result of an evaluation of a concept is a set of object indices. The
@@ -252,7 +268,7 @@ private:
     struct Cache {
         struct UniquePtrHash {
             std::size_t operator()(const std::unique_ptr<const T>& ptr) const {
-                return std::hash<T>()(*ptr);
+                return dlplan::core::hash<T>()(*ptr);
             }
         };
 

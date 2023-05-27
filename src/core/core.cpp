@@ -9,48 +9,54 @@
 #include <sstream>
 
 
-namespace std {
-    size_t hash<dlplan::core::State>::operator()(const dlplan::core::State& state) const noexcept {
-        return state.hash();
+namespace dlplan::core {
+size_t hash<dlplan::core::State>::operator()(const dlplan::core::State& state) const noexcept {
+    return state.hash();
+}
+size_t hash<dlplan::core::ConceptDenotation>::operator()(const dlplan::core::ConceptDenotation& denotation) const noexcept {
+    return denotation.hash();
+}
+size_t hash<dlplan::core::RoleDenotation>::operator()(const dlplan::core::RoleDenotation& denotation) const noexcept {
+    return denotation.hash();
+}
+size_t hash<bool>::operator()(const bool& value) const noexcept {
+    return std::hash<bool>()(value);
+}
+size_t hash<int>::operator()(const int& value) const noexcept {
+    return std::hash<int>()(value);
+}
+size_t hash<dlplan::core::ConceptDenotations>::operator()(const dlplan::core::ConceptDenotations& denotations) const noexcept {
+    size_t seed = 0;
+    for (const auto denot_ptr : denotations) {
+        dlplan::utils::hash_combine(seed, denot_ptr);
     }
-    size_t hash<dlplan::core::ConceptDenotation>::operator()(const dlplan::core::ConceptDenotation& denotation) const noexcept {
-        return denotation.hash();
+    return seed;
+}
+size_t hash<dlplan::core::RoleDenotations>::operator()(const dlplan::core::RoleDenotations& denotations) const noexcept {
+    size_t seed = 0;
+    for (const auto denot_ptr : denotations) {
+        dlplan::utils::hash_combine(seed, denot_ptr);
     }
-    size_t hash<dlplan::core::RoleDenotation>::operator()(const dlplan::core::RoleDenotation& denotation) const noexcept {
-        return denotation.hash();
+    return seed;
+}
+size_t hash<std::vector<bool>>::operator()(const std::vector<bool>& data) const noexcept {
+    return std::hash<std::vector<bool>>()(data);
+}
+size_t hash<std::vector<unsigned>>::operator()(const std::vector<unsigned>& data) const noexcept {
+    size_t seed = data.size();
+    for (unsigned value : data) {
+        dlplan::utils::hash_combine(seed, value);
     }
-    size_t hash<dlplan::core::ConceptDenotations>::operator()(const dlplan::core::ConceptDenotations& denotations) const noexcept {
-        size_t seed = 0;
-        for (const auto denot_ptr : denotations) {
-            dlplan::utils::hash_combine(seed, denot_ptr);
-        }
-        return seed;
+    return seed;
+}
+size_t hash<std::vector<int>>::operator()(const std::vector<int>& data) const noexcept {
+    size_t seed = data.size();
+    for (int value : data) {
+        dlplan::utils::hash_combine(seed, value);
     }
-    size_t hash<dlplan::core::RoleDenotations>::operator()(const dlplan::core::RoleDenotations& denotations) const noexcept {
-        size_t seed = 0;
-        for (const auto denot_ptr : denotations) {
-            dlplan::utils::hash_combine(seed, denot_ptr);
-        }
-        return seed;
-    }
-    size_t hash<vector<unsigned>>::operator()(const vector<unsigned>& data) const noexcept {
-        size_t seed = data.size();
-        for (unsigned value : data) {
-            dlplan::utils::hash_combine(seed, value);
-        }
-        return seed;
-    }
-    size_t hash<vector<int>>::operator()(const vector<int>& data) const noexcept {
-        size_t seed = data.size();
-        for (int value : data) {
-            dlplan::utils::hash_combine(seed, value);
-        }
-        return seed;
-    }
+    return seed;
 }
 
-
-namespace dlplan::core {
 
 ConceptDenotation::ConceptDenotation(int num_objects)
     : m_num_objects(num_objects), m_data(utils::DynamicBitset<unsigned>(num_objects)) { }
@@ -185,7 +191,7 @@ std::vector<int> ConceptDenotation::to_sorted_vector() const {
 }
 
 std::size_t ConceptDenotation::hash() const {
-    return std::hash<std::vector<unsigned>>()(m_data.get_blocks());
+    return dlplan::core::hash<std::vector<unsigned>>()(m_data.get_blocks());
 }
 
 std::string ConceptDenotation::str() const {
@@ -353,7 +359,7 @@ std::vector<std::pair<int, int>> RoleDenotation::to_sorted_vector() const {
 }
 
 std::size_t RoleDenotation::hash() const {
-    return std::hash<std::vector<unsigned>>()(m_data.get_blocks());
+    return dlplan::core::hash<std::vector<unsigned>>()(m_data.get_blocks());
 }
 
 std::string RoleDenotation::str() const {
