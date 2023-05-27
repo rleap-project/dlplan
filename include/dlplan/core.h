@@ -24,7 +24,7 @@ class Concept;
 class Role;
 class Boolean;
 class Numerical;
-class DenotationsCachesImpl;
+class DenotationsCaches;
 
 using Index_Vec = std::vector<int>;
 using IndexPair_Vec = std::vector<std::pair<int, int>>;
@@ -66,12 +66,6 @@ namespace std {
     };
     template<> struct hash<vector<int>> {
         size_t operator()(const vector<int>& data) const noexcept;
-    };
-    template<> struct hash<std::array<int, 2>> {
-        size_t operator()(const std::array<int, 2>& data) const noexcept;
-    };
-    template<> struct hash<std::array<int, 3>> {
-        size_t operator()(const std::array<int, 3>& data) const noexcept;
     };
 }
 
@@ -240,6 +234,20 @@ public:
 
 class DenotationsCaches {
 private:
+    struct Key {
+        int element_index;
+        int instance_index;
+        int state_index;
+    };
+
+    struct KeyHash  {
+        std::size_t operator()(const Key& key) const;
+    };
+
+    struct KeyEqual {
+        bool operator()(const Key& key1, const Key& key2) const;
+    };
+
     template<typename T>
     struct Cache {
         struct UniquePtrHash {
@@ -256,7 +264,7 @@ private:
 
         // We use unique_ptr such that other raw pointers do not become invalid.
         std::unordered_set<std::unique_ptr<const T>, UniquePtrHash, UniquePtrEqual> m_uniqueness;
-        std::unordered_map<std::array<int, 3>, const T*> m_per_element_instance_state_mapping;
+        std::unordered_map<Key, const T*, KeyHash, KeyEqual> m_per_element_instance_state_mapping;
 
         /// @brief Inserts denotation uniquely and returns it raw pointer.
         /// @param denotation
@@ -271,12 +279,12 @@ private:
         /// @param state_index
         /// @param denotation
         void insert_denotation(int element_index, int instance_index, int state_index, const T* denotation) {
-            std::array<int, 3> key{element_index, instance_index, state_index};
+            Key key{element_index, instance_index, state_index};
             m_per_element_instance_state_mapping.emplace(key, denotation);
         }
 
         const T* get_denotation(int element_index, int instance_index, int state_index) const {
-            std::array<int, 3> key{element_index, instance_index, state_index};
+            Key key{element_index, instance_index, state_index};
             auto iter = m_per_element_instance_state_mapping.find(key);
             if (iter != m_per_element_instance_state_mapping.end()) {
                 return iter->second;
