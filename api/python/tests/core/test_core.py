@@ -29,23 +29,22 @@ def test_vocabulary():
     """ Exhaustively test VocabularyInfo
     """
     vocabulary = generate_bw_vocabulary()
-
-    p0, p1, p2, p3, p4 = vocabulary.get_predicates()
-    assert p0.get_name() == "on"
-    assert p0.get_index() == 0
-    assert p0.get_arity() == 2
-    assert p1.get_name() == "on_g"
-    assert p1.get_index() == 1
-    assert p1.get_arity() == 2
-    assert p2.get_name() == "ontable"
-    assert p2.get_index() == 2
-    assert p2.get_arity() == 1
-    assert p3.get_name() == "holding"
-    assert p3.get_index() == 3
-    assert p3.get_arity() == 1
-    assert p4.get_name() == "clear"
-    assert p4.get_index() == 4
-    assert p4.get_arity() == 1
+    predicates = vocabulary.get_predicates()
+    assert predicates[0].get_name() == "on"
+    assert predicates[0].get_index() == 0
+    assert predicates[0].get_arity() == 2
+    assert predicates[1].get_name() == "on_g"
+    assert predicates[1].get_index() == 1
+    assert predicates[1].get_arity() == 2
+    assert predicates[2].get_name() == "ontable"
+    assert predicates[2].get_index() == 2
+    assert predicates[2].get_arity() == 1
+    assert predicates[3].get_name() == "holding"
+    assert predicates[3].get_index() == 3
+    assert predicates[3].get_arity() == 1
+    assert predicates[4].get_name() == "clear"
+    assert predicates[4].get_index() == 4
+    assert predicates[4].get_arity() == 1
 
 
 def test_instance():
@@ -54,43 +53,22 @@ def test_instance():
     vocabulary = generate_bw_vocabulary()
     instance = generate_bw_instance(vocabulary)
 
-    predicates = vocabulary.get_predicates()
-    p0, p1, p2, p3, p4 = vocabulary.get_predicates()
+    objects = instance.get_objects()
+    assert objects[0].get_name() == "a"
+    assert objects[0].get_index() == 0
+    assert objects[1].get_name() == "b"
+    assert objects[1].get_index() == 1
 
     atoms = instance.get_atoms()
-    a0, a1, a2, a3, a4, a5, a6, a7 = instance.get_atoms()
-
-    objects = instance.get_objects()
-    o0, o1 = instance.get_objects()
-
-    assert a0.get_name() == "on(a,b)"
-    assert a0.get_index() == 0
-    assert predicates[a0.get_predicate_index()].get_name() == "on"
-    assert [objects[obj].get_name() for obj in a0.get_object_indices()] == ["a", "b"]
-    assert a1.get_name() == "on(b,a)"
-    assert a1.get_index() == 1
-    assert predicates[a1.get_predicate_index()].get_name() == "on"
-    assert [objects[obj].get_name() for obj in a1.get_object_indices()] == ["b", "a"]
-    assert a2.get_name() == "ontable(a)"
-    assert a2.get_index() == 2
-    assert predicates[a2.get_predicate_index()].get_name() == "ontable"
-    assert [objects[obj].get_name() for obj in a2.get_object_indices()] == ["a"]
-
-    assert o0.get_name() == "a"
-    assert o0.get_index() == 0
-    assert o1.get_name() == "b"
-    assert o1.get_index() == 1
-
-    assert p0.get_name() == "on"
-    assert p0.get_index() == 0
-    assert p1.get_name() == "on_g"
-    assert p1.get_index() == 1
-    assert p2.get_name() == "ontable"
-    assert p2.get_index() == 2
-    assert p3.get_name() == "holding"
-    assert p3.get_index() == 3
-    assert p4.get_name() == "clear"
-    assert p4.get_index() == 4
+    assert atoms[0].get_name() == "on(a,b)"
+    assert atoms[0].get_index() == 0
+    assert [objects[obj].get_name() for obj in atoms[0].get_object_indices()] == ["a", "b"]
+    assert atoms[1].get_name() == "on(b,a)"
+    assert atoms[1].get_index() == 1
+    assert [objects[obj].get_name() for obj in atoms[1].get_object_indices()] == ["b", "a"]
+    assert atoms[2].get_name() == "ontable(a)"
+    assert atoms[2].get_index() == 2
+    assert [objects[obj].get_name() for obj in atoms[2].get_object_indices()] == ["a"]
 
 
 def test_factory():
@@ -100,9 +78,8 @@ def test_factory():
     instance = generate_bw_instance(vocabulary)
     factory = SyntacticElementFactory(vocabulary)
 
-    p0, p1, p2, p3, p4 = vocabulary.get_predicates()
-    a0, a1, a2, a3, a4, a5, a6, a7 = instance.get_atoms()
-    state = State(instance, [a0, a3, a6])
+    atoms = instance.get_atoms()
+    state = State(instance, [atoms[0], atoms[3], atoms[6]])
     assert str(state) == "(instance index=-1, state index=-1, atoms={on(a,b), ontable(b), clear(a)})"
 
     numerical = factory.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))")

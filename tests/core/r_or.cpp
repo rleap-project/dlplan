@@ -1,30 +1,30 @@
 #include <gtest/gtest.h>
 
+#include "../utils/denotation.h"
+
 #include "../include/dlplan/core.h"
 
 using namespace dlplan::core;
 
 
+namespace dlplan::tests::core {
+
 TEST(DLPTests, RoleOr) {
-    // Add predicates
-    std::shared_ptr<VocabularyInfo> vocabulary = std::make_shared<VocabularyInfo>();
-    Predicate p0 = vocabulary->add_predicate("role_1", 2);
-    Predicate p1 = vocabulary->add_predicate("role_2", 2);
-    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary, 0);
-    // Add state atoms
-    Atom a0 = instance->add_atom("role_1", {"A", "X"});
-    Atom a1 = instance->add_atom("role_1", {"B", "Y"});
+    auto vocabulary = std::make_shared<VocabularyInfo>();
+    auto predicate_0 = vocabulary->add_predicate("role_1", 2);
+    auto predicate_1 = vocabulary->add_predicate("role_2", 2);
+    auto instance = std::make_shared<InstanceInfo>(vocabulary, 0);
+    auto atom_0 = instance->add_atom("role_1", {"A", "X"});
+    auto atom_1 = instance->add_atom("role_1", {"B", "Y"});
+    auto atom_2 = instance->add_atom("role_2", {"B", "Y"});
+    auto atom_3 = instance->add_atom("role_2", {"C", "Z"});
 
-    Atom a2 = instance->add_atom("role_2", {"B", "Y"});
-    Atom a3 = instance->add_atom("role_2", {"C", "Z"});
-
-    State state(instance, {a0, a1, a2, a3}, 0);
+    State state_0(instance, {atom_0, atom_1, atom_2, atom_3}, 0);
 
     SyntacticElementFactory factory(vocabulary);
-    DenotationsCaches caches;
 
-    std::shared_ptr<const Role> role = factory.parse_role("r_or(r_primitive(role_1,0,1),r_primitive(role_2,0,1))");
-    EXPECT_EQ(role->evaluate(state).to_sorted_vector(), IndexPair_Vec({{0, 1}, {2, 3}, {4, 5}}));
-    EXPECT_EQ(role->evaluate(state, caches)->to_sorted_vector(), IndexPair_Vec({{0, 1}, {2, 3}, {4, 5}}));
-     EXPECT_EQ(role->evaluate({state}, caches)->to_sorted_vector(), IndexPair_Vec({{0, 1}, {2, 3}, {4, 5}}));
+    auto role_0 = factory.parse_role("r_or(r_primitive(role_1,0,1),r_primitive(role_2,0,1))");
+    EXPECT_EQ(role_0->evaluate(state_0), create_role_denotation(*instance, {{"A", "X"}, {"B", "Y"}, {"C", "Z"}}));
+}
+
 }

@@ -1,35 +1,34 @@
 #include <gtest/gtest.h>
 
+#include "../utils/denotation.h"
+
 #include "../include/dlplan/core.h"
 
 using namespace dlplan::core;
 
 
-TEST(DLPTests, RoleTransitiveClosure) {
-    // Add predicates
-    std::shared_ptr<VocabularyInfo> vocabulary = std::make_shared<VocabularyInfo>();
-    Predicate p0 = vocabulary->add_predicate("conn", 2);
-    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary, 0);
-    // Add state atoms
-    Atom a0 = instance->add_atom("conn", {"A", "B"});
-    Atom a1 = instance->add_atom("conn", {"B", "C"});
-    Atom a2 = instance->add_atom("conn", {"C", "A"});
-    Atom a3 = instance->add_atom("conn", {"D", "E"});
-    Atom a4 = instance->add_atom("conn", {"E", "A"});
+namespace dlplan::tests::core {
 
-    State state(instance, {a0, a1, a2, a3, a4}, 0);
+TEST(DLPTests, RoleTransitiveClosure) {
+    auto vocabulary = std::make_shared<VocabularyInfo>();
+    auto predicate_0 = vocabulary->add_predicate("conn", 2);
+    auto instance = std::make_shared<InstanceInfo>(vocabulary, 0);
+    auto atom_0 = instance->add_atom("conn", {"A", "B"});
+    auto atom_1 = instance->add_atom("conn", {"B", "C"});
+    auto atom_2 = instance->add_atom("conn", {"C", "A"});
+    auto atom_3 = instance->add_atom("conn", {"D", "E"});
+    auto atom_4 = instance->add_atom("conn", {"E", "A"});
+
+    State state_0(instance, {atom_0, atom_1, atom_2, atom_3, atom_4}, 0);
 
     SyntacticElementFactory factory(vocabulary);
-    DenotationsCaches caches;
 
-    std::shared_ptr<const Role> role1 = factory.parse_role("r_primitive(conn,0,1)");
-    EXPECT_EQ(role1->evaluate(state).to_sorted_vector(), IndexPair_Vec({{0, 1}, {1, 2}, {2, 0}, {3, 4}, {4, 0}}));
-    EXPECT_EQ(role1->evaluate(state, caches)->to_sorted_vector(), IndexPair_Vec({{0, 1}, {1, 2}, {2, 0}, {3, 4}, {4, 0}}));
-    EXPECT_EQ(role1->evaluate({state}, caches)->to_sorted_vector(), IndexPair_Vec({{0, 1}, {1, 2}, {2, 0}, {3, 4}, {4, 0}}));
+    auto role_0 = factory.parse_role("r_primitive(conn,0,1)");
+    EXPECT_EQ(role_0->evaluate(state_0), create_role_denotation(*instance, {{"A", "B"}, {"B", "C"}, {"C", "A"}, {"D", "E"}, {"E", "A"}}));
 
-    std::shared_ptr<const Role> role2 = factory.parse_role("r_transitive_closure(r_primitive(conn,0,1))");
+    auto role_1 = factory.parse_role("r_transitive_closure(r_primitive(conn,0,1))");
     // Note that (A, A), (B, B), (C, C) are included but (D, D), (E, E) are not
-    EXPECT_EQ(role2->evaluate(state).to_sorted_vector(), IndexPair_Vec({{0, 0}, {0, 1}, {0, 2}, {1, 0}, {1, 1}, {1, 2}, {2, 0}, {2, 1}, {2, 2}, {3, 0}, {3, 1}, {3, 2}, {3, 4}, {4, 0}, {4, 1}, {4, 2}}));
-    EXPECT_EQ(role2->evaluate(state, caches)->to_sorted_vector(), IndexPair_Vec({{0, 0}, {0, 1}, {0, 2}, {1, 0}, {1, 1}, {1, 2}, {2, 0}, {2, 1}, {2, 2}, {3, 0}, {3, 1}, {3, 2}, {3, 4}, {4, 0}, {4, 1}, {4, 2}}));
-    EXPECT_EQ(role2->evaluate({state}, caches)->to_sorted_vector(), IndexPair_Vec({{0, 0}, {0, 1}, {0, 2}, {1, 0}, {1, 1}, {1, 2}, {2, 0}, {2, 1}, {2, 2}, {3, 0}, {3, 1}, {3, 2}, {3, 4}, {4, 0}, {4, 1}, {4, 2}}));
+    EXPECT_EQ(role_1->evaluate(state_0), create_role_denotation(*instance, {{"A", "A"}, {"A", "B"}, {"A", "C"}, {"B", "A"}, {"B", "B"}, {"B", "C"}, {"C", "A"}, {"C", "B"}, {"C", "C"}, {"D", "A"}, {"D", "B"}, {"D", "C"}, {"D", "E"}, {"E", "A"}, {"E", "B"}, {"E", "C"}}));
+}
+
 }

@@ -1,60 +1,53 @@
 #include <gtest/gtest.h>
 
+#include "../utils/denotation.h"
+
 #include "../include/dlplan/core.h"
 
 using namespace dlplan::core;
 
 
+namespace dlplan::tests::core {
+
 TEST(DLPTests, ConceptAll) {
-    // Add predicates
-    std::shared_ptr<VocabularyInfo> vocabulary = std::make_shared<VocabularyInfo>();
-    Predicate p0 = vocabulary->add_predicate("role", 2);
-    Predicate p1 = vocabulary->add_predicate("concept", 1);
-    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary, 0);
-    // Add state atoms
-    Atom a0 = instance->add_atom("role", {"A", "B"});
-    Atom a1 = instance->add_atom("role", {"A", "C"});
-    Atom a2 = instance->add_atom("role", {"B", "C"});
-    Atom a3 = instance->add_atom("role", {"B", "D"});
-    Atom a4 = instance->add_atom("role", {"E", "D"});
+    auto vocabulary = std::make_shared<VocabularyInfo>();
+    auto predicate_0 = vocabulary->add_predicate("role", 2);
+    auto predicate_1 = vocabulary->add_predicate("concept", 1);
+    auto instance = std::make_shared<InstanceInfo>(vocabulary, 0);
+    auto atom_0 = instance->add_atom("role", {"A", "B"});
+    auto atom_1 = instance->add_atom("role", {"A", "C"});
+    auto atom_2 = instance->add_atom("role", {"B", "C"});
+    auto atom_3 = instance->add_atom("role", {"B", "D"});
+    auto atom_4 = instance->add_atom("role", {"E", "D"});
+    auto atom_5 = instance->add_atom("concept", {"B"});
+    auto atom_6 = instance->add_atom("concept", {"C"});
 
-    Atom a5 = instance->add_atom("concept", {"B"});
-    Atom a6 = instance->add_atom("concept", {"C"});
-
-    State state(instance, {a0, a1, a2, a3, a4, a5, a6}, 0);
+    State state_0(instance, {atom_0, atom_1, atom_2, atom_3, atom_4, atom_5, atom_6}, 0);
 
     SyntacticElementFactory factory(vocabulary);
 
-    std::shared_ptr<const Concept> concept = factory.parse_concept("c_all(r_primitive(role,0,1),c_primitive(concept,0))");
-    EXPECT_EQ(concept->evaluate(state).to_sorted_vector(), Index_Vec({0, 2, 3}));
-
-    DenotationsCaches caches;
-    EXPECT_EQ(concept->evaluate(state), *concept->evaluate(state, caches));
+    auto concept = factory.parse_concept("c_all(r_primitive(role,0,1),c_primitive(concept,0))");
+    EXPECT_EQ(concept->evaluate(state_0), create_concept_denotation(*instance, {"A", "C", "D"}));
 }
 
 TEST(DLPTests, ConceptAll2) {
-    // Example for the spanner domain
-    // Add predicates
-    std::shared_ptr<VocabularyInfo> vocabulary = std::make_shared<VocabularyInfo>();
-    Predicate p0 = vocabulary->add_predicate("at", 2);
-    Predicate p1 = vocabulary->add_predicate("man", 1);
-    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary, 0);
-    // Add state atoms
-    Atom a0 = instance->add_atom("at", {"spanner_1", "location_1"});
-    Atom a1 = instance->add_atom("at", {"spanner_2", "location_2"});
-    Atom a2 = instance->add_atom("at", {"bob", "location_1"});
-    Atom a3 = instance->add_atom("man", {"bob"});
+    auto vocabulary = std::make_shared<VocabularyInfo>();
+    auto predicate_0 = vocabulary->add_predicate("at", 2);
+    auto predicate_1 = vocabulary->add_predicate("man", 1);
+    auto instance = std::make_shared<InstanceInfo>(vocabulary, 0);
+    auto atom_0 = instance->add_atom("at", {"spanner_1", "location_1"});
+    auto atom_1 = instance->add_atom("at", {"spanner_2", "location_2"});
+    auto atom_2 = instance->add_atom("at", {"bob", "location_1"});
+    auto atom_3 = instance->add_atom("man", {"bob"});
 
-    State state_1(instance, {a0, a1, a2, a3}, 0);  // bob and spanner_1 at location_1
-    State state_2(instance, {a1, a2, a3}, 1);  // only bob at location_1
+    State state_0(instance, {atom_0, atom_1, atom_2, atom_3}, 0);  // bob and spanner_1 at location_1
+    State state_1(instance, {atom_1, atom_2, atom_3}, 1);  // only bob at location_1
 
     SyntacticElementFactory factory(vocabulary);
-    DenotationsCaches caches;
 
-    std::shared_ptr<const Concept> concept = factory.parse_concept("c_all(r_primitive(at,1,0),c_primitive(man,0))");
-    EXPECT_EQ(concept->evaluate(state_1).to_sorted_vector(), Index_Vec({0, 2, 4}));
-    EXPECT_EQ(concept->evaluate(state_1, caches)->to_sorted_vector(), Index_Vec({0, 2, 4}));
+    auto concept = factory.parse_concept("c_all(r_primitive(at,1,0),c_primitive(man,0))");
+    EXPECT_EQ(concept->evaluate(state_0), create_concept_denotation(*instance, {"spanner_1", "spanner_2", "bob"}));
+    EXPECT_EQ(concept->evaluate(state_1), create_concept_denotation(*instance, {"spanner_1", "location_1", "spanner_2", "bob"}));
+}
 
-    EXPECT_EQ(concept->evaluate(state_2).to_sorted_vector(), Index_Vec({0, 1, 2, 4}));
-    EXPECT_EQ(concept->evaluate(state_2, caches)->to_sorted_vector(), Index_Vec({0, 1, 2, 4}));
 }

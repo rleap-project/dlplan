@@ -8,6 +8,8 @@ using namespace dlplan::core;
 using namespace dlplan::policy;
 
 
+namespace dlplan::tests::policy {
+
 TEST(DLPTests, StructuralMinimization) {
     std::string policy_textual =
         "(:policy\n"
@@ -89,7 +91,7 @@ TEST(DLPTests, StructuralMinimization3) {
         "(:rule (:conditions (:c_n_gt 0) (:c_b_pos 0)) (:effects (:e_n_inc 0)))\n"
         ")";
 
-    auto vocabulary_info = gripper::construct_blocks_vocabulary_info();
+    auto vocabulary_info = blocks_4::construct_vocabulary_info();
     auto syntactic_element_factory = construct_syntactic_element_factory(vocabulary_info);
     auto builder = PolicyBuilder();
     auto input_policy = PolicyReader().read(policy_textual, builder, syntactic_element_factory);
@@ -119,7 +121,7 @@ TEST(DLPTests, StructuralMinimization4) {
         "(:rule (:conditions (:c_n_gt 0)) (:effects (:e_n_dec 0)))\n"
         "(:rule (:conditions ) (:effects (:e_n_inc 0)))\n"
         ")";
-    auto vocabulary_info = gripper::construct_blocks_vocabulary_info();
+    auto vocabulary_info = blocks_4::construct_vocabulary_info();
     auto syntactic_element_factory = construct_syntactic_element_factory(vocabulary_info);
     auto builder = PolicyBuilder();
     auto input_policy = PolicyReader().read(policy_textual, builder, syntactic_element_factory);
@@ -182,4 +184,6 @@ TEST(DLPTests, EmpiricalMinimization) {
               << "Minimized policy:" << std::endl
               << minimized_policy->compute_repr() << std::endl;
     EXPECT_EQ(minimized_policy->compute_repr(), result_policy->compute_repr());
+}
+
 }

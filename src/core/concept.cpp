@@ -36,8 +36,7 @@ const ConceptDenotation* Concept::evaluate(const State& state, DenotationsCaches
 const ConceptDenotations* Concept::evaluate(const States& states, DenotationsCaches& caches) const {
     auto cached = caches.get_concept_denotations_cache().get_denotation(get_index(), -1, -1);
     if (cached) return cached;
-    auto denotations = evaluate_impl(states, caches);
-    auto result_denotations = caches.get_concept_denotations_cache().insert_denotation(std::move(denotations));
+    auto result_denotations = caches.get_concept_denotations_cache().insert_denotation(evaluate_impl(states, caches));
     caches.get_concept_denotations_cache().insert_denotation(get_index(), -1, -1, result_denotations);
     return result_denotations;
 }

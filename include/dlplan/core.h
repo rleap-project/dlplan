@@ -43,7 +43,9 @@ using NumericalDenotations = std::vector<int>;
 namespace dlplan::core {
 template<typename T>
 struct hash {
-    std::size_t operator()(const T& value) const noexcept;
+    std::size_t operator()(const T& value) const noexcept {
+        throw std::runtime_error("hash::operator() - not implemented.");
+    }
 };
 template<>
 struct hash<dlplan::core::State> {

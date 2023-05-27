@@ -35,8 +35,7 @@ const RoleDenotation* Role::evaluate(const State& state, DenotationsCaches& cach
 const RoleDenotations* Role::evaluate(const States& states, DenotationsCaches& caches) const {
     auto cached = caches.get_role_denotations_cache().get_denotation(get_index(), -1, -1);
     if (cached) return cached;
-    auto denotations = evaluate_impl(states, caches);
-    auto result_denotations = caches.get_role_denotations_cache().insert_denotation(std::move(denotations));
+    auto result_denotations = caches.get_role_denotations_cache().insert_denotation(evaluate_impl(states, caches));
     caches.get_role_denotations_cache().insert_denotation(get_index(), -1, -1, result_denotations);
     return result_denotations;
 }

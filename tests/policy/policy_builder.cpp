@@ -9,6 +9,8 @@ using namespace dlplan::core;
 using namespace dlplan::policy;
 
 
+namespace dlplan::tests::policy {
+
 TEST(DLPTests, PolicyBuilderTest) {
     auto vocabulary_info = gripper::construct_vocabulary_info();
     auto syntactic_element_factory = construct_syntactic_element_factory(vocabulary_info);
@@ -37,4 +39,6 @@ TEST(DLPTests, PolicyBuilderTest) {
         "(:rule (:conditions (:c_b_pos \"b_empty(c_primitive(package,0))\")) (:effects (:e_b_neg \"b_empty(r_primitive(at,0,1))\")))\n"
         ")"
     );
+}
+
 }

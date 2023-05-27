@@ -1,30 +1,30 @@
 #include <gtest/gtest.h>
 
+#include "../utils/denotation.h"
+
 #include "../include/dlplan/core.h"
 
 using namespace dlplan::core;
 
 
+namespace dlplan::tests::core {
+
 TEST(DLPTests, ConceptDiff) {
-    // Add predicates
-    std::shared_ptr<VocabularyInfo> vocabulary = std::make_shared<VocabularyInfo>();
-    Predicate p0 = vocabulary->add_predicate("concept_1", 1);
-    Predicate p1 = vocabulary->add_predicate("concept_2", 1);
-    std::shared_ptr<InstanceInfo> instance = std::make_shared<InstanceInfo>(vocabulary, 0);
-    // Add state atoms
-    Atom a0 = instance->add_atom("concept_1", {"A"});
-    Atom a1 = instance->add_atom("concept_1", {"B"});
+    auto vocabulary = std::make_shared<VocabularyInfo>();
+    auto predicate_0 = vocabulary->add_predicate("concept_1", 1);
+    auto predicate_1 = vocabulary->add_predicate("concept_2", 1);
+    auto instance = std::make_shared<InstanceInfo>(vocabulary, 0);
+    auto atom_0 = instance->add_atom("concept_1", {"A"});
+    auto atom_1 = instance->add_atom("concept_1", {"B"});
+    auto atom_2 = instance->add_atom("concept_2", {"B"});
+    auto atom_3 = instance->add_atom("concept_2", {"C"});
 
-    Atom a2 = instance->add_atom("concept_2", {"B"});
-    Atom a3 = instance->add_atom("concept_2", {"C"});
-
-    State state(instance, {a0, a1, a2, a3}, 0);
+    State state_0(instance, {atom_0, atom_1, atom_2, atom_3}, 0);
 
     SyntacticElementFactory factory(vocabulary);
-    DenotationsCaches caches;
 
-    std::shared_ptr<const Concept> concept = factory.parse_concept("c_diff(c_primitive(concept_1,0),c_primitive(concept_2,0))");
-    EXPECT_EQ(concept->evaluate(state).to_sorted_vector(), Index_Vec({0}));
-    EXPECT_EQ(concept->evaluate(state, caches)->to_sorted_vector(), Index_Vec({0}));
-    EXPECT_EQ(concept->evaluate({state}, caches)->to_sorted_vector(), Index_Vec({0}));
+    auto concept = factory.parse_concept("c_diff(c_primitive(concept_1,0),c_primitive(concept_2,0))");
+    EXPECT_EQ(concept->evaluate(state_0), create_concept_denotation(*instance, {"A"}));
+}
+
 }

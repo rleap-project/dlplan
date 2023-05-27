@@ -10,6 +10,8 @@ using namespace dlplan::state_space;
 using namespace dlplan::novelty;
 
 
+namespace dlplan::tests::novelty {
+
 TEST(DLPTests, NoveltyGripperTest) {
     auto result = generate_state_space("domain.pddl", "p-1-0.pddl");
     auto state_space = std::make_shared<StateSpace>(std::move(result.state_space));
@@ -23,4 +25,6 @@ TEST(DLPTests, NoveltyGripperTest) {
         auto tuple_graph = TupleGraph(novelty_base, state_space, pair.first, 2);
         std::cout << std::endl << tuple_graph.to_dot(1) << std::endl;
     }
+}
+
 }

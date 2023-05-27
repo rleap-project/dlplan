@@ -11,6 +11,7 @@ using namespace dlplan::core;
 using namespace dlplan::generator;
 using namespace dlplan::state_space;
 
+namespace dlplan::tests::generator {
 
 TEST(DLPTests, GeneratorDeliveryTest) {
     auto result = generate_state_space("domain.pddl", "instance_4_2_29.pddl", nullptr, 0);
@@ -151,4 +152,6 @@ TEST(DLPTests, GeneratorDeliveryTest) {
         }
         EXPECT_EQ(found, true);
     }
+}
+
 }

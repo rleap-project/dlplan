@@ -4,8 +4,10 @@
 
 #include "../include/dlplan/novelty.h"
 
-
 using namespace dlplan::novelty;
+
+
+namespace dlplan::tests::novelty {
 
 TEST(DLPTests, TupleIndexGeneratorTest) {
     // Test with single atom tuple.
@@ -75,4 +77,6 @@ TEST(DLPTests, TupleIndexGeneratorTest2) {
     EXPECT_EQ(*(begin++), 86);  // {1,2,3} 11 = 1*5^0 + 2*5^1 + 3*5^2
     EXPECT_EQ(*(begin++), 55);  // {0,1,2} 16 = 1*5^0 + 3*5^1 + 5*5^2 - {0,1,2} occurs in the end because we call seek_next() in the constructor
     EXPECT_EQ(begin, end);
+}
+
 }
