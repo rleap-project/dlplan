@@ -2,6 +2,8 @@
 
 Welcome to the DLPlan-library.
 
+![](https://github.com/rleap-project/dlplan/blob/documentation/images/thumbnail.png)
+
 ## 1. Background
 
 ### 1.1. State Language
