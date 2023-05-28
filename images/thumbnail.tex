@@ -1,0 +1,37 @@
+\documentclass[convert={density=300,size=1000x500,outext=.png}]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{amsmath}
+\usepackage{booktabs}
+
+\begin{document}
+\begin{tikzpicture}[scale=0.12]
+    \draw[black,line width=2pt] (0,0) rectangle (100, 50);
+
+    \node[draw, rectangle, line width=1pt, align=center] (state) at (15,25) {First-order \\ planning state};
+
+    %\node[draw, rectangle, align=center] (myNode) at (50,40) {Description Logics with \\ planning extensions};
+    \node[draw, rectangle, line width=1pt, align=center] (feature) at (53,25) {
+        \begin{tabular}{c}
+            Description Logics with \\ planning extensions \\
+            \hline
+            \rule{0pt}{30pt}
+            \begin{tikzpicture}[scale=0.12]
+                \node[align=center] (dummy) at (0,40) {};
+                \node[draw, rectangle, rounded corners=2pt, align=center] (root) at (0,34) {$\boldsymbol{\sqcap}$};
+                \node[draw, rectangle, rounded corners=2pt, align=center] (n1) at (-10,26) {$\text{predicate}_\text{goal}$};
+                \node[draw, rectangle, rounded corners=2pt, align=center] (n2) at (10,26) {$\boldsymbol{\neg}$};
+                \node[draw, rectangle, rounded corners=2pt, align=center] (n3) at (10,18) {predicate};
+
+                \draw[-latex] (dummy) -- (root);
+                \draw[-latex] (root) -- (n1);
+                \draw[-latex] (root) -- (n2);
+                \draw[-latex] (n2) -- (n3);
+            \end{tikzpicture}
+        \end{tabular}};
+    \node[draw, rectangle, line width=1pt, align=center] (valuation) at (90,25) {valuation};
+
+    \draw[-latex, line width=1pt] (state) -- (feature);
+    \draw[-latex, line width=1pt] (feature) -- (valuation);
+\end{tikzpicture}
+\end{document}
