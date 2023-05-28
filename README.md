@@ -2,7 +2,8 @@
 
 Welcome to the DLPlan-library.
 
-![](https://github.com/rleap-project/dlplan/blob/documentation/images/thumbnail.png)
+![](images/thumbnail.png)
+*Figure 1: illustration of the core functionality of DLPlan - evaluating a domain-general state feature based on description logics with planning extensions on a given first-order planning state.*
 
 ## 1. Background
 
