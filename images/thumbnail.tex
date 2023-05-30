@@ -21,6 +21,7 @@
         \begin{tabular}{c}
         First-order \\ planning state \\
         \hline
+        \\[-5pt]
         \begin{tikzpicture}[scale=0.12]
             \node[align=center] (dummy) at (0,3) {\block{0.12}{red}{}};
             \node[align=center] (dummy) at (0,0) {\block{0.12}{green}{}};
@@ -28,23 +29,24 @@
             \draw[line width=1] (-3,-1.5) -- (10,-1.5);
         \end{tikzpicture} \\
         $\boldsymbol{+}$ \\
-        $\text{clear}_\text{goal}(\kern-3pt\raisebox{-4pt}{\block{0.12}{red}{}}\kern-3pt)$ \\
-        $\text{clear}_\text{goal}(\kern-3pt\raisebox{-4pt}{\block{0.12}{green}{}}\kern-3pt)$ \\
-        $\text{clear}_\text{goal}(\kern-3pt\raisebox{-4pt}{\block{0.12}{blue}{}}\kern-3pt)$
+        \\[-5pt]
+        $\text{clear}_\text{goal}(\kern-3pt\raisebox{-3pt}{\block{0.12}{red}{}}\kern-3pt)$ \\
+        $\text{clear}_\text{goal}(\kern-3pt\raisebox{-3pt}{\block{0.12}{green}{}}\kern-3pt)$ \\
+        $\text{clear}_\text{goal}(\kern-3pt\raisebox{-3pt}{\block{0.12}{blue}{}}\kern-3pt)$
     \end{tabular}
     };
 
     \node[draw, rectangle, line width=1pt, align=center] (feature) at (53,25) {
         \begin{tabular}{c}
-            Description Logics with \\ planning extensions \\
+            Description logics with \\ planning extensions \\
             \hline
             \rule{0pt}{30pt}
             \begin{tikzpicture}[scale=0.12]
                 \node[align=center] (dummy) at (0,40) {};
                 \node[draw, rectangle, rounded corners=2pt, align=center] (root) at (0,34) {$\boldsymbol{\sqcap}$};
-                \node[draw, rectangle, rounded corners=2pt, align=center] (n1) at (-10,26) {$\text{clear}_\text{goal}(\kern-3pt\raisebox{-4pt}{\block{0.12}{white}{?}}\kern-3pt)$};
+                \node[draw, rectangle, rounded corners=2pt, align=center] (n1) at (-10,26) {$\text{clear}_\text{goal}(\kern-3pt\raisebox{-3pt}{\block{0.12}{white}{}}\kern-3pt)$};
                 \node[draw, rectangle, rounded corners=2pt, align=center] (n2) at (10,26) {$\boldsymbol{\neg}$};
-                \node[draw, rectangle, rounded corners=2pt, align=center] (n3) at (10,18) {clear(\kern-3pt\raisebox{-4pt}{\block{0.12}{white}{?}}\kern-3pt)};
+                \node[draw, rectangle, rounded corners=2pt, align=center] (n3) at (10,18) {clear(\kern-3pt\raisebox{-3pt}{\block{0.12}{white}{}}\kern-3pt)};
 
                 \draw[-latex] (dummy) -- (root);
                 \draw[-latex] (root) -- (n1);
@@ -58,7 +60,8 @@
         \begin{tabular}{c}
             Valuation \\
             \hline
-            $\{\kern-3pt\raisebox{-4pt}{\block{0.12}{red}{}}\kern-3pt,\kern-3pt\raisebox{-4pt}{\block{0.12}{green}{}}\kern-3pt\}$ \\
+            \\[-5pt]
+            $\{\kern-3pt\raisebox{-3pt}{\block{0.12}{red}{}}\kern-3pt,\kern-3pt\raisebox{-3pt}{\block{0.12}{green}{}}\kern-3pt\}$ \\
         \end{tabular}
     };
 
