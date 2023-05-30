@@ -16,11 +16,11 @@ std::string BaseElement::compute_repr() const {
     return ss.str();
 }
 
-void BaseElement::set_index(int index) {
+void BaseElement::set_index(ElementIndex index) {
     m_index = index;
 }
 
-int BaseElement::get_index() const {
+ElementIndex BaseElement::get_index() const {
     return m_index;
 }
 

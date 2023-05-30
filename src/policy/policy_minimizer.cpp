@@ -73,10 +73,10 @@ static Rules compute_dominated_rules(
  */
 static bool check_policy_matches_classification(
     const Policy& policy,
-    const core::StatePairs& true_state_pairs,
-    const core::StatePairs& false_state_pairs) {
-    return std::all_of(true_state_pairs.begin(), true_state_pairs.end(), [&policy](const core::StatePair& state_pair){ return policy.evaluate(state_pair.first, state_pair.second); }) &&
-           std::all_of(false_state_pairs.begin(), false_state_pairs.end(), [&policy](const core::StatePair& state_pair){ return !policy.evaluate(state_pair.first, state_pair.second); });
+    const StatePairs& true_state_pairs,
+    const StatePairs& false_state_pairs) {
+    return std::all_of(true_state_pairs.begin(), true_state_pairs.end(), [&policy](const StatePair& state_pair){ return policy.evaluate(state_pair.first, state_pair.second); }) &&
+           std::all_of(false_state_pairs.begin(), false_state_pairs.end(), [&policy](const StatePair& state_pair){ return !policy.evaluate(state_pair.first, state_pair.second); });
 }
 
 
@@ -344,7 +344,7 @@ std::shared_ptr<const Policy> PolicyMinimizer::minimize(const std::shared_ptr<co
     return builder.add_policy(utils::set_difference(rules_result, compute_dominated_rules(rules_result)));
 }
 
-std::shared_ptr<const Policy> PolicyMinimizer::minimize(const std::shared_ptr<const Policy>& policy, const core::StatePairs& true_state_pairs, const core::StatePairs& false_state_pairs, PolicyBuilder& builder) const {
+std::shared_ptr<const Policy> PolicyMinimizer::minimize(const std::shared_ptr<const Policy>& policy, const StatePairs& true_state_pairs, const StatePairs& false_state_pairs, PolicyBuilder& builder) const {
     auto current_policy = policy;
     bool minimization_success;
     do {

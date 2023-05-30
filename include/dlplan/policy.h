@@ -16,19 +16,27 @@
 
 namespace dlplan::policy {
 class PolicyBuilderImpl;
-    class PolicyReaderImpl;
-    class PolicyWriterImpl;
-    class BaseCondition;
-    class BaseEffect;
-    class Rule;
-    class Policy;
+class PolicyReaderImpl;
+class PolicyWriterImpl;
+class BaseCondition;
+class BaseEffect;
+class Rule;
+class Policy;
 
-    using Booleans = std::set<std::shared_ptr<const dlplan::core::Boolean>>;
-    using Numericals = std::set<std::shared_ptr<const dlplan::core::Numerical>>;
-    using Conditions = std::set<std::shared_ptr<const BaseCondition>>;
-    using Effects = std::set<std::shared_ptr<const BaseEffect>>;
-    using Rules = std::set<std::shared_ptr<const Rule>>;
-    using Policies = std::set<std::shared_ptr<const Policy>>;
+using Booleans = std::set<std::shared_ptr<const dlplan::core::Boolean>>;
+using Numericals = std::set<std::shared_ptr<const dlplan::core::Numerical>>;
+using Conditions = std::set<std::shared_ptr<const BaseCondition>>;
+using Effects = std::set<std::shared_ptr<const BaseEffect>>;
+using Rules = std::set<std::shared_ptr<const Rule>>;
+using Policies = std::set<std::shared_ptr<const Policy>>;
+
+using StatePair = std::pair<dlplan::core::State, dlplan::core::State>;
+using StatePairs = std::vector<StatePair>;
+
+using ConditionIndex = int;
+using EffectIndex = int;
+using RuleIndex = int;
+using PolicyIndex = int;
 
 
 /// @brief Represents the abstract base class of a feature condition and
@@ -53,10 +61,10 @@ public:
 
     virtual std::string compute_repr() const = 0;
     virtual std::string str() const = 0;
-    void set_index(int index);
+    void set_index(ConditionIndex index);
     virtual std::shared_ptr<const core::Boolean> get_boolean() const = 0;
     virtual std::shared_ptr<const core::Numerical> get_numerical() const = 0;
-    int get_index() const;
+    ConditionIndex get_index() const;
 };
 
 
@@ -82,8 +90,8 @@ public:
 
     virtual std::string compute_repr() const = 0;
     virtual std::string str() const = 0;
-    void set_index(int index);
-    int get_index() const;
+    void set_index(EffectIndex index);
+    EffectIndex get_index() const;
     virtual std::shared_ptr<const core::Boolean> get_boolean() const = 0;
     virtual std::shared_ptr<const core::Numerical> get_numerical() const = 0;
 };
@@ -97,7 +105,7 @@ class Rule {
 private:
     Conditions m_conditions;
     Effects m_effects;
-    int m_index;
+    RuleIndex m_index;
 
 private:
     Rule(Conditions&& conditions, Effects&& effects);
@@ -117,8 +125,8 @@ public:
 
     std::string compute_repr() const;
     std::string str() const;
-    void set_index(int index);
-    int get_index() const;
+    void set_index(RuleIndex index);
+    RuleIndex get_index() const;
     const Conditions& get_conditions() const;
     const Effects& get_effects() const;
 };
@@ -163,8 +171,8 @@ public:
 
     std::string compute_repr() const;
     std::string str() const;
-    void set_index(int index);
-    int get_index() const;
+    void set_index(PolicyIndex index);
+    PolicyIndex get_index() const;
     const Booleans& get_booleans() const;
     const Numericals& get_numericals() const;
     const Rules& get_rules() const;
@@ -225,8 +233,14 @@ public:
     PolicyMinimizer& operator=(PolicyMinimizer&& other);
     ~PolicyMinimizer();
 
-    std::shared_ptr<const Policy> minimize(const std::shared_ptr<const Policy>& policy, PolicyBuilder& builder) const;
-    std::shared_ptr<const Policy> minimize(const std::shared_ptr<const Policy>& policy, const core::StatePairs& true_state_pairs, const core::StatePairs& false_state_pairs, PolicyBuilder& builder) const;
+    std::shared_ptr<const Policy> minimize(
+        const std::shared_ptr<const Policy>& policy,
+        PolicyBuilder& builder) const;
+    std::shared_ptr<const Policy> minimize(
+        const std::shared_ptr<const Policy>& policy,
+        const StatePairs& true_state_pairs,
+        const StatePairs& false_state_pairs,
+        PolicyBuilder& builder) const;
 };
 
 

@@ -12,9 +12,9 @@ namespace dlplan::core {
 
 Atom::Atom(
     const std::string& name,
-    int index,
-    int predicate_idx,
-    const std::vector<int> &object_idxs,
+    AtomIndex index,
+    PredicateIndex predicate_idx,
+    const ObjectIndices &object_idxs,
     bool is_static)
     : m_name(name), m_index(index),
       m_predicate_index(predicate_idx), m_object_indices(object_idxs), m_is_static(is_static) {
@@ -42,15 +42,15 @@ const std::string& Atom::get_name() const {
     return m_name;
 }
 
-int Atom::get_index() const {
+AtomIndex Atom::get_index() const {
     return m_index;
 }
 
-int Atom::get_predicate_index() const {
+PredicateIndex Atom::get_predicate_index() const {
     return m_predicate_index;
 }
 
-const std::vector<int>& Atom::get_object_indices() const {
+const ObjectIndices& Atom::get_object_indices() const {
     return m_object_indices;
 }
 

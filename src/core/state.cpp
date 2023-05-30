@@ -10,13 +10,13 @@
 
 namespace dlplan::core {
 
-static std::vector<int> compute_sorted_atom_idxs(const std::vector<int>& atom_idxs) {
-    std::vector<int> sorted_atom_idxs(atom_idxs);
+static AtomIndices compute_sorted_atom_idxs(const AtomIndices& atom_idxs) {
+    AtomIndices sorted_atom_idxs(atom_idxs);
     std::sort(sorted_atom_idxs.begin(), sorted_atom_idxs.end());
     return sorted_atom_idxs;
 }
 
-State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms, int index)
+State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms, StateIndex index)
     : m_instance_info(instance_info), m_index(index) {
     if (!std::all_of(atoms.begin(), atoms.end(), [&](const auto& atom){ return !atom.is_static(); })) {
         throw std::runtime_error("State::State - static atom is not allowed in State.");
@@ -28,7 +28,7 @@ State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vecto
     }
 }
 
-State::State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_idxs, int index)
+State::State(std::shared_ptr<const InstanceInfo> instance_info, const AtomIndices& atom_idxs, StateIndex index)
     : m_instance_info(instance_info), m_atom_indices(atom_idxs), m_index(index) {
     const auto& atoms = instance_info->get_atoms();
     if (!std::all_of(atom_idxs.begin(), atom_idxs.end(), [&](int atom_idx){ return utils::in_bounds(atom_idx, atoms); })) {
@@ -61,11 +61,11 @@ std::shared_ptr<const InstanceInfo> State::get_instance_info() const {
     return m_instance_info;
 }
 
-const Index_Vec& State::get_atom_indices() const {
+const AtomIndices& State::get_atom_indices() const {
     return m_atom_indices;
 }
 
-int State::get_index() const {
+StateIndex State::get_index() const {
     return m_index;
 }
 
@@ -88,7 +88,7 @@ std::string State::str() const {
 }
 
 size_t State::hash() const {
-    Index_Vec sorted_atom_idxs = compute_sorted_atom_idxs(m_atom_indices);
+    AtomIndices sorted_atom_idxs = compute_sorted_atom_idxs(m_atom_indices);
     size_t seed = sorted_atom_idxs.size();
     for (int atom_idx : sorted_atom_idxs) {
         utils::hash_combine(seed, atom_idx);
@@ -97,7 +97,7 @@ size_t State::hash() const {
     return seed;
 }
 
-void State::set_index(int index) {
+void State::set_index(StateIndex index) {
     m_index = index;
 }
 

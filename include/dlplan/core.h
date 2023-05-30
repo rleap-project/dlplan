@@ -19,29 +19,36 @@
 
 namespace dlplan::core {
 class SyntacticElementFactoryImpl;
-class SyntacticElementFactory;
 class InstanceInfo;
 class VocabularyInfo;
 class State;
 class ConceptDenotation;
 class RoleDenotation;
-class Concept;
-class Role;
-class Boolean;
-class Numerical;
-class DenotationsCaches;
-
-using Index_Vec = std::vector<int>;
-using IndexPair_Vec = std::vector<std::pair<int, int>>;
-
-using States = std::vector<State>;
-using StatePair = std::pair<State, State>;
-using StatePairs = std::vector<StatePair>;
 
 using ConceptDenotations = std::vector<const ConceptDenotation*>;
 using RoleDenotations = std::vector<const RoleDenotation*>;
 using BooleanDenotations = std::vector<bool>;
 using NumericalDenotations = std::vector<int>;
+
+using States = std::vector<State>;
+
+using ConstantIndex = int;
+
+using PredicateIndex = int;
+
+using ObjectIndex = int;
+using ObjectIndices = std::vector<ObjectIndex>;
+using PairOfObjectIndices = std::pair<ObjectIndex, ObjectIndex>;
+using PairsOfObjectIndices = std::vector<PairOfObjectIndices>;
+
+using AtomIndex = int;
+using AtomIndices = std::vector<AtomIndex>;
+
+using ElementIndex = int;
+
+using InstanceIndex = int;
+
+using StateIndex = int;
 
 
 template<typename T>
@@ -51,16 +58,16 @@ struct hash {
     }
 };
 template<>
-struct hash<dlplan::core::State> {
-    size_t operator()(const dlplan::core::State& state) const noexcept;
+struct hash<State> {
+    size_t operator()(const State& state) const noexcept;
 };
 template<>
-struct hash<dlplan::core::ConceptDenotation> {
-    size_t operator()(const dlplan::core::ConceptDenotation& denotation) const noexcept;
+struct hash<ConceptDenotation> {
+    size_t operator()(const ConceptDenotation& denotation) const noexcept;
 };
 template<>
-struct hash<dlplan::core::RoleDenotation> {
-    size_t operator()(const dlplan::core::RoleDenotation& denotation) const noexcept;
+struct hash<RoleDenotation> {
+    size_t operator()(const RoleDenotation& denotation) const noexcept;
 };
 template<>
 struct hash<bool> {
@@ -71,12 +78,12 @@ struct hash<int> {
     size_t operator()(const int& value) const noexcept;
 };
 template<>
-struct hash<dlplan::core::ConceptDenotations> {
-    size_t operator()(const dlplan::core::ConceptDenotations& denotations) const noexcept;
+struct hash<ConceptDenotations> {
+    size_t operator()(const ConceptDenotations& denotations) const noexcept;
 };
 template<>
-struct hash<dlplan::core::RoleDenotations> {
-    size_t operator()(const dlplan::core::RoleDenotations& denotations) const noexcept;
+struct hash<RoleDenotations> {
+    size_t operator()(const RoleDenotations& denotations) const noexcept;
 };
 template<>
 struct hash<std::vector<bool>> {
@@ -117,14 +124,15 @@ public:
             bool operator!=(const const_iterator& other) const;
             bool operator==(const const_iterator& other) const;
 
-            const int& operator*() const;
+            const ObjectIndex& operator*() const;
+            ObjectIndex* operator->();
             const_iterator operator++(int);
             const_iterator& operator++();
 
         private:
             const_reference m_data;
             int m_num_objects;
-            int m_index;
+            ObjectIndex m_index;
 
             void seek_next();
     };
@@ -147,17 +155,17 @@ public:
     const_iterator begin() const;
     const_iterator end() const;
 
-    bool contains(int value) const;
+    bool contains(ObjectIndex value) const;
     void set();
-    void insert(int value);
-    void erase(int value);
+    void insert(ObjectIndex value);
+    void erase(ObjectIndex value);
 
     int size() const;
     bool empty() const;
     bool intersects(const ConceptDenotation& other) const;
     bool is_subset_of(const ConceptDenotation& other) const;
 
-    std::vector<int> to_sorted_vector() const;
+    ObjectIndices to_sorted_vector() const;
     std::size_t hash() const;
     std::string str() const;
     int get_num_objects() const;
@@ -189,15 +197,15 @@ public:
             bool operator!=(const const_iterator& other) const;
             bool operator==(const const_iterator& other) const;
 
-            const std::pair<int, int>& operator*() const;
-            std::pair<int, int>* operator->();
+            const PairOfObjectIndices& operator*() const;
+            PairOfObjectIndices* operator->();
             const_iterator operator++(int);
             const_iterator& operator++();
 
         private:
             const_reference m_data;
             int m_num_objects;
-            std::pair<int, int> m_indices;
+            PairOfObjectIndices m_indices;
 
         private:
             void seek_next();
@@ -221,17 +229,17 @@ public:
     const_iterator begin() const;
     const_iterator end() const;
 
-    bool contains(const std::pair<int, int>& value) const;
+    bool contains(const PairOfObjectIndices& value) const;
     void set();
-    void insert(const std::pair<int, int>& value);
-    void erase(const std::pair<int, int>& value);
+    void insert(const PairOfObjectIndices& value);
+    void erase(const PairOfObjectIndices& value);
 
     int size() const;
     bool empty() const;
     bool intersects(const RoleDenotation& other) const;
     bool is_subset_of(const RoleDenotation& other) const;
 
-    std::vector<std::pair<int, int>> to_sorted_vector() const;
+    PairsOfObjectIndices to_sorted_vector() const;
     std::size_t hash() const;
     std::string str() const;
     int get_num_objects() const;
@@ -239,13 +247,13 @@ public:
 
 
 /// @brief Encapsulates caches for denotations and provides functionality to
-///        insert and retrieve denotations into or from the cache.
+///        insert and retrieve denotations into and respectively from the cache.
 class DenotationsCaches {
 private:
     struct Key {
-        int element_index;
-        int instance_index;
-        int state_index;
+        ElementIndex element;
+        InstanceIndex instance;
+        StateIndex state;
 
         bool operator==(const Key& other) const;
         bool operator!=(const Key& other) const;
@@ -285,13 +293,13 @@ private:
         /// @param instance_index
         /// @param state_index
         /// @param denotation
-        void insert_denotation(int element_index, int instance_index, int state_index, const T* denotation) {
-            Key key{element_index, instance_index, state_index};
+        void insert_denotation(ElementIndex element, InstanceIndex instance, StateIndex state, const T* denotation) {
+            Key key{element, instance, state};
             m_per_element_instance_state_mapping.emplace(key, denotation);
         }
 
-        const T* get_denotation(int element_index, int instance_index, int state_index) const {
-            Key key{element_index, instance_index, state_index};
+        const T* get_denotation(ElementIndex element, InstanceIndex instance, StateIndex state) const {
+            Key key{element, instance, state};
             auto iter = m_per_element_instance_state_mapping.find(key);
             if (iter != m_per_element_instance_state_mapping.end()) {
                 return iter->second;
@@ -349,9 +357,9 @@ private:
     ///< The name of the constant.
     std::string m_name;
     ///< The index of the constant.
-    int m_index;
+    ConstantIndex m_index;
 
-    Constant(const std::string& name, int index);
+    Constant(const std::string& name, ConstantIndex index);
     friend class VocabularyInfo;
 
 public:
@@ -374,7 +382,7 @@ public:
 
     /// @brief Retrieves the index of the constant.
     /// @return The index of the constant.
-    int get_index() const;
+    ConstantIndex get_index() const;
 
     /// @brief Retrieves the name of the constant.
     /// @return The name of the constant.
@@ -392,11 +400,11 @@ public:
 class Predicate {
 private:
     std::string m_name;
-    int m_index;
+    PredicateIndex m_index;
     int m_arity;
     bool m_is_static;
 
-    Predicate(const std::string& name, int index, int arity, bool is_static=false);
+    Predicate(const std::string& name, PredicateIndex index, int arity, bool is_static=false);
     friend class VocabularyInfo;
 
 public:
@@ -409,7 +417,7 @@ public:
     bool operator==(const Predicate& other) const;
     bool operator!=(const Predicate& other) const;
 
-    int get_index() const;
+    PredicateIndex get_index() const;
     const std::string& get_name() const;
     int get_arity() const;
     bool is_static() const;
@@ -427,10 +435,10 @@ public:
 class VocabularyInfo {
 private:
     // we store static and dynamic predicates together.
-    std::unordered_map<std::string, int> m_predicate_name_to_index;
+    std::unordered_map<std::string, PredicateIndex> m_predicate_name_to_index;
     std::vector<Predicate> m_predicates;
 
-    std::unordered_map<std::string, int> m_constant_name_to_index;
+    std::unordered_map<std::string, ConstantIndex> m_constant_name_to_index;
     std::vector<Constant> m_constants;
 
 public:
@@ -457,7 +465,7 @@ public:
 class Object {
 private:
     std::string m_name;
-    int m_index;
+    ObjectIndex m_index;
 
     Object(const std::string& name, int index);
     friend class InstanceInfo;
@@ -472,7 +480,7 @@ public:
     bool operator==(const Object& other) const;
     bool operator!=(const Object& other) const;
 
-    int get_index() const;
+    ObjectIndex get_index() const;
     const std::string& get_name() const;
 };
 
@@ -482,15 +490,15 @@ public:
 class Atom {
 private:
     std::string m_name;
-    int m_index;
-    int m_predicate_index;
-    std::vector<int> m_object_indices;
+    AtomIndex m_index;
+    PredicateIndex m_predicate_index;
+    ObjectIndices m_object_indices;
     bool m_is_static;
 
     Atom(const std::string& name,
-        int index,
-        int predicate_index,
-        const std::vector<int> &object_indices,
+        AtomIndex index,
+        PredicateIndex predicate_index,
+        const ObjectIndices &object_indices,
         bool is_static=false);
     friend class InstanceInfo;
 
@@ -505,9 +513,9 @@ public:
     bool operator!=(const Atom& other) const;
 
     const std::string& get_name() const;
-    int get_index() const;
-    int get_predicate_index() const;
-    const std::vector<int>& get_object_indices() const;
+    AtomIndex get_index() const;
+    PredicateIndex get_predicate_index() const;
+    const ObjectIndices& get_object_indices() const;
     bool is_static() const;
 };
 
@@ -517,24 +525,24 @@ public:
 class InstanceInfo {
 private:
     std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
-    int m_index;
+    InstanceIndex m_index;
 
-    std::unordered_map<std::string, int> m_atom_name_to_index;
+    std::unordered_map<std::string, AtomIndex> m_atom_name_to_index;
     std::vector<Atom> m_atoms;
 
-    std::unordered_map<std::string, int> m_static_atom_name_to_index;
+    std::unordered_map<std::string, AtomIndex> m_static_atom_name_to_index;
     std::vector<Atom> m_static_atoms;
 
-    std::unordered_map<std::string, int> m_object_name_to_index;
+    std::unordered_map<std::string, ObjectIndex> m_object_name_to_index;
     std::vector<Object> m_objects;
 
-    const Atom& add_atom(int predicate_index, const Index_Vec& object_indices, bool is_static);
+    const Atom& add_atom(PredicateIndex predicate_index, const ObjectIndices& object_indices, bool is_static);
     const Atom& add_atom(const Predicate& predicate, const std::vector<Object>& objects, bool is_static);
     const Atom& add_atom(const std::string& predicate_name, const std::vector<std::string>& object_names, bool is_static);
 
 public:
     InstanceInfo() = delete;
-    InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info, int index=-1);
+    InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info, InstanceIndex index=-1);
     InstanceInfo(const InstanceInfo& other);
     InstanceInfo& operator=(const InstanceInfo& other);
     InstanceInfo(InstanceInfo&& other);
@@ -551,17 +559,17 @@ public:
     /**
      * Alternative 2 to add atoms.
      */
-    const Atom& add_atom(int predicate_index, const std::vector<int>& object_indices);
-    const Atom& add_static_atom(int predicate_index, const std::vector<int>& object_indices);
+    const Atom& add_atom(PredicateIndex predicate_index, const ObjectIndices& object_indices);
+    const Atom& add_static_atom(PredicateIndex predicate_index, const ObjectIndices& object_indices);
     /**
      * Alternative 3 to add atoms.
      */
     const Atom& add_atom(const std::string& predicate_name, const std::vector<std::string>& object_names);
     const Atom& add_static_atom(const std::string& predicate_name, const std::vector<std::string>& object_names);
 
-    void set_index(int index);
+    void set_index(InstanceIndex index);
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
-    int get_index() const;
+    InstanceIndex get_index() const;
     const std::vector<Atom>& get_atoms() const;
     const std::vector<Atom>& get_static_atoms() const;
     const std::vector<Object>& get_objects() const;
@@ -570,17 +578,17 @@ public:
 };
 
 
-/// @brief Encapsulates the atoms that are considered to be true and provides
-///        functionality to access it.
+/// @brief Encapsulates the atoms that are considered to be true in the
+///        current situation and provides functionality to access it.
 class State {
 private:
     std::shared_ptr<const InstanceInfo> m_instance_info;
-    Index_Vec m_atom_indices;
+    AtomIndices m_atom_indices;
     int m_index;
 
 public:
-    State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms, int index=-1);
-    State(std::shared_ptr<const InstanceInfo> instance_info, const Index_Vec& atom_indices, int index=-1);
+    State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms, StateIndex index=-1);
+    State(std::shared_ptr<const InstanceInfo> instance_info, const AtomIndices& atom_indices, StateIndex index=-1);
     State(const State& other);
     State& operator=(const State& other);
     State(State&& other);
@@ -592,10 +600,10 @@ public:
 
     std::string str() const;
     size_t hash() const;
-    void set_index(int index);
+    void set_index(StateIndex index);
     std::shared_ptr<const InstanceInfo> get_instance_info() const;
-    const Index_Vec& get_atom_indices() const;
-    int get_index() const;
+    const AtomIndices& get_atom_indices() const;
+    StateIndex get_index() const;
 };
 
 
@@ -605,7 +613,7 @@ class BaseElement {
 protected:
     std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
 
-    int m_index;
+    ElementIndex m_index;
     /**
      * if true then element is evaluated per instance rather than per state.
      */
@@ -629,15 +637,15 @@ public:
     virtual std::string compute_repr() const;
     virtual void compute_repr(std::stringstream& out) const = 0;
 
-    void set_index(int index);
-    int get_index() const;
+    void set_index(ElementIndex index);
+    ElementIndex get_index() const;
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
     bool is_static() const;
 };
 
 
 /// @brief Represents a concept element that evaluates to a concept denotation
-///        on a given state. It can also make us of a cache during evaluation.
+///        on a given state. It can also make use of a cache during evaluation.
 class Concept : public BaseElement {
 protected:
     Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
@@ -660,7 +668,7 @@ public:
 
 
 /// @brief Represents a role element that evaluates to a role denotation
-///        on a given state. It can also make us of a cache during evaluation.
+///        on a given state. It can also make use of a cache during evaluation.
 class Role : public BaseElement {
 protected:
     Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
@@ -683,7 +691,7 @@ public:
 
 
 /// @brief Represents a numerical element that evaluates to an natural number
-///        on a given state. It can also make us of a cache during evaluation.
+///        on a given state. It can also make use of a cache during evaluation.
 class Numerical : public BaseElement {
 protected:
     Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
@@ -706,7 +714,7 @@ public:
 
 
 /// @brief Represents a Boolean element that evaluates to either true or false
-///        on a given state. It can also make us of a cache during evaluation.
+///        on a given state. It can also make use of a cache during evaluation.
 class Boolean : public BaseElement {
 protected:
     Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);

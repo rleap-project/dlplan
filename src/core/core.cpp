@@ -10,13 +10,13 @@
 
 
 namespace dlplan::core {
-size_t hash<dlplan::core::State>::operator()(const dlplan::core::State& state) const noexcept {
+size_t hash<State>::operator()(const State& state) const noexcept {
     return state.hash();
 }
-size_t hash<dlplan::core::ConceptDenotation>::operator()(const dlplan::core::ConceptDenotation& denotation) const noexcept {
+size_t hash<ConceptDenotation>::operator()(const ConceptDenotation& denotation) const noexcept {
     return denotation.hash();
 }
-size_t hash<dlplan::core::RoleDenotation>::operator()(const dlplan::core::RoleDenotation& denotation) const noexcept {
+size_t hash<RoleDenotation>::operator()(const RoleDenotation& denotation) const noexcept {
     return denotation.hash();
 }
 size_t hash<bool>::operator()(const bool& value) const noexcept {
@@ -25,14 +25,14 @@ size_t hash<bool>::operator()(const bool& value) const noexcept {
 size_t hash<int>::operator()(const int& value) const noexcept {
     return std::hash<int>()(value);
 }
-size_t hash<dlplan::core::ConceptDenotations>::operator()(const dlplan::core::ConceptDenotations& denotations) const noexcept {
+size_t hash<ConceptDenotations>::operator()(const ConceptDenotations& denotations) const noexcept {
     size_t seed = 0;
     for (const auto denot_ptr : denotations) {
         dlplan::utils::hash_combine(seed, denot_ptr);
     }
     return seed;
 }
-size_t hash<dlplan::core::RoleDenotations>::operator()(const dlplan::core::RoleDenotations& denotations) const noexcept {
+size_t hash<RoleDenotations>::operator()(const RoleDenotations& denotations) const noexcept {
     size_t seed = 0;
     for (const auto denot_ptr : denotations) {
         dlplan::utils::hash_combine(seed, denot_ptr);
@@ -91,8 +91,12 @@ bool ConceptDenotation::const_iterator::operator==(const const_iterator& other) 
     return ((m_index == other.m_index) && (&m_data == &other.m_data));
 }
 
-const int& ConceptDenotation::const_iterator::operator*() const {
+const ObjectIndex& ConceptDenotation::const_iterator::operator*() const {
     return m_index;
+}
+
+ObjectIndex* ConceptDenotation::const_iterator::operator->() {
+    return &m_index;
 }
 
 ConceptDenotation::const_iterator ConceptDenotation::const_iterator::operator++(int) {
@@ -145,7 +149,7 @@ ConceptDenotation::const_iterator ConceptDenotation::end() const {
     return ConceptDenotation::const_iterator(m_data, m_num_objects, true);
 }
 
-bool ConceptDenotation::contains(int value) const {
+bool ConceptDenotation::contains(ObjectIndex value) const {
     assert(value >= 0 && value < m_num_objects);
     return m_data.test(value);
 }
@@ -154,12 +158,12 @@ void ConceptDenotation::set() {
     m_data.set();
 }
 
-void ConceptDenotation::insert(int value) {
+void ConceptDenotation::insert(ObjectIndex value) {
     assert(value >= 0 && value < m_num_objects);
     m_data.set(value);
 }
 
-void ConceptDenotation::erase(int value) {
+void ConceptDenotation::erase(ObjectIndex value) {
     assert(value >= 0 && value < m_num_objects);
     m_data.reset(value);
 }
@@ -180,8 +184,8 @@ bool ConceptDenotation::is_subset_of(const ConceptDenotation& other) const {
     return m_data.is_subset_of(other.m_data);
 }
 
-std::vector<int> ConceptDenotation::to_sorted_vector() const {
-    std::vector<int> result;
+ObjectIndices ConceptDenotation::to_sorted_vector() const {
+    ObjectIndices result;
     result.reserve(m_num_objects);
     for (int i = 0; i < m_num_objects; ++i) {
         if (m_data.test(i)) result.push_back(i);
@@ -197,8 +201,8 @@ std::size_t ConceptDenotation::hash() const {
 std::string ConceptDenotation::str() const {
     std::stringstream ss;
     ss << "{";
-    std::vector<int> object_idxs = to_sorted_vector();
-    for (int i : object_idxs) {
+    ObjectIndices object_idxs = to_sorted_vector();
+    for (ObjectIndex i : object_idxs) {
         ss << i;
         if (i != object_idxs.back()) ss << ", ";
     }
@@ -254,11 +258,11 @@ bool RoleDenotation::const_iterator::operator==(const const_iterator& other) con
     return ((m_indices == other.m_indices) && (&m_data == &other.m_data));
 }
 
-const std::pair<int, int>& RoleDenotation::const_iterator::operator*() const {
+const PairOfObjectIndices& RoleDenotation::const_iterator::operator*() const {
     return m_indices;
 }
 
-std::pair<int, int>* RoleDenotation::const_iterator::operator->() {
+PairOfObjectIndices* RoleDenotation::const_iterator::operator->() {
     return &m_indices;
 }
 
@@ -316,15 +320,15 @@ void RoleDenotation::set() {
     m_data.set();
 }
 
-bool RoleDenotation::contains(const std::pair<int, int>& value) const {
+bool RoleDenotation::contains(const PairOfObjectIndices& value) const {
     return m_data.test(value.first * m_num_objects + value.second);
 }
 
-void RoleDenotation::insert(const std::pair<int, int>& value) {
+void RoleDenotation::insert(const PairOfObjectIndices& value) {
     return m_data.set(value.first * m_num_objects + value.second);
 }
 
-void RoleDenotation::erase(const std::pair<int, int>& value) {
+void RoleDenotation::erase(const PairOfObjectIndices& value) {
     return m_data.reset(value.first * m_num_objects + value.second);
 }
 
@@ -344,8 +348,8 @@ bool RoleDenotation::is_subset_of(const RoleDenotation& other) const {
     return m_data.is_subset_of(other.m_data);
 }
 
-std::vector<std::pair<int, int>> RoleDenotation::to_sorted_vector() const {
-    std::vector<std::pair<int, int>> result;
+PairsOfObjectIndices RoleDenotation::to_sorted_vector() const {
+    PairsOfObjectIndices result;
     result.reserve(m_num_objects * m_num_objects);
     for (int i = 0; i < m_num_objects; ++i) {
         for (int j = 0; j < m_num_objects; ++j) {
@@ -365,7 +369,7 @@ std::size_t RoleDenotation::hash() const {
 std::string RoleDenotation::str() const {
     std::stringstream ss;
     ss << "{";
-    std::vector<std::pair<int, int>> object_pair_idxs = to_sorted_vector();
+    PairsOfObjectIndices object_pair_idxs = to_sorted_vector();
     for (const auto& p : object_pair_idxs) {
         ss << "(" << p.first << ", " << p.second << ")";
         if (p != object_pair_idxs.back()) ss << ", ";
@@ -421,9 +425,9 @@ DenotationsCaches::Cache<NumericalDenotations>& DenotationsCaches::get_numerical
 
 
 bool DenotationsCaches::Key::operator==(const Key& other) const {
-    return (element_index == other.element_index) &&
-           (instance_index == other.instance_index) &&
-           (state_index == other.state_index);
+    return (element == other.element) &&
+           (instance == other.instance) &&
+           (state == other.state);
 }
 
 bool DenotationsCaches::Key::operator!=(const Key& other) const {
@@ -432,9 +436,9 @@ bool DenotationsCaches::Key::operator!=(const Key& other) const {
 
 
 std::size_t DenotationsCaches::KeyHash::operator()(const Key& key) const {
-    std::size_t seed = key.element_index;
-    dlplan::utils::hash_combine(seed, key.instance_index);
-    dlplan::utils::hash_combine(seed, key.state_index);
+    std::size_t seed = key.element;
+    dlplan::utils::hash_combine(seed, key.instance);
+    dlplan::utils::hash_combine(seed, key.state);
     return seed;
 }
 

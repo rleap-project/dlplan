@@ -23,7 +23,7 @@ static std::string compute_atom_name(const Predicate& predicate, const std::vect
     return ss.str();
 }
 
-InstanceInfo::InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info, int index)
+InstanceInfo::InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info, InstanceIndex index)
     : m_vocabulary_info(vocabulary_info), m_index(index) {
 }
 
@@ -37,7 +37,7 @@ InstanceInfo& InstanceInfo::operator=(InstanceInfo&& other) = default;
 
 InstanceInfo::~InstanceInfo() = default;
 
-const Atom& InstanceInfo::add_atom(int predicate_idx, const Index_Vec& object_idxs, bool is_static) {
+const Atom& InstanceInfo::add_atom(PredicateIndex predicate_idx, const ObjectIndices& object_idxs, bool is_static) {
     // predicate related
     const Predicate& predicate = m_vocabulary_info->get_predicates()[predicate_idx];
     // object related
@@ -113,11 +113,11 @@ const Atom& InstanceInfo::add_static_atom(const Predicate& predicate, const std:
     return add_atom(predicate, objects, true);
 }
 
-const Atom& InstanceInfo::add_atom(int predicate_idx, const std::vector<int>& object_idxs) {
+const Atom& InstanceInfo::add_atom(PredicateIndex predicate_idx, const ObjectIndices& object_idxs) {
     return add_atom(predicate_idx, object_idxs, false);
 }
 
-const Atom& InstanceInfo::add_static_atom(int predicate_idx, const std::vector<int>& object_idxs) {
+const Atom& InstanceInfo::add_static_atom(PredicateIndex predicate_idx, const ObjectIndices& object_idxs) {
     return add_atom(predicate_idx, object_idxs, true);
 }
 
@@ -129,11 +129,11 @@ const Atom& InstanceInfo::add_static_atom(const std::string& predicate_name, con
     return add_atom(predicate_name, object_names, true);
 }
 
-void InstanceInfo::set_index(int index) {
+void InstanceInfo::set_index(InstanceIndex index) {
     m_index = index;
 }
 
-int InstanceInfo::get_index() const {
+InstanceIndex InstanceInfo::get_index() const {
     return m_index;
 }
 

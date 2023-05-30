@@ -141,11 +141,11 @@ std::string Policy::str() const {
     return ss.str();
 }
 
-void Policy::set_index(int index) {
+void Policy::set_index(PolicyIndex index) {
     m_index = index;
 }
 
-int Policy::get_index() const {
+PolicyIndex Policy::get_index() const {
     return m_index;
 }
 

@@ -2,7 +2,7 @@
 
 
 namespace dlplan::core {
-Constant::Constant(const std::string& name, int index)
+Constant::Constant(const std::string& name, ConstantIndex index)
     : m_name(name), m_index(index) { }
 
 Constant::Constant(const Constant& other) = default;
@@ -23,7 +23,7 @@ bool Constant::operator!=(const Constant& other) const {
     return !(*this == other);
 }
 
-int Constant::get_index() const {
+ConstantIndex Constant::get_index() const {
     return m_index;
 }
 

@@ -2,7 +2,7 @@
 
 
 namespace dlplan::core {
-Predicate::Predicate(const std::string& name, int index, int arity, bool is_static)
+Predicate::Predicate(const std::string& name, PredicateIndex index, int arity, bool is_static)
     : m_name(name), m_index(index), m_arity(arity), m_is_static(is_static) { }
 
 Predicate::Predicate(const Predicate& other) = default;
@@ -27,7 +27,7 @@ const std::string& Predicate::get_name() const {
     return m_name;
 }
 
-int Predicate::get_index() const {
+PredicateIndex Predicate::get_index() const {
     return m_index;
 }
 

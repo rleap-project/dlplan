@@ -101,11 +101,11 @@ std::string Rule::str() const {
     return ss.str();
 }
 
-void Rule::set_index(int index) {
+void Rule::set_index(RuleIndex index) {
     m_index = index;
 }
 
-int Rule::get_index() const {
+RuleIndex Rule::get_index() const {
     return m_index;
 }
 

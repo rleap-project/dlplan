@@ -2,7 +2,7 @@
 
 
 namespace dlplan::core {
-Object::Object(const std::string& name, int index)
+Object::Object(const std::string& name, ObjectIndex index)
     : m_name(name), m_index(index) { }
 
 Object::Object(const Object& other) = default;
@@ -27,7 +27,7 @@ const std::string& Object::get_name() const {
     return m_name;
 }
 
-int Object::get_index() const {
+ObjectIndex Object::get_index() const {
     return m_index;
 }
 
