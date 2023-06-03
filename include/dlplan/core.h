@@ -52,50 +52,56 @@ using StateIndex = int;
 
 
 template<typename T>
-struct hash {
-    std::size_t operator()(const T& value) const noexcept {
+struct hash_impl {
+    std::size_t operator()(const T&) const {
         throw std::runtime_error("hash::operator() - not implemented.");
     }
 };
-template<>
-struct hash<State> {
-    size_t operator()(const State& state) const noexcept;
+template<typename T>
+struct hash {
+    std::size_t operator()(const T& value) const {
+        return hash_impl<typename std::remove_const<T>::type>()(value);
+    }
 };
 template<>
-struct hash<ConceptDenotation> {
-    size_t operator()(const ConceptDenotation& denotation) const noexcept;
+struct hash_impl<State> {
+    size_t operator()(const State& state) const;
 };
 template<>
-struct hash<RoleDenotation> {
-    size_t operator()(const RoleDenotation& denotation) const noexcept;
+struct hash_impl<ConceptDenotation> {
+    size_t operator()(const ConceptDenotation& denotation) const;
 };
 template<>
-struct hash<bool> {
-    size_t operator()(const bool& value) const noexcept;
+struct hash_impl<RoleDenotation> {
+    size_t operator()(const RoleDenotation& denotation) const;
 };
 template<>
-struct hash<int> {
-    size_t operator()(const int& value) const noexcept;
+struct hash_impl<bool> {
+    size_t operator()(const bool& value) const;
 };
 template<>
-struct hash<ConceptDenotations> {
-    size_t operator()(const ConceptDenotations& denotations) const noexcept;
+struct hash_impl<int> {
+    size_t operator()(const int& value) const;
 };
 template<>
-struct hash<RoleDenotations> {
-    size_t operator()(const RoleDenotations& denotations) const noexcept;
+struct hash_impl<ConceptDenotations> {
+    size_t operator()(const ConceptDenotations& denotations) const;
 };
 template<>
-struct hash<std::vector<bool>> {
-    size_t operator()(const std::vector<bool>& data) const noexcept;
+struct hash_impl<RoleDenotations> {
+    size_t operator()(const RoleDenotations& denotations) const;
 };
 template<>
-struct hash<std::vector<unsigned>> {
-    size_t operator()(const std::vector<unsigned>& data) const noexcept;
+struct hash_impl<std::vector<bool>> {
+    size_t operator()(const std::vector<bool>& data) const;
 };
 template<>
-struct hash<std::vector<int>> {
-    size_t operator()(const std::vector<int>& data) const noexcept;
+struct hash_impl<std::vector<unsigned>> {
+    size_t operator()(const std::vector<unsigned>& data) const;
+};
+template<>
+struct hash_impl<std::vector<int>> {
+    size_t operator()(const std::vector<int>& data) const;
 };
 
 

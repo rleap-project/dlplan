@@ -19,7 +19,7 @@ Boolean& Boolean::operator=(Boolean&& other) = default;
 Boolean::~Boolean() = default;
 
 bool Boolean::evaluate(const State& state, DenotationsCaches& caches) const {
-    auto cached = caches.get_boolean_denotation_cache().get_denotation(
+    const bool* cached = caches.get_boolean_denotation_cache().get_denotation(
         get_index(),
         state.get_instance_info()->get_index(),
         is_static() ? -1 : state.get_index());

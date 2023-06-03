@@ -10,46 +10,46 @@
 
 
 namespace dlplan::core {
-size_t hash<State>::operator()(const State& state) const noexcept {
+size_t hash_impl<State>::operator()(const State& state) const {
     return state.hash();
 }
-size_t hash<ConceptDenotation>::operator()(const ConceptDenotation& denotation) const noexcept {
+size_t hash_impl<ConceptDenotation>::operator()(const ConceptDenotation& denotation) const {
     return denotation.hash();
 }
-size_t hash<RoleDenotation>::operator()(const RoleDenotation& denotation) const noexcept {
+size_t hash_impl<RoleDenotation>::operator()(const RoleDenotation& denotation) const {
     return denotation.hash();
 }
-size_t hash<bool>::operator()(const bool& value) const noexcept {
+size_t hash_impl<bool>::operator()(const bool& value) const {
     return std::hash<bool>()(value);
 }
-size_t hash<int>::operator()(const int& value) const noexcept {
+size_t hash_impl<int>::operator()(const int& value) const {
     return std::hash<int>()(value);
 }
-size_t hash<ConceptDenotations>::operator()(const ConceptDenotations& denotations) const noexcept {
+size_t hash_impl<ConceptDenotations>::operator()(const ConceptDenotations& denotations) const {
     size_t seed = 0;
     for (const auto denot_ptr : denotations) {
         dlplan::utils::hash_combine(seed, denot_ptr);
     }
     return seed;
 }
-size_t hash<RoleDenotations>::operator()(const RoleDenotations& denotations) const noexcept {
+size_t hash_impl<RoleDenotations>::operator()(const RoleDenotations& denotations) const {
     size_t seed = 0;
     for (const auto denot_ptr : denotations) {
         dlplan::utils::hash_combine(seed, denot_ptr);
     }
     return seed;
 }
-size_t hash<std::vector<bool>>::operator()(const std::vector<bool>& data) const noexcept {
+size_t hash_impl<std::vector<bool>>::operator()(const std::vector<bool>& data) const {
     return std::hash<std::vector<bool>>()(data);
 }
-size_t hash<std::vector<unsigned>>::operator()(const std::vector<unsigned>& data) const noexcept {
+size_t hash_impl<std::vector<unsigned>>::operator()(const std::vector<unsigned>& data) const {
     size_t seed = data.size();
     for (unsigned value : data) {
         dlplan::utils::hash_combine(seed, value);
     }
     return seed;
 }
-size_t hash<std::vector<int>>::operator()(const std::vector<int>& data) const noexcept {
+size_t hash_impl<std::vector<int>>::operator()(const std::vector<int>& data) const {
     size_t seed = data.size();
     for (int value : data) {
         dlplan::utils::hash_combine(seed, value);

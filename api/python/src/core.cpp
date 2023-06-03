@@ -13,15 +13,45 @@ using namespace dlplan::core;
 
 void init_core(py::module_ &m_core) {
     py::class_<ConceptDenotation>(m_core, "ConceptDenotation")
-        .def("to_sorted_vector", &ConceptDenotation::to_sorted_vector)
+        .def(py::init<int>())
+        .def("__eq__", &ConceptDenotation::operator==)
+        .def("__ne__", &ConceptDenotation::operator!=)
         .def("__str__", &ConceptDenotation::str)
         .def("__repr__", &ConceptDenotation::str)
+        .def("__len__", &ConceptDenotation::size)
+        .def("__hash__", &ConceptDenotation::hash)
+        .def("__iter__", [](const ConceptDenotation& obj) {
+            return py::make_iterator(obj.begin(), obj.end());
+        }, py::keep_alive<0, 1>())
+        .def("contains", &ConceptDenotation::contains)
+        .def("set", &ConceptDenotation::set)
+        .def("insert", &ConceptDenotation::insert)
+        .def("erase", &ConceptDenotation::erase)
+        .def("intersects", &ConceptDenotation::intersects)
+        .def("is_subset_of", &ConceptDenotation::is_subset_of)
+        .def("to_sorted_vector", &ConceptDenotation::to_sorted_vector)
+        .def("get_num_objects", &ConceptDenotation::get_num_objects)
     ;
 
     py::class_<RoleDenotation>(m_core, "RoleDenotation")
-        .def("to_sorted_vector", &RoleDenotation::to_sorted_vector)
+        .def(py::init<int>())
+        .def("__eq__", &RoleDenotation::operator==)
+        .def("__ne__", &RoleDenotation::operator!=)
         .def("__str__", &RoleDenotation::str)
         .def("__repr__", &RoleDenotation::str)
+        .def("__len__", &RoleDenotation::size)
+        .def("__hash__", &RoleDenotation::hash)
+        .def("__iter__", [](const RoleDenotation& obj) {
+            return py::make_iterator(obj.begin(), obj.end());
+        }, py::keep_alive<0, 1>())
+        .def("contains", &RoleDenotation::contains)
+        .def("set", &RoleDenotation::set)
+        .def("insert", &RoleDenotation::insert)
+        .def("erase", &RoleDenotation::erase)
+        .def("intersects", &RoleDenotation::intersects)
+        .def("is_subset_of", &RoleDenotation::is_subset_of)
+        .def("to_sorted_vector", &RoleDenotation::to_sorted_vector)
+        .def("get_num_objects", &RoleDenotation::get_num_objects)
     ;
 
     py::class_<DenotationsCaches>(m_core, "DenotationsCaches")
@@ -30,7 +60,7 @@ void init_core(py::module_ &m_core) {
 
     py::class_<Constant>(m_core, "Constant")
         .def("__eq__", &Constant::operator==)
-        .def("__neq__", &Constant::operator!=)
+        .def("__ne__", &Constant::operator!=)
         .def("__repr__", &Constant::get_name)
         .def("__str__", &Constant::get_name)
         .def("get_index", &Constant::get_index)
@@ -39,7 +69,7 @@ void init_core(py::module_ &m_core) {
 
     py::class_<Predicate>(m_core, "Predicate")
         .def("__eq__", &Predicate::operator==)
-        .def("__neq__", &Predicate::operator!=)
+        .def("__ne__", &Predicate::operator!=)
         .def("__repr__", &Predicate::get_name)
         .def("__str__", &Predicate::get_name)
         .def("get_index", &Predicate::get_index)
@@ -60,7 +90,7 @@ void init_core(py::module_ &m_core) {
 
     py::class_<Object>(m_core, "Object")
         .def("__eq__", &Object::operator==)
-        .def("__neq__", &Object::operator!=)
+        .def("__ne__", &Object::operator!=)
         .def("__repr__", &Object::get_name)
         .def("__str__", &Object::get_name)
         .def("get_index", &Object::get_index)
@@ -69,7 +99,7 @@ void init_core(py::module_ &m_core) {
 
     py::class_<Atom>(m_core, "Atom")
         .def("__eq__", &Atom::operator==)
-        .def("__neq__", &Atom::operator!=)
+        .def("__ne__", &Atom::operator!=)
         .def("__repr__", &Atom::get_name)
         .def("__str__", &Atom::get_name)
         .def("get_index", &Atom::get_index)
@@ -102,7 +132,7 @@ void init_core(py::module_ &m_core) {
         .def(py::init<std::shared_ptr<const InstanceInfo>, const std::vector<Atom>&, int>(), py::arg("instance_info"), py::arg("atoms"), py::arg("index") = -1)
         .def(py::init<std::shared_ptr<const InstanceInfo>, const std::vector<int>&, int>(), py::arg("instance_info"), py::arg("atom_indices"), py::arg("index") = -1)
         .def("__eq__", &State::operator==)
-        .def("__neq__", &State::operator!=)
+        .def("__ne__", &State::operator!=)
         .def("__repr__", &State::str)
         .def("__str__", &State::str)
         .def("__hash__", &State::hash)
@@ -136,13 +166,13 @@ void init_core(py::module_ &m_core) {
     py::class_<Numerical, BaseElement, std::shared_ptr<Numerical>>(m_core, "Numerical")
         .def("evaluate", py::overload_cast<const State&>(&Numerical::evaluate, py::const_))
         .def("evaluate", py::overload_cast<const State&, DenotationsCaches&>(&Numerical::evaluate, py::const_))
-        .def("evaluate", py::overload_cast<const States&, DenotationsCaches&>(&Numerical::evaluate, py::const_))
+        .def("evaluate", py::overload_cast<const States&, DenotationsCaches&>(&Numerical::evaluate, py::const_), py::return_value_policy::reference)
     ;
 
     py::class_<Boolean, BaseElement, std::shared_ptr<Boolean>>(m_core, "Boolean")
         .def("evaluate", py::overload_cast<const State&>(&Boolean::evaluate, py::const_))
         .def("evaluate", py::overload_cast<const State&, DenotationsCaches&>(&Boolean::evaluate, py::const_))
-        .def("evaluate", py::overload_cast<const States&, DenotationsCaches&>(&Boolean::evaluate, py::const_))
+        .def("evaluate", py::overload_cast<const States&, DenotationsCaches&>(&Boolean::evaluate, py::const_), py::return_value_policy::reference)
     ;
 
     py::class_<SyntacticElementFactory, std::shared_ptr<SyntacticElementFactory>>(m_core, "SyntacticElementFactory")

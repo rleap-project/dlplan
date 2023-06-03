@@ -33,6 +33,18 @@ namespace dlplan::tests::core
             *concept_0->evaluate(States{state_0, state_1}, caches)
         );
 
+        auto role_0 = factory.parse_role("r_primitive(role, 0, 1)");
+        EXPECT_EQ(role_0->evaluate(state_0), create_role_denotation(*instance, {}));
+        EXPECT_EQ(role_0->evaluate(state_0), *role_0->evaluate(state_0, caches));
+        EXPECT_EQ(role_0->evaluate(state_0, caches), role_0->evaluate(state_0, caches));
+        EXPECT_EQ(role_0->evaluate(state_1), create_role_denotation(*instance, {{"A", "B"}}));
+        EXPECT_EQ(role_0->evaluate(state_1), *role_0->evaluate(state_1, caches));
+        EXPECT_EQ(role_0->evaluate(state_1, caches), role_0->evaluate(state_1, caches));
+        EXPECT_EQ(
+            RoleDenotations({role_0->evaluate(state_0,caches), role_0->evaluate(state_1,caches)}),
+            *role_0->evaluate(States{state_0, state_1}, caches)
+        );
+
         auto numerical_0 = factory.parse_numerical("n_count(c_primitive(role, 0))");
         EXPECT_EQ(numerical_0->evaluate(state_0), 0);
         EXPECT_EQ(numerical_0->evaluate(state_0), numerical_0->evaluate(state_0, caches));

@@ -24,7 +24,7 @@ const ConceptDenotation* Concept::evaluate(const State& state, DenotationsCaches
         state.get_instance_info()->get_index(),
         is_static() ? -1 : state.get_index());
     if (cached) return cached;
-    const ConceptDenotation* denotation = caches.get_concept_denotation_cache().insert_denotation(evaluate_impl(state, caches));
+    auto denotation = caches.get_concept_denotation_cache().insert_denotation(evaluate_impl(state, caches));
     caches.get_concept_denotation_cache().insert_denotation(
         get_index(),
         state.get_instance_info()->get_index(),
