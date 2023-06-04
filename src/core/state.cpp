@@ -72,9 +72,11 @@ StateIndex State::get_index() const {
 
 std::string State::compute_repr() const {
     std::stringstream ss;
+    AtomIndices sorted_atom_indices = m_atom_indices;
+    std::sort(sorted_atom_indices.begin(), sorted_atom_indices.end());
     ss << "State("
        << "index=" << m_index << ", "
-       << "atom_indices=" << m_atom_indices
+       << "atom_indices=" << sorted_atom_indices
        << ")";
     return ss.str();
 }
@@ -85,21 +87,7 @@ std::ostream& operator<<(std::ostream& os, const State& state) {
 }
 
 std::string State::str() const {
-    std::stringstream result;
-    result << "(instance index=" << get_instance_info()->get_index()
-           << ", state index=" << get_index()
-           << ", atoms={";
-    const auto& atoms = get_instance_info()->get_atoms();
-    for (int atom_idx : m_atom_indices) {
-        assert(dlplan::utils::in_bounds(atom_idx, atoms));
-        const auto& atom = atoms[atom_idx];
-        result << atom.get_name();
-        if (atom_idx != m_atom_indices.back()) {
-            result << ", ";
-        }
-    }
-    result << "})";
-    return result.str();
+    return compute_repr();
 }
 
 size_t State::hash() const {

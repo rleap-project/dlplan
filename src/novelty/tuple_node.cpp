@@ -41,13 +41,18 @@ std::string TupleNode::compute_repr() const {
     std::sort(sorted_predecessors.begin(), sorted_predecessors.end());
     TupleIndices sorted_successors(m_successors.begin(), m_successors.end());
     std::sort(sorted_successors.begin(), sorted_successors.end());
-    ss << "("
-       << "tuple_index: " << m_tuple_index << ", "
-       << "state_indices: " << sorted_state_indices << ", "
-       << "predecessors: " << sorted_predecessors << ", "
-       << "successors: " << sorted_successors
+    ss << "TupleNode("
+       << "tuple_index=" << m_tuple_index << ", "
+       << "state_indices=" << sorted_state_indices << ", "
+       << "predecessors=" << sorted_predecessors << ", "
+       << "successors=" << sorted_successors
        << ")";
     return ss.str();
+}
+
+std::ostream& operator<<(std::ostream& os, const TupleNode& tuple_node) {
+    os << tuple_node.compute_repr();
+    return os;
 }
 
 std::string TupleNode::str() const {

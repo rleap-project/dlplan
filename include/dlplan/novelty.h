@@ -49,7 +49,6 @@ public:
     TupleIndex atom_tuple_to_tuple_index(const AtomIndices& tuple_atom_indices) const;
     AtomIndices tuple_index_to_atom_tuple(TupleIndex tuple_index) const;
 
-    std::string compute_repr() const;
     int get_tuple_size() const;
     int get_num_atoms() const;
     int get_num_tuples() const;
@@ -181,8 +180,21 @@ public:
     void add_predecessor(TupleIndex tuple_index);
     void add_successor(TupleIndex tuple_index);
 
+    /// @brief Compute the canonical string representation of this tuple node.
+    /// @return The canonical string representation of this tuple node.
     std::string compute_repr() const;
+
+    /// @brief Overload of the output stream insertion operator (operator<<) for the TupleNode class.
+    ///        Outputs a string representation of a TupleNode object to the specified output stream.
+    /// @param os The output stream to write the string representation to.
+    /// @param denotation The TupleNode to be represented as a string.
+    /// @return A reference to the output stream after writing the string representation.
+    friend std::ostream& operator<<(std::ostream& os, const TupleNode& tuple_node);
+
+    /// @brief Compute a string representation of this tuple node.
+    /// @return A string representation of this tuple node.
     std::string str() const;
+
     TupleIndex get_tuple_index() const;
     const state_space::StateIndices& get_state_indices() const;
     const TupleIndices& get_predecessors() const;
@@ -217,8 +229,27 @@ public:
     TupleGraph& operator=(TupleGraph&& other);
     ~TupleGraph();
 
+    /// @brief Compute the canonical string representation of this tuple graph.
+    /// @return The canonical string representation of this tuple graph.
+    ///
+    /// @note This representation does not include the recursive conversion of shared resources.
+    ///       Users are responsible for handling shared resources separately if desired.
     std::string compute_repr() const;
+
+    /// @brief Overload of the output stream insertion operator (operator<<) for the TupleGraph class.
+    ///        Outputs a string representation of a TupleGraph object to the specified output stream.
+    /// @param os The output stream to write the string representation to.
+    /// @param denotation The TupleGraph to be represented as a string.
+    /// @return A reference to the output stream after writing the string representation.
+    ///
+    /// @note This representation does not include the recursive conversion of shared resources.
+    ///       Users are responsible for handling shared resources separately if desired.
+    friend std::ostream& operator<<(std::ostream& os, const TupleGraph& tuple_graph);
+
+    /// @brief Compute a string representation of this tuple graph.
+    /// @return A string representation of this tuple graph.
     std::string str() const;
+
     std::string to_dot(int verbosity_level) const;
     const std::vector<TupleNodes>& get_tuple_nodes_by_distance() const;
     const std::vector<state_space::StateIndices>& get_state_indices_by_distance() const;

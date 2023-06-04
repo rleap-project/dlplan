@@ -47,7 +47,7 @@ StateSpace::StateSpace(
         throw std::runtime_error("StateSpace::StateSpace - not all states come from the given InstanceInfo.");
     }
     if (!std::all_of(m_states.begin(), m_states.end(),
-        [this](const auto& pair){ return pair.first == pair.second.get_index(); })) {
+        [](const auto& pair){ return pair.first == pair.second.get_index(); })) {
         throw std::runtime_error("StateSpace::StateSpace - invalid mapping from index to state.");
     }
     // assert goals

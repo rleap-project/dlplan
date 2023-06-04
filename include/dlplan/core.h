@@ -784,9 +784,6 @@ public:
 
     /// @brief Compute the canonical string representation of this element.
     /// @return The canonical string representation of this element.
-    ///
-    /// @note This representation does not include the recursive conversion of shared resources.
-    ///       Users are responsible for handling shared resources separately if desired.
     std::string compute_repr() const;
     virtual void compute_repr(std::stringstream& out) const = 0;
 
@@ -795,9 +792,6 @@ public:
     /// @param os The output stream to write the string representation to.
     /// @param denotation The BaseElement to be represented as a string.
     /// @return A reference to the output stream after writing the string representation.
-    ///
-    /// @note This representation does not include the recursive conversion of shared resources.
-    ///       Users are responsible for handling shared resources separately if desired.
     friend std::ostream& operator<<(std::ostream& os, const BaseElement& element);
 
     /// @brief Compute a string representation of this element.

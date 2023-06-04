@@ -57,15 +57,6 @@ AtomIndices NoveltyBase::tuple_index_to_atom_tuple(TupleIndex tuple_index) const
     return result;
 }
 
-std::string NoveltyBase::compute_repr() const {
-    std::stringstream ss;
-    ss << "("
-       << "num_atoms: " << m_num_atoms << ", "
-       << "tuple_size: " << m_tuple_size
-       << ")";
-    return ss.str();
-}
-
 int NoveltyBase::get_tuple_size() const {
     return m_tuple_size;
 }

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "../include/dlplan/state_space.h"
-#include "../include/dlplan/novelty.h"
+#include "../../../include/dlplan/state_space.h"
+#include "../../../include/dlplan/novelty.h"
 
 #include <iostream>
 
@@ -23,7 +23,7 @@ TEST(DLPTests, NoveltyGripperTest) {
     std::cout << std::endl << "Tuple graphs:" << std::endl;
     for (const auto& pair : state_space->get_states()) {
         auto tuple_graph = TupleGraph(novelty_base, state_space, pair.first, 2);
-        std::cout << std::endl << tuple_graph.to_dot(1) << std::endl;
+        std::cout << std::endl << tuple_graph << std::endl;
     }
 }
 

@@ -1,5 +1,7 @@
 #include "../../include/dlplan/novelty.h"
 
+#include "../utils/logging.h"
+
 #include <cassert>
 #include <sstream>
 
@@ -206,36 +208,44 @@ TupleGraph& TupleGraph::operator=(TupleGraph&& other) = default;
 TupleGraph::~TupleGraph() = default;
 
 std::string TupleGraph::compute_repr() const {
+    std::stringstream ss;
+    auto cmp = [](const TupleNode& l, const TupleNode& r){ return l.get_tuple_index() < r.get_tuple_index(); };
+    std::vector<TupleNodes> sorted_tuple_nodes_by_distance = m_tuple_nodes_by_distance;
+    std::for_each(sorted_tuple_nodes_by_distance.begin(), sorted_tuple_nodes_by_distance.end(),
+              [&](std::vector<TupleNode>& vec) { std::sort(vec.begin(), vec.end(), cmp); });
+    std::vector<state_space::StateIndices> sorted_state_indices_by_distance = m_state_indices_by_distance;
+    std::for_each(sorted_state_indices_by_distance.begin(), sorted_state_indices_by_distance.end(),
+              [&](state_space::StateIndices& vec) { std::sort(vec.begin(), vec.end()); });
+    ss << "TupleGraph(\n"
+       << "  root_state_index=" << m_root_state_index << ",\n"
+       << "  width=" << m_width << ",\n"
+       << "  tuple_nodes_by_distance=[\n";
+    for (const auto& tuple_nodes : sorted_tuple_nodes_by_distance) {
+        ss << "    [\n";
+        for (size_t i = 0; i < tuple_nodes.size(); ++i) {
+            if (i > 0) ss << ",\n";
+            ss << "      " << tuple_nodes[i];
+        }
+        ss << "\n    ],\n";
+    }
+    ss << "  ],\n"
+       << "  state_indices_by_distance=[\n";
+    for (size_t i = 0; i < sorted_state_indices_by_distance.size(); ++i) {
+        if (i > 0) ss << ",\n";
+        ss << "    " << sorted_state_indices_by_distance[i];
+    }
+    ss << "\n  ]\n"
+       << ")";
+    return ss.str();
+}
 
+std::ostream& operator<<(std::ostream& os, const TupleGraph& tuple_graph) {
+    os << tuple_graph.compute_repr();
+    return os;
 }
 
 std::string TupleGraph::str() const {
-    std::stringstream result;
-    result << "root state: " << m_root_state_index << "\n"
-           << "width: " << m_width << "\n";
-    result << "tuple nodes by distance:\n";
-    for (const auto& tuple_layer : m_tuple_nodes_by_distance) {
-        result << "[";
-        for (size_t i = 0; i < tuple_layer.size(); ++i) {
-            if (i != 0) {
-                result << ", ";
-            }
-            result << tuple_layer[i].str();
-        }
-        result << "]\n";
-    }
-    result << "state indices by distance:\n";
-    for (const auto& state_layer : m_state_indices_by_distance) {
-        result << "[";
-        for (size_t i = 0; i < state_layer.size(); ++i) {
-            if (i != 0) {
-                result << ", ";
-            }
-            result << state_layer[i];
-        }
-        result << "]\n";
-    }
-    return result.str();
+    return compute_repr();
 }
 
 std::string TupleGraph::to_dot(int verbosity_level) const {
