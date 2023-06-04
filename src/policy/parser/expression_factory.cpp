@@ -40,7 +40,7 @@ EXPRESSION_TYPE ExpressionFactory::element_name_to_expression_type(const std::st
     return p->second;
 }
 
-Expression_Ptr ExpressionFactory::make_expression(const std::string &name, std::vector<Expression_Ptr> &&children) {
+std::unique_ptr<Expression> ExpressionFactory::make_expression(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children) {
     if (ExpressionFactory::exists_element_name(name)) {
         EXPRESSION_TYPE expression_type = ExpressionFactory::element_name_to_expression_type(name);
         switch (expression_type)

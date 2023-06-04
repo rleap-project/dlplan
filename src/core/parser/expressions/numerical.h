@@ -2,6 +2,8 @@
 #define DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_NUMERICAL_H_
 
 #include "expression.h"
+#include "../../cache.h"
+
 
 namespace dlplan::core {
 class Numerical;

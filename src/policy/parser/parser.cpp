@@ -24,7 +24,7 @@ static TokenRegexes element_token_regexes = {
  * Parses the canonical AST from the given tokens.
  * Tokens in children are sorted lexicographically.
  */
-Expression_Ptr Parser::parse_expressions_tree(Tokens &tokens) const {
+std::unique_ptr<Expression> Parser::parse_expressions_tree(Tokens &tokens) const {
     if (tokens.empty()) {
         throw std::runtime_error("Parser::parse_expressions_tree - Unexpected EOF\n");
     }
@@ -33,7 +33,7 @@ Expression_Ptr Parser::parse_expressions_tree(Tokens &tokens) const {
     tokens.pop_front();
     // std::cout << token.first << " " << token.second << std::endl;
     if (token.second == "(") {
-        std::vector<Expression_Ptr> children;
+        std::vector<std::unique_ptr<Expression>> children;
         while (!tokens.empty() && tokens.front().second != ")") {
             children.emplace_back(parse_expressions_tree(tokens));
         }
@@ -53,7 +53,7 @@ Expression_Ptr Parser::parse_expressions_tree(Tokens &tokens) const {
 
 Parser::Parser() = default;
 
-Expression_Ptr Parser::parse(const std::string& data) const {
+std::unique_ptr<Expression> Parser::parse(const std::string& data) const {
     Tokens tokens = Tokenizer().tokenize(data, element_token_regexes);
     return parse_expressions_tree(tokens);
 }

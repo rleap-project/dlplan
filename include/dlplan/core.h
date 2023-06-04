@@ -15,6 +15,7 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <vector>
+#include <iostream>
 
 
 namespace dlplan::core {
@@ -171,9 +172,23 @@ public:
     bool intersects(const ConceptDenotation& other) const;
     bool is_subset_of(const ConceptDenotation& other) const;
 
+    /// @brief Compute the canonical string representation of the ConceptDenotation object.
+    /// @return The canonical string representation of the ConceptDenotation object.
+    std::string compute_repr() const;
+
+    /// @brief Overload of the output stream insertion operator (operator<<) for the ConceptDenotation class.
+    ///        Outputs a string representation of a ConceptDenotation object to the specified output stream.
+    /// @param os The output stream to write the string representation to.
+    /// @param denotation The ConceptDenotation to be represented as a string.
+    /// @return A reference to the output stream after writing the string representation.
+    friend std::ostream& operator<<(std::ostream& os, const ConceptDenotation& denotation);
+
+    /// @brief Compute a string representation of the RoleDenotation object.
+    /// @return A string representation of the RoleDenotation object.
+    std::string str() const;
+
     ObjectIndices to_sorted_vector() const;
     std::size_t hash() const;
-    std::string str() const;
     int get_num_objects() const;
 };
 
@@ -245,9 +260,23 @@ public:
     bool intersects(const RoleDenotation& other) const;
     bool is_subset_of(const RoleDenotation& other) const;
 
+    /// @brief Compute the canonical string representation of the RoleDenotation object.
+    /// @return The canonical string representation of the RoleDenotation object.
+    std::string compute_repr() const;
+
+    /// @brief Overload of the output stream insertion operator (operator<<) for the RoleDenotation class.
+    ///        Outputs a string representation of a RoleDenotation object to the specified output stream.
+    /// @param os The output stream to write the string representation to.
+    /// @param denotation The RoleDenotation to be represented as a string.
+    /// @return A reference to the output stream after writing the string representation.
+    friend std::ostream& operator<<(std::ostream& os, const RoleDenotation& denotation);
+
+    /// @brief Compute a string representation of the RoleDenotation object.
+    /// @return A string representation of the RoleDenotation object.
+    std::string str() const;
+
     PairsOfObjectIndices to_sorted_vector() const;
     std::size_t hash() const;
-    std::string str() const;
     int get_num_objects() const;
 };
 

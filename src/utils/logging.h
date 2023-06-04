@@ -78,6 +78,12 @@ namespace std {
         stream << "}";
         return stream;
     }
+
+    template<class T, class U>
+    ostream &operator<<(ostream &stream, const pair<T, U> &pair) {
+        stream << "<" << pair.first << "," << pair.second << ">";
+        return stream;
+    }
 }
 
 #endif

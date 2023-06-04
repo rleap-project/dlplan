@@ -1,16 +1,13 @@
 #ifndef DLPLAN_SRC_CORE_PARSER_PARSER_H_
 #define DLPLAN_SRC_CORE_PARSER_PARSER_H_
 
-#include "types.h"
-
 #include "../../utils/tokenizer.h"
 
 #include <string>
 
 
-namespace dlplan::core {
-class VocabularyInfo;
-namespace parser {
+namespace dlplan::core::parser {
+class Expression;
 
 enum class TokenType {
     COMMA,
@@ -29,7 +26,7 @@ private:
     /**
      * Parses tokens into an abstract syntax tree.
      */
-    Expression_Ptr parse_expressions_tree(Tokens &tokens) const;
+    std::unique_ptr<Expression> parse_expressions_tree(Tokens &tokens) const;
 
 public:
     Parser();
@@ -37,10 +34,9 @@ public:
     /**
      * Parses a textual description into an abstract syntax tree.
      */
-    Expression_Ptr parse(const std::string &description) const;
+    std::unique_ptr<Expression> parse(const std::string &description) const;
 };
 
-}
 }
 
 #endif

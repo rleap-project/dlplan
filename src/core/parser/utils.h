@@ -1,7 +1,6 @@
 #ifndef DLPLAN_SRC_CORE_PARSER_UTILS_H_
 #define DLPLAN_SRC_CORE_PARSER_UTILS_H_
 
-#include "types.h"
 #include "expressions/expression.h"
 
 #include <algorithm>
@@ -30,9 +29,9 @@ bool is_number(const std::string& name) {
  * We apply this in commutative expressions
  * to obtain a canonical representation.
  */
-std::vector<Expression_Ptr> sort_children_lexicographically(std::vector<Expression_Ptr> &&children) {
+std::vector<std::unique_ptr<Expression>> sort_children_lexicographically(std::vector<std::unique_ptr<Expression>> &&children) {
     std::sort(children.begin(), children.end(),
-        [](const Expression_Ptr &l, const Expression_Ptr &r){ return l->get_name() < r->get_name(); });
+        [](const std::unique_ptr<Expression> &l, const std::unique_ptr<Expression> &r){ return l->get_name() < r->get_name(); });
     return std::move(children);
 }
 

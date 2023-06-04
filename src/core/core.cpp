@@ -2,6 +2,7 @@
 
 #include "element_factory.h"
 #include "../utils/hashing.h"
+#include "../utils/logging.h"
 
 #include <cassert>
 #include <iostream>
@@ -184,11 +185,29 @@ bool ConceptDenotation::is_subset_of(const ConceptDenotation& other) const {
     return m_data.is_subset_of(other.m_data);
 }
 
+std::string ConceptDenotation::compute_repr() const {
+    std::stringstream ss;
+    ss << "ConceptDenotation("
+       << "num_objects=" << m_num_objects << ", "
+       << "object_indices=" << to_sorted_vector()
+       << ")";
+    return ss.str();
+}
+
+std::ostream& operator<<(std::ostream& os, const ConceptDenotation& denotation) {
+    os << denotation.compute_repr();
+    return os;
+}
+
+std::string ConceptDenotation::str() const {
+    return compute_repr();
+}
+
 ObjectIndices ConceptDenotation::to_sorted_vector() const {
     ObjectIndices result;
     result.reserve(m_num_objects);
-    for (int i = 0; i < m_num_objects; ++i) {
-        if (m_data.test(i)) result.push_back(i);
+    for (int object_idx : *this) {
+        result.push_back(object_idx);
     }
     result.shrink_to_fit();
     return result;
@@ -196,18 +215,6 @@ ObjectIndices ConceptDenotation::to_sorted_vector() const {
 
 std::size_t ConceptDenotation::hash() const {
     return dlplan::core::hash<std::vector<unsigned>>()(m_data.get_blocks());
-}
-
-std::string ConceptDenotation::str() const {
-    std::stringstream ss;
-    ss << "{";
-    ObjectIndices object_idxs = to_sorted_vector();
-    for (ObjectIndex i : object_idxs) {
-        ss << i;
-        if (i != object_idxs.back()) ss << ", ";
-    }
-    ss << "}";
-    return ss.str();
 }
 
 int ConceptDenotation::get_num_objects() const {
@@ -348,15 +355,29 @@ bool RoleDenotation::is_subset_of(const RoleDenotation& other) const {
     return m_data.is_subset_of(other.m_data);
 }
 
+std::string RoleDenotation::compute_repr() const {
+    std::stringstream ss;
+    ss << "RoleDenotation("
+       << "num_objects=" << m_num_objects << ", "
+       << "pairs_of_object_indices=" << to_sorted_vector()
+       << ")";
+    return ss.str();
+}
+
+std::ostream& operator<<(std::ostream& os, const RoleDenotation& denotation) {
+    os << denotation.compute_repr();
+    return os;
+}
+
+std::string RoleDenotation::str() const {
+    return compute_repr();
+}
+
 PairsOfObjectIndices RoleDenotation::to_sorted_vector() const {
     PairsOfObjectIndices result;
     result.reserve(m_num_objects * m_num_objects);
-    for (int i = 0; i < m_num_objects; ++i) {
-        for (int j = 0; j < m_num_objects; ++j) {
-            if (m_data.test(i * m_num_objects + j)) {
-                result.emplace_back(i, j);
-            }
-        }
+    for (const auto& pair_of_object_indices : *this) {
+        result.push_back(pair_of_object_indices);
     }
     result.shrink_to_fit();
     return result;
@@ -364,18 +385,6 @@ PairsOfObjectIndices RoleDenotation::to_sorted_vector() const {
 
 std::size_t RoleDenotation::hash() const {
     return dlplan::core::hash<std::vector<unsigned>>()(m_data.get_blocks());
-}
-
-std::string RoleDenotation::str() const {
-    std::stringstream ss;
-    ss << "{";
-    PairsOfObjectIndices object_pair_idxs = to_sorted_vector();
-    for (const auto& p : object_pair_idxs) {
-        ss << "(" << p.first << ", " << p.second << ")";
-        if (p != object_pair_idxs.back()) ss << ", ";
-    }
-    ss << "}";
-    return ss.str();
 }
 
 int RoleDenotation::get_num_objects() const {

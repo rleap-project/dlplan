@@ -59,7 +59,7 @@ public:
         return m_element->compute_complexity() + 1;
     }
 
-    void compute_repr(std::stringstream& out) const {
+    void compute_repr(std::stringstream& out) const override {
         out << get_name() << "(";
         m_element->compute_repr(out);
         out << ")";

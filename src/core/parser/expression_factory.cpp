@@ -74,75 +74,75 @@
 
 namespace dlplan::core::parser {
 
-Expression_Ptr ExpressionFactory::make_expression(const std::string& name, std::vector<Expression_Ptr> &&children) {
+std::unique_ptr<Expression> ExpressionFactory::make_expression(const std::string& name, std::vector<std::unique_ptr<Expression>> &&children) {
     if (name == dlplan::core::EmptyBoolean<int>::get_name()) {
-        return std::make_unique<EmptyBoolean>(EmptyBoolean(name, std::move(children)));
+        return std::make_unique<EmptyBoolean>(name, std::move(children));
     } else if (name == dlplan::core::InclusionBoolean<int>::get_name()) {
-        return std::make_unique<InclusionBoolean>(InclusionBoolean(name, std::move(children)));
+        return std::make_unique<InclusionBoolean>(name, std::move(children));
     } else if (name == dlplan::core::NullaryBoolean::get_name()) {
-        return std::make_unique<NullaryBoolean>(NullaryBoolean(name, std::move(children)));
+        return std::make_unique<NullaryBoolean>(name, std::move(children));
     } else if (name == dlplan::core::AllConcept::get_name()) {
-        return std::make_unique<AllConcept>(AllConcept(name, std::move(children)));
+        return std::make_unique<AllConcept>(name, std::move(children));
     } else if (name == dlplan::core::AndConcept::get_name()) {
-        return std::make_unique<AndConcept>(AndConcept(name, std::move(children)));
+        return std::make_unique<AndConcept>(name, std::move(children));
     } else if (name == dlplan::core::BotConcept::get_name()) {
-        return std::make_unique<BotConcept>(BotConcept(name, std::move(children)));
+        return std::make_unique<BotConcept>(name, std::move(children));
     } else if (name == dlplan::core::DiffConcept::get_name()) {
-        return std::make_unique<DiffConcept>(DiffConcept(name, std::move(children)));
+        return std::make_unique<DiffConcept>(name, std::move(children));
     } else if (name == dlplan::core::EqualConcept::get_name()) {
-        return std::make_unique<EqualConcept>(EqualConcept(name, std::move(children)));
+        return std::make_unique<EqualConcept>(name, std::move(children));
     } else if (name == dlplan::core::NotConcept::get_name()) {
-        return std::make_unique<NotConcept>(NotConcept(name, std::move(children)));
+        return std::make_unique<NotConcept>(name, std::move(children));
     } else if (name == dlplan::core::OneOfConcept::get_name()) {
-        return std::make_unique<OneOfConcept>(OneOfConcept(name, std::move(children)));
+        return std::make_unique<OneOfConcept>(name, std::move(children));
     } else if (name == dlplan::core::OrConcept::get_name()) {
-        return std::make_unique<OrConcept>(OrConcept(name, std::move(children)));
+        return std::make_unique<OrConcept>(name, std::move(children));
     } else if (name == dlplan::core::PrimitiveConcept::get_name()) {
-        return std::make_unique<PrimitiveConcept>(PrimitiveConcept(name, std::move(children)));
+        return std::make_unique<PrimitiveConcept>(name, std::move(children));
     } else if (name == dlplan::core::ProjectionConcept::get_name()) {
-        return std::make_unique<ProjectionConcept>(ProjectionConcept(name, std::move(children)));
+        return std::make_unique<ProjectionConcept>(name, std::move(children));
     } else if (name == dlplan::core::SomeConcept::get_name()) {
-        return std::make_unique<SomeConcept>(SomeConcept(name, std::move(children)));
+        return std::make_unique<SomeConcept>(name, std::move(children));
     } else if (name == dlplan::core::SubsetConcept::get_name()) {
-        return std::make_unique<SubsetConcept>(SubsetConcept(name, std::move(children)));
+        return std::make_unique<SubsetConcept>(name, std::move(children));
     } else if (name == dlplan::core::TopConcept::get_name()) {
-        return std::make_unique<TopConcept>(TopConcept(name, std::move(children)));
+        return std::make_unique<TopConcept>(name, std::move(children));
     } else if (name == dlplan::core::ConceptDistanceNumerical::get_name()) {
-        return std::make_unique<ConceptDistanceNumerical>(ConceptDistanceNumerical(name, std::move(children)));
+        return std::make_unique<ConceptDistanceNumerical>(name, std::move(children));
     } else if (name == dlplan::core::CountNumerical<int>::get_name()) {
-        return std::make_unique<CountNumerical>(CountNumerical(name, std::move(children)));
+        return std::make_unique<CountNumerical>(name, std::move(children));
     } else if (name == dlplan::core::RoleDistanceNumerical::get_name()) {
-        return std::make_unique<RoleDistanceNumerical>(RoleDistanceNumerical(name, std::move(children)));
+        return std::make_unique<RoleDistanceNumerical>(name, std::move(children));
     } else if (name == dlplan::core::SumConceptDistanceNumerical::get_name()) {
-        return std::make_unique<SumConceptDistanceNumerical>(SumConceptDistanceNumerical(name, std::move(children)));
+        return std::make_unique<SumConceptDistanceNumerical>(name, std::move(children));
     } else if (name == dlplan::core::SumRoleDistanceNumerical::get_name()) {
-        return std::make_unique<SumRoleDistanceNumerical>(SumRoleDistanceNumerical(name, std::move(children)));
+        return std::make_unique<SumRoleDistanceNumerical>(name, std::move(children));
     } else if (name == dlplan::core::AndRole::get_name()) {
-        return std::make_unique<AndRole>(AndRole(name, std::move(children)));
+        return std::make_unique<AndRole>(name, std::move(children));
     } else if (name == dlplan::core::ComposeRole::get_name()) {
-        return std::make_unique<ComposeRole>(ComposeRole(name, std::move(children)));
+        return std::make_unique<ComposeRole>(name, std::move(children));
     } else if (name == dlplan::core::DiffRole::get_name()) {
-        return std::make_unique<DiffRole>(DiffRole(name, std::move(children)));
+        return std::make_unique<DiffRole>(name, std::move(children));
     } else if (name == dlplan::core::IdentityRole::get_name()) {
-        return std::make_unique<IdentityRole>(IdentityRole(name, std::move(children)));
+        return std::make_unique<IdentityRole>(name, std::move(children));
     } else if (name == dlplan::core::InverseRole::get_name()) {
-        return std::make_unique<InverseRole>(InverseRole(name, std::move(children)));
+        return std::make_unique<InverseRole>(name, std::move(children));
     } else if (name == dlplan::core::NotRole::get_name()) {
-        return std::make_unique<NotRole>(NotRole(name, std::move(children)));
+        return std::make_unique<NotRole>(name, std::move(children));
     } else if (name == dlplan::core::OrRole::get_name()) {
-        return std::make_unique<OrRole>(OrRole(name, std::move(children)));
+        return std::make_unique<OrRole>(name, std::move(children));
     } else if (name == dlplan::core::PrimitiveRole::get_name()) {
-        return std::make_unique<PrimitiveRole>(PrimitiveRole(name, std::move(children)));
+        return std::make_unique<PrimitiveRole>(name, std::move(children));
     } else if (name == dlplan::core::RestrictRole::get_name()) {
-        return std::make_unique<RestrictRole>(RestrictRole(name, std::move(children)));
+        return std::make_unique<RestrictRole>(name, std::move(children));
     } else if (name == dlplan::core::TopRole::get_name()) {
-        return std::make_unique<TopRole>(TopRole(name, std::move(children)));
+        return std::make_unique<TopRole>(name, std::move(children));
     } else if (name == dlplan::core::TransitiveClosureRole::get_name()) {
-        return std::make_unique<TransitiveClosureRole>(TransitiveClosureRole(name, std::move(children)));
+        return std::make_unique<TransitiveClosureRole>(name, std::move(children));
     } else if (name == dlplan::core::TransitiveReflexiveClosureRole::get_name()) {
-        return std::make_unique<TransitiveReflexiveClosureRole>(TransitiveReflexiveClosureRole(name, std::move(children)));
+        return std::make_unique<TransitiveReflexiveClosureRole>(name, std::move(children));
     }
-    return std::make_unique<Expression>(Expression(name, std::move(children)));
+    return std::make_unique<Expression>(name, std::move(children));
 }
 
 

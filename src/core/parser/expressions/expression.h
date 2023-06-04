@@ -1,12 +1,20 @@
 #ifndef DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_EXPRESSION_H_
 #define DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_EXPRESSION_H_
 
-#include "../../element_factory.h"
-
 #include <sstream>
 #include <string>
 #include <vector>
+#include <memory>
 
+
+namespace dlplan::core {
+class VocabularyInfo;
+class Caches;
+class Concept;
+class Role;
+class Boolean;
+class Numerical;
+}
 
 namespace dlplan::core::parser {
 
@@ -23,6 +31,7 @@ public:
         std::vector<std::unique_ptr<Expression>> &&children)
         : m_name(name), m_children(std::move(children)) {
     }
+    virtual ~Expression() = default;
 
     /**
      * Returns true if the expression is a leaf, i.e.,

@@ -8,7 +8,7 @@
 
 
 namespace dlplan::generator {
-class GeneratorData;
+struct GeneratorData;
 namespace rules {
 
 class Rule {
