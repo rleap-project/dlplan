@@ -33,6 +33,23 @@ void TupleNode::add_successor(TupleIndex tuple_index) {
     m_successors.push_back(tuple_index);
 }
 
+std::string TupleNode::compute_repr() const {
+    std::stringstream ss;
+    state_space::StateIndices sorted_state_indices(m_state_indices.begin(), m_state_indices.end());
+    std::sort(sorted_state_indices.begin(), sorted_state_indices.end());
+    TupleIndices sorted_predecessors(m_predecessors.begin(), m_predecessors.end());
+    std::sort(sorted_predecessors.begin(), sorted_predecessors.end());
+    TupleIndices sorted_successors(m_successors.begin(), m_successors.end());
+    std::sort(sorted_successors.begin(), sorted_successors.end());
+    ss << "("
+       << "tuple_index: " << m_tuple_index << ", "
+       << "state_indices: " << sorted_state_indices << ", "
+       << "predecessors: " << sorted_predecessors << ", "
+       << "successors: " << sorted_successors
+       << ")";
+    return ss.str();
+}
+
 std::string TupleNode::str() const {
     std::stringstream result;
     result << "(" << m_tuple_index << ", " << m_state_indices << ")";

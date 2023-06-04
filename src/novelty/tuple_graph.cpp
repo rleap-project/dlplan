@@ -133,9 +133,9 @@ TupleGraph::TupleGraph(
       m_width(width) {
     if (width < 0) {
         throw std::runtime_error("TupleGraph::TupleGraph - width must be greater than or equal to 0.");
-    } else if (width == 0 && novelty_base->get_max_tuple_size() != 1) {
+    } else if (width == 0 && novelty_base->get_tuple_size() != 1) {
         throw std::runtime_error("TupleGraph::TupleGraph - TupleGraph with width 0 requires NoveltyBase with max_tuple_size 1.");
-    } else if (width > 0 && novelty_base->get_max_tuple_size() != width) {
+    } else if (width > 0 && novelty_base->get_tuple_size() != width) {
         throw std::runtime_error("TupleGraph::TupleGraph - TupleGraph with width greater 0 requires NoveltyBase with equal max_tuple_size.");
     }
     /* If width is 0 then we compute a tuple graph for width 1
@@ -204,6 +204,10 @@ TupleGraph::TupleGraph(TupleGraph&& other) = default;
 TupleGraph& TupleGraph::operator=(TupleGraph&& other) = default;
 
 TupleGraph::~TupleGraph() = default;
+
+std::string TupleGraph::compute_repr() const {
+
+}
 
 std::string TupleGraph::str() const {
     std::stringstream result;

@@ -32,17 +32,16 @@ class NoveltyBase {
 private:
     std::vector<int> m_factors;
     int m_num_atoms;
-    int m_max_tuple_size;
+    int m_tuple_size;
     int m_num_tuples;
 
 public:
-    NoveltyBase(int num_atoms, int max_tuple_size);
+    NoveltyBase(int num_atoms, int tuple_size);
     NoveltyBase(const NoveltyBase& other);
     NoveltyBase& operator=(const NoveltyBase& other);
     NoveltyBase(NoveltyBase&& other);
     NoveltyBase& operator=(NoveltyBase&& other);
     ~NoveltyBase();
-
 
     /**
      * Computes atom tuple to tuple index and vice versa.
@@ -50,7 +49,8 @@ public:
     TupleIndex atom_tuple_to_tuple_index(const AtomIndices& tuple_atom_indices) const;
     AtomIndices tuple_index_to_atom_tuple(TupleIndex tuple_index) const;
 
-    int get_max_tuple_size() const;
+    std::string compute_repr() const;
+    int get_tuple_size() const;
     int get_num_atoms() const;
     int get_num_tuples() const;
 };
@@ -114,6 +114,8 @@ public:
 
     tuple_index_iterator begin();
     tuple_index_iterator end();
+
+    int get_width() const;
 };
 
 
@@ -179,6 +181,7 @@ public:
     void add_predecessor(TupleIndex tuple_index);
     void add_successor(TupleIndex tuple_index);
 
+    std::string compute_repr() const;
     std::string str() const;
     TupleIndex get_tuple_index() const;
     const state_space::StateIndices& get_state_indices() const;
@@ -214,6 +217,7 @@ public:
     TupleGraph& operator=(TupleGraph&& other);
     ~TupleGraph();
 
+    std::string compute_repr() const;
     std::string str() const;
     std::string to_dot(int verbosity_level) const;
     const std::vector<TupleNodes>& get_tuple_nodes_by_distance() const;
