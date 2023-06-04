@@ -10,14 +10,14 @@
 
 namespace dlplan::novelty {
 
-NoveltyBase::NoveltyBase(int num_atoms, int tuple_size)
-    : m_num_atoms(num_atoms+1), m_tuple_size(tuple_size) {
-    if (m_tuple_size < 0) {
-        throw std::runtime_error("NoveltyBase::NoveltyBase - tuple_size must be greater than or equal to 0.");
+NoveltyBase::NoveltyBase(int num_atoms, int arity)
+    : m_num_atoms(num_atoms+1), m_arity(arity) {
+    if (m_arity < 0) {
+        throw std::runtime_error("NoveltyBase::NoveltyBase - arity must be greater than or equal to 0.");
     }
-    m_factors = std::vector<int>(m_tuple_size);
+    m_factors = std::vector<int>(m_arity);
     m_num_tuples = 0;
-    for (int i = 0; i < m_tuple_size; ++i) {
+    for (int i = 0; i < m_arity; ++i) {
         m_factors[i] = std::pow(m_num_atoms, i);
         m_num_tuples += m_num_atoms * m_factors[i];
     }
@@ -34,7 +34,7 @@ NoveltyBase& NoveltyBase::operator=(NoveltyBase&& other) = default;
 NoveltyBase::~NoveltyBase() = default;
 
 TupleIndex NoveltyBase::atom_tuple_to_tuple_index(const AtomIndices& tuple_atom_indices) const {
-    assert(static_cast<int>(tuple_atom_indices.size()) == m_tuple_size);
+    assert(static_cast<int>(tuple_atom_indices.size()) == m_arity);
     TupleIndex result = 0;
     int i = 0;
     for (auto atom_index : tuple_atom_indices) {
@@ -46,7 +46,7 @@ TupleIndex NoveltyBase::atom_tuple_to_tuple_index(const AtomIndices& tuple_atom_
 
 AtomIndices NoveltyBase::tuple_index_to_atom_tuple(TupleIndex tuple_index) const {
     AtomIndices result;
-    for (int i = m_tuple_size-1; i >= 0; --i) {
+    for (int i = m_arity-1; i >= 0; --i) {
         int atom_index = tuple_index / m_factors[i];
         if (atom_index != get_num_atoms()) {  // index of dummy atom
             result.push_back(atom_index);
@@ -57,16 +57,12 @@ AtomIndices NoveltyBase::tuple_index_to_atom_tuple(TupleIndex tuple_index) const
     return result;
 }
 
-int NoveltyBase::get_tuple_size() const {
-    return m_tuple_size;
-}
-
 int NoveltyBase::get_num_atoms() const {
     return m_num_atoms;
 }
 
-int NoveltyBase::get_num_tuples() const {
-    return m_num_tuples;
+int NoveltyBase::get_arity() const {
+    return m_arity;
 }
 
 }

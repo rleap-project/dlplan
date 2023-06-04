@@ -1,5 +1,7 @@
 #include "../../include/dlplan/novelty.h"
 
+#include "tuple_index_generator.h"
+
 #include "../utils/logging.h"
 
 #include <cassert>
@@ -31,28 +33,28 @@ static StateIndices compute_state_layer(
 }
 
 
-static std::tuple<TupleIndicesSet, std::unordered_map<StateIndex, TupleIndices>, std::unordered_map<TupleIndex, StateIndices>>
+static std::tuple<TupleIndices, std::unordered_map<StateIndex, TupleIndices>, std::unordered_map<TupleIndex, StateIndices>>
 compute_novel_tuple_indices_layer(
     const StateIndices& curr_state_layer,
     const StateSpace& state_space,
-    std::shared_ptr<const NoveltyBase> novelty_base,
     NoveltyTable& novelty_table) {
     std::unordered_map<StateIndex, TupleIndices> state_index_to_novel_tuples;
     std::unordered_map<TupleIndex, StateIndices> novel_tuple_to_state_indices;
-    TupleIndicesSet novel_tuples;
+    std::unordered_set<TupleIndex> novel_tuples_set;
+    AtomIndices effect_atom_indices;
     for (const auto state_index : curr_state_layer) {
         const TupleIndices state_novel_tuples = novelty_table.compute_novel_tuple_indices(
-            TupleIndexGenerator(
-                novelty_base,
-                state_space.get_states().at(state_index).get_atom_indices()));
-        novel_tuples.insert(state_novel_tuples.begin(), state_novel_tuples.end());
+            state_space.get_states().at(state_index).get_atom_indices(),
+            effect_atom_indices);
+        novel_tuples_set.insert(state_novel_tuples.begin(), state_novel_tuples.end());
         state_index_to_novel_tuples.emplace(state_index, state_novel_tuples);
         for (const auto tuple_index : state_novel_tuples) {
             novel_tuple_to_state_indices[tuple_index].push_back(state_index);
         }
     }
+    TupleIndices novel_tuples = TupleIndices(novel_tuples_set.begin(), novel_tuples_set.end());
     novelty_table.reset_novelty(novel_tuples);
-    return std::tuple<TupleIndicesSet, std::unordered_map<StateIndex, TupleIndices>, std::unordered_map<TupleIndex, StateIndices>>{novel_tuples, state_index_to_novel_tuples, novel_tuple_to_state_indices};
+    return std::tuple<TupleIndices, std::unordered_map<StateIndex, TupleIndices>, std::unordered_map<TupleIndex, StateIndices>>{novel_tuples, state_index_to_novel_tuples, novel_tuple_to_state_indices};
 }
 
 
@@ -137,7 +139,7 @@ TupleGraph::TupleGraph(
     if (!state_space) {
         throw std::runtime_error("TupleGraph::TupleGraph - state_space is nullptr.");
     }
-    if (novelty_base->get_tuple_size() == 0) {
+    if (novelty_base->get_arity() == 0) {
         int tuple_index = 0;
         m_tuple_nodes_by_distance.push_back({TupleNode(tuple_index++, {root_state})});
         m_state_indices_by_distance.push_back({root_state});
@@ -154,16 +156,17 @@ TupleGraph::TupleGraph(
         }
     } else {
         // 1. Initialize root state with distance = 0
-        NoveltyTable novelty_table(novelty_base->get_num_tuples());
+        NoveltyTable novelty_table(novelty_base, state_space->get_instance_info()->get_atoms().size() + 1);
         StateIndicesSet visited_states;
         StateIndices initial_state_layer{root_state};
         m_state_indices_by_distance.push_back(std::move(initial_state_layer));
         TupleNodes initial_tuple_layer;
-        for (const auto tuple_index : TupleIndexGenerator(novelty_base, state_space->get_states().at(root_state).get_atom_indices())) {
+        TupleIndices tuple_indices = novelty_table.compute_novel_tuple_indices(state_space->get_states().at(root_state).get_atom_indices(), {});
+        for (const auto tuple_index : tuple_indices) {
             initial_tuple_layer.emplace_back(tuple_index, StateIndices{root_state});
         }
         m_tuple_nodes_by_distance.push_back(std::move(initial_tuple_layer));
-        novelty_table.insert(TupleIndexGenerator(novelty_base, state_space->get_states().at(root_state).get_atom_indices()), false);
+        novelty_table.insert(tuple_indices, false);
         visited_states.insert(root_state);
         // 2. Iterate distances > 0
         for (int distance = 1; ; ++distance) {
@@ -178,7 +181,6 @@ TupleGraph::TupleGraph(
                 novel_tuple_to_state_indices] = compute_novel_tuple_indices_layer(
                     curr_state_layer,
                     *state_space,
-                    novelty_base,
                     novelty_table);
             if (novel_tuples.empty()) {
                 break;

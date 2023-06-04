@@ -16,14 +16,12 @@ namespace dlplan::novelty {
 class TupleNode;
 
 using AtomIndex = int;
+using AtomIndices = std::vector<AtomIndex>;
 
 using TupleIndex = int;
 using TupleIndices = std::vector<TupleIndex>;
-using TupleIndicesSet = std::unordered_set<TupleIndex>;
 
 using TupleNodes = std::vector<TupleNode>;
-
-using AtomIndices = std::vector<AtomIndex>;
 
 
 /// @brief Encapsulates mappings betweens tuples of atom indices and tuple indices, and
@@ -32,11 +30,11 @@ class NoveltyBase {
 private:
     std::vector<int> m_factors;
     int m_num_atoms;
-    int m_tuple_size;
+    int m_arity;
     int m_num_tuples;
 
 public:
-    NoveltyBase(int num_atoms, int tuple_size);
+    NoveltyBase(int num_atoms, int arity);
     NoveltyBase(const NoveltyBase& other);
     NoveltyBase& operator=(const NoveltyBase& other);
     NoveltyBase(NoveltyBase&& other);
@@ -49,83 +47,19 @@ public:
     TupleIndex atom_tuple_to_tuple_index(const AtomIndices& tuple_atom_indices) const;
     AtomIndices tuple_index_to_atom_tuple(TupleIndex tuple_index) const;
 
-    int get_tuple_size() const;
     int get_num_atoms() const;
-    int get_num_tuples() const;
+    int get_arity() const;
 };
-
-
-/// @brief Implements an iterator over all tuples of atom indices of size k
-///        from a given set of atom indices.
-class TupleIndexGenerator {
-private:
-    std::shared_ptr<const NoveltyBase> m_novelty_base;
-    AtomIndices m_atom_indices;
-
-public:
-    class tuple_index_iterator {
-        public:
-            using iterator_category = std::forward_iterator_tag;
-            using value_type        = TupleIndex;
-            using distance_type     = std::ptrdiff_t;
-
-            tuple_index_iterator(std::shared_ptr<const NoveltyBase> novelty_base, const AtomIndices& atom_indices, bool end=false);
-            tuple_index_iterator(const tuple_index_iterator& other);
-            tuple_index_iterator& operator=(const tuple_index_iterator& other);
-            tuple_index_iterator(tuple_index_iterator&& other);
-            tuple_index_iterator& operator=(tuple_index_iterator&& other);
-            ~tuple_index_iterator();
-
-            bool operator!=(const tuple_index_iterator& other) const;
-            bool operator==(const tuple_index_iterator& other) const;
-
-            TupleIndex operator*() const;
-            // Postfix increment
-            tuple_index_iterator operator++(int);
-            // Prefix increment
-            tuple_index_iterator& operator++();
-
-        private:
-            // The input data.
-            std::shared_ptr<const NoveltyBase> m_novelty_base;
-            AtomIndices m_atom_indices;
-            int m_width;
-            /* The data to generate next tuple index. */
-            // compact representation of atom tuple
-            int m_count;
-            // atom indices in current tuple
-            AtomIndices m_tuple_atom_indices;
-            // the output, i.e., the index of the atom tuple
-            TupleIndex m_tuple_index;
-
-        private:
-            void seek_next();
-    };
-
-    TupleIndexGenerator(
-        std::shared_ptr<const NoveltyBase> novelty_base,
-        const AtomIndices& atom_indices);
-    TupleIndexGenerator(const TupleIndexGenerator& other);
-    TupleIndexGenerator& operator=(const TupleIndexGenerator& other);
-    TupleIndexGenerator(TupleIndexGenerator&& other);
-    TupleIndexGenerator& operator=(TupleIndexGenerator&& other);
-    ~TupleIndexGenerator();
-
-    tuple_index_iterator begin();
-    tuple_index_iterator end();
-
-    int get_width() const;
-};
-
 
 /// @brief Implements a novelty table for the manipulation and querying of the
 ///        novelty status of a tuple with its representing index.
 class NoveltyTable {
 private:
+    std::shared_ptr<const NoveltyBase> m_novelty_base;
     std::vector<bool> m_table;
 
 public:
-    explicit NoveltyTable(int num_tuples);
+    NoveltyTable(std::shared_ptr<const NoveltyBase> novelty_base, int num_atoms);
     NoveltyTable(const NoveltyTable& other);
     NoveltyTable& operator=(const NoveltyTable& other);
     NoveltyTable(NoveltyTable&& other);
@@ -135,8 +69,10 @@ public:
     /**
      * Useful for construction of tuple graphs.
      */
-    void reset_novelty(const TupleIndicesSet& tuple_indices);
-    TupleIndices compute_novel_tuple_indices(TupleIndexGenerator&& tuple_index_generator) const;
+    void reset_novelty(const TupleIndices& tuple_indices);
+    TupleIndices compute_novel_tuple_indices(
+        const AtomIndices& atom_indices,
+        const AtomIndices& effect_atom_indices) const;
 
     /**
      * Useful for width-based planners.
@@ -146,7 +82,10 @@ public:
      * If the additional parameter stop_if_novel is true
      * then iteration stopps after novelty was proven.
      */
-    bool insert(TupleIndexGenerator&& tuple_index_generator, bool stop_if_novel=true);
+    bool insert(
+        const AtomIndices& atom_indices,
+        const AtomIndices& effect_atom_indices,
+        bool stop_if_novel=true);
 
     /**
      * Useful for width-based planners (requires expert knowledge).
@@ -214,8 +153,6 @@ private:
     std::vector<state_space::StateIndices> m_state_indices_by_distance;
     // The root state index
     state_space::StateIndex m_root_state_index;
-    // The width
-    int m_width;
 
 public:
     TupleGraph(
