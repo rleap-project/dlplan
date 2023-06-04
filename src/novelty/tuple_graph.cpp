@@ -127,72 +127,73 @@ compute_tuple_nodes_layer(
 TupleGraph::TupleGraph(
     std::shared_ptr<const NoveltyBase> novelty_base,
     std::shared_ptr<const state_space::StateSpace> state_space,
-    StateIndex root_state,
-    int width)
+    StateIndex root_state)
     : m_novelty_base(novelty_base),
       m_state_space(state_space),
-      m_root_state_index(root_state),
-      m_width(width) {
-    if (width < 0) {
-        throw std::runtime_error("TupleGraph::TupleGraph - width must be greater than or equal to 0.");
-    } else if (width == 0 && novelty_base->get_tuple_size() != 1) {
-        throw std::runtime_error("TupleGraph::TupleGraph - TupleGraph with width 0 requires NoveltyBase with max_tuple_size 1.");
-    } else if (width > 0 && novelty_base->get_tuple_size() != width) {
-        throw std::runtime_error("TupleGraph::TupleGraph - TupleGraph with width greater 0 requires NoveltyBase with equal max_tuple_size.");
+      m_root_state_index(root_state) {
+    if (!novelty_base) {
+        throw std::runtime_error("TupleGraph::TupleGraph - novelty_base is nullptr.");
     }
-    /* If width is 0 then we compute a tuple graph for width 1
-       and terminate after 1 step in the iteration.
-       Each successor of the initial state makes it into this tuple graph
-       because each successor has at least one novel tuple of size 1.
-    */
-    bool zero_width = false;
-    if (width == 0) {
-        zero_width = true;
-        width = 1;
+    if (!state_space) {
+        throw std::runtime_error("TupleGraph::TupleGraph - state_space is nullptr.");
     }
-    NoveltyTable novelty_table(novelty_base->get_num_tuples());
-    StateIndicesSet visited_states;
-    // 1. Initialize root state with distance = 0
-    StateIndices initial_state_layer{root_state};
-    TupleNodes initial_tuple_layer;
-    for (const auto tuple_index : TupleIndexGenerator(novelty_base, state_space->get_states().at(root_state).get_atom_indices())) {
-        initial_tuple_layer.emplace_back(tuple_index, StateIndices{root_state});
-    }
-    novelty_table.insert(TupleIndexGenerator(novelty_base, state_space->get_states().at(root_state).get_atom_indices()), false);
-    m_tuple_nodes_by_distance.push_back(std::move(initial_tuple_layer));
-    m_state_indices_by_distance.push_back(std::move(initial_state_layer));
-    visited_states.insert(root_state);
-    // 2. Iterate distances > 0
-    for (int distance = 1; ; ++distance) {
-        // 2.1. Compute unique states in curr state layer.
-        StateIndices curr_state_layer = compute_state_layer(
-            m_state_indices_by_distance[distance-1],
-            *state_space,
-            visited_states);
-        // 2.2. Compute novel tuples, mappings between states, and reset their novelty.
-        auto [novel_tuples,
-              state_index_to_novel_tuples,
-              novel_tuple_to_state_indices] = compute_novel_tuple_indices_layer(
-                  curr_state_layer,
-                  *state_space,
-                  novelty_base,
-                  novelty_table);
-        if (novel_tuples.empty()) {
-            break;
+    if (novelty_base->get_tuple_size() == 0) {
+        int tuple_index = 0;
+        m_tuple_nodes_by_distance.push_back({TupleNode(tuple_index++, {root_state})});
+        m_state_indices_by_distance.push_back({root_state});
+        const auto& it = state_space->get_forward_successor_state_indices().find(root_state);
+        if (it != state_space->get_forward_successor_state_indices().end()) {
+            TupleNodes curr_tuple_layer;
+            StateIndices curr_state_layer;
+            for (const auto& target_index : it->second) {
+                curr_tuple_layer.push_back(TupleNode(tuple_index++, {target_index}));
+                curr_state_layer.push_back(target_index);
+            }
+            m_tuple_nodes_by_distance.push_back(curr_tuple_layer);
+            m_state_indices_by_distance.push_back(curr_state_layer);
         }
-        // 2.3. Extend optimal plans of tuples from previous layer to tuples in current layer
-        TupleNodes curr_tuple_layer = compute_tuple_nodes_layer(
-            m_tuple_nodes_by_distance[distance-1],
-            *state_space,
-            state_index_to_novel_tuples,
-            novel_tuple_to_state_indices);
-        if (curr_tuple_layer.empty()) {
-            break;
+    } else {
+        // 1. Initialize root state with distance = 0
+        NoveltyTable novelty_table(novelty_base->get_num_tuples());
+        StateIndicesSet visited_states;
+        StateIndices initial_state_layer{root_state};
+        m_state_indices_by_distance.push_back(std::move(initial_state_layer));
+        TupleNodes initial_tuple_layer;
+        for (const auto tuple_index : TupleIndexGenerator(novelty_base, state_space->get_states().at(root_state).get_atom_indices())) {
+            initial_tuple_layer.emplace_back(tuple_index, StateIndices{root_state});
         }
-        m_tuple_nodes_by_distance.push_back(std::move(curr_tuple_layer));
-        m_state_indices_by_distance.push_back(std::move(curr_state_layer));
-        if (zero_width) {
-            break;
+        m_tuple_nodes_by_distance.push_back(std::move(initial_tuple_layer));
+        novelty_table.insert(TupleIndexGenerator(novelty_base, state_space->get_states().at(root_state).get_atom_indices()), false);
+        visited_states.insert(root_state);
+        // 2. Iterate distances > 0
+        for (int distance = 1; ; ++distance) {
+            // 2.1. Compute unique states in curr state layer.
+            StateIndices curr_state_layer = compute_state_layer(
+                m_state_indices_by_distance[distance-1],
+                *state_space,
+                visited_states);
+            // 2.2. Compute novel tuples, mappings between states, and reset their novelty.
+            auto [novel_tuples,
+                state_index_to_novel_tuples,
+                novel_tuple_to_state_indices] = compute_novel_tuple_indices_layer(
+                    curr_state_layer,
+                    *state_space,
+                    novelty_base,
+                    novelty_table);
+            if (novel_tuples.empty()) {
+                break;
+            }
+            // 2.3. Extend optimal plans of tuples from previous layer to tuples in current layer
+            TupleNodes curr_tuple_layer = compute_tuple_nodes_layer(
+                m_tuple_nodes_by_distance[distance-1],
+                *state_space,
+                state_index_to_novel_tuples,
+                novel_tuple_to_state_indices);
+            if (curr_tuple_layer.empty()) {
+                break;
+            }
+            m_tuple_nodes_by_distance.push_back(std::move(curr_tuple_layer));
+            m_state_indices_by_distance.push_back(std::move(curr_state_layer));
         }
     }
 }
@@ -218,7 +219,6 @@ std::string TupleGraph::compute_repr() const {
               [&](state_space::StateIndices& vec) { std::sort(vec.begin(), vec.end()); });
     ss << "TupleGraph(\n"
        << "  root_state_index=" << m_root_state_index << ",\n"
-       << "  width=" << m_width << ",\n"
        << "  tuple_nodes_by_distance=[\n";
     for (const auto& tuple_nodes : sorted_tuple_nodes_by_distance) {
         ss << "    [\n";
@@ -314,6 +314,14 @@ std::string TupleGraph::to_dot(int verbosity_level) const {
     return result.str();
 }
 
+std::shared_ptr<const NoveltyBase> TupleGraph::get_novelty_base() const {
+    return m_novelty_base;
+}
+
+std::shared_ptr<const state_space::StateSpace> TupleGraph::get_state_space() const {
+    return m_state_space;
+}
+
 const std::vector<TupleNodes>& TupleGraph::get_tuple_nodes_by_distance() const {
     return m_tuple_nodes_by_distance;
 }
@@ -324,10 +332,6 @@ const std::vector<state_space::StateIndices>& TupleGraph::get_state_indices_by_d
 
 state_space::StateIndex TupleGraph::get_root_state_index() const {
     return m_root_state_index;
-}
-
-int TupleGraph::get_width() const {
-    return m_width;
 }
 
 }

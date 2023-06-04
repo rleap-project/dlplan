@@ -221,8 +221,7 @@ public:
     TupleGraph(
         std::shared_ptr<const NoveltyBase> novelty_base,
         std::shared_ptr<const state_space::StateSpace> state_space,
-        state_space::StateIndex root_state_index,
-        int width);
+        state_space::StateIndex root_state_index);
     TupleGraph(const TupleGraph& other);
     TupleGraph& operator=(const TupleGraph& other);
     TupleGraph(TupleGraph&& other);
@@ -250,11 +249,16 @@ public:
     /// @return A string representation of this tuple graph.
     std::string str() const;
 
+    /// @brief Compute a string-dot representation of this tuple graph.
+    /// @param verbosity_level
+    /// @return A string-dot representation of this tuple graph.
     std::string to_dot(int verbosity_level) const;
+
+    std::shared_ptr<const NoveltyBase> get_novelty_base() const;
+    std::shared_ptr<const state_space::StateSpace> get_state_space() const;
     const std::vector<TupleNodes>& get_tuple_nodes_by_distance() const;
     const std::vector<state_space::StateIndices>& get_state_indices_by_distance() const;
     state_space::StateIndex get_root_state_index() const;
-    int get_width() const;
 };
 
 }

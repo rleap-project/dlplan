@@ -12,8 +12,8 @@ namespace dlplan::novelty {
 
 NoveltyBase::NoveltyBase(int num_atoms, int tuple_size)
     : m_num_atoms(num_atoms+1), m_tuple_size(tuple_size) {
-    if (m_tuple_size <= 0) {
-        throw std::runtime_error("NoveltyBase::NoveltyBase - tuple_size must be greater than 0.");
+    if (m_tuple_size < 0) {
+        throw std::runtime_error("NoveltyBase::NoveltyBase - tuple_size must be greater than or equal to 0.");
     }
     m_factors = std::vector<int>(m_tuple_size);
     m_num_tuples = 0;

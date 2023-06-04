@@ -87,7 +87,21 @@ std::ostream& operator<<(std::ostream& os, const State& state) {
 }
 
 std::string State::str() const {
-    return compute_repr();
+    std::stringstream result;
+    result << "(instance index=" << get_instance_info()->get_index()
+           << ", state index=" << get_index()
+           << ", atoms={";
+    const auto& atoms = get_instance_info()->get_atoms();
+    for (int atom_idx : m_atom_indices) {
+        assert(dlplan::utils::in_bounds(atom_idx, atoms));
+        const auto& atom = atoms[atom_idx];
+        result << atom.get_name();
+        if (atom_idx != m_atom_indices.back()) {
+            result << ", ";
+        }
+    }
+    result << "})";
+    return result.str();
 }
 
 size_t State::hash() const {
