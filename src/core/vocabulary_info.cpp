@@ -3,6 +3,9 @@
 #include "element_factory.h"
 
 #include "../utils/collections.h"
+#include "../utils/logging.h"
+
+#include <sstream>
 
 using namespace std::string_literals;
 
@@ -61,6 +64,24 @@ const Constant& VocabularyInfo::get_constant(const std::string& name) const {
         throw std::runtime_error("VocabularyInfo::get_constant - constant " + name + " does not exist.");
     }
     return m_constants[m_constant_name_to_index.at(name)];
+}
+
+std::string VocabularyInfo::compute_repr() const {
+    std::stringstream ss;
+    ss << "VocabularyInfo("
+       << "constants=" << m_constants << ", "
+       << "predicates=" << m_predicates
+       << ")";
+    return ss.str();
+}
+
+std::ostream& operator<<(std::ostream& os, const VocabularyInfo& vocabulary) {
+    os << vocabulary.compute_repr();
+    return os;
+}
+
+std::string VocabularyInfo::str() const {
+    return compute_repr();
 }
 
 }

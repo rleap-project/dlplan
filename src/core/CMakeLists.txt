@@ -4,11 +4,14 @@ target_sources(dlplancore
         atom.cpp
         base_element.cpp
         boolean.cpp
+        concept_denotation.cpp
         concept.cpp
+        role_denotation.cpp
         role.cpp
         state.cpp
         constant.cpp
         core.cpp
+        denotations_caches.cpp
         element_factory.cpp
         instance_info.cpp
         numerical.cpp

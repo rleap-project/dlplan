@@ -17,7 +17,7 @@ void init_novelty(py::module_ &m_novelty) {
         .def(py::init<int, int>())
         .def("atom_tuple_to_tuple_index", &NoveltyBase::atom_tuple_to_tuple_index)
         .def("tuple_index_to_atom_tuple", &NoveltyBase::tuple_index_to_atom_tuple)
-        .def("get_max_tuple_size", &NoveltyBase::get_max_tuple_size)
+        .def("get_tuple_size", &NoveltyBase::get_tuple_size)
         .def("get_num_atoms", &NoveltyBase::get_num_atoms)
         .def("get_num_tuples", &NoveltyBase::get_num_tuples)
     ;
@@ -34,7 +34,7 @@ void init_novelty(py::module_ &m_novelty) {
         .def("compute_novel_tuple_indices", [](NoveltyTable& self, TupleIndexGenerator generator){ return self.compute_novel_tuple_indices(std::move(generator));})
         .def("insert", [](NoveltyTable& self, TupleIndexGenerator generator, bool stop_if_novel){ return self.insert(std::move(generator), stop_if_novel);}, py::arg("tuple_index_generator"), py::arg("stop_if_novel") = true)
         .def("insert", [](NoveltyTable& self, const TupleIndices& tuple_indices, bool stop_if_novel){ return self.insert(tuple_indices, stop_if_novel);}, py::arg("tuple_index_generator"), py::arg("stop_if_novel") = true)
-    ;        
+    ;
 
     py::class_<TupleNode>(m_novelty, "TupleNode")
         .def(py::init<TupleIndex, const StateIndices&>())

@@ -1,6 +1,7 @@
 #include "../../include/dlplan/core.h"
 
 #include "../utils/collections.h"
+#include "../utils/logging.h"
 
 #include <string>
 #include <algorithm>
@@ -127,6 +128,26 @@ const Atom& InstanceInfo::add_atom(const std::string& predicate_name, const std:
 
 const Atom& InstanceInfo::add_static_atom(const std::string& predicate_name, const std::vector<std::string>& object_names) {
     return add_atom(predicate_name, object_names, true);
+}
+
+std::string InstanceInfo::compute_repr() const {
+    std::stringstream ss;
+    ss << "InstanceInfo("
+       << "index=" << m_index << ", "
+       << "objects=" << m_objects << ", "
+       << "atoms=" << m_atoms << ", "
+       << "static_atoms=" << m_static_atoms
+       << ")";
+    return ss.str();
+}
+
+std::ostream& operator<<(std::ostream& os, const InstanceInfo& instance) {
+    os << instance.compute_repr();
+    return os;
+}
+
+std::string InstanceInfo::str() const {
+    return compute_repr();
 }
 
 void InstanceInfo::set_index(InstanceIndex index) {

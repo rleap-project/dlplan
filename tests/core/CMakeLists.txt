@@ -5,6 +5,8 @@ target_sources(
     core_tests
     PRIVATE
         caching.cpp
+        concept_denotation.cpp
+        role_denotation.cpp
         core.cpp
         b_empty.cpp
         b_inclusion.cpp

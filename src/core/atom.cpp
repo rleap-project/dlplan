@@ -1,6 +1,7 @@
 #include "../../include/dlplan/core.h"
 
 #include "../utils/collections.h"
+#include "../utils/logging.h"
 
 #include <sstream>
 #include <cassert>
@@ -36,6 +37,27 @@ bool Atom::operator==(const Atom& other) const {
 
 bool Atom::operator!=(const Atom& other) const {
     return !(*this == other);
+}
+
+std::string Atom::compute_repr() const {
+    std::stringstream ss;
+    ss << "Atom("
+       << "index=" << m_index << ", "
+       << "name=" << m_name << ", "
+       << "predicate_index=" << m_predicate_index << ", "
+       << "object_indices=" << m_object_indices << ", "
+       << "is_static=" << m_is_static
+       << ")";
+    return ss.str();
+}
+
+std::ostream& operator<<(std::ostream& os, const Atom& atom) {
+    os << atom.compute_repr();
+    return os;
+}
+
+std::string Atom::str() const {
+    return compute_repr();
 }
 
 const std::string& Atom::get_name() const {

@@ -172,8 +172,8 @@ public:
     bool intersects(const ConceptDenotation& other) const;
     bool is_subset_of(const ConceptDenotation& other) const;
 
-    /// @brief Compute the canonical string representation of the ConceptDenotation object.
-    /// @return The canonical string representation of the ConceptDenotation object.
+    /// @brief Compute the canonical string representation of this concept denotation.
+    /// @return The canonical string representation of this concept denotation.
     std::string compute_repr() const;
 
     /// @brief Overload of the output stream insertion operator (operator<<) for the ConceptDenotation class.
@@ -183,8 +183,8 @@ public:
     /// @return A reference to the output stream after writing the string representation.
     friend std::ostream& operator<<(std::ostream& os, const ConceptDenotation& denotation);
 
-    /// @brief Compute a string representation of the RoleDenotation object.
-    /// @return A string representation of the RoleDenotation object.
+    /// @brief Compute a string representation of this concept denotation.
+    /// @return A string representation of this concept denotation.
     std::string str() const;
 
     ObjectIndices to_sorted_vector() const;
@@ -260,8 +260,8 @@ public:
     bool intersects(const RoleDenotation& other) const;
     bool is_subset_of(const RoleDenotation& other) const;
 
-    /// @brief Compute the canonical string representation of the RoleDenotation object.
-    /// @return The canonical string representation of the RoleDenotation object.
+    /// @brief Compute the canonical string representation of this role denotation.
+    /// @return The canonical string representation of this role denotation.
     std::string compute_repr() const;
 
     /// @brief Overload of the output stream insertion operator (operator<<) for the RoleDenotation class.
@@ -271,8 +271,8 @@ public:
     /// @return A reference to the output stream after writing the string representation.
     friend std::ostream& operator<<(std::ostream& os, const RoleDenotation& denotation);
 
-    /// @brief Compute a string representation of the RoleDenotation object.
-    /// @return A string representation of the RoleDenotation object.
+    /// @brief Compute a string representation of this role denotation.
+    /// @return A string representation of this role denotation.
     std::string str() const;
 
     PairsOfObjectIndices to_sorted_vector() const;
@@ -405,6 +405,21 @@ public:
     Constant& operator=(Constant&& other);
     ~Constant();
 
+    /// @brief Compute the canonical string representation of this constant.
+    /// @return The canonical string representation of this constant.
+    std::string compute_repr() const;
+
+    /// @brief Overload of the output stream insertion operator (operator<<) for the Constant class.
+    ///        Outputs a string representation of a Constant object to the specified output stream.
+    /// @param os The output stream to write the string representation to.
+    /// @param denotation The Constant to be represented as a string.
+    /// @return A reference to the output stream after writing the string representation.
+    friend std::ostream& operator<<(std::ostream& os, const Constant& constant);
+
+    /// @brief Compute a string representation of this constant.
+    /// @return A string representation of this constant.
+    std::string str() const;
+
     /// @brief Checks if this constant is equal to another constant.
     /// @param other The constant to compare against.
     /// @return True if the constants are equal, false otherwise.
@@ -452,6 +467,21 @@ public:
     bool operator==(const Predicate& other) const;
     bool operator!=(const Predicate& other) const;
 
+    /// @brief Compute the canonical string representation of this predicate.
+    /// @return The canonical string representation of this predicate.
+    std::string compute_repr() const;
+
+    /// @brief Overload of the output stream insertion operator (operator<<) for the Predicate class.
+    ///        Outputs a string representation of a Predicate object to the specified output stream.
+    /// @param os The output stream to write the string representation to.
+    /// @param denotation The Predicate to be represented as a string.
+    /// @return A reference to the output stream after writing the string representation.
+    friend std::ostream& operator<<(std::ostream& os, const Predicate& predicate);
+
+    /// @brief Compute a string representation of this predicate.
+    /// @return A string representation of this predicate.
+    std::string str() const;
+
     PredicateIndex get_index() const;
     const std::string& get_name() const;
     int get_arity() const;
@@ -492,6 +522,21 @@ public:
 
     const Predicate& get_predicate(const std::string& name) const;
     const Constant& get_constant(const std::string& name) const;
+
+    /// @brief Compute the canonical string representation of this vocabulary.
+    /// @return The canonical string representation of this vocabulary.
+    std::string compute_repr() const;
+
+    /// @brief Overload of the output stream insertion operator (operator<<) for the VocabularyInfo class.
+    ///        Outputs a string representation of a VocabularyInfo object to the specified output stream.
+    /// @param os The output stream to write the string representation to.
+    /// @param denotation The VocabularyInfo to be represented as a string.
+    /// @return A reference to the output stream after writing the string representation.
+    friend std::ostream& operator<<(std::ostream& os, const VocabularyInfo& vocabulary);
+
+    /// @brief Compute a string representation of this vocabulary.
+    /// @return A string representation of this vocabulary.
+    std::string str() const;
 };
 
 
@@ -514,6 +559,21 @@ public:
 
     bool operator==(const Object& other) const;
     bool operator!=(const Object& other) const;
+
+    /// @brief Compute the canonical string representation of this object.
+    /// @return The canonical string representation of this object.
+    std::string compute_repr() const;
+
+    /// @brief Overload of the output stream insertion operator (operator<<) for the Object class.
+    ///        Outputs a string representation of a Object object to the specified output stream.
+    /// @param os The output stream to write the string representation to.
+    /// @param denotation The Object to be represented as a string.
+    /// @return A reference to the output stream after writing the string representation.
+    friend std::ostream& operator<<(std::ostream& os, const Object& object);
+
+    /// @brief Compute a string representation of this object.
+    /// @return A string representation of this object.
+    std::string str() const;
 
     ObjectIndex get_index() const;
     const std::string& get_name() const;
@@ -546,6 +606,21 @@ public:
 
     bool operator==(const Atom& other) const;
     bool operator!=(const Atom& other) const;
+
+    /// @brief Compute the canonical string representation of this atom.
+    /// @return The canonical string representation of this atom.
+    std::string compute_repr() const;
+
+    /// @brief Overload of the output stream insertion operator (operator<<) for the Atom class.
+    ///        Outputs a string representation of a Atom object to the specified output stream.
+    /// @param os The output stream to write the string representation to.
+    /// @param denotation The Atom to be represented as a string.
+    /// @return A reference to the output stream after writing the string representation.
+    friend std::ostream& operator<<(std::ostream& os, const Atom& atom);
+
+    /// @brief Compute a string representation of this atom.
+    /// @return A string representation of this atom.
+    std::string str() const;
 
     const std::string& get_name() const;
     AtomIndex get_index() const;
@@ -602,6 +677,27 @@ public:
     const Atom& add_atom(const std::string& predicate_name, const std::vector<std::string>& object_names);
     const Atom& add_static_atom(const std::string& predicate_name, const std::vector<std::string>& object_names);
 
+    /// @brief Compute the canonical string representation of this instance.
+    /// @return The canonical string representation of this instance.
+    ///
+    /// @note This representation does not include the recursive conversion of shared resources.
+    ///       Users are responsible for handling shared resources separately if desired.
+    std::string compute_repr() const;
+
+    /// @brief Overload of the output stream insertion operator (operator<<) for the InstanceInfo class.
+    ///        Outputs a string representation of a InstanceInfo object to the specified output stream.
+    /// @param os The output stream to write the string representation to.
+    /// @param denotation The InstanceInfo to be represented as a string.
+    /// @return A reference to the output stream after writing the string representation.
+    ///
+    /// @note This representation does not include the recursive conversion of shared resources.
+    ///       Users are responsible for handling shared resources separately if desired.
+    friend std::ostream& operator<<(std::ostream& os, const InstanceInfo& instance);
+
+    /// @brief Compute a string representation of this instance.
+    /// @return A string representation of this instance.
+    std::string str() const;
+
     void set_index(InstanceIndex index);
     std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
     InstanceIndex get_index() const;
@@ -633,7 +729,27 @@ public:
     bool operator==(const State& other) const;
     bool operator!=(const State& other) const;
 
+    /// @brief Compute the canonical string representation of this state.
+    /// @return The canonical string representation of this state.
+    ///
+    /// @note This representation does not include the recursive conversion of shared resources.
+    ///       Users are responsible for handling shared resources separately if desired.
+    std::string compute_repr() const;
+
+    /// @brief Overload of the output stream insertion operator (operator<<) for the State class.
+    ///        Outputs a string representation of a State object to the specified output stream.
+    /// @param os The output stream to write the string representation to.
+    /// @param denotation The State to be represented as a string.
+    /// @return A reference to the output stream after writing the string representation.
+    ///
+    /// @note This representation does not include the recursive conversion of shared resources.
+    ///       Users are responsible for handling shared resources separately if desired.
+    friend std::ostream& operator<<(std::ostream& os, const State& state);
+
+    /// @brief Compute a string representation of this state.
+    /// @return A string representation of this state.
     std::string str() const;
+
     size_t hash() const;
     void set_index(StateIndex index);
     std::shared_ptr<const InstanceInfo> get_instance_info() const;
@@ -666,11 +782,27 @@ public:
      */
     virtual int compute_complexity() const = 0;
 
-    /**
-     * Returns a canonical string representation.
-     */
-    virtual std::string compute_repr() const;
+    /// @brief Compute the canonical string representation of this element.
+    /// @return The canonical string representation of this element.
+    ///
+    /// @note This representation does not include the recursive conversion of shared resources.
+    ///       Users are responsible for handling shared resources separately if desired.
+    std::string compute_repr() const;
     virtual void compute_repr(std::stringstream& out) const = 0;
+
+    /// @brief Overload of the output stream insertion operator (operator<<) for the BaseElement class.
+    ///        Outputs a string representation of a BaseElement object to the specified output stream.
+    /// @param os The output stream to write the string representation to.
+    /// @param denotation The BaseElement to be represented as a string.
+    /// @return A reference to the output stream after writing the string representation.
+    ///
+    /// @note This representation does not include the recursive conversion of shared resources.
+    ///       Users are responsible for handling shared resources separately if desired.
+    friend std::ostream& operator<<(std::ostream& os, const BaseElement& element);
+
+    /// @brief Compute a string representation of this element.
+    /// @return A string representation of this element.
+    std::string str() const;
 
     void set_index(ElementIndex index);
     ElementIndex get_index() const;

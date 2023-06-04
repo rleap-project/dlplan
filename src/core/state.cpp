@@ -2,6 +2,7 @@
 
 #include "../utils/collections.h"
 #include "../utils/hashing.h"
+#include "../utils/logging.h"
 
 #include <algorithm>
 #include <stdexcept>
@@ -67,6 +68,20 @@ const AtomIndices& State::get_atom_indices() const {
 
 StateIndex State::get_index() const {
     return m_index;
+}
+
+std::string State::compute_repr() const {
+    std::stringstream ss;
+    ss << "State("
+       << "index=" << m_index << ", "
+       << "atom_indices=" << m_atom_indices
+       << ")";
+    return ss.str();
+}
+
+std::ostream& operator<<(std::ostream& os, const State& state) {
+    os << state.compute_repr();
+    return os;
 }
 
 std::string State::str() const {

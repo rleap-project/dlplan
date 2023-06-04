@@ -1,5 +1,7 @@
 #include "../../include/dlplan/core.h"
 
+#include <sstream>
+
 
 namespace dlplan::core {
 Object::Object(const std::string& name, ObjectIndex index)
@@ -21,6 +23,24 @@ bool Object::operator==(const Object& other) const {
 
 bool Object::operator!=(const Object& other) const {
     return !(*this == other);
+}
+
+std::string Object::compute_repr() const {
+    std::stringstream ss;
+    ss << "Object("
+       << "index=" << m_index << ", "
+       << "name=" << m_name
+       << ")";
+    return ss.str();
+}
+
+std::ostream& operator<<(std::ostream& os, const Object& object) {
+    os << object.compute_repr();
+    return os;
+}
+
+std::string Object::str() const {
+    return compute_repr();
 }
 
 const std::string& Object::get_name() const {
