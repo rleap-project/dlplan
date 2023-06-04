@@ -41,9 +41,6 @@ public:
     NoveltyBase& operator=(NoveltyBase&& other);
     ~NoveltyBase();
 
-    /**
-     * Computes atom tuple to tuple index and vice versa.
-     */
     TupleIndex atom_tuple_to_tuple_index(const AtomIndices& tuple_atom_indices) const;
     AtomIndices tuple_index_to_atom_tuple(TupleIndex tuple_index) const;
 
@@ -66,34 +63,16 @@ public:
     NoveltyTable& operator=(NoveltyTable&& other);
     ~NoveltyTable();
 
-    /**
-     * Useful for construction of tuple graphs.
-     */
     void reset_novelty(const TupleIndices& tuple_indices);
     TupleIndices compute_novel_tuple_indices(
         const AtomIndices& atom_indices,
         const AtomIndices& effect_atom_indices) const;
 
-    /**
-     * Useful for width-based planners.
-     *
-     * Iterates over the tuples, marks each as not novel.
-     * Returns true iff a novel tuple was found.
-     * If the additional parameter stop_if_novel is true
-     * then iteration stopps after novelty was proven.
-     */
     bool insert(
         const AtomIndices& atom_indices,
         const AtomIndices& effect_atom_indices,
         bool stop_if_novel=true);
 
-    /**
-     * Useful for width-based planners (requires expert knowledge).
-     *
-     * The above method lacks taking into consideration
-     * the atoms that were changed by operator application.
-     * Hence, the user can compute tuples and pass them in here.
-     */
     bool insert(const TupleIndices& tuple_indices, bool stop_if_novel=true);
 };
 
@@ -147,11 +126,8 @@ class TupleGraph {
 private:
     std::shared_ptr<const NoveltyBase> m_novelty_base;
     std::shared_ptr<const state_space::StateSpace> m_state_space;
-    // The novel tuples that make it into the tuple graph.
     std::vector<TupleNodes> m_tuple_nodes_by_distance;
-    // The reachable states with distance at most the largest distance of a tuple node.
     std::vector<state_space::StateIndices> m_state_indices_by_distance;
-    // The root state index
     state_space::StateIndex m_root_state_index;
 
 public:
