@@ -17,9 +17,8 @@ void init_novelty(py::module_ &m_novelty) {
         .def(py::init<int, int>())
         .def("atom_tuple_to_tuple_index", &NoveltyBase::atom_tuple_to_tuple_index)
         .def("tuple_index_to_atom_tuple", &NoveltyBase::tuple_index_to_atom_tuple)
-        .def("get_tuple_size", &NoveltyBase::get_tuple_size)
         .def("get_num_atoms", &NoveltyBase::get_num_atoms)
-        .def("get_num_tuples", &NoveltyBase::get_num_tuples)
+        .def("get_arity", &NoveltyBase::get_arity)
     ;
 
     py::class_<TupleIndexGenerator>(m_novelty, "TupleIndexGenerator")

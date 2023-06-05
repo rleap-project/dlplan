@@ -51,20 +51,14 @@ static bool next_combination(const Iterator first, Iterator k, const Iterator la
 }
 
 
-static AtomIndices pad_and_sort_atom_indices(const AtomIndices& atom_indices, int width, int dummy_atom_index) {
-    AtomIndices result(std::max(width, static_cast<int>(atom_indices.size())), dummy_atom_index);
-    std::copy(atom_indices.begin(), atom_indices.end(), result.begin());
-    std::sort(result.begin(), result.end());
-    return result;
-}
-
-
 template<int Arity=-1>
 class tuple_index_iterator {
 public:
     using iterator_category = std::forward_iterator_tag;
     using value_type        = TupleIndex;
     using distance_type     = std::ptrdiff_t;
+
+    const static int end_value = -1;
 
     /// @brief Implements an iterator over all sorted pairs of atom indices
     ///        of size specificed by novelty base.
@@ -78,24 +72,16 @@ public:
         AtomIndices effect_atom_indices,
         bool end=false)
         : m_novelty_base(novelty_base),
-          m_atom_indices(pad_and_sort_atom_indices(
-            atom_indices, novelty_base->get_arity(), novelty_base->get_num_atoms())
-          ),
-          m_effect_atom_indices(pad_and_sort_atom_indices(
-            effect_atom_indices, novelty_base->get_arity(), novelty_base->get_num_atoms())
-          ),
-          m_arity(novelty_base->get_arity()),
-          m_count(end ? utils::binomial_coefficient(
-            std::max(novelty_base->get_arity(), static_cast<int>(atom_indices.size())),
-            novelty_base->get_arity()) : -1
-          ),
-          m_tuple_atom_indices(novelty_base->get_arity()) {
+          m_atom_indices(atom_indices),
+          m_effect_atom_indices(effect_atom_indices),
+          m_arity(std::min(static_cast<int>(atom_indices.size()), novelty_base->get_arity())),
+          m_tuple_atom_indices(AtomIndices(atom_indices.begin(), atom_indices.begin() + m_arity)),
+          m_tuple_index(m_novelty_base->atom_tuple_to_tuple_index(AtomIndices(atom_indices.begin(), atom_indices.begin() + m_arity))) {
         if (effect_atom_indices.size() > 0) {
             throw std::runtime_error("tuple_index_iterator::tuple_index_iterator - generic implementation does currently not support effect_atom_indices.");
         }
-        assert(static_cast<int>(m_atom_indices.size()) >= novelty_base->get_arity());
         assert(std::is_sorted(m_atom_indices.begin(), m_atom_indices.end()));
-        if (!end) seek_next();
+        if (end) m_tuple_index = end_value;
     }
     ~tuple_index_iterator() = default;
 
@@ -104,7 +90,7 @@ public:
     }
 
     bool operator==(const tuple_index_iterator& other) const {
-        return m_count == other.m_count;
+        return m_tuple_index == other.m_tuple_index;
     }
 
     TupleIndex operator*() const {
@@ -130,20 +116,18 @@ private:
     AtomIndices m_atom_indices;
     AtomIndices m_effect_atom_indices;
     int m_arity;
-    /* The data to generate next tuple index. */
-    // compact representation of atom tuple
-    int m_count;
     // atom indices in current tuple
     AtomIndices m_tuple_atom_indices;
     // the output, i.e., the index of the atom tuple
     TupleIndex m_tuple_index;
 
+
 private:
     void seek_next() {
-        ++m_count;
-        next_combination(m_atom_indices.begin(), m_atom_indices.begin() + m_arity, m_atom_indices.end());
+        bool in_progress = next_combination(m_atom_indices.begin(), m_atom_indices.begin() + m_arity, m_atom_indices.end());
         std::copy(m_atom_indices.begin(), m_atom_indices.begin() + m_arity, m_tuple_atom_indices.begin());
         m_tuple_index = m_novelty_base->atom_tuple_to_tuple_index(m_tuple_atom_indices);
+        if (!in_progress) m_tuple_index = end_value;
     }
 };
 
@@ -163,7 +147,10 @@ public:
         AtomIndices effect_atom_indices)
         : m_novelty_base(novelty_base),
           m_atom_indices(atom_indices),
-          m_effect_atom_indices(effect_atom_indices) { }
+          m_effect_atom_indices(effect_atom_indices) {
+        std::sort(m_atom_indices.begin(), m_atom_indices.end());
+        std::sort(m_effect_atom_indices.begin(), m_effect_atom_indices.end());
+    }
     ~TupleIndexGenerator() = default;
 
     tuple_index_iterator<Arity> begin() {

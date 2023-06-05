@@ -6,11 +6,12 @@ add_executable(
 target_sources(
     novelty_tests
     PRIVATE
+        novelty_base.cpp
         tuple_index_generator.cpp
 )
-target_link_libraries(novelty_tests 
+target_link_libraries(novelty_tests
     PRIVATE
-        dlplannovelty 
+        dlplannovelty
         GTest::GTest)
 
 add_test(novelty_gtests novelty_tests)

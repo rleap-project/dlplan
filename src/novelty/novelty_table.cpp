@@ -57,29 +57,29 @@ void NoveltyTable::reset_novelty(const TupleIndices& tuple_indices) {
 
 TupleIndices NoveltyTable::compute_novel_tuple_indices(
     const AtomIndices& atom_indices,
-    const AtomIndices& effect_atom_indices) const {
+    const AtomIndices& add_atom_indices) const {
     TupleIndices result;
     if (m_novelty_base->get_arity() == 1) {
-        return compute_novel_tuple_indices_with_generator(TupleIndexGenerator<1>(m_novelty_base, atom_indices, effect_atom_indices), m_table);
+        return compute_novel_tuple_indices_with_generator(TupleIndexGenerator<1>(m_novelty_base, atom_indices, add_atom_indices), m_table);
     } else if (m_novelty_base->get_arity() == 2) {
-        return compute_novel_tuple_indices_with_generator(TupleIndexGenerator<2>(m_novelty_base, atom_indices, effect_atom_indices), m_table);
+        return compute_novel_tuple_indices_with_generator(TupleIndexGenerator<2>(m_novelty_base, atom_indices, add_atom_indices), m_table);
     } else {
-        return compute_novel_tuple_indices_with_generator(TupleIndexGenerator<-1>(m_novelty_base, atom_indices, effect_atom_indices), m_table);
+        return compute_novel_tuple_indices_with_generator(TupleIndexGenerator<-1>(m_novelty_base, atom_indices, add_atom_indices), m_table);
     }
     return result;
 }
 
 bool NoveltyTable::insert(
     const AtomIndices& atom_indices,
-    const AtomIndices& effect_atom_indices,
+    const AtomIndices& add_atom_indices,
     bool stop_if_novel) {
     bool result = false;
     if (m_novelty_base->get_arity() == 1) {
-        return insert_with_generator(TupleIndexGenerator<1>(m_novelty_base, atom_indices, effect_atom_indices), m_table, stop_if_novel);
+        return insert_with_generator(TupleIndexGenerator<1>(m_novelty_base, atom_indices, add_atom_indices), m_table, stop_if_novel);
     } else if (m_novelty_base->get_arity() == 2) {
-        return insert_with_generator(TupleIndexGenerator<2>(m_novelty_base, atom_indices, effect_atom_indices), m_table, stop_if_novel);
+        return insert_with_generator(TupleIndexGenerator<2>(m_novelty_base, atom_indices, add_atom_indices), m_table, stop_if_novel);
     } else {
-        return insert_with_generator(TupleIndexGenerator<-1>(m_novelty_base, atom_indices, effect_atom_indices), m_table, stop_if_novel);
+        return insert_with_generator(TupleIndexGenerator<-1>(m_novelty_base, atom_indices, add_atom_indices), m_table, stop_if_novel);
     }
     return result;
 }
