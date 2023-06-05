@@ -57,6 +57,7 @@ namespace dlplan::novelty
         int get_arity() const;
     };
 
+
     /// @brief Implements a novelty table for the manipulation and querying of the
     ///        novelty status of a tuple with its representing index.
     class NoveltyTable
@@ -114,6 +115,7 @@ namespace dlplan::novelty
         bool insert(const TupleIndices &tuple_indices, bool stop_if_novel = true);
     };
 
+
     /// @brief Encapsulates data related to a node in a tuple graph and provides
     ///        functionality to access it.
     class TupleNode
@@ -156,6 +158,7 @@ namespace dlplan::novelty
         const TupleIndices &get_predecessors() const;
         const TupleIndices &get_successors() const;
     };
+
 
     /// @brief Implements a tuple graph and provides functionality for the
     ///        construction and for accessing the data.

@@ -21,23 +21,16 @@ void init_novelty(py::module_ &m_novelty) {
         .def("get_arity", &NoveltyBase::get_arity)
     ;
 
-    py::class_<TupleIndexGenerator>(m_novelty, "TupleIndexGenerator")
-        .def(py::init<std::shared_ptr<const NoveltyBase>, const AtomIndices&>())
-        .def("__iter__", [](TupleIndexGenerator &generator) { return py::make_iterator(generator.begin(), generator.end()); },
-                         py::keep_alive<0, 1>() /* Essential: keep object alive while iterator exists */)
-    ;
-
     py::class_<NoveltyTable>(m_novelty, "NoveltyTable")
-        .def(py::init<int>())
+        .def(py::init<std::shared_ptr<const NoveltyBase>, int>())
         .def("reset_novelty", &NoveltyTable::reset_novelty)
-        .def("compute_novel_tuple_indices", [](NoveltyTable& self, TupleIndexGenerator generator){ return self.compute_novel_tuple_indices(std::move(generator));})
-        .def("insert", [](NoveltyTable& self, TupleIndexGenerator generator, bool stop_if_novel){ return self.insert(std::move(generator), stop_if_novel);}, py::arg("tuple_index_generator"), py::arg("stop_if_novel") = true)
-        .def("insert", [](NoveltyTable& self, const TupleIndices& tuple_indices, bool stop_if_novel){ return self.insert(tuple_indices, stop_if_novel);}, py::arg("tuple_index_generator"), py::arg("stop_if_novel") = true)
+        .def("compute_novel_tuple_indices", &NoveltyTable::compute_novel_tuple_indices)
+        .def("insert", py::overload_cast<const AtomIndices&, const AtomIndices&, bool>(&NoveltyTable::insert), py::arg("atom_indices"), py::arg("add_atom_indices"), py::arg("stop_if_novel") = true)
+        .def("insert", py::overload_cast<const TupleIndices&, bool>(&NoveltyTable::insert), py::arg("tuple_indices"), py::arg("stop_if_novel") = true)
     ;
 
     py::class_<TupleNode>(m_novelty, "TupleNode")
         .def(py::init<TupleIndex, const StateIndices&>())
-        .def(py::init<TupleIndex, StateIndices&&>())
         .def("__repr__", &TupleNode::compute_repr)
         .def("__str__", &TupleNode::str)
         .def("get_tuple_index", &TupleNode::get_tuple_index)
