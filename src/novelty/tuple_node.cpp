@@ -9,11 +9,11 @@ using namespace dlplan::state_space;
 
 namespace dlplan::novelty {
 
-TupleNode::TupleNode(TupleIndex tuple_index, const StateIndices& state_indices)
-    : m_tuple_index(tuple_index), m_state_indices(state_indices) { }
+TupleNode::TupleNode(TupleNodeIndex index, TupleIndex tuple_index, const StateIndices& state_indices)
+    : m_index(index), m_tuple_index(tuple_index), m_state_indices(state_indices) { }
 
-TupleNode::TupleNode(TupleIndex tuple_index, StateIndices&& state_indices)
-    : m_tuple_index(tuple_index), m_state_indices(std::move(state_indices)) { }
+TupleNode::TupleNode(TupleNodeIndex index, TupleIndex tuple_index, StateIndices&& state_indices)
+    : m_index(index), m_tuple_index(tuple_index), m_state_indices(std::move(state_indices)) { }
 
 TupleNode::TupleNode(const TupleNode& other) = default;
 
@@ -42,6 +42,7 @@ std::string TupleNode::compute_repr() const {
     TupleIndices sorted_successors(m_successors.begin(), m_successors.end());
     std::sort(sorted_successors.begin(), sorted_successors.end());
     ss << "TupleNode("
+       << "index=" << m_index << ", "
        << "tuple_index=" << m_tuple_index << ", "
        << "state_indices=" << sorted_state_indices << ", "
        << "predecessors=" << sorted_predecessors << ", "
@@ -59,6 +60,10 @@ std::string TupleNode::str() const {
     std::stringstream result;
     result << "(" << m_tuple_index << ", " << m_state_indices << ")";
     return result.str();
+}
+
+TupleNodeIndex TupleNode::get_index() const {
+    return m_index;
 }
 
 TupleIndex TupleNode::get_tuple_index() const {

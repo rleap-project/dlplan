@@ -22,7 +22,7 @@ void init_novelty(py::module_ &m_novelty) {
     ;
 
     py::class_<NoveltyTable>(m_novelty, "NoveltyTable")
-        .def(py::init<std::shared_ptr<const NoveltyBase>, int>())
+        .def(py::init<std::shared_ptr<const NoveltyBase>>())
         .def("reset_novelty", &NoveltyTable::reset_novelty)
         .def("compute_novel_tuple_indices", &NoveltyTable::compute_novel_tuple_indices)
         .def("insert", py::overload_cast<const AtomIndices&, const AtomIndices&, bool>(&NoveltyTable::insert), py::arg("atom_indices"), py::arg("add_atom_indices"), py::arg("stop_if_novel") = true)
@@ -30,9 +30,10 @@ void init_novelty(py::module_ &m_novelty) {
     ;
 
     py::class_<TupleNode>(m_novelty, "TupleNode")
-        .def(py::init<TupleIndex, const StateIndices&>())
+        .def(py::init<TupleNodeIndex, TupleIndex, const StateIndices&>())
         .def("__repr__", &TupleNode::compute_repr)
         .def("__str__", &TupleNode::str)
+        .def("get_index", &TupleNode::get_index)
         .def("get_tuple_index", &TupleNode::get_tuple_index)
         .def("get_state_indices", &TupleNode::get_state_indices, py::return_value_policy::reference)
         .def("get_predecessors", &TupleNode::get_predecessors, py::return_value_policy::reference)
@@ -46,8 +47,9 @@ void init_novelty(py::module_ &m_novelty) {
         .def("to_dot", &TupleGraph::to_dot)
         .def("get_novelty_base", &TupleGraph::get_novelty_base)
         .def("get_state_space", &TupleGraph::get_state_space)
-        .def("get_tuple_nodes_by_distance", &TupleGraph::get_tuple_nodes_by_distance, py::return_value_policy::reference)
-        .def("get_state_indices_by_distance", &TupleGraph::get_state_indices_by_distance, py::return_value_policy::reference)
         .def("get_root_state_index", &TupleGraph::get_root_state_index)
+        .def("get_tuple_nodes", &TupleGraph::get_tuple_nodes, py::return_value_policy::reference)
+        .def("get_tuple_node_indices_by_distance", &TupleGraph::get_tuple_node_indices_by_distance, py::return_value_policy::reference)
+        .def("get_state_indices_by_distance", &TupleGraph::get_state_indices_by_distance, py::return_value_policy::reference)
     ;
 }

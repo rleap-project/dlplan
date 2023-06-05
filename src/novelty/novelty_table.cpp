@@ -36,8 +36,8 @@ static bool insert_with_generator(T&& tuple_index_generator, std::vector<bool>& 
 }
 
 
-NoveltyTable::NoveltyTable(std::shared_ptr<const NoveltyBase> novelty_base, int num_atoms)
-    : m_novelty_base(novelty_base), m_table(pow(num_atoms, novelty_base->get_arity()), true) { }
+NoveltyTable::NoveltyTable(std::shared_ptr<const NoveltyBase> novelty_base)
+    : m_novelty_base(novelty_base), m_table(pow(novelty_base->get_num_atoms()+1, novelty_base->get_arity()), true) { }
 
 NoveltyTable::NoveltyTable(const NoveltyTable& other) = default;
 

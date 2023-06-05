@@ -21,6 +21,8 @@ namespace dlplan::novelty
     using TupleIndex = int;
     using TupleIndices = std::vector<TupleIndex>;
 
+    using TupleNodeIndex = int;
+    using TupleNodeIndices = std::vector<TupleNodeIndex>;
     using TupleNodes = std::vector<TupleNode>;
 
     /// @brief Encapsulates mappings betweens tuples of atom indices and tuple indices, and
@@ -67,7 +69,7 @@ namespace dlplan::novelty
         std::vector<bool> m_table;
 
     public:
-        NoveltyTable(std::shared_ptr<const NoveltyBase> novelty_base, int num_atoms);
+        NoveltyTable(std::shared_ptr<const NoveltyBase> novelty_base);
         NoveltyTable(const NoveltyTable &other);
         NoveltyTable &operator=(const NoveltyTable &other);
         NoveltyTable(NoveltyTable &&other);
@@ -121,14 +123,15 @@ namespace dlplan::novelty
     class TupleNode
     {
     private:
+        TupleNodeIndex m_index;
         TupleIndex m_tuple_index;
         state_space::StateIndices m_state_indices;
         TupleIndices m_predecessors;
         TupleIndices m_successors;
 
     public:
-        TupleNode(TupleIndex tuple_index, const state_space::StateIndices &state_indices);
-        TupleNode(TupleIndex tuple_index, state_space::StateIndices &&state_indices);
+        TupleNode(TupleNodeIndex index, TupleIndex tuple_index, const state_space::StateIndices &state_indices);
+        TupleNode(TupleNodeIndex index, TupleIndex tuple_index, state_space::StateIndices &&state_indices);
         TupleNode(const TupleNode &other);
         TupleNode &operator=(const TupleNode &other);
         TupleNode(TupleNode &&other);
@@ -153,6 +156,7 @@ namespace dlplan::novelty
         /// @return A string representation of this tuple node.
         std::string str() const;
 
+        TupleNodeIndex get_index() const;
         TupleIndex get_tuple_index() const;
         const state_space::StateIndices &get_state_indices() const;
         const TupleIndices &get_predecessors() const;
@@ -167,9 +171,11 @@ namespace dlplan::novelty
     private:
         std::shared_ptr<const NoveltyBase> m_novelty_base;
         std::shared_ptr<const state_space::StateSpace> m_state_space;
-        std::vector<TupleNodes> m_tuple_nodes_by_distance;
-        std::vector<state_space::StateIndices> m_state_indices_by_distance;
         state_space::StateIndex m_root_state_index;
+
+        TupleNodes m_tuple_nodes;
+        std::vector<TupleNodeIndices> m_tuple_node_indices_by_distance;
+        std::vector<state_space::StateIndices> m_state_indices_by_distance;
 
     public:
         TupleGraph(
@@ -210,9 +216,10 @@ namespace dlplan::novelty
 
         std::shared_ptr<const NoveltyBase> get_novelty_base() const;
         std::shared_ptr<const state_space::StateSpace> get_state_space() const;
-        const std::vector<TupleNodes> &get_tuple_nodes_by_distance() const;
-        const std::vector<state_space::StateIndices> &get_state_indices_by_distance() const;
         state_space::StateIndex get_root_state_index() const;
+        const TupleNodes& get_tuple_nodes() const;
+        const std::vector<TupleNodeIndices>& get_tuple_node_indices_by_distance() const;
+        const std::vector<state_space::StateIndices>& get_state_indices_by_distance() const;
     };
 
 }
