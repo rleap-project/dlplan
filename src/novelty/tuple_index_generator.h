@@ -131,6 +131,88 @@ private:
     }
 };
 
+
+template<>
+class tuple_index_iterator<1> {
+public:
+    using iterator_category = std::forward_iterator_tag;
+    using value_type        = TupleIndex;
+    using distance_type     = std::ptrdiff_t;
+
+    const static int end_value = -1;
+
+    /// @brief Implements an iterator over all sorted pairs of atom indices
+    ///        of size specificed by novelty base.
+    /// @param novelty_base
+    /// @param atom_indices
+    /// @param effect_atom_indices
+    /// @param end
+    tuple_index_iterator(
+        std::shared_ptr<const NoveltyBase> novelty_base,
+        AtomIndices atom_indices,
+        AtomIndices effect_atom_indices,
+        bool end=false)
+        : m_novelty_base(novelty_base),
+          m_atom_indices(atom_indices),
+          m_effect_atom_indices(effect_atom_indices),
+          m_arity(std::min(static_cast<int>(atom_indices.size()), novelty_base->get_arity())),
+          m_tuple_atom_indices(AtomIndices(atom_indices.begin(), atom_indices.begin() + m_arity)),
+          m_tuple_index(m_novelty_base->atom_tuple_to_tuple_index(AtomIndices(atom_indices.begin(), atom_indices.begin() + m_arity))) {
+        if (effect_atom_indices.size() > 0) {
+            throw std::runtime_error("tuple_index_iterator::tuple_index_iterator - generic implementation does currently not support effect_atom_indices.");
+        }
+        assert(std::is_sorted(m_atom_indices.begin(), m_atom_indices.end()));
+        if (end) m_tuple_index = end_value;
+    }
+    ~tuple_index_iterator() = default;
+
+    bool operator!=(const tuple_index_iterator& other) const {
+        return !(*this == other);
+    }
+
+    bool operator==(const tuple_index_iterator& other) const {
+        return m_tuple_index == other.m_tuple_index;
+    }
+
+    TupleIndex operator*() const {
+        return m_tuple_index;
+    }
+
+    // Postfix increment
+    tuple_index_iterator operator++(int) {
+        tuple_index_iterator prev = *this;
+        seek_next();
+        return prev;
+    }
+
+    // Prefix increment
+    tuple_index_iterator& operator++() {
+        seek_next();
+        return *this;
+    }
+
+private:
+    // The input data.
+    std::shared_ptr<const NoveltyBase> m_novelty_base;
+    AtomIndices m_atom_indices;
+    AtomIndices m_effect_atom_indices;
+    int m_arity;
+    // atom indices in current tuple
+    AtomIndices m_tuple_atom_indices;
+    // the output, i.e., the index of the atom tuple
+    TupleIndex m_tuple_index;
+
+
+private:
+    void seek_next() {
+        bool in_progress = next_combination(m_atom_indices.begin(), m_atom_indices.begin() + m_arity, m_atom_indices.end());
+        std::copy(m_atom_indices.begin(), m_atom_indices.begin() + m_arity, m_tuple_atom_indices.begin());
+        m_tuple_index = m_novelty_base->atom_tuple_to_tuple_index(m_tuple_atom_indices);
+        if (!in_progress) m_tuple_index = end_value;
+    }
+};
+
+
 /// @brief Implements an iterator over all tuples of atom indices of size Arity
 ///        from a given set of atom indices.
 template<int Arity=-1>

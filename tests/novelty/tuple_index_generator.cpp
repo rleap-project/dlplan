@@ -81,4 +81,12 @@ TEST(DLPTests, TupleIndexGeneratorTest2) {
     EXPECT_EQ(begin, end);
 }
 
+TEST(DLPTests, TupleIndexGeneratorArity1) {
+    // Test with single atom tuple.
+    auto novelty_base = std::make_shared<const NoveltyBase>(4, 1);
+    auto tuple_index_generator = TupleIndexGenerator<1>(novelty_base, {0,1,2}, {});
+    auto begin = tuple_index_generator.begin();
+    auto end = tuple_index_generator.end();
+}
+
 }
