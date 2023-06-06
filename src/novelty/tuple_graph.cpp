@@ -1,7 +1,6 @@
 #include "../../include/dlplan/novelty.h"
 
 #include "tuple_graph_builder.h"
-#include "tuple_graph_utils.h"
 #include "tuple_index_generator.h"
 
 #include "../utils/logging.h"
@@ -21,6 +20,12 @@ TupleGraph::TupleGraph(
     : m_novelty_base(novelty_base),
       m_state_space(state_space),
       m_root_state_index(root_state) {
+    if (!m_novelty_base) {
+        throw std::runtime_error("TupleGraph::TupleGraph - novelty_base is nullptr.");
+    }
+    if (!m_novelty_base) {
+        throw std::runtime_error("TupleGraph::TupleGraph - state_space is nullptr.");
+    }
     TupleGraphBuilderResult result = TupleGraphBuilder(novelty_base, state_space, root_state).get_result();
     m_nodes = std::move(result.nodes);
     m_node_indices_by_distance = std::move(result.node_indices_by_distance);
@@ -38,28 +43,66 @@ TupleGraph& TupleGraph::operator=(TupleGraph&& other) = default;
 TupleGraph::~TupleGraph() = default;
 
 std::string TupleGraph::compute_repr() const {
-    std::stringstream ss;
-    /*
-    auto tuple_graph = canonize(*this);
-    auto cmp = [](const TupleNode& l, const TupleNode& r){ return l.get_tuple_index() < r.get_tuple_index(); };
-    std::vector<TupleNodeIndices> sorted_tuple_node_indices_by_distance = m_node_indices_by_distance;
-    std::for_each(sorted_tuple_node_indices_by_distance.begin(), sorted_tuple_node_indices_by_distance.end(),
-              [&](std::vector<TupleNode>& vec) { std::sort(vec.begin(), vec.end()); });
+    // Step 1: Sort nodes, compute index remapping
+    TupleNodes nodes = m_nodes;
+    std::sort(nodes.begin(), nodes.end(), [](const TupleNode& l, const TupleNode& r){
+        StateIndices l_sorted_state_indices = l.get_state_indices();
+        std::sort(l_sorted_state_indices.begin(), l_sorted_state_indices.end());
+        StateIndices r_sorted_state_indices = r.get_state_indices();
+        std::sort(r_sorted_state_indices.begin(), r_sorted_state_indices.end());
+        if (l_sorted_state_indices == r_sorted_state_indices) {
+            return l.get_tuple_index() < r.get_tuple_index();
+        }
+        return l_sorted_state_indices < r_sorted_state_indices;
+    });
+    std::vector<TupleNodeIndex> remapping(nodes.size());
+    for (size_t i = 0; i < nodes.size(); ++i) {
+        remapping[nodes[i].get_index()] = i;  // old to new index
+    }
+    TupleNodes new_nodes;
+    new_nodes.reserve(nodes.size());
+    for (size_t i = 0; i < nodes.size(); ++i) {
+        auto& node = nodes[i];
+        TupleNode new_node = TupleNode(i, node.get_tuple_index(), node.get_state_indices());
+        for (int pre : node.get_predecessors()) {
+            new_node.add_predecessor(remapping[pre]);
+        }
+        for (int suc : node.get_successors()) {
+            new_node.add_successor(remapping[suc]);
+        }
+        new_nodes.push_back(std::move(new_node));
+    }
+    std::vector<TupleNodeIndices> new_node_indices_by_distance;
+    new_node_indices_by_distance.reserve(m_node_indices_by_distance.size());
+    for (const auto& layer : m_node_indices_by_distance) {
+        TupleNodeIndices new_layer;
+        new_layer.reserve(layer.size());
+        for (int node_index : layer) {
+            new_layer.push_back(remapping[node_index]);
+        }
+        std::sort(new_layer.begin(), new_layer.end());
+        new_node_indices_by_distance.push_back(std::move(new_layer));
+    }
     std::vector<state_space::StateIndices> sorted_state_indices_by_distance = m_state_indices_by_distance;
     std::for_each(sorted_state_indices_by_distance.begin(), sorted_state_indices_by_distance.end(),
               [&](state_space::StateIndices& vec) { std::sort(vec.begin(), vec.end()); });
+
+    std::stringstream ss;
+
     ss << "TupleGraph(\n"
        << "  root_state_index=" << m_root_state_index << ",\n"
-       << "  tuple_nodes_by_distance=[\n";
-    for (const auto& tuple_nodes : sorted_tuple_node_indices_by_distance) {
-        ss << "    [\n";
-        for (size_t i = 0; i < tuple_nodes.size(); ++i) {
-            if (i > 0) ss << ",\n";
-            ss << "      " << tuple_nodes[i];
-        }
-        ss << "\n    ],\n";
+       << "  tuple_nodes=[";
+    for (size_t i = 0; i < new_nodes.size(); ++i) {
+        if (i > 0) ss << ",\n";
+            ss << "    " << new_nodes[i];
     }
-    ss << "  ],\n"
+    ss << "\n  ],\n"
+       << "  node_indices_by_distance=[\n";
+    for (size_t i = 0; i < new_node_indices_by_distance.size(); ++i) {
+        if (i > 0) ss << ",\n";
+        ss << "    " << new_node_indices_by_distance[i];
+    }
+    ss << "\n  ],\n"
        << "  state_indices_by_distance=[\n";
     for (size_t i = 0; i < sorted_state_indices_by_distance.size(); ++i) {
         if (i > 0) ss << ",\n";
@@ -67,7 +110,6 @@ std::string TupleGraph::compute_repr() const {
     }
     ss << "\n  ]\n"
        << ")";
-    */
     return ss.str();
 }
 
@@ -95,6 +137,7 @@ std::string TupleGraph::to_dot(int verbosity_level) const {
             const auto& tuple_node = m_nodes[node_index];
             result << "t" << tuple_node.get_index() << "[";
             result << "label=<";
+            result << "index=" << tuple_node.get_index() << "<BR/>";
             result << "tuple index=" << tuple_node.get_tuple_index() << "<BR/>";
             result << "atoms={";
             const auto atom_indices = m_novelty_base->tuple_index_to_atom_tuple(tuple_node.get_tuple_index());

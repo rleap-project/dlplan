@@ -5,7 +5,6 @@ target_sources(dlplannovelty
         novelty_table.cpp
         novelty.cpp
         tuple_graph_builder.cpp
-        tuple_graph_utils.cpp
         tuple_graph.cpp
         tuple_node.cpp
         ../utils/math.cpp

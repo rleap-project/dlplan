@@ -30,7 +30,6 @@ void init_novelty(py::module_ &m_novelty) {
     ;
 
     py::class_<TupleNode>(m_novelty, "TupleNode")
-        .def(py::init<TupleNodeIndex, TupleIndex, const StateIndices&>())
         .def("__repr__", &TupleNode::compute_repr)
         .def("__str__", &TupleNode::str)
         .def("get_index", &TupleNode::get_index)
