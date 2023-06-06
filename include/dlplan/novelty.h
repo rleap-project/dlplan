@@ -173,8 +173,8 @@ namespace dlplan::novelty
         std::shared_ptr<const state_space::StateSpace> m_state_space;
         state_space::StateIndex m_root_state_index;
 
-        TupleNodes m_tuple_nodes;
-        std::vector<TupleNodeIndices> m_tuple_node_indices_by_distance;
+        TupleNodes m_nodes;
+        std::vector<TupleNodeIndices> m_node_indices_by_distance;
         std::vector<state_space::StateIndices> m_state_indices_by_distance;
 
     public:
