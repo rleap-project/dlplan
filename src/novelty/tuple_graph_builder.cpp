@@ -24,11 +24,10 @@ StateIndices TupleGraphBuilder::compute_state_layer(
 
 TupleIndices TupleGraphBuilder::compute_novel_tuple_indices_layer(const StateIndices& curr_state_layer) {
     std::unordered_set<TupleIndex> novel_tuples_set;
-    AtomIndices effect_atom_indices;
     for (const auto state_index : curr_state_layer) {
         const TupleIndices state_novel_tuples = m_novelty_table.compute_novel_tuple_indices(
-            m_state_space->get_states().at(state_index).get_atom_indices(),
-            effect_atom_indices);
+            {},
+            m_state_space->get_states().at(state_index).get_atom_indices());
         novel_tuples_set.insert(state_novel_tuples.begin(), state_novel_tuples.end());
         m_state_index_to_novel_tuple_indices.emplace(state_index, state_novel_tuples);
         for (const auto tuple_index : state_novel_tuples) {
@@ -120,7 +119,7 @@ void TupleGraphBuilder::build_width_greater_0_tuple_graph() {
     // 1. Initialize root state with distance = 0
     m_state_indices_by_distance.push_back(StateIndices{m_root_state_index});
     TupleNodeIndices initial_tuple_layer;
-    TupleIndices tuple_indices = m_novelty_table.compute_novel_tuple_indices(m_state_space->get_states().at(m_root_state_index).get_atom_indices(), {});
+    TupleIndices tuple_indices = m_novelty_table.compute_novel_tuple_indices({}, m_state_space->get_states().at(m_root_state_index).get_atom_indices());
     for (const auto tuple_index : tuple_indices) {
         int node_index = m_nodes.size();
         m_nodes.push_back(TupleNode(node_index, tuple_index, StateIndices{m_root_state_index}));
