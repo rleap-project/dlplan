@@ -79,6 +79,7 @@ public:
             throw std::runtime_error("tuple_index_iterator::tuple_index_iterator - generic implementation does currently not support atom_indices.");
         }
         int place_holder = novelty_base->get_num_atoms();
+        // add placeholders to be able to generate tuples of size less than arity.
         m_add_atom_indices.insert(m_add_atom_indices.end(), m_arity, place_holder);
         m_tuple_atom_indices = AtomIndices(m_add_atom_indices.begin(), m_add_atom_indices.begin() + m_arity);
         m_tuple_index = (end) ? end_value : m_novelty_base->atom_tuple_to_tuple_index(m_tuple_atom_indices);
@@ -159,7 +160,8 @@ public:
           m_pos(end ? m_add_atom_indices.size()+1 : 0) {
         assert(1 == novelty_base->get_arity());
         int place_holder = novelty_base->get_num_atoms();
-        // we add an additional place holder to be able to remove a bound check in the seek next method.
+        // add one placeholder to generate the empty tuple.
+        // add an additional place holder to be able to remove a bound check in the seek next method.
         m_add_atom_indices.insert(m_add_atom_indices.end(), 2, place_holder);
         m_tuple_index = m_novelty_base->atom_tuple_to_tuple_index({m_add_atom_indices[0]});
     }
