@@ -37,8 +37,7 @@ TupleIndex NoveltyBase::atom_tuple_to_tuple_index(const AtomIndices& tuple_atom_
     TupleIndex result = 0;
     int i = 0;
     for (auto atom_index : tuple_atom_indices) {
-        // we add +1 to make every atom contribute (including the atom with index 0).
-        result += m_factors[i] * (atom_index + 1);
+        result += m_factors[i] * atom_index;
         ++i;
     }
     return result;
@@ -46,13 +45,13 @@ TupleIndex NoveltyBase::atom_tuple_to_tuple_index(const AtomIndices& tuple_atom_
 
 AtomIndices NoveltyBase::tuple_index_to_atom_tuple(TupleIndex tuple_index) const {
     AtomIndices result;
+    int place_holder = m_num_atoms;
     for (int i = m_arity-1; i >= 0; --i) {
         int atom_index = tuple_index / m_factors[i];
-        if (atom_index > 0) {
-            // only add atom indices that were contributing.
-            result.push_back(atom_index - 1);
-            tuple_index -= atom_index * m_factors[i];
+        if (atom_index != place_holder) {
+            result.push_back(atom_index);
         }
+        tuple_index -= atom_index * m_factors[i];
     }
     std::reverse(result.begin(), result.end());
     return result;
