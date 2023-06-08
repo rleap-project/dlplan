@@ -81,8 +81,8 @@ public:
         int place_holder = novelty_base->get_num_atoms();
         // add placeholders to be able to generate tuples of size less than arity.
         m_add_atom_indices.insert(m_add_atom_indices.end(), m_arity, place_holder);
-        m_tuple_atom_indices = AtomIndices(m_add_atom_indices.begin(), m_add_atom_indices.begin() + m_arity);
-        m_tuple_index = (end) ? end_value : m_novelty_base->atom_tuple_to_tuple_index(m_tuple_atom_indices);
+        m_tuple_index = (end) ? end_value : m_novelty_base->atom_tuple_to_tuple_index(
+            AtomIndices(m_add_atom_indices.begin(), m_add_atom_indices.begin() + m_arity));
         assert(std::is_sorted(m_atom_indices.begin(), m_atom_indices.end()));
         assert(std::is_sorted(m_add_atom_indices.begin(), m_add_atom_indices.end()));
     }
@@ -119,8 +119,6 @@ private:
     AtomIndices m_atom_indices;
     AtomIndices m_add_atom_indices;
     int m_arity;
-    // atom indices in current tuple
-    AtomIndices m_tuple_atom_indices;
     // the output, i.e., the index of the atom tuple
     TupleIndex m_tuple_index;
 
@@ -128,8 +126,8 @@ private:
 private:
     void seek_next() {
         bool in_progress = next_combination(m_add_atom_indices.begin(), m_add_atom_indices.begin() + m_arity, m_add_atom_indices.end());
-        std::copy(m_add_atom_indices.begin(), m_add_atom_indices.begin() + m_arity, m_tuple_atom_indices.begin());
-        m_tuple_index = m_novelty_base->atom_tuple_to_tuple_index(m_tuple_atom_indices);
+        m_tuple_index = m_novelty_base->atom_tuple_to_tuple_index(
+            AtomIndices(m_add_atom_indices.begin(), m_add_atom_indices.begin() + m_arity));
         if (!in_progress) m_tuple_index = end_value;
     }
 };
