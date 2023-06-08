@@ -117,7 +117,8 @@ extern GeneratorResult generate_state_space(
     const std::string& instance_file,
     std::shared_ptr<const core::VocabularyInfo> vocabulary_info=nullptr,
     core::InstanceIndex index=-1,
-    int max_time=std::numeric_limits<int>::max());
+    int max_time=std::numeric_limits<int>::max()-1,
+    int max_num_states=std::numeric_limits<int>::max()-1);
 
 }
 

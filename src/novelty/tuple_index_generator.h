@@ -74,15 +74,18 @@ public:
         : m_novelty_base(novelty_base),
           m_atom_indices(atom_indices),
           m_add_atom_indices(add_atom_indices),
-          m_arity(std::min(static_cast<int>(add_atom_indices.size()), novelty_base->get_arity())),
-          m_tuple_atom_indices(AtomIndices(add_atom_indices.begin(), add_atom_indices.begin() + std::min(static_cast<int>(add_atom_indices.size()), novelty_base->get_arity()))),
-          m_tuple_index(m_novelty_base->atom_tuple_to_tuple_index(AtomIndices(add_atom_indices.begin(), add_atom_indices.begin() + std::min(static_cast<int>(add_atom_indices.size()), novelty_base->get_arity())))) {
+          m_arity(novelty_base->get_arity()),
+          m_tuple_atom_indices(novelty_base->get_arity(), -1),
+          m_tuple_index(end ? end_value : 0) {
         if (atom_indices.size() > 0) {
             throw std::runtime_error("tuple_index_iterator::tuple_index_iterator - generic implementation does currently not support atom_indices.");
         }
+        assert(m_novelty_base->atom_tuple_to_tuple_index(AtomIndices(novelty_base->get_arity(), -1)) == 0);
         assert(std::is_sorted(m_atom_indices.begin(), m_atom_indices.end()));
         assert(std::is_sorted(m_add_atom_indices.begin(), m_add_atom_indices.end()));
-        if (end) m_tuple_index = end_value;
+        // add padding to be able to represent all atoms up to size arity.
+        m_add_atom_indices = AtomIndices(m_arity, -1);
+        m_add_atom_indices.insert(m_add_atom_indices.end(), add_atom_indices.begin(), add_atom_indices.end());
     }
     ~tuple_index_iterator() = default;
 
@@ -156,12 +159,82 @@ public:
         : m_novelty_base(novelty_base),
           m_add_atom_indices(add_atom_indices),
           m_arity(std::min(static_cast<int>(add_atom_indices.size()), novelty_base->get_arity())),
-          m_pos(0),
+          m_pos(end ? m_add_atom_indices.size() : 0),
           m_tuple_index(m_novelty_base->atom_tuple_to_tuple_index(AtomIndices(add_atom_indices.begin(), add_atom_indices.begin() + std::min(static_cast<int>(add_atom_indices.size()), novelty_base->get_arity())))) {
-        if (1 != novelty_base->get_arity()) {
-            throw std::runtime_error("tuple_index_iterator::tuple_index_iterator - mismatched arity of template parameter and novelty base.");
+        assert(1 == novelty_base->get_arity());
+    }
+    ~tuple_index_iterator() = default;
+
+    bool operator!=(const tuple_index_iterator& other) const {
+        return !(*this == other);
+    }
+
+    bool operator==(const tuple_index_iterator& other) const {
+        return m_pos == other.m_pos;
+    }
+
+    TupleIndex operator*() const {
+        return m_tuple_index;
+    }
+
+    // Postfix increment
+    tuple_index_iterator operator++(int) {
+        tuple_index_iterator prev = *this;
+        seek_next();
+        return prev;
+    }
+
+    // Prefix increment
+    tuple_index_iterator& operator++() {
+        seek_next();
+        return *this;
+    }
+
+private:
+    // The input data.
+    std::shared_ptr<const NoveltyBase> m_novelty_base;
+    AtomIndices m_add_atom_indices;
+    int m_arity;
+    size_t m_pos;
+    // the output, i.e., the index of the atom tuple
+    TupleIndex m_tuple_index;
+
+private:
+    void seek_next() {
+        ++m_pos;
+        if (m_pos < m_add_atom_indices.size()) {
+            m_tuple_index = m_novelty_base->atom_tuple_to_tuple_index({m_add_atom_indices[m_pos]});
         }
-        if (end) m_pos = m_add_atom_indices.size();
+    }
+};
+
+
+template<>
+class tuple_index_iterator<2> {
+public:
+    using iterator_category = std::forward_iterator_tag;
+    using value_type        = TupleIndex;
+    using distance_type     = std::ptrdiff_t;
+
+    const static int end_value = -1;
+
+    /// @brief Implements an iterator over all sorted pairs of atom indices
+    ///        of size specificed by novelty base.
+    /// @param novelty_base
+    /// @param atom_indices
+    /// @param add_atom_indices
+    /// @param end
+    tuple_index_iterator(
+        std::shared_ptr<const NoveltyBase> novelty_base,
+        AtomIndices,
+        AtomIndices add_atom_indices,
+        bool end=false)
+        : m_novelty_base(novelty_base),
+          m_add_atom_indices(add_atom_indices),
+          m_arity(std::min(static_cast<int>(add_atom_indices.size()), novelty_base->get_arity())),
+          m_pos(end ? m_add_atom_indices.size() : 0),
+          m_tuple_index(m_novelty_base->atom_tuple_to_tuple_index(AtomIndices(add_atom_indices.begin(), add_atom_indices.begin() + std::min(static_cast<int>(add_atom_indices.size()), novelty_base->get_arity())))) {
+        assert(1 == novelty_base->get_arity());
     }
     ~tuple_index_iterator() = default;
 

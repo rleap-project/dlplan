@@ -57,9 +57,10 @@ void init_state_space(py::module_ &m_state_space) {
         const std::string& instance_file,
         std::shared_ptr<const VocabularyInfo> vocabulary_info,
         int index,
-        int max_time){
-            auto result = generate_state_space(domain_file, instance_file, vocabulary_info, index, max_time);
+        int max_time,
+        int max_num_states){
+            auto result = generate_state_space(domain_file, instance_file, vocabulary_info, index, max_time, max_num_states);
             return GeneratorResultWrapper{result.exit_code, std::make_shared<StateSpace>(result.state_space) };
-        }, py::arg("domain_file"), py::arg("instance_file"), py::arg("vocabulary_info") = nullptr, py::arg("index") = -1, py::arg("max_time") = std::numeric_limits<int>::max())
+        }, py::arg("domain_file"), py::arg("instance_file"), py::arg("vocabulary_info") = nullptr, py::arg("index") = -1, py::arg("max_time") = std::numeric_limits<int>::max()-1, py::arg("max_num_states") = std::numeric_limits<int>::max()-1)
     ;
 }

@@ -357,8 +357,9 @@ GeneratorResult generate_state_space(
     const std::string& instance_file,
     std::shared_ptr<const core::VocabularyInfo> vocabulary_info,
     core::InstanceIndex index,
-    int max_time) {
-    generator::generate_state_space_files(domain_file, instance_file, max_time);
+    int max_time,
+    int max_num_states) {
+    generator::generate_state_space_files(domain_file, instance_file, max_time, max_num_states);
     return reader::read(vocabulary_info, index);
 }
 

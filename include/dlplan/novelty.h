@@ -25,8 +25,7 @@ using TupleNodeIndex = int;
 using TupleNodeIndices = std::vector<TupleNodeIndex>;
 using TupleNodes = std::vector<TupleNode>;
 
-/// @brief Encapsulates mappings betweens tuples of atom indices and tuple indices, and
-///        provides functionality to map from one to the other.
+/// @brief Implements a perfect hash function between atom tuples and atom indices.
 class NoveltyBase
 {
 private:
