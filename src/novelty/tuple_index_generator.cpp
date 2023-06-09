@@ -48,8 +48,8 @@ void for_each_tuple_index<2>(
         ref.insert(ref.begin() + n, m, 1);
         do {
             std::vector<int> indices(2);
-            for (int i = 1; i <= n; ++i) {
-                indices.push_back(add_atom_indices[])
+            for (int i = 0; i < n; ++i) {
+                indices.push_back(i);
             }
         } while (std::next_permutation(ref.begin(), ref.end()));
     }
