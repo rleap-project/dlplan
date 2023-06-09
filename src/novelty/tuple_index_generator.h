@@ -5,10 +5,13 @@
 
 #include "../utils/math.h"
 
+#include <functional>
+
 
 namespace dlplan::novelty {
 
 // https://stackoverflow.com/questions/127704/algorithm-to-return-all-combinations-of-k-elements-from-n
+// https://stackoverflow.com/questions/4973077/the-amortized-complexity-of-stdnext-permutation
 template <typename Iterator>
 static bool next_combination(const Iterator first, Iterator k, const Iterator last)
 {
@@ -50,6 +53,51 @@ static bool next_combination(const Iterator first, Iterator k, const Iterator la
     return false;
 }
 
+
+/// @brief
+/// @tparam Arity
+/// @param novelty_base
+/// @param atom_indices
+/// @param add_atom_indices
+/// @param callback
+template<int Arity=-1>
+void for_each_tuple_index(
+    const NoveltyBase &novelty_base,
+    AtomIndices atom_indices,
+    AtomIndices add_atom_indices,
+    const std::function<bool(int)>& callback) {
+    assert(std::is_sorted(atom_indices.begin(), atom_indices.end()));
+    assert(std::is_sorted(add_atom_indices.begin(), add_atom_indices.end()));
+    int arity = novelty_base.get_arity();
+    // add placeholders to be able to generate tuples of size less than arity.
+    int place_holder = novelty_base.get_num_atoms();
+    add_atom_indices.insert(add_atom_indices.end(), arity, place_holder);
+    AtomIndices atom_tuple_indices(arity);
+    do {
+        std::copy(add_atom_indices.begin(), add_atom_indices.begin() + arity, atom_tuple_indices.begin());
+        int tuple_index = novelty_base.atom_tuple_to_tuple_index(atom_tuple_indices);
+        if (callback(tuple_index)) {
+            break;
+        }
+    } while (next_combination(add_atom_indices.begin(), add_atom_indices.begin() + arity, add_atom_indices.end()));
+}
+
+
+template<>
+void for_each_tuple_index<1>(
+    const NoveltyBase &novelty_base,
+    AtomIndices atom_indices,
+    AtomIndices add_atom_indices,
+    const std::function<bool(int)>& callback);
+
+/*
+template<>
+void for_each_tuple_index<2>(
+    const NoveltyBase &novelty_base,
+    AtomIndices atom_indices,
+    AtomIndices add_atom_indices,
+    const std::function<bool(int)>& callback);
+*/
 
 template<int Arity=-1>
 class tuple_index_iterator {

@@ -6,6 +6,7 @@ target_sources(dlplannovelty
         novelty.cpp
         tuple_graph_builder.cpp
         tuple_graph.cpp
+        tuple_index_generator.cpp
         tuple_node.cpp
         ../utils/math.cpp
     )
