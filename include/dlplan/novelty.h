@@ -90,6 +90,9 @@ public:
         const AtomIndices &atom_indices,
         const AtomIndices &add_atom_indices) const;
 
+    TupleIndices compute_novel_tuple_indices(
+        const AtomIndices &atom_indices) const;
+
     /// @brief Marks all tuples of size specified by the arity in the novelty base
     ///        that can be obtained from the given atom indices as not novel anymore.
     /// @param atom_indices A vector of atom indices. The user must take care
@@ -100,9 +103,13 @@ public:
     ///                         Must be distjoin with atom_indices.
     /// @param stop_if_novel Stop the iteration early if a tuple index was novel.
     /// @return True if at least one given tuple index was novel.
-    bool insert(
+    bool insert_atom_indices(
         const AtomIndices &atom_indices,
         const AtomIndices &add_atom_indices,
+        bool stop_if_novel = true);
+
+    bool insert_atom_indices(
+        const AtomIndices &atom_indices,
         bool stop_if_novel = true);
 
     /// @brief Iterates over all given tuple indices and marks them internally
@@ -113,7 +120,7 @@ public:
     ///                      compute_novel_tuples.
     /// @param stop_if_novel Stop the iteration early if a tuple index was novel.
     /// @return True if at least one given tuple index was novel.
-    bool insert(const TupleIndices &tuple_indices, bool stop_if_novel = true);
+    bool insert_tuple_indices(const TupleIndices &tuple_indices, bool stop_if_novel = true);
 };
 
 

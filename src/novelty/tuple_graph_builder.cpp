@@ -126,7 +126,7 @@ void TupleGraphBuilder::build_width_greater_0_tuple_graph() {
         initial_tuple_layer.push_back(node_index);
     }
     m_node_indices_by_distance.push_back(std::move(initial_tuple_layer));
-    m_novelty_table.insert(tuple_indices, false);
+    m_novelty_table.insert_tuple_indices(tuple_indices, false);
     visited_state_indices.insert(m_root_state_index);
     // 2. Iterate distances > 0
     for (int distance = 1; ; ++distance) {
