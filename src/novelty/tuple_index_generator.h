@@ -17,7 +17,7 @@ template<int Arity=-1>
 void for_each_tuple_index(
     const NoveltyBase &novelty_base,
     AtomIndices atom_indices,
-    const std::function<bool(int)>& callback) {
+    const std::function<bool(TupleIndex)>& callback) {
     int arity = novelty_base.get_arity();
     // Add placeholders to be able to generate tuples of size less than arity.
     int place_holder = novelty_base.get_num_atoms();
@@ -61,13 +61,13 @@ template<>
 void for_each_tuple_index<1>(
     const NoveltyBase &novelty_base,
     AtomIndices atom_indices,
-    const std::function<bool(int)>& callback);
+    const std::function<bool(TupleIndex)>& callback);
 
 template<>
 void for_each_tuple_index<2>(
     const NoveltyBase &novelty_base,
     AtomIndices atom_indices,
-    const std::function<bool(int)>& callback);
+    const std::function<bool(TupleIndex)>& callback);
 
 
 /// @brief
@@ -81,7 +81,7 @@ void for_each_tuple_index(
     const NoveltyBase& novelty_base,
     AtomIndices atom_indices,
     AtomIndices add_atom_indices,
-    const std::function<bool(int)>& callback) {
+    const std::function<bool(TupleIndex)>& callback) {
     int arity = novelty_base.get_arity();
     assert(std::is_sorted(atom_indices.begin(), atom_indices.end()));
     assert(std::is_sorted(add_atom_indices.begin(), add_atom_indices.end()));
@@ -134,6 +134,11 @@ void for_each_tuple_index(
                 break;
             }
             indices[i] = index;
+            if (a[j-1] == a[j] && a[j] == 1 && indices[j-1] == indices[j]) {
+                // duplicate atom indices from add_atom_indices
+                exhausted = true;
+                break;
+            }
             atom_tuple_indices[i] = a_indices[a[i]][index];
         }
         if (exhausted) {
@@ -186,7 +191,7 @@ void for_each_tuple_index<1>(
     const NoveltyBase& novelty_base,
     AtomIndices atom_indices,
     AtomIndices add_atom_indices,
-    const std::function<bool(int)>& callback);
+    const std::function<bool(TupleIndex)>& callback);
 
 
 template<>
@@ -194,7 +199,7 @@ void for_each_tuple_index<2>(
     const NoveltyBase& novelty_base,
     AtomIndices atom_indices,
     AtomIndices add_atom_indices,
-    const std::function<bool(int)>& callback);
+    const std::function<bool(TupleIndex)>& callback);
 
 }
 

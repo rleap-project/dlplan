@@ -10,7 +10,7 @@ template<>
 void for_each_tuple_index<1>(
     const NoveltyBase &novelty_base,
     AtomIndices atom_indices,
-    const std::function<bool(int)>& callback) {
+    const std::function<bool(TupleIndex)>& callback) {
     assert(std::is_sorted(atom_indices.begin(), atom_indices.end()));
     int place_holder = novelty_base.get_num_atoms();
     atom_indices.push_back(place_holder);
@@ -27,7 +27,7 @@ template<>
 void for_each_tuple_index<2>(
     const NoveltyBase &novelty_base,
     AtomIndices atom_indices,
-    const std::function<bool(int)>& callback) {
+    const std::function<bool(TupleIndex)>& callback) {
     int place_holder = novelty_base.get_num_atoms();
     atom_indices.push_back(place_holder);
     AtomIndices atom_tuple_indices(2);
@@ -49,7 +49,7 @@ void for_each_tuple_index<1>(
     const NoveltyBase &novelty_base,
     AtomIndices,
     AtomIndices add_atom_indices,
-    const std::function<bool(int)>& callback) {
+    const std::function<bool(TupleIndex)>& callback) {
     assert(novelty_base.get_arity() == 1);
     assert(std::is_sorted(add_atom_indices.begin(), add_atom_indices.end()));
     AtomIndices atom_tuple_indices(1);
@@ -67,7 +67,7 @@ void for_each_tuple_index<2>(
     const NoveltyBase &novelty_base,
     AtomIndices atom_indices,
     AtomIndices add_atom_indices,
-    const std::function<bool(int)>& callback) {
+    const std::function<bool(TupleIndex)>& callback) {
     assert(novelty_base.get_arity() == 2);
     assert(std::is_sorted(atom_indices.begin(), atom_indices.end()));
     assert(std::is_sorted(add_atom_indices.begin(), add_atom_indices.end()));
