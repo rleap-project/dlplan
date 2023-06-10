@@ -119,7 +119,7 @@ void TupleGraphBuilder::build_width_greater_0_tuple_graph() {
     // 1. Initialize root state with distance = 0
     m_state_indices_by_distance.push_back(StateIndices{m_root_state_index});
     TupleNodeIndices initial_tuple_layer;
-    TupleIndices tuple_indices = m_novelty_table.compute_novel_tuple_indices({}, m_state_space->get_states().at(m_root_state_index).get_atom_indices());
+    TupleIndices tuple_indices = m_novelty_table.compute_novel_tuple_indices(m_state_space->get_states().at(m_root_state_index).get_atom_indices());
     for (const auto tuple_index : tuple_indices) {
         int node_index = m_nodes.size();
         m_nodes.push_back(TupleNode(node_index, tuple_index, StateIndices{m_root_state_index}));

@@ -115,6 +115,7 @@ void for_each_tuple_index(
     std::vector<int> a_num_atom_indices{num_atom_indices, num_add_atom_indices};
     std::vector<std::vector<int>> a_geq{std::move(geq_indices), std::move(geq_indices_add)};
     std::vector<int> a(arity);
+    std::vector<int> indices(arity);
     for (int k = 1; k < std::pow(2, arity); ++k) {
         int tmp = k;
         for (int i = 0; i < arity; ++i) {
@@ -122,7 +123,6 @@ void for_each_tuple_index(
             tmp >>= 1;
         }
         // Initialize iteration indices.
-        std::vector<int> indices(arity);
         AtomIndices atom_tuple_indices(arity);
         indices[0] = 0;
         atom_tuple_indices[0] = a_indices[a[0]][0];
