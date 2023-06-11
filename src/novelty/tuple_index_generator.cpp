@@ -5,6 +5,30 @@
 
 namespace dlplan::novelty {
 
+std::array<std::vector<int>, 2> compute_geq_mappings(
+    const AtomIndices& vec_1,
+    const AtomIndices& vec_2) {
+    std::vector<int> geq_1(vec_1.size(), std::numeric_limits<int>::max());
+    std::vector<int> geq_2(vec_2.size(), std::numeric_limits<int>::max());
+    int j = 0;
+    int i = 0;
+    while (j < static_cast<int>(geq_1.size()) && i < static_cast<int>(geq_2.size())) {
+        if (vec_1[j] < vec_2[i]) {
+            geq_1[j] = i;
+            ++j;
+        } else if (vec_1[j] > vec_2[i]) {
+            geq_2[i] = j;
+            ++i;
+        } else {
+            geq_2[i] = j;
+            geq_1[j] = i;
+            ++j;
+            ++i;
+        }
+    }
+    return {geq_1, geq_2};
+}
+
 
 template<>
 void for_each_tuple_index<1>(
@@ -75,28 +99,10 @@ void for_each_tuple_index<2>(
     int place_holder = novelty_base.get_num_atoms();
     atom_indices.push_back(place_holder);
     // Initialize book-keeping for efficient sorted iteration.
-    std::vector<int> geq_indices(atom_indices.size(), std::numeric_limits<int>::max());
-    std::vector<int> geq_indices_add(add_atom_indices.size(), std::numeric_limits<int>::max());
-    int j = 0;
-    int i = 0;
-    while (j < static_cast<int>(geq_indices.size()) && i < static_cast<int>(geq_indices_add.size())) {
-        if (atom_indices[j] < add_atom_indices[i]) {
-            geq_indices[j] = i;
-            ++j;
-        } else if (atom_indices[j] > add_atom_indices[i]) {
-            geq_indices_add[i] = j;
-            ++i;
-        } else {
-            geq_indices_add[i] = j;
-            geq_indices[j] = i;
-            ++j;
-            ++i;
-        }
-    }
+    std::array<std::vector<int>, 2> a_geq = compute_geq_mappings(atom_indices, add_atom_indices);
+    std::array<AtomIndices, 2> a_indices{std::move(atom_indices), std::move(add_atom_indices)};
     // Iteration that selects at least one atom index from add_atom_indices.
     AtomIndices atom_tuple_indices(2);
-    std::vector<AtomIndices> a_indices{std::move(atom_indices), std::move(add_atom_indices)};
-    std::vector<std::vector<int>> a_geq{std::move(geq_indices), std::move(geq_indices_add)};
     for (int k = 1; k < 4; ++k) {
         int a0 = (k & 1) > 0;
         int a1 = (k & 2) > 0;

@@ -106,11 +106,11 @@ public:
     bool insert_atom_indices(
         const AtomIndices &atom_indices,
         const AtomIndices &add_atom_indices,
-        bool stop_if_novel = true);
+        bool stop_if_novel = false);
 
     bool insert_atom_indices(
         const AtomIndices &atom_indices,
-        bool stop_if_novel = true);
+        bool stop_if_novel = false);
 
     /// @brief Iterates over all given tuple indices and marks them internally
     ///        as being not novel anymore.
@@ -120,7 +120,7 @@ public:
     ///                      compute_novel_tuples.
     /// @param stop_if_novel Stop the iteration early if a tuple index was novel.
     /// @return True if at least one given tuple index was novel.
-    bool insert_tuple_indices(const TupleIndices &tuple_indices, bool stop_if_novel = true);
+    bool insert_tuple_indices(const TupleIndices &tuple_indices, bool stop_if_novel = false);
 };
 
 

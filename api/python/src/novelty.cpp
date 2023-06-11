@@ -24,9 +24,11 @@ void init_novelty(py::module_ &m_novelty) {
     py::class_<NoveltyTable>(m_novelty, "NoveltyTable")
         .def(py::init<std::shared_ptr<const NoveltyBase>>())
         .def("reset_novelty", &NoveltyTable::reset_novelty)
-        .def("compute_novel_tuple_indices", &NoveltyTable::compute_novel_tuple_indices)
-        .def("insert", py::overload_cast<const AtomIndices&, const AtomIndices&, bool>(&NoveltyTable::insert), py::arg("atom_indices"), py::arg("add_atom_indices"), py::arg("stop_if_novel") = true)
-        .def("insert", py::overload_cast<const TupleIndices&, bool>(&NoveltyTable::insert), py::arg("tuple_indices"), py::arg("stop_if_novel") = true)
+        .def("compute_novel_tuple_indices", py::overload_cast<const AtomIndices&>(&NoveltyTable::compute_novel_tuple_indices, py::const_))
+        .def("compute_novel_tuple_indices", py::overload_cast<const AtomIndices&, const AtomIndices&>(&NoveltyTable::compute_novel_tuple_indices, py::const_))
+        .def("insert_atom_indices", py::overload_cast<const AtomIndices&, bool>(&NoveltyTable::insert_atom_indices), py::arg("atom_indices"), py::arg("stop_if_novel") = false)
+        .def("insert_atom_indices", py::overload_cast<const AtomIndices&, const AtomIndices&, bool>(&NoveltyTable::insert_atom_indices), py::arg("atom_indices"), py::arg("add_atom_indices"), py::arg("stop_if_novel") = false)
+        .def("insert_tuple_indices", py::overload_cast<const TupleIndices&, bool>(&NoveltyTable::insert_tuple_indices), py::arg("tuple_indices"), py::arg("stop_if_novel") = false)
     ;
 
     py::class_<TupleNode>(m_novelty, "TupleNode")
