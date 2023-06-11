@@ -1,0 +1,2 @@
+add_executable(novelty_example novelty.cpp)
+target_link_libraries(novelty_example dlplannovelty)

@@ -75,9 +75,11 @@ struct InsertCallback {
     bool operator()(TupleIndex tuple_index) {
         bool is_novel = m_table[tuple_index];
         m_table[tuple_index] = false;
-        if (m_stop_if_novel && is_novel) {
+        if (is_novel) {
             m_result = true;
-            return true;
+            if (m_stop_if_novel) {
+                return true;
+            }
         }
         return false;
     }
@@ -119,12 +121,12 @@ bool NoveltyTable::insert_tuple_indices(const TupleIndices& tuple_indices, bool 
     for (const auto tuple_index : tuple_indices) {
         assert(utils::in_bounds(tuple_index, m_table));
         bool is_novel = m_table[tuple_index];
-        if (!result && is_novel) {
-            result = true;
-        }
         m_table[tuple_index] = false;
-        if (stop_if_novel && is_novel) {
-            break;
+        if (is_novel) {
+            result = true;
+            if (stop_if_novel) {
+                break;
+            }
         }
     }
     return result;

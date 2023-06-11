@@ -1,2 +1,1 @@
-from _dlplan import NoveltyBase, TupleIndexGenerator, NoveltyTable, TupleNode, \
-    TupleGraph
+from _dlplan import NoveltyBase, NoveltyTable, TupleNode, TupleGraph
