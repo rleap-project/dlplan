@@ -1,7 +1,5 @@
 /// @brief Provides functionality for the construction an evaluation of
-///        domain-general state features based on description logics
-///        for a collection of classical planning instances over a common
-///        planning domain.
+///        domain-general state features based on description logics.
 
 #ifndef DLPLAN_INCLUDE_DLPLAN_CORE_H_
 #define DLPLAN_INCLUDE_DLPLAN_CORE_H_

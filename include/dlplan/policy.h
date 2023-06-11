@@ -1,5 +1,4 @@
-/// @brief Provides functionality for the construction and evaluation of a
-///        collection of policies for a classical planning domain.
+/// @brief Implements the general policy language.
 
 #ifndef DLPLAN_INCLUDE_DLPLAN_POLICY_H_
 #define DLPLAN_INCLUDE_DLPLAN_POLICY_H_

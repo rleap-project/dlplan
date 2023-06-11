@@ -1,8 +1,7 @@
+/// Provides functionality for generating state spaces from PDDL.
+
 #ifndef DLPLAN_INCLUDE_DLPLAN_STATE_SPACE_H_
 #define DLPLAN_INCLUDE_DLPLAN_STATE_SPACE_H_
-
-/// Provides functionality for generating state spaces from PDDL and
-/// commonly used functionality to work with state spaces.
 
 #include "core.h"
 

@@ -1,7 +1,5 @@
-/// @brief Provides functionality for automatically generating domain-general
-///        state features based on description logics for a collection of
-///        classical planning instances over a common planning domain
-///        that are distinguishable on a finite set of states.
+/// @brief Provides functionality for automatically generating a set of domain-general
+///        state features that are distinguishable on a given finite set of states.
 
 #ifndef DLPLAN_INCLUDE_DLPLAN_GENERATOR_H_
 #define DLPLAN_INCLUDE_DLPLAN_GENERATOR_H_

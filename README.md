@@ -21,23 +21,27 @@ There are two types of objects in description logics: concepts and roles. A Conc
 
 ## 2. Features of the DLPlan-library
 
-The library consists of four components. Each having its own public header file, examples, tests, and python bindings.
+The library consists of five components. Each component has its own public header file, examples, tests, and python bindings.
 
 ### 2.1. Core
 
-The core component provides functionality for constructing and evaluating features for the class of problems Q. We included `guide.pdf` in the `docs` folder with further information regarding the available elements with a description of their syntax and semantics.
+The core component provides functionality for the construction an evaluation of domain-general state features based on description logics.
 
 ### 2.2. Generator
 
-The generator component provides functionality for automatically generating a set of features F with complexity at most k such that for each f,f' in F there exists a state s in Si such that f yields a different valuation on s than f'.
+The generator component provides functionality for automatically generating a set of domain-general state features that are distinguishable on a given finite set of states.
 
 ### 2.3. Policy
 
-The policy component allows to construct a policy and evaluate state pairs (s, s') on it.
+The policy component implements the general policy language.
 
 ### 2.4. State Space
 
-The state space component allows to generate state spaces from PDDL input files.
+The state space provides functionality for generating state spaces from PDDL.
+
+### 2.5. Novelty
+
+The novelty component provides functionality for width-based planning and learning.
 
 ### 3.1. Building the C++ Interface
 
