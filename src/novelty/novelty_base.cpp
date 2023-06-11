@@ -31,19 +31,19 @@ NoveltyBase& NoveltyBase::operator=(NoveltyBase&& other) = default;
 
 NoveltyBase::~NoveltyBase() = default;
 
-TupleIndex NoveltyBase::atom_tuple_to_tuple_index(const AtomIndices& tuple_atom_indices) const {
-    assert(static_cast<int>(tuple_atom_indices.size()) <= m_arity);
-    assert(std::is_sorted(tuple_atom_indices.begin(), tuple_atom_indices.end()));
+TupleIndex NoveltyBase::atom_indices_to_tuple_index(const AtomIndices& atom_indices) const {
+    assert(static_cast<int>(atom_indices.size()) == m_arity);
+    assert(std::is_sorted(atom_indices.begin(), atom_indices.end()));
     TupleIndex result = 0;
     int i = 0;
-    for (auto atom_index : tuple_atom_indices) {
+    for (auto atom_index : atom_indices) {
         result += m_factors[i] * atom_index;
         ++i;
     }
     return result;
 }
 
-AtomIndices NoveltyBase::tuple_index_to_atom_tuple(TupleIndex tuple_index) const {
+AtomIndices NoveltyBase::tuple_index_to_atom_indices(TupleIndex tuple_index) const {
     AtomIndices result;
     int place_holder = m_num_atoms;
     for (int i = m_arity-1; i >= 0; --i) {

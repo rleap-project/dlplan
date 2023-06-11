@@ -23,7 +23,7 @@ TEST(DLPLTests, TupleIndexGeneratorForEachArity1Test) {
     EXPECT_EQ(result_1, TupleIndices({0,1,2,4}));
     std::vector<AtomIndices> atom_tuple_indices_1;
     std::for_each(result_1.begin(), result_1.end(), [&](TupleIndex tuple_index){
-        atom_tuple_indices_1.push_back(novelty_base.tuple_index_to_atom_tuple(tuple_index));
+        atom_tuple_indices_1.push_back(novelty_base.tuple_index_to_atom_indices(tuple_index));
     });
     EXPECT_EQ(atom_tuple_indices_1, std::vector<AtomIndices>({{0}, {1}, {2}, {}}));
 
@@ -37,7 +37,7 @@ TEST(DLPLTests, TupleIndexGeneratorForEachArity1Test) {
     EXPECT_EQ(result_2, TupleIndices({0,1,2}));
     std::vector<AtomIndices> atom_tuple_indices_2;
     std::for_each(result_2.begin(), result_2.end(), [&](TupleIndex tuple_index){
-        atom_tuple_indices_2.push_back(novelty_base.tuple_index_to_atom_tuple(tuple_index));
+        atom_tuple_indices_2.push_back(novelty_base.tuple_index_to_atom_indices(tuple_index));
     });
     EXPECT_EQ(atom_tuple_indices_2, std::vector<AtomIndices>({{0}, {1}, {2}}));
 
@@ -50,7 +50,7 @@ TEST(DLPLTests, TupleIndexGeneratorForEachArity1Test) {
     EXPECT_EQ(result_3, TupleIndices({0,2}));
     std::vector<AtomIndices> atom_tuple_indices_3;
     std::for_each(result_3.begin(), result_3.end(), [&](TupleIndex tuple_index){
-        atom_tuple_indices_3.push_back(novelty_base.tuple_index_to_atom_tuple(tuple_index));
+        atom_tuple_indices_3.push_back(novelty_base.tuple_index_to_atom_indices(tuple_index));
     });
     EXPECT_EQ(atom_tuple_indices_3, std::vector<AtomIndices>({{0}, {2}}));
 }
@@ -68,7 +68,7 @@ TEST(DLPLTests, TupleIndexGeneratorForEachArity2Test) {
     EXPECT_EQ(result_1, TupleIndices({5,10,11,20,21,22,24}));
     std::vector<AtomIndices> atom_tuple_indices_1;
     std::for_each(result_1.begin(), result_1.end(), [&](TupleIndex tuple_index){
-        atom_tuple_indices_1.push_back(novelty_base.tuple_index_to_atom_tuple(tuple_index));
+        atom_tuple_indices_1.push_back(novelty_base.tuple_index_to_atom_indices(tuple_index));
     });
     EXPECT_EQ(atom_tuple_indices_1, std::vector<AtomIndices>({{0,1}, {0,2}, {1,2}, {0}, {1}, {2}, {}}));
 
@@ -82,7 +82,7 @@ TEST(DLPLTests, TupleIndexGeneratorForEachArity2Test) {
     EXPECT_EQ(result_2, TupleIndices({5,10,11,20,21,22}));
     std::vector<AtomIndices> atom_tuple_indices_2;
     std::for_each(result_2.begin(), result_2.end(), [&](TupleIndex tuple_index){
-        atom_tuple_indices_2.push_back(novelty_base.tuple_index_to_atom_tuple(tuple_index));
+        atom_tuple_indices_2.push_back(novelty_base.tuple_index_to_atom_indices(tuple_index));
     });
     EXPECT_EQ(atom_tuple_indices_2, std::vector<AtomIndices>({{0,1}, {0,2}, {1,2}, {0}, {1}, {2}}));
 
@@ -95,7 +95,7 @@ TEST(DLPLTests, TupleIndexGeneratorForEachArity2Test) {
     EXPECT_EQ(result_3, TupleIndices({5,10,11,15,17,20,22}));
     std::vector<AtomIndices> atom_tuple_indices_3;
     std::for_each(result_3.begin(), result_3.end(), [&](TupleIndex tuple_index){
-        atom_tuple_indices_3.push_back(novelty_base.tuple_index_to_atom_tuple(tuple_index));
+        atom_tuple_indices_3.push_back(novelty_base.tuple_index_to_atom_indices(tuple_index));
     });
     EXPECT_EQ(atom_tuple_indices_3, std::vector<AtomIndices>({{0,1}, {0,2}, {1,2}, {0,3}, {2,3}, {0}, {2}}));
 }
@@ -112,7 +112,7 @@ TEST(DLPLTests, TupleIndexGeneratorForEachArityKTest) {
     EXPECT_EQ(result_1, TupleIndices({5,10,11,20,21,22,24}));
     std::vector<AtomIndices> atom_tuple_indices_1;
     std::for_each(result_1.begin(), result_1.end(), [&](TupleIndex tuple_index){
-        atom_tuple_indices_1.push_back(novelty_base.tuple_index_to_atom_tuple(tuple_index));
+        atom_tuple_indices_1.push_back(novelty_base.tuple_index_to_atom_indices(tuple_index));
     });
     EXPECT_EQ(atom_tuple_indices_1, std::vector<AtomIndices>({{0,1}, {0,2}, {1,2}, {0}, {1}, {2}, {}}));
 
@@ -126,7 +126,7 @@ TEST(DLPLTests, TupleIndexGeneratorForEachArityKTest) {
     EXPECT_EQ(result_2, TupleIndices({5,10,11,20,21,22}));
     std::vector<AtomIndices> atom_tuple_indices_2;
     std::for_each(result_2.begin(), result_2.end(), [&](TupleIndex tuple_index){
-        atom_tuple_indices_2.push_back(novelty_base.tuple_index_to_atom_tuple(tuple_index));
+        atom_tuple_indices_2.push_back(novelty_base.tuple_index_to_atom_indices(tuple_index));
     });
     EXPECT_EQ(atom_tuple_indices_2, std::vector<AtomIndices>({{0,1}, {0,2}, {1,2}, {0}, {1}, {2}}));
 
@@ -139,7 +139,7 @@ TEST(DLPLTests, TupleIndexGeneratorForEachArityKTest) {
     EXPECT_EQ(result_3, TupleIndices({5,10,11,15,17,20,22}));
     std::vector<AtomIndices> atom_tuple_indices_3;
     std::for_each(result_3.begin(), result_3.end(), [&](TupleIndex tuple_index){
-        atom_tuple_indices_3.push_back(novelty_base.tuple_index_to_atom_tuple(tuple_index));
+        atom_tuple_indices_3.push_back(novelty_base.tuple_index_to_atom_indices(tuple_index));
     });
     EXPECT_EQ(atom_tuple_indices_3, std::vector<AtomIndices>({{0,1}, {0,2}, {1,2}, {0,3}, {2,3}, {0}, {2}}));
 }

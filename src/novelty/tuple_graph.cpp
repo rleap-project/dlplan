@@ -140,7 +140,7 @@ std::string TupleGraph::to_dot(int verbosity_level) const {
             result << "index=" << tuple_node.get_index() << "<BR/>";
             result << "tuple index=" << tuple_node.get_tuple_index() << "<BR/>";
             result << "atoms={";
-            const auto atom_indices = m_novelty_base->tuple_index_to_atom_tuple(tuple_node.get_tuple_index());
+            const auto atom_indices = m_novelty_base->tuple_index_to_atom_indices(tuple_node.get_tuple_index());
             for (size_t i = 0; i < atom_indices.size(); ++i) {
                 if (i != 0) {
                     result << ",";

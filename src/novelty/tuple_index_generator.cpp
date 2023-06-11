@@ -41,7 +41,7 @@ void for_each_tuple_index<1>(
     AtomIndices atom_tuple_indices(1);
     for (int atom_index : atom_indices) {
         atom_tuple_indices[0] = atom_index;
-        int tuple_index = novelty_base.atom_tuple_to_tuple_index(atom_tuple_indices);
+        int tuple_index = novelty_base.atom_indices_to_tuple_index(atom_tuple_indices);
         bool finish = callback(tuple_index);
         if (finish) return;
     }
@@ -60,7 +60,7 @@ void for_each_tuple_index<2>(
         atom_tuple_indices[0] = atom_indices[i1];
         for (int i2 = (i1 < num_atoms - 1) ? i1 + 1 : i1; i2 < num_atoms; ++i2) {
             atom_tuple_indices[1] = atom_indices[i2];
-            int tuple_index = novelty_base.atom_tuple_to_tuple_index(atom_tuple_indices);
+            int tuple_index = novelty_base.atom_indices_to_tuple_index(atom_tuple_indices);
             bool finish = callback(tuple_index);
             if (finish) return;
         }
@@ -79,7 +79,7 @@ void for_each_tuple_index<1>(
     AtomIndices atom_tuple_indices(1);
     for (int atom_index : add_atom_indices) {
         atom_tuple_indices[0] = atom_index;
-        int tuple_index = novelty_base.atom_tuple_to_tuple_index(atom_tuple_indices);
+        int tuple_index = novelty_base.atom_indices_to_tuple_index(atom_tuple_indices);
         bool finish = callback(tuple_index);
         if (finish) return;
     }
@@ -115,7 +115,7 @@ void for_each_tuple_index<2>(
             atom_tuple_indices[0] = a0_indices[i];
             for (int j = (a0 != a1) ? a0_geq[i] : i+1; j < num_a1_indices; ++j) {
                 atom_tuple_indices[1] = a1_indices[j];
-                int tuple_index = novelty_base.atom_tuple_to_tuple_index(atom_tuple_indices);
+                int tuple_index = novelty_base.atom_indices_to_tuple_index(atom_tuple_indices);
                 bool finish = callback(tuple_index);
                 if (finish) return;
             }

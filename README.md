@@ -109,11 +109,11 @@ python3 -m pytest api/python/
 
 ## 6. Profiling
 
-In the `experiments/` directory, we provide code to profile parts of the library. To run the experimental code, it is necessary to install the modified version of `tarski` that we provide in the respective submodule in the `submodules/tarski` directory.
+In the `experiments/` directory, we provide code to profile parts of the library.
 
 ## 7. Citing DLPlan
 
-We created a DOI on zenodo under this [link](https://zenodo.org/record/5826140#.YfK9E_so85k). A bibtex entry can look like this:
+We created a DOI on Zenodo under this [link](https://zenodo.org/record/5826140#.YfK9E_so85k). A BibTeX entry can look like this:
 
 ```
 @software{drexler-et-al-dlplan2022,

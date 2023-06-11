@@ -15,8 +15,8 @@ using namespace dlplan::state_space;
 void init_novelty(py::module_ &m_novelty) {
     py::class_<NoveltyBase, std::shared_ptr<NoveltyBase>>(m_novelty, "NoveltyBase")
         .def(py::init<int, int>())
-        .def("atom_tuple_to_tuple_index", &NoveltyBase::atom_tuple_to_tuple_index)
-        .def("tuple_index_to_atom_tuple", &NoveltyBase::tuple_index_to_atom_tuple)
+        .def("atom_indices_to_tuple_index", &NoveltyBase::atom_indices_to_tuple_index)
+        .def("tuple_index_to_atom_indices", &NoveltyBase::tuple_index_to_atom_indices)
         .def("get_num_atoms", &NoveltyBase::get_num_atoms)
         .def("get_arity", &NoveltyBase::get_arity)
     ;

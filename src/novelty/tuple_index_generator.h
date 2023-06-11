@@ -45,7 +45,7 @@ void for_each_tuple_index(
         indices[i] = index;
         atom_tuple_indices[i] = atom_indices[index];
     }
-    TupleIndex tuple_index = novelty_base.atom_tuple_to_tuple_index(atom_tuple_indices);
+    TupleIndex tuple_index = novelty_base.atom_indices_to_tuple_index(atom_tuple_indices);
     /*
         This iteration has amortized time O(1). Computing tuple index from atom tuple has time O(arity).
         Can be improved to O(1) as well by only considering the flipped values.
@@ -71,7 +71,7 @@ void for_each_tuple_index(
             indices[j] = index;
             atom_tuple_indices[j] = atom_indices[index];
         }
-        tuple_index = novelty_base.atom_tuple_to_tuple_index(atom_tuple_indices);
+        tuple_index = novelty_base.atom_indices_to_tuple_index(atom_tuple_indices);
     }
 }
 
@@ -143,7 +143,7 @@ void for_each_tuple_index(
         if (exhausted) {
             continue;
         }
-        TupleIndex tuple_index = novelty_base.atom_tuple_to_tuple_index(atom_tuple_indices);
+        TupleIndex tuple_index = novelty_base.atom_indices_to_tuple_index(atom_tuple_indices);
         /*
           This iteration has amortized time O(1). Computing tuple index from atom tuple has time O(arity).
           Can be improved to O(1) as well by only considering the flipped values.
@@ -182,7 +182,7 @@ void for_each_tuple_index(
             if (exhausted) {
                 break;
             }
-            tuple_index = novelty_base.atom_tuple_to_tuple_index(atom_tuple_indices);
+            tuple_index = novelty_base.atom_indices_to_tuple_index(atom_tuple_indices);
         }
     }
 }

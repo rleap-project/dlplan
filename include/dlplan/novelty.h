@@ -25,7 +25,7 @@ using TupleNodeIndex = int;
 using TupleNodeIndices = std::vector<TupleNodeIndex>;
 using TupleNodes = std::vector<TupleNode>;
 
-/// @brief Implements a perfect hash function between atom tuples and atom indices.
+/// @brief Implements a perfect hash function between tuple index and atom indices.
 class NoveltyBase
 {
 private:
@@ -41,18 +41,19 @@ public:
     NoveltyBase &operator=(NoveltyBase &&other);
     ~NoveltyBase();
 
-    /// @brief Converts a atom tuples of size at most arity to a tuple index.
-    ///        The user must sort atoms if atom tuples are viewed as sets.
+    /// @brief Converts an the atom indices of size arity to a tuple index.
     ///        This function is a perfect hash function.
-    /// @param tuple_atom_indices A vector of atom indices of size at most arity
+    ///        The user must sort atoms if atom tuples are viewed as sets.
+    ///        The user must add place holder with index num_atoms to match arity.
+    /// @param atom_indices A vector of atom indices of size at most arity
     /// @return A tuple index that identifies the input atom indices.
-    TupleIndex atom_tuple_to_tuple_index(const AtomIndices &tuple_atom_indices) const;
+    TupleIndex atom_indices_to_tuple_index(const AtomIndices &atom_indices) const;
 
-    /// @brief Converts an atom index to a tuple of atoms. The resulting atom indices
+    /// @brief Converts an tuple index to atom indices. The resulting atom indices
     ///        are in the same order as they were used when computing the tuple index.
     /// @param tuple_index
     /// @return
-    AtomIndices tuple_index_to_atom_tuple(TupleIndex tuple_index) const;
+    AtomIndices tuple_index_to_atom_indices(TupleIndex tuple_index) const;
 
     int get_num_atoms() const;
     int get_arity() const;
@@ -60,7 +61,7 @@ public:
 
 
 /// @brief Implements a novelty table for the manipulation and querying of the
-///        novelty status of a tuple with its representing index.
+///        novelty status of tuple indices.
 class NoveltyTable
 {
 private:
@@ -112,8 +113,7 @@ public:
         const AtomIndices &atom_indices,
         bool stop_if_novel = false);
 
-    /// @brief Iterates over all given tuple indices and marks them internally
-    ///        as being not novel anymore.
+    /// @brief Iterates over all given tuple indices and marks them as not novel.
     /// @param tuple_indices A vector of tuple indices. The user must take care
     ///                      that the indices are within correct bound. This is
     ///                      the case when the tuples were obtained by calling

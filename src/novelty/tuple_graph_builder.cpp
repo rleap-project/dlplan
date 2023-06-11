@@ -95,7 +95,7 @@ TupleNodeIndices TupleGraphBuilder::compute_nodes_layer(TupleNodeIndices& prev_t
 
 void TupleGraphBuilder::build_width_equal_0_tuple_graph() {
     TupleNodeIndex node_index = m_nodes.size();
-    TupleIndex tuple_index = m_novelty_base->atom_tuple_to_tuple_index({});
+    TupleIndex tuple_index = m_novelty_base->atom_indices_to_tuple_index({});
     m_node_indices_by_distance.push_back({node_index});
     m_nodes.push_back({TupleNode(node_index, tuple_index, {m_root_state_index})});
     m_state_indices_by_distance.push_back({m_root_state_index});
