@@ -23,7 +23,6 @@ void init_novelty(py::module_ &m_novelty) {
 
     py::class_<NoveltyTable>(m_novelty, "NoveltyTable")
         .def(py::init<std::shared_ptr<const NoveltyBase>>())
-        .def("reset_novelty", &NoveltyTable::reset_novelty)
         .def("compute_novel_tuple_indices", py::overload_cast<const AtomIndices&>(&NoveltyTable::compute_novel_tuple_indices, py::const_))
         .def("compute_novel_tuple_indices", py::overload_cast<const AtomIndices&, const AtomIndices&>(&NoveltyTable::compute_novel_tuple_indices, py::const_))
         .def("insert_atom_indices", py::overload_cast<const AtomIndices&, bool>(&NoveltyTable::insert_atom_indices), py::arg("atom_indices"), py::arg("stop_if_novel") = false)

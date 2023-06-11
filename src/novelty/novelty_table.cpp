@@ -20,12 +20,6 @@ NoveltyTable& NoveltyTable::operator=(NoveltyTable&& other) = default;
 
 NoveltyTable::~NoveltyTable() = default;
 
-void NoveltyTable::reset_novelty(const TupleIndices& tuple_indices) {
-    for (const auto tuple_index : tuple_indices) {
-        m_table[tuple_index] = false;
-    }
-}
-
 struct ComputeNovelTupleIndicesCallback {
     const std::vector<bool>& m_table;
     TupleIndices& m_result;

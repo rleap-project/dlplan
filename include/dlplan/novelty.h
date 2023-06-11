@@ -41,7 +41,7 @@ public:
     NoveltyBase &operator=(NoveltyBase &&other);
     ~NoveltyBase();
 
-    /// @brief Converts an the atom indices of size arity to a tuple index.
+    /// @brief Convert the input atom indices of size arity to a tuple index.
     ///        This function is a perfect hash function.
     ///        The user must sort atoms if atom tuples are viewed as sets.
     ///        The user must add place holder with index num_atoms to match arity.
@@ -49,7 +49,7 @@ public:
     /// @return A tuple index that identifies the input atom indices.
     TupleIndex atom_indices_to_tuple_index(const AtomIndices &atom_indices) const;
 
-    /// @brief Converts an tuple index to atom indices. The resulting atom indices
+    /// @brief Convert the input tuple index to atom indices. The resulting atom indices
     ///        are in the same order as they were used when computing the tuple index.
     /// @param tuple_index
     /// @return
@@ -76,51 +76,60 @@ public:
     NoveltyTable &operator=(NoveltyTable &&other);
     ~NoveltyTable();
 
-    void reset_novelty(const TupleIndices &tuple_indices);
+    /// @brief Compute all novel tuple indices derived from tuples of the input atom indices
+    ///        of size that is at most the arity as specified in the novelty_base.
+    /// @param atom_indices A vector of atom indices.
+    ///                     The user must take care that the atom indices are within correct bound.
+    /// @return Vector of novel tuples indices derived from the input atom indices.
+    TupleIndices compute_novel_tuple_indices(
+        const AtomIndices &atom_indices) const;
 
-    /// @brief Computes all novel tuple indices of size specified by the arity
-    ///        in the novelty base that can be obtained from the given atom indices.
-    /// @param atom_indices A vector of atom indices. The user must take care
-    ///                     that the atom indices are within correct bound.
-    ///                     This is the case when the indices do not exceed the
-    ///                     num_atoms parameter provided to the novelty base.
-    /// @param add_atom_indices Atoms that were added by operator effects.
-    ///                         Must be disjoint with atom_indices.
-    /// @return Vector of novel tuple indices obtained from the given atom indices.
+    /// @brief Compute all novel tuple indices derived from tuples of the input atom indices
+    ///        and add atom indices of size that is at most the arity as specified in the novelty_base.
+    ///        There is an additional constraint that requires that each tuple of atom indices
+    ///        will contain at least one atom index from add atom indices.
+    /// @param atom_indices A vector of atom indices.
+    ///                     The user must take care that the atom indices are within correct bound.
+    /// @param add_atom_indices A vector of atom indices.
+    ///                         The user must take care that the atom indices are within correct bound.
+    ///                         The user must take care that it is disjoint with atom indices.
+    /// @return Vector of novel tuples indices derived from the input atom indices.
     TupleIndices compute_novel_tuple_indices(
         const AtomIndices &atom_indices,
         const AtomIndices &add_atom_indices) const;
 
-    TupleIndices compute_novel_tuple_indices(
-        const AtomIndices &atom_indices) const;
+    /// @brief Mark all input tuple indices as not novel.
+    /// @param tuple_indices A vector of tuple indices.
+    ///                      The user must take care that the indices are within correct bound.
+    /// @param stop_if_novel Stop the iteration early if a tuple index was novel.
+    /// @return True if at least one given tuple index was novel.
+    bool insert_tuple_indices(const TupleIndices &tuple_indices, bool stop_if_novel = false);
 
-    /// @brief Marks all tuples of size specified by the arity in the novelty base
-    ///        that can be obtained from the given atom indices as not novel anymore.
-    /// @param atom_indices A vector of atom indices. The user must take care
-    ///                     that the atom indices are within correct bound.
-    ///                     This is the case when the indices do not exceed the
-    ///                     num_atoms parameter provided to the novelty base.
-    /// @param add_atom_indices Atoms that were added by operator effects.
-    ///                         Must be distjoin with atom_indices.
+    /// @brief Mark all novel tuple indices derived from tuples of the input atom indices
+    ///        of size that is at most the arity as specified in the novelty_base as not novel.
+    /// @param atom_indices A vector of atom indices.
+    ///                     The user must take care that the atom indices are within correct bound.
+    /// @param stop_if_novel Stop the iteration early if a tuple index was novel.
+    /// @return True if at least one given tuple index was novel.
+    bool insert_atom_indices(
+        const AtomIndices &atom_indices,
+        bool stop_if_novel = false);
+
+    /// @brief Mark all novel tuple indices derived from tuples of the input atom indices
+    ///        of size that is at most the arity as specified in the novelty_base as not novel.
+    ///        There is an additional constraint that requires that each tuple of atom indices
+    ///        will contain at least one atom index from add atom indices.
+    /// @param atom_indices A vector of atom indices.
+    ///                     The user must take care that the atom indices are within correct bound.
+    /// @param add_atom_indices A vector of atom indices.
+    ///                         The user must take care that the atom indices are within correct bound.
+    ///                         The user must take care that it is disjoint with atom indices.
     /// @param stop_if_novel Stop the iteration early if a tuple index was novel.
     /// @return True if at least one given tuple index was novel.
     bool insert_atom_indices(
         const AtomIndices &atom_indices,
         const AtomIndices &add_atom_indices,
         bool stop_if_novel = false);
-
-    bool insert_atom_indices(
-        const AtomIndices &atom_indices,
-        bool stop_if_novel = false);
-
-    /// @brief Iterates over all given tuple indices and marks them as not novel.
-    /// @param tuple_indices A vector of tuple indices. The user must take care
-    ///                      that the indices are within correct bound. This is
-    ///                      the case when the tuples were obtained by calling
-    ///                      compute_novel_tuples.
-    /// @param stop_if_novel Stop the iteration early if a tuple index was novel.
-    /// @return True if at least one given tuple index was novel.
-    bool insert_tuple_indices(const TupleIndices &tuple_indices, bool stop_if_novel = false);
 };
 
 

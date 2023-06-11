@@ -35,7 +35,7 @@ TupleIndices TupleGraphBuilder::compute_novel_tuple_indices_layer(const StateInd
         }
     }
     TupleIndices novel_tuples = TupleIndices(novel_tuples_set.begin(), novel_tuples_set.end());
-    m_novelty_table.reset_novelty(novel_tuples);
+    m_novelty_table.insert_tuple_indices(novel_tuples, false);
     return novel_tuples;
 }
 
