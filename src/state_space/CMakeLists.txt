@@ -11,6 +11,10 @@ target_include_directories(dlplanstatespace
         ${PROJECT_SOURCE_DIR}/include
 )
 
+set_target_properties(dlplanstatespace PROPERTIES
+    INSTALL_RPATH "$ORIGIN"
+)
+
 install(
     TARGETS
         dlplanstatespace

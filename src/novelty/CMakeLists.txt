@@ -10,10 +10,14 @@ target_sources(dlplannovelty
         tuple_node.cpp
         ../utils/math.cpp
     )
-target_link_libraries(dlplannovelty dlplanstatespace)
+target_link_libraries(dlplannovelty dlplancore dlplanstatespace)
 target_include_directories(dlplannovelty
     PUBLIC
         ${PROJECT_SOURCE_DIR}/include
+)
+
+set_target_properties(dlplannovelty PROPERTIES
+    INSTALL_RPATH "$ORIGIN"
 )
 
 install(

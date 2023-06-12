@@ -37,10 +37,14 @@ target_sources(dlplangenerator
         ../utils/logging.cpp
         ../utils/countdown_timer.cpp
 )
-target_link_libraries(dlplangenerator dlplancore pthread)
+target_link_libraries(dlplangenerator dlplancore)
 target_include_directories(dlplangenerator
     PUBLIC
         ${PROJECT_SOURCE_DIR}/include
+)
+
+set_target_properties(dlplangenerator PROPERTIES
+    INSTALL_RPATH "$ORIGIN"
 )
 
 install(

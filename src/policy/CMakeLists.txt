@@ -19,6 +19,10 @@ target_include_directories(dlplanpolicy
         ${PROJECT_SOURCE_DIR}/include/
 )
 
+set_target_properties(dlplanpolicy PROPERTIES
+    INSTALL_RPATH "$ORIGIN"
+)
+
 install(
     TARGETS
         dlplanpolicy
