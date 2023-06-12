@@ -16,9 +16,15 @@ target_include_directories(dlplannovelty
         ${PROJECT_SOURCE_DIR}/include
 )
 
-set_target_properties(dlplannovelty PROPERTIES
-    INSTALL_RPATH "$ORIGIN"
-)
+if (APPLE)
+    set_target_properties(dlplannovelty PROPERTIES
+        INSTALL_NAME_DIR "@loader_path"
+    )
+elseif (UNIX)
+    set_target_properties(dlplannovelty PROPERTIES
+        INSTALL_RPATH "$ORIGIN"
+    )
+endif()
 
 install(
     TARGETS
