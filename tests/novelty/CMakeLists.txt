@@ -7,6 +7,7 @@ target_sources(
     novelty_tests
     PRIVATE
         novelty_base.cpp
+        novelty_table.cpp
         tuple_index_generator.cpp
 )
 target_link_libraries(novelty_tests
