@@ -36,7 +36,6 @@ void for_each_tuple_index<1>(
     AtomIndices atom_indices,
     const std::function<bool(TupleIndex)>& callback) {
     assert(std::is_sorted(atom_indices.begin(), atom_indices.end()));
-    const std::vector<int>& factors = novelty_base.get_factors();
     int place_holder = novelty_base.get_num_atoms();
     atom_indices.push_back(place_holder);
     for (int atom_index : atom_indices) {
@@ -73,7 +72,6 @@ void for_each_tuple_index<1>(
     const std::function<bool(TupleIndex)>& callback) {
     assert(novelty_base.get_arity() == 1);
     assert(std::is_sorted(add_atom_indices.begin(), add_atom_indices.end()));
-    const std::vector<int>& factors = novelty_base.get_factors();
     for (int atom_index : add_atom_indices) {
         bool finish = callback(atom_index);
         if (finish) return;

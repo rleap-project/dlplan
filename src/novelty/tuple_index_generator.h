@@ -32,6 +32,7 @@ void for_each_tuple_index(
     const NoveltyBase &novelty_base,
     AtomIndices atom_indices,
     const std::function<bool(TupleIndex)>& callback) {
+    const std::vector<int>& factors = novelty_base.get_factors();
     int arity = novelty_base.get_arity();
     // Add placeholders to be able to generate tuples of size less than arity.
     int place_holder = novelty_base.get_num_atoms();
@@ -39,16 +40,13 @@ void for_each_tuple_index(
     int num_atom_indices = static_cast<int>(atom_indices.size());
     // Initialize iteration indices.
     std::vector<int> indices(arity);
-    AtomIndices atom_tuple_indices(arity);
+    TupleIndex tuple_index = 0;
     for (int i = 0; i < arity; ++i) {
-        int index = std::min(i, num_atom_indices);
-        indices[i] = index;
-        atom_tuple_indices[i] = atom_indices[index];
+        int index = indices[i] = std::min(i, num_atom_indices);
+        tuple_index += factors[i] * atom_indices[index];
     }
-    TupleIndex tuple_index = novelty_base.atom_indices_to_tuple_index(atom_tuple_indices);
     /*
-        This iteration has amortized time O(1). Computing tuple index from atom tuple has time O(arity).
-        Can be improved to O(1) as well by only considering the flipped values.
+        This iteration has amortized time O(1) to compute the next tuple index.
     */
     while (true) {
         bool finished = callback(tuple_index);
@@ -63,15 +61,14 @@ void for_each_tuple_index(
             return;
         }
         int index = ++indices[i];
-        atom_tuple_indices[i] = atom_indices[index];
+        tuple_index += factors[i] * (atom_indices[index] - atom_indices[index - 1]);
         // Update indices right of the incremented rightmost index i.
         for (int j = i + 1; j < arity; ++j) {
             // Ensure that index is not larger than index of place holder.
-            int index = std::min(num_atom_indices - 1, indices[j-1] + 1);
-            indices[j] = index;
-            atom_tuple_indices[j] = atom_indices[index];
+            int old_index = indices[j];
+            int new_index = indices[j] = std::min(num_atom_indices - 1, indices[j-1] + 1);
+            tuple_index += factors[j] * (atom_indices[new_index] - atom_indices[old_index]);
         }
-        tuple_index = novelty_base.atom_indices_to_tuple_index(atom_tuple_indices);
     }
 }
 
