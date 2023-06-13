@@ -57,6 +57,10 @@ AtomIndices NoveltyBase::tuple_index_to_atom_indices(TupleIndex tuple_index) con
     return result;
 }
 
+const std::vector<int>& NoveltyBase::get_factors() const {
+    return m_factors;
+}
+
 int NoveltyBase::get_num_atoms() const {
     return m_num_atoms;
 }

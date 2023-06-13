@@ -55,6 +55,7 @@ public:
     /// @return
     AtomIndices tuple_index_to_atom_indices(TupleIndex tuple_index) const;
 
+    const std::vector<int>& get_factors() const;
     int get_num_atoms() const;
     int get_arity() const;
 };

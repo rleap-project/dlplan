@@ -75,12 +75,22 @@ void for_each_tuple_index(
     }
 }
 
+/// @brief Spezialized implementation with constant depth 1 for-loop
+///        and direct computation of hash value.
+/// @param novelty_base
+/// @param atom_indices
+/// @param callback
 template<>
 void for_each_tuple_index<1>(
     const NoveltyBase &novelty_base,
     AtomIndices atom_indices,
     const std::function<bool(TupleIndex)>& callback);
 
+/// @brief Spezialized implementation with constant depth 2 for-loop
+///        and direct computation of hash value.
+/// @param novelty_base
+/// @param atom_indices
+/// @param callback
 template<>
 void for_each_tuple_index<2>(
     const NoveltyBase &novelty_base,
@@ -110,7 +120,7 @@ void for_each_tuple_index(
     int num_add_atom_indices = static_cast<int>(add_atom_indices.size());
     // Initialize book-keeping for efficient sorted iteration.
     std::array<std::vector<int>, 2> a_geq = compute_geq_mappings(atom_indices, add_atom_indices);
-    std::array<AtomIndices, 2> a_indices{std::move(atom_indices), std::move(add_atom_indices)};
+    std::array<AtomIndices, 2> a_atom_indices{std::move(atom_indices), std::move(add_atom_indices)};
     std::array<int, 2> a_num_atom_indices{num_atom_indices, num_add_atom_indices};
     // Iteration that selects at least one atom index from add_atom_indices.
     AtomIndices atom_tuple_indices(arity);
@@ -124,7 +134,7 @@ void for_each_tuple_index(
         }
         // Initialize iteration indices.
         indices[0] = 0;
-        atom_tuple_indices[0] = a_indices[a[0]][0];
+        atom_tuple_indices[0] = a_atom_indices[a[0]][0];
         bool exhausted = false;
         for (int i = 1; i < arity; ++i) {
             int index = indices[i] = (a[i-1] != a[i]) ? a_geq[a[i-1]][indices[i-1]] : indices[i-1] + 1;
@@ -138,7 +148,7 @@ void for_each_tuple_index(
                 exhausted = true;
                 break;
             }
-            atom_tuple_indices[i] = a_indices[a[i]][indices[i]];
+            atom_tuple_indices[i] = a_atom_indices[a[i]][indices[i]];
         }
         if (exhausted) {
             continue;
@@ -161,7 +171,7 @@ void for_each_tuple_index(
                 break;
             }
             int index = ++indices[i];
-            atom_tuple_indices[i] = a_indices[a[i]][index];
+            atom_tuple_indices[i] = a_atom_indices[a[i]][index];
             // Update indices right of the incremented rightmost index i.
             bool exhausted = false;
             for (int j = i + 1; j < arity; ++j) {
@@ -177,7 +187,7 @@ void for_each_tuple_index(
                     exhausted = true;
                     break;
                 }
-                atom_tuple_indices[j] = a_indices[a[j]][indices[j]];
+                atom_tuple_indices[j] = a_atom_indices[a[j]][indices[j]];
             }
             if (exhausted) {
                 break;
@@ -187,7 +197,12 @@ void for_each_tuple_index(
     }
 }
 
-
+/// @brief Spezialized implementation with constant depth 1 for-loop
+///        and direct computation of hash value.
+/// @param novelty_base
+/// @param atom_indices
+/// @param add_atom_indices
+/// @param callback
 template<>
 void for_each_tuple_index<1>(
     const NoveltyBase& novelty_base,
@@ -196,6 +211,12 @@ void for_each_tuple_index<1>(
     const std::function<bool(TupleIndex)>& callback);
 
 
+/// @brief Spezialized implementation with constant depth 2 for-loop
+///        and direct computation of hash value.
+/// @param novelty_base
+/// @param atom_indices
+/// @param add_atom_indices
+/// @param callback
 template<>
 void for_each_tuple_index<2>(
     const NoveltyBase& novelty_base,

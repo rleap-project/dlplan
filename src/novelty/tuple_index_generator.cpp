@@ -36,13 +36,11 @@ void for_each_tuple_index<1>(
     AtomIndices atom_indices,
     const std::function<bool(TupleIndex)>& callback) {
     assert(std::is_sorted(atom_indices.begin(), atom_indices.end()));
+    const std::vector<int>& factors = novelty_base.get_factors();
     int place_holder = novelty_base.get_num_atoms();
     atom_indices.push_back(place_holder);
-    AtomIndices atom_tuple_indices(1);
     for (int atom_index : atom_indices) {
-        atom_tuple_indices[0] = atom_index;
-        int tuple_index = novelty_base.atom_indices_to_tuple_index(atom_tuple_indices);
-        bool finish = callback(tuple_index);
+        bool finish = callback(atom_index);
         if (finish) return;
     }
 }
@@ -52,15 +50,14 @@ void for_each_tuple_index<2>(
     const NoveltyBase &novelty_base,
     AtomIndices atom_indices,
     const std::function<bool(TupleIndex)>& callback) {
+    const std::vector<int>& factors = novelty_base.get_factors();
     int place_holder = novelty_base.get_num_atoms();
     atom_indices.push_back(place_holder);
-    AtomIndices atom_tuple_indices(2);
     int num_atoms = static_cast<int>(atom_indices.size());
-    for (int i1 = 0; i1 < num_atoms; ++i1) {
-        atom_tuple_indices[0] = atom_indices[i1];
-        for (int i2 = (i1 < num_atoms - 1) ? i1 + 1 : i1; i2 < num_atoms; ++i2) {
-            atom_tuple_indices[1] = atom_indices[i2];
-            int tuple_index = novelty_base.atom_indices_to_tuple_index(atom_tuple_indices);
+    for (int i0 = 0; i0 < num_atoms; ++i0) {
+        int i0_tuple_index = factors[0] * atom_indices[i0];
+        for (int i1 = (i0 < num_atoms - 1) ? i0 + 1 : i0; i1 < num_atoms; ++i1) {
+            int tuple_index = i0_tuple_index + factors[1] * atom_indices[i1];
             bool finish = callback(tuple_index);
             if (finish) return;
         }
@@ -76,11 +73,9 @@ void for_each_tuple_index<1>(
     const std::function<bool(TupleIndex)>& callback) {
     assert(novelty_base.get_arity() == 1);
     assert(std::is_sorted(add_atom_indices.begin(), add_atom_indices.end()));
-    AtomIndices atom_tuple_indices(1);
+    const std::vector<int>& factors = novelty_base.get_factors();
     for (int atom_index : add_atom_indices) {
-        atom_tuple_indices[0] = atom_index;
-        int tuple_index = novelty_base.atom_indices_to_tuple_index(atom_tuple_indices);
-        bool finish = callback(tuple_index);
+        bool finish = callback(atom_index);
         if (finish) return;
     }
 }
@@ -95,27 +90,29 @@ void for_each_tuple_index<2>(
     assert(novelty_base.get_arity() == 2);
     assert(std::is_sorted(atom_indices.begin(), atom_indices.end()));
     assert(std::is_sorted(add_atom_indices.begin(), add_atom_indices.end()));
+    const std::vector<int>& factors = novelty_base.get_factors();
     // Add placeholders to be able to not pick an atom from atom_indices.
     int place_holder = novelty_base.get_num_atoms();
     atom_indices.push_back(place_holder);
+    int num_atom_indices = static_cast<int>(atom_indices.size());
+    int num_add_atom_indices = static_cast<int>(add_atom_indices.size());
     // Initialize book-keeping for efficient sorted iteration.
     std::array<std::vector<int>, 2> a_geq = compute_geq_mappings(atom_indices, add_atom_indices);
-    std::array<AtomIndices, 2> a_indices{std::move(atom_indices), std::move(add_atom_indices)};
+    std::array<AtomIndices, 2> a_atom_indices{std::move(atom_indices), std::move(add_atom_indices)};
+    std::array<int, 2> a_num_atom_indices{num_atom_indices, num_add_atom_indices};
+    std::array<int, 2> a;
     // Iteration that selects at least one atom index from add_atom_indices.
     AtomIndices atom_tuple_indices(2);
     for (int k = 1; k < 4; ++k) {
-        int a0 = (k & 1) > 0;
-        int a1 = (k & 2) > 0;
-        const auto& a0_indices = a_indices[a0];
-        const auto& a1_indices = a_indices[a1];
-        const auto& a0_geq = a_geq[a0];
-        int num_a0_indices = static_cast<int>(a0_indices.size());
-        int num_a1_indices = static_cast<int>(a1_indices.size());
-        for (int i = 0; i < num_a0_indices; ++i) {
-            atom_tuple_indices[0] = a0_indices[i];
-            for (int j = (a0 != a1) ? a0_geq[i] : i+1; j < num_a1_indices; ++j) {
-                atom_tuple_indices[1] = a1_indices[j];
-                int tuple_index = novelty_base.atom_indices_to_tuple_index(atom_tuple_indices);
+        int tmp = k;
+        for (int i = 0; i < 2; ++i) {
+            a[i] = (tmp & 1) > 0;
+            tmp >>= 1;
+        }
+        for (int i0 = 0; i0 < a_num_atom_indices[a[0]]; ++i0) {
+            int i0_tuple_index = factors[0] * a_atom_indices[a[0]][i0];
+            for (int i1 = (a[0] != a[1]) ? a_geq[a[0]][i0] : i0+1; i1 < a_num_atom_indices[a[1]]; ++i1) {
+                int tuple_index = i0_tuple_index + factors[1] * a_atom_indices[a[1]][i1];
                 bool finish = callback(tuple_index);
                 if (finish) return;
             }
