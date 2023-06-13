@@ -42,7 +42,7 @@ void for_each_tuple_index(
     std::vector<int> indices(arity);
     TupleIndex tuple_index = 0;
     for (int i = 0; i < arity; ++i) {
-        int index = indices[i] = std::min(i, num_atom_indices);
+        int index = indices[i] = std::min(i, num_atom_indices - 1);
         tuple_index += factors[i] * atom_indices[index];
     }
     /*
@@ -107,6 +107,10 @@ void for_each_tuple_index(
     AtomIndices atom_indices,
     AtomIndices add_atom_indices,
     const std::function<bool(TupleIndex)>& callback) {
+    if (add_atom_indices.empty()) {
+        // No tuple index exists.
+        return;
+    }
     int arity = novelty_base.get_arity();
     assert(std::is_sorted(atom_indices.begin(), atom_indices.end()));
     assert(std::is_sorted(add_atom_indices.begin(), add_atom_indices.end()));
