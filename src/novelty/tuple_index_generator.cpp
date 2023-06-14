@@ -35,7 +35,6 @@ void for_each_tuple_index<1>(
     const NoveltyBase &novelty_base,
     AtomIndices atom_indices,
     const std::function<bool(TupleIndex)>& callback) {
-    assert(std::is_sorted(atom_indices.begin(), atom_indices.end()));
     int place_holder = novelty_base.get_num_atoms();
     atom_indices.push_back(place_holder);
     for (int atom_index : atom_indices) {
@@ -56,7 +55,7 @@ void for_each_tuple_index<2>(
     for (int i0 = 0; i0 < num_atoms; ++i0) {
         int i0_tuple_index = factors[0] * atom_indices[i0];
         for (int i1 = (i0 < num_atoms - 1) ? i0 + 1 : i0; i1 < num_atoms; ++i1) {
-            int tuple_index = i0_tuple_index + factors[1] * atom_indices[i1];
+            TupleIndex tuple_index = i0_tuple_index + factors[1] * atom_indices[i1];
             bool finish = callback(tuple_index);
             if (finish) return;
         }
@@ -71,7 +70,6 @@ void for_each_tuple_index<1>(
     AtomIndices add_atom_indices,
     const std::function<bool(TupleIndex)>& callback) {
     assert(novelty_base.get_arity() == 1);
-    assert(std::is_sorted(add_atom_indices.begin(), add_atom_indices.end()));
     for (int atom_index : add_atom_indices) {
         bool finish = callback(atom_index);
         if (finish) return;
@@ -100,7 +98,6 @@ void for_each_tuple_index<2>(
     std::array<int, 2> a_num_atom_indices{num_atom_indices, num_add_atom_indices};
     std::array<int, 2> a;
     // Iteration that selects at least one atom index from add_atom_indices.
-    AtomIndices atom_tuple_indices(2);
     for (int k = 1; k < 4; ++k) {
         int tmp = k;
         for (int i = 0; i < 2; ++i) {
@@ -110,7 +107,7 @@ void for_each_tuple_index<2>(
         for (int i0 = 0; i0 < a_num_atom_indices[a[0]]; ++i0) {
             int i0_tuple_index = factors[0] * a_atom_indices[a[0]][i0];
             for (int i1 = (a[0] != a[1]) ? a_geq[a[0]][i0] : i0+1; i1 < a_num_atom_indices[a[1]]; ++i1) {
-                int tuple_index = i0_tuple_index + factors[1] * a_atom_indices[a[1]][i1];
+                TupleIndex tuple_index = i0_tuple_index + factors[1] * a_atom_indices[a[1]][i1];
                 bool finish = callback(tuple_index);
                 if (finish) return;
             }

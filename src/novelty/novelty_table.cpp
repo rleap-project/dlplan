@@ -45,7 +45,7 @@ TupleIndices NoveltyTable::compute_novel_tuple_indices(
     } else if (m_novelty_base->get_arity() == 2) {
         for_each_tuple_index<2>(*m_novelty_base, atom_indices, add_atom_indices, callback);
     } else {
-        for_each_tuple_index<-1>(*m_novelty_base, atom_indices, add_atom_indices, callback);
+        for_each_tuple_index(*m_novelty_base, atom_indices, add_atom_indices, callback);
     }
     return result;
 }
@@ -59,7 +59,7 @@ TupleIndices NoveltyTable::compute_novel_tuple_indices(
     } else if (m_novelty_base->get_arity() == 2) {
         for_each_tuple_index<2>(*m_novelty_base, atom_indices, callback);
     } else {
-        for_each_tuple_index<-1>(*m_novelty_base, atom_indices, callback);
+        for_each_tuple_index(*m_novelty_base, atom_indices, callback);
     }
     return result;
 }
@@ -95,7 +95,7 @@ bool NoveltyTable::insert_atom_indices(
     } else if (m_novelty_base->get_arity() == 2) {
         for_each_tuple_index<2>(*m_novelty_base, atom_indices, callback);
     } else {
-        for_each_tuple_index<-1>(*m_novelty_base, atom_indices, callback);
+        for_each_tuple_index(*m_novelty_base, atom_indices, callback);
     }
     return result;
 }
@@ -111,7 +111,7 @@ bool NoveltyTable::insert_atom_indices(
     } else if (m_novelty_base->get_arity() == 2) {
         for_each_tuple_index<2>(*m_novelty_base, atom_indices, add_atom_indices, callback);
     } else {
-        for_each_tuple_index<-1>(*m_novelty_base, atom_indices, add_atom_indices, callback);
+        for_each_tuple_index(*m_novelty_base, atom_indices, add_atom_indices, callback);
     }
     return result;
 }
