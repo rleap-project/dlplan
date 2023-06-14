@@ -56,6 +56,19 @@ extern Log g_log;
 
 namespace std {
 
+template<class T, size_t C>
+std::ostream &operator<<(std::ostream &stream, const std::array<T, C> &arr) {
+    stream << "[";
+    for (size_t i = 0; i < arr.size(); ++i) {
+        if (i != 0)
+            stream << ", ";
+        stream << arr[i];
+    }
+    stream << "]";
+    return stream;
+}
+
+
 template<class T>
 std::ostream &operator<<(std::ostream &stream, const std::vector<T> &vec) {
     stream << "[";

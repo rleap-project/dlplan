@@ -137,7 +137,7 @@ void for_each_tuple_index(
         TupleIndex tuple_index = factors[0] * a_atom_indices[a[0]][0];  // existence of atom index is guaranteed.
         bool exhausted = false;
         for (int i = 1; i < arity; ++i) {
-            int index = indices[i] = (a[i-1] != a[i]) ? a_geq[a[i-1]][indices[i-1]] : indices[i-1] + 1;
+            int index = indices[i] = (a[i-1] != a[i]) ? a_geq[a[i-1]][indices[i-1]] : std::min(a_num_atom_indices[a[i]] - 1, indices[i-1] + 1);
             if (index == std::numeric_limits<int>::max()) {
                 // no larger atom index can be appended.
                 exhausted = true;
