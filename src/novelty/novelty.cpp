@@ -3,4 +3,6 @@
 
 namespace dlplan::novelty {
 
+const int NoveltyBase::place_holder = -1;
+
 }

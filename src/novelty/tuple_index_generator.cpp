@@ -30,86 +30,145 @@ std::array<std::vector<int>, 2> compute_geq_mappings(
 }
 
 
-template<>
-void for_each_tuple_index<1>(
-    const NoveltyBase &novelty_base,
-    AtomIndices atom_indices,
-    const std::function<bool(TupleIndex)>& callback) {
-    int place_holder = novelty_base.get_num_atoms();
-    atom_indices.push_back(place_holder);
-    for (int atom_index : atom_indices) {
-        bool finish = callback(atom_index);
-        if (finish) return;
-    }
-}
-
-template<>
-void for_each_tuple_index<2>(
+void for_each_tuple_index(
     const NoveltyBase &novelty_base,
     AtomIndices atom_indices,
     const std::function<bool(TupleIndex)>& callback) {
     const std::vector<int>& factors = novelty_base.get_factors();
-    int place_holder = novelty_base.get_num_atoms();
-    atom_indices.push_back(place_holder);
-    int num_atoms = static_cast<int>(atom_indices.size());
-    for (int i0 = 0; i0 < num_atoms; ++i0) {
-        int i0_tuple_index = factors[0] * atom_indices[i0];
-        for (int i1 = (i0 < num_atoms - 1) ? i0 + 1 : i0; i1 < num_atoms; ++i1) {
-            TupleIndex tuple_index = i0_tuple_index + factors[1] * atom_indices[i1];
-            bool finish = callback(tuple_index);
-            if (finish) return;
+    int arity = novelty_base.get_arity();
+    // Add placeholders to be able to generate tuples of size less than arity.
+    atom_indices.push_back(NoveltyBase::place_holder);
+    std::sort(atom_indices.begin(), atom_indices.end());
+    std::transform(atom_indices.begin(), atom_indices.end(), atom_indices.begin(), [](int index){ return ++index; });
+    int num_atom_indices = static_cast<int>(atom_indices.size());
+    // Initialize iteration indices.
+    std::vector<int> indices(arity, 0);
+    TupleIndex tuple_index = 0;
+    /*
+        This iteration has amortized time O(1) to compute the next tuple index.
+    */
+    while (true) {
+        bool finished = callback(tuple_index);
+        if (finished) return;
+        // Find the rightmost index to increment
+        int i = arity - 1;
+        while (i >= 0 && (indices[i] >= num_atom_indices - (arity - i))) {
+            --i;
+        }
+        if (i < 0) {
+            // Exit the loop when all indices have reached their maximum values
+            return;
+        }
+        int index = ++indices[i];
+        tuple_index += factors[i] * (atom_indices[index] - atom_indices[index - 1]);
+        // Update indices right of the incremented rightmost index i.
+        for (int j = i + 1; j < arity; ++j) {
+            // Ensure that index is not larger than index of place holder.
+            int old_index = indices[j];
+            int new_index = indices[j] = indices[j-1] + 1;
+            tuple_index += factors[j] * (atom_indices[new_index] - atom_indices[old_index]);
         }
     }
 }
 
 
-template<>
-void for_each_tuple_index<1>(
-    const NoveltyBase &novelty_base,
-    AtomIndices,
-    AtomIndices add_atom_indices,
-    const std::function<bool(TupleIndex)>& callback) {
-    assert(novelty_base.get_arity() == 1);
-    for (int atom_index : add_atom_indices) {
-        bool finish = callback(atom_index);
-        if (finish) return;
-    }
-}
-
-
-template<>
-void for_each_tuple_index<2>(
-    const NoveltyBase &novelty_base,
+void for_each_tuple_index(
+    const NoveltyBase& novelty_base,
     AtomIndices atom_indices,
     AtomIndices add_atom_indices,
     const std::function<bool(TupleIndex)>& callback) {
-    assert(novelty_base.get_arity() == 2);
-    assert(std::is_sorted(atom_indices.begin(), atom_indices.end()));
-    assert(std::is_sorted(add_atom_indices.begin(), add_atom_indices.end()));
+    if (add_atom_indices.empty()) {
+        // No tuple index exists.
+        return;
+    }
     const std::vector<int>& factors = novelty_base.get_factors();
+    int arity = novelty_base.get_arity();
     // Add placeholders to be able to not pick an atom from atom_indices.
-    int place_holder = novelty_base.get_num_atoms();
-    atom_indices.push_back(place_holder);
+    atom_indices.push_back(NoveltyBase::place_holder);
+    std::sort(atom_indices.begin(), atom_indices.end());
+    std::transform(atom_indices.begin(), atom_indices.end(), atom_indices.begin(), [](int index){ return ++index; });
+    std::sort(add_atom_indices.begin(), add_atom_indices.end());
+    std::transform(add_atom_indices.begin(), add_atom_indices.end(), add_atom_indices.begin(), [](int index){ return ++index; });
     int num_atom_indices = static_cast<int>(atom_indices.size());
     int num_add_atom_indices = static_cast<int>(add_atom_indices.size());
     // Initialize book-keeping for efficient sorted iteration.
     std::array<std::vector<int>, 2> a_geq = compute_geq_mappings(atom_indices, add_atom_indices);
     std::array<AtomIndices, 2> a_atom_indices{std::move(atom_indices), std::move(add_atom_indices)};
     std::array<int, 2> a_num_atom_indices{num_atom_indices, num_add_atom_indices};
-    std::array<int, 2> a;
     // Iteration that selects at least one atom index from add_atom_indices.
-    for (int k = 1; k < 4; ++k) {
+    std::vector<int> a(arity);
+    std::vector<int> indices(arity);
+    for (int k = 1; k < std::pow(2, arity); ++k) {
         int tmp = k;
-        for (int i = 0; i < 2; ++i) {
+        for (int i = 0; i < arity; ++i) {
             a[i] = (tmp & 1) > 0;
             tmp >>= 1;
         }
-        for (int i0 = 0; i0 < a_num_atom_indices[a[0]]; ++i0) {
-            int i0_tuple_index = factors[0] * a_atom_indices[a[0]][i0];
-            for (int i1 = (a[0] != a[1]) ? a_geq[a[0]][i0] : i0+1; i1 < a_num_atom_indices[a[1]]; ++i1) {
-                TupleIndex tuple_index = i0_tuple_index + factors[1] * a_atom_indices[a[1]][i1];
-                bool finish = callback(tuple_index);
-                if (finish) return;
+        // Initialize iteration indices.
+        indices[0] = 0;
+        TupleIndex tuple_index = factors[0] * a_atom_indices[a[0]][0];  // existence of atom index is guaranteed.
+        bool exhausted = false;
+        // Fill as many leading place holders as possible.
+        int i = 1;
+        if (a[0] == 0) {
+            while (a[i] == 0) {
+                indices[i] = 0;
+                ++i;
+            }
+        }
+        for (; i < arity; ++i) {
+            int index = indices[i] = (a[i-1] != a[i]) ? a_geq[a[i-1]][indices[i-1]] : std::min(a_num_atom_indices[a[i]] - 1, indices[i-1] + 1);
+            if (index == std::numeric_limits<int>::max()) {
+                // no larger atom index can be appended.
+                exhausted = true;
+                break;
+            }
+            if (a[i-1] == a[i] && a[i] == 1 && indices[i-1] == indices[i]) {
+                // duplicate atom indices from add_atom_indices
+                exhausted = true;
+                break;
+            }
+            tuple_index += factors[i] * a_atom_indices[a[i]][indices[i]];
+        }
+        if (exhausted) {
+            continue;
+        }
+        /*
+            This iteration has amortized time O(1) to compute the next tuple index.
+        */
+        while (true) {
+            bool finished = callback(tuple_index);
+            if (finished) return;
+            // Find the rightmost index to increment
+            int i = arity - 1;
+            while (i >= 0 && (indices[i] >= a_num_atom_indices[a[i]] - 1)) {
+                --i;
+            }
+            if (i < 0) {
+                // Exit the loop when all indices have reached their maximum values
+                break;
+            }
+            int index = ++indices[i];
+            tuple_index += factors[i] * (a_atom_indices[a[i]][index] - a_atom_indices[a[i]][index - 1]);
+            // Update indices right of the incremented rightmost index i.
+            bool exhausted = false;
+            for (int j = i + 1; j < arity; ++j) {
+                int old_index = indices[j];
+                int new_index = indices[j] = (a[j-1] != a[j]) ? a_geq[a[j-1]][indices[j-1]] : std::min(a_num_atom_indices[a[j]] - 1, indices[j-1] + 1);
+                if (new_index == std::numeric_limits<int>::max()) {
+                    // no larger atom index can be appended.
+                    exhausted = true;
+                    break;
+                }
+                if (a[j-1] == a[j] && a[j] == 1 && indices[j-1] == indices[j]) {
+                    // duplicate atom indices from add_atom_indices
+                    exhausted = true;
+                    break;
+                }
+                tuple_index += factors[j] * (a_atom_indices[a[j]][new_index] - a_atom_indices[a[j]][old_index]);
+            }
+            if (exhausted) {
+                break;
             }
         }
     }

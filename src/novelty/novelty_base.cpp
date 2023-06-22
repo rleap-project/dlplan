@@ -37,7 +37,7 @@ TupleIndex NoveltyBase::atom_indices_to_tuple_index(const AtomIndices& atom_indi
     TupleIndex result = 0;
     int i = 0;
     for (auto atom_index : atom_indices) {
-        result += m_factors[i] * atom_index;
+        result += m_factors[i] * (atom_index + 1);
         ++i;
     }
     return result;
@@ -45,11 +45,10 @@ TupleIndex NoveltyBase::atom_indices_to_tuple_index(const AtomIndices& atom_indi
 
 AtomIndices NoveltyBase::tuple_index_to_atom_indices(TupleIndex tuple_index) const {
     AtomIndices result;
-    int place_holder = m_num_atoms;
     for (int i = m_arity-1; i >= 0; --i) {
         int atom_index = tuple_index / m_factors[i];
-        if (atom_index != place_holder) {
-            result.push_back(atom_index);
+        if (atom_index != 0) {
+            result.push_back(atom_index - 1);
         }
         tuple_index -= atom_index * m_factors[i];
     }

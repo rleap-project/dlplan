@@ -34,6 +34,13 @@ TEST(DLPTests, NoveltyBaseTableInsertAtomIndices2Test) {
     EXPECT_EQ(is_novel, true);
     is_novel = novelty_table.insert_atom_indices({}, {2,3,4});
     EXPECT_EQ(is_novel, false);
+
+    auto novelty_base_2 = std::make_shared<const NoveltyBase>(6,2);
+    novelty_table.resize(novelty_base_2);
+    is_novel = novelty_table.insert_atom_indices({}, {4,5}, false);
+    EXPECT_EQ(is_novel, true);
+    is_novel = novelty_table.insert_atom_indices({}, {4,5}, false);
+    EXPECT_EQ(is_novel, false);
 }
 
 
@@ -42,7 +49,7 @@ TEST(DLPTests, NoveltyBaseTableComputeNovelTupleIndices1Test) {
     auto novelty_table = NoveltyTable(novelty_base);
     auto tuple_indices = novelty_table.compute_novel_tuple_indices({0,1,2});
     std::sort(tuple_indices.begin(), tuple_indices.end());
-    EXPECT_EQ(tuple_indices, TupleIndices({5,10,11,20,21,22,24}));
+    EXPECT_EQ(tuple_indices, TupleIndices({0, 5, 10, 11, 15, 16, 17}));
 }
 
 
@@ -51,11 +58,11 @@ TEST(DLPTests, NoveltyBaseTableComputeNovelTupleIndices2Test) {
     auto novelty_table = NoveltyTable(novelty_base);
     auto tuple_indices_1 = novelty_table.compute_novel_tuple_indices({}, {0,1,2});
     std::sort(tuple_indices_1.begin(), tuple_indices_1.end());
-    EXPECT_EQ(tuple_indices_1, TupleIndices({5,10,11,20,21,22}));
+    EXPECT_EQ(tuple_indices_1, TupleIndices({5, 10, 11, 15, 16, 17}));
 
     auto tuple_indices_2 = novelty_table.compute_novel_tuple_indices({1,3}, {0,2});
     std::sort(tuple_indices_2.begin(), tuple_indices_2.end());
-    EXPECT_EQ(tuple_indices_2, TupleIndices({5,10,11,15,17,20,22}));
+    EXPECT_EQ(tuple_indices_2, TupleIndices({5, 11, 15, 16, 17, 21, 23}));
 }
 
 TEST(DLPTests, NoveltyBaseTableInsertTupleIndicesTest) {

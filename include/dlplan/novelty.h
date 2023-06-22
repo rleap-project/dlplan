@@ -58,6 +58,8 @@ public:
     const std::vector<int>& get_factors() const;
     int get_num_atoms() const;
     int get_arity() const;
+
+    static const int place_holder;
 };
 
 
@@ -131,6 +133,9 @@ public:
         const AtomIndices &atom_indices,
         const AtomIndices &add_atom_indices,
         bool stop_if_novel = false);
+
+    /// @brief Resizes the novelty table.
+    void resize(std::shared_ptr<const NoveltyBase> novelty_base);
 };
 
 

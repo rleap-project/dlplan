@@ -8,7 +8,8 @@
 namespace dlplan::novelty {
 
 NoveltyTable::NoveltyTable(std::shared_ptr<const NoveltyBase> novelty_base)
-    : m_novelty_base(novelty_base), m_table(pow(novelty_base->get_num_atoms()+1, novelty_base->get_arity()), true) { }
+    : m_novelty_base(novelty_base), m_table(pow(novelty_base->get_num_atoms()+1, novelty_base->get_arity()), true) {
+}
 
 NoveltyTable::NoveltyTable(const NoveltyTable& other) = default;
 
@@ -40,13 +41,7 @@ TupleIndices NoveltyTable::compute_novel_tuple_indices(
     const AtomIndices& add_atom_indices) const {
     TupleIndices result;
     auto callback = ComputeNovelTupleIndicesCallback{m_table, result};
-    if (m_novelty_base->get_arity() == 1) {
-        for_each_tuple_index<1>(*m_novelty_base, atom_indices, add_atom_indices, callback);
-    } else if (m_novelty_base->get_arity() == 2) {
-        for_each_tuple_index<2>(*m_novelty_base, atom_indices, add_atom_indices, callback);
-    } else {
-        for_each_tuple_index(*m_novelty_base, atom_indices, add_atom_indices, callback);
-    }
+    for_each_tuple_index(*m_novelty_base, atom_indices, add_atom_indices, callback);
     return result;
 }
 
@@ -54,13 +49,7 @@ TupleIndices NoveltyTable::compute_novel_tuple_indices(
     const AtomIndices& atom_indices) const {
     TupleIndices result;
     auto callback = ComputeNovelTupleIndicesCallback{m_table, result};
-    if (m_novelty_base->get_arity() == 1) {
-        for_each_tuple_index<1>(*m_novelty_base, atom_indices, callback);
-    } else if (m_novelty_base->get_arity() == 2) {
-        for_each_tuple_index<2>(*m_novelty_base, atom_indices, callback);
-    } else {
-        for_each_tuple_index(*m_novelty_base, atom_indices, callback);
-    }
+    for_each_tuple_index(*m_novelty_base, atom_indices, callback);
     return result;
 }
 
@@ -73,6 +62,7 @@ struct InsertCallback {
         : m_table(table), m_stop_if_novel(stop_if_novel), m_result(result) {}
 
     bool operator()(TupleIndex tuple_index) {
+        assert(tuple_index < static_cast<int>(m_table.size()) && tuple_index >= 0);
         bool is_novel = m_table[tuple_index];
         m_table[tuple_index] = false;
         if (is_novel) {
@@ -90,13 +80,7 @@ bool NoveltyTable::insert_atom_indices(
     bool stop_if_novel) {
     bool result = false;
     auto callback = InsertCallback{m_table, stop_if_novel, result};
-    if (m_novelty_base->get_arity() == 1) {
-        for_each_tuple_index<1>(*m_novelty_base, atom_indices, callback);
-    } else if (m_novelty_base->get_arity() == 2) {
-        for_each_tuple_index<2>(*m_novelty_base, atom_indices, callback);
-    } else {
-        for_each_tuple_index(*m_novelty_base, atom_indices, callback);
-    }
+    for_each_tuple_index(*m_novelty_base, atom_indices, callback);
     return result;
 }
 
@@ -106,20 +90,14 @@ bool NoveltyTable::insert_atom_indices(
     bool stop_if_novel) {
     bool result = false;
     auto callback = InsertCallback{m_table, stop_if_novel, result};
-    if (m_novelty_base->get_arity() == 1) {
-        for_each_tuple_index<1>(*m_novelty_base, atom_indices, add_atom_indices, callback);
-    } else if (m_novelty_base->get_arity() == 2) {
-        for_each_tuple_index<2>(*m_novelty_base, atom_indices, add_atom_indices, callback);
-    } else {
-        for_each_tuple_index(*m_novelty_base, atom_indices, add_atom_indices, callback);
-    }
+    for_each_tuple_index(*m_novelty_base, atom_indices, add_atom_indices, callback);
     return result;
 }
 
 bool NoveltyTable::insert_tuple_indices(const TupleIndices& tuple_indices, bool stop_if_novel) {
     bool result = false;
     for (const auto tuple_index : tuple_indices) {
-        assert(utils::in_bounds(tuple_index, m_table));
+        assert(tuple_index < static_cast<int>(m_table.size()) && tuple_index >= 0);
         bool is_novel = m_table[tuple_index];
         m_table[tuple_index] = false;
         if (is_novel) {
@@ -130,6 +108,14 @@ bool NoveltyTable::insert_tuple_indices(const TupleIndices& tuple_indices, bool 
         }
     }
     return result;
+}
+
+void NoveltyTable::resize(std::shared_ptr<const NoveltyBase> novelty_base) {
+    if (novelty_base->get_arity() != m_novelty_base->get_arity()) {
+        throw std::runtime_error("NoveltyTable::resize - missmatched arity of novelty_table and novelty_base.");
+    }
+    m_table.resize(pow(novelty_base->get_num_atoms()+1, novelty_base->get_arity()), true);
+    m_novelty_base = novelty_base;
 }
 
 }
