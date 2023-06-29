@@ -1,6 +1,8 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_ROLES_RESTRICT_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_ROLES_RESTRICT_H_
 
+#include "../utils.h"
+
 #include "../../../../include/dlplan/core.h"
 
 #include <sstream>
@@ -79,6 +81,10 @@ public:
         out << ",";
         m_concept->compute_repr(out);
         out << ")";
+    }
+
+    int compute_evaluate_time_score() const override {
+        return m_role->compute_evaluate_time_score() + m_concept->compute_evaluate_time_score() + SCORE_QUADRATIC;
     }
 
     static std::string get_name() {

@@ -1,8 +1,9 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_ROLES_TRANSITIVE_REFLEXIVE_CLOSURE_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_ROLES_TRANSITIVE_REFLEXIVE_CLOSURE_H_
 
-#include "../../../../include/dlplan/core.h"
 #include "../utils.h"
+
+#include "../../../../include/dlplan/core.h"
 
 #include <sstream>
 
@@ -86,6 +87,10 @@ public:
         out << get_name() << "(";
         m_role->compute_repr(out);
         out << ")";
+    }
+
+    int compute_evaluate_time_score() const override {
+        return m_role->compute_evaluate_time_score() + SCORE_QUBIC;
     }
 
     static std::string get_name() {

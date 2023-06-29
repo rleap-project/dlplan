@@ -45,8 +45,7 @@ public:
 
     std::shared_ptr<const Rule> add_rule(Conditions&& conditions, Effects&& effects);
 
-    std::shared_ptr<const Policy> add_policy(
-        std::set<std::shared_ptr<const Rule>>&& rules);
+    std::shared_ptr<const Policy> add_policy(Rules&& rules);
 };
 
 }

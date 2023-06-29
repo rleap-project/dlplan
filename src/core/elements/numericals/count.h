@@ -1,6 +1,8 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_NUMERICAL_COUNT_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_NUMERICAL_COUNT_H_
 
+#include "../utils.h"
+
 #include "../../../../include/dlplan/core.h"
 
 #include <sstream>
@@ -63,6 +65,18 @@ public:
         out << get_name() << "(";
         m_element->compute_repr(out);
         out << ")";
+    }
+
+    int compute_evaluate_time_score() const override {
+        int score = m_element->compute_evaluate_time_score();
+        if (std::is_same<T, Concept>::value) {
+            score += SCORE_LINEAR;
+        } else if (std::is_same<T, Role>::value) {
+            score += SCORE_QUADRATIC;
+        } else {
+            throw std::runtime_error("Inclusion::compute_evaluate_time_score - unknown template parameter.");
+        }
+        return score;
     }
 
     static std::string get_name() {

@@ -1,6 +1,8 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_ROLES_IDENTITY_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_ROLES_IDENTITY_H_
 
+#include "../utils.h"
+
 #include "../../../../include/dlplan/core.h"
 
 #include <sstream>
@@ -67,6 +69,10 @@ public:
         out << get_name() << "(";
         m_concept->compute_repr(out);
         out << ")";
+    }
+
+    int compute_evaluate_time_score() const override {
+        return m_concept->compute_evaluate_time_score() + SCORE_LINEAR;
     }
 
     static std::string get_name() {

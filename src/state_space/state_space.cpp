@@ -5,7 +5,6 @@
 
 #include "../utils/collections.h"
 #include "../utils/memory.h"
-#include "../utils/set_operators.h"
 
 #include <algorithm>
 #include <deque>

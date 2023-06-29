@@ -59,7 +59,7 @@ std::shared_ptr<const Rule> PolicyBuilderImpl::add_rule(Conditions&& conditions,
 }
 
 std::shared_ptr<const Policy> PolicyBuilderImpl::add_policy(
-    std::set<std::shared_ptr<const Rule>>&& rules) {
+    Rules&& rules) {
     if (!std::all_of(rules.begin(), rules.end(), [&](const auto& rule){ return m_rules.count(rule); })) {
         throw std::runtime_error("PolicyBuilderImpl::add_policy - tried adding policy with rule from different builder.");
     }

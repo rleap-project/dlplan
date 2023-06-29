@@ -141,6 +141,14 @@ std::string Policy::str() const {
     return ss.str();
 }
 
+int Policy::compute_evaluate_time_score() const {
+    int score = 0;
+    for (const auto& rule : m_rules) {
+        score += rule->compute_evaluate_time_score();
+    }
+    return score;
+}
+
 void Policy::set_index(PolicyIndex index) {
     m_index = index;
 }

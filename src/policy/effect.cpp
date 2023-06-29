@@ -6,6 +6,10 @@ namespace dlplan::policy {
 BooleanEffect::BooleanEffect(std::shared_ptr<const core::Boolean> boolean)
     : BaseEffect(), m_boolean(boolean) { }
 
+int BooleanEffect::compute_evaluate_time_score() const {
+    return m_boolean->compute_evaluate_time_score();
+}
+
 std::shared_ptr<const core::Boolean> BooleanEffect::get_boolean() const {
     return m_boolean;
 }
@@ -17,6 +21,10 @@ std::shared_ptr<const core::Numerical> BooleanEffect::get_numerical() const {
 
 NumericalEffect::NumericalEffect(std::shared_ptr<const core::Numerical> numerical)
     : BaseEffect(), m_numerical(numerical) { }
+
+int NumericalEffect::compute_evaluate_time_score() const {
+    return m_numerical->compute_evaluate_time_score();
+}
 
 std::shared_ptr<const core::Boolean> NumericalEffect::get_boolean() const {
     return nullptr;

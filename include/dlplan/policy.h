@@ -22,12 +22,27 @@ class BaseEffect;
 class Rule;
 class Policy;
 
-using Booleans = std::set<std::shared_ptr<const dlplan::core::Boolean>>;
-using Numericals = std::set<std::shared_ptr<const dlplan::core::Numerical>>;
-using Conditions = std::set<std::shared_ptr<const BaseCondition>>;
-using Effects = std::set<std::shared_ptr<const BaseEffect>>;
-using Rules = std::set<std::shared_ptr<const Rule>>;
-using Policies = std::set<std::shared_ptr<const Policy>>;
+
+/// @brief Sort elements in policy by their evaluate time score.
+/// @tparam T
+template<typename T>
+struct ScoreCompare {
+    bool operator()(
+        const std::shared_ptr<T>& l,
+        const std::shared_ptr<T>& r) const {
+        if (l->compute_evaluate_time_score() == r->compute_evaluate_time_score()) {
+            return l->compute_repr() < r->compute_repr();
+        }
+        return l->compute_evaluate_time_score() < r->compute_evaluate_time_score();
+    }
+};
+
+using Booleans = std::set<std::shared_ptr<const dlplan::core::Boolean>, ScoreCompare<const dlplan::core::Boolean>>;
+using Numericals = std::set<std::shared_ptr<const dlplan::core::Numerical>, ScoreCompare<const dlplan::core::Numerical>>;
+using Conditions = std::set<std::shared_ptr<const BaseCondition>, ScoreCompare<const BaseCondition>>;
+using Effects = std::set<std::shared_ptr<const BaseEffect>, ScoreCompare<const BaseEffect>>;
+using Rules = std::set<std::shared_ptr<const Rule>, ScoreCompare<const Rule>>;
+using Policies = std::set<std::shared_ptr<const Policy>, ScoreCompare<const Policy>>;
 
 using StatePair = std::pair<dlplan::core::State, dlplan::core::State>;
 using StatePairs = std::vector<StatePair>;
@@ -60,6 +75,12 @@ public:
 
     virtual std::string compute_repr() const = 0;
     virtual std::string str() const = 0;
+
+    /// @brief Computes a time score for evaluating this condition relative to other conditions.
+    ///        The scoring assumes evaluation that uses caching.
+    /// @return An integer that represents the score.
+    virtual int compute_evaluate_time_score() const = 0;
+
     void set_index(ConditionIndex index);
     virtual std::shared_ptr<const core::Boolean> get_boolean() const = 0;
     virtual std::shared_ptr<const core::Numerical> get_numerical() const = 0;
@@ -89,6 +110,12 @@ public:
 
     virtual std::string compute_repr() const = 0;
     virtual std::string str() const = 0;
+
+    /// @brief Computes a time score for evaluating this effect relative to other effects.
+    ///        The scoring assumes evaluation that uses caching.
+    /// @return An integer that represents the score.
+    virtual int compute_evaluate_time_score() const = 0;
+
     void set_index(EffectIndex index);
     EffectIndex get_index() const;
     virtual std::shared_ptr<const core::Boolean> get_boolean() const = 0;
@@ -124,6 +151,12 @@ public:
 
     std::string compute_repr() const;
     std::string str() const;
+
+    /// @brief Computes a time score for evaluating this rule relative to other rules.
+    ///        The scoring assumes evaluation that uses caching.
+    /// @return An integer that represents the score.
+    int compute_evaluate_time_score() const;
+
     void set_index(RuleIndex index);
     RuleIndex get_index() const;
     const Conditions& get_conditions() const;
@@ -170,6 +203,12 @@ public:
 
     std::string compute_repr() const;
     std::string str() const;
+
+    /// @brief Computes a time score for evaluating this condition relative to other conditions.
+    ///        The scoring assumes evaluation that uses caching.
+    /// @return An integer that represents the score.
+    int compute_evaluate_time_score() const;
+
     void set_index(PolicyIndex index);
     PolicyIndex get_index() const;
     const Booleans& get_booleans() const;
@@ -210,14 +249,14 @@ public:
      * Uniquely adds a rule and returns it.
      */
     std::shared_ptr<const Rule> add_rule(
-        std::set<std::shared_ptr<const BaseCondition>>&& conditions,
-        std::set<std::shared_ptr<const BaseEffect>>&& effects);
+        Conditions&& conditions,
+        Effects&& effects);
 
     /**
      * Uniquely adds a policy and returns it.
      */
     std::shared_ptr<const Policy> add_policy(
-        std::set<std::shared_ptr<const Rule>>&& rules);
+        Rules&& rules);
 };
 
 

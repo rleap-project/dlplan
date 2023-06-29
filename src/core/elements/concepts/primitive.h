@@ -1,6 +1,8 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_PRIMITIVE_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_PRIMITIVE_H_
 
+#include "../utils.h"
+
 #include "../../../../include/dlplan/core.h"
 
 #include "../../../utils/collections.h"
@@ -75,9 +77,12 @@ public:
         return 1;
     }
 
-
     void compute_repr(std::stringstream& out) const override {
         out << get_name() << "(" << m_predicate.get_name() << "," << std::to_string(m_pos) << ")";
+    }
+
+    int compute_evaluate_time_score() const override {
+        return SCORE_LINEAR;
     }
 
     static std::string get_name() {

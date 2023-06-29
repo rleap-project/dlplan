@@ -1,6 +1,8 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_ROLES_TOP_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_ROLES_TOP_H_
 
+#include "../utils.h"
+
 #include "../../../../include/dlplan/core.h"
 
 #include <sstream>
@@ -47,6 +49,10 @@ public:
 
     void compute_repr(std::stringstream& out) const override {
         out << get_name();
+    }
+
+    int compute_evaluate_time_score() const override {
+        return SCORE_CONSTANT;
     }
 
     static std::string get_name() {

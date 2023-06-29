@@ -1,8 +1,9 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_NUMERICAL_SUM_CONCEPT_DISTANCE_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_NUMERICAL_SUM_CONCEPT_DISTANCE_H_
 
-#include "../../../../include/dlplan/core.h"
 #include "../utils.h"
+
+#include "../../../../include/dlplan/core.h"
 
 #include <sstream>
 
@@ -109,6 +110,10 @@ public:
         out << ",";
         m_concept_to->compute_repr(out);
         out << ")";
+    }
+
+    int compute_evaluate_time_score() const override {
+        return m_concept_from->compute_evaluate_time_score() + m_role->compute_evaluate_time_score() + m_concept_to->compute_evaluate_time_score() + SCORE_QUBIC;
     }
 
     static std::string get_name() {

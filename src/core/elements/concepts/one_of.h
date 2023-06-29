@@ -1,6 +1,8 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_ONE_OF_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_ONE_OF_H_
 
+#include "../utils.h"
+
 #include "../../../../include/dlplan/core.h"
 
 #include <sstream>
@@ -67,6 +69,10 @@ public:
 
     void compute_repr(std::stringstream& out) const override {
         out << get_name() << "(" << m_constant.get_name() << ")";
+    }
+
+    int compute_evaluate_time_score() const override {
+        return SCORE_LINEAR;
     }
 
     static std::string get_name() {

@@ -20,6 +20,8 @@ protected:
 protected:
     BooleanEffect(std::shared_ptr<const core::Boolean> boolean);
 
+    int compute_evaluate_time_score() const override;
+
     std::shared_ptr<const core::Boolean> get_boolean() const override;
     std::shared_ptr<const core::Numerical> get_numerical() const override;
 };
@@ -31,6 +33,8 @@ protected:
 
 protected:
     NumericalEffect(std::shared_ptr<const core::Numerical> numerical);
+
+    int compute_evaluate_time_score() const override;
 
     std::shared_ptr<const core::Boolean> get_boolean() const override;
     std::shared_ptr<const core::Numerical> get_numerical() const override;

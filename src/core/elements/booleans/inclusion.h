@@ -1,9 +1,12 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_BOOLEAN_INCLUSION_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_BOOLEAN_INCLUSION_H_
 
+#include "../utils.h"
+
 #include "../../../../include/dlplan/core.h"
 
 #include <sstream>
+#include <type_traits>
 
 using namespace std::string_literals;
 
@@ -74,6 +77,18 @@ public:
        out << ",";
        m_element_right->compute_repr(out) ;
        out << ")";
+    }
+
+    int compute_evaluate_time_score() const override {
+        int score = m_element_left->compute_evaluate_time_score() + m_element_right->compute_evaluate_time_score();
+        if (std::is_same<T, Concept>::value) {
+            score += SCORE_LINEAR;
+        } else if (std::is_same<T, Role>::value) {
+            score += SCORE_QUADRATIC;
+        } else {
+            throw std::runtime_error("Inclusion::compute_evaluate_time_score - unknown template parameter.");
+        }
+        return score;
     }
 
     static std::string get_name() {

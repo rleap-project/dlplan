@@ -785,6 +785,11 @@ public:
     std::string compute_repr() const;
     virtual void compute_repr(std::stringstream& out) const = 0;
 
+    /// @brief Computes a time score for evaluating this element relative to other elements.
+    ///        The scoring assumes evaluation that uses caching.
+    /// @return An integer that represents the score.
+    virtual int compute_evaluate_time_score() const = 0;
+
     /// @brief Overload of the output stream insertion operator (operator<<) for the BaseElement class.
     ///        Outputs a string representation of a BaseElement object to the specified output stream.
     /// @param os The output stream to write the string representation to.

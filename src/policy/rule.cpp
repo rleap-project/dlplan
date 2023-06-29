@@ -9,7 +9,8 @@
 namespace dlplan::policy {
 
 Rule::Rule(Conditions&& conditions, Effects&& effects)
-    : m_conditions(std::move(conditions)), m_effects(std::move(effects)) { }
+    : m_conditions(std::move(conditions)), m_effects(std::move(effects)) {
+}
 
 Rule::~Rule() = default;
 
@@ -74,31 +75,32 @@ std::string Rule::compute_repr() const {
 std::string Rule::str() const {
     std::stringstream ss;
     ss << "(:rule (:conditions ";
-    // sort conditions by str
-    std::vector<std::shared_ptr<const BaseCondition>> sorted_conditions(m_conditions.begin(), m_conditions.end());
-    std::sort(sorted_conditions.begin(), sorted_conditions.end(), [&](const auto& l, const auto& r){
-        return l->str() < r->str();
-    });
-    for (const auto& c : sorted_conditions) {
+    for (const auto& c : m_conditions) {
         ss << c->str();
-        if (c != *sorted_conditions.rbegin()) {
+        if (c != *m_conditions.rbegin()) {
             ss << " ";
         }
     }
     ss << ") (:effects ";
-    // sort conditions by str
-    std::vector<std::shared_ptr<const BaseEffect>> sorted_effects(m_effects.begin(), m_effects.end());
-    std::sort(sorted_effects.begin(), sorted_effects.end(), [&](const auto& l, const auto& r){
-        return l->str() < r->str();
-    });
-    for (const auto& e : sorted_effects) {
+    for (const auto& e : m_effects) {
         ss << e->str();
-        if (e != *sorted_effects.rbegin()) {
+        if (e != *m_effects.rbegin()) {
             ss << " ";
         }
     }
     ss << "))";
     return ss.str();
+}
+
+int Rule::compute_evaluate_time_score() const {
+    int score = 0;
+    for (const auto& condition : m_conditions) {
+        score += condition->compute_evaluate_time_score();
+    }
+    for (const auto& effect : m_effects) {
+        score += effect->compute_evaluate_time_score();
+    }
+    return score;
 }
 
 void Rule::set_index(RuleIndex index) {

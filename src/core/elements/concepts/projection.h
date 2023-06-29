@@ -1,6 +1,8 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_PROJECTION_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_PROJECTION_H_
 
+#include "../utils.h"
+
 #include "../../../../include/dlplan/core.h"
 
 #include <sstream>
@@ -72,6 +74,10 @@ public:
         out << get_name() << "(";
         m_role->compute_repr(out);
         out << "," << std::to_string(m_pos) << ")";
+    }
+
+    int compute_evaluate_time_score() const override {
+        return m_role->compute_evaluate_time_score() + SCORE_QUADRATIC;
     }
 
     static std::string get_name() {
