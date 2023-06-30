@@ -15,8 +15,13 @@ namespace dlplan::core {
 class ComposeRole : public Role {
 private:
     void compute_result(const RoleDenotation& left_denot, const RoleDenotation& right_denot, RoleDenotation& result) const {
+        // Compute sparse representation.
+        PairsOfObjectIndices right_pairs;
+        for (const auto& right_pair : right_denot) {
+            right_pairs.push_back(right_pair);
+        }
         for (const auto& left_pair : left_denot) {  // source
-            for (const auto& right_pair : right_denot) {  // target
+            for (const auto& right_pair : right_pairs) {  // target
                 if (left_pair.second == right_pair.first) {
                     result.insert(std::make_pair(left_pair.first, right_pair.second));
                 }

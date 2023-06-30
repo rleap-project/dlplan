@@ -19,8 +19,13 @@ private:
         bool changed = false;
         do {
             RoleDenotation tmp_result = result;
-            for (const auto& pair_1 : tmp_result) {
-                for (const auto& pair_2 : tmp_result) {
+            // Compute sparse representation.
+            PairsOfObjectIndices pairs;
+            for (const auto& pair : tmp_result) {
+                pairs.push_back(pair);
+            }
+            for (const auto& pair_1 : pairs) {
+                for (const auto& pair_2 : pairs) {
                     if (pair_1.second == pair_2.first) {
                         result.insert(std::make_pair(pair_1.first, pair_2.second));
                     }
