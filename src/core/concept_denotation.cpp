@@ -1,4 +1,5 @@
 #include "../../include/dlplan/core.h"
+#include "../../include/dlplan/utils/hash.h"
 
 #include "../utils/logging.h"
 
@@ -19,45 +20,6 @@ ConceptDenotation::ConceptDenotation(ConceptDenotation&& other) = default;
 ConceptDenotation& ConceptDenotation::operator=(ConceptDenotation&& other) = default;
 
 ConceptDenotation::~ConceptDenotation() = default;
-
-void ConceptDenotation::const_iterator::seek_next() {
-    while (++m_index < m_num_objects) {
-        if (m_data.test(m_index)) break;
-    }
-}
-
-ConceptDenotation::const_iterator::const_iterator(
-    ConceptDenotation::const_iterator::const_reference data, int num_objects, bool end)
-    : m_data(data), m_num_objects(num_objects), m_index(end ? num_objects : -1) {
-    if (!end) seek_next();
-}
-
-bool ConceptDenotation::const_iterator::operator!=(const const_iterator& other) const {
-    return !(*this == other);
-}
-
-bool ConceptDenotation::const_iterator::operator==(const const_iterator& other) const {
-    return ((m_index == other.m_index) && (&m_data == &other.m_data));
-}
-
-const ObjectIndex& ConceptDenotation::const_iterator::operator*() const {
-    return m_index;
-}
-
-ObjectIndex* ConceptDenotation::const_iterator::operator->() {
-    return &m_index;
-}
-
-ConceptDenotation::const_iterator ConceptDenotation::const_iterator::operator++(int) {
-    ConceptDenotation::const_iterator prev = *this;
-    seek_next();
-    return prev;
-}
-
-ConceptDenotation::const_iterator& ConceptDenotation::const_iterator::operator++() {
-    seek_next();
-    return *this;
-}
 
 bool ConceptDenotation::operator==(const ConceptDenotation& other) const {
     if (this != &other) {
@@ -88,14 +50,6 @@ ConceptDenotation& ConceptDenotation::operator-=(const ConceptDenotation& other)
 ConceptDenotation& ConceptDenotation::operator~() {
     ~m_data;
     return *this;
-}
-
-ConceptDenotation::const_iterator ConceptDenotation::begin() const {
-    return ConceptDenotation::const_iterator(m_data, m_num_objects);
-}
-
-ConceptDenotation::const_iterator ConceptDenotation::end() const {
-    return ConceptDenotation::const_iterator(m_data, m_num_objects, true);
 }
 
 bool ConceptDenotation::contains(ObjectIndex value) const {
@@ -151,18 +105,25 @@ std::string ConceptDenotation::str() const {
     return compute_repr();
 }
 
+ObjectIndices ConceptDenotation::to_vector() const {
+    // In the case of bitset, the to_sorted_vector has best runtime complexity.
+    return to_sorted_vector();
+}
+
 ObjectIndices ConceptDenotation::to_sorted_vector() const {
     ObjectIndices result;
     result.reserve(m_num_objects);
-    for (int object_idx : *this) {
-        result.push_back(object_idx);
+    for (ObjectIndex i = 0; i < m_num_objects; ++i) {
+        if (m_data.test(i)) {
+            result.push_back(i);
+        }
     }
     result.shrink_to_fit();
     return result;
 }
 
 std::size_t ConceptDenotation::hash() const {
-    return dlplan::core::hash<std::vector<unsigned>>()(m_data.get_blocks());
+    return m_data.hash();
 }
 
 int ConceptDenotation::get_num_objects() const {

@@ -15,7 +15,7 @@ namespace dlplan::core {
 class IdentityRole : public Role {
 private:
     void compute_result(const ConceptDenotation& denot, RoleDenotation& result) const {
-        for (const auto& single : denot) {
+        for (const auto& single : denot.to_vector()) {
             result.insert(std::make_pair(single, single));
         }
     }

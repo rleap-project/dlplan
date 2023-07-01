@@ -24,7 +24,8 @@ target_sources(dlplancore
         ../utils/logging.cpp
         ../utils/MurmurHash3.cpp
         ../utils/system.cpp
-        ../utils/timer.cpp)
+        ../utils/timer.cpp
+        ../utils/hash.cpp)
 target_include_directories(dlplancore
     PUBLIC
         ${PROJECT_SOURCE_DIR}/include

@@ -1,6 +1,8 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_UTILS_DYNAMIC_BITSET_H
 #define DLPLAN_INCLUDE_DLPLAN_UTILS_DYNAMIC_BITSET_H
 
+#include "hash.h"
+
 #include <cassert>
 #include <limits>
 #include <vector>
@@ -175,11 +177,8 @@ public:
         return true;
     }
 
-    /**
-     * Useful for copying the underlying data when computing a hash for a collection of bitsets.
-     */
-    const std::vector<Block>& get_blocks() const {
-        return blocks;
+    std::size_t hash() const {
+        return dlplan::utils::hash<std::vector<Block>>()(blocks);
     }
 };
 

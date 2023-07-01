@@ -1,8 +1,7 @@
 #include "condition.h"
 #include "effect.h"
 
-#include "../utils/hashing.h"
-
+#include "../../include/dlplan/utils/hash.h"
 #include "../../include/dlplan/policy.h"
 
 namespace dlplan::policy {

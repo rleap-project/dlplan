@@ -17,7 +17,7 @@ private:
     void compute_result(const RoleDenotation& left_denot, const RoleDenotation& right_denot, ConceptDenotation& result) const {
         // find counterexamples a : exists b . (a,b) in R and (a,b) notin S
         result.set();
-        for (const auto& pair : left_denot) {
+        for (const auto& pair : left_denot.to_vector()) {
             if (!right_denot.contains(pair)) result.erase(pair.first);
         }
     }

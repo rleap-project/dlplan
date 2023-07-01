@@ -20,11 +20,7 @@ private:
         bool changed = false;
         do {
             RoleDenotation tmp_result = result;
-            // Compute sparse representation.
-            PairsOfObjectIndices pairs;
-            for (const auto& pair : tmp_result) {
-                pairs.push_back(pair);
-            }
+            PairsOfObjectIndices pairs = tmp_result.to_vector();
             for (const auto& pair_1 : pairs) {
                 for (const auto& pair_2 : pairs) {
                     if (pair_1.second == pair_2.first) {

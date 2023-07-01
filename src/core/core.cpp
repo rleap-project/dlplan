@@ -1,7 +1,7 @@
 #include "../../include/dlplan/core.h"
+#include "../../include/dlplan/utils/hash.h"
 
 #include "element_factory.h"
-#include "../utils/hashing.h"
 
 
 namespace dlplan::core {
@@ -13,12 +13,6 @@ size_t hash_impl<ConceptDenotation>::operator()(const ConceptDenotation& denotat
 }
 size_t hash_impl<RoleDenotation>::operator()(const RoleDenotation& denotation) const {
     return denotation.hash();
-}
-size_t hash_impl<bool>::operator()(const bool& value) const {
-    return std::hash<bool>()(value);
-}
-size_t hash_impl<int>::operator()(const int& value) const {
-    return std::hash<int>()(value);
 }
 size_t hash_impl<ConceptDenotations>::operator()(const ConceptDenotations& denotations) const {
     size_t seed = 0;
@@ -34,22 +28,20 @@ size_t hash_impl<RoleDenotations>::operator()(const RoleDenotations& denotations
     }
     return seed;
 }
+size_t hash_impl<bool>::operator()(const bool& value) const {
+    return std::hash<bool>()(value);
+}
+size_t hash_impl<int>::operator()(const int& value) const {
+    return std::hash<int>()(value);
+}
 size_t hash_impl<std::vector<bool>>::operator()(const std::vector<bool>& data) const {
     return std::hash<std::vector<bool>>()(data);
 }
 size_t hash_impl<std::vector<unsigned>>::operator()(const std::vector<unsigned>& data) const {
-    size_t seed = data.size();
-    for (unsigned value : data) {
-        dlplan::utils::hash_combine(seed, value);
-    }
-    return seed;
+    return dlplan::utils::hash<std::vector<unsigned>>()(data);
 }
 size_t hash_impl<std::vector<int>>::operator()(const std::vector<int>& data) const {
-    size_t seed = data.size();
-    for (int value : data) {
-        dlplan::utils::hash_combine(seed, value);
-    }
-    return seed;
+    return dlplan::utils::hash<std::vector<int>>()(data);
 }
 
 

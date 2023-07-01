@@ -20,15 +20,13 @@ void init_core(py::module_ &m_core) {
         .def("__repr__", &ConceptDenotation::compute_repr)
         .def("__len__", &ConceptDenotation::size)
         .def("__hash__", &ConceptDenotation::hash)
-        .def("__iter__", [](const ConceptDenotation& obj) {
-            return py::make_iterator(obj.begin(), obj.end());
-        }, py::keep_alive<0, 1>())
         .def("contains", &ConceptDenotation::contains)
         .def("set", &ConceptDenotation::set)
         .def("insert", &ConceptDenotation::insert)
         .def("erase", &ConceptDenotation::erase)
         .def("intersects", &ConceptDenotation::intersects)
         .def("is_subset_of", &ConceptDenotation::is_subset_of)
+        .def("to_vector", &ConceptDenotation::to_vector)
         .def("to_sorted_vector", &ConceptDenotation::to_sorted_vector)
         .def("get_num_objects", &ConceptDenotation::get_num_objects)
     ;
@@ -41,15 +39,13 @@ void init_core(py::module_ &m_core) {
         .def("__repr__", &RoleDenotation::compute_repr)
         .def("__len__", &RoleDenotation::size)
         .def("__hash__", &RoleDenotation::hash)
-        .def("__iter__", [](const RoleDenotation& obj) {
-            return py::make_iterator(obj.begin(), obj.end());
-        }, py::keep_alive<0, 1>())
         .def("contains", &RoleDenotation::contains)
         .def("set", &RoleDenotation::set)
         .def("insert", &RoleDenotation::insert)
         .def("erase", &RoleDenotation::erase)
         .def("intersects", &RoleDenotation::intersects)
         .def("is_subset_of", &RoleDenotation::is_subset_of)
+        .def("to_vector", &RoleDenotation::to_vector)
         .def("to_sorted_vector", &RoleDenotation::to_sorted_vector)
         .def("get_num_objects", &RoleDenotation::get_num_objects)
     ;

@@ -75,20 +75,20 @@ struct hash_impl<RoleDenotation> {
     size_t operator()(const RoleDenotation& denotation) const;
 };
 template<>
-struct hash_impl<bool> {
-    size_t operator()(const bool& value) const;
-};
-template<>
-struct hash_impl<int> {
-    size_t operator()(const int& value) const;
-};
-template<>
 struct hash_impl<ConceptDenotations> {
     size_t operator()(const ConceptDenotations& denotations) const;
 };
 template<>
 struct hash_impl<RoleDenotations> {
     size_t operator()(const RoleDenotations& denotations) const;
+};
+template<>
+struct hash_impl<bool> {
+    size_t operator()(const bool& value) const;
+};
+template<>
+struct hash_impl<int> {
+    size_t operator()(const int& value) const;
 };
 template<>
 struct hash_impl<std::vector<bool>> {
@@ -117,31 +117,6 @@ private:
     dlplan::utils::DynamicBitset<unsigned> m_data;
 
 public:
-    // Special iterator for bitset representing set of integers
-    class const_iterator {
-        public:
-            using iterator_category = std::forward_iterator_tag;
-            using value_type        = dlplan::utils::DynamicBitset<unsigned>;
-            using const_reference   = const value_type&;
-
-            const_iterator(const_reference data, int num_objects, bool end=false);
-
-            bool operator!=(const const_iterator& other) const;
-            bool operator==(const const_iterator& other) const;
-
-            const ObjectIndex& operator*() const;
-            ObjectIndex* operator->();
-            const_iterator operator++(int);
-            const_iterator& operator++();
-
-        private:
-            const_reference m_data;
-            int m_num_objects;
-            ObjectIndex m_index;
-
-            void seek_next();
-    };
-
     explicit ConceptDenotation(int num_objects);
     ConceptDenotation(const ConceptDenotation& other);
     ConceptDenotation& operator=(const ConceptDenotation& other);
@@ -156,9 +131,6 @@ public:
     ConceptDenotation& operator|=(const ConceptDenotation& other);
     ConceptDenotation& operator-=(const ConceptDenotation& other);
     ConceptDenotation& operator~();
-
-    const_iterator begin() const;
-    const_iterator end() const;
 
     bool contains(ObjectIndex value) const;
     void set();
@@ -185,7 +157,14 @@ public:
     /// @return A string representation of this concept denotation.
     std::string str() const;
 
+    /// @brief Compute a vector representation of this concept denotation.
+    /// @return A vector of object indices.
+    ObjectIndices to_vector() const;
+
+    /// @brief Compute a sorted vector representation of this concept denotation.
+    /// @return A vector of object indices in ascending order.
     ObjectIndices to_sorted_vector() const;
+
     std::size_t hash() const;
     int get_num_objects() const;
 };
@@ -204,32 +183,6 @@ private:
     dlplan::utils::DynamicBitset<unsigned> m_data;
 
 public:
-    // Special iterator for bitset representing set of pairs of ints.
-    class const_iterator {
-        public:
-            using iterator_category = std::forward_iterator_tag;
-            using value_type        = dlplan::utils::DynamicBitset<unsigned>;
-            using const_reference   = const value_type&;
-
-            const_iterator(const_reference data, int num_objects, bool end=false);
-
-            bool operator!=(const const_iterator& other) const;
-            bool operator==(const const_iterator& other) const;
-
-            const PairOfObjectIndices& operator*() const;
-            PairOfObjectIndices* operator->();
-            const_iterator operator++(int);
-            const_iterator& operator++();
-
-        private:
-            const_reference m_data;
-            int m_num_objects;
-            PairOfObjectIndices m_indices;
-
-        private:
-            void seek_next();
-    };
-
     explicit RoleDenotation(int num_objects);
     RoleDenotation(const RoleDenotation& other);
     RoleDenotation& operator=(const RoleDenotation& other);
@@ -244,9 +197,6 @@ public:
     RoleDenotation& operator|=(const RoleDenotation& other);
     RoleDenotation& operator-=(const RoleDenotation& other);
     RoleDenotation& operator~();
-
-    const_iterator begin() const;
-    const_iterator end() const;
 
     bool contains(const PairOfObjectIndices& value) const;
     void set();
@@ -273,7 +223,14 @@ public:
     /// @return A string representation of this role denotation.
     std::string str() const;
 
+    /// @brief Compute a vector representation of this role denotation.
+    /// @return A vector of pairs of object indices.
+    PairsOfObjectIndices to_vector() const;
+
+    /// @brief Compute a sorted vector representation of this role denotation.
+    /// @return A vector of pairs of object indices in ascending order by first then second element.
     PairsOfObjectIndices to_sorted_vector() const;
+
     std::size_t hash() const;
     int get_num_objects() const;
 };

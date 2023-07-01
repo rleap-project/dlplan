@@ -16,7 +16,7 @@ class SomeConcept : public Concept {
 private:
     void compute_result(const RoleDenotation& role_denot, const ConceptDenotation& concept_denot, ConceptDenotation& result) const {
         // find examples a : exists b . (a,b) in R and b in C
-        for (const auto& pair : role_denot) {
+        for (const auto& pair : role_denot.to_vector()) {
             if (concept_denot.contains(pair.second)) {
                 result.insert(pair.first);
             }

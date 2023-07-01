@@ -16,7 +16,7 @@ class RestrictRole : public Role {
 private:
     void compute_result(const RoleDenotation& role_denot, const ConceptDenotation& concept_denot, RoleDenotation& result) const {
         result = role_denot;
-        for (const auto& pair : role_denot) {
+        for (const auto& pair : role_denot.to_vector()) {
             if (!concept_denot.contains(pair.second)) {
                 result.erase(pair);
             }

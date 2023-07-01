@@ -1,4 +1,5 @@
 #include "../../include/dlplan/core.h"
+#include "../../include/dlplan/utils/hash.h"
 
 #include "../utils/logging.h"
 
@@ -19,55 +20,6 @@ RoleDenotation::RoleDenotation(RoleDenotation&& other) = default;
 RoleDenotation& RoleDenotation::operator=(RoleDenotation&& other) = default;
 
 RoleDenotation::~RoleDenotation() = default;
-
-void RoleDenotation::const_iterator::seek_next() {
-    int& i = m_indices.first;
-    int& j = m_indices.second;
-    int offset = i * m_num_objects;
-    while (i < m_num_objects) {
-        ++j;
-        if (j == m_num_objects) {  // end of row is reached
-            ++i;
-            offset += m_num_objects;
-            j = 0;
-            if (i == m_num_objects) break;  // reached last row
-        }
-        if (m_data.test(offset + j)) break;
-    }
-    assert(offset + j <= static_cast<int>(m_data.size()));
-}
-
-RoleDenotation::const_iterator::const_iterator(const_reference data, int num_objects, bool end)
-    : m_data(data), m_num_objects(num_objects), m_indices(end ? std::pair<size_t, size_t>(num_objects, 0) : std::pair<size_t, size_t>(0, -1)) {
-    if (!end) seek_next();
-}
-
-bool RoleDenotation::const_iterator::operator!=(const const_iterator& other) const {
-    return !(*this == other);
-}
-
-bool RoleDenotation::const_iterator::operator==(const const_iterator& other) const {
-    return ((m_indices == other.m_indices) && (&m_data == &other.m_data));
-}
-
-const PairOfObjectIndices& RoleDenotation::const_iterator::operator*() const {
-    return m_indices;
-}
-
-PairOfObjectIndices* RoleDenotation::const_iterator::operator->() {
-    return &m_indices;
-}
-
-RoleDenotation::const_iterator RoleDenotation::const_iterator::operator++(int) {
-    RoleDenotation::const_iterator prev = *this;
-    seek_next();
-    return prev;
-}
-
-RoleDenotation::const_iterator& RoleDenotation::const_iterator::operator++() {
-    seek_next();
-    return *this;
-}
 
 bool RoleDenotation::operator==(const RoleDenotation& other) const {
     if (this != &other) {
@@ -98,14 +50,6 @@ RoleDenotation& RoleDenotation::operator-=(const RoleDenotation& other) {
 RoleDenotation& RoleDenotation::operator~() {
     ~m_data;
     return *this;
-}
-
-RoleDenotation::const_iterator RoleDenotation::begin() const {
-    return RoleDenotation::const_iterator(m_data, m_num_objects);
-}
-
-RoleDenotation::const_iterator RoleDenotation::end() const {
-    return RoleDenotation::const_iterator(m_data, m_num_objects, true);
 }
 
 void RoleDenotation::set() {
@@ -158,18 +102,28 @@ std::string RoleDenotation::str() const {
     return compute_repr();
 }
 
+PairsOfObjectIndices RoleDenotation::to_vector() const {
+    // In the case of bitset, the to_sorted_vector has best runtime complexity.
+    return to_sorted_vector();
+}
+
 PairsOfObjectIndices RoleDenotation::to_sorted_vector() const {
     PairsOfObjectIndices result;
     result.reserve(m_num_objects * m_num_objects);
-    for (const auto& pair_of_object_indices : *this) {
-        result.push_back(pair_of_object_indices);
+    for (ObjectIndex i = 0; i < m_num_objects; ++i) {
+        int offset = m_num_objects * i;
+        for (ObjectIndex j = 0; j < m_num_objects; ++j) {
+            if (m_data.test(offset + j)) {
+                result.emplace_back(i, j);
+            }
+        }
     }
     result.shrink_to_fit();
     return result;
 }
 
 std::size_t RoleDenotation::hash() const {
-    return dlplan::core::hash<std::vector<unsigned>>()(m_data.get_blocks());
+    return m_data.hash();
 }
 
 int RoleDenotation::get_num_objects() const {

@@ -1,6 +1,5 @@
 #include "../../include/dlplan/core.h"
-
-#include "../utils/hashing.h"
+#include "../../include/dlplan/utils/hash.h"
 
 
 namespace dlplan::core {

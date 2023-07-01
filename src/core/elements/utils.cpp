@@ -26,7 +26,7 @@ int path_addition(int a, int b) {
 AdjList compute_adjacency_list(const RoleDenotation& role_denot, bool forward=true) {
     int num_objects = role_denot.get_num_objects();
     AdjList adjacency_list(num_objects);
-    for (const auto& pair : role_denot) {
+    for (const auto& pair : role_denot.to_vector()) {
         if (forward) adjacency_list[pair.first].push_back(pair.second);
         else adjacency_list[pair.second].push_back(pair.first);
     }
@@ -58,7 +58,7 @@ int compute_multi_source_multi_target_shortest_distance(const ConceptDenotation&
     int num_objects = targets.get_num_objects();
     Distances distances(num_objects, INF);
     std::deque<int> queue;
-    for (int source : sources) {
+    for (int source : sources.to_vector()) {
         distances[source] = 0;
         queue.push_back(source);
         if (targets.contains(source)) {
@@ -89,7 +89,7 @@ Distances compute_multi_source_multi_target_shortest_distances(const ConceptDeno
     int num_objects = targets.get_num_objects();
     Distances distances(num_objects, INF);
     std::deque<int> queue;
-    for (int source : sources) {
+    for (int source : sources.to_vector()) {
         distances[source] = 0;
         queue.push_back(source);
     }

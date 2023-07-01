@@ -17,10 +17,10 @@ private:
     void compute_result(const RoleDenotation& left_denot, const RoleDenotation& right_denot, ConceptDenotation& result) const {
         // find counterexample [(a,b) in R and (a,b) not in S] or [(a,b) not in R and (a,b) in S]
         result.set();
-        for (const auto& pair : left_denot) {
+        for (const auto& pair : left_denot.to_vector()) {
             if (!right_denot.contains(pair)) result.erase(pair.first);
         }
-        for (const auto& pair : right_denot) {
+        for (const auto& pair : right_denot.to_vector()) {
             if (!left_denot.contains(pair)) result.erase(pair.first);
         }
     }

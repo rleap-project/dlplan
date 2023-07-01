@@ -15,7 +15,7 @@ namespace dlplan::core {
 class InverseRole : public Role {
 private:
     void compute_result(const RoleDenotation& denot, RoleDenotation& result) const {
-        for (const auto& pair : denot) {
+        for (const auto& pair : denot.to_vector()) {
             result.insert(std::make_pair(pair.second, pair.first));
         }
     }
