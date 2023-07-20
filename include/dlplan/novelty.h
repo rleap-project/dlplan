@@ -44,7 +44,6 @@ public:
     /// @brief Convert the input atom indices of size arity to a tuple index.
     ///        This function is a perfect hash function.
     ///        The user must sort atoms if atom tuples are viewed as sets.
-    ///        The user must add place holder with index num_atoms to match arity.
     /// @param atom_indices A vector of atom indices of size at most arity
     /// @return A tuple index that identifies the input atom indices.
     TupleIndex atom_indices_to_tuple_index(const AtomIndices &atom_indices) const;
@@ -81,7 +80,7 @@ public:
 
     /// @brief Compute all novel tuple indices derived from tuples of the input atom indices
     ///        of size that is at most the arity as specified in the novelty_base.
-    /// @param atom_indices A vector of atom indices.
+    /// @param atom_indices A vector of atom indices sorted ascendingly.
     ///                     The user must take care that the atom indices are within correct bound.
     /// @return Vector of novel tuples indices derived from the input atom indices.
     TupleIndices compute_novel_tuple_indices(
@@ -91,9 +90,9 @@ public:
     ///        and add atom indices of size that is at most the arity as specified in the novelty_base.
     ///        There is an additional constraint that requires that each tuple of atom indices
     ///        will contain at least one atom index from add atom indices.
-    /// @param atom_indices A vector of atom indices.
+    /// @param atom_indices A vector of atom indices sorted ascendingly.
     ///                     The user must take care that the atom indices are within correct bound.
-    /// @param add_atom_indices A vector of atom indices.
+    /// @param add_atom_indices A vector of atom indices sorted ascendingly.
     ///                         The user must take care that the atom indices are within correct bound.
     ///                         The user must take care that it is disjoint with atom indices.
     /// @return Vector of novel tuples indices derived from the input atom indices.
@@ -103,14 +102,14 @@ public:
 
     /// @brief Mark all input tuple indices as not novel.
     /// @param tuple_indices A vector of tuple indices.
-    ///                      The user must take care that the indices are within correct bound.
+    ///                      The user must take care that the tuple indices are within correct bound.
     /// @param stop_if_novel Stop the iteration early if a tuple index was novel.
     /// @return True if at least one given tuple index was novel.
     bool insert_tuple_indices(const TupleIndices &tuple_indices, bool stop_if_novel = false);
 
     /// @brief Mark all novel tuple indices derived from tuples of the input atom indices
     ///        of size that is at most the arity as specified in the novelty_base as not novel.
-    /// @param atom_indices A vector of atom indices.
+    /// @param atom_indices A vector of atom indices sorted ascendingly.
     ///                     The user must take care that the atom indices are within correct bound.
     /// @param stop_if_novel Stop the iteration early if a tuple index was novel.
     /// @return True if at least one given tuple index was novel.
@@ -122,9 +121,9 @@ public:
     ///        of size that is at most the arity as specified in the novelty_base as not novel.
     ///        There is an additional constraint that requires that each tuple of atom indices
     ///        will contain at least one atom index from add atom indices.
-    /// @param atom_indices A vector of atom indices.
+    /// @param atom_indices A vector of atom indices sorted ascendingly.
     ///                     The user must take care that the atom indices are within correct bound.
-    /// @param add_atom_indices A vector of atom indices.
+    /// @param add_atom_indices A vector of atom indices sorted ascendingly.
     ///                         The user must take care that the atom indices are within correct bound.
     ///                         The user must take care that it is disjoint with atom indices.
     /// @param stop_if_novel Stop the iteration early if a tuple index was novel.

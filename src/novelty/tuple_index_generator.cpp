@@ -5,6 +5,7 @@
 
 namespace dlplan::novelty {
 
+
 std::array<std::vector<int>, 2> compute_geq_mappings(
     const AtomIndices& vec_1,
     const AtomIndices& vec_2) {
@@ -34,12 +35,15 @@ void for_each_tuple_index(
     const NoveltyBase &novelty_base,
     AtomIndices atom_indices,
     const std::function<bool(TupleIndex)>& callback) {
+    assert(std::is_sorted(atom_indices.begin(), atom_indices.end()));
+
     const std::vector<int>& factors = novelty_base.get_factors();
     int arity = novelty_base.get_arity();
     // Add placeholders to be able to generate tuples of size less than arity.
     atom_indices.push_back(NoveltyBase::place_holder);
-    std::sort(atom_indices.begin(), atom_indices.end());
     std::transform(atom_indices.begin(), atom_indices.end(), atom_indices.begin(), [](int index){ return ++index; });
+    std::rotate(atom_indices.rbegin(), atom_indices.rbegin() + 1, atom_indices.rend());
+    assert(std::is_sorted(atom_indices.begin(), atom_indices.end()));
     int num_atom_indices = static_cast<int>(atom_indices.size());
     // Initialize iteration indices.
     std::vector<int> indices(arity, 0);
@@ -77,6 +81,9 @@ void for_each_tuple_index(
     AtomIndices atom_indices,
     AtomIndices add_atom_indices,
     const std::function<bool(TupleIndex)>& callback) {
+    assert(std::is_sorted(atom_indices.begin(), atom_indices.end()));
+    assert(std::is_sorted(add_atom_indices.begin(), add_atom_indices.end()));
+
     if (add_atom_indices.empty()) {
         // No tuple index exists.
         return;
@@ -85,9 +92,9 @@ void for_each_tuple_index(
     int arity = novelty_base.get_arity();
     // Add placeholders to be able to not pick an atom from atom_indices.
     atom_indices.push_back(NoveltyBase::place_holder);
-    std::sort(atom_indices.begin(), atom_indices.end());
     std::transform(atom_indices.begin(), atom_indices.end(), atom_indices.begin(), [](int index){ return ++index; });
-    std::sort(add_atom_indices.begin(), add_atom_indices.end());
+    std::rotate(atom_indices.rbegin(), atom_indices.rbegin() + 1, atom_indices.rend());
+    assert(std::is_sorted(atom_indices.begin(), atom_indices.end()));
     std::transform(add_atom_indices.begin(), add_atom_indices.end(), add_atom_indices.begin(), [](int index){ return ++index; });
     int num_atom_indices = static_cast<int>(atom_indices.size());
     int num_add_atom_indices = static_cast<int>(add_atom_indices.size());

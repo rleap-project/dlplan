@@ -675,6 +675,7 @@ private:
 public:
     State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms, StateIndex index=-1);
     State(std::shared_ptr<const InstanceInfo> instance_info, const AtomIndices& atom_indices, StateIndex index=-1);
+    State(std::shared_ptr<const InstanceInfo> instance_info, AtomIndices&& atom_indices, StateIndex index=-1);
     State(const State& other);
     State& operator=(const State& other);
     State(State&& other);

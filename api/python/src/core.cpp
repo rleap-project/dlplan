@@ -131,6 +131,7 @@ void init_core(py::module_ &m_core) {
     py::class_<State>(m_core, "State")
         .def(py::init<std::shared_ptr<const InstanceInfo>, const std::vector<Atom>&, int>(), py::arg("instance_info"), py::arg("atoms"), py::arg("index") = -1)
         .def(py::init<std::shared_ptr<const InstanceInfo>, const std::vector<int>&, int>(), py::arg("instance_info"), py::arg("atom_indices"), py::arg("index") = -1)
+        .def(py::init<std::shared_ptr<const InstanceInfo>, std::vector<int>&&, int>(), py::arg("instance_info"), py::arg("atom_indices"), py::arg("index") = -1)
         .def("__eq__", &State::operator==)
         .def("__ne__", &State::operator!=)
         .def("__repr__", &State::str)

@@ -11,11 +11,11 @@
 
 namespace dlplan::core {
 
-static AtomIndices compute_sorted_atom_idxs(const AtomIndices& atom_idxs) {
-    AtomIndices sorted_atom_idxs(atom_idxs);
-    std::sort(sorted_atom_idxs.begin(), sorted_atom_idxs.end());
-    return sorted_atom_idxs;
+static AtomIndices sort_atom_idxs(AtomIndices&& atom_idxs) {
+    std::sort(atom_idxs.begin(), atom_idxs.end());
+    return atom_idxs;
 }
+
 
 State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms, StateIndex index)
     : m_instance_info(instance_info), m_index(index) {
@@ -27,18 +27,31 @@ State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vecto
         int atom_idx = atom.get_index();
         m_atom_indices.push_back(atom_idx);
     }
+    if (!std::is_sorted(m_atom_indices.begin(), m_atom_indices.end())) {
+        std::sort(m_atom_indices.begin(), m_atom_indices.end());
+    }
 }
 
-State::State(std::shared_ptr<const InstanceInfo> instance_info, const AtomIndices& atom_idxs, StateIndex index)
-    : m_instance_info(instance_info), m_atom_indices(atom_idxs), m_index(index) {
+State::State(std::shared_ptr<const InstanceInfo> instance_info, const AtomIndices& atom_indices, StateIndex index)
+    : m_instance_info(instance_info),
+      m_atom_indices(std::is_sorted(atom_indices.begin(), atom_indices.end()) ? atom_indices : sort_atom_idxs(AtomIndices(atom_indices))),
+      m_index(index) {
     const auto& atoms = instance_info->get_atoms();
-    if (!std::all_of(atom_idxs.begin(), atom_idxs.end(), [&](int atom_idx){ return utils::in_bounds(atom_idx, atoms); })) {
+    if (!std::all_of(m_atom_indices.begin(), m_atom_indices.end(), [&](int atom_idx){ return utils::in_bounds(atom_idx, atoms); })) {
         throw std::runtime_error("State::State - atom index out of range.");
     }
-    if (!std::all_of(atom_idxs.begin(), atom_idxs.end(), [&](int atom_idx){ return !atoms[atom_idx].is_static(); })) {
-        throw std::runtime_error("State::State - static atom is not allowed in State.");
+}
+
+State::State(std::shared_ptr<const InstanceInfo> instance_info, AtomIndices&& atom_indices, StateIndex index)
+    : m_instance_info(instance_info),
+      m_atom_indices(std::is_sorted(atom_indices.begin(), atom_indices.end()) ? atom_indices : sort_atom_idxs(std::move(atom_indices))),
+      m_index(index) {
+    const auto& atoms = instance_info->get_atoms();
+    if (!std::all_of(m_atom_indices.begin(), m_atom_indices.end(), [&](int atom_idx){ return utils::in_bounds(atom_idx, atoms); })) {
+        throw std::runtime_error("State::State - atom index out of range.");
     }
 }
+
 
 State::State(const State&) = default;
 
@@ -51,7 +64,7 @@ State& State::operator=(State&& other) = default;
 State::~State() = default;
 
 bool State::operator==(const State& other) const {
-    return (compute_sorted_atom_idxs(get_atom_indices()) == compute_sorted_atom_idxs(other.get_atom_indices())) && (get_instance_info() == other.get_instance_info());
+    return (get_atom_indices() == other.get_atom_indices()) && (get_instance_info() == other.get_instance_info());
 }
 
 bool State::operator!=(const State& other) const {
@@ -72,11 +85,9 @@ StateIndex State::get_index() const {
 
 std::string State::compute_repr() const {
     std::stringstream ss;
-    AtomIndices sorted_atom_indices = m_atom_indices;
-    std::sort(sorted_atom_indices.begin(), sorted_atom_indices.end());
     ss << "State("
        << "index=" << m_index << ", "
-       << "atom_indices=" << sorted_atom_indices
+       << "atom_indices=" << m_atom_indices
        << ")";
     return ss.str();
 }
@@ -105,9 +116,9 @@ std::string State::str() const {
 }
 
 size_t State::hash() const {
-    AtomIndices sorted_atom_idxs = compute_sorted_atom_idxs(m_atom_indices);
-    size_t seed = sorted_atom_idxs.size();
-    for (int atom_idx : sorted_atom_idxs) {
+    assert(std::is_sorted(m_atom_indices.begin(), m_atom_indices.end()));
+    size_t seed = m_atom_indices.size();
+    for (int atom_idx : m_atom_indices) {
         utils::hash_combine(seed, atom_idx);
     }
     utils::hash_combine(seed, m_instance_info.get());
