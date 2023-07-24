@@ -2,6 +2,8 @@
 import os
 import sys
 import subprocess
+import multiprocessing
+
 from pathlib import Path
 
 from setuptools import setup, find_packages, Extension
@@ -48,7 +50,7 @@ class CMakeBuild(build_ext):
             ["cmake", ext.sourcedir] + cmake_args, cwd=self.build_temp
         )
         subprocess.check_call(
-            ["cmake", "--build", "."] + build_args, cwd=self.build_temp
+            ["cmake", "--build", ".", f"-j{multiprocessing.cpu_count()}"] + build_args, cwd=self.build_temp
         )
 
 
