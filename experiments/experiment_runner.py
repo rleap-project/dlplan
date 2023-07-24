@@ -69,35 +69,34 @@ exp = Experiment(environment=ENV)
 exp.add_parser("experiment_parser.py")
 
 for task in suites.build_suite(BENCHMARKS_DIR, SUITE):
-    for num_threads in [1]:
-        for complexity in [10]:
-            run = exp.add_run()
-            # Create symbolic links and aliases. This is optional. We
-            # could also use absolute paths in add_command().
-            run.add_resource("domain", task.domain_file, symlink=True)
-            run.add_resource("problem", task.problem_file, symlink=True)
-            run.add_resource("experiment_generator", "experiment_generator", symlink=True)
-            # 'ff' binary has to be on the PATH.
-            # We could also use exp.add_resource().
-            run.add_command(
-                f"complexity-{complexity}-{num_threads}",
-                ["./experiment_generator", "{domain}", "{problem}", complexity, complexity, complexity, complexity, complexity, GENERATOR_TIME_LIMIT, GENERATOR_FEATURE_LIMIT, num_threads, NUM_FEATURE_VALUATION_ITERATIONS],
-                time_limit=num_threads * TIME_LIMIT,
-                memory_limit=MEMORY_LIMIT,
-            )
-            # AbsoluteReport needs the following properties:
-            # 'domain', 'problem', 'algorithm', 'coverage'.
-            run.set_property("domain", task.domain)
-            run.set_property("problem", task.problem)
-            run.set_property("algorithm", f"complexity-{complexity}-{num_threads}")
-            # BaseReport needs the following properties:
-            # 'time_limit', 'memory_limit'.
-            run.set_property("time_limit", TIME_LIMIT)
-            run.set_property("memory_limit", MEMORY_LIMIT)
-            # Every run has to have a unique id in the form of a list.
-            # The algorithm name is only really needed when there are
-            # multiple algorithms.
-            run.set_property("id", [f"complexity-{complexity}-{num_threads}", task.domain, task.problem])
+    for complexity in [10]:
+        run = exp.add_run()
+        # Create symbolic links and aliases. This is optional. We
+        # could also use absolute paths in add_command().
+        run.add_resource("domain", task.domain_file, symlink=True)
+        run.add_resource("problem", task.problem_file, symlink=True)
+        run.add_resource("experiment_generator", "experiment_generator", symlink=True)
+        # 'ff' binary has to be on the PATH.
+        # We could also use exp.add_resource().
+        run.add_command(
+            f"complexity-{complexity}",
+            ["./experiment_generator", "{domain}", "{problem}", complexity, complexity, complexity, complexity, complexity, GENERATOR_TIME_LIMIT, GENERATOR_FEATURE_LIMIT, NUM_FEATURE_VALUATION_ITERATIONS],
+            time_limit=TIME_LIMIT,
+            memory_limit=MEMORY_LIMIT,
+        )
+        # AbsoluteReport needs the following properties:
+        # 'domain', 'problem', 'algorithm', 'coverage'.
+        run.set_property("domain", task.domain)
+        run.set_property("problem", task.problem)
+        run.set_property("algorithm", f"complexity-{complexity}")
+        # BaseReport needs the following properties:
+        # 'time_limit', 'memory_limit'.
+        run.set_property("time_limit", TIME_LIMIT)
+        run.set_property("memory_limit", MEMORY_LIMIT)
+        # Every run has to have a unique id in the form of a list.
+        # The algorithm name is only really needed when there are
+        # multiple algorithms.
+        run.set_property("id", [f"complexity-{complexity}", task.domain, task.problem])
 
 # Add step that writes experiment files to disk.
 exp.add_step("build", exp.build)

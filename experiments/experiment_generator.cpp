@@ -14,8 +14,8 @@ int main(int argc, char** argv) {
     for (int i = 0; i < argc; ++i) {
         std::cout << argv[i] << std::endl;
     }
-    if (argc != 12) {
-        std::cout << "User error. Expected: ./experiment_core <str:domain_filename> <str:instance_filename> <int:concept_complexity_limit> <int:role_complexity_limit> <int:boolean_complexity_limit> <int:count_numerical_complexity_limit> <int:distance_numerical_complexity_limit> <int:time_limit> <int:features_limit> <int:limit_threads> <int:num_iterations>" << std::endl;
+    if (argc != 11) {
+        std::cout << "User error. Expected: ./experiment_core <str:domain_filename> <str:instance_filename> <int:concept_complexity_limit> <int:role_complexity_limit> <int:boolean_complexity_limit> <int:count_numerical_complexity_limit> <int:distance_numerical_complexity_limit> <int:time_limit> <int:features_limit> <int:num_iterations>" << std::endl;
         return 1;
     }
     std::string domain_filename = argv[1];
@@ -27,8 +27,7 @@ int main(int argc, char** argv) {
     int distance_numerical_complexity_limit = std::atoi(argv[7]);
     int time_limit = std::atoi(argv[8]);
     int feature_limit = std::atoi(argv[9]);
-    int threads_limit = std::atoi(argv[10]);
-    int num_iterations = std::atoi(argv[11]);
+    int num_iterations = std::atoi(argv[10]);
     std::cout << "Number of iterations: " << num_iterations << std::endl;
 
     auto result =  state_space::generate_state_space(domain_filename, instance_filename, nullptr, 0);
@@ -39,22 +38,9 @@ int main(int argc, char** argv) {
     std::cout << "Number of static atoms: " << state_space.get_instance_info()->get_static_atoms().size() << std::endl;
 
     auto syntactic_element_factory = core::SyntacticElementFactory(state_space.get_instance_info()->get_vocabulary_info());
-    auto feature_generator = generator::FeatureGenerator();
-    feature_generator.set_generate_inclusion_boolean(false);
-    feature_generator.set_generate_diff_concept(false);
-    feature_generator.set_generate_or_concept(false);
-    feature_generator.set_generate_subset_concept(false);
-    feature_generator.set_generate_and_role(false);
-    feature_generator.set_generate_compose_role(false);
-    feature_generator.set_generate_diff_role(false);
-    feature_generator.set_generate_identity_role(false);
-    feature_generator.set_generate_not_role(false);
-    feature_generator.set_generate_or_role(false);
-    // feature_generator.set_generate_top_role(false);
-    feature_generator.set_generate_transitive_reflexive_closure_role(false);
     core::States states;
     std::for_each(state_space.get_states().begin(), state_space.get_states().end(), [&](const auto& pair){ states.push_back(pair.second); });
-    auto feature_reprs = feature_generator.generate(
+    auto feature_reprs = generator::generate_features(
         syntactic_element_factory,
         states,
         concept_complexity_limit,

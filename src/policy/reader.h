@@ -10,13 +10,6 @@ namespace core {
     class SyntacticElementFactory;
 }
 namespace policy {
-template<typename T>
-class Feature;
-template<typename T>
-class FeatureFactory;
-class BaseCondition;
-class BaseEffect;
-class Rule;
 class Policy;
 class PolicyBuilder;
 
