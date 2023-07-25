@@ -25,8 +25,19 @@ jobs:
           python -m pip install setuptools wheel twine state_space_generator
           python -m pip install -r requirements.txt
 
+      - name: Install boost
+        uses: MarkusJx/install-boost@v2.4.1
+        id: install-boost
+        with:
+            # REQUIRED: Specify the required boost version
+            # A list of supported versions can be found here:
+            # https://github.com/MarkusJx/prebuilt-boost/blob/main/versions-manifest.json
+            boost_version: 1.80.0
+
       - name: Configure CMake
         run: cmake -DENABLE_TESTING:BOOL=TRUE -DBUILD_SSE:BOOL=TRUE -S $GITHUB_WORKSPACE -B ${{runner.workspace}}/build
+        env:
+          BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
 
       - name: Build
         working-directory: ${{runner.workspace}}/build
