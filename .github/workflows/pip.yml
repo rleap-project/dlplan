@@ -24,21 +24,21 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
-          python -m pip install setuptools wheel twine
-
-      - name: Install boost
-        uses: MarkusJx/install-boost@v2.4.1
-        id: install-boost
-        with:
-            # REQUIRED: Specify the required boost version
-            # A list of supported versions can be found here:
-            # https://github.com/MarkusJx/prebuilt-boost/blob/main/versions-manifest.json
-            boost_version: 1.80.0
+          python -m pip install setuptools wheel twine libboost-dev
+#
+      #- name: Install boost
+      #  uses: MarkusJx/install-boost@v2.4.1
+      #  id: install-boost
+      #  with:
+      #      # REQUIRED: Specify the required boost version
+      #      # A list of supported versions can be found here:
+      #      # https://github.com/MarkusJx/prebuilt-boost/blob/main/versions-manifest.json
+      #      boost_version: 1.80.0
 
       - name: Build and install
         run: python -m pip install --verbose .[test]
-        env:
-          BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
+        #env:
+        #  BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
 
       - name: Test
         run: pytest api/python
