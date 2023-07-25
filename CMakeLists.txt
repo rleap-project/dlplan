@@ -28,6 +28,16 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
         STRING "Choose the type of build." FORCE)
 endif()
 
+# Find boost
+set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
+set(BOOST_MIN_VERSION "1.77.0")
+find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS serialization)
+include_directories(${Boost_INCLUDE_DIRS})
+link_directories(${Boost_LIBRARY_DIRS})
+
+# Compile tests.
 OPTION(ENABLE_TESTING "Enables compilation of tests." OFF)
 if (ENABLE_TESTING)
     MESSAGE("Building tests enabled.")

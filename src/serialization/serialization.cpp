@@ -1,5 +1,6 @@
 #include "../../include/dlplan/serialization.h"
 
+#include <boost/serialization/base_object.hpp>
 
 namespace dlplan::serialization {
 

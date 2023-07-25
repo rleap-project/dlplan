@@ -1,4 +1,5 @@
 add_library(dlplanserialization SHARED)
+target_link_libraries(dlplanserialization Boost::serialization)
 target_sources(dlplanserialization
     PRIVATE
         serialization.cpp)

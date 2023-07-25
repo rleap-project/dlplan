@@ -45,6 +45,9 @@ The novelty component provides functionality for width-based planning and learni
 
 ### 3.1. Building the C++ Interface
 
+Dependencies
+- Boost (boost.org)
+
 Install requirements
 ```console
 pip install pybind11 pybind11-global state_space_generator
