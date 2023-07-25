@@ -35,7 +35,7 @@ jobs:
             boost_version: 1.80.0
 
       - name: Configure CMake
-        run: cmake -DENABLE_TESTING:BOOL=TRUE -DBUILD_SSE:BOOL=TRUE -S $GITHUB_WORKSPACE -B ${{runner.workspace}}/build
+        run: cmake -DENABLE_TESTING:BOOL=TRUE -S $GITHUB_WORKSPACE -B ${{runner.workspace}}/build
         env:
           BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
 
