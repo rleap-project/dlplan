@@ -29,6 +29,13 @@ static AdjacencyList compute_inverse_successor_state_indices(const AdjacencyList
     return inverse_successor_state_indices;
 }
 
+StateSpace::StateSpace()
+    : m_instance_info(nullptr),
+      m_states(StateMapping()),
+      m_initial_state_index(-1),
+      m_forward_successor_state_indices(AdjacencyList()),
+      m_backward_successor_state_indices(AdjacencyList()) { }
+
 StateSpace::StateSpace(
     std::shared_ptr<const InstanceInfo>&& instance_info,
     StateMapping&& states,

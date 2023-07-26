@@ -5,8 +5,17 @@
 
 #include "core.h"
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 #include <unordered_map>
 #include <unordered_set>
+
+namespace boost {
+namespace serialization {
+    class access;
+}
+} // namespace boost
 
 
 namespace dlplan::state_space {
@@ -34,7 +43,11 @@ private:
     // for backward search
     AdjacencyList m_backward_successor_state_indices;
 
+    friend class boost::serialization::access;
+    friend void serialize(boost::archive::text_oarchive& ar, StateSpace& state_space, const unsigned int version);
+
 public:
+    StateSpace();
     StateSpace(
         std::shared_ptr<const core::InstanceInfo>&& instance_info,
         StateMapping&& index_to_state,
