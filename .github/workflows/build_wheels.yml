@@ -36,7 +36,7 @@ jobs:
       run: cibuildwheel --platform linux --output-dir wheelhouse
       env:
         CIBW_BUILD_VERBOSITY: "1"
-        CIBW_BEFORE_BUILD: bash .github/workflows/install_boost.sh
+        CIBW_BEFORE_BUILD: bash .github/workflows/scripts/install_boost.sh
 
     - name: Upload to PyPI
       env:
