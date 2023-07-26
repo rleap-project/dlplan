@@ -37,6 +37,7 @@ jobs:
       env:
         CIBW_BUILD_VERBOSITY: "1"
         CIBW_BEFORE_BUILD: bash .github/workflows/scripts/install_boost.sh
+        CIBW_ENVIRONMENT: BOOST_ROOT="/boost/boost_1_82_0"
 
     - name: Upload to PyPI
       env:
