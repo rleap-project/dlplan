@@ -3,14 +3,13 @@
 #include "../../include/dlplan/core.h"
 #include "../../include/dlplan/state_space.h"
 
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-#include <boost/serialization/unique_ptr.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/unordered_map.hpp>
 #include <boost/serialization/unordered_set.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/unique_ptr.hpp>
 
 #include <unordered_map>
 
@@ -90,6 +89,12 @@ void serialize( Archive& ar, dlplan::state_space::StateSpace& state_space, const
     ar & state_space.m_backward_successor_state_indices;
 }
 
+template<typename Archive>
+void serialize( Archive& ar, dlplan::serialization::Data& data, const unsigned int /* version */ )
+{
+    ar & data.m_state_spaces;
+}
+
 }
 
 
@@ -97,13 +102,13 @@ namespace dlplan::serialization {
 
 void serialize(const Data& data, std::ostream& out_buffer) {
     boost::archive::text_oarchive oa(out_buffer);
-    oa << data.m_state_spaces;
+    oa << data;
 }
 
 Data deserialize(std::istream& buffer) {
     boost::archive::text_iarchive ia(buffer);
     Data data;
-    ia >> data.m_state_spaces;
+    ia >> data;
     return data;
 }
 

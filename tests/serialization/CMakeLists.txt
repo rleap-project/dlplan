@@ -4,7 +4,7 @@ add_executable(
 target_sources(
     serialization_tests
     PRIVATE
-        serialization
+        serialization.cpp
 )
 target_link_libraries(serialization_tests
     PRIVATE
