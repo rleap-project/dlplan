@@ -4,6 +4,9 @@
 
 
 namespace dlplan::core {
+Constant::Constant()
+    : m_name(""), m_index(-1) { }
+
 Constant::Constant(const std::string& name, ConstantIndex index)
     : m_name(name), m_index(index) { }
 

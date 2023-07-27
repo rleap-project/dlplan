@@ -24,6 +24,9 @@ static std::string compute_atom_name(const Predicate& predicate, const std::vect
     return ss.str();
 }
 
+InstanceInfo::InstanceInfo()
+    : m_vocabulary_info(nullptr), m_index(-1) { }
+
 InstanceInfo::InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info, InstanceIndex index)
     : m_vocabulary_info(vocabulary_info), m_index(index) {
 }

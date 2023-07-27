@@ -5,18 +5,18 @@
 
 #include "core.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-
 #include <unordered_map>
 #include <unordered_set>
 
-namespace boost {
-namespace serialization {
-    class access;
+namespace dlplan::state_space {
+class StateSpace;
 }
-} // namespace boost
 
+// Forward declare the serialize function template in boost::serialization namespace
+namespace boost::serialization {
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::state_space::StateSpace& state_space, const unsigned int version);
+}
 
 namespace dlplan::state_space {
 using StateIndex = int;
@@ -43,8 +43,8 @@ private:
     // for backward search
     AdjacencyList m_backward_successor_state_indices;
 
-    friend class boost::serialization::access;
-    friend void serialize(boost::archive::text_oarchive& ar, StateSpace& state_space, const unsigned int version);
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, StateSpace& state_space, const unsigned int version);
 
 public:
     StateSpace();

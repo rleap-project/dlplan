@@ -1,0 +1,16 @@
+add_executable(
+    serialization_tests
+)
+target_sources(
+    serialization_tests
+    PRIVATE
+        serialization
+)
+target_link_libraries(serialization_tests
+    PRIVATE
+        dlplanserialization
+        dlplanstatespace
+        Boost::serialization
+        GTest::GTest)
+
+add_test(policy_gtests serialization_tests)

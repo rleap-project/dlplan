@@ -5,17 +5,20 @@
 
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/unique_ptr.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/unordered_map.hpp>
+#include <boost/serialization/unordered_set.hpp>
 
-
-using namespace dlplan;
+#include <unordered_map>
 
 
 namespace boost::serialization {
 
 template<typename Archive>
-void serialize( Archive& ar, core::Predicate& predicate, const unsigned int version )
+void serialize( Archive& ar, dlplan::core::Predicate& predicate, const unsigned int /* version */ )
 {
     ar & predicate.m_index;
     ar & predicate.m_name;
@@ -24,21 +27,21 @@ void serialize( Archive& ar, core::Predicate& predicate, const unsigned int vers
 }
 
 template<typename Archive>
-void serialize( Archive& ar, core::Constant& constant, const unsigned int version )
+void serialize( Archive& ar, dlplan::core::Constant& constant, const unsigned int /* version */ )
 {
     ar & constant.m_index;
     ar & constant.m_name;
 }
 
 template<typename Archive>
-void serialize( Archive& ar, core::Object& object, const unsigned int version )
+void serialize( Archive& ar, dlplan::core::Object& object, const unsigned int /* version */ )
 {
     ar & object.m_index;
     ar & object.m_name;
 }
 
 template<typename Archive>
-void serialize( Archive& ar, core::Atom& atom, const unsigned int version )
+void serialize( Archive& ar, dlplan::core::Atom& atom, const unsigned int /* version */ )
 {
     ar & atom.m_index;
     ar & atom.m_name;
@@ -48,13 +51,7 @@ void serialize( Archive& ar, core::Atom& atom, const unsigned int version )
 }
 
 template<typename Archive>
-void serialize( Archive& ar, std::shared_ptr<core::VocabularyInfo>& vocabulary_info, const unsigned int version )
-{
-    ar & vocabulary_info;
-}
-
-template<typename Archive>
-void serialize( Archive& ar, core::VocabularyInfo& vocabulary_info, const unsigned int version )
+void serialize( Archive& ar, dlplan::core::VocabularyInfo& vocabulary_info, const unsigned int /* version */ )
 {
     ar & vocabulary_info.m_constants;
     ar & vocabulary_info.m_constant_name_to_index;
@@ -63,13 +60,7 @@ void serialize( Archive& ar, core::VocabularyInfo& vocabulary_info, const unsign
 }
 
 template<typename Archive>
-void serialize( Archive& ar, std::shared_ptr<core::InstanceInfo>& instance_info, const unsigned int version )
-{
-    ar & instance_info;
-}
-
-template<typename Archive>
-void serialize( Archive& ar, core::InstanceInfo& instance_info, const unsigned int version )
+void serialize( Archive& ar, dlplan::core::InstanceInfo& instance_info, const unsigned int /* version */ )
 {
     ar & instance_info.m_index;
     ar & instance_info.m_objects;
@@ -80,38 +71,16 @@ void serialize( Archive& ar, core::InstanceInfo& instance_info, const unsigned i
     ar & instance_info.m_static_atom_name_to_index;
 }
 
-template<typename Archive>
-void serialize( Archive& ar, std::vector<std::unique_ptr<state_space::StateSpace>>& state_spaces, const unsigned int version )
+template <typename Archive>
+void serialize(Archive& ar, dlplan::core::State& state, const unsigned int /* version */ )
 {
-    // Serialize the size of the vector
-    size_t size = state_spaces.size();
-    ar & size;
-
-    // Serialize each element in the vector
-    for (size_t i = 0; i < size; ++i)
-    {
-        // For saving: serialize the underlying StateSpace object
-        // For loading: create a new unique_ptr and serialize the underlying StateSpace object
-        if (Archive::is_saving::value)
-        {
-            ar & *(state_spaces[i]);
-        }
-        else if (Archive::is_loading::value)
-        {
-            state_spaces.emplace_back(std::make_unique<dlplan::state_space::StateSpace>());
-            ar & *(state_spaces[i]);
-        }
-    }
+    ar & state.m_index;
+    ar & state.m_instance_info;
+    ar & state.m_atom_indices;
 }
 
 template<typename Archive>
-void serialize( Archive& ar, std::unique_ptr<state_space::StateSpace>& state_space, const unsigned int version )
-{
-    ar & state_space;
-}
-
-template<typename Archive>
-void serialize( Archive& ar, state_space::StateSpace& state_space, const unsigned int version )
+void serialize( Archive& ar, dlplan::state_space::StateSpace& state_space, const unsigned int /* version */ )
 {
     ar & state_space.m_instance_info;
     ar & state_space.m_states;
@@ -126,14 +95,16 @@ void serialize( Archive& ar, state_space::StateSpace& state_space, const unsigne
 
 namespace dlplan::serialization {
 
-
 void serialize(const Data& data, std::ostream& out_buffer) {
     boost::archive::text_oarchive oa(out_buffer);
-    oa & data.m_state_spaces;
+    oa << data.m_state_spaces;
 }
 
 Data deserialize(std::istream& buffer) {
-    return Data{};
+    boost::archive::text_iarchive ia(buffer);
+    Data data;
+    ia >> data.m_state_spaces;
+    return data;
 }
 
 }

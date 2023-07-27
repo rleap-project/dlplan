@@ -11,6 +11,9 @@ using namespace std::string_literals;
 
 namespace dlplan::core {
 
+Atom::Atom()
+    : m_name(""), m_index(-1), m_predicate_index(-1), m_object_indices(ObjectIndices()), m_is_static(false) { }
+
 Atom::Atom(
     const std::string& name,
     AtomIndex index,

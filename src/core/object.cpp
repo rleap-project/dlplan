@@ -4,6 +4,9 @@
 
 
 namespace dlplan::core {
+Object::Object()
+    : m_name(""), m_index(-1) { }
+
 Object::Object(const std::string& name, ObjectIndex index)
     : m_name(name), m_index(index) { }
 

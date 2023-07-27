@@ -15,15 +15,45 @@
 #include <vector>
 #include <iostream>
 
-
 namespace dlplan::core {
-class SyntacticElementFactoryImpl;
-class InstanceInfo;
-class VocabularyInfo;
-class State;
 class ConceptDenotation;
 class RoleDenotation;
+class Constant;
+class Predicate;
+class VocabularyInfo;
+class Object;
+class Atom;
+class InstanceInfo;
+class State;
+class SyntacticElementFactory;
+class SyntacticElementFactoryImpl;
+}
 
+// Forward declare the serialize function template in boost::serialization namespace
+namespace boost::serialization {
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::core::Constant& constant, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::core::Predicate& predicate, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::core::Object& object, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::core::Atom& atom, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::core::State& state, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::core::VocabularyInfo& vocabulary_info, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::core::InstanceInfo& instance_info, const unsigned int version);
+}
+
+namespace dlplan::core {
 using ConceptDenotations = std::vector<const ConceptDenotation*>;
 using RoleDenotations = std::vector<const RoleDenotation*>;
 using BooleanDenotations = std::vector<bool>;
@@ -352,8 +382,11 @@ private:
     Constant(const std::string& name, ConstantIndex index);
     friend class VocabularyInfo;
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, Constant& constant, const unsigned int version);
+
 public:
-    Constant() = delete;
+    Constant();
     Constant(const Constant& other);
     Constant& operator=(const Constant& other);
     Constant(Constant&& other);
@@ -412,7 +445,12 @@ private:
     Predicate(const std::string& name, PredicateIndex index, int arity, bool is_static=false);
     friend class VocabularyInfo;
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, Predicate& predicate, const unsigned int version);
+
+
 public:
+    Predicate();
     Predicate(const Predicate& other);
     Predicate& operator=(const Predicate& other);
     Predicate(Predicate&& other);
@@ -461,6 +499,9 @@ private:
     std::unordered_map<std::string, ConstantIndex> m_constant_name_to_index;
     std::vector<Constant> m_constants;
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, VocabularyInfo& vocabulary_info, const unsigned int version);
+
 public:
     VocabularyInfo();
     VocabularyInfo(const VocabularyInfo& other);
@@ -505,7 +546,11 @@ private:
     Object(const std::string& name, int index);
     friend class InstanceInfo;
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, Object& object, const unsigned int version);
+
 public:
+    Object();
     Object(const Object& other);
     Object& operator=(const Object& other);
     Object(Object&& other);
@@ -552,7 +597,12 @@ private:
         bool is_static=false);
     friend class InstanceInfo;
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, Atom& atom, const unsigned int version);
+
+
 public:
+    Atom();
     Atom(const Atom& other);
     Atom& operator=(const Atom& other);
     Atom(Atom&& other);
@@ -605,8 +655,11 @@ private:
     const Atom& add_atom(const Predicate& predicate, const std::vector<Object>& objects, bool is_static);
     const Atom& add_atom(const std::string& predicate_name, const std::vector<std::string>& object_names, bool is_static);
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, InstanceInfo& instance_info, const unsigned int version);
+
 public:
-    InstanceInfo() = delete;
+    InstanceInfo();
     InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info, InstanceIndex index=-1);
     InstanceInfo(const InstanceInfo& other);
     InstanceInfo& operator=(const InstanceInfo& other);
@@ -672,7 +725,12 @@ private:
     AtomIndices m_atom_indices;
     int m_index;
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, State& state, const unsigned int version);
+
+
 public:
+    State();
     State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms, StateIndex index=-1);
     State(std::shared_ptr<const InstanceInfo> instance_info, const AtomIndices& atom_indices, StateIndex index=-1);
     State(std::shared_ptr<const InstanceInfo> instance_info, AtomIndices&& atom_indices, StateIndex index=-1);

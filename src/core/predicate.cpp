@@ -4,6 +4,9 @@
 
 
 namespace dlplan::core {
+Predicate::Predicate()
+    : m_name(""), m_index(-1), m_arity(0), m_is_static(false) { }
+
 Predicate::Predicate(const std::string& name, PredicateIndex index, int arity, bool is_static)
     : m_name(name), m_index(index), m_arity(arity), m_is_static(is_static) { }
 
