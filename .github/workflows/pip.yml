@@ -42,3 +42,5 @@ jobs:
 
       - name: Test
         run: pytest api/python
+        env:
+          BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
