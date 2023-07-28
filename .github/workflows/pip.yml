@@ -42,7 +42,7 @@ jobs:
 
           # List the contents of the BOOST_ROOT directory
           ls -l ${BOOST_ROOT}
-          ls -l ${BOOST_ROOT}/stage/lib
+          ls -l ${BOOST_ROOT}/lib
         env:
           BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
 
@@ -58,7 +58,7 @@ jobs:
 
           # List the contents of the BOOST_ROOT directory
           ls -l ${BOOST_ROOT}
-          ls -l ${BOOST_ROOT}/stage/lib
+          ls -l ${BOOST_ROOT}/lib
         env:
           BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
 
