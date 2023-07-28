@@ -1,9 +1,7 @@
 #ifndef DLPLAN_SRC_POLICY_POLICY_BUILDER_H_
 #define DLPLAN_SRC_POLICY_POLICY_BUILDER_H_
 
-#include "../utils/cache.h"
-
-#include "../../include/dlplan/policy.h"
+#include "cache.h"
 
 #include <memory>
 #include <vector>
@@ -24,10 +22,7 @@ class PolicyMinimizer;
 
 class PolicyBuilderImpl {
 private:
-    std::shared_ptr<dlplan::utils::ReferenceCountedObjectCache<std::string, BaseCondition>> m_condition_cache;
-    std::shared_ptr<dlplan::utils::ReferenceCountedObjectCache<std::string, BaseEffect>> m_effect_cache;
-    std::shared_ptr<dlplan::utils::ReferenceCountedObjectCache<std::string, Rule>> m_rule_cache;
-    std::shared_ptr<dlplan::utils::ReferenceCountedObjectCache<std::string, Policy>> m_policy_cache;
+    Caches m_caches;
 
 public:
     std::shared_ptr<const BaseCondition> add_pos_condition(const std::shared_ptr<const core::Boolean>& boolean);
