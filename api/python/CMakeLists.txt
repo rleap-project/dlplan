@@ -32,4 +32,4 @@ target_compile_definitions(_dlplan PUBLIC DLPLAN_VERSION_INFO="${DLPLAN_VERSION_
 #if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 #    message( FATAL_ERROR "Windows is not supported." )
 #endif()
-set_target_properties(_dlplan PROPERTIES BUILD_WITH_INSTALL_RPATH true)
+#set_target_properties(_dlplan PROPERTIES BUILD_WITH_INSTALL_RPATH true)
