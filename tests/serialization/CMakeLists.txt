@@ -13,4 +13,6 @@ target_link_libraries(serialization_tests
         Boost::serialization
         GTest::GTest)
 
-add_test(policy_gtests serialization_tests)
+add_test(serialization_gtests serialization_tests)
+
+add_subdirectory(gripper)

@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
     std::cout << "Number of iterations: " << num_iterations << std::endl;
 
     auto result =  state_space::generate_state_space(domain_filename, instance_filename, nullptr, 0);
-    auto state_space = result.state_space;
+    const auto& state_space = *result.state_space;
     std::cout << "Started generating features" << std::endl;
     std::cout << "Number of states: " << state_space.get_states().size() << std::endl;
     std::cout << "Number of dynamic atoms: " << state_space.get_instance_info()->get_atoms().size() << std::endl;

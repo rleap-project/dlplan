@@ -15,7 +15,7 @@ namespace dlplan::tests::generator {
 
 TEST(DLPTests, GeneratorDeliveryTest) {
     auto result = generate_state_space("domain.pddl", "instance_4_2_29.pddl", nullptr, 0);
-    auto state_space = result.state_space;
+    const auto& state_space = *result.state_space;
     auto vocabulary_info = state_space.get_instance_info()->get_vocabulary_info();
     auto feature_generator = FeatureGenerator();
     feature_generator.set_generate_inclusion_boolean(false);
