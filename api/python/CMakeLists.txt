@@ -17,7 +17,8 @@ target_link_libraries(_dlplan
         dlplannovelty
         dlplanpolicy
         dlplanserialization
-        dlplanstatespace)
+        dlplanstatespace
+        Boost::serialization)
 target_compile_definitions(_dlplan PUBLIC DLPLAN_VERSION_INFO="${DLPLAN_VERSION_INFO}")
 
 # In case of moving the library (as done in the setup.py),
