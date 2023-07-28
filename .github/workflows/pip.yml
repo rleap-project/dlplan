@@ -42,5 +42,3 @@ jobs:
 
       - name: Test
         run: pytest api/python
-        env:
-          DYLD_LIBRARY_PATH: ${{ steps.install-boost.outputs.BOOST_ROOT }}:$DYLD_LIBRARY_PATH
