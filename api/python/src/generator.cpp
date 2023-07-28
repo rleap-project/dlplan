@@ -12,7 +12,7 @@ using namespace dlplan::generator;
 
 
 void init_generator(py::module_ &m_generator) {
-    py::class_<FeatureGenerator, std::shared_ptr<FeatureGenerator>>(m_generator, "FeatureGenerator")
+    py::class_<FeatureGenerator>(m_generator, "FeatureGenerator")
         .def(py::init<>())
         .def("generate", &FeatureGenerator::generate, py::arg("factory"), py::arg("states"), py::arg("concept_complexity_limit") = 9, py::arg("role_complexity_limit") = 9, py::arg("boolean_complexity_limit") = 9, py::arg("count_numerical_complexity_limit") = 9, py::arg("distance_numerical_complexity_limit") = 9, py::arg("time_limit") = 3600, py::arg("feature_limit") = 10000)
         .def("set_generate_empty_boolean", &FeatureGenerator::set_generate_empty_boolean)
