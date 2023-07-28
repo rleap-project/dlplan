@@ -1,10 +1,11 @@
 name: Build Source Distribution
 
-on: 
+on:
   push:
     branches:
       - main
       - master
+      - serialization
 
 jobs:
   build_wheels:

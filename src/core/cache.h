@@ -12,7 +12,7 @@ namespace dlplan::core {
 /**
  * One cache for each template instantiated element.
  */
-struct Caches {
+class Caches {
     std::shared_ptr<dlplan::utils::ReferenceCountedObjectCache<std::string, Concept>> m_concept_cache;
     std::shared_ptr<dlplan::utils::ReferenceCountedObjectCache<std::string, Role>> m_role_cache;
     std::shared_ptr<dlplan::utils::ReferenceCountedObjectCache<std::string, Numerical>> m_numerical_cache;
