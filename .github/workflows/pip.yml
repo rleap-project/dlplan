@@ -35,30 +35,8 @@ jobs:
             # https://github.com/MarkusJx/prebuilt-boost/blob/main/versions-manifest.json
             boost_version: 1.80.0
 
-      - name: List Boost directory 2
-        run: |
-          # Verify the BOOST_ROOT variable is set
-          echo "BOOST_ROOT: ${BOOST_ROOT}"
-
-          # List the contents of the BOOST_ROOT directory
-          ls -l ${BOOST_ROOT}
-          ls -l ${BOOST_ROOT}/lib
-        env:
-          BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
-
       - name: Build and install
         run: python -m pip install --verbose .[test]
-        env:
-          BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
-
-      - name: List Boost directory 2
-        run: |
-          # Verify the BOOST_ROOT variable is set
-          echo "BOOST_ROOT: ${BOOST_ROOT}"
-
-          # List the contents of the BOOST_ROOT directory
-          ls -l ${BOOST_ROOT}
-          ls -l ${BOOST_ROOT}/lib
         env:
           BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
 
