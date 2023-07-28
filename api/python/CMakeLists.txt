@@ -23,10 +23,10 @@ target_compile_definitions(_dlplan PUBLIC DLPLAN_VERSION_INFO="${DLPLAN_VERSION_
 # In case of moving the library (as done in the setup.py),
 # we need the library to find the component libraries in origin directory.
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    set_target_properties(_dlplan PROPERTIES INSTALL_RPATH $ORIGIN)
+    set_target_properties(_dlplan PROPERTIES INSTALL_RPATH "${ORIGIN}:${BOOST_ROOT}")
 endif()
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    set_target_properties(_dlplan PROPERTIES INSTALL_RPATH @loader_path)
+    set_target_properties(_dlplan PROPERTIES INSTALL_RPATH "@loader_path;${BOOST_ROOT}")
 endif()
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message( FATAL_ERROR "Windows is not supported." )
