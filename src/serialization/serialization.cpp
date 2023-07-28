@@ -91,7 +91,7 @@ void serialize( Archive& ar, dlplan::state_space::StateSpace& state_space, const
 template<typename Archive>
 void serialize( Archive& ar, dlplan::serialization::Data& data, const unsigned int /* version */ )
 {
-    ar & data.m_state_spaces;
+    ar & data.state_spaces;
 }
 
 }

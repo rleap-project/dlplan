@@ -8,7 +8,7 @@ using namespace dlplan;
 namespace dlplan::serialization {
 
 struct Data {
-    std::vector<std::shared_ptr<state_space::StateSpace>> m_state_spaces;
+    std::vector<std::shared_ptr<state_space::StateSpace>> state_spaces;
 };
 
 void serialize(const Data& data, std::ostream& out_buffer);

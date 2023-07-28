@@ -7,6 +7,7 @@ target_sources(_dlplan
         src/generator.cpp
         src/novelty.cpp
         src/policy.cpp
+        src/serialization.cpp
         src/state_space.cpp)
 target_link_libraries(_dlplan
     PRIVATE
@@ -15,6 +16,7 @@ target_link_libraries(_dlplan
         dlplangenerator
         dlplannovelty
         dlplanpolicy
+        dlplanserialization
         dlplanstatespace)
 target_compile_definitions(_dlplan PUBLIC DLPLAN_VERSION_INFO="${DLPLAN_VERSION_INFO}")
 

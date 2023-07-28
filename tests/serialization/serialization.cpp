@@ -13,7 +13,7 @@ TEST(DLPTests, SerializationTestEmpty) {
     dlplan::serialization::Data out_data{};
     dlplan::serialization::serialize(out_data, buffer);
     dlplan::serialization::Data in_data = dlplan::serialization::deserialize(buffer);
-    EXPECT_EQ(in_data.m_state_spaces.size(), 0);
+    EXPECT_EQ(in_data.state_spaces.size(), 0);
 }
 
 }
