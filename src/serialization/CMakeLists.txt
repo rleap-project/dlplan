@@ -19,8 +19,17 @@ target_include_directories(dlplanserialization
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
 
-# Add current directory (relative, relocatable) to RPATH
-set_target_properties(dlplanserialization PROPERTIES INSTALL_RPATH "./")
+# Add current directory for library to be relocatable
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set_target_properties(dlplanserialization PROPERTIES INSTALL_RPATH "$ORIGIN")
+endif()
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set_target_properties(dlplanserialization PROPERTIES INSTALL_RPATH "@loader_path")
+endif()
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    message( FATAL_ERROR "Windows is not supported." )
+endif()
+set_target_properties(dlplanserialization PROPERTIES BUILD_WITH_INSTALL_RPATH true)
 
 # Install the target and create export-set
 install(
