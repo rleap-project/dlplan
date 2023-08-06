@@ -33,12 +33,11 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set_target_properties(dlplanpolicy PROPERTIES INSTALL_RPATH "$ORIGIN")
 endif()
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    set_target_properties(dlplanpolicy PROPERTIES INSTALL_RPATH "@loader_path")
+    set_target_properties(dlplanpolicy PROPERTIES INSTALL_NAME_DIR "@loader_path")
 endif()
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message( FATAL_ERROR "Windows is not supported." )
 endif()
-set_target_properties(dlplanpolicy PROPERTIES BUILD_WITH_INSTALL_RPATH true)
 
 # Install the target and create export-set
 install(
