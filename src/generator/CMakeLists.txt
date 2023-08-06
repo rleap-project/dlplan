@@ -51,7 +51,7 @@ target_include_directories(dlplangenerator
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
 
-# Add current directory for library to be relocatable
+# Add current directory for library to be relocatable (for python api)
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set_target_properties(dlplangenerator PROPERTIES INSTALL_RPATH "$ORIGIN")
 endif()

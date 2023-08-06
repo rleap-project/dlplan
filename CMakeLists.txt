@@ -42,8 +42,8 @@ if (DEFINED ENV{BOOST_ROOT})
     set(BOOST_ROOT $ENV{BOOST_ROOT})
 endif()
 find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS serialization)
-include_directories(${Boost_INCLUDE_DIRS})
-link_directories(${Boost_LIBRARY_DIRS})
+#include_directories(${Boost_INCLUDE_DIRS})
+#link_directories(${Boost_LIBRARY_DIRS})
 
 # Compile tests.
 option(ENABLE_TESTING "Enables compilation of tests." OFF)
