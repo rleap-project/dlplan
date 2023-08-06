@@ -58,7 +58,16 @@ install(
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-# Install header file
+
+# Install header files
+install(
+  DIRECTORY "${PROJECT_SOURCE_DIR}/include/dlplan/phmap"
+  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/dlplan/phmap"
+)
+install(
+  DIRECTORY "${PROJECT_SOURCE_DIR}/include/dlplan/utils"
+  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/dlplan/utils"
+)
 install(
     FILES "${PROJECT_SOURCE_DIR}/include/dlplan/core.h"
     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/dlplan"
