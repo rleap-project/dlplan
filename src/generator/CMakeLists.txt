@@ -72,12 +72,6 @@ install(
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-# Install header file
-install(
-    FILES "${PROJECT_SOURCE_DIR}/include/dlplan/generator.h"
-    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/dlplan"
-)
-
 # Generate and install export file
 install(EXPORT dlplangeneratorTargets
     NAMESPACE dlplan::

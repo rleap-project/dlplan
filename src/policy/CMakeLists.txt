@@ -49,12 +49,6 @@ install(
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-# Install header file
-install(
-    FILES "${PROJECT_SOURCE_DIR}/include/dlplan/policy.h"
-    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/dlplan"
-)
-
 # Generate and install export file
 install(EXPORT dlplanpolicyTargets
     NAMESPACE dlplan::

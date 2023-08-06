@@ -81,6 +81,15 @@ if(DLPLAN_PYTHON)
   add_subdirectory(api/python)
 endif()
 
+############
+# Installs #
+############
+
+# Install header files
+install(
+    DIRECTORY "${PROJECT_SOURCE_DIR}/include/dlplan"
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/dlplan"
+)
 
 ###########
 # Exports #
