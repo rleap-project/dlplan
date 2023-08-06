@@ -1,0 +1,11 @@
+@PACKAGE_INIT@
+
+set(_dlplan_supported_components core generator novelty policy serialization statespace)
+
+foreach(_comp ${dlplan_FIND_COMPONENTS})
+  if (NOT _comp IN_LIST _dlplan_supported_components)
+    set(dlplan_FOUND False)
+    set(dlplan_NOT_FOUND_MESSAGE "Unsupported component: ${_comp}")
+  endif()
+  include("${CMAKE_CURRENT_LIST_DIR}/dlplan${_comp}Targets.cmake")
+endforeach()

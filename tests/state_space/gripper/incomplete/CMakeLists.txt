@@ -12,10 +12,9 @@ add_custom_target(state_space_gripper_incomplete_domain ALL
 add_custom_target(state_space_gripper_incomplete_instance ALL
     COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/p-1-0.pddl" "${CMAKE_BINARY_DIR}/tests/state_space/gripper/incomplete/p-1-0.pddl")
 
-target_link_libraries(state_space_gripper_incomplete_tests 
+target_link_libraries(state_space_gripper_incomplete_tests
     PRIVATE
-        dlplanstatespace 
-        dlplancore 
+        dlplan::statespace
         GTest::GTest)
 
 add_test(state_space_gripper_incomplete_gtests state_space_gripper_incomplete_tests)

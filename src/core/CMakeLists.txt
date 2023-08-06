@@ -26,19 +26,43 @@ target_sources(dlplancore
         ../utils/system.cpp
         ../utils/timer.cpp
         ../utils/hash.cpp)
+
+# Create an alias for simpler reference
+add_library(dlplan::core ALIAS dlplancore)
+
+# Use include depending on building or using from installed location
 target_include_directories(dlplancore
-    PUBLIC
-        ${PROJECT_SOURCE_DIR}/include
+    INTERFACE
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
+        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
 
+# Install the target and create export-set
 install(
-    TARGETS
-        dlplancore
-    LIBRARY DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/lib/dlplan)
+    TARGETS dlplancore
+    EXPORT dlplancoreTargets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
 
+# Install header file
 install(
-    DIRECTORY
-        ${PROJECT_SOURCE_DIR}/include/dlplan/
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/dlplan)
+    FILES "${PROJECT_SOURCE_DIR}/include/dlplan/core.h"
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/dlplan"
+)
+
+# Generate and install export file
+install(EXPORT dlplancoreTargets
+    NAMESPACE dlplan::
+    COMPONENT core
+    FILE dlplancoreTargets.cmake
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dlplan"
+)
+
+# Generate build tree export file
+export(EXPORT dlplancoreTargets
+       FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/dlplancoreTargets.cmake"
+       NAMESPACE dlplan::
+)

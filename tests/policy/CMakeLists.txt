@@ -10,7 +10,7 @@ target_sources(
 )
 target_link_libraries(policy_tests
     PRIVATE
-        dlplanpolicy
+        dlplan::policy
         GTest::GTest)
 
 add_test(policy_gtests policy_tests)

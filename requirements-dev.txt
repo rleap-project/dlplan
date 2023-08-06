@@ -1,3 +1,0 @@
-# Need to ensure same version of system clang and pybind clang
-git+https://github.com/pybind/pybind11_mkdoc.git@master
-clang==14

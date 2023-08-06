@@ -16,9 +16,7 @@ add_custom_target(serialization_gripper_instance_1 ALL
 
 target_link_libraries(serialization_gripper_tests
     PRIVATE
-        dlplanserialization
-        dlplanstatespace
-        Boost::serialization
+        dlplan::serialization
         GTest::GTest)
 
 add_test(serialization_gtests serialization_gripper_tests)

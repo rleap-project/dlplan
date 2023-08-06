@@ -37,30 +37,49 @@ target_sources(dlplangenerator
         ../utils/logging.cpp
         ../utils/countdown_timer.cpp
 )
-target_link_libraries(dlplangenerator dlplancore)
-target_include_directories(dlplangenerator
+target_link_libraries(dlplangenerator
     PUBLIC
-        ${PROJECT_SOURCE_DIR}/include
+        dlplan::core)
+
+# Create an alias for simpler reference
+add_library(dlplan::generator ALIAS dlplangenerator)
+
+# Use include depending on building or using from installed location
+target_include_directories(dlplangenerator
+    INTERFACE
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
+        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
 
-if (APPLE)
-    set_target_properties(dlplangenerator PROPERTIES
-        INSTALL_NAME_DIR "@loader_path"
-    )
-elseif (UNIX)
-    set_target_properties(dlplangenerator PROPERTIES
-        INSTALL_RPATH "$ORIGIN"
-    )
-endif()
+# Add current directory (relative, relocatable) to RPATH
+set_target_properties(dlplangenerator PROPERTIES INSTALL_RPATH "./")
 
+# Install the target and create export-set
 install(
-    TARGETS
-        dlplangenerator
-    LIBRARY DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/lib/dlplan)
+    TARGETS dlplangenerator
+    EXPORT dlplangeneratorTargets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
 
+# Install header file
 install(
-    DIRECTORY
-        ${PROJECT_SOURCE_DIR}/include/dlplan/
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/dlplan)
+    FILES "${PROJECT_SOURCE_DIR}/include/dlplan/generator.h"
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/dlplan"
+)
+
+# Generate and install export file
+install(EXPORT dlplangeneratorTargets
+    NAMESPACE dlplan::
+    COMPONENT generator
+    FILE dlplangeneratorTargets.cmake
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dlplan"
+)
+
+# Generate build tree export file
+export(EXPORT dlplangeneratorTargets
+       FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/dlplangeneratorTargets.cmake"
+       NAMESPACE dlplan::
+)

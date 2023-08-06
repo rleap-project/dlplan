@@ -11,6 +11,10 @@ if(CCACHE_FOUND AND NOT WIN32)  # Windows Github Actions find "ccache" --> ignor
 endif(CCACHE_FOUND AND NOT WIN32)
 
 project(dlplan VERSION 0.1 LANGUAGES C CXX)
+
+# make cache variables for install destinations
+include(GNUInstallDirs)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -55,16 +59,52 @@ add_subdirectory(src)
 add_subdirectory(examples)
 add_subdirectory(experiments)
 
+###########
+# Testing #
+###########
+
 if (ENABLE_TESTING)
     enable_testing()
     add_subdirectory(tests)
-    # TODO: does not work yet
-    #add_test(NAME MatmulPython
-    #    COMMAND ${Python_EXECUTABLE} -m pytest ${CMAKE_CURRENT_SOURCE_DIR} / "api/python"
-    #)
 endif()
+
+
+##############
+# Python API #
+##############
 
 if(DLPLAN_PYTHON)
   # For the dynamic library to be compatible with Python we need the -fPIC flags
   add_subdirectory(api/python)
 endif()
+
+
+###########
+# Exports #
+###########
+
+# https://cmake.org/cmake/help/latest/guide/importing-exporting/index.html
+
+include(CMakePackageConfigHelpers)
+
+# Generate the version file for the config file
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/dlplanConfigVersion.cmake"
+  VERSION "${dlplan_VERSION_MAJOR}.${dlplan_VERSION_MINOR}"
+  COMPATIBILITY ExactVersion
+)
+
+# Create config file
+configure_package_config_file("${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/dlplanConfig.cmake"
+  INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dlplan"
+  NO_CHECK_REQUIRED_COMPONENTS_MACRO
+)
+
+# Install config files
+install(
+  FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/dlplanConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/dlplanConfigVersion.cmake"
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dlplan"
+)

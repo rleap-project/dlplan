@@ -8,9 +8,7 @@ target_sources(
 )
 target_link_libraries(serialization_tests
     PRIVATE
-        dlplanserialization
-        dlplanstatespace
-        Boost::serialization
+        dlplan::serialization
         GTest::GTest)
 
 add_test(serialization_gtests serialization_tests)

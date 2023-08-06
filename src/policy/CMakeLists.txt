@@ -13,30 +13,50 @@ target_sources(dlplanpolicy
         parser/expression_factory.cpp
         parser/parser.cpp
         parser/utils.cpp)
-target_link_libraries(dlplanpolicy dlplancore)
-target_include_directories(dlplanpolicy
+
+target_link_libraries(dlplanpolicy
     PUBLIC
-        ${PROJECT_SOURCE_DIR}/include/
+        dlplan::core)
+
+# Create an alias for simpler reference
+add_library(dlplan::policy ALIAS dlplanpolicy)
+
+# Use include depending on building or using from installed location
+target_include_directories(dlplanpolicy
+    INTERFACE
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
+        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
 
-if (APPLE)
-    set_target_properties(dlplanpolicy PROPERTIES
-        INSTALL_NAME_DIR "@loader_path"
-    )
-elseif (UNIX)
-    set_target_properties(dlplanpolicy PROPERTIES
-        INSTALL_RPATH "$ORIGIN"
-    )
-endif()
+# Add current directory (relative, relocatable) to RPATH
+set_target_properties(dlplanpolicy PROPERTIES INSTALL_RPATH "./")
 
+# Install the target and create export-set
 install(
-    TARGETS
-        dlplanpolicy
-    LIBRARY DESTINATION
-        lib/dlplan)
+    TARGETS dlplanpolicy
+    EXPORT dlplanpolicyTargets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
 
+# Install header file
 install(
-    DIRECTORY
-        ${PROJECT_SOURCE_DIR}/include/dlplan/
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/dlplan)
+    FILES "${PROJECT_SOURCE_DIR}/include/dlplan/policy.h"
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/dlplan"
+)
+
+# Generate and install export file
+install(EXPORT dlplanpolicyTargets
+    NAMESPACE dlplan::
+    COMPONENT policy
+    FILE dlplanpolicyTargets.cmake
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dlplan"
+)
+
+# Generate build tree export file
+export(EXPORT dlplanpolicyTargets
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/dlplan/dlplanpolicyTargets.cmake"
+    NAMESPACE dlplan::
+)

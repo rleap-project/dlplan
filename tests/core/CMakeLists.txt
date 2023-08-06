@@ -46,7 +46,7 @@ target_sources(
 )
 target_link_libraries(core_tests
     PRIVATE
-        dlplancore
+        dlplan::core
         GTest::GTest)
 
 add_test(core_gtests core_tests)
