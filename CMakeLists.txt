@@ -63,6 +63,9 @@ add_subdirectory(experiments)
 # Testing #
 ###########
 
+option(INSTALL_GMOCK "Install Googletest's GMock?" OFF)
+option(INSTALL_GTEST "Install Googletest's GTest?" OFF)
+
 if (ENABLE_TESTING)
     enable_testing()
     add_subdirectory(tests)
