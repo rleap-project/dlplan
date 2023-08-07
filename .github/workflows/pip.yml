@@ -30,7 +30,7 @@ jobs:
         id: install-boost
         run: |
           bash .github/workflows/scripts/install_boost.sh
-          echo "{BOOST_ROOT}=${{runner.workspace}}/boost_1_82_0" >> "$GITHUB_OUTPUT"
+          echo "BOOST_ROOT=${{runner.workspace}}/boost_1_82_0" >> "$GITHUB_OUTPUT"
 
       - name: Build and install
         run: python -m pip install --verbose .[test]
