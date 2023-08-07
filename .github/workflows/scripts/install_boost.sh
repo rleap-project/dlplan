@@ -9,3 +9,4 @@ tar xf boost_1_82_0.tar.gz
 cd boost_1_82_0
 ./bootstrap.sh
 ./b2
+export BOOST_ROOT="/boost/boost_1_82_0"
