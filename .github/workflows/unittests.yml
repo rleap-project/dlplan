@@ -26,12 +26,15 @@ jobs:
           python -m pip install -r requirements.txt
 
       - name: Install boost
-        run: bash .github/workflows/scripts/install_boost.sh ${{runner.workspace}}
+        id: install-boost
+        run: |
+          bash .github/workflows/scripts/install_boost.sh
+          echo "{BOOT_ROOT}=${{runner.workspace}}/boost_1_82_0" >> "$GITHUB_OUTPUT"
 
       - name: Configure CMake
         run: cmake -DENABLE_TESTING:BOOL=TRUE -S $GITHUB_WORKSPACE -B ${{runner.workspace}}/build
         env:
-          BOOST_ROOT: ${{runner.workspace}}/boost/boost_1_82_0
+          BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
 
       - name: Build
         working-directory: ${{runner.workspace}}/build
