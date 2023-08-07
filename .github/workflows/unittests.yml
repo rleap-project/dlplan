@@ -28,8 +28,14 @@ jobs:
       - name: Install boost
         run: bash .github/workflows/scripts/install_boost.sh
 
+      - name: List files
+        run: |
+          ls -l
+
       - name: Configure CMake
         run: cmake -DENABLE_TESTING:BOOL=TRUE -S $GITHUB_WORKSPACE -B ${{runner.workspace}}/build
+        env:
+          BOOST_ROOT: ${GITHUB_WORKSPACE}/boost/boost_1_82_0
 
       - name: Build
         working-directory: ${{runner.workspace}}/build
