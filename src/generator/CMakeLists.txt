@@ -1,5 +1,4 @@
-add_library(dlplangenerator SHARED)
-
+add_library(dlplangenerator STATIC)
 target_sources(dlplangenerator
     PRIVATE
         feature_generator.cpp

@@ -1,4 +1,4 @@
-add_library(dlplannovelty SHARED)
+add_library(dlplannovelty STATIC)
 target_sources(dlplannovelty
     PRIVATE
         novelty_base.cpp

@@ -1,5 +1,4 @@
-add_library(dlplanserialization SHARED)
-
+add_library(dlplanserialization STATIC)
 target_link_libraries(dlplanserialization
     PUBLIC
         dlplan::statespace

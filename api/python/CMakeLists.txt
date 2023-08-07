@@ -17,20 +17,6 @@ target_link_libraries(_dlplan
         dlplannovelty
         dlplanpolicy
         dlplanserialization
-        dlplanstatespace)
+        dlplanstatespace
+        ${PYTHON_LIBRARIES})
 target_compile_definitions(_dlplan PUBLIC DLPLAN_VERSION_INFO="${DLPLAN_VERSION_INFO}")
-
-# In case of moving the library (as done in the setup.py),
-# we need the library to find the component libraries in origin directory.
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    #set_target_properties(_dlplan PROPERTIES INSTALL_RPATH "$ORIGIN:${BOOST_ROOT}/lib")
-    set_target_properties(_dlplan PROPERTIES INSTALL_RPATH "$ORIGIN")
-endif()
-if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    #set_target_properties(_dlplan PROPERTIES INSTALL_RPATH "@loader_path;${BOOST_ROOT}/lib")
-    set_target_properties(_dlplan PROPERTIES INSTALL_RPATH "@loader_path")
-endif()
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    message( FATAL_ERROR "Windows is not supported." )
-endif()
-set_target_properties(_dlplan PROPERTIES BUILD_WITH_INSTALL_RPATH true)

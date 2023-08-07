@@ -1,4 +1,4 @@
-add_library(dlplanpolicy SHARED)
+add_library(dlplanpolicy STATIC)
 target_sources(dlplanpolicy
     PRIVATE
         condition.cpp

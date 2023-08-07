@@ -1,4 +1,4 @@
-add_library(dlplanstatespace SHARED)
+add_library(dlplanstatespace STATIC)
 target_sources(dlplanstatespace
     PRIVATE
         generator.cpp
@@ -18,17 +18,6 @@ target_include_directories(dlplanstatespace
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
-
-# Add current directory for library to be relocatable (for python api)
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    set_target_properties(dlplanstatespace PROPERTIES INSTALL_RPATH "$ORIGIN")
-endif()
-if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    set_target_properties(dlplanstatespace PROPERTIES INSTALL_RPATH "@loader_path")
-endif()
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    message( FATAL_ERROR "Windows is not supported." )
-endif()
 
 # Install the target and create export-set
 install(

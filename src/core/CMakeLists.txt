@@ -1,4 +1,4 @@
-add_library(dlplancore SHARED)
+add_library(dlplancore STATIC)
 target_sources(dlplancore
     PRIVATE
         atom.cpp

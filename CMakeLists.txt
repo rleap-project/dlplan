@@ -20,7 +20,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Compilation flags, some configuration-specific
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Wextra -pedantic")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Wextra -pedantic -fPIC")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -fomit-frame-pointer")
 set(CMAKE_CXX_FLAGS_DEBUG "-O3 -DDEBUG")
 
@@ -32,8 +32,11 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
         STRING "Choose the type of build." FORCE)
 endif()
 
-# Find boost
-set(Boost_USE_STATIC_LIBS OFF)
+#########
+# Boost #
+#########
+
+set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 set(BOOST_MIN_VERSION "1.80.0")
@@ -42,16 +45,10 @@ if (DEFINED ENV{BOOST_ROOT})
     set(BOOST_ROOT $ENV{BOOST_ROOT})
 endif()
 find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS serialization)
-#include_directories(${Boost_INCLUDE_DIRS})
-#link_directories(${Boost_LIBRARY_DIRS})
 
-# Compile tests.
-option(ENABLE_TESTING "Enables compilation of tests." OFF)
-if (ENABLE_TESTING)
-    message("Building tests enabled.")
-else()
-    message("Building tests disabled.")
-endif()
+###########
+# Targets #
+###########
 
 include_directories(include/)
 
@@ -62,6 +59,14 @@ add_subdirectory(experiments)
 ###########
 # Testing #
 ###########
+
+# Compile tests.
+option(ENABLE_TESTING "Enables compilation of tests." OFF)
+if (ENABLE_TESTING)
+    message("Building tests enabled.")
+else()
+    message("Building tests disabled.")
+endif()
 
 option(INSTALL_GMOCK "Install Googletest's GMock?" OFF)
 option(INSTALL_GTEST "Install Googletest's GTest?" OFF)
