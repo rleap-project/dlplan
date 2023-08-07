@@ -29,7 +29,7 @@ jobs:
         id: install-boost
         run: |
           bash .github/workflows/scripts/install_boost.sh
-          echo "{BOOT_ROOT}=${{runner.workspace}}/boost_1_82_0" >> "$GITHUB_OUTPUT"
+          echo "{BOOST_ROOT}=${{runner.workspace}}/boost_1_82_0" >> "$GITHUB_OUTPUT"
 
       - name: Configure CMake
         run: cmake -DENABLE_TESTING:BOOL=TRUE -S $GITHUB_WORKSPACE -B ${{runner.workspace}}/build
