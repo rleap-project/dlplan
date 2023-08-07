@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# yum install -y wget
 ROOT_DIR=$(pwd)
 mkdir boost
 cd boost
@@ -8,6 +7,10 @@ wget --no-check-certificate 'https://boostorg.jfrog.io/artifactory/main/release/
 tar xf boost_1_82_0.tar.gz
 cd boost_1_82_0
 ./bootstrap.sh
-./b2
-cd "${ROOT_DIR}"
+
+# Compile with fPIC flag
+export CXXFLAGS="-fPIC"
+./b2 cxxflags="$CXXFLAGS"
+
 export BOOST_ROOT="${ROOT_DIR}/boost/boost_1_82_0"
+cd "${ROOT_DIR}"
