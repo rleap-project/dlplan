@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # yum install -y wget
+pwd
 cd /
 mkdir boost
 cd boost
