@@ -37,17 +37,6 @@ target_include_directories(dlplancore
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
 
-# Add current directory for library to be relocatable (for python api)
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    set_target_properties(dlplancore PROPERTIES INSTALL_RPATH "$ORIGIN")
-endif()
-if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    set_target_properties(dlplancore PROPERTIES INSTALL_NAME_DIR "@loader_path")
-endif()
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    message( FATAL_ERROR "Windows is not supported." )
-endif()
-
 # Install the target and create export-set
 install(
     TARGETS dlplancore
