@@ -51,7 +51,8 @@ include("configure_ccache")
 configure_ccache()
 
 # Python
-find_package(PythonLibs REQUIRED)
+#find_package(Python REQUIRED)
+#find_package(PythonLibs REQUIRED)
 
 # Boost
 configure_boost()

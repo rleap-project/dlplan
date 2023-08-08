@@ -17,6 +17,5 @@ target_link_libraries(_dlplan
         dlplannovelty
         dlplanpolicy
         dlplanserialization
-        dlplanstatespace
-        ${PYTHON_LIBRARIES})
+        dlplanstatespace)
 target_compile_definitions(_dlplan PUBLIC DLPLAN_VERSION_INFO="${DLPLAN_VERSION_INFO}")
