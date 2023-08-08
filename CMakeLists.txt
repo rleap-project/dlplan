@@ -50,6 +50,9 @@ include("configure_ccache")
 # CCache
 configure_ccache()
 
+# Python
+find_package(PythonLibs REQUIRED)
+
 # Boost
 configure_boost()
 find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS serialization)
