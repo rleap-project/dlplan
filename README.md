@@ -78,7 +78,7 @@ cmake --install build --prefix=<path/to/dlplan_install_dir>
 
 To use DLPlan in other cmake projects, add the following in the root CMakeLists.txt
 ```cmake
-list(APPEND CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/<path/to/dlplan_install_dir>")
+list(APPEND CMAKE_PREFIX_PATH "<path/to/dlplan_install_dir>")
 find_package(dlplan 0.1 REQUIRED COMPONENTS core generator policy statespace novelty serialization)
 ```
 
