@@ -39,7 +39,7 @@ jobs:
         CIBW_BEFORE_BUILD: |
           yum install -y wget
           bash .github/workflows/scripts/install_boost.sh
-        CIBW_ENVIRONMENT: BOOST_ROOT="/boost_1_82_0"
+        CIBW_ENVIRONMENT: BOOST_ROOT="/project/boost_1_82_0"
 
     - name: Upload to PyPI
       env:
