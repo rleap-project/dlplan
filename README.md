@@ -43,6 +43,7 @@ The state space provides functionality for generating state spaces from PDDL.
 
 The novelty component provides functionality for width-based planning and learning.
 
+## 3. Building and Installing
 
 ### 3.1. Building the C++ Interface
 
