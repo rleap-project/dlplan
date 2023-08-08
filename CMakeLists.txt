@@ -1,19 +1,18 @@
-# We use the earliest cmake 3
 cmake_minimum_required(VERSION 3.13)
 
-include("${CMAKE_CURRENT_LIST_DIR}/cmake/configure_boost.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/cmake/configure_ccache.cmake")
-
-configure_ccache()
-
-project(dlplan VERSION 0.1 LANGUAGES C CXX)
-
-# make cache variables for install destinations
-include(GNUInstallDirs)
+##############################################################
+# Language setup
+##############################################################
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
+##############################################################
+# Establish project
+##############################################################
+
+project(dlplan VERSION 0.1 LANGUAGES C CXX)
 
 # Compilation flags, some configuration-specific
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Wextra -pedantic -fPIC")
@@ -28,29 +27,6 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
         STRING "Choose the type of build." FORCE)
 endif()
 
-#########
-# Boost #
-#########
-
-configure_boost()
-find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS serialization)
-include_directories(${Boost_INCLUDE_DIRS})
-
-###########
-# Targets #
-###########
-
-include_directories(include/)
-
-add_subdirectory(src)
-add_subdirectory(examples)
-add_subdirectory(experiments)
-
-###########
-# Testing #
-###########
-
-# Compile tests.
 option(ENABLE_TESTING "Enables compilation of tests." OFF)
 if (ENABLE_TESTING)
     message("Building tests enabled.")
@@ -58,27 +34,47 @@ else()
     message("Building tests disabled.")
 endif()
 
-option(INSTALL_GMOCK "Install Googletest's GMock?" OFF)
-option(INSTALL_GTEST "Install Googletest's GTest?" OFF)
+##############################################################
+# CMake modules and macro files
+##############################################################
+
+list(APPEND CMAKE_MODULE_PATH
+  ${PROJECT_SOURCE_DIR}/cmake
+)
+message("${PROJECT_SOURCE_DIR}cmake")
+
+include("configure_boost")
+include("configure_ccache")
+
+# CCache
+configure_ccache()
+
+# Boost
+configure_boost()
+find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS serialization)
+include_directories(${Boost_INCLUDE_DIRS})
+
+##############################################################
+# Add library and executable targets
+##############################################################
+
+include_directories(include/)
+
+add_subdirectory(src)
+add_subdirectory(examples)
+add_subdirectory(experiments)
 
 if (ENABLE_TESTING)
-    enable_testing()
     add_subdirectory(tests)
 endif()
 
-
-##############
-# Python API #
-##############
-
 if(DLPLAN_PYTHON)
-  # For the dynamic library to be compatible with Python we need the -fPIC flags
   add_subdirectory(api/python)
 endif()
 
-############
-# Installs #
-############
+###########
+# Install #
+###########
 
 # Install header files
 install(

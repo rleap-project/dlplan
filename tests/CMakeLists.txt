@@ -1,3 +1,7 @@
+enable_testing()
+option(INSTALL_GMOCK "Install Googletest's GMock?" OFF)
+option(INSTALL_GTEST "Install Googletest's GTest?" OFF)
+
 set(TEST_NAME ${CMAKE_PROJECT_NAME}_tests)
 
 include(FetchContent)
