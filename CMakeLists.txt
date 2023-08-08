@@ -1,6 +1,9 @@
 # We use the earliest cmake 3
 cmake_minimum_required(VERSION 3.26)
 
+# Include the configure_boost.cmake script from the cmake subdirectory
+include("${CMAKE_CURRENT_LIST_DIR}/cmake/configure_boost.cmake")
+
 # If it's available, use ccache to cache compilation results. The two ccache options
 # allow sharing compilation results between different build directories.
 find_program(CCACHE_FOUND ccache)
@@ -36,14 +39,7 @@ endif()
 # Boost #
 #########
 
-set(Boost_USE_STATIC_LIBS ON)
-set(Boost_USE_MULTITHREADED ON)
-set(Boost_USE_STATIC_RUNTIME OFF)
-set(BOOST_MIN_VERSION "1.80.0")
-if (DEFINED ENV{BOOST_ROOT})
-    set(Boost_NO_SYSTEM_PATHS ON)
-    set(BOOST_ROOT $ENV{BOOST_ROOT})
-endif()
+configure_boost()
 find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS serialization)
 include_directories(${Boost_INCLUDE_DIRS})
 
@@ -95,6 +91,11 @@ endif()
 install(
     DIRECTORY "${PROJECT_SOURCE_DIR}/include/dlplan"
     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/dlplan"
+)
+
+install(
+    DIRECTORY "${PROJECT_SOURCE_DIR}/cmake"
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dlplan"
 )
 
 ###########
