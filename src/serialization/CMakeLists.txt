@@ -1,11 +1,14 @@
 add_library(dlplanserialization STATIC)
 target_link_libraries(dlplanserialization
+    PRIVATE
+        Boost::serialization
     PUBLIC
-        dlplan::statespace
-        Boost::serialization)
+        dlplan::statespace)
 
 # Create an alias for simpler reference
 add_library(dlplan::serialization ALIAS dlplanserialization)
+# Export component with simple name
+set_property(TARGET dlplanserialization PROPERTY EXPORT_NAME serialization)
 
 target_sources(dlplanserialization
     PRIVATE
@@ -13,7 +16,7 @@ target_sources(dlplanserialization
 
 # Use include depending on building or using from installed location
 target_include_directories(dlplanserialization
-    INTERFACE
+    PUBLIC
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )

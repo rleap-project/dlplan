@@ -20,6 +20,8 @@ target_link_libraries(dlplanpolicy
 
 # Create an alias for simpler reference
 add_library(dlplan::policy ALIAS dlplanpolicy)
+# Export component with simple name
+set_property(TARGET dlplanpolicy PROPERTY EXPORT_NAME policy)
 
 # Use include depending on building or using from installed location
 target_include_directories(dlplanpolicy

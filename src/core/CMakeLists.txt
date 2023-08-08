@@ -29,6 +29,8 @@ target_sources(dlplancore
 
 # Create an alias for simpler reference
 add_library(dlplan::core ALIAS dlplancore)
+# Export component with simple name
+set_property(TARGET dlplancore PROPERTY EXPORT_NAME core)
 
 # Use include depending on building or using from installed location
 target_include_directories(dlplancore

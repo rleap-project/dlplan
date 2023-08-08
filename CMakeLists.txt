@@ -1,5 +1,5 @@
 # We use the earliest cmake 3
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.26)
 
 # If it's available, use ccache to cache compilation results. The two ccache options
 # allow sharing compilation results between different build directories.
@@ -113,6 +113,8 @@ write_basic_package_version_file(
 )
 
 # Create config file
+# https://cmake.org/cmake/help/book/mastering-cmake/cmake/Help/guide/importing-exporting/index.html
+# https://cmake.org/cmake/help/latest/module/CMakePackageConfigHelpers.html#generating-a-package-configuration-file
 configure_package_config_file("${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in"
   "${CMAKE_CURRENT_BINARY_DIR}/dlplanConfig.cmake"
   INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dlplan"

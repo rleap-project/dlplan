@@ -42,6 +42,8 @@ target_link_libraries(dlplangenerator
 
 # Create an alias for simpler reference
 add_library(dlplan::generator ALIAS dlplangenerator)
+# Export component with simple name
+set_property(TARGET dlplangenerator PROPERTY EXPORT_NAME generator)
 
 # Use include depending on building or using from installed location
 target_include_directories(dlplangenerator

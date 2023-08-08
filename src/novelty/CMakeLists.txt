@@ -17,6 +17,8 @@ target_link_libraries(dlplannovelty
 
 # Create an alias for simpler reference
 add_library(dlplan::novelty ALIAS dlplannovelty)
+# Export component with simple name
+set_property(TARGET dlplannovelty PROPERTY EXPORT_NAME novelty)
 
 # Use include depending on building or using from installed location
 target_include_directories(dlplannovelty

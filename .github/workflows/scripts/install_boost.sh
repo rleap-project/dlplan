@@ -7,4 +7,4 @@ cd boost_1_82_0
 
 # Compile with fPIC flag
 export CXXFLAGS="-fPIC"
-./b2 cxxflags="$CXXFLAGS"
+./b2 cxxflags="$CXXFLAGS" link=static

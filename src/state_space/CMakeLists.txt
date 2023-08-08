@@ -11,6 +11,8 @@ target_link_libraries(dlplanstatespace
 
 # Create an alias for simpler reference
 add_library(dlplan::statespace ALIAS dlplanstatespace)
+# Export component with simple name
+set_property(TARGET dlplanstatespace PROPERTY EXPORT_NAME statespace)
 
 # Use include depending on building or using from installed location
 target_include_directories(dlplanstatespace

@@ -1,5 +1,25 @@
 @PACKAGE_INIT@
 
+##############
+# Dependencies
+##############
+
+include(CMakeFindDependencyMacro)
+set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
+set(BOOST_MIN_VERSION "1.80.0")
+if (DEFINED ENV{BOOST_ROOT})
+    set(Boost_NO_SYSTEM_PATHS ON)
+    set(BOOST_ROOT $ENV{BOOST_ROOT})
+endif()
+find_dependency(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS serialization)
+
+
+############
+# Components
+############
+
 set(_dlplan_supported_components core generator novelty policy serialization statespace)
 
 foreach(_comp ${dlplan_FIND_COMPONENTS})
