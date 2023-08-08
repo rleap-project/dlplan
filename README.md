@@ -43,31 +43,42 @@ The state space provides functionality for generating state spaces from PDDL.
 
 The novelty component provides functionality for width-based planning and learning.
 
+
 ### 3.1. Building the C++ Interface
 
 Dependencies
+- Python3
 - Boost (boost.org)
 
-Install requirements
+Create python virtual environment and install dependencies
 ```console
+python3 -m venv --prompt dlplan .venv
+source .venv/bin/activate
 pip install pybind11 pybind11-global state_space_generator
 ```
 
 Run the following from the project root to build the library.
 By default, the library compiles in `Debug` mode.
-
 ```console
 cmake -S . -B build
 cmake --build build -j4
 ```
+
 To build the library in `Release` mode, run
 ```console
 cmake -DCMAKE_BUILD_TYPE=Release -S . -B build
 cmake --build build -j4
 ```
+
 To install the library, run
 ```console
-cmake --install build
+cmake --install build --prefix=<path/to/dlplan_install_dir>
+```
+
+To use DLPlan in other cmake projects, add the following in the root CMakeLists.txt
+```cmake
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/<path/to/dlplan_install_dir>")
+find_package(dlplan 0.1 REQUIRED COMPONENTS core generator policy statespace novelty serialization)
 ```
 
 ### 3.2. Additional Compile Flags
