@@ -38,11 +38,12 @@ endif()
 # CMake modules and macro files
 ##############################################################
 
-list(APPEND CMAKE_MODULE_PATH
-  ${PROJECT_SOURCE_DIR}/cmake
-)
-message("${PROJECT_SOURCE_DIR}cmake")
+# make cache variables for install destinations
+include(GNUInstallDirs)
 
+list(APPEND CMAKE_MODULE_PATH
+  "${PROJECT_SOURCE_DIR}/cmake"
+)
 include("configure_boost")
 include("configure_ccache")
 
