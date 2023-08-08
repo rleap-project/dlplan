@@ -93,6 +93,7 @@ install(
     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/dlplan"
 )
 
+# Install cmake scripts
 install(
     DIRECTORY "${PROJECT_SOURCE_DIR}/cmake"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dlplan"
