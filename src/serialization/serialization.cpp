@@ -60,6 +60,7 @@ void serialize( Archive& ar, dlplan::core::VocabularyInfo& vocabulary_info, cons
 template<typename Archive>
 void serialize( Archive& ar, dlplan::core::InstanceInfo& instance_info, const unsigned int /* version */ )
 {
+    ar & instance_info.m_vocabulary_info;
     ar & instance_info.m_index;
     ar & instance_info.m_objects;
     ar & instance_info.m_object_name_to_index;
