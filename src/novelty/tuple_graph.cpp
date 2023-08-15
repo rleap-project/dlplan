@@ -13,6 +13,11 @@ using namespace dlplan::state_space;
 
 namespace dlplan::novelty {
 
+TupleGraph::TupleGraph()
+    : m_novelty_base(nullptr),
+      m_state_space(nullptr),
+      m_root_state_index(-1) { }
+
 TupleGraph::TupleGraph(
     std::shared_ptr<const NoveltyBase> novelty_base,
     std::shared_ptr<const state_space::StateSpace> state_space,

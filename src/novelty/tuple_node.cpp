@@ -9,6 +9,9 @@ using namespace dlplan::state_space;
 
 namespace dlplan::novelty {
 
+TupleNode::TupleNode()
+    : m_index(-1), m_tuple_index(-1), m_state_indices() { }
+
 TupleNode::TupleNode(TupleNodeIndex index, TupleIndex tuple_index, const StateIndices& state_indices)
     : m_index(index), m_tuple_index(tuple_index), m_state_indices(state_indices) { }
 

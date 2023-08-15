@@ -380,8 +380,8 @@ private:
     ConstantIndex m_index;
 
     Constant(const std::string& name, ConstantIndex index);
-    friend class VocabularyInfo;
 
+    friend class VocabularyInfo;
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, Constant& constant, const unsigned int version);
 
@@ -443,11 +443,10 @@ private:
     bool m_is_static;
 
     Predicate(const std::string& name, PredicateIndex index, int arity, bool is_static=false);
-    friend class VocabularyInfo;
 
+    friend class VocabularyInfo;
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, Predicate& predicate, const unsigned int version);
-
 
 public:
     Predicate();
@@ -544,8 +543,8 @@ private:
     ObjectIndex m_index;
 
     Object(const std::string& name, int index);
-    friend class InstanceInfo;
 
+    friend class InstanceInfo;
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, Object& object, const unsigned int version);
 
@@ -595,11 +594,10 @@ private:
         PredicateIndex predicate_index,
         const ObjectIndices &object_indices,
         bool is_static=false);
-    friend class InstanceInfo;
 
+    friend class InstanceInfo;
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, Atom& atom, const unsigned int version);
-
 
 public:
     Atom();
@@ -727,7 +725,6 @@ private:
 
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, State& state, const unsigned int version);
-
 
 public:
     State();

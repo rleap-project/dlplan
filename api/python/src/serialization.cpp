@@ -21,6 +21,7 @@ void init_serialization(py::module_ &m_serialization) {
     py::class_<Data>(m_serialization, "Data")
         .def(py::init<>())
         .def_readwrite("state_spaces", &Data::state_spaces)
+        .def_readwrite("tuple_graphs", &Data::tuple_graphs)
     ;
 
     m_serialization.def("serialize", [](const Data& data){

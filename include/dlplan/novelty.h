@@ -11,10 +11,26 @@
 #include <utility>
 #include <vector>
 
+namespace dlplan::novelty {
+class NoveltyBase;
+class TupleNode;
+class TupleGraph;
+}
+
+// Forward declare the serialize function template in boost::serialization namespace
+namespace boost::serialization {
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::novelty::NoveltyBase& novelty_base, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::novelty::TupleNode& tuple_node, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::novelty::TupleGraph& tuple_graph, const unsigned int version);
+}
+
 namespace dlplan::novelty
 {
-class TupleNode;
-
 using AtomIndex = int;
 using AtomIndices = std::vector<AtomIndex>;
 
@@ -33,7 +49,11 @@ private:
     int m_num_atoms;
     int m_arity;
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, NoveltyBase& novelty_base, const unsigned int version);
+
 public:
+    NoveltyBase();
     NoveltyBase(int num_atoms, int arity);
     NoveltyBase(const NoveltyBase &other);
     NoveltyBase &operator=(const NoveltyBase &other);
@@ -157,8 +177,11 @@ private:
 
     friend class TupleGraphBuilder;
     friend class TupleGraph;
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, TupleNode& tuple_node, const unsigned int version);
 
 public:
+    TupleNode();
     TupleNode(const TupleNode &other);
     TupleNode &operator=(const TupleNode &other);
     TupleNode(TupleNode &&other);
@@ -201,7 +224,11 @@ private:
     std::vector<TupleNodeIndices> m_node_indices_by_distance;
     std::vector<state_space::StateIndices> m_state_indices_by_distance;
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, TupleGraph& tuple_graph, const unsigned int version);
+
 public:
+    TupleGraph();
     TupleGraph(
         std::shared_ptr<const NoveltyBase> novelty_base,
         std::shared_ptr<const state_space::StateSpace> state_space,

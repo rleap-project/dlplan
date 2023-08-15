@@ -1,6 +1,7 @@
 #include "../../include/dlplan/serialization.h"
 
 #include "../../include/dlplan/core.h"
+#include "../../include/dlplan/novelty.h"
 #include "../../include/dlplan/state_space.h"
 
 #include <boost/archive/text_oarchive.hpp>
@@ -9,8 +10,6 @@
 #include <boost/serialization/unordered_map.hpp>
 #include <boost/serialization/unordered_set.hpp>
 #include <boost/serialization/shared_ptr.hpp>
-
-#include <unordered_map>
 
 
 namespace boost::serialization {
@@ -87,6 +86,35 @@ void serialize( Archive& ar, dlplan::state_space::StateSpace& state_space, const
     ar & state_space.m_goal_state_indices;
     ar & state_space.m_forward_successor_state_indices;
     ar & state_space.m_backward_successor_state_indices;
+}
+
+template<typename Archive>
+void serialize( Archive& ar, dlplan::novelty::NoveltyBase& novelty_base, const unsigned int /* version */ )
+{
+    ar & novelty_base.m_factors;
+    ar & novelty_base.m_num_atoms;
+    ar & novelty_base.m_arity;
+}
+
+template<typename Archive>
+void serialize( Archive& ar, dlplan::novelty::TupleNode& tuple_node, const unsigned int /* version */ )
+{
+    ar & tuple_node.m_index;
+    ar & tuple_node.m_tuple_index;
+    ar & tuple_node.m_state_indices;
+    ar & tuple_node.m_predecessors;
+    ar & tuple_node.m_successors;
+}
+
+template<typename Archive>
+void serialize( Archive& ar, dlplan::novelty::TupleGraph& tuple_graph, const unsigned int /* version */ )
+{
+    ar & tuple_graph.m_novelty_base;
+    ar & tuple_graph.m_state_space;
+    ar & tuple_graph.m_root_state_index;
+    ar & tuple_graph.m_nodes;
+    ar & tuple_graph.m_node_indices_by_distance;
+    ar & tuple_graph.m_state_indices_by_distance;
 }
 
 template<typename Archive>
