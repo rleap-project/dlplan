@@ -9,7 +9,7 @@ from pathlib import Path
 from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
-__version__ = "0.2.24"
+__version__ = "0.2.25"
 HERE = Path(__file__).resolve().parent
 
 
@@ -36,7 +36,7 @@ class CMakeBuild(build_ext):
             "-DDLPLAN_PYTHON=On",
             f"-DDLPLAN_VERSION_INFO={__version__}",
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}",
-            "-DENABLE_TESTING:bool=false",
+            "-DENABrecursive-includeLE_TESTING:bool=false",
             f"-DPYTHON_EXECUTABLE={sys.executable}",
             f"-DCMAKE_BUILD_TYPE={cfg}",  # not used on MSVC, but no harm
         ]
