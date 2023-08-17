@@ -3,6 +3,7 @@ target_link_libraries(dlplanserialization
     PRIVATE
         Boost::serialization
     PUBLIC
+        dlplan::novelty
         dlplan::statespace)
 
 # Create an alias for simpler reference

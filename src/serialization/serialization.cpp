@@ -121,6 +121,7 @@ template<typename Archive>
 void serialize( Archive& ar, dlplan::serialization::Data& data, const unsigned int /* version */ )
 {
     ar & data.state_spaces;
+    ar & data.tuple_graphs;
 }
 
 }
