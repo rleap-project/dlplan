@@ -41,5 +41,5 @@ jobs:
         run: export CXXFLAGS="-Werror" && cmake --build .
 
       - name: Test
-        working-directory: ${{runner.workspace}}/build
+        working-directory: ${{runner.workspace}}/build/tests
         run: GTEST_OUTPUT=xml:test-results/ GTEST_COLOR=1 ctest -V
