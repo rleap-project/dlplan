@@ -212,7 +212,7 @@ GeneratorResult read(std::shared_ptr<const VocabularyInfo> vocabulary_info, int 
     int initial_state_index = 0;
     return GeneratorResult{
         exit_code,
-        std::make_unique<StateSpace>(std::move(instance_info), std::move(states), initial_state_index, std::move(adjacency_list), std::move(goal_state_indices))
+        std::make_shared<StateSpace>(std::move(instance_info), std::move(states), initial_state_index, std::move(adjacency_list), std::move(goal_state_indices))
     };
 }
 

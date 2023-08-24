@@ -51,6 +51,9 @@ namespace boost::serialization {
 
     template <typename Archive>
     void serialize(Archive& ar, dlplan::core::InstanceInfo& instance_info, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, dlplan::core::SyntacticElementFactory& factory, const unsigned int version);
 }
 
 namespace dlplan::core {
@@ -918,7 +921,11 @@ class SyntacticElementFactory {
 private:
     dlplan::utils::pimpl<SyntacticElementFactoryImpl> m_pImpl;
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, SyntacticElementFactory& factory, const unsigned int version);
+
 public:
+    SyntacticElementFactory();
     SyntacticElementFactory(std::shared_ptr<const VocabularyInfo> vocabulary_info);
     SyntacticElementFactory(const SyntacticElementFactory& other);
     SyntacticElementFactory& operator=(const SyntacticElementFactory& other);

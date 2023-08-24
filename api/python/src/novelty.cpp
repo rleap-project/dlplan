@@ -21,7 +21,7 @@ void init_novelty(py::module_ &m_novelty) {
         .def("get_arity", &NoveltyBase::get_arity)
     ;
 
-    py::class_<NoveltyTable>(m_novelty, "NoveltyTable")
+    py::class_<NoveltyTable, std::shared_ptr<NoveltyTable>>(m_novelty, "NoveltyTable")
         .def(py::init<std::shared_ptr<const NoveltyBase>>())
         .def("compute_novel_tuple_indices", py::overload_cast<const AtomIndices&>(&NoveltyTable::compute_novel_tuple_indices, py::const_))
         .def("compute_novel_tuple_indices", py::overload_cast<const AtomIndices&, const AtomIndices&>(&NoveltyTable::compute_novel_tuple_indices, py::const_))
@@ -31,7 +31,7 @@ void init_novelty(py::module_ &m_novelty) {
         .def("resize", &NoveltyTable::resize)
     ;
 
-    py::class_<TupleNode>(m_novelty, "TupleNode")
+    py::class_<TupleNode, std::shared_ptr<TupleNode>>(m_novelty, "TupleNode")
         .def("__repr__", &TupleNode::compute_repr)
         .def("__str__", &TupleNode::str)
         .def("get_index", &TupleNode::get_index)

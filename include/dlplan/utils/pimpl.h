@@ -7,9 +7,20 @@
 
 #include <memory>
 
+// Forward declarations of this header.
+namespace dlplan::utils {
+template<typename T>
+class pimpl;
+}
+
+// Forward declare the serialize function template in boost::serialization namespace
+namespace boost::serialization {
+    template <typename Archive, typename T>
+    void serialize(Archive& ar, dlplan::utils::pimpl<T>& factory, const unsigned int version);
+}
+
 
 namespace dlplan::utils {
-
 /**
  * Unique_ptr version without automatically generated copy constructor and copy assignment.
  */
@@ -18,8 +29,10 @@ class pimpl {
 private:
     std::unique_ptr<T> m;
 
-public:
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, pimpl<T>& pimpl, const unsigned int version);
 
+public:
     pimpl() : m{ new T{} } { }
 
     // Variadic templates
@@ -34,17 +47,6 @@ public:
     template<typename Arg1, typename Arg2, typename Arg3>
     pimpl( Arg1&& arg1, Arg2&& arg2, Arg3&& arg3 )
         : m( new T( std::forward<Arg1>(arg1), std::forward<Arg2>(arg2), std::forward<Arg3>(arg3) ) ) { }
-
-    // Copy constructor.
-    //pimpl(const pimpl<T> &other) : m( new T(*(other.m))) { }
-
-    // Copy assignment operator
-    //pimpl<T>& operator=(const pimpl<T> &other) {
-    //    if (this != &other) {
-    //        m = std::unique_ptr<T>(new T(*(other.m)));
-    //    }
-    //    return *this;
-    //}
 
     ~pimpl() = default;
 

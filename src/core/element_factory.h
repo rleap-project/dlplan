@@ -8,6 +8,15 @@
 #include <memory>
 #include <string>
 
+namespace dlplan::core {
+class SyntacticElementFactoryImpl;
+}
+
+namespace boost::serialization {
+    template<typename Archive>
+    void serialize(Archive& ar, dlplan::core::SyntacticElementFactoryImpl& factory, const unsigned int version);
+}
+
 
 namespace dlplan::core {
 class SyntacticElementFactoryImpl {
@@ -16,7 +25,11 @@ private:
 
     Caches m_caches;
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, SyntacticElementFactoryImpl& factory, const unsigned int version);
+
 public:
+    SyntacticElementFactoryImpl();
     SyntacticElementFactoryImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info);
 
     std::shared_ptr<const Concept> parse_concept(const std::string &description);

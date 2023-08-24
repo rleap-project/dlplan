@@ -38,6 +38,9 @@
 
 
 namespace dlplan::core {
+SyntacticElementFactoryImpl::SyntacticElementFactoryImpl()
+    : m_vocabulary_info(nullptr), m_caches(Caches()) { }
+
 SyntacticElementFactoryImpl::SyntacticElementFactoryImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info)
     : m_vocabulary_info(vocabulary_info), m_caches(Caches()) {
 }

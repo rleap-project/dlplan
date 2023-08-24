@@ -113,7 +113,7 @@ enum class GeneratorExitCode {
 /// @brief Encapsulates the result of the state space generation process.
 struct GeneratorResult {
     GeneratorExitCode exit_code;
-    std::unique_ptr<StateSpace> state_space;
+    std::shared_ptr<StateSpace> state_space;
 };
 
 

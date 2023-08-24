@@ -1,4 +1,6 @@
+#include "core.h"
 #include "novelty.h"
+#include "policy.h"
 #include "state_space.h"
 
 #include <istream>
@@ -10,11 +12,24 @@ using namespace dlplan;
 namespace dlplan::serialization {
 
 /// @brief Encapsulates a forest of library objects for serialization and deserialization.
+///
+/// The key is a string to allow the user the encode more complex nestings.
+/// The value is a shared_ptr<T> to the allow sharing between other objects.
 struct Data {
-    // The key is a string to allow the user the encode more complex nestings.
-    // The value is a shared_ptr<T> to the allow sharing between other objects.
+    // core
+    std::unordered_map<std::string, std::shared_ptr<core::VocabularyInfo>> vocabulary_infos;
+    std::unordered_map<std::string, std::shared_ptr<core::InstanceInfo>> instance_infos;
+    std::unordered_map<std::string, std::shared_ptr<core::SyntacticElementFactory>> syntatic_element_factories;
+
+    // state_space
     std::unordered_map<std::string, std::shared_ptr<state_space::StateSpace>> state_spaces;
+
+    // novelty
     std::unordered_map<std::string, std::shared_ptr<novelty::TupleGraph>> tuple_graphs;
+
+    // policy
+    std::unordered_map<std::string, std::shared_ptr<policy::Policy>> policies;
+    std::unordered_map<std::string, std::shared_ptr<policy::PolicyBuilder>> policy_builders;
 };
 
 /// @brief Serializes the data and places it into the out_buffer.

@@ -6,17 +6,29 @@
 
 #include <memory>
 
+namespace dlplan::core {
+class Caches;
+}
+
+namespace boost::serialization {
+    template<typename Archive>
+    void serialize(Archive& ar, dlplan::core::Caches& caches, const unsigned int version);
+}
+
 
 namespace dlplan::core {
-
 /**
  * One cache for each template instantiated element.
  */
 class Caches {
+private:
     std::shared_ptr<dlplan::utils::ReferenceCountedObjectCache<std::string, Concept>> m_concept_cache;
     std::shared_ptr<dlplan::utils::ReferenceCountedObjectCache<std::string, Role>> m_role_cache;
     std::shared_ptr<dlplan::utils::ReferenceCountedObjectCache<std::string, Numerical>> m_numerical_cache;
     std::shared_ptr<dlplan::utils::ReferenceCountedObjectCache<std::string, Boolean>> m_boolean_cache;
+
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, Caches& caches, const unsigned int version);
 
 public:
     Caches()

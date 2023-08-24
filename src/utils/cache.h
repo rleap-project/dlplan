@@ -8,6 +8,17 @@
 
 
 namespace dlplan::utils {
+template<typename KEY, typename VALUE>
+class ReferenceCountedObjectCache;
+}
+
+namespace boost::serialization {
+    template<typename Archive, typename KEY, typename VALUE>
+    void serialize(Archive& ar, dlplan::utils::ReferenceCountedObjectCache<KEY, VALUE>& cache, const unsigned int version);
+}
+
+
+namespace dlplan::utils {
 
 /**
  * A thread-safe reference-counted object cache.
@@ -30,6 +41,9 @@ private:
      * For multi-threading purposes
      */
     mutable std::mutex m_mutex;
+
+    template<typename Archive, typename KEY_, typename VALUE_>
+    friend void boost::serialization::serialize(Archive& ar, ReferenceCountedObjectCache<KEY_, VALUE_>& cache, const unsigned int version);
 
 public:
     ReferenceCountedObjectCache() : m_index_counter(0) { }

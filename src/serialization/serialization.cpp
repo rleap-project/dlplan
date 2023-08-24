@@ -4,12 +4,15 @@
 #include "../../include/dlplan/novelty.h"
 #include "../../include/dlplan/state_space.h"
 
+#include "../../src/core/element_factory.h"
+
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/unordered_map.hpp>
 #include <boost/serialization/unordered_set.hpp>
 #include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/unique_ptr.hpp>
 
 
 namespace boost::serialization {
@@ -69,12 +72,49 @@ void serialize( Archive& ar, dlplan::core::InstanceInfo& instance_info, const un
     ar & instance_info.m_static_atom_name_to_index;
 }
 
-template <typename Archive>
+template<typename Archive>
 void serialize(Archive& ar, dlplan::core::State& state, const unsigned int /* version */ )
 {
     ar & state.m_index;
     ar & state.m_instance_info;
     ar & state.m_atom_indices;
+}
+
+template<typename Archive>
+void serialize(Archive& ar, dlplan::core::SyntacticElementFactory& factory, const unsigned int /* version */ )
+{
+    ar & factory.m_pImpl;
+}
+
+template<typename Archive>
+void serialize(Archive& ar, dlplan::core::SyntacticElementFactoryImpl& factory, const unsigned int /* version */ )
+{
+    ar & factory.m_vocabulary_info;
+    ar & factory.m_caches;
+}
+
+
+template<typename Archive>
+void serialize(Archive& ar, dlplan::utils::pimpl<dlplan::core::SyntacticElementFactoryImpl>& pimpl, const unsigned int /* version */ )
+{
+    ar & pimpl.m;
+}
+
+
+template<typename Archive>
+void serialize(Archive& ar, dlplan::core::Caches& caches, const unsigned int /* version */ )
+{
+    ar & caches.m_boolean_cache;
+    ar & caches.m_numerical_cache;
+    ar & caches.m_concept_cache;
+    ar & caches.m_role_cache;
+}
+
+template<typename Archive, typename KEY, typename VALUE>
+void serialize(Archive& ar, dlplan::utils::ReferenceCountedObjectCache<KEY, VALUE>& cache, const unsigned int /* version */ )
+{
+    ar & cache.m_cache;
+    ar & cache.m_index_counter;
 }
 
 template<typename Archive>
@@ -120,6 +160,9 @@ void serialize( Archive& ar, dlplan::novelty::TupleGraph& tuple_graph, const uns
 template<typename Archive>
 void serialize( Archive& ar, dlplan::serialization::Data& data, const unsigned int /* version */ )
 {
+    ar & data.vocabulary_infos;
+    ar & data.instance_infos;
+    ar & data.syntatic_element_factories;
     ar & data.state_spaces;
     ar & data.tuple_graphs;
 }

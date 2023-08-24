@@ -62,7 +62,7 @@ void init_policy(py::module_ &m_policy) {
         .def("get_numericals", &Policy::get_numericals, py::return_value_policy::reference)
     ;
 
-    py::class_<PolicyBuilder>(m_policy, "PolicyBuilder")
+    py::class_<PolicyBuilder, std::shared_ptr<PolicyBuilder>>(m_policy, "PolicyBuilder")
         .def(py::init<>())
         .def("add_pos_condition", &PolicyBuilder::add_pos_condition)
         .def("add_neg_condition", &PolicyBuilder::add_neg_condition)
