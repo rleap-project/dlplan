@@ -12,7 +12,6 @@
 #include <string>
 #include <vector>
 
-
 namespace dlplan::policy {
 class PolicyBuilderImpl;
 class PolicyReaderImpl;
@@ -21,8 +20,29 @@ class BaseCondition;
 class BaseEffect;
 class Rule;
 class Policy;
+class PolicyBuilder;
+}
+
+// Forward declare the serialize function template in boost::serialization namespace
+namespace boost::serialization {
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::BaseCondition& condition, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::BaseEffect& effect, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::Rule& rule, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::Policy& policy, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::PolicyBuilder& builder, const unsigned int version);
+}
 
 
+namespace dlplan::policy {
 /// @brief Sort elements in policy by their evaluate time score.
 /// @tparam T
 template<typename T>
@@ -60,10 +80,11 @@ class BaseCondition {
 private:
     int m_index;
 
-protected:
-    BaseCondition();
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, BaseCondition& condition, const unsigned int version);
 
 public:
+    BaseCondition();
     BaseCondition(const BaseCondition& other) = delete;
     BaseCondition& operator=(const BaseCondition& other) = delete;
     BaseCondition(BaseCondition&& other) = delete;
@@ -95,10 +116,11 @@ class BaseEffect {
 private:
     int m_index;
 
-protected:
-    BaseEffect();
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, BaseEffect& effect, const unsigned int version);
 
 public:
+    BaseEffect();
     BaseEffect(const BaseEffect& other) = delete;
     BaseEffect& operator=(const BaseEffect& other) = delete;
     BaseEffect(BaseEffect&& other) = delete;
@@ -133,11 +155,13 @@ private:
     Effects m_effects;
     RuleIndex m_index;
 
-private:
     Rule(Conditions&& conditions, Effects&& effects);
     friend class PolicyBuilderImpl;
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, Rule& rule, const unsigned int version);
 
 public:
+    Rule();
     Rule(const Rule& other) = delete;
     Rule& operator=(const Rule& other) = delete;
     Rule(Rule&& other) = delete;
@@ -175,9 +199,10 @@ private:
     Rules m_rules;
     int m_index;
 
-private:
     explicit Policy(Rules&& rules);
     friend class PolicyBuilderImpl;
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, Policy& policy, const unsigned int version);
 
 public:
     Policy();
@@ -222,6 +247,9 @@ public:
 class PolicyBuilder {
 private:
     dlplan::utils::pimpl<PolicyBuilderImpl> m_pImpl;
+
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, PolicyBuilder& builder, const unsigned int version);
 
 public:
     PolicyBuilder();

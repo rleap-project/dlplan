@@ -66,7 +66,6 @@ protected:
     Constant m_constant;
 
 public:
-    OneOfConcept() : Concept(), m_constant(Constant()) { }
     OneOfConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, const Constant& constant)
     : Concept(vocabulary_info, true), m_constant(constant) {
     }

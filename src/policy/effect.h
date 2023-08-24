@@ -7,15 +7,50 @@
 #include <memory>
 
 
-namespace dlplan {
-namespace evaluator {
-    struct EvaluationContext;
+namespace dlplan::policy {
+class BooleanEffect;
+class NumericalEffect;
+class PositiveBooleanEffect;
+class NegativeBooleanEffect;
+class UnchangedBooleanEffect;
+class IncrementNumericalEffect;
+class DecrementNumericalEffect;
+class UnchangedNumericalEffect;
 }
-namespace policy {
+
+// Forward declare the serialize function template in boost::serialization namespace
+namespace boost::serialization {
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::BooleanEffect& effect, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::NumericalEffect& effect, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::PositiveBooleanEffect& effect, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::NegativeBooleanEffect& effect, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::UnchangedBooleanEffect& effect, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::IncrementNumericalEffect& effect, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::DecrementNumericalEffect& effect, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::UnchangedNumericalEffect& effect, const unsigned int version);
+}
+
+
+namespace dlplan::policy {
 
 class BooleanEffect : public BaseEffect {
 protected:
-    const std::shared_ptr<const core::Boolean> m_boolean;
+    std::shared_ptr<const core::Boolean> m_boolean;
 
 protected:
     BooleanEffect(std::shared_ptr<const core::Boolean> boolean);
@@ -29,7 +64,7 @@ protected:
 
 class NumericalEffect : public BaseEffect {
 protected:
-    const std::shared_ptr<const core::Numerical> m_numerical;
+    std::shared_ptr<const core::Numerical> m_numerical;
 
 protected:
     NumericalEffect(std::shared_ptr<const core::Numerical> numerical);
@@ -107,7 +142,6 @@ public:
     std::string str() const override;
 };
 
-}
 }
 
 #endif

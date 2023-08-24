@@ -7,6 +7,7 @@
 
 
 namespace dlplan::policy {
+Rule::Rule() { }
 
 Rule::Rule(Conditions&& conditions, Effects&& effects)
     : m_conditions(std::move(conditions)), m_effects(std::move(effects)) {

@@ -2,6 +2,7 @@
 
 #include "../../include/dlplan/core.h"
 #include "../../include/dlplan/novelty.h"
+#include "../../include/dlplan/policy.h"
 #include "../../include/dlplan/state_space.h"
 
 #include "../../src/core/element_factory.h"
@@ -48,6 +49,7 @@
 #include <boost/serialization/unique_ptr.hpp>
 #include <boost/serialization/weak_ptr.hpp>
 #include <boost/serialization/export.hpp>
+#include <boost/serialization/serialization.hpp>
 
 // Runtime
 // https://www.boost.org/doc/libs/1_82_0/libs/serialization/doc/serialization.html#export
@@ -107,6 +109,23 @@ void serialize( Archive& ar, dlplan::core::Constant& constant, const unsigned in
 {
     ar & constant.m_index;
     ar & constant.m_name;
+}
+
+template<class Archive>
+inline void save_construct_data(
+    Archive & ar, const dlplan::core::Constant* constant, const unsigned int /* version */ ){
+    ar << constant->m_index;
+    ar << constant->m_name;
+}
+
+template<class Archive>
+inline void load_construct_data(
+    Archive & ar, dlplan::core::Constant* constant, const unsigned int /* version */ ){
+    dlplan::core::ConstantIndex m_index;
+    std::string m_name;
+    ar >> m_index;
+    ar >> m_name;
+    ::new(constant)dlplan::core::Constant(m_name, m_index);
 }
 
 template<typename Archive>
@@ -512,6 +531,41 @@ void serialize( Archive& ar, dlplan::novelty::TupleGraph& tuple_graph, const uns
     ar & tuple_graph.m_nodes;
     ar & tuple_graph.m_node_indices_by_distance;
     ar & tuple_graph.m_state_indices_by_distance;
+}
+
+template<typename Archive>
+void serialize( Archive& ar, dlplan::policy::BaseCondition& condition, const unsigned int /* version */ )
+{
+    ar & condition.m_index;
+}
+
+template<typename Archive>
+void serialize( Archive& ar, dlplan::policy::BaseEffect& effect, const unsigned int /* version */ )
+{
+    ar & effect.m_index;
+}
+
+template<typename Archive>
+void serialize( Archive& ar, dlplan::policy::Rule& rule, const unsigned int /* version */ )
+{
+    ar & rule.m_index;
+    ar & rule.m_conditions;
+    ar & rule.m_effects;
+}
+
+template<typename Archive>
+void serialize( Archive& ar, dlplan::policy::Policy& policy, const unsigned int /* version */ )
+{
+    ar & policy.m_index;
+    ar & policy.m_booleans;
+    ar & policy.m_numericals;
+    ar & policy.m_rules;
+}
+
+template<typename Archive>
+void serialize( Archive& ar, dlplan::policy::PolicyBuilder& builder, const unsigned int /* version */ )
+{
+    ar & builder.m_pImpl;
 }
 
 template<typename Archive>
