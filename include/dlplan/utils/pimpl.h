@@ -21,9 +21,6 @@ namespace boost::serialization {
 
 
 namespace dlplan::utils {
-/**
- * Unique_ptr version without automatically generated copy constructor and copy assignment.
- */
 template<typename T>
 class pimpl {
 private:

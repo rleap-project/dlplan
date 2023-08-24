@@ -49,7 +49,8 @@
 #include <boost/serialization/weak_ptr.hpp>
 #include <boost/serialization/export.hpp>
 
-
+// Runtime
+// https://www.boost.org/doc/libs/1_82_0/libs/serialization/doc/serialization.html#export
 BOOST_CLASS_EXPORT_GUID(dlplan::core::Concept, "dlplan::core::Concept")
 BOOST_CLASS_EXPORT_GUID(dlplan::core::Role, "dlplan::core::Role")
 BOOST_CLASS_EXPORT_GUID(dlplan::core::Boolean, "dlplan::core::Boolean")
@@ -163,36 +164,36 @@ void serialize(Archive& ar, dlplan::core::BaseElement& element, const unsigned i
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::Concept& concept, const unsigned int /* version */ ) {
-    boost::serialization::base_object<dlplan::core::BaseElement>(concept);
+void serialize(Archive& ar, dlplan::core::Concept& concept, const unsigned int /* version */ ) {
+    ar & boost::serialization::base_object<dlplan::core::BaseElement>(concept);
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::Role& role, const unsigned int /* version */ ) {
-    boost::serialization::base_object<dlplan::core::BaseElement>(role);
+void serialize(Archive& ar, dlplan::core::Role& role, const unsigned int /* version */ ) {
+    ar & boost::serialization::base_object<dlplan::core::BaseElement>(role);
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::Boolean& boolean, const unsigned int /* version */ ) {
-    boost::serialization::base_object<dlplan::core::BaseElement>(boolean);
+void serialize(Archive& ar, dlplan::core::Boolean& boolean, const unsigned int /* version */ ) {
+    ar & boost::serialization::base_object<dlplan::core::BaseElement>(boolean);
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::Numerical& numerical, const unsigned int /* version */ ) {
-    boost::serialization::base_object<dlplan::core::BaseElement>(numerical);
+void serialize(Archive& ar, dlplan::core::Numerical& numerical, const unsigned int /* version */ ) {
+    ar & boost::serialization::base_object<dlplan::core::BaseElement>(numerical);
 }
 
 template<typename Archive, typename T>
 void serialize(Archive& ar, dlplan::core::EmptyBoolean<T>& boolean, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Boolean>(boolean);
+    ar & boost::serialization::base_object<dlplan::core::Boolean>(boolean);
     ar & boolean.m_element;
 }
 
 template<typename Archive, typename T>
 void serialize(Archive& ar, dlplan::core::InclusionBoolean<T>& boolean, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Boolean>(boolean);
+    ar & boost::serialization::base_object<dlplan::core::Boolean>(boolean);
     ar & boolean.m_element_left;
     ar & boolean.m_element_right;
 }
@@ -200,14 +201,14 @@ void serialize(Archive& ar, dlplan::core::InclusionBoolean<T>& boolean, const un
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::NullaryBoolean& boolean, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Boolean>(boolean);
+    ar & boost::serialization::base_object<dlplan::core::Boolean>(boolean);
     ar & boolean.m_predicate;
 }
 
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::AllConcept& concept, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Concept>(concept);
+    ar & boost::serialization::base_object<dlplan::core::Concept>(concept);
     ar & concept.m_concept;
     ar & concept.m_role;
 }
@@ -215,21 +216,21 @@ void serialize(Archive& ar, dlplan::core::AllConcept& concept, const unsigned in
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::AndConcept& concept, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Concept>(concept);
+    ar & boost::serialization::base_object<dlplan::core::Concept>(concept);
     ar & concept.m_concept_left;
     ar & concept.m_concept_right;
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::BotConcept& concept, const unsigned int /* version */ )
+void serialize(Archive& ar, dlplan::core::BotConcept& concept, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Concept>(concept);
+    ar & boost::serialization::base_object<dlplan::core::Concept>(concept);
 }
 
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::DiffConcept& concept, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Concept>(concept);
+    ar & boost::serialization::base_object<dlplan::core::Concept>(concept);
     ar & concept.m_concept_left;
     ar & concept.m_concept_right;
 }
@@ -237,7 +238,7 @@ void serialize(Archive& ar, dlplan::core::DiffConcept& concept, const unsigned i
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::EqualConcept& concept, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Concept>(concept);
+    ar & boost::serialization::base_object<dlplan::core::Concept>(concept);
     ar & concept.m_role_left;
     ar & concept.m_role_right;
 }
@@ -245,21 +246,21 @@ void serialize(Archive& ar, dlplan::core::EqualConcept& concept, const unsigned 
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::NotConcept& concept, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Concept>(concept);
+    ar & boost::serialization::base_object<dlplan::core::Concept>(concept);
     ar & concept.m_concept;
 }
 
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::OneOfConcept& concept, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Concept>(concept);
+    ar & boost::serialization::base_object<dlplan::core::Concept>(concept);
     ar & concept.m_constant;
 }
 
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::OrConcept& concept, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Concept>(concept);
+    ar & boost::serialization::base_object<dlplan::core::Concept>(concept);
     ar & concept.m_concept_left;
     ar & concept.m_concept_right;
 }
@@ -267,7 +268,7 @@ void serialize(Archive& ar, dlplan::core::OrConcept& concept, const unsigned int
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::PrimitiveConcept& concept, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Concept>(concept);
+    ar & boost::serialization::base_object<dlplan::core::Concept>(concept);
     ar & concept.m_predicate;
     ar & concept.m_pos;
 }
@@ -275,7 +276,7 @@ void serialize(Archive& ar, dlplan::core::PrimitiveConcept& concept, const unsig
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::ProjectionConcept& concept, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Concept>(concept);
+    ar & boost::serialization::base_object<dlplan::core::Concept>(concept);
     ar & concept.m_role;
     ar & concept.m_pos;
 }
@@ -283,7 +284,7 @@ void serialize(Archive& ar, dlplan::core::ProjectionConcept& concept, const unsi
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::SomeConcept& concept, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Concept>(concept);
+    ar & boost::serialization::base_object<dlplan::core::Concept>(concept);
     ar & concept.m_role;
     ar & concept.m_concept;
 }
@@ -291,21 +292,21 @@ void serialize(Archive& ar, dlplan::core::SomeConcept& concept, const unsigned i
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::SubsetConcept& concept, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Concept>(concept);
+    ar & boost::serialization::base_object<dlplan::core::Concept>(concept);
     ar & concept.m_role_left;
     ar & concept.m_role_right;
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::TopConcept& concept, const unsigned int /* version */ )
+void serialize(Archive& ar, dlplan::core::TopConcept& concept, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Concept>(concept);
+    ar & boost::serialization::base_object<dlplan::core::Concept>(concept);
 }
 
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::ConceptDistanceNumerical& numerical, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Numerical>(numerical);
+    ar & boost::serialization::base_object<dlplan::core::Numerical>(numerical);
     ar & numerical.m_concept_from;
     ar & numerical.m_role;
     ar & numerical.m_concept_to;
@@ -314,14 +315,14 @@ void serialize(Archive& ar, dlplan::core::ConceptDistanceNumerical& numerical, c
 template<typename Archive, typename T>
 void serialize(Archive& ar, dlplan::core::CountNumerical<T>& numerical, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Numerical>(numerical);
+    ar & boost::serialization::base_object<dlplan::core::Numerical>(numerical);
     ar & numerical.m_element;
 }
 
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::RoleDistanceNumerical& numerical, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Numerical>(numerical);
+    ar & boost::serialization::base_object<dlplan::core::Numerical>(numerical);
     ar & numerical.m_role_from;
     ar & numerical.m_role;
     ar & numerical.m_role_to;
@@ -330,7 +331,7 @@ void serialize(Archive& ar, dlplan::core::RoleDistanceNumerical& numerical, cons
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::SumConceptDistanceNumerical& numerical, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Numerical>(numerical);
+    ar & boost::serialization::base_object<dlplan::core::Numerical>(numerical);
     ar & numerical.m_concept_from;
     ar & numerical.m_role;
     ar & numerical.m_concept_to;
@@ -339,7 +340,7 @@ void serialize(Archive& ar, dlplan::core::SumConceptDistanceNumerical& numerical
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::SumRoleDistanceNumerical& numerical, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Numerical>(numerical);
+    ar & boost::serialization::base_object<dlplan::core::Numerical>(numerical);
     ar & numerical.m_role_from;
     ar & numerical.m_role;
     ar & numerical.m_role_to;
@@ -348,7 +349,7 @@ void serialize(Archive& ar, dlplan::core::SumRoleDistanceNumerical& numerical, c
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::AndRole& role, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Role>(role);
+    ar & boost::serialization::base_object<dlplan::core::Role>(role);
     ar & role.m_role_left;
     ar & role.m_role_right;
 }
@@ -356,7 +357,7 @@ void serialize(Archive& ar, dlplan::core::AndRole& role, const unsigned int /* v
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::ComposeRole& role, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Role>(role);
+    ar & boost::serialization::base_object<dlplan::core::Role>(role);
     ar & role.m_role_left;
     ar & role.m_role_right;
 }
@@ -364,7 +365,7 @@ void serialize(Archive& ar, dlplan::core::ComposeRole& role, const unsigned int 
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::DiffRole& role, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Role>(role);
+    ar & boost::serialization::base_object<dlplan::core::Role>(role);
     ar & role.m_role_left;
     ar & role.m_role_right;
 }
@@ -372,28 +373,28 @@ void serialize(Archive& ar, dlplan::core::DiffRole& role, const unsigned int /* 
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::IdentityRole& role, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Role>(role);
+    ar & boost::serialization::base_object<dlplan::core::Role>(role);
     ar & role.m_concept;
 }
 
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::InverseRole& role, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Role>(role);
+    ar & boost::serialization::base_object<dlplan::core::Role>(role);
     ar & role.m_role;;
 }
 
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::NotRole& role, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Role>(role);
+    ar & boost::serialization::base_object<dlplan::core::Role>(role);
     ar & role.m_role;
 }
 
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::OrRole& role, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Role>(role);
+    ar & boost::serialization::base_object<dlplan::core::Role>(role);
     ar & role.m_role_left;
     ar & role.m_role_right;
 }
@@ -401,7 +402,7 @@ void serialize(Archive& ar, dlplan::core::OrRole& role, const unsigned int /* ve
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::PrimitiveRole& role, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Role>(role);
+    ar & boost::serialization::base_object<dlplan::core::Role>(role);
     ar & role.m_predicate;
     ar & role.m_pos_1;
     ar & role.m_pos_2;
@@ -410,28 +411,28 @@ void serialize(Archive& ar, dlplan::core::PrimitiveRole& role, const unsigned in
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::RestrictRole& role, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Role>(role);
+    ar & boost::serialization::base_object<dlplan::core::Role>(role);
     ar & role.m_role;
     ar & role.m_concept;
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::TopRole& role, const unsigned int /* version */ )
+void serialize(Archive& ar, dlplan::core::TopRole& role, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Role>(role);
+    ar & boost::serialization::base_object<dlplan::core::Role>(role);
 }
 
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::TransitiveClosureRole& role, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Role>(role);
+    ar & boost::serialization::base_object<dlplan::core::Role>(role);
     ar & role.m_role;
 }
 
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::TransitiveReflexiveClosureRole& role, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::Role>(role);
+    ar & boost::serialization::base_object<dlplan::core::Role>(role);
     ar & role.m_role;
 }
 
