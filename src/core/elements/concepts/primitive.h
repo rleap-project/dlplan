@@ -13,7 +13,17 @@ using namespace std::string_literals;
 
 
 namespace dlplan::core {
+class PrimitiveConcept;
+}
 
+
+namespace boost::serialization {
+    template<typename Archive>
+    void serialize(Archive& ar, dlplan::core::PrimitiveConcept& concept, const unsigned int version);
+}
+
+
+namespace dlplan::core {
 class PrimitiveConcept : public Concept {
 private:
     void compute_result(const State& state, ConceptDenotation& result) const {
@@ -55,11 +65,15 @@ private:
         return denotations;
     }
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, PrimitiveConcept& concept, const unsigned int version);
+
 protected:
-    const Predicate m_predicate;
-    const int m_pos;
+    Predicate m_predicate;
+    int m_pos;
 
 public:
+    PrimitiveConcept() : Concept(), m_predicate(Predicate()), m_pos(-1) { }
     PrimitiveConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, const Predicate& predicate, int pos)
     : Concept(vocabulary_info, predicate.is_static()), m_predicate(predicate), m_pos(pos) {
         if (m_pos >= m_predicate.get_arity()) {

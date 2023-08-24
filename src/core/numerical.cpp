@@ -2,7 +2,7 @@
 
 
 namespace dlplan::core {
-
+Numerical::Numerical() : BaseElement() { }
 
 Numerical::Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static)
     : BaseElement(vocabulary_info, is_static) {

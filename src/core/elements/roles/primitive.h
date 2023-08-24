@@ -13,7 +13,17 @@ using namespace std::string_literals;
 
 
 namespace dlplan::core {
+class PrimitiveRole;
+}
 
+
+namespace boost::serialization {
+    template<typename Archive>
+    void serialize(Archive& ar, dlplan::core::PrimitiveRole& role, const unsigned int version);
+}
+
+
+namespace dlplan::core {
 class PrimitiveRole : public Role {
 private:
     void compute_result(const State& state, RoleDenotation& result) const {
@@ -57,12 +67,16 @@ private:
         return denotations;
     }
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, PrimitiveRole& role, const unsigned int version);
+
 protected:
-    const Predicate m_predicate;
-    const int m_pos_1;
-    const int m_pos_2;
+    Predicate m_predicate;
+    int m_pos_1;
+    int m_pos_2;
 
 public:
+    PrimitiveRole() : Role(), m_predicate(Predicate()), m_pos_1(-1), m_pos_2(-1) { }
     PrimitiveRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, const Predicate& predicate, int pos_1, int pos_2)
     : Role(vocabulary_info, predicate.is_static()), m_predicate(predicate), m_pos_1(pos_1), m_pos_2(pos_2) {
         if (m_pos_1 >= m_predicate.get_arity() || m_pos_2 >= m_predicate.get_arity()) {

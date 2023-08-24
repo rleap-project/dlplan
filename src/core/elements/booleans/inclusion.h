@@ -12,7 +12,18 @@ using namespace std::string_literals;
 
 
 namespace dlplan::core {
+template<typename T>
+class InclusionBoolean;
+}
 
+
+namespace boost::serialization {
+    template<typename Archive, typename T>
+    void serialize(Archive& ar, dlplan::core::InclusionBoolean<T>& boolean, const unsigned int version);
+}
+
+
+namespace dlplan::core {
 template<typename T>
 class InclusionBoolean : public Boolean {
 private:
@@ -47,11 +58,15 @@ private:
         return denotations;
     }
 
+    template<typename Archive, typename T_>
+    friend void boost::serialization::serialize(Archive& ar, InclusionBoolean<T_>& boolean, const unsigned int version);
+
 protected:
-    const std::shared_ptr<const T> m_element_left;
-    const std::shared_ptr<const T> m_element_right;
+    std::shared_ptr<const T> m_element_left;
+    std::shared_ptr<const T> m_element_right;
 
 public:
+    InclusionBoolean() : Boolean(), m_element_left(nullptr), m_element_right(nullptr) { }
     InclusionBoolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const T> element_left, std::shared_ptr<const T> element_right)
     : Boolean(vocabulary_info, element_left->is_static() && element_right->is_static()),
       m_element_left(element_left),

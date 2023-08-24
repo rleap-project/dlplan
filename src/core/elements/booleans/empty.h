@@ -6,12 +6,24 @@
 #include "../../../../include/dlplan/core.h"
 
 #include <sstream>
+#include <memory>
 
 using namespace std::string_literals;
 
 
 namespace dlplan::core {
+template<typename T>
+class EmptyBoolean;
+}
 
+
+namespace boost::serialization {
+    template<typename Archive, typename T>
+    void serialize(Archive& ar, dlplan::core::EmptyBoolean<T>& boolean, const unsigned int version);
+}
+
+
+namespace dlplan::core {
 template<typename T>
 class EmptyBoolean : public Boolean {
 private:
@@ -43,10 +55,14 @@ private:
         return denotations;
     }
 
+    template<typename Archive, typename T_>
+    friend void boost::serialization::serialize(Archive& ar, EmptyBoolean<T_>& boolean, const unsigned int version);
+
 protected:
-    const std::shared_ptr<const T> m_element;
+    std::shared_ptr<const T> m_element;
 
 public:
+    EmptyBoolean() : Boolean(), m_element(nullptr) { }
     EmptyBoolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const T> element)
         : Boolean(vocabulary_info, element->is_static()), m_element(element) {
     }

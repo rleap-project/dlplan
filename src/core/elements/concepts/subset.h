@@ -11,7 +11,17 @@ using namespace std::string_literals;
 
 
 namespace dlplan::core {
+class SubsetConcept;
+}
 
+
+namespace boost::serialization {
+    template<typename Archive>
+    void serialize(Archive& ar, dlplan::core::SubsetConcept& concept, const unsigned int version);
+}
+
+
+namespace dlplan::core {
 class SubsetConcept : public Concept {
 private:
     void compute_result(const RoleDenotation& left_denot, const RoleDenotation& right_denot, ConceptDenotation& result) const {
@@ -48,11 +58,15 @@ private:
         return denotations;
     }
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, SubsetConcept& concept, const unsigned int version);
+
 protected:
-    const std::shared_ptr<const Role> m_role_left;
-    const std::shared_ptr<const Role> m_role_right;
+    std::shared_ptr<const Role> m_role_left;
+    std::shared_ptr<const Role> m_role_right;
 
 public:
+    SubsetConcept() : Concept(), m_role_left(nullptr), m_role_right(nullptr) { }
     SubsetConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role_left, std::shared_ptr<const Role> role_right)
     : Concept(vocabulary_info, role_left->is_static() && role_right->is_static()),
       m_role_left(role_left), m_role_right(role_right) {

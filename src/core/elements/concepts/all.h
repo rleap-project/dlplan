@@ -11,7 +11,17 @@ using namespace std::string_literals;
 
 
 namespace dlplan::core {
+class AllConcept;
+}
 
+
+namespace boost::serialization {
+    template<typename Archive>
+    void serialize(Archive& ar, dlplan::core::AllConcept& concept, const unsigned int version);
+}
+
+
+namespace dlplan::core {
 class AllConcept : public Concept {
 private:
     void compute_result(const RoleDenotation& role_denot, const ConceptDenotation& concept_denot, ConceptDenotation& result) const {
@@ -49,11 +59,15 @@ private:
         return denotations;
     }
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, AllConcept& concept, const unsigned int version);
+
 protected:
-    const std::shared_ptr<const Role> m_role;
-    const std::shared_ptr<const Concept> m_concept;
+    std::shared_ptr<const Role> m_role;
+    std::shared_ptr<const Concept> m_concept;
 
 public:
+    AllConcept() : Concept(), m_role(nullptr), m_concept(nullptr) { }
     AllConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept)
     : Concept(vocabulary_info, role->is_static() && concept->is_static()), m_role(role), m_concept(concept) {
         if (!(role && concept)) {

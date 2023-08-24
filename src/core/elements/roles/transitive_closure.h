@@ -11,7 +11,17 @@ using namespace std::string_literals;
 
 
 namespace dlplan::core {
+class TransitiveClosureRole;
+}
 
+
+namespace boost::serialization {
+    template<typename Archive>
+    void serialize(Archive& ar, dlplan::core::TransitiveClosureRole& role, const unsigned int version);
+}
+
+
+namespace dlplan::core {
 // https://stackoverflow.com/questions/3517524/what-is-the-best-known-transitive-closure-algorithm-for-a-directed-graph
 class TransitiveClosureRole : public Role {
 private:
@@ -54,10 +64,14 @@ private:
        return denotations;
     }
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, TransitiveClosureRole& role, const unsigned int version);
+
 protected:
-    const std::shared_ptr<const Role> m_role;
+    std::shared_ptr<const Role> m_role;
 
 public:
+    TransitiveClosureRole() : Role(), m_role(nullptr) { }
     TransitiveClosureRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role)
     : Role(vocabulary_info, role->is_static()), m_role(role) {
         if (!role) {

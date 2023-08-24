@@ -11,7 +11,17 @@ using namespace std::string_literals;
 
 
 namespace dlplan::core {
+class NullaryBoolean;
+}
 
+
+namespace boost::serialization {
+    template<typename Archive>
+    void serialize(Archive& ar, dlplan::core::NullaryBoolean& boolean, const unsigned int version);
+}
+
+
+namespace dlplan::core {
 class NullaryBoolean : public Boolean {
 private:
     void compute_result(const State& state, bool& result) const {
@@ -45,10 +55,14 @@ private:
         return denotations;
     }
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, NullaryBoolean& boolean, const unsigned int version);
+
 protected:
-    const Predicate m_predicate;
+    Predicate m_predicate;
 
 public:
+    NullaryBoolean() : Boolean(), m_predicate(Predicate()) { }
     NullaryBoolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, const Predicate& predicate)
     : Boolean(vocabulary_info, predicate.is_static()), m_predicate(predicate) {
         if (predicate.get_arity() != 0) {

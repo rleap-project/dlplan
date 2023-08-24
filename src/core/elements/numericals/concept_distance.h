@@ -11,6 +11,17 @@ using namespace std::string_literals;
 
 
 namespace dlplan::core {
+class ConceptDistanceNumerical;
+}
+
+
+namespace boost::serialization {
+    template<typename Archive>
+    void serialize(Archive& ar, dlplan::core::ConceptDistanceNumerical& numerical, const unsigned int version);
+}
+
+
+namespace dlplan::core {
 
 class ConceptDistanceNumerical : public Numerical {
 private:
@@ -69,12 +80,16 @@ private:
         return denotations;
     }
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, ConceptDistanceNumerical& numerical, const unsigned int version);
+
 protected:
-    const std::shared_ptr<const Concept> m_concept_from;
-    const std::shared_ptr<const Role> m_role;
-    const std::shared_ptr<const Concept> m_concept_to;
+    std::shared_ptr<const Concept> m_concept_from;
+    std::shared_ptr<const Role> m_role;
+    std::shared_ptr<const Concept> m_concept_to;
 
 public:
+    ConceptDistanceNumerical() : Numerical(), m_concept_from(nullptr), m_role(nullptr), m_concept_to(nullptr) { }
     ConceptDistanceNumerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept_from, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept_to)
     : Numerical(vocabulary_info, concept_from->is_static() && role->is_static() && concept_to->is_static()),
       m_concept_from(concept_from), m_role(role), m_concept_to(concept_to) {

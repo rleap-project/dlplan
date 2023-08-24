@@ -11,7 +11,17 @@ using namespace std::string_literals;
 
 
 namespace dlplan::core {
+class NotRole;
+}
 
+
+namespace boost::serialization {
+    template<typename Archive>
+    void serialize(Archive& ar, dlplan::core::NotRole& role, const unsigned int version);
+}
+
+
+namespace dlplan::core {
 class NotRole : public Role {
 private:
     void compute_result(const RoleDenotation& denot, RoleDenotation& result) const {
@@ -41,10 +51,14 @@ private:
        return denotations;
     }
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, NotRole& role, const unsigned int version);
+
 protected:
-    const std::shared_ptr<const Role> m_role;
+    std::shared_ptr<const Role> m_role;
 
 public:
+    NotRole() : Role(), m_role(nullptr) { }
     NotRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role)
     : Role(vocabulary_info, role->is_static()), m_role(role) {
         if (!role) {

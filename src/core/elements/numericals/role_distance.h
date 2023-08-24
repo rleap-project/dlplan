@@ -11,7 +11,17 @@ using namespace std::string_literals;
 
 
 namespace dlplan::core {
+class RoleDistanceNumerical;
+}
 
+
+namespace boost::serialization {
+    template<typename Archive>
+    void serialize(Archive& ar, dlplan::core::RoleDistanceNumerical& numerical, const unsigned int version);
+}
+
+
+namespace dlplan::core {
 class RoleDistanceNumerical : public Numerical {
 private:
     void compute_result(const RoleDenotation& role_from_denot, const RoleDenotation& role_denot, const RoleDenotation& role_to_denot, int& result) const {
@@ -72,17 +82,21 @@ private:
         return denotations;
     }
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, RoleDistanceNumerical& numerical, const unsigned int version);
+
 protected:
-    const std::shared_ptr<const Role> m_role_from;
-    const std::shared_ptr<const Role> m_role;
-    const std::shared_ptr<const Role> m_role_to;
+    std::shared_ptr<const Role> m_role_from;
+    std::shared_ptr<const Role> m_role;
+    std::shared_ptr<const Role> m_role_to;
 
 public:
+    RoleDistanceNumerical() : Numerical(), m_role_from(nullptr), m_role(nullptr), m_role_to(nullptr) { }
     RoleDistanceNumerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role_from, std::shared_ptr<const Role> role, std::shared_ptr<const Role> role_to)
     : Numerical(vocabulary_info, role_from->is_static() && role->is_static() && role_to->is_static()),
       m_role_from(role_from), m_role(role), m_role_to(role_to) {
         if (!(role_from && role && role_to)) {
-            throw std::runtime_error("ConceptDistanceNumerical::ConceptDistanceNumerical - child is not of type Role, Role, Role.");
+            throw std::runtime_error("RoleDistanceNumerical::RoleDistanceNumerical - child is not of type Role, Role, Role.");
         }
     }
 

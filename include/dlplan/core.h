@@ -25,6 +25,11 @@ class Object;
 class Atom;
 class InstanceInfo;
 class State;
+class BaseElement;
+class Concept;
+class Role;
+class Boolean;
+class Numerical;
 class SyntacticElementFactory;
 class SyntacticElementFactoryImpl;
 }
@@ -51,6 +56,21 @@ namespace boost::serialization {
 
     template <typename Archive>
     void serialize(Archive& ar, dlplan::core::InstanceInfo& instance_info, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, dlplan::core::BaseElement& element, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, dlplan::core::Concept& concept, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, dlplan::core::Role& role, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, dlplan::core::Boolean& boolean, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, dlplan::core::Numerical& numerical, const unsigned int version);
 
     template<typename Archive>
     void serialize(Archive& ar, dlplan::core::SyntacticElementFactory& factory, const unsigned int version);
@@ -784,10 +804,14 @@ protected:
      */
     bool m_is_static;
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, BaseElement& element, const unsigned int version);
+
 protected:
     explicit BaseElement(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
 
 public:
+    BaseElement() : m_vocabulary_info(nullptr), m_index(-1), m_is_static(false) { }
     virtual ~BaseElement();
 
     /**
@@ -829,12 +853,16 @@ public:
 class Concept : public BaseElement {
 protected:
     Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
+
     friend class SyntacticElementFactoryImpl;
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, Concept& concept, const unsigned int version);
 
     virtual ConceptDenotation evaluate_impl(const State& state, DenotationsCaches& caches) const = 0;
     virtual ConceptDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
 
 public:
+    Concept();
     Concept(const Concept& other);
     Concept& operator=(const Concept& other);
     Concept(Concept&& other);
@@ -852,12 +880,16 @@ public:
 class Role : public BaseElement {
 protected:
     Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
+
     friend class SyntacticElementFactoryImpl;
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, Role& role, const unsigned int version);
 
     virtual RoleDenotation evaluate_impl(const State& state, DenotationsCaches& caches) const = 0;
     virtual RoleDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
 
 public:
+    Role();
     Role(const Role& other);
     Role& operator=(const Role& other);
     Role(Role&& other);
@@ -875,12 +907,16 @@ public:
 class Numerical : public BaseElement {
 protected:
     Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
+
     friend class SyntacticElementFactoryImpl;
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, Numerical& numerical, const unsigned int version);
 
     virtual int evaluate_impl(const State& state, DenotationsCaches& caches) const = 0;
     virtual NumericalDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
 
 public:
+    Numerical();
     Numerical(const Numerical& other);
     Numerical& operator=(const Numerical& other);
     Numerical(Numerical&& other);
@@ -898,12 +934,16 @@ public:
 class Boolean : public BaseElement {
 protected:
     Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static);
+
     friend class SyntacticElementFactoryImpl;
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, Boolean& boolean, const unsigned int version);
 
     virtual bool evaluate_impl(const State& state, DenotationsCaches& caches) const = 0;
     virtual BooleanDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
 
 public:
+    Boolean();
     Boolean(const Boolean& other);
     Boolean& operator=(const Boolean& other);
     Boolean(Boolean&& other);

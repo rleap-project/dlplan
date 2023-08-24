@@ -11,7 +11,17 @@ using namespace std::string_literals;
 
 
 namespace dlplan::core {
+class OrRole;
+}
 
+
+namespace boost::serialization {
+    template<typename Archive>
+    void serialize(Archive& ar, dlplan::core::OrRole& role, const unsigned int version);
+}
+
+
+namespace dlplan::core {
 class OrRole : public Role {
 private:
     void compute_result(const RoleDenotation& left_denot, const RoleDenotation& right_denot, RoleDenotation& result) const {
@@ -44,11 +54,15 @@ private:
         return denotations;
     }
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, OrRole& role, const unsigned int version);
+
 protected:
     std::shared_ptr<const Role> m_role_left;
     std::shared_ptr<const Role> m_role_right;
 
 public:
+    OrRole() : Role(), m_role_left(nullptr), m_role_right(nullptr) { }
     OrRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role_1, std::shared_ptr<const Role> role_2)
     : Role(vocabulary_info, role_1->is_static() && role_2->is_static()),
       m_role_left(role_1),

@@ -11,7 +11,17 @@ using namespace std::string_literals;
 
 
 namespace dlplan::core {
+class InverseRole;
+}
 
+
+namespace boost::serialization {
+    template<typename Archive>
+    void serialize(Archive& ar, dlplan::core::InverseRole& role, const unsigned int version);
+}
+
+
+namespace dlplan::core {
 class InverseRole : public Role {
 private:
     void compute_result(const RoleDenotation& denot, RoleDenotation& result) const {
@@ -42,10 +52,14 @@ private:
        return denotations;
     }
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, InverseRole& role, const unsigned int version);
+
 protected:
-    const std::shared_ptr<const Role> m_role;
+    std::shared_ptr<const Role> m_role;
 
 public:
+    InverseRole() : Role(), m_role(nullptr) { }
     InverseRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role)
     : Role(vocabulary_info, role->is_static()), m_role(role) {
         if (!role) {

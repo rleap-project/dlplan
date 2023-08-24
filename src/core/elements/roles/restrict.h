@@ -11,7 +11,17 @@ using namespace std::string_literals;
 
 
 namespace dlplan::core {
+class RestrictRole;
+}
 
+
+namespace boost::serialization {
+    template<typename Archive>
+    void serialize(Archive& ar, dlplan::core::RestrictRole& role, const unsigned int version);
+}
+
+
+namespace dlplan::core {
 class RestrictRole : public Role {
 private:
     void compute_result(const RoleDenotation& role_denot, const ConceptDenotation& concept_denot, RoleDenotation& result) const {
@@ -48,11 +58,15 @@ private:
         return denotations;
     }
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, RestrictRole& role, const unsigned int version);
+
 protected:
-    const std::shared_ptr<const Role> m_role;
-    const std::shared_ptr<const Concept> m_concept;
+    std::shared_ptr<const Role> m_role;
+    std::shared_ptr<const Concept> m_concept;
 
 public:
+    RestrictRole() : Role(), m_role(nullptr), m_concept(nullptr) { }
     RestrictRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept)
     : Role(vocabulary_info, role->is_static() && concept->is_static()), m_role(role), m_concept(concept) {
         if (!(role && concept)) {

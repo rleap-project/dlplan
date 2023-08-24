@@ -28,6 +28,11 @@ TEST(DLPTests, SerializationGripperTest) {
     for (const auto& pair : state_space_2->get_states()) {
         out_data.tuple_graphs.emplace(std::to_string(state_space_2->get_instance_info()->get_index()) + "_" + std::to_string(pair.first), std::make_shared<TupleGraph>(novelty_base, state_space_2, pair.first));
     }
+    out_data.vocabulary_infos.emplace("0", state_space_1->get_instance_info()->get_vocabulary_info());
+    out_data.vocabulary_infos.emplace("1", state_space_2->get_instance_info()->get_vocabulary_info());
+
+    out_data.instance_infos.emplace("0", state_space_1->get_instance_info());
+    out_data.instance_infos.emplace("1", state_space_2->get_instance_info());
 
     std::stringstream buffer;
     dlplan::serialization::serialize(out_data, buffer);
@@ -39,6 +44,12 @@ TEST(DLPTests, SerializationGripperTest) {
     EXPECT_EQ(in_data.tuple_graphs.size(), state_space_1->get_states().size() + state_space_2->get_states().size());
     EXPECT_EQ(in_data.tuple_graphs.count("0_0"), 1);
     EXPECT_EQ(in_data.tuple_graphs.count("1_0"), 1);
+
+    EXPECT_EQ(in_data.vocabulary_infos.size(), 2);
+    EXPECT_EQ(in_data.vocabulary_infos["0"], in_data.vocabulary_infos["1"]);
+
+    EXPECT_EQ(in_data.instance_infos.size(), 2);
+    EXPECT_NE(in_data.instance_infos["0"], in_data.instance_infos["1"]);
 }
 
 }

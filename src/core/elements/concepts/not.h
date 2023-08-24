@@ -11,7 +11,17 @@ using namespace std::string_literals;
 
 
 namespace dlplan::core {
+class NotConcept;
+}
 
+
+namespace boost::serialization {
+    template<typename Archive>
+    void serialize(Archive& ar, dlplan::core::NotConcept& concept, const unsigned int version);
+}
+
+
+namespace dlplan::core {
 class NotConcept : public Concept {
 private:
     void compute_result(const ConceptDenotation& denot, ConceptDenotation& result) const {
@@ -42,10 +52,14 @@ private:
         return denotations;
     }
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, NotConcept& concept, const unsigned int version);
+
 protected:
-    const std::shared_ptr<const Concept> m_concept;
+    std::shared_ptr<const Concept> m_concept;
 
 public:
+    NotConcept() : Concept(), m_concept(nullptr) { }
     NotConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept)
     : Concept(vocabulary_info, concept->is_static()), m_concept(concept){
         if (!concept) {
