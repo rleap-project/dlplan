@@ -91,9 +91,7 @@ BOOST_CLASS_EXPORT_GUID(dlplan::core::TransitiveReflexiveClosureRole, "dlplan::c
 
 namespace boost::serialization {
 template<typename Archive>
-inline void serialize(Archive& ar, dlplan::core::Constant& constant, const unsigned int /* version */) {
-    ar & constant.m_name;
-    ar & constant.m_index;
+inline void serialize(Archive& /* ar */ , dlplan::core::Constant& /* constant */, const unsigned int /* version */) {
 }
 
 template<class Archive>
@@ -111,6 +109,10 @@ inline void load_construct_data(
     ar >> name;
     ar >> index;
     ::new(constant)dlplan::core::Constant(name, index);
+}
+
+template<typename Archive>
+inline void serialize(Archive& /* ar */ , dlplan::core::Predicate& /* predicate */, const unsigned int /* version */) {
 }
 
 template<class Archive>
@@ -136,6 +138,10 @@ inline void load_construct_data(
     ::new(predicate)dlplan::core::Predicate(name, index, arity, is_static);
 }
 
+template<typename Archive>
+inline void serialize(Archive& /* ar */ , dlplan::core::Object& /* object */, const unsigned int /* version */) {
+}
+
 template<class Archive>
 inline void save_construct_data(
     Archive & ar, const dlplan::core::Object* object, const unsigned int /* version */ ){
@@ -151,6 +157,10 @@ inline void load_construct_data(
     ar >> name;
     ar >> index;
     ::new(object)dlplan::core::Object(name, index);
+}
+
+template<typename Archive>
+inline void serialize(Archive& /* ar */ , dlplan::core::Atom& /* atom */, const unsigned int /* version */) {
 }
 
 template<class Archive>
@@ -189,17 +199,21 @@ void serialize( Archive& ar, dlplan::core::VocabularyInfo& vocabulary_info, cons
     ar & vocabulary_info.m_predicate_name_to_index;
 }
 
+template<typename Archive>
+inline void serialize(Archive& ar, dlplan::core::InstanceInfo& instance_info, const unsigned int /* version */) {
+    ar & instance_info.m_objects;
+    ar & instance_info.m_object_name_to_index;
+    ar & instance_info.m_atoms;
+    ar & instance_info.m_atom_name_to_index;
+    ar & instance_info.m_static_atoms;
+    ar & instance_info.m_static_atom_name_to_index;
+}
+
 template<class Archive>
 inline void save_construct_data(
     Archive & ar, const dlplan::core::InstanceInfo* instance_info, const unsigned int /* version */ ){
-    ar << instance_info->m_vocabulary_info;
-    ar << instance_info->m_index;
-    ar << instance_info->m_objects;
-    ar << instance_info->m_object_name_to_index;
-    ar << instance_info->m_atoms;
-    ar << instance_info->m_atom_name_to_index;
-    ar << instance_info->m_static_atoms;
-    ar << instance_info->m_static_atom_name_to_index;
+    ar & instance_info->m_vocabulary_info;
+    ar & instance_info->m_index;
 }
 
 template<class Archive>
@@ -207,65 +221,87 @@ inline void load_construct_data(
     Archive & ar, dlplan::core::InstanceInfo* instance_info, const unsigned int /* version */ ){
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     dlplan::core::InstanceIndex index;
-    std::unordered_map<std::string, dlplan::core::AtomIndex> atom_name_to_index;
-    std::vector<dlplan::core::Atom> atoms;
-    std::unordered_map<std::string, dlplan::core::AtomIndex> static_atom_name_to_index;
-    std::vector<dlplan::core::Atom> static_atoms;
-    std::unordered_map<std::string, dlplan::core::ObjectIndex> object_name_to_index;
-    std::vector<dlplan::core::Object> objects;
-    ar >> vocabulary;
-    ar >> index;
-    ar >> atom_name_to_index;
-    ar >> atoms;
-    ar >> static_atom_name_to_index;
-    ar >> static_atoms;
-    ar >> object_name_to_index;
-    ar >> objects;
+    ar & vocabulary;
+    ar & index;
     ::new(instance_info)dlplan::core::InstanceInfo(vocabulary);
-    instance_info->m_index = index;
-    instance_info->m_atom_name_to_index = std::move(atom_name_to_index);
-    instance_info->m_atoms = std::move(atoms);
-    instance_info->m_static_atom_name_to_index = std::move(static_atom_name_to_index);
-    instance_info->m_static_atoms = std::move(static_atoms);
-    instance_info->m_object_name_to_index = std::move(object_name_to_index);
-    instance_info->m_objects = std::move(objects);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::State& state, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::State& /* state */, const unsigned int /* version */ )
 {
-    ar & state.m_index;
-    ar & state.m_instance_info;
-    ar & state.m_atom_indices;
 }
 
+template<class Archive>
+inline void save_construct_data(
+    Archive & ar, const dlplan::core::State* state, const unsigned int /* version */ ){
+    ar << state->m_index;
+    ar << state->m_instance_info;
+    ar << state->m_atom_indices;
+}
 
-template<class Archive, typename T_>
-void save_construct_data(Archive & ar, const dlplan::core::EmptyBoolean<T_>* boolean, const unsigned int /* version */ )
+template<class Archive>
+inline void load_construct_data(
+    Archive & ar, dlplan::core::State* state, const unsigned int /* version */ ){
+    dlplan::core::InstanceIndex index;
+    std::shared_ptr<const dlplan::core::InstanceInfo> instance_info;
+    dlplan::core::AtomIndices atom_indices;
+    ar >> index;
+    ar >> instance_info;
+    ar >> atom_indices;
+    ::new(state)dlplan::core::State(instance_info, std::move(atom_indices), index);
+}
+
+template<typename Archive, typename T>
+void serialize(Archive& /* ar */ , dlplan::core::EmptyBoolean<T>& /* boolean */, const unsigned int /* version */ )
+{
+}
+
+template<class Archive, typename T>
+void save_construct_data(Archive & ar, const dlplan::core::EmptyBoolean<T>* boolean, const unsigned int /* version */ )
 {
     ar << boolean->m_vocabulary_info;
     ar << boolean->m_index;
     ar << boolean->m_element;
 }
 
-template<class Archive, typename T_>
-void load_construct_data(Archive & ar, dlplan::core::EmptyBoolean<T_>* boolean, const unsigned int /* version */ )
+template<class Archive, typename T>
+void load_construct_data(Archive & ar, dlplan::core::EmptyBoolean<T>* boolean, const unsigned int /* version */ )
 {
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     int index;
-    std::shared_ptr<const T_> element;
+    std::shared_ptr<const T> element;
     ar >> vocabulary;
     ar >> index;
     ar >> element;
-    ::new(boolean)dlplan::core::EmptyBoolean<T_>(vocabulary, index, element);
+    ::new(boolean)dlplan::core::EmptyBoolean<T>(vocabulary, index, element);
 }
 
 template<typename Archive, typename T>
-void serialize(Archive& ar, dlplan::core::InclusionBoolean<T>& boolean, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::InclusionBoolean<T>& /* boolean */, const unsigned int /* version */ )
 {
-    ar & boost::serialization::base_object<dlplan::core::Boolean>(boolean);
-    ar & boolean.m_element_left;
-    ar & boolean.m_element_right;
+}
+
+template<class Archive, typename T>
+void save_construct_data(Archive & ar, const dlplan::core::InclusionBoolean<T>* boolean, const unsigned int /* version */ )
+{
+    ar << boolean->m_vocabulary_info;
+    ar << boolean->m_index;
+    ar << boolean->m_element_left;
+    ar << boolean->m_element_right;
+}
+
+template<class Archive, typename T>
+void load_construct_data(Archive & ar, dlplan::core::InclusionBoolean<T>* boolean, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const T> element_left;
+    std::shared_ptr<const T> element_right;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> element_left;
+    ar >> element_right;
+    ::new(boolean)dlplan::core::InclusionBoolean<T>(vocabulary, index, element_left, element_right);
 }
 
 template<typename Archive>

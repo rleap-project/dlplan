@@ -20,6 +20,10 @@ class InclusionBoolean;
 namespace boost::serialization {
     template<typename Archive, typename T>
     void serialize(Archive& ar, dlplan::core::InclusionBoolean<T>& boolean, const unsigned int version);
+    template<class Archive, typename T>
+    void save_construct_data(Archive& ar, const dlplan::core::InclusionBoolean<T>* boolean, const unsigned int version);
+    template<class Archive, typename T>
+    void load_construct_data(Archive& ar, dlplan::core::InclusionBoolean<T>* boolean, const unsigned int version);
 }
 
 
@@ -60,6 +64,10 @@ private:
 
     template<typename Archive, typename T_>
     friend void boost::serialization::serialize(Archive& ar, InclusionBoolean<T_>& boolean, const unsigned int version);
+    template<class Archive, typename T_>
+    friend void boost::serialization::save_construct_data(Archive& ar, const InclusionBoolean<T_>* boolean, const unsigned int version);
+    template<class Archive, typename T_>
+    friend void boost::serialization::load_construct_data(Archive& ar, InclusionBoolean<T_>* boolean, const unsigned int version);
 
 protected:
     const std::shared_ptr<const T> m_element_left;

@@ -38,8 +38,6 @@ class SyntacticElementFactoryImpl;
 
 // Forward declare the serialize function template in boost::serialization namespace
 namespace boost::serialization {
-    class access;
-    /*
     template <typename Archive>
     void serialize(Archive& ar, dlplan::core::Constant& constant, const unsigned int version);
     template<class Archive>
@@ -87,7 +85,7 @@ namespace boost::serialization {
 
     template<typename Archive>
     void serialize(Archive& ar, dlplan::core::SyntacticElementFactory& factory, const unsigned int version);
-    */
+
 }
 
 
@@ -420,7 +418,12 @@ private:
     Constant(const std::string& name, ConstantIndex index);
 
     friend class VocabularyInfo;
-    friend class boost::serialization::access;
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, Constant& constant, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive & ar, const Constant* constant, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive & ar, Constant* constant, const unsigned int version);
 
 public:
     Constant(const Constant& other);

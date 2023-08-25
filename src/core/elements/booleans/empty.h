@@ -18,6 +18,8 @@ class EmptyBoolean;
 
 
 namespace boost::serialization {
+    template<typename Archive, typename T>
+    void serialize(Archive& ar, dlplan::core::EmptyBoolean<T>& boolean, const unsigned int version);
     template<class Archive, typename T>
     void save_construct_data(Archive& ar, const dlplan::core::EmptyBoolean<T>* boolean, const unsigned int version);
     template<class Archive, typename T>
@@ -57,6 +59,8 @@ private:
         return denotations;
     }
 
+    template<typename Archive, typename T_>
+    friend void boost::serialization::serialize(Archive& ar, EmptyBoolean<T_>& boolean, const unsigned int version);
     template<class Archive, typename T_>
     friend void boost::serialization::save_construct_data(Archive & ar, const EmptyBoolean<T_>* boolean, const unsigned int version);
     template<class Archive, typename T_>
