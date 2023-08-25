@@ -90,6 +90,12 @@ BOOST_CLASS_EXPORT_GUID(dlplan::core::TransitiveClosureRole, "dlplan::core::Tran
 BOOST_CLASS_EXPORT_GUID(dlplan::core::TransitiveReflexiveClosureRole, "dlplan::core::TransitiveReflexiveClosureRole")
 
 namespace boost::serialization {
+template<typename Archive>
+inline void serialize(Archive& ar, dlplan::core::Constant& constant, const unsigned int /* version */) {
+    ar & constant.m_name;
+    ar & constant.m_index;
+}
+
 template<class Archive>
 inline void save_construct_data(
     Archive & ar, const dlplan::core::Constant* constant, const unsigned int /* version */ ){
@@ -183,17 +189,46 @@ void serialize( Archive& ar, dlplan::core::VocabularyInfo& vocabulary_info, cons
     ar & vocabulary_info.m_predicate_name_to_index;
 }
 
-template<typename Archive>
-void serialize( Archive& ar, dlplan::core::InstanceInfo& instance_info, const unsigned int /* version */ )
-{
-    ar & instance_info.m_vocabulary_info;
-    ar & instance_info.m_index;
-    ar & instance_info.m_objects;
-    ar & instance_info.m_object_name_to_index;
-    ar & instance_info.m_atoms;
-    ar & instance_info.m_atom_name_to_index;
-    ar & instance_info.m_static_atoms;
-    ar & instance_info.m_static_atom_name_to_index;
+template<class Archive>
+inline void save_construct_data(
+    Archive & ar, const dlplan::core::InstanceInfo* instance_info, const unsigned int /* version */ ){
+    ar << instance_info->m_vocabulary_info;
+    ar << instance_info->m_index;
+    ar << instance_info->m_objects;
+    ar << instance_info->m_object_name_to_index;
+    ar << instance_info->m_atoms;
+    ar << instance_info->m_atom_name_to_index;
+    ar << instance_info->m_static_atoms;
+    ar << instance_info->m_static_atom_name_to_index;
+}
+
+template<class Archive>
+inline void load_construct_data(
+    Archive & ar, dlplan::core::InstanceInfo* instance_info, const unsigned int /* version */ ){
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    dlplan::core::InstanceIndex index;
+    std::unordered_map<std::string, dlplan::core::AtomIndex> atom_name_to_index;
+    std::vector<dlplan::core::Atom> atoms;
+    std::unordered_map<std::string, dlplan::core::AtomIndex> static_atom_name_to_index;
+    std::vector<dlplan::core::Atom> static_atoms;
+    std::unordered_map<std::string, dlplan::core::ObjectIndex> object_name_to_index;
+    std::vector<dlplan::core::Object> objects;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> atom_name_to_index;
+    ar >> atoms;
+    ar >> static_atom_name_to_index;
+    ar >> static_atoms;
+    ar >> object_name_to_index;
+    ar >> objects;
+    ::new(instance_info)dlplan::core::InstanceInfo(vocabulary);
+    instance_info->m_index = index;
+    instance_info->m_atom_name_to_index = std::move(atom_name_to_index);
+    instance_info->m_atoms = std::move(atoms);
+    instance_info->m_static_atom_name_to_index = std::move(static_atom_name_to_index);
+    instance_info->m_static_atoms = std::move(static_atoms);
+    instance_info->m_object_name_to_index = std::move(object_name_to_index);
+    instance_info->m_objects = std::move(objects);
 }
 
 template<typename Archive>
