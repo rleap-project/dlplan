@@ -18,6 +18,10 @@ class AndRole;
 namespace boost::serialization {
     template<typename Archive>
     void serialize(Archive& ar, dlplan::core::AndRole& role, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::core::AndRole* role, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::core::AndRole* role, const unsigned int version);
 }
 
 
@@ -56,6 +60,10 @@ private:
 
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, AndRole& role, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive& ar, const AndRole* role, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive& ar, AndRole* role, const unsigned int version);
 
 protected:
     std::shared_ptr<const Role> m_role_left;

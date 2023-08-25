@@ -18,6 +18,10 @@ class OneOfConcept;
 namespace boost::serialization {
     template<typename Archive>
     void serialize(Archive& ar, dlplan::core::OneOfConcept& concept, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::core::OneOfConcept* concept, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::core::OneOfConcept* concept, const unsigned int version);
 }
 
 
@@ -61,6 +65,10 @@ private:
 
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, OneOfConcept& concept, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive& ar, const OneOfConcept* concept, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive& ar, OneOfConcept* concept, const unsigned int version);
 
 protected:
     const Constant m_constant;

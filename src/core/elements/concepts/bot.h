@@ -18,6 +18,10 @@ class BotConcept;
 namespace boost::serialization {
     template<typename Archive>
     void serialize(Archive& ar, dlplan::core::BotConcept& concept, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::core::BotConcept* concept, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::core::BotConcept* concept, const unsigned int version);
 }
 
 
@@ -40,6 +44,10 @@ private:
 
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, BotConcept& concept, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive& ar, const BotConcept* concept, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive& ar, BotConcept* concept, const unsigned int version);
 
 public:
     BotConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index)
