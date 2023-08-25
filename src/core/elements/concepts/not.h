@@ -56,12 +56,11 @@ private:
     friend void boost::serialization::serialize(Archive& ar, NotConcept& concept, const unsigned int version);
 
 protected:
-    std::shared_ptr<const Concept> m_concept;
+    const std::shared_ptr<const Concept> m_concept;
 
 public:
-    NotConcept() : Concept(), m_concept(nullptr) { }
-    NotConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept)
-    : Concept(vocabulary_info, concept->is_static()), m_concept(concept){
+    NotConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Concept> concept)
+    : Concept(vocabulary_info, index, concept->is_static()), m_concept(concept){
         if (!concept) {
             throw std::runtime_error("NotConcept::NotConcept - child is a nullptr");
         }

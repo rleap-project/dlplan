@@ -32,10 +32,10 @@ public:
     SyntacticElementFactoryImpl();
     SyntacticElementFactoryImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info);
 
-    std::shared_ptr<const Concept> parse_concept(const std::string &description);
-    std::shared_ptr<const Role> parse_role(const std::string &description);
-    std::shared_ptr<const Numerical> parse_numerical(const std::string &description);
-    std::shared_ptr<const Boolean> parse_boolean(const std::string &description);
+    std::shared_ptr<const Concept> parse_concept(SyntacticElementFactory& parent, const std::string &description);
+    std::shared_ptr<const Role> parse_role(SyntacticElementFactory& parent, const std::string &description);
+    std::shared_ptr<const Numerical> parse_numerical(SyntacticElementFactory& parent, const std::string &description);
+    std::shared_ptr<const Boolean> parse_boolean(SyntacticElementFactory& parent, const std::string &description);
 
     std::shared_ptr<const Boolean> make_empty_boolean(const std::shared_ptr<const Concept>& concept);
     std::shared_ptr<const Boolean> make_empty_boolean(const std::shared_ptr<const Role>& role);

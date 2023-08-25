@@ -58,13 +58,12 @@ private:
     friend void boost::serialization::serialize(Archive& ar, DiffConcept& concept, const unsigned int version);
 
 protected:
-    std::shared_ptr<const Concept> m_concept_left;
-    std::shared_ptr<const Concept> m_concept_right;
+    const std::shared_ptr<const Concept> m_concept_left;
+    const std::shared_ptr<const Concept> m_concept_right;
 
 public:
-    DiffConcept() : Concept(), m_concept_left(nullptr), m_concept_right(nullptr) { }
-    DiffConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept_1, std::shared_ptr<const Concept> concept_2)
-    : Concept(vocabulary_info, concept_1->is_static() && concept_2->is_static()), m_concept_left(concept_1), m_concept_right(concept_2) {
+    DiffConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Concept> concept_1, std::shared_ptr<const Concept> concept_2)
+    : Concept(vocabulary_info, index, concept_1->is_static() && concept_2->is_static()), m_concept_left(concept_1), m_concept_right(concept_2) {
         if (!(concept_1 && concept_2)) {
             throw std::runtime_error("DiffConcept::DiffConcept - at least one child is a nullptr.");
         }

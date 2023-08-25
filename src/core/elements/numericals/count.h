@@ -57,12 +57,11 @@ private:
     friend void boost::serialization::serialize(Archive& ar, CountNumerical<T_>& numerical, const unsigned int version);
 
 protected:
-    std::shared_ptr<const T> m_element;
+    const std::shared_ptr<const T> m_element;
 
 public:
-    CountNumerical() : Numerical(), m_element(nullptr) { }
-    CountNumerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const T> element)
-    : Numerical(vocabulary_info, element->is_static()), m_element(element) { }
+    CountNumerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const T> element)
+    : Numerical(vocabulary_info, index, element->is_static()), m_element(element) { }
 
     int evaluate(const State& state) const override {
         int result;

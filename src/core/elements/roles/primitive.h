@@ -71,14 +71,13 @@ private:
     friend void boost::serialization::serialize(Archive& ar, PrimitiveRole& role, const unsigned int version);
 
 protected:
-    Predicate m_predicate;
-    int m_pos_1;
-    int m_pos_2;
+    const Predicate m_predicate;
+    const int m_pos_1;
+    const int m_pos_2;
 
 public:
-    PrimitiveRole() : Role(), m_predicate(Predicate()), m_pos_1(-1), m_pos_2(-1) { }
-    PrimitiveRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, const Predicate& predicate, int pos_1, int pos_2)
-    : Role(vocabulary_info, predicate.is_static()), m_predicate(predicate), m_pos_1(pos_1), m_pos_2(pos_2) {
+    PrimitiveRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, const Predicate& predicate, int pos_1, int pos_2)
+    : Role(vocabulary_info, index, predicate.is_static()), m_predicate(predicate), m_pos_1(pos_1), m_pos_2(pos_2) {
         if (m_pos_1 >= m_predicate.get_arity() || m_pos_2 >= m_predicate.get_arity()) {
             throw std::runtime_error("PrimitiveRole::evaluate_impl - object index does not match predicate arity ("s + std::to_string(m_pos_1) + " or " + std::to_string(m_pos_2)  + " > " + std::to_string(predicate.get_arity()) + ").");
         }

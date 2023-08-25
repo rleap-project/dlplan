@@ -62,13 +62,12 @@ private:
     friend void boost::serialization::serialize(Archive& ar, SomeConcept& concept, const unsigned int version);
 
 protected:
-    std::shared_ptr<const Role> m_role;
-    std::shared_ptr<const Concept> m_concept;
+    const std::shared_ptr<const Role> m_role;
+    const std::shared_ptr<const Concept> m_concept;
 
 public:
-    SomeConcept() : Concept(), m_role(nullptr), m_concept(nullptr) { }
-    SomeConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept)
-    : Concept(vocabulary_info, role->is_static() && concept->is_static()),
+    SomeConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept)
+    : Concept(vocabulary_info, index, role->is_static() && concept->is_static()),
       m_role(role), m_concept(concept) {
         if (!(role && concept)) {
             throw std::runtime_error("SomeConcept::SomeConcept - at least one child is a nullptr");

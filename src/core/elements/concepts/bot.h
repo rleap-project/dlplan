@@ -42,9 +42,8 @@ private:
     friend void boost::serialization::serialize(Archive& ar, BotConcept& concept, const unsigned int version);
 
 public:
-    BotConcept() : Concept() { }
-    BotConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info)
-    : Concept(vocabulary_info, true) { }
+    BotConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index)
+    : Concept(vocabulary_info, index, true) { }
 
     ConceptDenotation evaluate(const State& state) const override {
         return ConceptDenotation(state.get_instance_info()->get_objects().size());

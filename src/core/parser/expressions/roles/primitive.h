@@ -3,27 +3,28 @@
 
 #include "../role.h"
 #include "../../utils.h"
-#include "../../../elements/roles/primitive.h"
+
+using namespace std::string_literals;
+
 
 namespace dlplan::core::parser {
 
 class PrimitiveRole : public Role {
-protected:
-    std::unique_ptr<dlplan::core::Role> parse_role_impl(std::shared_ptr<const VocabularyInfo> vocabulary_info, Caches &) const override {
-        if (m_children.size() != 3) {
-            throw std::runtime_error("PrimitiveRole::parse_role_impl - number of children ("s + std::to_string(m_children.size()) + " != 3).");
-        }
-        // 1. Parse children
-        const std::string& predicate_name = m_children[0]->get_name();
-        int pos_1 = try_parse_number(m_children[1]->get_name());
-        int pos_2 = try_parse_number(m_children[2]->get_name());
-        // 2. Construct element
-        return std::make_unique<dlplan::core::PrimitiveRole>(vocabulary_info, vocabulary_info->get_predicate(predicate_name), pos_1, pos_2);
-    }
-
 public:
     PrimitiveRole(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Role(name, std::move(children)) { }
+
+    std::shared_ptr<const dlplan::core::Role> parse_role(SyntacticElementFactory& factory) const override {
+        if (m_children.size() != 3) {
+            throw std::runtime_error("PrimitiveRole::parse_role - number of children ("s + std::to_string(m_children.size()) + " != 3).");
+        }
+        // 1. Parse children
+        const auto& predicate_name = m_children[0]->get_name();
+        int pos_1 = try_parse_number(m_children[1]->get_name());
+        int pos_2 = try_parse_number(m_children[2]->get_name());
+        // 2. Construct element
+        return factory.make_primitive_role(factory.get_vocabulary_info()->get_predicate(predicate_name), pos_1, pos_2);
+    }
 };
 
 }

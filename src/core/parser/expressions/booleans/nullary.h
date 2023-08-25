@@ -2,27 +2,27 @@
 #define DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_BOOLEANS_NULLARY_H_
 
 #include "../boolean.h"
-#include "../../utils.h"
-#include "../../../elements/booleans/nullary.h"
+
+
+using namespace std::string_literals;
 
 
 namespace dlplan::core::parser {
 
 class NullaryBoolean : public Boolean {
-protected:
-    std::unique_ptr<dlplan::core::Boolean> parse_boolean_impl(std::shared_ptr<const VocabularyInfo> vocabulary_info, Caches &) const override {
-        if (m_children.size() != 1) {
-            throw std::runtime_error("NullaryBoolean::parse_boolean_impl - number of children ("s + std::to_string(m_children.size()) + " != 1).");
-        }
-        // 1. Parse children
-        const std::string& predicate_name = m_children[0]->get_name();
-        // 2. Construct element
-        return std::make_unique<dlplan::core::NullaryBoolean>(vocabulary_info, vocabulary_info->get_predicate(predicate_name));
-    }
-
 public:
     NullaryBoolean(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Boolean(name, std::move(children)) { }
+
+    std::shared_ptr<const dlplan::core::Boolean> parse_boolean(SyntacticElementFactory& factory) const override {
+        if (m_children.size() != 1) {
+            throw std::runtime_error("NullaryBoolean::parse_boolean - number of children ("s + std::to_string(m_children.size()) + " != 1).");
+        }
+        // 1. Parse children
+        const auto& predicate_name = m_children[0]->get_name();
+        // 2. Construct element
+        return factory.make_nullary_boolean(factory.get_vocabulary_info()->get_predicate(predicate_name));
+    }
 };
 
 }

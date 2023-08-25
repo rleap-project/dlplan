@@ -2,10 +2,8 @@
 
 
 namespace dlplan::core {
-Boolean::Boolean() : BaseElement() { }
-
-Boolean::Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static)
-    : BaseElement(vocabulary_info, is_static) {
+Boolean::Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
+    : BaseElement(vocabulary_info, index, is_static) {
 }
 
 Boolean::Boolean(const Boolean& other) = default;

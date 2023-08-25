@@ -14,7 +14,7 @@ protected:
     const std::shared_ptr<const core::Boolean> m_boolean;
 
 protected:
-    BooleanCondition(std::shared_ptr<const core::Boolean> boolean);
+    BooleanCondition(std::shared_ptr<const core::Boolean> boolean, ConditionIndex index);
 
     int compute_evaluate_time_score() const override;
 
@@ -28,7 +28,7 @@ protected:
     const std::shared_ptr<const core::Numerical> m_numerical;
 
 protected:
-    NumericalCondition(std::shared_ptr<const core::Numerical> numerical);
+    NumericalCondition(std::shared_ptr<const core::Numerical> numerical, ConditionIndex index);
 
     int compute_evaluate_time_score() const override;
 
@@ -39,7 +39,7 @@ protected:
 
 class PositiveBooleanCondition : public BooleanCondition {
 public:
-    PositiveBooleanCondition(std::shared_ptr<const core::Boolean> boolean_feature);
+    PositiveBooleanCondition(std::shared_ptr<const core::Boolean> boolean, ConditionIndex index);
 
     bool evaluate(const core::State& source_state) const override;
     bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const override;
@@ -50,7 +50,7 @@ public:
 
 class NegativeBooleanCondition : public BooleanCondition {
 public:
-    NegativeBooleanCondition(std::shared_ptr<const core::Boolean> boolean_feature);
+    NegativeBooleanCondition(std::shared_ptr<const core::Boolean> boolean, ConditionIndex index);
 
     bool evaluate(const core::State& source_state) const override;
     bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const override;
@@ -61,7 +61,7 @@ public:
 
 class EqualNumericalCondition : public NumericalCondition {
 public:
-    EqualNumericalCondition(std::shared_ptr<const core::Numerical> numerical_feature);
+    EqualNumericalCondition(std::shared_ptr<const core::Numerical> numerical, ConditionIndex index);
 
     bool evaluate(const core::State& source_state) const override;
     bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const override;
@@ -72,7 +72,7 @@ public:
 
 class GreaterNumericalCondition : public NumericalCondition {
 public:
-    GreaterNumericalCondition(std::shared_ptr<const core::Numerical> numerical_feature);
+    GreaterNumericalCondition(std::shared_ptr<const core::Numerical> numerical, ConditionIndex index);
 
     bool evaluate(const core::State& source_state) const override;
     bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const override;

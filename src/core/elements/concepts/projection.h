@@ -57,13 +57,12 @@ private:
     friend void boost::serialization::serialize(Archive& ar, ProjectionConcept& concept, const unsigned int version);
 
 protected:
-    std::shared_ptr<const Role> m_role;
-    int m_pos;
+    const std::shared_ptr<const Role> m_role;
+    const int m_pos;
 
 public:
-    ProjectionConcept() : Concept(), m_role(nullptr), m_pos(-1) { }
-    ProjectionConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, const std::shared_ptr<const Role>& role, int pos)
-    : Concept(vocabulary_info, role->is_static()), m_role(role), m_pos(pos) {
+    ProjectionConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, const std::shared_ptr<const Role>& role, int pos)
+    : Concept(vocabulary_info, index, role->is_static()), m_role(role), m_pos(pos) {
         if (pos < 0 || pos > 1) {
             throw std::runtime_error("ProjectionConcept::ProjectionConcept - projection index out of range, should be 0 or 1 ("s + std::to_string(pos) + ")");
         }

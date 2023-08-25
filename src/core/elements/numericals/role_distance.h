@@ -86,14 +86,13 @@ private:
     friend void boost::serialization::serialize(Archive& ar, RoleDistanceNumerical& numerical, const unsigned int version);
 
 protected:
-    std::shared_ptr<const Role> m_role_from;
-    std::shared_ptr<const Role> m_role;
-    std::shared_ptr<const Role> m_role_to;
+    const std::shared_ptr<const Role> m_role_from;
+    const std::shared_ptr<const Role> m_role;
+    const std::shared_ptr<const Role> m_role_to;
 
 public:
-    RoleDistanceNumerical() : Numerical(), m_role_from(nullptr), m_role(nullptr), m_role_to(nullptr) { }
-    RoleDistanceNumerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role_from, std::shared_ptr<const Role> role, std::shared_ptr<const Role> role_to)
-    : Numerical(vocabulary_info, role_from->is_static() && role->is_static() && role_to->is_static()),
+    RoleDistanceNumerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role_from, std::shared_ptr<const Role> role, std::shared_ptr<const Role> role_to)
+    : Numerical(vocabulary_info, index, role_from->is_static() && role->is_static() && role_to->is_static()),
       m_role_from(role_from), m_role(role), m_role_to(role_to) {
         if (!(role_from && role && role_to)) {
             throw std::runtime_error("RoleDistanceNumerical::RoleDistanceNumerical - child is not of type Role, Role, Role.");

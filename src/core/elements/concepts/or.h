@@ -63,9 +63,8 @@ protected:
     std::shared_ptr<const Concept> m_concept_right;
 
 public:
-    OrConcept() : Concept(), m_concept_left(nullptr), m_concept_right(nullptr) { }
-    OrConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept_1, std::shared_ptr<const Concept> concept_2)
-    : Concept(vocabulary_info, concept_1->is_static() && concept_2->is_static()),
+    OrConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Concept> concept_1, std::shared_ptr<const Concept> concept_2)
+    : Concept(vocabulary_info, index, concept_1->is_static() && concept_2->is_static()),
       m_concept_left(concept_1),
       m_concept_right(concept_2) {
         if (!(concept_1 && concept_2)) {

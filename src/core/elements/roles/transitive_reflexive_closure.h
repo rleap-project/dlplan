@@ -73,12 +73,11 @@ private:
     friend void boost::serialization::serialize(Archive& ar, TransitiveReflexiveClosureRole& role, const unsigned int version);
 
 protected:
-    std::shared_ptr<const Role> m_role;
+    const std::shared_ptr<const Role> m_role;
 
 public:
-    TransitiveReflexiveClosureRole() : Role(), m_role(nullptr) { }
-    TransitiveReflexiveClosureRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role)
-    : Role(vocabulary_info, role->is_static()), m_role(role) {
+    TransitiveReflexiveClosureRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role)
+    : Role(vocabulary_info, index, role->is_static()), m_role(role) {
         if (!role) {
             throw std::runtime_error("TransitiveReflexiveClosureRole::TransitiveReflexiveClosureRole - child is a nullptr.");
         }

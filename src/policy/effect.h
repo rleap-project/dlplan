@@ -53,7 +53,7 @@ protected:
     std::shared_ptr<const core::Boolean> m_boolean;
 
 protected:
-    BooleanEffect(std::shared_ptr<const core::Boolean> boolean);
+    BooleanEffect(std::shared_ptr<const core::Boolean> boolean, EffectIndex index);
 
     int compute_evaluate_time_score() const override;
 
@@ -67,7 +67,7 @@ protected:
     std::shared_ptr<const core::Numerical> m_numerical;
 
 protected:
-    NumericalEffect(std::shared_ptr<const core::Numerical> numerical);
+    NumericalEffect(std::shared_ptr<const core::Numerical> numerical, EffectIndex index);
 
     int compute_evaluate_time_score() const override;
 
@@ -78,7 +78,7 @@ protected:
 
 class PositiveBooleanEffect : public BooleanEffect {
 public:
-    PositiveBooleanEffect(std::shared_ptr<const core::Boolean> boolean_feature);
+    PositiveBooleanEffect(std::shared_ptr<const core::Boolean> boolean, EffectIndex index);
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
@@ -89,7 +89,7 @@ public:
 
 class NegativeBooleanEffect : public BooleanEffect {
 public:
-    NegativeBooleanEffect(std::shared_ptr<const core::Boolean> boolean_feature);
+    NegativeBooleanEffect(std::shared_ptr<const core::Boolean> boolean, EffectIndex index);
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
@@ -100,7 +100,7 @@ public:
 
 class UnchangedBooleanEffect : public BooleanEffect {
 public:
-    UnchangedBooleanEffect(std::shared_ptr<const core::Boolean> boolean_feature);
+    UnchangedBooleanEffect(std::shared_ptr<const core::Boolean> boolean, EffectIndex index);
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
@@ -111,7 +111,7 @@ public:
 
 class IncrementNumericalEffect : public NumericalEffect {
 public:
-    IncrementNumericalEffect(std::shared_ptr<const core::Numerical> numerical_feature);
+    IncrementNumericalEffect(std::shared_ptr<const core::Numerical> numerical, EffectIndex index);
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
@@ -122,7 +122,7 @@ public:
 
 class DecrementNumericalEffect : public NumericalEffect {
 public:
-    DecrementNumericalEffect(std::shared_ptr<const core::Numerical> numerical_feature);
+    DecrementNumericalEffect(std::shared_ptr<const core::Numerical> numerical, EffectIndex index);
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
@@ -133,7 +133,7 @@ public:
 
 class UnchangedNumericalEffect : public NumericalEffect {
 public:
-    UnchangedNumericalEffect(std::shared_ptr<const core::Numerical> numerical_feature);
+    UnchangedNumericalEffect(std::shared_ptr<const core::Numerical> numerical, EffectIndex index);
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;

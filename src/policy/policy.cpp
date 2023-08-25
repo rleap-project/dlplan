@@ -14,26 +14,18 @@
 namespace dlplan::policy {
 
 
-BaseCondition::BaseCondition() { }
+BaseCondition::BaseCondition(ConditionIndex index) : m_index(index) { }
 
 BaseCondition::~BaseCondition() = default;
-
-void BaseCondition::set_index(ConditionIndex index) {
-    m_index = index;
-}
 
 ConditionIndex BaseCondition::get_index() const {
     return m_index;
 }
 
 
-BaseEffect::BaseEffect() { }
+BaseEffect::BaseEffect(EffectIndex index) : m_index(index) { }
 
 BaseEffect::~BaseEffect() = default;
-
-void BaseEffect::set_index(EffectIndex index) {
-    m_index = index;
-}
 
 EffectIndex BaseEffect::get_index() const {
     return m_index;

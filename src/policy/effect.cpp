@@ -3,8 +3,8 @@
 
 namespace dlplan::policy {
 
-BooleanEffect::BooleanEffect(std::shared_ptr<const core::Boolean> boolean)
-    : BaseEffect(), m_boolean(boolean) { }
+BooleanEffect::BooleanEffect(std::shared_ptr<const core::Boolean> boolean, EffectIndex index)
+    : BaseEffect(index), m_boolean(boolean) { }
 
 int BooleanEffect::compute_evaluate_time_score() const {
     return m_boolean->compute_evaluate_time_score();
@@ -19,8 +19,8 @@ std::shared_ptr<const core::Numerical> BooleanEffect::get_numerical() const {
 }
 
 
-NumericalEffect::NumericalEffect(std::shared_ptr<const core::Numerical> numerical)
-    : BaseEffect(), m_numerical(numerical) { }
+NumericalEffect::NumericalEffect(std::shared_ptr<const core::Numerical> numerical, EffectIndex index)
+    : BaseEffect(index), m_numerical(numerical) { }
 
 int NumericalEffect::compute_evaluate_time_score() const {
     return m_numerical->compute_evaluate_time_score();
@@ -35,8 +35,8 @@ std::shared_ptr<const core::Numerical> NumericalEffect::get_numerical() const {
 }
 
 
-PositiveBooleanEffect::PositiveBooleanEffect(std::shared_ptr<const core::Boolean> boolean_feature)
-    : BooleanEffect(boolean_feature) {}
+PositiveBooleanEffect::PositiveBooleanEffect(std::shared_ptr<const core::Boolean> boolean, EffectIndex index)
+    : BooleanEffect(boolean, index) {}
 
 bool PositiveBooleanEffect::evaluate(const core::State&, const core::State& target_state) const {
     return m_boolean->evaluate(target_state);
@@ -55,8 +55,8 @@ std::string PositiveBooleanEffect::str() const {
 }
 
 
-NegativeBooleanEffect::NegativeBooleanEffect(std::shared_ptr<const core::Boolean> boolean_feature)
-    : BooleanEffect(boolean_feature) {}
+NegativeBooleanEffect::NegativeBooleanEffect(std::shared_ptr<const core::Boolean> boolean, EffectIndex index)
+    : BooleanEffect(boolean, index) {}
 
 bool NegativeBooleanEffect::evaluate(const core::State&, const core::State& target_state) const {
     return !m_boolean->evaluate(target_state);
@@ -75,8 +75,8 @@ std::string NegativeBooleanEffect::str() const {
 }
 
 
-UnchangedBooleanEffect::UnchangedBooleanEffect(std::shared_ptr<const core::Boolean> boolean_feature)
-    : BooleanEffect(boolean_feature) {}
+UnchangedBooleanEffect::UnchangedBooleanEffect(std::shared_ptr<const core::Boolean> boolean, EffectIndex index)
+    : BooleanEffect(boolean, index) {}
 
 bool UnchangedBooleanEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
     return m_boolean->evaluate(source_state) == m_boolean->evaluate(target_state);
@@ -95,8 +95,8 @@ std::string UnchangedBooleanEffect::str() const {
 }
 
 
-IncrementNumericalEffect::IncrementNumericalEffect(std::shared_ptr<const core::Numerical> numerical_feature)
-    : NumericalEffect(numerical_feature) {}
+IncrementNumericalEffect::IncrementNumericalEffect(std::shared_ptr<const core::Numerical> numerical, EffectIndex index)
+    : NumericalEffect(numerical, index) {}
 
 bool IncrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
     return m_numerical->evaluate(source_state) < m_numerical->evaluate(target_state);
@@ -115,8 +115,8 @@ std::string IncrementNumericalEffect::str() const {
 }
 
 
-DecrementNumericalEffect::DecrementNumericalEffect(std::shared_ptr<const core::Numerical> numerical_feature)
-    : NumericalEffect(numerical_feature) {}
+DecrementNumericalEffect::DecrementNumericalEffect(std::shared_ptr<const core::Numerical> numerical, EffectIndex index)
+    : NumericalEffect(numerical, index) {}
 
 bool DecrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
     return m_numerical->evaluate(source_state) > m_numerical->evaluate(target_state);
@@ -135,8 +135,8 @@ std::string DecrementNumericalEffect::str() const {
 }
 
 
-UnchangedNumericalEffect::UnchangedNumericalEffect(std::shared_ptr<const core::Numerical> numerical_feature)
-    : NumericalEffect(numerical_feature) {}
+UnchangedNumericalEffect::UnchangedNumericalEffect(std::shared_ptr<const core::Numerical> numerical, EffectIndex index)
+    : NumericalEffect(numerical, index) {}
 
 bool UnchangedNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
     return m_numerical->evaluate(source_state) == m_numerical->evaluate(target_state);

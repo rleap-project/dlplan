@@ -2,29 +2,30 @@
 #define DLPLAN_SRC_CORE_PARSER_EXPRESSIONS_NUMERICAL_ROLE_DISTANCE_H_
 
 #include "../numerical.h"
-#include "../../../elements/numericals/role_distance.h"
+
+using namespace std::string_literals;
+
 
 namespace dlplan::core::parser {
 
 class RoleDistanceNumerical : public Numerical {
-protected:
-    std::unique_ptr<dlplan::core::Numerical> parse_numerical_impl(std::shared_ptr<const VocabularyInfo> vocabulary_info, Caches &cache) const override {
-        if (m_children.size() != 3) {
-            throw std::runtime_error("RoleDistanceNumerical::parse_numerical_impl - number of children ("s + std::to_string(m_children.size()) + " != 3).");
-        }
-        // 1. Parse children
-        std::shared_ptr<const dlplan::core::Role> role_from = m_children[0]->parse_role(vocabulary_info, cache);
-        std::shared_ptr<const dlplan::core::Role> role = m_children[1]->parse_role(vocabulary_info, cache);
-        std::shared_ptr<const dlplan::core::Role> role_to = m_children[2]->parse_role(vocabulary_info, cache);
-        if (!(role_from && role && role_to)) {
-            throw std::runtime_error("RoleDistanceNumerical::parse_numerical_impl - child is not of type Role, Role, Role.");
-        }
-        return std::make_unique<dlplan::core::RoleDistanceNumerical>(vocabulary_info, role_from, role, role_to);
-    }
-
 public:
     RoleDistanceNumerical(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Numerical(name, std::move(children)) { }
+
+    std::shared_ptr<const dlplan::core::Numerical> parse_numerical(SyntacticElementFactory& factory) const override {
+        if (m_children.size() != 3) {
+            throw std::runtime_error("RoleDistanceNumerical::parse_numerical - number of children ("s + std::to_string(m_children.size()) + " != 3).");
+        }
+        // 1. Parse children
+        auto role_from = m_children[0]->parse_role(factory);
+        auto role = m_children[1]->parse_role(factory);
+        auto role_to = m_children[2]->parse_role(factory);
+        if (!(role_from && role && role_to)) {
+            throw std::runtime_error("RoleDistanceNumerical::parse_numerical - child is not of type Role, Role, Role.");
+        }
+        return factory.make_role_distance_numerical(role_from, role, role_to);
+    }
 };
 
 }

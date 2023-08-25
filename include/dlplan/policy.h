@@ -84,7 +84,7 @@ private:
     friend void boost::serialization::serialize(Archive& ar, BaseCondition& condition, const unsigned int version);
 
 public:
-    BaseCondition();
+    explicit BaseCondition(ConditionIndex index);
     BaseCondition(const BaseCondition& other) = delete;
     BaseCondition& operator=(const BaseCondition& other) = delete;
     BaseCondition(BaseCondition&& other) = delete;
@@ -102,7 +102,6 @@ public:
     /// @return An integer that represents the score.
     virtual int compute_evaluate_time_score() const = 0;
 
-    void set_index(ConditionIndex index);
     virtual std::shared_ptr<const core::Boolean> get_boolean() const = 0;
     virtual std::shared_ptr<const core::Numerical> get_numerical() const = 0;
     ConditionIndex get_index() const;
@@ -120,7 +119,7 @@ private:
     friend void boost::serialization::serialize(Archive& ar, BaseEffect& effect, const unsigned int version);
 
 public:
-    BaseEffect();
+    explicit BaseEffect(EffectIndex index);
     BaseEffect(const BaseEffect& other) = delete;
     BaseEffect& operator=(const BaseEffect& other) = delete;
     BaseEffect(BaseEffect&& other) = delete;
@@ -138,7 +137,6 @@ public:
     /// @return An integer that represents the score.
     virtual int compute_evaluate_time_score() const = 0;
 
-    void set_index(EffectIndex index);
     EffectIndex get_index() const;
     virtual std::shared_ptr<const core::Boolean> get_boolean() const = 0;
     virtual std::shared_ptr<const core::Numerical> get_numerical() const = 0;
@@ -155,13 +153,12 @@ private:
     Effects m_effects;
     RuleIndex m_index;
 
-    Rule(Conditions&& conditions, Effects&& effects);
+    Rule(Conditions&& conditions, Effects&& effects, RuleIndex index);
     friend class PolicyBuilderImpl;
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, Rule& rule, const unsigned int version);
 
 public:
-    Rule();
     Rule(const Rule& other) = delete;
     Rule& operator=(const Rule& other) = delete;
     Rule(Rule&& other) = delete;
@@ -181,7 +178,6 @@ public:
     /// @return An integer that represents the score.
     int compute_evaluate_time_score() const;
 
-    void set_index(RuleIndex index);
     RuleIndex get_index() const;
     const Conditions& get_conditions() const;
     const Effects& get_effects() const;
@@ -199,13 +195,12 @@ private:
     Rules m_rules;
     int m_index;
 
-    explicit Policy(Rules&& rules);
+    Policy(Rules&& rules, PolicyIndex index);
     friend class PolicyBuilderImpl;
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, Policy& policy, const unsigned int version);
 
 public:
-    Policy();
     Policy(const Policy& other);
     Policy& operator=(const Policy& other);
     Policy(Policy&& other);

@@ -2,10 +2,8 @@
 
 
 namespace dlplan::core {
-Concept::Concept() : BaseElement() { }
-
-Concept::Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static)
-    : BaseElement(vocabulary_info, is_static) {
+Concept::Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
+    : BaseElement(vocabulary_info, index, is_static) {
 }
 
 Concept::Concept(const Concept& other) = default;

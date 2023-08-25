@@ -62,13 +62,12 @@ private:
     friend void boost::serialization::serialize(Archive& ar, InclusionBoolean<T_>& boolean, const unsigned int version);
 
 protected:
-    std::shared_ptr<const T> m_element_left;
-    std::shared_ptr<const T> m_element_right;
+    const std::shared_ptr<const T> m_element_left;
+    const std::shared_ptr<const T> m_element_right;
 
 public:
-    InclusionBoolean() : Boolean(), m_element_left(nullptr), m_element_right(nullptr) { }
-    InclusionBoolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const T> element_left, std::shared_ptr<const T> element_right)
-    : Boolean(vocabulary_info, element_left->is_static() && element_right->is_static()),
+    InclusionBoolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const T> element_left, std::shared_ptr<const T> element_right)
+    : Boolean(vocabulary_info, index, element_left->is_static() && element_right->is_static()),
       m_element_left(element_left),
       m_element_right(element_right) {
     }

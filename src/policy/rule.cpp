@@ -7,10 +7,8 @@
 
 
 namespace dlplan::policy {
-Rule::Rule() { }
-
-Rule::Rule(Conditions&& conditions, Effects&& effects)
-    : m_conditions(std::move(conditions)), m_effects(std::move(effects)) {
+Rule::Rule(Conditions&& conditions, Effects&& effects, RuleIndex index)
+    : m_conditions(std::move(conditions)), m_effects(std::move(effects)), m_index(index) {
 }
 
 Rule::~Rule() = default;
@@ -102,10 +100,6 @@ int Rule::compute_evaluate_time_score() const {
         score += effect->compute_evaluate_time_score();
     }
     return score;
-}
-
-void Rule::set_index(RuleIndex index) {
-    m_index = index;
 }
 
 RuleIndex Rule::get_index() const {

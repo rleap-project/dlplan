@@ -63,11 +63,11 @@ private:
     friend void boost::serialization::serialize(Archive& ar, OneOfConcept& concept, const unsigned int version);
 
 protected:
-    Constant m_constant;
+    const Constant m_constant;
 
 public:
-    OneOfConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, const Constant& constant)
-    : Concept(vocabulary_info, true), m_constant(constant) {
+    OneOfConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, const Constant& constant)
+    : Concept(vocabulary_info, index, true), m_constant(constant) {
     }
 
     ConceptDenotation evaluate(const State& state) const override {

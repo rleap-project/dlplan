@@ -75,19 +75,19 @@ std::shared_ptr<const VocabularyInfo> SyntacticElementFactory::get_vocabulary_in
 }
 
 std::shared_ptr<const Concept> SyntacticElementFactory::parse_concept(const std::string &description) {
-    return m_pImpl->parse_concept(description);
+    return m_pImpl->parse_concept(*this, description);
 }
 
 std::shared_ptr<const Role>SyntacticElementFactory::parse_role(const std::string &description) {
-    return m_pImpl->parse_role(description);
+    return m_pImpl->parse_role(*this, description);
 }
 
 std::shared_ptr<const Numerical>SyntacticElementFactory::parse_numerical(const std::string &description) {
-    return m_pImpl->parse_numerical(description);
+    return m_pImpl->parse_numerical(*this, description);
 }
 
 std::shared_ptr<const Boolean>SyntacticElementFactory::parse_boolean(const std::string &description) {
-    return m_pImpl->parse_boolean(description);
+    return m_pImpl->parse_boolean(*this, description);
 }
 
 

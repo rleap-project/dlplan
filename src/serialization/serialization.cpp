@@ -53,10 +53,6 @@
 
 // Runtime
 // https://www.boost.org/doc/libs/1_82_0/libs/serialization/doc/serialization.html#export
-BOOST_CLASS_EXPORT_GUID(dlplan::core::Concept, "dlplan::core::Concept")
-BOOST_CLASS_EXPORT_GUID(dlplan::core::Role, "dlplan::core::Role")
-BOOST_CLASS_EXPORT_GUID(dlplan::core::Boolean, "dlplan::core::Boolean")
-BOOST_CLASS_EXPORT_GUID(dlplan::core::Numerical, "dlplan::core::Numerical")
 BOOST_CLASS_EXPORT_GUID(dlplan::core::EmptyBoolean<dlplan::core::Concept>, "dlplan::core::EmptyBoolean<dlplan::core::Concept>")
 BOOST_CLASS_EXPORT_GUID(dlplan::core::EmptyBoolean<dlplan::core::Role>, "dlplan::core::EmptyBoolean<dlplan::core::Role>")
 BOOST_CLASS_EXPORT_GUID(dlplan::core::InclusionBoolean<dlplan::core::Concept>, "dlplan::core::InclusionBoolean<dlplan::core::Concept>")
@@ -94,56 +90,89 @@ BOOST_CLASS_EXPORT_GUID(dlplan::core::TransitiveClosureRole, "dlplan::core::Tran
 BOOST_CLASS_EXPORT_GUID(dlplan::core::TransitiveReflexiveClosureRole, "dlplan::core::TransitiveReflexiveClosureRole")
 
 namespace boost::serialization {
-
-template<typename Archive>
-void serialize( Archive& ar, dlplan::core::Predicate& predicate, const unsigned int /* version */ )
-{
-    ar & predicate.m_index;
-    ar & predicate.m_name;
-    ar & predicate.m_arity;
-    ar & predicate.m_is_static;
-}
-
-template<typename Archive>
-void serialize( Archive& ar, dlplan::core::Constant& constant, const unsigned int /* version */ )
-{
-    ar & constant.m_index;
-    ar & constant.m_name;
-}
-
 template<class Archive>
 inline void save_construct_data(
     Archive & ar, const dlplan::core::Constant* constant, const unsigned int /* version */ ){
-    ar << constant->m_index;
     ar << constant->m_name;
+    ar << constant->m_index;
 }
 
 template<class Archive>
 inline void load_construct_data(
     Archive & ar, dlplan::core::Constant* constant, const unsigned int /* version */ ){
-    dlplan::core::ConstantIndex m_index;
-    std::string m_name;
-    ar >> m_index;
-    ar >> m_name;
-    ::new(constant)dlplan::core::Constant(m_name, m_index);
+    std::string name;
+    dlplan::core::ConstantIndex index;
+    ar >> name;
+    ar >> index;
+    ::new(constant)dlplan::core::Constant(name, index);
 }
 
-template<typename Archive>
-void serialize( Archive& ar, dlplan::core::Object& object, const unsigned int /* version */ )
-{
-    ar & object.m_index;
-    ar & object.m_name;
+template<class Archive>
+inline void save_construct_data(
+    Archive & ar, const dlplan::core::Predicate* predicate, const unsigned int /* version */ ){
+    ar << predicate->m_name;
+    ar << predicate->m_index;
+    ar << predicate->m_arity;
+    ar << predicate->m_is_static;
 }
 
-template<typename Archive>
-void serialize( Archive& ar, dlplan::core::Atom& atom, const unsigned int /* version */ )
-{
-    ar & atom.m_index;
-    ar & atom.m_name;
-    ar & atom.m_is_static;
-    ar & atom.m_predicate_index;
-    ar & atom.m_object_indices;
+template<class Archive>
+inline void load_construct_data(
+    Archive & ar, dlplan::core::Predicate* predicate, const unsigned int /* version */ ){
+    std::string name;
+    dlplan::core::PredicateIndex index;
+    int arity;
+    bool is_static;
+    ar >> name;
+    ar >> index;
+    ar >> arity;
+    ar >> is_static;
+    ::new(predicate)dlplan::core::Predicate(name, index, arity, is_static);
 }
+
+template<class Archive>
+inline void save_construct_data(
+    Archive & ar, const dlplan::core::Object* object, const unsigned int /* version */ ){
+    ar << object->m_name;
+    ar << object->m_index;
+}
+
+template<class Archive>
+inline void load_construct_data(
+    Archive & ar, dlplan::core::Object* object, const unsigned int /* version */ ){
+    std::string name;
+    dlplan::core::ObjectIndex index;
+    ar >> name;
+    ar >> index;
+    ::new(object)dlplan::core::Object(name, index);
+}
+
+template<class Archive>
+inline void save_construct_data(
+    Archive & ar, const dlplan::core::Atom* atom, const unsigned int /* version */ ){
+    ar << atom->m_name;
+    ar << atom->m_index;
+    ar << atom->m_predicate_index;
+    ar << atom->m_object_indices;
+    ar << atom->m_is_static;
+}
+
+template<class Archive>
+inline void load_construct_data(
+    Archive & ar, dlplan::core::Atom* object, const unsigned int /* version */ ){
+    std::string name;
+    dlplan::core::AtomIndex index;
+    dlplan::core::PredicateIndex predicate_index;
+    dlplan::core::ObjectIndices object_indices;
+    bool is_static;
+    ar >> name;
+    ar >> index;
+    ar >> predicate_index;
+    ar >> object_indices;
+    ar >> is_static;
+    ::new(object)dlplan::core::Atom(name, index, predicate_index, object_indices, is_static);
+}
+
 
 template<typename Archive>
 void serialize( Archive& ar, dlplan::core::VocabularyInfo& vocabulary_info, const unsigned int /* version */ )
@@ -175,38 +204,25 @@ void serialize(Archive& ar, dlplan::core::State& state, const unsigned int /* ve
     ar & state.m_atom_indices;
 }
 
-template<typename Archive>
-void serialize(Archive& ar, dlplan::core::BaseElement& element, const unsigned int /* version */ ) {
-    ar & element.m_index;
-    ar & element.m_vocabulary_info;
-    ar & element.m_is_static;
-}
 
-template<typename Archive>
-void serialize(Archive& ar, dlplan::core::Concept& concept, const unsigned int /* version */ ) {
-    ar & boost::serialization::base_object<dlplan::core::BaseElement>(concept);
-}
-
-template<typename Archive>
-void serialize(Archive& ar, dlplan::core::Role& role, const unsigned int /* version */ ) {
-    ar & boost::serialization::base_object<dlplan::core::BaseElement>(role);
-}
-
-template<typename Archive>
-void serialize(Archive& ar, dlplan::core::Boolean& boolean, const unsigned int /* version */ ) {
-    ar & boost::serialization::base_object<dlplan::core::BaseElement>(boolean);
-}
-
-template<typename Archive>
-void serialize(Archive& ar, dlplan::core::Numerical& numerical, const unsigned int /* version */ ) {
-    ar & boost::serialization::base_object<dlplan::core::BaseElement>(numerical);
-}
-
-template<typename Archive, typename T>
-void serialize(Archive& ar, dlplan::core::EmptyBoolean<T>& boolean, const unsigned int /* version */ )
+template<class Archive, typename T_>
+void save_construct_data(Archive & ar, const dlplan::core::EmptyBoolean<T_>* boolean, const unsigned int /* version */ )
 {
-    ar & boost::serialization::base_object<dlplan::core::Boolean>(boolean);
-    ar & boolean.m_element;
+    ar << boolean->m_vocabulary_info;
+    ar << boolean->m_index;
+    ar << boolean->m_element;
+}
+
+template<class Archive, typename T_>
+void load_construct_data(Archive & ar, dlplan::core::EmptyBoolean<T_>* boolean, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const T_> element;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> element;
+    ::new(boolean)dlplan::core::EmptyBoolean<T_>(vocabulary, index, element);
 }
 
 template<typename Archive, typename T>

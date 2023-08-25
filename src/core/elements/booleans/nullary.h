@@ -59,12 +59,11 @@ private:
     friend void boost::serialization::serialize(Archive& ar, NullaryBoolean& boolean, const unsigned int version);
 
 protected:
-    Predicate m_predicate;
+    const Predicate m_predicate;
 
 public:
-    NullaryBoolean() : Boolean(), m_predicate(Predicate()) { }
-    NullaryBoolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, const Predicate& predicate)
-    : Boolean(vocabulary_info, predicate.is_static()), m_predicate(predicate) {
+    NullaryBoolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, const Predicate& predicate)
+    : Boolean(vocabulary_info, index, predicate.is_static()), m_predicate(predicate) {
         if (predicate.get_arity() != 0) {
             throw std::runtime_error("NullaryBoolean::NullaryBoolean - expected predicate with arity 0.");
         }

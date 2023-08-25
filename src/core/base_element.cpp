@@ -5,8 +5,8 @@
 
 namespace dlplan::core {
 
-BaseElement::BaseElement(std::shared_ptr<const VocabularyInfo> vocabulary_info, bool is_static)
-    : m_vocabulary_info(vocabulary_info), m_index(-1), m_is_static(is_static) { }
+BaseElement::BaseElement(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
+    : m_vocabulary_info(vocabulary_info), m_index(index), m_is_static(is_static) { }
 
 BaseElement::~BaseElement() { }
 
@@ -23,10 +23,6 @@ std::ostream& operator<<(std::ostream& os, const BaseElement& element) {
 
 std::string BaseElement::str() const {
     return compute_repr();
-}
-
-void BaseElement::set_index(ElementIndex index) {
-    m_index = index;
 }
 
 ElementIndex BaseElement::get_index() const {

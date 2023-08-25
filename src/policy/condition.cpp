@@ -3,8 +3,8 @@
 
 namespace dlplan::policy {
 
-BooleanCondition::BooleanCondition(std::shared_ptr<const core::Boolean> boolean)
-    : BaseCondition(), m_boolean(boolean) { }
+BooleanCondition::BooleanCondition(std::shared_ptr<const core::Boolean> boolean, ConditionIndex index)
+    : BaseCondition(index), m_boolean(boolean) { }
 
 int BooleanCondition::compute_evaluate_time_score() const {
     return m_boolean->compute_evaluate_time_score();
@@ -19,8 +19,8 @@ std::shared_ptr<const core::Numerical> BooleanCondition::get_numerical() const {
 }
 
 
-NumericalCondition::NumericalCondition(std::shared_ptr<const core::Numerical> numerical)
-    : BaseCondition(), m_numerical(numerical) { }
+NumericalCondition::NumericalCondition(std::shared_ptr<const core::Numerical> numerical, ConditionIndex index)
+    : BaseCondition(index), m_numerical(numerical) { }
 
 int NumericalCondition::compute_evaluate_time_score() const {
     return m_numerical->compute_evaluate_time_score();
@@ -36,8 +36,8 @@ std::shared_ptr<const core::Numerical> NumericalCondition::get_numerical() const
 
 
 
-PositiveBooleanCondition::PositiveBooleanCondition(std::shared_ptr<const core::Boolean> boolean_feature)
-    : BooleanCondition(boolean_feature) { }
+PositiveBooleanCondition::PositiveBooleanCondition(std::shared_ptr<const core::Boolean> boolean, ConditionIndex index)
+    : BooleanCondition(boolean, index) { }
 
 bool PositiveBooleanCondition::evaluate(const core::State& source_state) const {
     return m_boolean->evaluate(source_state);
@@ -56,8 +56,8 @@ std::string PositiveBooleanCondition::str() const {
 }
 
 
-NegativeBooleanCondition::NegativeBooleanCondition(std::shared_ptr<const core::Boolean> boolean_feature)
-    : BooleanCondition(boolean_feature) { }
+NegativeBooleanCondition::NegativeBooleanCondition(std::shared_ptr<const core::Boolean> boolean, ConditionIndex index)
+    : BooleanCondition(boolean, index) { }
 
 bool NegativeBooleanCondition::evaluate(const core::State& source_state) const {
     return !m_boolean->evaluate(source_state);
@@ -76,8 +76,8 @@ std::string NegativeBooleanCondition::str() const {
 }
 
 
-EqualNumericalCondition::EqualNumericalCondition(std::shared_ptr<const core::Numerical> numerical_feature)
-    : NumericalCondition(numerical_feature) { }
+EqualNumericalCondition::EqualNumericalCondition(std::shared_ptr<const core::Numerical> numerical, ConditionIndex index)
+    : NumericalCondition(numerical, index) { }
 
 bool EqualNumericalCondition::evaluate(const core::State& source_state) const {
     return m_numerical->evaluate(source_state) == 0;
@@ -96,8 +96,8 @@ std::string EqualNumericalCondition::str() const {
 }
 
 
-GreaterNumericalCondition::GreaterNumericalCondition(std::shared_ptr<const core::Numerical> numerical_feature)
-    : NumericalCondition(numerical_feature) { }
+GreaterNumericalCondition::GreaterNumericalCondition(std::shared_ptr<const core::Numerical> numerical, ConditionIndex index)
+    : NumericalCondition(numerical, index) { }
 
 bool GreaterNumericalCondition::evaluate(const core::State& source_state) const {
     return m_numerical->evaluate(source_state) > 0;

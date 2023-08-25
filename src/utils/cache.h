@@ -31,13 +31,6 @@ private:
     std::unordered_map<KEY, std::weak_ptr<VALUE>> m_cache;
 
     /**
-     * A nonfragmented indexing scheme is obtained if no elements are deleted after insertion.
-     * A nonfragmented indexing scheme is useful when caching Denotations in a vector.
-     * A fragmented indexing scheme can still be used when caching denotation in an unordered_map.
-     */
-    int m_index_counter;
-
-    /**
      * For multi-threading purposes
      */
     mutable std::mutex m_mutex;
@@ -46,7 +39,7 @@ private:
     friend void boost::serialization::serialize(Archive& ar, ReferenceCountedObjectCache<KEY_, VALUE_>& cache, const unsigned int version);
 
 public:
-    ReferenceCountedObjectCache() : m_index_counter(0) { }
+    ReferenceCountedObjectCache() { }
     /**
      * Retrieves a certain element.
      */
@@ -69,7 +62,6 @@ public:
         bool new_insertion = false;
         if (!sp) {
             new_insertion = true;
-            element->set_index(m_index_counter++);
             cached = sp = std::shared_ptr<VALUE>(
                 element.get(),
                 [parent=this->shared_from_this(), original_deleter=element.get_deleter()](VALUE* x)

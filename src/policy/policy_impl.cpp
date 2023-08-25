@@ -10,10 +10,8 @@
 
 namespace dlplan::policy {
 
-Policy::Policy() = default;
-
-Policy::Policy(Rules&& rules)
-    : m_rules(move(rules)) {
+Policy::Policy(Rules&& rules, PolicyIndex index)
+    : m_rules(move(rules)), m_index(index) {
     // Retrieve boolean and numericals from the rules.
     for (const auto& rule : m_rules) {
         for (const auto& condition : rule->get_conditions()) {
@@ -147,10 +145,6 @@ int Policy::compute_evaluate_time_score() const {
         score += rule->compute_evaluate_time_score();
     }
     return score;
-}
-
-void Policy::set_index(PolicyIndex index) {
-    m_index = index;
 }
 
 PolicyIndex Policy::get_index() const {

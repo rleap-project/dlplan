@@ -45,9 +45,8 @@ private:
     friend void boost::serialization::serialize(Archive& ar, TopRole& role, const unsigned int version);
 
 public:
-    TopRole() : Role() { }
-    TopRole(std::shared_ptr<const VocabularyInfo> vocabulary_info)
-    : Role(vocabulary_info, true) {
+    TopRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index)
+    : Role(vocabulary_info, index, true) {
     }
 
     RoleDenotation evaluate(const State& state) const override {

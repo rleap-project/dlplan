@@ -84,14 +84,13 @@ private:
     friend void boost::serialization::serialize(Archive& ar, ConceptDistanceNumerical& numerical, const unsigned int version);
 
 protected:
-    std::shared_ptr<const Concept> m_concept_from;
-    std::shared_ptr<const Role> m_role;
-    std::shared_ptr<const Concept> m_concept_to;
+    const std::shared_ptr<const Concept> m_concept_from;
+    const std::shared_ptr<const Role> m_role;
+    const std::shared_ptr<const Concept> m_concept_to;
 
 public:
-    ConceptDistanceNumerical() : Numerical(), m_concept_from(nullptr), m_role(nullptr), m_concept_to(nullptr) { }
-    ConceptDistanceNumerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept_from, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept_to)
-    : Numerical(vocabulary_info, concept_from->is_static() && role->is_static() && concept_to->is_static()),
+    ConceptDistanceNumerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Concept> concept_from, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept_to)
+    : Numerical(vocabulary_info, index, concept_from->is_static() && role->is_static() && concept_to->is_static()),
       m_concept_from(concept_from), m_role(role), m_concept_to(concept_to) {
         if (!(concept_from && role && concept_to)) {
             throw std::runtime_error("ConceptDistanceNumerical::ConceptDistanceNumerical - child is not of type Concept, Role, Concept.");

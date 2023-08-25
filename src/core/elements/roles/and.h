@@ -62,9 +62,8 @@ protected:
     std::shared_ptr<const Role> m_role_right;
 
 public:
-    AndRole() : Role(), m_role_left(nullptr), m_role_right(nullptr) { }
-    AndRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role_1, std::shared_ptr<const Role> role_2)
-    : Role(vocabulary_info, role_1->is_static() && role_2->is_static()),
+    AndRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role_1, std::shared_ptr<const Role> role_2)
+    : Role(vocabulary_info, index, role_1->is_static() && role_2->is_static()),
       m_role_left(role_1),
       m_role_right(role_2) {
         if (!(role_1 && role_2)) {

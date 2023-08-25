@@ -45,9 +45,8 @@ private:
     friend void boost::serialization::serialize(Archive& ar, TopConcept& concept, const unsigned int version);
 
 public:
-    TopConcept() : Concept() { }
-    TopConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info)
-    : Concept(vocabulary_info, true) {
+    TopConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index)
+    : Concept(vocabulary_info, index, true) {
     }
 
     ConceptDenotation evaluate(const State& state) const override {

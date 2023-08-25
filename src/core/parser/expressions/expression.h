@@ -14,6 +14,7 @@ class Concept;
 class Role;
 class Boolean;
 class Numerical;
+class SyntacticElementFactory;
 }
 
 namespace dlplan::core::parser {
@@ -58,7 +59,8 @@ public:
      * Tries to parse the Expression into a Concept.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual std::shared_ptr<const dlplan::core::Concept> parse_concept(std::shared_ptr<const VocabularyInfo>, Caches&) const {
+    virtual std::shared_ptr<const dlplan::core::Concept>
+    parse_concept(dlplan::core::SyntacticElementFactory& /* factory */ ) const {
         return nullptr;
     }
 
@@ -66,7 +68,8 @@ public:
      * Tries to parse the Expression into a Role.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual std::shared_ptr<const dlplan::core::Role> parse_role(std::shared_ptr<const VocabularyInfo>, Caches&) const {
+    virtual std::shared_ptr<const dlplan::core::Role>
+    parse_role(dlplan::core::SyntacticElementFactory& /* factory */ ) const {
         return nullptr;
     }
 
@@ -74,7 +77,8 @@ public:
      * Tries to parse the Expression into a Numerical.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual std::shared_ptr<const dlplan::core::Numerical> parse_numerical(std::shared_ptr<const VocabularyInfo>, Caches&) const {
+    virtual std::shared_ptr<const dlplan::core::Numerical>
+    parse_numerical(dlplan::core::SyntacticElementFactory& /* factory */ ) const {
         return nullptr;
     }
 
@@ -82,7 +86,8 @@ public:
      * Tries to parse the Expression into a Boolean.
      * If unsuccessful print human readable error messages and throw and exception.
      */
-    virtual std::shared_ptr<const dlplan::core::Boolean> parse_boolean(std::shared_ptr<const VocabularyInfo>, Caches&) const {
+    virtual std::shared_ptr<const dlplan::core::Boolean>
+    parse_boolean(dlplan::core::SyntacticElementFactory& /* factory */ ) const {
         return nullptr;
     }
 };

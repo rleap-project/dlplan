@@ -65,13 +65,12 @@ private:
     friend void boost::serialization::serialize(Archive& ar, EqualConcept& concept, const unsigned int version);
 
 protected:
-    std::shared_ptr<const Role> m_role_left;
-    std::shared_ptr<const Role> m_role_right;
+    const std::shared_ptr<const Role> m_role_left;
+    const std::shared_ptr<const Role> m_role_right;
 
 public:
-    EqualConcept() : Concept(), m_role_left(nullptr), m_role_right(nullptr) { }
-    EqualConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role_left, std::shared_ptr<const Role> role_right)
-    : Concept(vocabulary_info, role_left->is_static() && role_right->is_static()),
+    EqualConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role_left, std::shared_ptr<const Role> role_right)
+    : Concept(vocabulary_info, index, role_left->is_static() && role_right->is_static()),
       m_role_left(role_left), m_role_right(role_right) {
         if (!(role_left && role_right)) {
             throw std::runtime_error("EqualConcept::EqualConcept - at least one child is a nullptr");
