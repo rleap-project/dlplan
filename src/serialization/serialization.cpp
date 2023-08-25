@@ -305,10 +305,28 @@ void load_construct_data(Archive & ar, dlplan::core::InclusionBoolean<T>* boolea
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::NullaryBoolean& boolean, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::NullaryBoolean& /* boolean */, const unsigned int /* version */ )
 {
-    ar & boost::serialization::base_object<dlplan::core::Boolean>(boolean);
-    ar & boolean.m_predicate;
+}
+
+template<class Archive>
+void save_construct_data(Archive & ar, const dlplan::core::NullaryBoolean* boolean, const unsigned int /* version */ )
+{
+    ar << boolean->m_vocabulary_info;
+    ar << boolean->m_index;
+    ar << &boolean->m_predicate;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::NullaryBoolean* boolean, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    dlplan::core::Predicate* predicate;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> predicate;
+    ::new(boolean)dlplan::core::NullaryBoolean(vocabulary, index, *predicate);
 }
 
 template<typename Archive>
