@@ -1248,18 +1248,6 @@ void serialize( Archive& ar, dlplan::novelty::TupleGraph& tuple_graph, const uns
 }
 
 template<typename Archive>
-void serialize( Archive& ar, dlplan::policy::BaseCondition& condition, const unsigned int /* version */ )
-{
-    ar & condition.m_index;
-}
-
-template<typename Archive>
-void serialize( Archive& ar, dlplan::policy::BaseEffect& effect, const unsigned int /* version */ )
-{
-    ar & effect.m_index;
-}
-
-template<typename Archive>
 void serialize( Archive& ar, dlplan::policy::Rule& rule, const unsigned int /* version */ )
 {
     ar & rule.m_index;
