@@ -26,16 +26,18 @@ class PolicyBuilder;
 // Forward declare the serialize function template in boost::serialization namespace
 namespace boost::serialization {
     template <typename Archive>
-    void serialize(Archive& ar, dlplan::policy::BaseCondition& condition, const unsigned int version);
+    void serialize(Archive& ar, dlplan::policy::Rule& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::policy::Rule* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::policy::Rule* t, const unsigned int version);
 
     template <typename Archive>
-    void serialize(Archive& ar, dlplan::policy::BaseEffect& effect, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::policy::Rule& rule, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::policy::Policy& policy, const unsigned int version);
+    void serialize(Archive& ar, dlplan::policy::Policy& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::policy::Policy* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::policy::Policy* t, const unsigned int version);
 
     template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::PolicyBuilder& builder, const unsigned int version);
@@ -80,9 +82,6 @@ class BaseCondition {
 private:
     int m_index;
 
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, BaseCondition& condition, const unsigned int version);
-
 public:
     explicit BaseCondition(ConditionIndex index);
     BaseCondition(const BaseCondition& other) = delete;
@@ -114,9 +113,6 @@ public:
 class BaseEffect {
 private:
     int m_index;
-
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, BaseEffect& effect, const unsigned int version);
 
 public:
     explicit BaseEffect(EffectIndex index);
@@ -154,9 +150,14 @@ private:
     RuleIndex m_index;
 
     Rule(Conditions&& conditions, Effects&& effects, RuleIndex index);
+
     friend class PolicyBuilderImpl;
     template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, Rule& rule, const unsigned int version);
+    friend void boost::serialization::serialize(Archive& ar, Rule& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive& ar, const Rule* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive& ar, Rule* t, const unsigned int version);
 
 public:
     Rule(const Rule& other) = delete;
@@ -196,9 +197,14 @@ private:
     int m_index;
 
     Policy(Rules&& rules, PolicyIndex index);
+
     friend class PolicyBuilderImpl;
     template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, Policy& policy, const unsigned int version);
+    friend void boost::serialization::serialize(Archive& ar, Policy& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive& ar, const Policy* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive& ar, Policy* t, const unsigned int version);
 
 public:
     Policy(const Policy& other);
@@ -243,7 +249,7 @@ private:
     dlplan::utils::pimpl<PolicyBuilderImpl> m_pImpl;
 
     template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, PolicyBuilder& builder, const unsigned int version);
+    friend void boost::serialization::serialize(Archive& ar, PolicyBuilder& t, const unsigned int version);
 
 public:
     PolicyBuilder();

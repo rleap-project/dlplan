@@ -827,13 +827,6 @@ protected:
      */
     bool m_is_static;
 
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, BaseElement& element, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive & ar, const BaseElement* element, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive & ar, BaseElement* element, const unsigned int version);
-
 protected:
     BaseElement(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
 
@@ -879,14 +872,6 @@ class Concept : public BaseElement {
 protected:
     Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
 
-    friend class SyntacticElementFactoryImpl;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, Concept& concept, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive & ar, const Concept* concept, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive & ar, Concept* concept, const unsigned int version);
-
     virtual ConceptDenotation evaluate_impl(const State& state, DenotationsCaches& caches) const = 0;
     virtual ConceptDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
 
@@ -908,14 +893,6 @@ public:
 class Role : public BaseElement {
 protected:
     Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
-
-    friend class SyntacticElementFactoryImpl;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, Role& role, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive & ar, const Role* role, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive & ar, Role* role, const unsigned int version);
 
     virtual RoleDenotation evaluate_impl(const State& state, DenotationsCaches& caches) const = 0;
     virtual RoleDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
@@ -939,14 +916,6 @@ class Numerical : public BaseElement {
 protected:
     Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
 
-    friend class SyntacticElementFactoryImpl;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, Numerical& numerical, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive & ar, const Numerical* numerical, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive & ar, Numerical* numerical, const unsigned int version);
-
     virtual int evaluate_impl(const State& state, DenotationsCaches& caches) const = 0;
     virtual NumericalDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
 
@@ -968,14 +937,6 @@ public:
 class Boolean : public BaseElement {
 protected:
     Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
-
-    friend class SyntacticElementFactoryImpl;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, Boolean& boolean, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive & ar, const Boolean* boolean, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive & ar, Boolean* boolean, const unsigned int version);
 
     virtual bool evaluate_impl(const State& state, DenotationsCaches& caches) const = 0;
     virtual BooleanDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;

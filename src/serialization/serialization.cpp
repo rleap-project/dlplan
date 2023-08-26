@@ -1290,6 +1290,7 @@ void serialize( Archive& ar, dlplan::serialization::Data& data, const unsigned i
     ar & data.syntatic_element_factories;
     ar & data.state_spaces;
     ar & data.tuple_graphs;
+    // ar & data.policies;
 }
 
 }
