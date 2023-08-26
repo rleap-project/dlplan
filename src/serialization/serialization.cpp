@@ -50,6 +50,7 @@
 #include <boost/serialization/weak_ptr.hpp>
 #include <boost/serialization/export.hpp>
 #include <boost/serialization/serialization.hpp>
+#include <boost/serialization/utility.hpp>
 
 // Runtime
 // https://www.boost.org/doc/libs/1_82_0/libs/serialization/doc/serialization.html#export
@@ -91,42 +92,42 @@ BOOST_CLASS_EXPORT_GUID(dlplan::core::TransitiveReflexiveClosureRole, "dlplan::c
 
 namespace boost::serialization {
 template<typename Archive>
-inline void serialize(Archive& /* ar */ , dlplan::core::Constant& /* constant */, const unsigned int /* version */) {
+inline void serialize(Archive& /* ar */ , dlplan::core::Constant& /* t */, const unsigned int /* version */) {
 }
 
 template<class Archive>
 inline void save_construct_data(
-    Archive & ar, const dlplan::core::Constant* constant, const unsigned int /* version */ ){
-    ar << constant->m_name;
-    ar << constant->m_index;
+    Archive & ar, const dlplan::core::Constant* t, const unsigned int /* version */ ){
+    ar << t->m_name;
+    ar << t->m_index;
 }
 
 template<class Archive>
 inline void load_construct_data(
-    Archive & ar, dlplan::core::Constant* constant, const unsigned int /* version */ ){
+    Archive & ar, dlplan::core::Constant* t, const unsigned int /* version */ ){
     std::string name;
     dlplan::core::ConstantIndex index;
     ar >> name;
     ar >> index;
-    ::new(constant)dlplan::core::Constant(name, index);
+    ::new(t)dlplan::core::Constant(name, index);
 }
 
 template<typename Archive>
-inline void serialize(Archive& /* ar */ , dlplan::core::Predicate& /* predicate */, const unsigned int /* version */) {
+inline void serialize(Archive& /* ar */ , dlplan::core::Predicate& /* t */, const unsigned int /* version */) {
 }
 
 template<class Archive>
 inline void save_construct_data(
-    Archive & ar, const dlplan::core::Predicate* predicate, const unsigned int /* version */ ){
-    ar << predicate->m_name;
-    ar << predicate->m_index;
-    ar << predicate->m_arity;
-    ar << predicate->m_is_static;
+    Archive & ar, const dlplan::core::Predicate* t, const unsigned int /* version */ ){
+    ar << t->m_name;
+    ar << t->m_index;
+    ar << t->m_arity;
+    ar << t->m_is_static;
 }
 
 template<class Archive>
 inline void load_construct_data(
-    Archive & ar, dlplan::core::Predicate* predicate, const unsigned int /* version */ ){
+    Archive & ar, dlplan::core::Predicate* t, const unsigned int /* version */ ){
     std::string name;
     dlplan::core::PredicateIndex index;
     int arity;
@@ -135,47 +136,47 @@ inline void load_construct_data(
     ar >> index;
     ar >> arity;
     ar >> is_static;
-    ::new(predicate)dlplan::core::Predicate(name, index, arity, is_static);
+    ::new(t)dlplan::core::Predicate(name, index, arity, is_static);
 }
 
 template<typename Archive>
-inline void serialize(Archive& /* ar */ , dlplan::core::Object& /* object */, const unsigned int /* version */) {
+inline void serialize(Archive& /* ar */ , dlplan::core::Object& /* t */, const unsigned int /* version */) {
 }
 
 template<class Archive>
 inline void save_construct_data(
-    Archive & ar, const dlplan::core::Object* object, const unsigned int /* version */ ){
-    ar << object->m_name;
-    ar << object->m_index;
+    Archive & ar, const dlplan::core::Object* t, const unsigned int /* version */ ){
+    ar << t->m_name;
+    ar << t->m_index;
 }
 
 template<class Archive>
 inline void load_construct_data(
-    Archive & ar, dlplan::core::Object* object, const unsigned int /* version */ ){
+    Archive & ar, dlplan::core::Object* t, const unsigned int /* version */ ){
     std::string name;
     dlplan::core::ObjectIndex index;
     ar >> name;
     ar >> index;
-    ::new(object)dlplan::core::Object(name, index);
+    ::new(t)dlplan::core::Object(name, index);
 }
 
 template<typename Archive>
-inline void serialize(Archive& /* ar */ , dlplan::core::Atom& /* atom */, const unsigned int /* version */) {
+inline void serialize(Archive& /* ar */ , dlplan::core::Atom& /* t */, const unsigned int /* version */) {
 }
 
 template<class Archive>
 inline void save_construct_data(
-    Archive & ar, const dlplan::core::Atom* atom, const unsigned int /* version */ ){
-    ar << atom->m_name;
-    ar << atom->m_index;
-    ar << atom->m_predicate_index;
-    ar << atom->m_object_indices;
-    ar << atom->m_is_static;
+    Archive & ar, const dlplan::core::Atom* t, const unsigned int /* version */ ){
+    ar << t->m_name;
+    ar << t->m_index;
+    ar << t->m_predicate_index;
+    ar << t->m_object_indices;
+    ar << t->m_is_static;
 }
 
 template<class Archive>
 inline void load_construct_data(
-    Archive & ar, dlplan::core::Atom* object, const unsigned int /* version */ ){
+    Archive & ar, dlplan::core::Atom* t, const unsigned int /* version */ ){
     std::string name;
     dlplan::core::AtomIndex index;
     dlplan::core::PredicateIndex predicate_index;
@@ -186,86 +187,109 @@ inline void load_construct_data(
     ar >> predicate_index;
     ar >> object_indices;
     ar >> is_static;
-    ::new(object)dlplan::core::Atom(name, index, predicate_index, object_indices, is_static);
+    ::new(t)dlplan::core::Atom(name, index, predicate_index, object_indices, is_static);
 }
 
 
 template<typename Archive>
-void serialize( Archive& ar, dlplan::core::VocabularyInfo& vocabulary_info, const unsigned int /* version */ )
+void serialize( Archive& ar, dlplan::core::VocabularyInfo& t, const unsigned int /* version */ )
 {
-    ar & vocabulary_info.m_constants;
-    ar & vocabulary_info.m_constant_name_to_index;
-    ar & vocabulary_info.m_predicates;
-    ar & vocabulary_info.m_predicate_name_to_index;
+    ar & t.m_constants;
+    ar & t.m_constant_name_to_index;
+    ar & t.m_predicates;
+    ar & t.m_predicate_name_to_index;
 }
 
 template<typename Archive>
-inline void serialize(Archive& ar, dlplan::core::InstanceInfo& instance_info, const unsigned int /* version */) {
-    ar & instance_info.m_objects;
-    ar & instance_info.m_object_name_to_index;
-    ar & instance_info.m_atoms;
-    ar & instance_info.m_atom_name_to_index;
-    ar & instance_info.m_static_atoms;
-    ar & instance_info.m_static_atom_name_to_index;
+inline void serialize(Archive& ar, dlplan::core::InstanceInfo& t, const unsigned int /* version */) {
+    ar & t.m_objects;
+    ar & t.m_object_name_to_index;
+    ar & t.m_atoms;
+    ar & t.m_atom_name_to_index;
+    ar & t.m_static_atoms;
+    ar & t.m_static_atom_name_to_index;
 }
 
 template<class Archive>
 inline void save_construct_data(
-    Archive & ar, const dlplan::core::InstanceInfo* instance_info, const unsigned int /* version */ ){
-    ar & instance_info->m_vocabulary_info;
-    ar & instance_info->m_index;
+    Archive & ar, const dlplan::core::InstanceInfo* t, const unsigned int /* version */ ){
+    ar & t->m_vocabulary_info;
+    ar & t->m_index;
 }
 
 template<class Archive>
 inline void load_construct_data(
-    Archive & ar, dlplan::core::InstanceInfo* instance_info, const unsigned int /* version */ ){
+    Archive & ar, dlplan::core::InstanceInfo* t, const unsigned int /* version */ ){
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     dlplan::core::InstanceIndex index;
     ar & vocabulary;
     ar & index;
-    ::new(instance_info)dlplan::core::InstanceInfo(vocabulary);
+    ::new(t)dlplan::core::InstanceInfo(vocabulary);
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */ , dlplan::core::State& /* state */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::State& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
 inline void save_construct_data(
-    Archive & ar, const dlplan::core::State* state, const unsigned int /* version */ ){
-    ar << state->m_index;
-    ar << state->m_instance_info;
-    ar << state->m_atom_indices;
+    Archive & ar, const dlplan::core::State* t, const unsigned int /* version */ ){
+    ar << t->m_index;
+    ar << t->m_instance_info;
+    ar << t->m_atom_indices;
 }
 
 template<class Archive>
 inline void load_construct_data(
-    Archive & ar, dlplan::core::State* state, const unsigned int /* version */ ){
+    Archive & ar, dlplan::core::State* t, const unsigned int /* version */ ){
     dlplan::core::InstanceIndex index;
     std::shared_ptr<const dlplan::core::InstanceInfo> instance_info;
     dlplan::core::AtomIndices atom_indices;
     ar >> index;
     ar >> instance_info;
     ar >> atom_indices;
-    ::new(state)dlplan::core::State(instance_info, std::move(atom_indices), index);
+    ::new(t)dlplan::core::State(instance_info, std::move(atom_indices), index);
+}
+
+template<typename Archive>
+void serialize(Archive& /* ar */ , std::pair<const int, dlplan::core::State>& /* t */, const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+inline void save_construct_data(
+    Archive & ar, const std::pair<const int, dlplan::core::State>* t, const unsigned int /* version */ ){
+    ar << t->first;
+    ar << &t->second;
+}
+
+template<class Archive>
+inline void load_construct_data(
+    Archive & ar, std::pair<const int, dlplan::core::State>* t, const unsigned int /* version */ ){
+    int first;
+    dlplan::core::State* second;
+    ar >> first;
+    ar >> second;
+    ::new(t)std::pair<int, dlplan::core::State>(first, *second);
+    delete second;
 }
 
 template<typename Archive, typename T>
-void serialize(Archive& /* ar */ , dlplan::core::EmptyBoolean<T>& /* boolean */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::EmptyBoolean<T>& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive, typename T>
-void save_construct_data(Archive & ar, const dlplan::core::EmptyBoolean<T>* boolean, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::EmptyBoolean<T>* t, const unsigned int /* version */ )
 {
-    ar << boolean->m_vocabulary_info;
-    ar << boolean->m_index;
-    ar << boolean->m_element;
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_element;
 }
 
 template<class Archive, typename T>
-void load_construct_data(Archive & ar, dlplan::core::EmptyBoolean<T>* boolean, const unsigned int /* version */ )
+void load_construct_data(Archive & ar, dlplan::core::EmptyBoolean<T>* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     int index;
@@ -273,25 +297,25 @@ void load_construct_data(Archive & ar, dlplan::core::EmptyBoolean<T>* boolean, c
     ar >> vocabulary;
     ar >> index;
     ar >> element;
-    ::new(boolean)dlplan::core::EmptyBoolean<T>(vocabulary, index, element);
+    ::new(t)dlplan::core::EmptyBoolean<T>(vocabulary, index, element);
 }
 
 template<typename Archive, typename T>
-void serialize(Archive& /* ar */, dlplan::core::InclusionBoolean<T>& /* boolean */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::InclusionBoolean<T>& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive, typename T>
-void save_construct_data(Archive & ar, const dlplan::core::InclusionBoolean<T>* boolean, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::InclusionBoolean<T>* t, const unsigned int /* version */ )
 {
-    ar << boolean->m_vocabulary_info;
-    ar << boolean->m_index;
-    ar << boolean->m_element_left;
-    ar << boolean->m_element_right;
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_element_left;
+    ar << t->m_element_right;
 }
 
 template<class Archive, typename T>
-void load_construct_data(Archive & ar, dlplan::core::InclusionBoolean<T>* boolean, const unsigned int /* version */ )
+void load_construct_data(Archive & ar, dlplan::core::InclusionBoolean<T>* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     int index;
@@ -301,24 +325,24 @@ void load_construct_data(Archive & ar, dlplan::core::InclusionBoolean<T>* boolea
     ar >> index;
     ar >> element_left;
     ar >> element_right;
-    ::new(boolean)dlplan::core::InclusionBoolean<T>(vocabulary, index, element_left, element_right);
+    ::new(t)dlplan::core::InclusionBoolean<T>(vocabulary, index, element_left, element_right);
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::NullaryBoolean& /* boolean */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::NullaryBoolean& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::NullaryBoolean* boolean, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::NullaryBoolean* t, const unsigned int /* version */ )
 {
-    ar << boolean->m_vocabulary_info;
-    ar << boolean->m_index;
-    ar << &boolean->m_predicate;
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << &t->m_predicate;
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::NullaryBoolean* boolean, const unsigned int /* version */ )
+void load_construct_data(Archive & ar, dlplan::core::NullaryBoolean* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     int index;
@@ -326,25 +350,25 @@ void load_construct_data(Archive & ar, dlplan::core::NullaryBoolean* boolean, co
     ar >> vocabulary;
     ar >> index;
     ar >> predicate;
-    ::new(boolean)dlplan::core::NullaryBoolean(vocabulary, index, *predicate);
+    ::new(t)dlplan::core::NullaryBoolean(vocabulary, index, *predicate);
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::AllConcept& /* all_concept */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::AllConcept& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::AllConcept* all_concept, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::AllConcept* t, const unsigned int /* version */ )
 {
-    ar << all_concept->m_vocabulary_info;
-    ar << all_concept->m_index;
-    ar << all_concept->m_role;
-    ar << all_concept->m_concept;
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_role;
+    ar << t->m_concept;
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::AllConcept* all_concept, const unsigned int /* version */ )
+void load_construct_data(Archive & ar, dlplan::core::AllConcept* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     int index;
@@ -354,25 +378,25 @@ void load_construct_data(Archive & ar, dlplan::core::AllConcept* all_concept, co
     ar >> index;
     ar >> role;
     ar >> concept;
-    ::new(all_concept)dlplan::core::AllConcept(vocabulary, index, role, concept);
+    ::new(t)dlplan::core::AllConcept(vocabulary, index, role, concept);
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::AndConcept& /* and_concept */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::AndConcept& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::AndConcept* and_concept, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::AndConcept* t, const unsigned int /* version */ )
 {
-    ar << and_concept->m_vocabulary_info;
-    ar << and_concept->m_index;
-    ar << and_concept->m_concept_left;
-    ar << and_concept->m_concept_right;
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_concept_left;
+    ar << t->m_concept_right;
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::AndConcept* and_concept, const unsigned int /* version */ )
+void load_construct_data(Archive & ar, dlplan::core::AndConcept* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     int index;
@@ -382,473 +406,768 @@ void load_construct_data(Archive & ar, dlplan::core::AndConcept* and_concept, co
     ar >> index;
     ar >> concept_left;
     ar >> concept_right;
-    ::new(and_concept)dlplan::core::AndConcept(vocabulary, index, concept_left, concept_right);
+    ::new(t)dlplan::core::AndConcept(vocabulary, index, concept_left, concept_right);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::BotConcept& concept, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::BotConcept& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::BotConcept* concept, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::BotConcept* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::BotConcept* concept, const unsigned int /* version */ )
+void load_construct_data(Archive & ar, dlplan::core::BotConcept* t, const unsigned int /* version */ )
 {
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    ar >> vocabulary;
+    ar >> index;
+    ::new(t)dlplan::core::BotConcept(vocabulary, index);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::DiffConcept& concept, const unsigned int /* version */ )
-{
-    ar & concept.m_concept_left;
-    ar & concept.m_concept_right;
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::DiffConcept* concept, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::DiffConcept& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::DiffConcept* concept, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::DiffConcept* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_concept_left;
+    ar << t->m_concept_right;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::DiffConcept* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const dlplan::core::Concept> concept_left;
+    std::shared_ptr<const dlplan::core::Concept> concept_right;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> concept_left;
+    ar >> concept_right;
+    ::new(t)dlplan::core::DiffConcept(vocabulary, index, concept_left, concept_right);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::EqualConcept& concept, const unsigned int /* version */ )
-{
-    ar & concept.m_role_left;
-    ar & concept.m_role_right;
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::EqualConcept* concept, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::EqualConcept& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::EqualConcept* concept, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::EqualConcept* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_role_left;
+    ar << t->m_role_right;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::EqualConcept* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const dlplan::core::Role> role_left;
+    std::shared_ptr<const dlplan::core::Role> role_right;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> role_left;
+    ar >> role_right;
+    ::new(t)dlplan::core::EqualConcept(vocabulary, index, role_left, role_right);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::NotConcept& concept, const unsigned int /* version */ )
-{
-    ar & concept.m_concept;
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::NotConcept* concept, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::NotConcept& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::NotConcept* concept, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::NotConcept* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_concept;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::NotConcept* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const dlplan::core::Concept> concept;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> concept;
+    ::new(t)dlplan::core::NotConcept(vocabulary, index, concept);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::OneOfConcept& concept, const unsigned int /* version */ )
-{
-    ar & concept.m_constant;
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::OneOfConcept* concept, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::OneOfConcept& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::OneOfConcept* concept, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::OneOfConcept* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << &t->m_constant;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::OneOfConcept* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    dlplan::core::Constant* constant;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> constant;
+    ::new(t)dlplan::core::OneOfConcept(vocabulary, index, *constant);
+    delete constant;
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::OrConcept& concept, const unsigned int /* version */ )
-{
-    ar & concept.m_concept_left;
-    ar & concept.m_concept_right;
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::OrConcept* concept, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::OrConcept& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::OrConcept* concept, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::OrConcept* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_concept_left;
+    ar << t->m_concept_right;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::OrConcept* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const dlplan::core::Concept> concept_left;
+    std::shared_ptr<const dlplan::core::Concept> concept_right;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> concept_left;
+    ar >> concept_right;
+    ::new(t)dlplan::core::OrConcept(vocabulary, index, concept_left, concept_right);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::PrimitiveConcept& concept, const unsigned int /* version */ )
-{
-    ar & concept.m_predicate;
-    ar & concept.m_pos;
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::PrimitiveConcept* concept, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::PrimitiveConcept& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::PrimitiveConcept* concept, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::PrimitiveConcept* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << &t->m_predicate;
+    ar << t->m_pos;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::PrimitiveConcept* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    dlplan::core::Predicate* predicate;
+    int pos;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> predicate;
+    ar >> pos;
+    ::new(t)dlplan::core::PrimitiveConcept(vocabulary, index, *predicate, pos);
+    delete predicate;
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::ProjectionConcept& concept, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::ProjectionConcept& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::ProjectionConcept* concept, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::ProjectionConcept* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_role;
+    ar << t->m_pos;
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::ProjectionConcept* concept, const unsigned int /* version */ )
+void load_construct_data(Archive & ar, dlplan::core::ProjectionConcept* t, const unsigned int /* version */ )
 {
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const dlplan::core::Role> role;
+    int pos;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> role;
+    ar >> pos;
+    ::new(t)dlplan::core::ProjectionConcept(vocabulary, index, role, pos);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::SomeConcept& concept, const unsigned int /* version */ )
-{
-    ar & concept.m_role;
-    ar & concept.m_concept;
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::SomeConcept* concept, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::SomeConcept& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::SomeConcept* concept, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::SomeConcept* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_role;
+    ar << t->m_concept;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::SomeConcept* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const dlplan::core::Role> role;
+    std::shared_ptr<const dlplan::core::Concept> concept;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> role;
+    ar >> concept;
+    ::new(t)dlplan::core::SomeConcept(vocabulary, index, role, concept);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::SubsetConcept& concept, const unsigned int /* version */ )
-{
-    ar & concept.m_role_left;
-    ar & concept.m_role_right;
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::SubsetConcept* concept, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::SubsetConcept& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::SubsetConcept* concept, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::SubsetConcept* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_role_left;
+    ar << t->m_role_right;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::SubsetConcept* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const dlplan::core::Role> role_left;
+    std::shared_ptr<const dlplan::core::Role> role_right;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> role_left;
+    ar >> role_right;
+    ::new(t)dlplan::core::SubsetConcept(vocabulary, index, role_left, role_right);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::TopConcept& concept, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::TopConcept& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::TopConcept* concept, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::TopConcept* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::TopConcept* concept, const unsigned int /* version */ )
+void load_construct_data(Archive & ar, dlplan::core::TopConcept* t, const unsigned int /* version */ )
 {
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    ar >> vocabulary;
+    ar >> index;
+    ::new(t)dlplan::core::TopConcept(vocabulary, index);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::ConceptDistanceNumerical& numerical, const unsigned int /* version */ )
-{
-    ar & numerical.m_concept_from;
-    ar & numerical.m_role;
-    ar & numerical.m_concept_to;
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::ConceptDistanceNumerical* concept, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::ConceptDistanceNumerical& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::ConceptDistanceNumerical* concept, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::ConceptDistanceNumerical* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_concept_from;
+    ar << t->m_role;
+    ar << t->m_concept_to;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::ConceptDistanceNumerical* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const dlplan::core::Concept> concept_from;
+    std::shared_ptr<const dlplan::core::Role> role;
+    std::shared_ptr<const dlplan::core::Concept> concept_to;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> concept_from;
+    ar >> role;
+    ar >> concept_to;
+    ::new(t)dlplan::core::ConceptDistanceNumerical(vocabulary, index, concept_from, role, concept_to);
 }
 
 template<typename Archive, typename T>
-void serialize(Archive& ar, dlplan::core::CountNumerical<T>& numerical, const unsigned int /* version */ )
-{
-    ar & numerical.m_element;
-}
-
-template<class Archive, typename T>
-void save_construct_data(Archive & ar, const dlplan::core::CountNumerical<T>* concept, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::CountNumerical<T>& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive, typename T>
-void load_construct_data(Archive & ar, dlplan::core::CountNumerical<T>* concept, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::CountNumerical<T>* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_element;
+}
+
+template<class Archive, typename T>
+void load_construct_data(Archive & ar, dlplan::core::CountNumerical<T>* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const T> element;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> element;
+    ::new(t)dlplan::core::CountNumerical<T>(vocabulary, index, element);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::RoleDistanceNumerical& numerical, const unsigned int /* version */ )
-{
-    ar & numerical.m_role_from;
-    ar & numerical.m_role;
-    ar & numerical.m_role_to;
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::RoleDistanceNumerical* concept, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::RoleDistanceNumerical& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::RoleDistanceNumerical* concept, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::RoleDistanceNumerical* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_role_from;
+    ar << t->m_role;
+    ar << t->m_role_to;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::RoleDistanceNumerical* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const dlplan::core::Role> role_from;
+    std::shared_ptr<const dlplan::core::Role> role;
+    std::shared_ptr<const dlplan::core::Role> role_to;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> role_from;
+    ar >> role;
+    ar >> role_to;
+    ::new(t)dlplan::core::RoleDistanceNumerical(vocabulary, index, role_from, role, role_to);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::SumConceptDistanceNumerical& numerical, const unsigned int /* version */ )
-{
-    ar & numerical.m_concept_from;
-    ar & numerical.m_role;
-    ar & numerical.m_concept_to;
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::SumConceptDistanceNumerical* concept, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::SumConceptDistanceNumerical& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::SumConceptDistanceNumerical* concept, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::SumConceptDistanceNumerical* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_concept_from;
+    ar << t->m_role;
+    ar << t->m_concept_to;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::SumConceptDistanceNumerical* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const dlplan::core::Concept> concept_from;
+    std::shared_ptr<const dlplan::core::Role> role;
+    std::shared_ptr<const dlplan::core::Concept> concept_to;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> concept_from;
+    ar >> role;
+    ar >> concept_to;
+    ::new(t)dlplan::core::SumConceptDistanceNumerical(vocabulary, index, concept_from, role, concept_to);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::SumRoleDistanceNumerical& numerical, const unsigned int /* version */ )
-{
-    ar & numerical.m_role_from;
-    ar & numerical.m_role;
-    ar & numerical.m_role_to;
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::SumRoleDistanceNumerical* concept, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::SumRoleDistanceNumerical& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::SumRoleDistanceNumerical* concept, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::SumRoleDistanceNumerical* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_role_from;
+    ar << t->m_role;
+    ar << t->m_role_to;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::SumRoleDistanceNumerical* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const dlplan::core::Role> role_from;
+    std::shared_ptr<const dlplan::core::Role> role;
+    std::shared_ptr<const dlplan::core::Role> role_to;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> role_from;
+    ar >> role;
+    ar >> role_to;
+    ::new(t)dlplan::core::SumRoleDistanceNumerical(vocabulary, index, role_from, role, role_to);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::AndRole& role, const unsigned int /* version */ )
-{
-    ar & role.m_role_left;
-    ar & role.m_role_right;
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::AndRole* role, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::AndRole& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::AndRole* role, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::AndRole* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_role_left;
+    ar << t->m_role_right;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::AndRole* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const dlplan::core::Role> role_left;
+    std::shared_ptr<const dlplan::core::Role> role_right;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> role_left;
+    ar >> role_right;
+    ::new(t)dlplan::core::AndRole(vocabulary, index, role_left, role_right);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::ComposeRole& role, const unsigned int /* version */ )
-{
-    ar & role.m_role_left;
-    ar & role.m_role_right;
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::ComposeRole* role, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::ComposeRole& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::ComposeRole* role, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::ComposeRole* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_role_left;
+    ar << t->m_role_right;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::ComposeRole* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const dlplan::core::Role> role_left;
+    std::shared_ptr<const dlplan::core::Role> role_right;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> role_left;
+    ar >> role_right;
+    ::new(t)dlplan::core::ComposeRole(vocabulary, index, role_left, role_right);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::DiffRole& role, const unsigned int /* version */ )
-{
-    ar & role.m_role_left;
-    ar & role.m_role_right;
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::DiffRole* role, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::DiffRole& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::DiffRole* role, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::DiffRole* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_role_left;
+    ar << t->m_role_right;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::DiffRole* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const dlplan::core::Role> role_left;
+    std::shared_ptr<const dlplan::core::Role> role_right;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> role_left;
+    ar >> role_right;
+    ::new(t)dlplan::core::DiffRole(vocabulary, index, role_left, role_right);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::IdentityRole& role, const unsigned int /* version */ )
-{
-    ar & role.m_concept;
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::IdentityRole* role, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::IdentityRole& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::IdentityRole* role, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::IdentityRole* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_concept;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::IdentityRole* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const dlplan::core::Concept> concept;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> concept;
+    ::new(t)dlplan::core::IdentityRole(vocabulary, index, concept);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::InverseRole& role, const unsigned int /* version */ )
-{
-    ar & role.m_role;;
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::InverseRole* role, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::InverseRole& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::InverseRole* role, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::InverseRole* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_role;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::InverseRole* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const dlplan::core::Role> role;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> role;
+    ::new(t)dlplan::core::InverseRole(vocabulary, index, role);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::NotRole& role, const unsigned int /* version */ )
-{
-    ar & role.m_role;
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::NotRole* role, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::NotRole& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::NotRole* role, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::NotRole* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_role;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::NotRole* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const dlplan::core::Role> role;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> role;
+    ::new(t)dlplan::core::NotRole(vocabulary, index, role);
 }
 
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::OrRole& role, const unsigned int /* version */ )
-{
-    ar & role.m_role_left;
-    ar & role.m_role_right;
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::OrRole* role, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::OrRole& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::OrRole* role, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::OrRole* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_role_left;
+    ar << t->m_role_right;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::OrRole* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const dlplan::core::Role> role_left;
+    std::shared_ptr<const dlplan::core::Role> role_right;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> role_left;
+    ar >> role_right;
+    ::new(t)dlplan::core::OrRole(vocabulary, index, role_left, role_right);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::PrimitiveRole& role, const unsigned int /* version */ )
-{
-    ar & role.m_predicate;
-    ar & role.m_pos_1;
-    ar & role.m_pos_2;
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::PrimitiveRole* role, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::PrimitiveRole& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::PrimitiveRole* role, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::PrimitiveRole* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << &t->m_predicate;
+    ar << t->m_pos_1;
+    ar << t->m_pos_2;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::PrimitiveRole* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    dlplan::core::Predicate* predicate;
+    int pos_1;
+    int pos_2;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> predicate;
+    ar >> pos_1;
+    ar >> pos_2;
+    ::new(t)dlplan::core::PrimitiveRole(vocabulary, index, *predicate, pos_1, pos_2);
+    delete predicate;
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::RestrictRole& role, const unsigned int /* version */ )
-{
-    ar & role.m_role;
-    ar & role.m_concept;
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::RestrictRole* role, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::RestrictRole& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::RestrictRole* role, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::RestrictRole* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_role;
+    ar << t->m_concept;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::RestrictRole* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const dlplan::core::Role> role;
+    std::shared_ptr<const dlplan::core::Concept> concept;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> role;
+    ar >> concept;
+    ::new(t)dlplan::core::RestrictRole(vocabulary, index, role, concept);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::TopRole& role, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::TopRole& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::TopRole* role, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::TopRole* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::TopRole* role, const unsigned int /* version */ )
+void load_construct_data(Archive & ar, dlplan::core::TopRole* t, const unsigned int /* version */ )
 {
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    ar >> vocabulary;
+    ar >> index;
+    ::new(t)dlplan::core::TopRole(vocabulary, index);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::TransitiveClosureRole& role, const unsigned int /* version */ )
-{
-    ar & role.m_role;
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::TransitiveClosureRole* role, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::TransitiveClosureRole& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::TransitiveClosureRole* role, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::TransitiveClosureRole* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_role;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::TransitiveClosureRole* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const dlplan::core::Role> role;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> role;
+    ::new(t)dlplan::core::TransitiveClosureRole(vocabulary, index, role);
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::TransitiveReflexiveClosureRole& role, const unsigned int /* version */ )
-{
-    ar & role.m_role;
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::TransitiveReflexiveClosureRole* role, const unsigned int /* version */ )
+void serialize(Archive& /* ar */, dlplan::core::TransitiveReflexiveClosureRole& /* t */, const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::TransitiveReflexiveClosureRole* role, const unsigned int /* version */ )
+void save_construct_data(Archive & ar, const dlplan::core::TransitiveReflexiveClosureRole* t, const unsigned int /* version */ )
 {
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_role;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::TransitiveReflexiveClosureRole* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const dlplan::core::Role> role;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> role;
+    ::new(t)dlplan::core::TransitiveReflexiveClosureRole(vocabulary, index, role);
 }
 
 
@@ -886,7 +1205,6 @@ template<typename Archive, typename KEY, typename VALUE>
 void serialize(Archive& ar, dlplan::utils::ReferenceCountedObjectCache<KEY, VALUE>& cache, const unsigned int /* version */ )
 {
     ar & cache.m_cache;
-    ar & cache.m_index_counter;
 }
 
 template<typename Archive>
