@@ -17,13 +17,13 @@ Role& Role::operator=(Role&& other) = default;
 Role::~Role() = default;
 
 const RoleDenotation* Role::evaluate(const State& state, DenotationsCaches& caches) const {
-    auto cached = caches.get_role_denotation_cache().get_denotation(
+    auto cached = caches.role_denotation_cache.get_denotation(
         get_index(),
         state.get_instance_info()->get_index(),
         is_static() ? -1 : state.get_index());
     if (cached) return cached;
-    auto denotation = caches.get_role_denotation_cache().insert_denotation(evaluate_impl(state, caches));
-    caches.get_role_denotation_cache().insert_denotation(
+    auto denotation = caches.role_denotation_cache.insert_denotation(evaluate_impl(state, caches));
+    caches.role_denotation_cache.insert_denotation(
         get_index(),
         state.get_instance_info()->get_index(),
         is_static() ? -1 : state.get_index(),
@@ -32,10 +32,10 @@ const RoleDenotation* Role::evaluate(const State& state, DenotationsCaches& cach
 }
 
 const RoleDenotations* Role::evaluate(const States& states, DenotationsCaches& caches) const {
-    auto cached = caches.get_role_denotations_cache().get_denotation(get_index(), -1, -1);
+    auto cached = caches.role_denotations_cache.get_denotation(get_index(), -1, -1);
     if (cached) return cached;
-    auto result_denotations = caches.get_role_denotations_cache().insert_denotation(evaluate_impl(states, caches));
-    caches.get_role_denotations_cache().insert_denotation(get_index(), -1, -1, result_denotations);
+    auto result_denotations = caches.role_denotations_cache.insert_denotation(evaluate_impl(states, caches));
+    caches.role_denotations_cache.insert_denotation(get_index(), -1, -1, result_denotations);
     return result_denotations;
 }
 

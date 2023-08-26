@@ -18,6 +18,8 @@ void InclusionBoolean::generate_impl(const core::States& states, int target_comp
                     data.m_reprs.push_back(element->compute_repr());
                     data.m_booleans_by_iteration[target_complexity].push_back(std::move(element));
                     increment_generated();
+                } else {
+                    caches.boolean_denotations_cache.erase_denotation(element->get_index(), -1, -1);
                 }
             }
         }
@@ -32,6 +34,8 @@ void InclusionBoolean::generate_impl(const core::States& states, int target_comp
                     data.m_reprs.push_back(element->compute_repr());
                     data.m_booleans_by_iteration[target_complexity].push_back(std::move(element));
                     increment_generated();
+                } else {
+                    caches.boolean_denotations_cache.erase_denotation(element->get_index(), -1, -1);
                 }
             }
         }

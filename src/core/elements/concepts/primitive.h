@@ -64,7 +64,7 @@ private:
             compute_result(
                 states[i],
                 denotation);
-            denotations.push_back(caches.get_concept_denotation_cache().insert_denotation(std::move(denotation)));
+            denotations.push_back(caches.concept_denotation_cache.insert_denotation(std::move(denotation)));
         }
         return denotations;
     }

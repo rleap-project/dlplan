@@ -118,7 +118,6 @@ void init_core(py::module_ &m_core) {
         .def("add_static_atom", py::overload_cast<const Predicate&, const std::vector<Object>&>(&InstanceInfo::add_static_atom))
         .def("add_static_atom", py::overload_cast<int, const std::vector<int>&>(&InstanceInfo::add_static_atom))
         .def("add_static_atom", py::overload_cast<const std::string&, const std::vector<std::string>&>(&InstanceInfo::add_static_atom))
-        .def("set_index", &InstanceInfo::set_index)
         .def("get_index", &InstanceInfo::get_index)
         .def("get_objects", &InstanceInfo::get_objects)
         .def("get_atoms", &InstanceInfo::get_atoms)
@@ -137,7 +136,6 @@ void init_core(py::module_ &m_core) {
         .def("__repr__", &State::str)
         .def("__str__", &State::str)
         .def("__hash__", &State::hash)
-        .def("set_index", &State::set_index)
         .def("get_index", &State::get_index)
         .def("get_atom_indices", &State::get_atom_indices)
         .def("get_instance_info", &State::get_instance_info)
@@ -148,7 +146,6 @@ void init_core(py::module_ &m_core) {
         .def("__str__", [](const BaseElement &element) { return element.str(); })
         .def("compute_complexity", &BaseElement::compute_complexity)
         .def("compute_repr", py::overload_cast<>(&BaseElement::compute_repr, py::const_))
-        .def("set_index", &BaseElement::set_index)
         .def("get_index", &BaseElement::get_index)
         .def("get_vocabulary_info", &BaseElement::get_vocabulary_info)
     ;

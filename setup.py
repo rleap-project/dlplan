@@ -36,7 +36,7 @@ class CMakeBuild(build_ext):
             "-DDLPLAN_PYTHON=On",
             f"-DDLPLAN_VERSION_INFO={__version__}",
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}",
-            "-DENABrecursive-includeLE_TESTING:bool=false",
+            "-DENABLE_TESTING:bool=false",
             f"-DPYTHON_EXECUTABLE={sys.executable}",
             f"-DCMAKE_BUILD_TYPE={cfg}",  # not used on MSVC, but no harm
         ]

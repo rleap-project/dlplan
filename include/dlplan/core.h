@@ -362,19 +362,12 @@ private:
             }
             return nullptr;
         }
+
+        void erase_denotation(ElementIndex element, InstanceIndex instance, StateIndex state) {
+            Key key{element, instance, state};
+            m_per_element_instance_state_mapping.erase(key);
+        }
     };
-
-    /// @brief Cache single denotations
-    Cache<ConceptDenotation> m_concept_denotation_cache;
-    Cache<RoleDenotation> m_role_denotation_cache;
-    Cache<bool> m_boolean_denotation_cache;
-    Cache<int> m_numerical_denotation_cache;
-
-    /// @brief Cache collection of denotations
-    Cache<ConceptDenotations> m_concept_denotations_cache;
-    Cache<RoleDenotations> m_role_denotations_cache;
-    Cache<BooleanDenotations> m_boolean_denotations_cache;
-    Cache<NumericalDenotations> m_numerical_denotations_cache;
 
     DenotationsCaches(const DenotationsCaches& other) = delete;
     DenotationsCaches& operator=(const DenotationsCaches& other) = delete;
@@ -385,15 +378,17 @@ public:
     DenotationsCaches(DenotationsCaches&& other);
     DenotationsCaches& operator=(DenotationsCaches&& other);
 
-    Cache<ConceptDenotation>& get_concept_denotation_cache();
-    Cache<RoleDenotation>& get_role_denotation_cache();
-    Cache<bool>& get_boolean_denotation_cache();
-    Cache<int>& get_numerical_denotation_cache();
+    /// @brief Cache single denotations
+    Cache<ConceptDenotation> concept_denotation_cache;
+    Cache<RoleDenotation> role_denotation_cache;
+    Cache<bool> boolean_denotation_cache;
+    Cache<int> numerical_denotation_cache;
 
-    Cache<ConceptDenotations>& get_concept_denotations_cache();
-    Cache<RoleDenotations>& get_role_denotations_cache();
-    Cache<BooleanDenotations>& get_boolean_denotations_cache();
-    Cache<NumericalDenotations>& get_numerical_denotations_cache();
+    /// @brief Cache collection of denotations
+    Cache<ConceptDenotations> concept_denotations_cache;
+    Cache<RoleDenotations> role_denotations_cache;
+    Cache<BooleanDenotations> boolean_denotations_cache;
+    Cache<NumericalDenotations> numerical_denotations_cache;
 };
 
 

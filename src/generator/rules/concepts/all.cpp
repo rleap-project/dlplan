@@ -14,10 +14,13 @@ void AllConcept::generate_impl(const core::States& states, int target_complexity
             for (const auto& c : data.m_concepts_by_iteration[j]) {
                 auto element = factory.make_all_concept(r, c);
                 auto denotations = element->evaluate(states, caches);
+                std::cout << element->compute_repr() << std::endl;
                 if (data.m_concept_hash_table.insert(denotations).second) {
                     data.m_reprs.push_back(element->compute_repr());
                     data.m_concepts_by_iteration[target_complexity].push_back(std::move(element));
                     increment_generated();
+                } else {
+                    caches.concept_denotations_cache.erase_denotation(element->get_index(), -1, -1);
                 }
             }
         }

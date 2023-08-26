@@ -50,7 +50,7 @@ private:
             compute_result(
                 *(*role_denotations)[i],
                 denotation);
-            denotations.push_back(caches.get_role_denotation_cache().insert_denotation(std::move(denotation)));
+            denotations.push_back(caches.role_denotation_cache.insert_denotation(std::move(denotation)));
         }
        return denotations;
     }

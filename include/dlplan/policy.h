@@ -229,7 +229,6 @@ public:
     /// @return An integer that represents the score.
     int compute_evaluate_time_score() const;
 
-    void set_index(PolicyIndex index);
     PolicyIndex get_index() const;
     const Booleans& get_booleans() const;
     const Numericals& get_numericals() const;

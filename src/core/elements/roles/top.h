@@ -40,7 +40,7 @@ private:
         for (size_t i = 0; i < states.size(); ++i) {
             RoleDenotation denotation(states[i].get_instance_info()->get_objects().size());
             denotation.set();
-            denotations.push_back(caches.get_role_denotation_cache().insert_denotation(std::move(denotation)));
+            denotations.push_back(caches.role_denotation_cache.insert_denotation(std::move(denotation)));
         }
         return denotations;
     }
