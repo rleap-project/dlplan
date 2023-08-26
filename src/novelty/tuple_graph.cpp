@@ -13,25 +13,35 @@ using namespace dlplan::state_space;
 
 namespace dlplan::novelty {
 
-TupleGraph::TupleGraph()
-    : m_novelty_base(nullptr),
-      m_state_space(nullptr),
-      m_root_state_index(-1) { }
+TupleGraph::TupleGraph(
+    std::shared_ptr<const NoveltyBase> novelty_base,
+    std::shared_ptr<const state_space::StateSpace> state_space,
+    state_space::StateIndex root_state_index,
+    TupleNodes&& nodes,
+    std::vector<TupleNodeIndices>&& node_indices_by_distance,
+    std::vector<state_space::StateIndices>&& state_indices_by_distance)
+    : m_novelty_base(novelty_base),
+      m_state_space(state_space),
+      m_root_state_index(root_state_index),
+      m_nodes(std::move(nodes)),
+      m_node_indices_by_distance(std::move(node_indices_by_distance)),
+      m_state_indices_by_distance(std::move(state_indices_by_distance)) {
+}
 
 TupleGraph::TupleGraph(
     std::shared_ptr<const NoveltyBase> novelty_base,
     std::shared_ptr<const state_space::StateSpace> state_space,
-    StateIndex root_state)
+    StateIndex root_state_index)
     : m_novelty_base(novelty_base),
       m_state_space(state_space),
-      m_root_state_index(root_state) {
+      m_root_state_index(root_state_index) {
     if (!m_novelty_base) {
         throw std::runtime_error("TupleGraph::TupleGraph - novelty_base is nullptr.");
     }
     if (!m_novelty_base) {
         throw std::runtime_error("TupleGraph::TupleGraph - state_space is nullptr.");
     }
-    TupleGraphBuilderResult result = TupleGraphBuilder(novelty_base, state_space, root_state).get_result();
+    TupleGraphBuilderResult result = TupleGraphBuilder(novelty_base, state_space, root_state_index).get_result();
     m_nodes = std::move(result.nodes);
     m_node_indices_by_distance = std::move(result.node_indices_by_distance);
     m_state_indices_by_distance = std::move(result.state_indices_by_distance);

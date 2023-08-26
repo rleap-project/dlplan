@@ -1219,32 +1219,93 @@ void serialize( Archive& ar, dlplan::state_space::StateSpace& t, const unsigned 
 }
 
 template<typename Archive>
-void serialize( Archive& ar, dlplan::novelty::NoveltyBase& t, const unsigned int /* version */ )
+void serialize( Archive& /* ar */ , dlplan::novelty::NoveltyBase& /* t */ , const unsigned int /* version */ )
 {
-    ar & t.m_factors;
-    ar & t.m_num_atoms;
-    ar & t.m_arity;
+}
+
+template<class Archive>
+void save_construct_data(Archive & ar, const dlplan::novelty::NoveltyBase* t, const unsigned int /* version */ )
+{
+    ar << t->m_factors;
+    ar << t->m_num_atoms;
+    ar << t->m_arity;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::novelty::NoveltyBase* t, const unsigned int /* version */ )
+{
+    std::vector<int> factors;
+    int num_atoms;
+    int arity;
+    ar >> factors;
+    ar >> num_atoms;
+    ar >> arity;
+    ::new(t)dlplan::novelty::NoveltyBase(std::move(factors), num_atoms, arity);
 }
 
 template<typename Archive>
-void serialize( Archive& ar, dlplan::novelty::TupleNode& t, const unsigned int /* version */ )
+void serialize( Archive& /* ar */ , dlplan::novelty::TupleNode& /* t */ , const unsigned int /* version */ )
 {
-    ar & t.m_index;
-    ar & t.m_tuple_index;
-    ar & t.m_state_indices;
-    ar & t.m_predecessors;
-    ar & t.m_successors;
+}
+
+template<class Archive>
+void save_construct_data(Archive & ar, const dlplan::novelty::TupleNode* t, const unsigned int /* version */ )
+{
+    ar << t->m_index;
+    ar << t->m_tuple_index;
+    ar << t->m_state_indices;
+    ar << t->m_predecessors;
+    ar << t->m_successors;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::novelty::TupleNode* t, const unsigned int /* version */ )
+{
+    dlplan::novelty::TupleNodeIndex index;
+    dlplan::novelty::TupleIndex tuple_index;
+    dlplan::state_space::StateIndices state_indices;
+    dlplan::novelty::TupleNodeIndices predecessors;
+    dlplan::novelty::TupleNodeIndices successors;
+    ar >> index;
+    ar >> tuple_index;
+    ar >> state_indices;
+    ar >> predecessors;
+    ar >> successors;
+    ::new(t)dlplan::novelty::TupleNode(index, tuple_index, std::move(state_indices), std::move(predecessors), std::move(successors));
 }
 
 template<typename Archive>
-void serialize( Archive& ar, dlplan::novelty::TupleGraph& t, const unsigned int /* version */ )
+void serialize( Archive& /* ar */ , dlplan::novelty::TupleGraph& /* t */ , const unsigned int /* version */ )
 {
-    ar & t.m_novelty_base;
-    ar & t.m_state_space;
-    ar & t.m_root_state_index;
-    ar & t.m_nodes;
-    ar & t.m_node_indices_by_distance;
-    ar & t.m_state_indices_by_distance;
+}
+
+template<class Archive>
+void save_construct_data(Archive & ar, const dlplan::novelty::TupleGraph* t, const unsigned int /* version */ )
+{
+    ar << t->m_novelty_base;
+    ar << t->m_state_space;
+    ar << t->m_root_state_index;
+    ar << t->m_nodes;
+    ar << t->m_node_indices_by_distance;
+    ar << t->m_state_indices_by_distance;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::novelty::TupleGraph* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::novelty::NoveltyBase> novelty_base;
+    std::shared_ptr<const dlplan::state_space::StateSpace> state_space;
+    state_space::StateIndex root_state_index;
+    dlplan::novelty::TupleNodes nodes;
+    std::vector<dlplan::novelty::TupleNodeIndices> node_indices_by_distance;
+    std::vector<dlplan::state_space::StateIndices> state_indices_by_distance;
+    ar >> novelty_base;
+    ar >> state_space;
+    ar >> root_state_index;
+    ar >> nodes;
+    ar >> node_indices_by_distance;
+    ar >> state_indices_by_distance;
+    ::new(t)dlplan::novelty::TupleGraph(novelty_base, state_space, root_state_index, std::move(nodes), std::move(node_indices_by_distance), std::move(state_indices_by_distance));
 }
 
 template<typename Archive>

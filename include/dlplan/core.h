@@ -87,7 +87,6 @@ namespace boost::serialization {
 
     template<typename Archive>
     void serialize(Archive& ar, dlplan::core::SyntacticElementFactory& t, const unsigned int version);
-
 }
 
 
