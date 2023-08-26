@@ -38,53 +38,55 @@ class SyntacticElementFactoryImpl;
 
 // Forward declare the serialize function template in boost::serialization namespace
 namespace boost::serialization {
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::Constant& constant, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::Constant* constant, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::Constant* constant, const unsigned int version);
+    class access;
 
     template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::Predicate& predicate, const unsigned int version);
+    void serialize(Archive& ar, dlplan::core::Constant& t, const unsigned int version);
     template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::Predicate* predicate, const unsigned int version);
+    void save_construct_data(Archive& ar, const dlplan::core::Constant* t, const unsigned int version);
     template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::Predicate* predicate, const unsigned int version);
+    void load_construct_data(Archive& ar, dlplan::core::Constant* t, const unsigned int version);
 
     template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::Object& object, const unsigned int version);
+    void serialize(Archive& ar, dlplan::core::Predicate& t, const unsigned int version);
     template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::Object* object, const unsigned int version);
+    void save_construct_data(Archive& ar, const dlplan::core::Predicate* t, const unsigned int version);
     template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::Object* object, const unsigned int version);
+    void load_construct_data(Archive& ar, dlplan::core::Predicate* t, const unsigned int version);
 
     template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::Atom& atom, const unsigned int version);
+    void serialize(Archive& ar, dlplan::core::Object& t, const unsigned int version);
     template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::Atom* atom, const unsigned int version);
+    void save_construct_data(Archive& ar, const dlplan::core::Object* t, const unsigned int version);
     template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::Atom* atom, const unsigned int version);
+    void load_construct_data(Archive& ar, dlplan::core::Object* t, const unsigned int version);
 
     template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::State& state, const unsigned int version);
+    void serialize(Archive& ar, dlplan::core::Atom& t, const unsigned int version);
     template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::State* state, const unsigned int version);
+    void save_construct_data(Archive& ar, const dlplan::core::Atom* t, const unsigned int version);
     template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::State* state, const unsigned int version);
+    void load_construct_data(Archive& ar, dlplan::core::Atom* t, const unsigned int version);
 
     template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::VocabularyInfo& vocabulary_info, const unsigned int version);
+    void serialize(Archive& ar, dlplan::core::State& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::core::State* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::core::State* t, const unsigned int version);
 
     template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::InstanceInfo& instance_info, const unsigned int version);
+    void serialize(Archive& ar, dlplan::core::VocabularyInfo& t, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::core::InstanceInfo& t, const unsigned int version);
     template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::InstanceInfo* instance_info, const unsigned int version);
+    void save_construct_data(Archive& ar, const dlplan::core::InstanceInfo* t, const unsigned int version);
     template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::InstanceInfo* instance_info, const unsigned int version);
+    void load_construct_data(Archive& ar, dlplan::core::InstanceInfo* t, const unsigned int version);
 
     template<typename Archive>
-    void serialize(Archive& ar, dlplan::core::SyntacticElementFactory& factory, const unsigned int version);
+    void serialize(Archive& ar, dlplan::core::SyntacticElementFactory& t, const unsigned int version);
 
 }
 
@@ -414,11 +416,11 @@ private:
 
     friend class VocabularyInfo;
     template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, Constant& constant, const unsigned int version);
+    friend void boost::serialization::serialize(Archive& ar, Constant& t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive & ar, const Constant* constant, const unsigned int version);
+    friend void boost::serialization::save_construct_data(Archive & ar, const Constant* t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive & ar, Constant* constant, const unsigned int version);
+    friend void boost::serialization::load_construct_data(Archive & ar, Constant* t, const unsigned int version);
 
 public:
     Constant(const Constant& other);
@@ -480,11 +482,11 @@ private:
 
     friend class VocabularyInfo;
     template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, Predicate& predicate, const unsigned int version);
+    friend void boost::serialization::serialize(Archive& ar, Predicate& t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive & ar, const Predicate* predicate, const unsigned int version);
+    friend void boost::serialization::save_construct_data(Archive & ar, const Predicate* t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive & ar, Predicate* predicate, const unsigned int version);
+    friend void boost::serialization::load_construct_data(Archive & ar, Predicate* t, const unsigned int version);
 
 public:
     Predicate(const Predicate& other);
@@ -536,7 +538,7 @@ private:
     std::vector<Constant> m_constants;
 
     template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, VocabularyInfo& vocabulary_info, const unsigned int version);
+    friend void boost::serialization::serialize(Archive& ar, VocabularyInfo& t, const unsigned int version);
 
 public:
     VocabularyInfo();
@@ -583,11 +585,11 @@ private:
 
     friend class InstanceInfo;
     template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, Object& object, const unsigned int version);
+    friend void boost::serialization::serialize(Archive& ar, Object& t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive & ar, const Object* object, const unsigned int version);
+    friend void boost::serialization::save_construct_data(Archive & ar, const Object* t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive & ar, Object* object, const unsigned int version);
+    friend void boost::serialization::load_construct_data(Archive & ar, Object* t, const unsigned int version);
 
 public:
     Object(const Object& other);
@@ -637,11 +639,11 @@ private:
 
     friend class InstanceInfo;
     template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, Atom& atom, const unsigned int version);
+    friend void boost::serialization::serialize(Archive& ar, Atom& t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive & ar, const Atom* atom, const unsigned int version);
+    friend void boost::serialization::save_construct_data(Archive & ar, const Atom* t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive & ar, Atom* atom, const unsigned int version);
+    friend void boost::serialization::load_construct_data(Archive & ar, Atom* t, const unsigned int version);
 
 public:
     Atom(const Atom& other);
@@ -697,11 +699,11 @@ private:
     const Atom& add_atom(const std::string& predicate_name, const std::vector<std::string>& object_names, bool is_static);
 
     template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, InstanceInfo& instance_info, const unsigned int version);
+    friend void boost::serialization::serialize(Archive& ar, InstanceInfo& t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive & ar, const InstanceInfo* instance_info, const unsigned int version);
+    friend void boost::serialization::save_construct_data(Archive & ar, const InstanceInfo* t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive & ar, InstanceInfo* instance_info, const unsigned int version);
+    friend void boost::serialization::load_construct_data(Archive & ar, InstanceInfo* t, const unsigned int version);
 
 public:
     InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info, InstanceIndex index=-1);
@@ -769,11 +771,11 @@ private:
     int m_index;
 
     template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, State& state, const unsigned int version);
+    friend void boost::serialization::serialize(Archive& ar, State& t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive & ar, const State* state, const unsigned int version);
+    friend void boost::serialization::save_construct_data(Archive & ar, const State* t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive & ar, State* state, const unsigned int version);
+    friend void boost::serialization::load_construct_data(Archive & ar, State* t, const unsigned int version);
 
 public:
     State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms, StateIndex index=-1);
@@ -960,7 +962,7 @@ private:
     dlplan::utils::pimpl<SyntacticElementFactoryImpl> m_pImpl;
 
     template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, SyntacticElementFactory& factory, const unsigned int version);
+    friend void boost::serialization::serialize(Archive& ar, SyntacticElementFactory& t, const unsigned int version);
 
 public:
     SyntacticElementFactory();

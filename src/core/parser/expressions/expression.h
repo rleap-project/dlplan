@@ -9,7 +9,7 @@
 
 namespace dlplan::core {
 class VocabularyInfo;
-class Caches;
+struct Caches;
 class Concept;
 class Role;
 class Boolean;

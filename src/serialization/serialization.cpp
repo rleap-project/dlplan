@@ -1172,96 +1172,96 @@ void load_construct_data(Archive & ar, dlplan::core::TransitiveReflexiveClosureR
 
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::SyntacticElementFactory& factory, const unsigned int /* version */ )
+void serialize(Archive& ar, dlplan::core::SyntacticElementFactory& t, const unsigned int /* version */ )
 {
-    ar & factory.m_pImpl;
+    ar & t.m_pImpl;
 }
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::SyntacticElementFactoryImpl& factory, const unsigned int /* version */ )
+void serialize(Archive& ar, dlplan::core::SyntacticElementFactoryImpl& t, const unsigned int /* version */ )
 {
-    ar & factory.m_vocabulary_info;
-    ar & factory.m_caches;
-}
-
-
-template<typename Archive>
-void serialize(Archive& ar, dlplan::utils::pimpl<dlplan::core::SyntacticElementFactoryImpl>& pimpl, const unsigned int /* version */ )
-{
-    ar & pimpl.m;
+    ar & t.m_vocabulary_info;
+    ar & t.m_caches;
 }
 
 
 template<typename Archive>
-void serialize(Archive& ar, dlplan::core::Caches& caches, const unsigned int /* version */ )
+void serialize(Archive& ar, dlplan::utils::pimpl<dlplan::core::SyntacticElementFactoryImpl>& t, const unsigned int /* version */ )
 {
-    ar & caches.m_boolean_cache;
-    ar & caches.m_numerical_cache;
-    ar & caches.m_concept_cache;
-    ar & caches.m_role_cache;
+    ar & t.m;
+}
+
+
+template<typename Archive>
+void serialize(Archive& ar, dlplan::core::Caches& t, const unsigned int /* version */ )
+{
+    ar & t.m_boolean_cache;
+    ar & t.m_numerical_cache;
+    ar & t.m_concept_cache;
+    ar & t.m_role_cache;
 }
 
 template<typename Archive, typename KEY, typename VALUE>
-void serialize(Archive& ar, dlplan::utils::ReferenceCountedObjectCache<KEY, VALUE>& cache, const unsigned int /* version */ )
+void serialize(Archive& ar, dlplan::utils::ReferenceCountedObjectCache<KEY, VALUE>& t, const unsigned int /* version */ )
 {
-    ar & cache.m_cache;
+    ar & t.m_cache;
 }
 
 template<typename Archive>
-void serialize( Archive& ar, dlplan::state_space::StateSpace& state_space, const unsigned int /* version */ )
+void serialize( Archive& ar, dlplan::state_space::StateSpace& t, const unsigned int /* version */ )
 {
-    ar & state_space.m_instance_info;
-    ar & state_space.m_states;
-    ar & state_space.m_initial_state_index;
-    ar & state_space.m_goal_state_indices;
-    ar & state_space.m_forward_successor_state_indices;
-    ar & state_space.m_backward_successor_state_indices;
+    ar & t.m_instance_info;
+    ar & t.m_states;
+    ar & t.m_initial_state_index;
+    ar & t.m_goal_state_indices;
+    ar & t.m_forward_successor_state_indices;
+    ar & t.m_backward_successor_state_indices;
 }
 
 template<typename Archive>
-void serialize( Archive& ar, dlplan::novelty::NoveltyBase& novelty_base, const unsigned int /* version */ )
+void serialize( Archive& ar, dlplan::novelty::NoveltyBase& t, const unsigned int /* version */ )
 {
-    ar & novelty_base.m_factors;
-    ar & novelty_base.m_num_atoms;
-    ar & novelty_base.m_arity;
+    ar & t.m_factors;
+    ar & t.m_num_atoms;
+    ar & t.m_arity;
 }
 
 template<typename Archive>
-void serialize( Archive& ar, dlplan::novelty::TupleNode& tuple_node, const unsigned int /* version */ )
+void serialize( Archive& ar, dlplan::novelty::TupleNode& t, const unsigned int /* version */ )
 {
-    ar & tuple_node.m_index;
-    ar & tuple_node.m_tuple_index;
-    ar & tuple_node.m_state_indices;
-    ar & tuple_node.m_predecessors;
-    ar & tuple_node.m_successors;
+    ar & t.m_index;
+    ar & t.m_tuple_index;
+    ar & t.m_state_indices;
+    ar & t.m_predecessors;
+    ar & t.m_successors;
 }
 
 template<typename Archive>
-void serialize( Archive& ar, dlplan::novelty::TupleGraph& tuple_graph, const unsigned int /* version */ )
+void serialize( Archive& ar, dlplan::novelty::TupleGraph& t, const unsigned int /* version */ )
 {
-    ar & tuple_graph.m_novelty_base;
-    ar & tuple_graph.m_state_space;
-    ar & tuple_graph.m_root_state_index;
-    ar & tuple_graph.m_nodes;
-    ar & tuple_graph.m_node_indices_by_distance;
-    ar & tuple_graph.m_state_indices_by_distance;
+    ar & t.m_novelty_base;
+    ar & t.m_state_space;
+    ar & t.m_root_state_index;
+    ar & t.m_nodes;
+    ar & t.m_node_indices_by_distance;
+    ar & t.m_state_indices_by_distance;
 }
 
 template<typename Archive>
-void serialize( Archive& ar, dlplan::policy::Rule& rule, const unsigned int /* version */ )
+void serialize( Archive& ar, dlplan::policy::Rule& t, const unsigned int /* version */ )
 {
-    ar & rule.m_index;
-    ar & rule.m_conditions;
-    ar & rule.m_effects;
+    ar & t.m_index;
+    ar & t.m_conditions;
+    ar & t.m_effects;
 }
 
 template<typename Archive>
-void serialize( Archive& ar, dlplan::policy::Policy& policy, const unsigned int /* version */ )
+void serialize( Archive& ar, dlplan::policy::Policy& t, const unsigned int /* version */ )
 {
-    ar & policy.m_index;
-    ar & policy.m_booleans;
-    ar & policy.m_numericals;
-    ar & policy.m_rules;
+    ar & t.m_index;
+    ar & t.m_booleans;
+    ar & t.m_numericals;
+    ar & t.m_rules;
 }
 
 template<typename Archive>
