@@ -271,7 +271,7 @@ inline void load_construct_data(
     dlplan::core::State* second;
     ar >> first;
     ar >> second;
-    ::new(t)std::pair<int, dlplan::core::State>(first, *second);
+    ::new(t)std::pair<int, dlplan::core::State>(first, std::move(*second));
     delete second;
 }
 
