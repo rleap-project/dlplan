@@ -10,6 +10,12 @@
 
 namespace dlplan::policy {
 
+Policy::Policy(Booleans&& booleans, Numericals&& numericals, Rules&& rules, PolicyIndex index)
+    : m_booleans(std::move(booleans)),
+      m_numericals(std::move(numericals)),
+      m_rules(std::move(rules)),
+      m_index(index) { }
+
 Policy::Policy(Rules&& rules, PolicyIndex index)
     : m_rules(move(rules)), m_index(index) {
     // Retrieve boolean and numericals from the rules.

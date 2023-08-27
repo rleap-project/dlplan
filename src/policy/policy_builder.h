@@ -7,12 +7,25 @@
 #include <vector>
 #include <set>
 
-namespace dlplan {
-namespace core {
-    class Boolean;
-    class Numerical;
+
+namespace dlplan::core {
+class Boolean;
+class Numerical;
 }
-namespace policy {
+
+
+namespace dlplan::policy {
+class PolicyBuilderImpl;
+}
+
+
+namespace boost::serialization {
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::PolicyBuilderImpl& t, const unsigned int version);
+}
+
+
+namespace dlplan::policy {
 class PolicyRoot;
 class BaseCondition;
 class BaseEffect;
@@ -23,6 +36,9 @@ class PolicyMinimizer;
 class PolicyBuilderImpl {
 private:
     Caches m_caches;
+
+    template <typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, PolicyBuilderImpl& t, const unsigned int version);
 
 public:
     std::shared_ptr<const BaseCondition> add_pos_condition(const std::shared_ptr<const core::Boolean>& boolean);
@@ -41,7 +57,6 @@ public:
     std::shared_ptr<const Policy> add_policy(Rules&& rules);
 };
 
-}
 }
 
 #endif

@@ -12,6 +12,8 @@
 #include <string>
 #include <vector>
 
+
+// Forward declarations of this header
 namespace dlplan::policy {
 class PolicyBuilderImpl;
 class PolicyReaderImpl;
@@ -23,7 +25,8 @@ class Policy;
 class PolicyBuilder;
 }
 
-// Forward declare the serialize function template in boost::serialization namespace
+
+// Forward declarations of template spezializations for serialization
 namespace boost::serialization {
     template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::Rule& t, const unsigned int version);
@@ -79,7 +82,7 @@ using PolicyIndex = int;
 ///        provides functionality to access its underlying data and for
 ///        the evaluation on a state.
 class BaseCondition {
-private:
+protected:
     int m_index;
 
 public:
@@ -111,7 +114,7 @@ public:
 ///        provides functionality to access its underlying data and for
 ///        the evaluation on a pair of states.
 class BaseEffect {
-private:
+protected:
     int m_index;
 
 public:
@@ -195,6 +198,9 @@ private:
     Numericals m_numericals;
     Rules m_rules;
     int m_index;
+
+    /// @brief Constructor for serialization.
+    Policy(Booleans&& booleans, Numericals&& numericals, Rules&& rules, PolicyIndex index);
 
     Policy(Rules&& rules, PolicyIndex index);
 

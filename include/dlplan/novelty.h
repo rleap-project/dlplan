@@ -11,13 +11,16 @@
 #include <utility>
 #include <vector>
 
+
+// Forward declarations of this header
 namespace dlplan::novelty {
 class NoveltyBase;
 class TupleNode;
 class TupleGraph;
 }
 
-// Forward declare the serialize function template in boost::serialization namespace
+
+// Forward declarations of template spezializations for serialization
 namespace boost::serialization {
     template <typename Archive>
     void serialize(Archive& ar, dlplan::novelty::NoveltyBase& t, const unsigned int version);

@@ -15,7 +15,7 @@
 #include <vector>
 #include <iostream>
 
-
+// Forward declarations of this header
 namespace dlplan::core {
 class ConceptDenotation;
 class RoleDenotation;
@@ -36,10 +36,8 @@ class SyntacticElementFactoryImpl;
 }
 
 
-// Forward declare the serialize function template in boost::serialization namespace
+// Forward declarations of template spezializations for serialization
 namespace boost::serialization {
-    class access;
-
     template <typename Archive>
     void serialize(Archive& ar, dlplan::core::Constant& t, const unsigned int version);
     template<class Archive>

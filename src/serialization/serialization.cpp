@@ -5,46 +5,51 @@
 #include "../../include/dlplan/policy.h"
 #include "../../include/dlplan/state_space.h"
 
-#include "../../src/core/element_factory.h"
-#include "elements/booleans/empty.h"
-#include "elements/booleans/inclusion.h"
-#include "elements/booleans/nullary.h"
-#include "elements/concepts/all.h"
-#include "elements/concepts/bot.h"
-#include "elements/concepts/and.h"
-#include "elements/concepts/diff.h"
-#include "elements/concepts/equal.h"
-#include "elements/concepts/not.h"
-#include "elements/concepts/one_of.h"
-#include "elements/concepts/or.h"
-#include "elements/concepts/projection.h"
-#include "elements/concepts/primitive.h"
-#include "elements/concepts/some.h"
-#include "elements/concepts/subset.h"
-#include "elements/concepts/top.h"
-#include "elements/numericals/concept_distance.h"
-#include "elements/numericals/count.h"
-#include "elements/numericals/role_distance.h"
-#include "elements/numericals/sum_concept_distance.h"
-#include "elements/numericals/sum_role_distance.h"
-#include "elements/roles/and.h"
-#include "elements/roles/compose.h"
-#include "elements/roles/diff.h"
-#include "elements/roles/identity.h"
-#include "elements/roles/inverse.h"
-#include "elements/roles/not.h"
-#include "elements/roles/or.h"
-#include "elements/roles/primitive.h"
-#include "elements/roles/restrict.h"
-#include "elements/roles/top.h"
-#include "elements/roles/transitive_closure.h"
-#include "elements/roles/transitive_reflexive_closure.h"
+#include "../core/element_factory.h"
+#include "../core/elements/booleans/empty.h"
+#include "../core/elements/booleans/inclusion.h"
+#include "../core/elements/booleans/nullary.h"
+#include "../core/elements/concepts/all.h"
+#include "../core/elements/concepts/bot.h"
+#include "../core/elements/concepts/and.h"
+#include "../core/elements/concepts/diff.h"
+#include "../core/elements/concepts/equal.h"
+#include "../core/elements/concepts/not.h"
+#include "../core/elements/concepts/one_of.h"
+#include "../core/elements/concepts/or.h"
+#include "../core/elements/concepts/projection.h"
+#include "../core/elements/concepts/primitive.h"
+#include "../core/elements/concepts/some.h"
+#include "../core/elements/concepts/subset.h"
+#include "../core/elements/concepts/top.h"
+#include "../core/elements/numericals/concept_distance.h"
+#include "../core/elements/numericals/count.h"
+#include "../core/elements/numericals/role_distance.h"
+#include "../core/elements/numericals/sum_concept_distance.h"
+#include "../core/elements/numericals/sum_role_distance.h"
+#include "../core/elements/roles/and.h"
+#include "../core/elements/roles/compose.h"
+#include "../core/elements/roles/diff.h"
+#include "../core/elements/roles/identity.h"
+#include "../core/elements/roles/inverse.h"
+#include "../core/elements/roles/not.h"
+#include "../core/elements/roles/or.h"
+#include "../core/elements/roles/primitive.h"
+#include "../core/elements/roles/restrict.h"
+#include "../core/elements/roles/top.h"
+#include "../core/elements/roles/transitive_closure.h"
+#include "../core/elements/roles/transitive_reflexive_closure.h"
+
+#include "../policy/condition.h"
+#include "../policy/effect.h"
+#include "../policy/policy_builder.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/unordered_map.hpp>
 #include <boost/serialization/unordered_set.hpp>
+#include <boost/serialization/set.hpp>
 #include <boost/serialization/shared_ptr.hpp>
 #include <boost/serialization/unique_ptr.hpp>
 #include <boost/serialization/weak_ptr.hpp>
@@ -89,6 +94,16 @@ BOOST_CLASS_EXPORT_GUID(dlplan::core::RestrictRole, "dlplan::core::RestrictRole"
 BOOST_CLASS_EXPORT_GUID(dlplan::core::TopRole, "dlplan::core::TopRole")
 BOOST_CLASS_EXPORT_GUID(dlplan::core::TransitiveClosureRole, "dlplan::core::TransitiveClosureRole")
 BOOST_CLASS_EXPORT_GUID(dlplan::core::TransitiveReflexiveClosureRole, "dlplan::core::TransitiveReflexiveClosureRole")
+BOOST_CLASS_EXPORT_GUID(dlplan::policy::PositiveBooleanCondition, "dlplan::policy::PositiveBooleanCondition")
+BOOST_CLASS_EXPORT_GUID(dlplan::policy::NegativeBooleanCondition, "dlplan::policy::NegativeBooleanCondition")
+BOOST_CLASS_EXPORT_GUID(dlplan::policy::GreaterNumericalCondition, "dlplan::policy::GreaterNumericalCondition")
+BOOST_CLASS_EXPORT_GUID(dlplan::policy::EqualNumericalCondition, "dlplan::policy::EqualNumericalCondition")
+BOOST_CLASS_EXPORT_GUID(dlplan::policy::PositiveBooleanEffect, "dlplan::policy::PositiveBooleanEffect")
+BOOST_CLASS_EXPORT_GUID(dlplan::policy::NegativeBooleanEffect, "dlplan::policy::NegativeBooleanEffect")
+BOOST_CLASS_EXPORT_GUID(dlplan::policy::UnchangedBooleanEffect, "dlplan::policy::UnchangedBooleanEffect")
+BOOST_CLASS_EXPORT_GUID(dlplan::policy::IncrementNumericalEffect, "dlplan::policy::IncrementNumericalEffect")
+BOOST_CLASS_EXPORT_GUID(dlplan::policy::DecrementNumericalEffect, "dlplan::policy::DecrementNumericalEffect")
+BOOST_CLASS_EXPORT_GUID(dlplan::policy::UnchangedNumericalEffect, "dlplan::policy::UnchangedNumericalEffect")
 
 namespace boost::serialization {
 template<typename Archive>
@@ -224,7 +239,7 @@ inline void load_construct_data(
     dlplan::core::InstanceIndex index;
     ar & vocabulary;
     ar & index;
-    ::new(t)dlplan::core::InstanceInfo(vocabulary);
+    ::new(t)dlplan::core::InstanceInfo(vocabulary, index);
 }
 
 template<typename Archive>
@@ -351,6 +366,7 @@ void load_construct_data(Archive & ar, dlplan::core::NullaryBoolean* t, const un
     ar >> index;
     ar >> predicate;
     ::new(t)dlplan::core::NullaryBoolean(vocabulary, index, *predicate);
+    delete predicate;
 }
 
 template<typename Archive>
@@ -1009,7 +1025,6 @@ void load_construct_data(Archive & ar, dlplan::core::NotRole* t, const unsigned 
     ::new(t)dlplan::core::NotRole(vocabulary, index, role);
 }
 
-
 template<typename Archive>
 void serialize(Archive& /* ar */, dlplan::core::OrRole& /* t */, const unsigned int /* version */ )
 {
@@ -1185,8 +1200,8 @@ void serialize(Archive& ar, dlplan::core::SyntacticElementFactoryImpl& t, const 
 }
 
 
-template<typename Archive>
-void serialize(Archive& ar, dlplan::utils::pimpl<dlplan::core::SyntacticElementFactoryImpl>& t, const unsigned int /* version */ )
+template<typename Archive, typename T>
+void serialize(Archive& ar, dlplan::utils::pimpl<T>& t, const unsigned int /* version */ )
 {
     ar & t.m;
 }
@@ -1309,37 +1324,310 @@ void load_construct_data(Archive & ar, dlplan::novelty::TupleGraph* t, const uns
 }
 
 template<typename Archive>
-void serialize( Archive& ar, dlplan::policy::Rule& t, const unsigned int /* version */ )
+void serialize( Archive& /* ar */ , dlplan::policy::PositiveBooleanCondition& /* t */ , const unsigned int /* version */ )
 {
-    ar & t.m_index;
-    ar & t.m_conditions;
-    ar & t.m_effects;
+}
+
+template<class Archive>
+void save_construct_data(Archive & ar, const dlplan::policy::PositiveBooleanCondition* t, const unsigned int /* version */ )
+{
+    ar << t->m_boolean;
+    ar << t->m_index;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::policy::PositiveBooleanCondition* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const core::Boolean> boolean;
+    dlplan::policy::ConditionIndex index;
+    ar >> boolean;
+    ar >> index;
+    ::new(t)dlplan::policy::PositiveBooleanCondition(boolean, index);
 }
 
 template<typename Archive>
-void serialize( Archive& ar, dlplan::policy::Policy& t, const unsigned int /* version */ )
+void serialize( Archive& /* ar */ , dlplan::policy::NegativeBooleanCondition& /* t */ , const unsigned int /* version */ )
 {
-    ar & t.m_index;
-    ar & t.m_booleans;
-    ar & t.m_numericals;
-    ar & t.m_rules;
+}
+
+template<class Archive>
+void save_construct_data(Archive & ar, const dlplan::policy::NegativeBooleanCondition* t, const unsigned int /* version */ )
+{
+    ar << t->m_boolean;
+    ar << t->m_index;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::policy::NegativeBooleanCondition* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const core::Boolean> boolean;
+    dlplan::policy::ConditionIndex index;
+    ar >> boolean;
+    ar >> index;
+    ::new(t)dlplan::policy::NegativeBooleanCondition(boolean, index);
 }
 
 template<typename Archive>
-void serialize( Archive& ar, dlplan::policy::PolicyBuilder& builder, const unsigned int /* version */ )
+void serialize( Archive& /* ar */ , dlplan::policy::GreaterNumericalCondition& /* t */ , const unsigned int /* version */ )
 {
-    ar & builder.m_pImpl;
+}
+
+template<class Archive>
+void save_construct_data(Archive & ar, const dlplan::policy::GreaterNumericalCondition* t, const unsigned int /* version */ )
+{
+    ar << t->m_numerical;
+    ar << t->m_index;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::policy::GreaterNumericalCondition* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const core::Numerical> numerical;
+    dlplan::policy::ConditionIndex index;
+    ar >> numerical;
+    ar >> index;
+    ::new(t)dlplan::policy::GreaterNumericalCondition(numerical, index);
 }
 
 template<typename Archive>
-void serialize( Archive& ar, dlplan::serialization::Data& data, const unsigned int /* version */ )
+void serialize( Archive& /* ar */ , dlplan::policy::EqualNumericalCondition& /* t */ , const unsigned int /* version */ )
 {
-    ar & data.vocabulary_infos;
-    ar & data.instance_infos;
-    ar & data.syntatic_element_factories;
-    ar & data.state_spaces;
-    ar & data.tuple_graphs;
-    // ar & data.policies;
+}
+
+template<class Archive>
+void save_construct_data(Archive & ar, const dlplan::policy::EqualNumericalCondition* t, const unsigned int /* version */ )
+{
+    ar << t->m_numerical;
+    ar << t->m_index;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::policy::EqualNumericalCondition* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const core::Numerical> numerical;
+    dlplan::policy::ConditionIndex index;
+    ar >> numerical;
+    ar >> index;
+    ::new(t)dlplan::policy::EqualNumericalCondition(numerical, index);
+}
+
+template<typename Archive>
+void serialize( Archive& /* ar */ , dlplan::policy::PositiveBooleanEffect& /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void save_construct_data(Archive & ar, const dlplan::policy::PositiveBooleanEffect* t, const unsigned int /* version */ )
+{
+    ar << t->m_boolean;
+    ar << t->m_index;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::policy::PositiveBooleanEffect* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const core::Boolean> boolean;
+    dlplan::policy::EffectIndex index;
+    ar >> boolean;
+    ar >> index;
+    ::new(t)dlplan::policy::PositiveBooleanEffect(boolean, index);
+}
+
+template<typename Archive>
+void serialize( Archive& /* ar */ , dlplan::policy::NegativeBooleanEffect& /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void save_construct_data(Archive & ar, const dlplan::policy::NegativeBooleanEffect* t, const unsigned int /* version */ )
+{
+    ar << t->m_boolean;
+    ar << t->m_index;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::policy::NegativeBooleanEffect* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const core::Boolean> boolean;
+    dlplan::policy::EffectIndex index;
+    ar >> boolean;
+    ar >> index;
+    ::new(t)dlplan::policy::NegativeBooleanEffect(boolean, index);
+}
+
+template<typename Archive>
+void serialize( Archive& /* ar */ , dlplan::policy::UnchangedBooleanEffect& /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void save_construct_data(Archive & ar, const dlplan::policy::UnchangedBooleanEffect* t, const unsigned int /* version */ )
+{
+    ar << t->m_boolean;
+    ar << t->m_index;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::policy::UnchangedBooleanEffect* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const core::Boolean> boolean;
+    dlplan::policy::EffectIndex index;
+    ar >> boolean;
+    ar >> index;
+    ::new(t)dlplan::policy::UnchangedBooleanEffect(boolean, index);
+}
+
+template<typename Archive>
+void serialize( Archive& /* ar */ , dlplan::policy::IncrementNumericalEffect& /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void save_construct_data(Archive & ar, const dlplan::policy::IncrementNumericalEffect* t, const unsigned int /* version */ )
+{
+    ar << t->m_numerical;
+    ar << t->m_index;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::policy::IncrementNumericalEffect* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const core::Numerical> numerical;
+    dlplan::policy::EffectIndex index;
+    ar >> numerical;
+    ar >> index;
+    ::new(t)dlplan::policy::IncrementNumericalEffect(numerical, index);
+}
+
+template<typename Archive>
+void serialize( Archive& /* ar */ , dlplan::policy::DecrementNumericalEffect& /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void save_construct_data(Archive & ar, const dlplan::policy::DecrementNumericalEffect* t, const unsigned int /* version */ )
+{
+    ar << t->m_numerical;
+    ar << t->m_index;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::policy::DecrementNumericalEffect* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const core::Numerical> numerical;
+    dlplan::policy::EffectIndex index;
+    ar >> numerical;
+    ar >> index;
+    ::new(t)dlplan::policy::DecrementNumericalEffect(numerical, index);
+}
+
+template<typename Archive>
+void serialize( Archive& /* ar */ , dlplan::policy::UnchangedNumericalEffect& /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void save_construct_data(Archive & ar, const dlplan::policy::UnchangedNumericalEffect* t, const unsigned int /* version */ )
+{
+    ar << t->m_numerical;
+    ar << t->m_index;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::policy::UnchangedNumericalEffect* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const core::Numerical> numerical;
+    dlplan::policy::EffectIndex index;
+    ar >> numerical;
+    ar >> index;
+    ::new(t)dlplan::policy::UnchangedNumericalEffect(numerical, index);
+}
+
+
+template<typename Archive>
+void serialize( Archive& /* ar */ , dlplan::policy::Rule& /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void save_construct_data(Archive & ar, const dlplan::policy::Rule* t, const unsigned int /* version */ )
+{
+    ar << t->m_index;
+    ar << t->m_conditions;
+    ar << t->m_effects;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::policy::Rule* t, const unsigned int /* version */ )
+{
+    dlplan::policy::RuleIndex index;
+    dlplan::policy::Conditions conditions;
+    dlplan::policy::Effects effects;
+    ar >> index;
+    ar >> conditions;
+    ar >> effects;
+    ::new(t)dlplan::policy::Rule(std::move(conditions), std::move(effects), index);
+}
+
+template<typename Archive>
+void serialize( Archive& /* ar */ , dlplan::policy::Policy& /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void save_construct_data(Archive & ar, const dlplan::policy::Policy* t, const unsigned int /* version */ )
+{
+    ar << t->m_index;
+    ar << t->m_booleans;
+    ar << t->m_numericals;
+    ar << t->m_rules;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::policy::Policy* t, const unsigned int /* version */ )
+{
+    dlplan::policy::PolicyIndex index;
+    dlplan::policy::Booleans booleans;
+    dlplan::policy::Numericals numericals;
+    dlplan::policy::Rules rules;
+    ar >> index;
+    ar >> booleans;
+    ar >> numericals;
+    ar >> rules;
+    ::new(t)dlplan::policy::Policy(std::move(booleans), std::move(numericals), std::move(rules), index);
+}
+
+template<typename Archive>
+void serialize( Archive& ar, dlplan::policy::PolicyBuilder& t, const unsigned int /* version */ )
+{
+    ar & t.m_pImpl;
+}
+
+template<typename Archive>
+void serialize( Archive& ar, dlplan::policy::PolicyBuilderImpl& t, const unsigned int /* version */ )
+{
+    ar & t.m_caches;
+}
+
+template<typename Archive>
+void serialize(Archive& ar, dlplan::policy::Caches& t, const unsigned int /* version */ )
+{
+    ar & t.m_condition_cache;
+    ar & t.m_effect_cache;
+    ar & t.m_rule_cache;
+    ar & t.m_policy_cache;
+}
+
+template<typename Archive>
+void serialize( Archive& ar, dlplan::serialization::Data& t, const unsigned int /* version */ )
+{
+    ar & t.vocabulary_infos;
+    ar & t.instance_infos;
+    ar & t.syntatic_element_factories;
+    ar & t.state_spaces;
+    ar & t.tuple_graphs;
+    ar & t.policies;
+    ar & t.policy_builders;
 }
 
 }

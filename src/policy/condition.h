@@ -77,6 +77,14 @@ protected:
 
 
 class PositiveBooleanCondition : public BooleanCondition {
+private:
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, PositiveBooleanCondition& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive& ar, const PositiveBooleanCondition* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive& ar, PositiveBooleanCondition* t, const unsigned int version);
+
 public:
     PositiveBooleanCondition(std::shared_ptr<const core::Boolean> boolean, ConditionIndex index);
 
@@ -88,6 +96,14 @@ public:
 };
 
 class NegativeBooleanCondition : public BooleanCondition {
+private:
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, NegativeBooleanCondition& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive& ar, const NegativeBooleanCondition* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive& ar, NegativeBooleanCondition* t, const unsigned int version);
+
 public:
     NegativeBooleanCondition(std::shared_ptr<const core::Boolean> boolean, ConditionIndex index);
 
@@ -99,6 +115,14 @@ public:
 };
 
 class EqualNumericalCondition : public NumericalCondition {
+private:
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, EqualNumericalCondition& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive& ar, const EqualNumericalCondition* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive& ar, EqualNumericalCondition* t, const unsigned int version);
+
 public:
     EqualNumericalCondition(std::shared_ptr<const core::Numerical> numerical, ConditionIndex index);
 
@@ -110,6 +134,14 @@ public:
 };
 
 class GreaterNumericalCondition : public NumericalCondition {
+private:
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, GreaterNumericalCondition& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive& ar, const GreaterNumericalCondition* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive& ar, GreaterNumericalCondition* t, const unsigned int version);
+
 public:
     GreaterNumericalCondition(std::shared_ptr<const core::Numerical> numerical, ConditionIndex index);
 

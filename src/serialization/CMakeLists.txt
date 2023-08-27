@@ -4,7 +4,9 @@ target_link_libraries(dlplanserialization
         Boost::serialization
     PUBLIC
         dlplan::novelty
-        dlplan::statespace)
+        dlplan::statespace
+        dlplan::novelty
+        dlplan::policy)
 
 # Create an alias for simpler reference
 add_library(dlplan::serialization ALIAS dlplanserialization)

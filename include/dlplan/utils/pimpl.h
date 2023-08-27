@@ -26,8 +26,8 @@ class pimpl {
 private:
     std::unique_ptr<T> m;
 
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, pimpl<T>& pimpl, const unsigned int version);
+    template<typename Archive, typename T_>
+    friend void boost::serialization::serialize(Archive& ar, pimpl<T_>& pimpl, const unsigned int version);
 
 public:
     pimpl() : m{ new T{} } { }
