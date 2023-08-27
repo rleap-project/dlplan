@@ -29,6 +29,20 @@ class PolicyBuilder;
 // Forward declarations of template spezializations for serialization
 namespace boost::serialization {
     template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::BaseCondition& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::policy::BaseCondition* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::policy::BaseCondition* t, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::BaseEffect& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::policy::BaseEffect* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::policy::BaseEffect* t, const unsigned int version);
+
+    template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::Rule& t, const unsigned int version);
     template<class Archive>
     void save_construct_data(Archive& ar, const dlplan::policy::Rule* t, const unsigned int version);
@@ -85,6 +99,13 @@ class BaseCondition {
 protected:
     int m_index;
 
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, BaseCondition& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive& ar, const BaseCondition* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive& ar, BaseCondition* t, const unsigned int version);
+
 public:
     explicit BaseCondition(ConditionIndex index);
     BaseCondition(const BaseCondition& other) = delete;
@@ -116,6 +137,13 @@ public:
 class BaseEffect {
 protected:
     int m_index;
+
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, BaseEffect& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive& ar, const BaseEffect* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive& ar, BaseEffect* t, const unsigned int version);
 
 public:
     explicit BaseEffect(EffectIndex index);

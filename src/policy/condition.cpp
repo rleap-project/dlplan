@@ -1,5 +1,6 @@
 #include "condition.h"
 
+#include <memory>
 
 namespace dlplan::policy {
 

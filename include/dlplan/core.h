@@ -83,6 +83,41 @@ namespace boost::serialization {
     template<class Archive>
     void load_construct_data(Archive& ar, dlplan::core::InstanceInfo* t, const unsigned int version);
 
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::core::BaseElement& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::core::BaseElement* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::core::BaseElement* t, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::core::Concept& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::core::Concept* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::core::Concept* t, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::core::Role& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::core::Role* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::core::Role* t, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::core::Boolean& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::core::Boolean* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::core::Boolean* t, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::core::Numerical& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::core::Numerical* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::core::Numerical* t, const unsigned int version);
+
     template<typename Archive>
     void serialize(Archive& ar, dlplan::core::SyntacticElementFactory& t, const unsigned int version);
 }
@@ -826,6 +861,13 @@ protected:
      */
     bool m_is_static;
 
+    template <typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, BaseElement& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive & ar, const BaseElement* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive & ar, BaseElement* t, const unsigned int version);
+
 protected:
     BaseElement(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
 
@@ -841,7 +883,7 @@ public:
     /// @brief Compute the canonical string representation of this element.
     /// @return The canonical string representation of this element.
     std::string compute_repr() const;
-    virtual void compute_repr(std::stringstream& out) const = 0;
+    virtual void compute_repr(std::stringstream& ) const = 0;
 
     /// @brief Computes a time score for evaluating this element relative to other elements.
     ///        The scoring assumes evaluation that uses caching.
@@ -871,8 +913,15 @@ class Concept : public BaseElement {
 protected:
     Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
 
-    virtual ConceptDenotation evaluate_impl(const State& state, DenotationsCaches& caches) const = 0;
-    virtual ConceptDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
+    virtual ConceptDenotation evaluate_impl(const State& , DenotationsCaches& ) const = 0;
+    virtual ConceptDenotations evaluate_impl(const States& , DenotationsCaches& ) const = 0;
+
+    template <typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, Concept& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive & ar, const Concept* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive & ar, Concept* t, const unsigned int version);
 
 public:
     Concept(const Concept& other);
@@ -881,7 +930,7 @@ public:
     Concept& operator=(Concept&& other);
     ~Concept() override;
 
-    virtual ConceptDenotation evaluate(const State& state) const = 0;
+    virtual ConceptDenotation evaluate(const State& ) const = 0;
     const ConceptDenotation* evaluate(const State& state, DenotationsCaches& caches) const;
     const ConceptDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
 };
@@ -893,8 +942,15 @@ class Role : public BaseElement {
 protected:
     Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
 
-    virtual RoleDenotation evaluate_impl(const State& state, DenotationsCaches& caches) const = 0;
-    virtual RoleDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
+    virtual RoleDenotation evaluate_impl(const State& , DenotationsCaches& ) const = 0;
+    virtual RoleDenotations evaluate_impl(const States& , DenotationsCaches& ) const = 0;
+
+    template <typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, Role& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive & ar, const Role* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive & ar, Role* t, const unsigned int version);
 
 public:
     Role(const Role& other);
@@ -903,7 +959,7 @@ public:
     Role& operator=(Role&& other);
     ~Role() override;
 
-    virtual RoleDenotation evaluate(const State& state) const = 0;
+    virtual RoleDenotation evaluate(const State& ) const = 0;
     const RoleDenotation* evaluate(const State& state, DenotationsCaches& caches) const;
     const RoleDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
 };
@@ -915,8 +971,15 @@ class Numerical : public BaseElement {
 protected:
     Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
 
-    virtual int evaluate_impl(const State& state, DenotationsCaches& caches) const = 0;
-    virtual NumericalDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
+    virtual int evaluate_impl(const State& , DenotationsCaches& ) const = 0;
+    virtual NumericalDenotations evaluate_impl(const States& , DenotationsCaches& ) const = 0;
+
+    template <typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, Numerical& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive & ar, const Numerical* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive & ar, Numerical* t, const unsigned int version);
 
 public:
     Numerical(const Numerical& other);
@@ -925,7 +988,7 @@ public:
     Numerical& operator=(Numerical&& other);
     ~Numerical() override;
 
-    virtual int evaluate(const State& state) const = 0;
+    virtual int evaluate(const State& ) const = 0;
     int evaluate(const State& state, DenotationsCaches& caches) const;
     const NumericalDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
 };
@@ -937,8 +1000,11 @@ class Boolean : public BaseElement {
 protected:
     Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
 
-    virtual bool evaluate_impl(const State& state, DenotationsCaches& caches) const = 0;
-    virtual BooleanDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const = 0;
+    virtual bool evaluate_impl(const State& , DenotationsCaches& ) const = 0;
+    virtual BooleanDenotations evaluate_impl(const States& , DenotationsCaches& ) const = 0;
+
+    template <typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, Boolean& t, const unsigned int version);
 
 public:
     Boolean(const Boolean& other);
@@ -947,7 +1013,7 @@ public:
     Boolean& operator=(Boolean&& other);
     ~Boolean() override;
 
-    virtual bool evaluate(const State& state) const = 0;
+    virtual bool evaluate(const State& ) const = 0;
     bool evaluate(const State& state, DenotationsCaches& caches) const;
     const BooleanDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
 };
@@ -1038,5 +1104,6 @@ public:
 };
 
 }
+
 
 #endif

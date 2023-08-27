@@ -1,6 +1,10 @@
 #ifndef DLPLAN_SRC_POLICY_CONDITION_H_
 #define DLPLAN_SRC_POLICY_CONDITION_H_
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/export.hpp>
+
 #include "../../include/dlplan/policy.h"
 
 #include <string>
@@ -8,6 +12,8 @@
 
 
 namespace dlplan::policy {
+class BooleanCondition;
+class NumericalCondition;
 class PositiveBooleanCondition;
 class NegativeBooleanCondition;
 class EqualNumericalCondition;
@@ -16,6 +22,20 @@ class GreaterNumericalCondition;
 
 
 namespace boost::serialization {
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::BooleanCondition& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::policy::BooleanCondition* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::policy::BooleanCondition* t, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::NumericalCondition& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::policy::NumericalCondition* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::policy::NumericalCondition* t, const unsigned int version);
+
     template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::PositiveBooleanCondition& t, const unsigned int version);
     template<class Archive>
@@ -49,20 +69,43 @@ namespace boost::serialization {
 namespace dlplan::policy {
 
 class BooleanCondition : public BaseCondition {
+private:
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, BooleanCondition& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive& ar, const BooleanCondition* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive& ar, BooleanCondition* t, const unsigned int version);
+
 protected:
     const std::shared_ptr<const core::Boolean> m_boolean;
 
 protected:
     BooleanCondition(std::shared_ptr<const core::Boolean> boolean, ConditionIndex index);
 
-    int compute_evaluate_time_score() const override;
+    int compute_evaluate_time_score() const override {
+        return m_boolean->compute_evaluate_time_score();
+    }
 
-    std::shared_ptr<const core::Boolean> get_boolean() const override;
-    std::shared_ptr<const core::Numerical> get_numerical() const override;
+    std::shared_ptr<const core::Boolean> get_boolean() const override {
+        return m_boolean;
+    }
+
+    std::shared_ptr<const core::Numerical> get_numerical() const override {
+        return nullptr;
+    };
 };
 
 
 class NumericalCondition : public BaseCondition {
+private:
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, NumericalCondition& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive& ar, const NumericalCondition* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive& ar, NumericalCondition* t, const unsigned int version);
+
 protected:
     const std::shared_ptr<const core::Numerical> m_numerical;
 
@@ -153,5 +196,10 @@ public:
 };
 
 }
+
+BOOST_CLASS_EXPORT_KEY2(dlplan::policy::PositiveBooleanCondition, "dlplan::policy::PositiveBooleanCondition")
+BOOST_CLASS_EXPORT_KEY2(dlplan::policy::NegativeBooleanCondition, "dlplan::policy::NegativeBooleanCondition")
+BOOST_CLASS_EXPORT_KEY2(dlplan::policy::GreaterNumericalCondition, "dlplan::policy::GreaterNumericalCondition")
+BOOST_CLASS_EXPORT_KEY2(dlplan::policy::EqualNumericalCondition, "dlplan::policy::EqualNumericalCondition")
 
 #endif

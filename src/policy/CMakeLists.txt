@@ -15,6 +15,8 @@ target_sources(dlplanpolicy
         parser/utils.cpp)
 
 target_link_libraries(dlplanpolicy
+    PRIVATE
+        Boost::serialization
     PUBLIC
         dlplan::core)
 

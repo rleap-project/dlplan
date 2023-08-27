@@ -1,6 +1,10 @@
 #ifndef DLPLAN_SRC_POLICY_EFFECT_H_
 #define DLPLAN_SRC_POLICY_EFFECT_H_
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/export.hpp>
+
 #include "../../include/dlplan/policy.h"
 
 #include <string>
@@ -18,8 +22,22 @@ class DecrementNumericalEffect;
 class UnchangedNumericalEffect;
 }
 
-// Forward declare the serialize function template in boost::serialization namespace
+
 namespace boost::serialization {
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::BooleanEffect& effect, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::policy::BooleanEffect* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::policy::BooleanEffect* t, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::NumericalEffect& effect, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::policy::NumericalEffect* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::policy::NumericalEffect* t, const unsigned int version);
+
     template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::PositiveBooleanEffect& effect, const unsigned int version);
     template<class Archive>
@@ -67,6 +85,14 @@ namespace boost::serialization {
 namespace dlplan::policy {
 
 class BooleanEffect : public BaseEffect {
+private:
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, BooleanEffect& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive& ar, const BooleanEffect* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive& ar, BooleanEffect* t, const unsigned int version);
+
 protected:
     std::shared_ptr<const core::Boolean> m_boolean;
 
@@ -81,6 +107,14 @@ protected:
 
 
 class NumericalEffect : public BaseEffect {
+private:
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, NumericalEffect& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive& ar, const NumericalEffect* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive& ar, NumericalEffect* t, const unsigned int version);
+
 protected:
     std::shared_ptr<const core::Numerical> m_numerical;
 
@@ -209,5 +243,12 @@ public:
 };
 
 }
+
+BOOST_CLASS_EXPORT_KEY2(dlplan::policy::PositiveBooleanEffect, "dlplan::policy::PositiveBooleanEffect")
+BOOST_CLASS_EXPORT_KEY2(dlplan::policy::NegativeBooleanEffect, "dlplan::policy::NegativeBooleanEffect")
+BOOST_CLASS_EXPORT_KEY2(dlplan::policy::UnchangedBooleanEffect, "dlplan::policy::UnchangedBooleanEffect")
+BOOST_CLASS_EXPORT_KEY2(dlplan::policy::IncrementNumericalEffect, "dlplan::policy::IncrementNumericalEffect")
+BOOST_CLASS_EXPORT_KEY2(dlplan::policy::DecrementNumericalEffect, "dlplan::policy::DecrementNumericalEffect")
+BOOST_CLASS_EXPORT_KEY2(dlplan::policy::UnchangedNumericalEffect, "dlplan::policy::UnchangedNumericalEffect")
 
 #endif

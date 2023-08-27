@@ -1,3 +1,17 @@
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/export.hpp>
+#include <boost/serialization/assume_abstract.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/unordered_map.hpp>
+#include <boost/serialization/unordered_set.hpp>
+#include <boost/serialization/set.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/unique_ptr.hpp>
+#include <boost/serialization/weak_ptr.hpp>
+#include <boost/serialization/serialization.hpp>
+#include <boost/serialization/utility.hpp>
+
 #include "../../include/dlplan/serialization.h"
 
 #include "../../include/dlplan/core.h"
@@ -44,19 +58,6 @@
 #include "../policy/effect.h"
 #include "../policy/policy_builder.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/vector.hpp>
-#include <boost/serialization/unordered_map.hpp>
-#include <boost/serialization/unordered_set.hpp>
-#include <boost/serialization/set.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-#include <boost/serialization/unique_ptr.hpp>
-#include <boost/serialization/weak_ptr.hpp>
-#include <boost/serialization/export.hpp>
-#include <boost/serialization/serialization.hpp>
-#include <boost/serialization/utility.hpp>
-
 // Runtime
 // https://www.boost.org/doc/libs/1_82_0/libs/serialization/doc/serialization.html#export
 BOOST_CLASS_EXPORT_GUID(dlplan::core::EmptyBoolean<dlplan::core::Concept>, "dlplan::core::EmptyBoolean<dlplan::core::Concept>")
@@ -72,6 +73,7 @@ BOOST_CLASS_EXPORT_GUID(dlplan::core::EqualConcept, "dlplan::core::EqualConcept"
 BOOST_CLASS_EXPORT_GUID(dlplan::core::NotConcept, "dlplan::core::NotConcept")
 BOOST_CLASS_EXPORT_GUID(dlplan::core::OneOfConcept, "dlplan::core::OneOfConcept")
 BOOST_CLASS_EXPORT_GUID(dlplan::core::OrConcept, "dlplan::core::OrConcept")
+BOOST_CLASS_EXPORT_GUID(dlplan::core::PrimitiveConcept, "dlplan::core::PrimitiveConcept")
 BOOST_CLASS_EXPORT_GUID(dlplan::core::ProjectionConcept, "dlplan::core::ProjectionConcept")
 BOOST_CLASS_EXPORT_GUID(dlplan::core::SomeConcept, "dlplan::core::SomeConcept")
 BOOST_CLASS_EXPORT_GUID(dlplan::core::SubsetConcept, "dlplan::core::SubsetConcept")
@@ -290,13 +292,93 @@ inline void load_construct_data(
     delete second;
 }
 
-template<typename Archive, typename T>
-void serialize(Archive& /* ar */ , dlplan::core::EmptyBoolean<T>& /* t */, const unsigned int /* version */ )
+template<typename Archive>
+void serialize(Archive& /* ar */ , dlplan::core::BaseElement& /* t */, const unsigned int /* version */ )
 {
 }
 
+template<class Archive>
+void save_construct_data(Archive& /* ar */ , const dlplan::core::BaseElement* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void load_construct_data(Archive& /* ar */ , dlplan::core::BaseElement* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<typename Archive>
+void serialize(Archive& /* ar */ , dlplan::core::Concept& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::core::BaseElement>(t);
+}
+
+template<class Archive>
+void save_construct_data(Archive& /* ar */ , const dlplan::core::Concept* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void load_construct_data(Archive& /* ar */ , dlplan::core::Concept* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<typename Archive>
+void serialize(Archive& /* ar */ , dlplan::core::Role& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::core::BaseElement>(t);
+}
+
+template<class Archive>
+void save_construct_data(Archive& /* ar */ , const dlplan::core::Role* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void load_construct_data(Archive& /* ar */ , dlplan::core::Role* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<typename Archive>
+void serialize(Archive& /* ar */ , dlplan::core::Boolean& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::core::BaseElement>(t);
+}
+
+template<class Archive>
+void save_construct_data(Archive& /* ar */ , const dlplan::core::Boolean* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void load_construct_data(Archive& /* ar */ , dlplan::core::Boolean* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<typename Archive>
+void serialize(Archive& /* ar */ , dlplan::core::Numerical& t , const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::core::BaseElement>(t);
+}
+
+template<class Archive>
+void save_construct_data(Archive& /* ar */ , const dlplan::core::Numerical* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void load_construct_data(Archive& /* ar */ , dlplan::core::Numerical* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<typename Archive, typename T>
+void serialize(Archive& /* ar */ , dlplan::core::EmptyBoolean<T>& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::core::Boolean>(t);
+}
+
 template<class Archive, typename T>
-void save_construct_data(Archive & ar, const dlplan::core::EmptyBoolean<T>* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::core::EmptyBoolean<T>* t, const unsigned int /* version */ )
 {
     ar << t->m_vocabulary_info;
     ar << t->m_index;
@@ -304,7 +386,7 @@ void save_construct_data(Archive & ar, const dlplan::core::EmptyBoolean<T>* t, c
 }
 
 template<class Archive, typename T>
-void load_construct_data(Archive & ar, dlplan::core::EmptyBoolean<T>* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::core::EmptyBoolean<T>* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     int index;
@@ -316,12 +398,13 @@ void load_construct_data(Archive & ar, dlplan::core::EmptyBoolean<T>* t, const u
 }
 
 template<typename Archive, typename T>
-void serialize(Archive& /* ar */, dlplan::core::InclusionBoolean<T>& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::InclusionBoolean<T>& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Boolean>(t);
 }
 
 template<class Archive, typename T>
-void save_construct_data(Archive & ar, const dlplan::core::InclusionBoolean<T>* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::core::InclusionBoolean<T>* t, const unsigned int /* version */ )
 {
     ar << t->m_vocabulary_info;
     ar << t->m_index;
@@ -330,7 +413,7 @@ void save_construct_data(Archive & ar, const dlplan::core::InclusionBoolean<T>* 
 }
 
 template<class Archive, typename T>
-void load_construct_data(Archive & ar, dlplan::core::InclusionBoolean<T>* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::core::InclusionBoolean<T>* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     int index;
@@ -344,12 +427,13 @@ void load_construct_data(Archive & ar, dlplan::core::InclusionBoolean<T>* t, con
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::NullaryBoolean& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::NullaryBoolean& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Boolean>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::NullaryBoolean* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::core::NullaryBoolean* t, const unsigned int /* version */ )
 {
     ar << t->m_vocabulary_info;
     ar << t->m_index;
@@ -357,7 +441,7 @@ void save_construct_data(Archive & ar, const dlplan::core::NullaryBoolean* t, co
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::NullaryBoolean* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::core::NullaryBoolean* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     int index;
@@ -370,12 +454,13 @@ void load_construct_data(Archive & ar, dlplan::core::NullaryBoolean* t, const un
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::AllConcept& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::AllConcept& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Concept>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::AllConcept* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::core::AllConcept* t, const unsigned int /* version */ )
 {
     ar << t->m_vocabulary_info;
     ar << t->m_index;
@@ -384,7 +469,7 @@ void save_construct_data(Archive & ar, const dlplan::core::AllConcept* t, const 
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::AllConcept* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::core::AllConcept* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     int index;
@@ -398,12 +483,13 @@ void load_construct_data(Archive & ar, dlplan::core::AllConcept* t, const unsign
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::AndConcept& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::AndConcept& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Concept>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::AndConcept* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::core::AndConcept* t, const unsigned int /* version */ )
 {
     ar << t->m_vocabulary_info;
     ar << t->m_index;
@@ -412,7 +498,7 @@ void save_construct_data(Archive & ar, const dlplan::core::AndConcept* t, const 
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::AndConcept* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::core::AndConcept* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     int index;
@@ -426,19 +512,20 @@ void load_construct_data(Archive & ar, dlplan::core::AndConcept* t, const unsign
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::BotConcept& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::BotConcept& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Concept>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::BotConcept* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::core::BotConcept* t, const unsigned int /* version */ )
 {
     ar << t->m_vocabulary_info;
     ar << t->m_index;
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::BotConcept* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::core::BotConcept* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     int index;
@@ -448,12 +535,13 @@ void load_construct_data(Archive & ar, dlplan::core::BotConcept* t, const unsign
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::DiffConcept& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::DiffConcept& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Concept>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::DiffConcept* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::core::DiffConcept* t, const unsigned int /* version */ )
 {
     ar << t->m_vocabulary_info;
     ar << t->m_index;
@@ -462,7 +550,7 @@ void save_construct_data(Archive & ar, const dlplan::core::DiffConcept* t, const
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::DiffConcept* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::core::DiffConcept* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     int index;
@@ -476,12 +564,13 @@ void load_construct_data(Archive & ar, dlplan::core::DiffConcept* t, const unsig
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::EqualConcept& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::EqualConcept& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Concept>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::EqualConcept* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::core::EqualConcept* t, const unsigned int /* version */ )
 {
     ar << t->m_vocabulary_info;
     ar << t->m_index;
@@ -490,7 +579,7 @@ void save_construct_data(Archive & ar, const dlplan::core::EqualConcept* t, cons
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::EqualConcept* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::core::EqualConcept* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     int index;
@@ -504,12 +593,13 @@ void load_construct_data(Archive & ar, dlplan::core::EqualConcept* t, const unsi
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::NotConcept& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::NotConcept& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Concept>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::NotConcept* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::core::NotConcept* t, const unsigned int /* version */ )
 {
     ar << t->m_vocabulary_info;
     ar << t->m_index;
@@ -517,7 +607,7 @@ void save_construct_data(Archive & ar, const dlplan::core::NotConcept* t, const 
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::NotConcept* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::core::NotConcept* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     int index;
@@ -529,12 +619,13 @@ void load_construct_data(Archive & ar, dlplan::core::NotConcept* t, const unsign
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::OneOfConcept& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::OneOfConcept& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Concept>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::OneOfConcept* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::core::OneOfConcept* t, const unsigned int /* version */ )
 {
     ar << t->m_vocabulary_info;
     ar << t->m_index;
@@ -542,7 +633,7 @@ void save_construct_data(Archive & ar, const dlplan::core::OneOfConcept* t, cons
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::OneOfConcept* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::core::OneOfConcept* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     int index;
@@ -555,12 +646,13 @@ void load_construct_data(Archive & ar, dlplan::core::OneOfConcept* t, const unsi
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::OrConcept& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::OrConcept& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Concept>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::OrConcept* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::core::OrConcept* t, const unsigned int /* version */ )
 {
     ar << t->m_vocabulary_info;
     ar << t->m_index;
@@ -569,7 +661,7 @@ void save_construct_data(Archive & ar, const dlplan::core::OrConcept* t, const u
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::OrConcept* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::core::OrConcept* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     int index;
@@ -583,12 +675,13 @@ void load_construct_data(Archive & ar, dlplan::core::OrConcept* t, const unsigne
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::PrimitiveConcept& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::PrimitiveConcept& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Concept>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::PrimitiveConcept* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::core::PrimitiveConcept* t, const unsigned int /* version */ )
 {
     ar << t->m_vocabulary_info;
     ar << t->m_index;
@@ -597,7 +690,7 @@ void save_construct_data(Archive & ar, const dlplan::core::PrimitiveConcept* t, 
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::PrimitiveConcept* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::core::PrimitiveConcept* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     int index;
@@ -612,12 +705,13 @@ void load_construct_data(Archive & ar, dlplan::core::PrimitiveConcept* t, const 
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::ProjectionConcept& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::ProjectionConcept& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Concept>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::ProjectionConcept* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::core::ProjectionConcept* t, const unsigned int /* version */ )
 {
     ar << t->m_vocabulary_info;
     ar << t->m_index;
@@ -626,7 +720,7 @@ void save_construct_data(Archive & ar, const dlplan::core::ProjectionConcept* t,
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::ProjectionConcept* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::core::ProjectionConcept* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     int index;
@@ -640,12 +734,13 @@ void load_construct_data(Archive & ar, dlplan::core::ProjectionConcept* t, const
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::SomeConcept& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::SomeConcept& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Concept>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::SomeConcept* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::core::SomeConcept* t, const unsigned int /* version */ )
 {
     ar << t->m_vocabulary_info;
     ar << t->m_index;
@@ -654,7 +749,7 @@ void save_construct_data(Archive & ar, const dlplan::core::SomeConcept* t, const
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::SomeConcept* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::core::SomeConcept* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     int index;
@@ -668,12 +763,13 @@ void load_construct_data(Archive & ar, dlplan::core::SomeConcept* t, const unsig
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::SubsetConcept& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::SubsetConcept& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Concept>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::SubsetConcept* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::core::SubsetConcept* t, const unsigned int /* version */ )
 {
     ar << t->m_vocabulary_info;
     ar << t->m_index;
@@ -682,7 +778,7 @@ void save_construct_data(Archive & ar, const dlplan::core::SubsetConcept* t, con
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::SubsetConcept* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::core::SubsetConcept* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     int index;
@@ -696,19 +792,20 @@ void load_construct_data(Archive & ar, dlplan::core::SubsetConcept* t, const uns
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::TopConcept& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::TopConcept& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Concept>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::TopConcept* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::core::TopConcept* t, const unsigned int /* version */ )
 {
     ar << t->m_vocabulary_info;
     ar << t->m_index;
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::TopConcept* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::core::TopConcept* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     int index;
@@ -718,12 +815,13 @@ void load_construct_data(Archive & ar, dlplan::core::TopConcept* t, const unsign
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::ConceptDistanceNumerical& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::ConceptDistanceNumerical& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Numerical>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::ConceptDistanceNumerical* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::core::ConceptDistanceNumerical* t, const unsigned int /* version */ )
 {
     ar << t->m_vocabulary_info;
     ar << t->m_index;
@@ -733,7 +831,7 @@ void save_construct_data(Archive & ar, const dlplan::core::ConceptDistanceNumeri
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::ConceptDistanceNumerical* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::core::ConceptDistanceNumerical* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
     int index;
@@ -749,8 +847,9 @@ void load_construct_data(Archive & ar, dlplan::core::ConceptDistanceNumerical* t
 }
 
 template<typename Archive, typename T>
-void serialize(Archive& /* ar */, dlplan::core::CountNumerical<T>& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::CountNumerical<T>& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Numerical>(t);
 }
 
 template<class Archive, typename T>
@@ -774,8 +873,9 @@ void load_construct_data(Archive & ar, dlplan::core::CountNumerical<T>* t, const
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::RoleDistanceNumerical& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::RoleDistanceNumerical& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Numerical>(t);
 }
 
 template<class Archive>
@@ -805,8 +905,9 @@ void load_construct_data(Archive & ar, dlplan::core::RoleDistanceNumerical* t, c
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::SumConceptDistanceNumerical& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::SumConceptDistanceNumerical& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Numerical>(t);
 }
 
 template<class Archive>
@@ -836,12 +937,13 @@ void load_construct_data(Archive & ar, dlplan::core::SumConceptDistanceNumerical
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::SumRoleDistanceNumerical& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::SumRoleDistanceNumerical& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Numerical>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::SumRoleDistanceNumerical* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::core::SumRoleDistanceNumerical* t, const unsigned int /* version */ )
 {
     ar << t->m_vocabulary_info;
     ar << t->m_index;
@@ -867,8 +969,9 @@ void load_construct_data(Archive & ar, dlplan::core::SumRoleDistanceNumerical* t
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::AndRole& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::AndRole& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Role>(t);
 }
 
 template<class Archive>
@@ -895,8 +998,9 @@ void load_construct_data(Archive & ar, dlplan::core::AndRole* t, const unsigned 
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::ComposeRole& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::ComposeRole& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Role>(t);
 }
 
 template<class Archive>
@@ -923,8 +1027,9 @@ void load_construct_data(Archive & ar, dlplan::core::ComposeRole* t, const unsig
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::DiffRole& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::DiffRole& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Role>(t);
 }
 
 template<class Archive>
@@ -951,8 +1056,9 @@ void load_construct_data(Archive & ar, dlplan::core::DiffRole* t, const unsigned
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::IdentityRole& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::IdentityRole& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Role>(t);
 }
 
 template<class Archive>
@@ -976,8 +1082,9 @@ void load_construct_data(Archive & ar, dlplan::core::IdentityRole* t, const unsi
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::InverseRole& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::InverseRole& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Role>(t);
 }
 
 template<class Archive>
@@ -1001,8 +1108,9 @@ void load_construct_data(Archive & ar, dlplan::core::InverseRole* t, const unsig
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::NotRole& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::NotRole& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Role>(t);
 }
 
 template<class Archive>
@@ -1026,8 +1134,9 @@ void load_construct_data(Archive & ar, dlplan::core::NotRole* t, const unsigned 
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::OrRole& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::OrRole& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Role>(t);
 }
 
 template<class Archive>
@@ -1054,8 +1163,9 @@ void load_construct_data(Archive & ar, dlplan::core::OrRole* t, const unsigned i
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::PrimitiveRole& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::PrimitiveRole& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Role>(t);
 }
 
 template<class Archive>
@@ -1086,8 +1196,9 @@ void load_construct_data(Archive & ar, dlplan::core::PrimitiveRole* t, const uns
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::RestrictRole& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::RestrictRole& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Role>(t);
 }
 
 template<class Archive>
@@ -1114,8 +1225,9 @@ void load_construct_data(Archive & ar, dlplan::core::RestrictRole* t, const unsi
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::TopRole& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::TopRole& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Role>(t);
 }
 
 template<class Archive>
@@ -1136,8 +1248,9 @@ void load_construct_data(Archive & ar, dlplan::core::TopRole* t, const unsigned 
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::TransitiveClosureRole& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::TransitiveClosureRole& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Role>(t);
 }
 
 template<class Archive>
@@ -1161,8 +1274,9 @@ void load_construct_data(Archive & ar, dlplan::core::TransitiveClosureRole* t, c
 }
 
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::core::TransitiveReflexiveClosureRole& /* t */, const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::core::TransitiveReflexiveClosureRole& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::core::Role>(t);
 }
 
 template<class Archive>
@@ -1324,19 +1438,114 @@ void load_construct_data(Archive & ar, dlplan::novelty::TupleGraph* t, const uns
 }
 
 template<typename Archive>
-void serialize( Archive& /* ar */ , dlplan::policy::PositiveBooleanCondition& /* t */ , const unsigned int /* version */ )
+void serialize( Archive& /* ar */ , dlplan::policy::BaseCondition& /* t */ , const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::policy::PositiveBooleanCondition* t, const unsigned int /* version */ )
+void save_construct_data(Archive& /* ar */ , const dlplan::policy::BaseCondition* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void load_construct_data(Archive& /* ar */ , dlplan::policy::BaseCondition* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<typename Archive>
+void serialize( Archive& /* ar */ , dlplan::policy::BooleanCondition& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::policy::BaseCondition>(t);
+}
+
+template<class Archive>
+void save_construct_data(Archive& /* ar */ , const dlplan::policy::BooleanCondition* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void load_construct_data(Archive& /* ar */ , dlplan::policy::BooleanCondition* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<typename Archive>
+void serialize( Archive& /* ar */ , dlplan::policy::NumericalCondition& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::policy::BaseCondition>(t);
+}
+
+template<class Archive>
+void save_construct_data(Archive& /* ar */ , const dlplan::policy::NumericalCondition* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void load_construct_data(Archive& /* ar */ , dlplan::policy::NumericalCondition* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<typename Archive>
+void serialize( Archive& /* ar */ , dlplan::policy::BaseEffect& /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void save_construct_data(Archive& /* ar */ , const dlplan::policy::BaseEffect* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void load_construct_data(Archive& /* ar */ , dlplan::policy::BaseEffect* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<typename Archive>
+void serialize( Archive& /* ar */ , dlplan::policy::BooleanEffect& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::policy::BaseEffect>(t);
+}
+
+template<class Archive>
+void save_construct_data(Archive& /* ar */ , const dlplan::policy::BooleanEffect* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void load_construct_data(Archive& /* ar */ , dlplan::policy::BooleanEffect* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<typename Archive>
+void serialize( Archive& /* ar */ , dlplan::policy::NumericalEffect& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::policy::BaseEffect>(t);
+}
+
+template<class Archive>
+void save_construct_data(Archive& /* ar */ , const dlplan::policy::NumericalEffect* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void load_construct_data(Archive& /* ar */ , dlplan::policy::NumericalEffect* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<typename Archive>
+void serialize(Archive& /* ar */ , dlplan::policy::PositiveBooleanCondition& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::policy::BooleanCondition>(t);
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const dlplan::policy::PositiveBooleanCondition* t, const unsigned int /* version */ )
 {
     ar << t->m_boolean;
     ar << t->m_index;
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::policy::PositiveBooleanCondition* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::policy::PositiveBooleanCondition* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const core::Boolean> boolean;
     dlplan::policy::ConditionIndex index;
@@ -1346,8 +1555,9 @@ void load_construct_data(Archive & ar, dlplan::policy::PositiveBooleanCondition*
 }
 
 template<typename Archive>
-void serialize( Archive& /* ar */ , dlplan::policy::NegativeBooleanCondition& /* t */ , const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::policy::NegativeBooleanCondition& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::policy::BooleanCondition>(t);
 }
 
 template<class Archive>
@@ -1368,19 +1578,20 @@ void load_construct_data(Archive & ar, dlplan::policy::NegativeBooleanCondition*
 }
 
 template<typename Archive>
-void serialize( Archive& /* ar */ , dlplan::policy::GreaterNumericalCondition& /* t */ , const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::policy::GreaterNumericalCondition& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::policy::NumericalCondition>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::policy::GreaterNumericalCondition* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::policy::GreaterNumericalCondition* t, const unsigned int /* version */ )
 {
     ar << t->m_numerical;
     ar << t->m_index;
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::policy::GreaterNumericalCondition* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::policy::GreaterNumericalCondition* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const core::Numerical> numerical;
     dlplan::policy::ConditionIndex index;
@@ -1390,19 +1601,20 @@ void load_construct_data(Archive & ar, dlplan::policy::GreaterNumericalCondition
 }
 
 template<typename Archive>
-void serialize( Archive& /* ar */ , dlplan::policy::EqualNumericalCondition& /* t */ , const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::policy::EqualNumericalCondition& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::policy::NumericalCondition>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::policy::EqualNumericalCondition* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::policy::EqualNumericalCondition* t, const unsigned int /* version */ )
 {
     ar << t->m_numerical;
     ar << t->m_index;
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::policy::EqualNumericalCondition* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::policy::EqualNumericalCondition* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const core::Numerical> numerical;
     dlplan::policy::ConditionIndex index;
@@ -1412,19 +1624,20 @@ void load_construct_data(Archive & ar, dlplan::policy::EqualNumericalCondition* 
 }
 
 template<typename Archive>
-void serialize( Archive& /* ar */ , dlplan::policy::PositiveBooleanEffect& /* t */ , const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::policy::PositiveBooleanEffect& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::policy::BooleanEffect>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::policy::PositiveBooleanEffect* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::policy::PositiveBooleanEffect* t, const unsigned int /* version */ )
 {
     ar << t->m_boolean;
     ar << t->m_index;
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::policy::PositiveBooleanEffect* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::policy::PositiveBooleanEffect* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const core::Boolean> boolean;
     dlplan::policy::EffectIndex index;
@@ -1434,19 +1647,20 @@ void load_construct_data(Archive & ar, dlplan::policy::PositiveBooleanEffect* t,
 }
 
 template<typename Archive>
-void serialize( Archive& /* ar */ , dlplan::policy::NegativeBooleanEffect& /* t */ , const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::policy::NegativeBooleanEffect& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::policy::BooleanEffect>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::policy::NegativeBooleanEffect* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::policy::NegativeBooleanEffect* t, const unsigned int /* version */ )
 {
     ar << t->m_boolean;
     ar << t->m_index;
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::policy::NegativeBooleanEffect* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::policy::NegativeBooleanEffect* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const core::Boolean> boolean;
     dlplan::policy::EffectIndex index;
@@ -1456,19 +1670,20 @@ void load_construct_data(Archive & ar, dlplan::policy::NegativeBooleanEffect* t,
 }
 
 template<typename Archive>
-void serialize( Archive& /* ar */ , dlplan::policy::UnchangedBooleanEffect& /* t */ , const unsigned int /* version */ )
+void serialize( Archive& /* ar */ , dlplan::policy::UnchangedBooleanEffect& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::policy::BooleanEffect>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::policy::UnchangedBooleanEffect* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::policy::UnchangedBooleanEffect* t, const unsigned int /* version */ )
 {
     ar << t->m_boolean;
     ar << t->m_index;
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::policy::UnchangedBooleanEffect* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::policy::UnchangedBooleanEffect* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const core::Boolean> boolean;
     dlplan::policy::EffectIndex index;
@@ -1478,19 +1693,20 @@ void load_construct_data(Archive & ar, dlplan::policy::UnchangedBooleanEffect* t
 }
 
 template<typename Archive>
-void serialize( Archive& /* ar */ , dlplan::policy::IncrementNumericalEffect& /* t */ , const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::policy::IncrementNumericalEffect& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::policy::NumericalEffect>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::policy::IncrementNumericalEffect* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::policy::IncrementNumericalEffect* t, const unsigned int /* version */ )
 {
     ar << t->m_numerical;
     ar << t->m_index;
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::policy::IncrementNumericalEffect* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::policy::IncrementNumericalEffect* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const core::Numerical> numerical;
     dlplan::policy::EffectIndex index;
@@ -1500,19 +1716,20 @@ void load_construct_data(Archive & ar, dlplan::policy::IncrementNumericalEffect*
 }
 
 template<typename Archive>
-void serialize( Archive& /* ar */ , dlplan::policy::DecrementNumericalEffect& /* t */ , const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::policy::DecrementNumericalEffect& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::policy::NumericalEffect>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::policy::DecrementNumericalEffect* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::policy::DecrementNumericalEffect* t, const unsigned int /* version */ )
 {
     ar << t->m_numerical;
     ar << t->m_index;
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::policy::DecrementNumericalEffect* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::policy::DecrementNumericalEffect* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const core::Numerical> numerical;
     dlplan::policy::EffectIndex index;
@@ -1522,19 +1739,20 @@ void load_construct_data(Archive & ar, dlplan::policy::DecrementNumericalEffect*
 }
 
 template<typename Archive>
-void serialize( Archive& /* ar */ , dlplan::policy::UnchangedNumericalEffect& /* t */ , const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::policy::UnchangedNumericalEffect& t, const unsigned int /* version */ )
 {
+    boost::serialization::base_object<dlplan::policy::NumericalEffect>(t);
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::policy::UnchangedNumericalEffect* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::policy::UnchangedNumericalEffect* t, const unsigned int /* version */ )
 {
     ar << t->m_numerical;
     ar << t->m_index;
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::policy::UnchangedNumericalEffect* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::policy::UnchangedNumericalEffect* t, const unsigned int /* version */ )
 {
     std::shared_ptr<const core::Numerical> numerical;
     dlplan::policy::EffectIndex index;
@@ -1545,12 +1763,12 @@ void load_construct_data(Archive & ar, dlplan::policy::UnchangedNumericalEffect*
 
 
 template<typename Archive>
-void serialize( Archive& /* ar */ , dlplan::policy::Rule& /* t */ , const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::policy::Rule& /* t */ , const unsigned int /* version */ )
 {
 }
 
 template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::policy::Rule* t, const unsigned int /* version */ )
+void save_construct_data(Archive& ar, const dlplan::policy::Rule* t, const unsigned int /* version */ )
 {
     ar << t->m_index;
     ar << t->m_conditions;
@@ -1558,7 +1776,7 @@ void save_construct_data(Archive & ar, const dlplan::policy::Rule* t, const unsi
 }
 
 template<class Archive>
-void load_construct_data(Archive & ar, dlplan::policy::Rule* t, const unsigned int /* version */ )
+void load_construct_data(Archive& ar, dlplan::policy::Rule* t, const unsigned int /* version */ )
 {
     dlplan::policy::RuleIndex index;
     dlplan::policy::Conditions conditions;
@@ -1570,7 +1788,7 @@ void load_construct_data(Archive & ar, dlplan::policy::Rule* t, const unsigned i
 }
 
 template<typename Archive>
-void serialize( Archive& /* ar */ , dlplan::policy::Policy& /* t */ , const unsigned int /* version */ )
+void serialize(Archive& /* ar */ , dlplan::policy::Policy& /* t */ , const unsigned int /* version */ )
 {
 }
 
