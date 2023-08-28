@@ -342,13 +342,13 @@ private:
             Key key{element, instance, state};
             per_element_instance_state_mapping.erase(key);
         }
-
-        template<typename Archive, typename T_>
-        friend void boost::serialization::serialize(Archive& ar, DenotationsCaches::Cache<T_>& t, const unsigned int version);
     };
 
     DenotationsCaches(const DenotationsCaches& other) = delete;
     DenotationsCaches& operator=(const DenotationsCaches& other) = delete;
+
+    template<typename Archive, typename T_>
+    friend void boost::serialization::serialize(Archive& ar, DenotationsCaches::Cache<T_>& t, const unsigned int version);
 
 public:
     DenotationsCaches();
