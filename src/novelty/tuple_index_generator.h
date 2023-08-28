@@ -1,6 +1,10 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_TUPLE_INDEX_GENERATOR_H_
 #define DLPLAN_INCLUDE_DLPLAN_TUPLE_INDEX_GENERATOR_H_
 
+#include <array>
+#include <vector>
+#include <functional>
+
 #include "../utils/logging.h"
 #include "../../include/dlplan/novelty.h"
 
