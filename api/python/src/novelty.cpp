@@ -21,7 +21,7 @@ void init_novelty(py::module_ &m_novelty) {
         .def("get_arity", &NoveltyBase::get_arity)
     ;
 
-    py::class_<NoveltyTable, std::shared_ptr<NoveltyTable>>(m_novelty, "NoveltyTable")
+    py::class_<NoveltyTable>(m_novelty, "NoveltyTable")
         .def(py::init<std::shared_ptr<const NoveltyBase>>())
         .def("compute_novel_tuple_indices", py::overload_cast<const AtomIndices&>(&NoveltyTable::compute_novel_tuple_indices, py::const_))
         .def("compute_novel_tuple_indices", py::overload_cast<const AtomIndices&, const AtomIndices&>(&NoveltyTable::compute_novel_tuple_indices, py::const_))

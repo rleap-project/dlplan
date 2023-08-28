@@ -50,7 +50,7 @@ void init_core(py::module_ &m_core) {
         .def("get_num_objects", &RoleDenotation::get_num_objects)
     ;
 
-    py::class_<DenotationsCaches>(m_core, "DenotationsCaches")
+    py::class_<DenotationsCaches, std::shared_ptr<DenotationsCaches>>(m_core, "DenotationsCaches")
         .def(py::init<>())
     ;
 
