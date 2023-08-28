@@ -2,6 +2,11 @@
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+
+#include "../../include/dlplan/core.h"
+
+using namespace dlplan;
 
 
 namespace dlplan::policy {
@@ -159,6 +164,252 @@ std::string UnchangedNumericalEffect::str() const {
 
 }
 
+namespace boost::serialization {
+template<typename Archive>
+void serialize( Archive& /* ar */ , dlplan::policy::BooleanEffect& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::policy::BaseEffect>(t);
+}
+
+template<class Archive>
+void save_construct_data(Archive& /* ar */ , const dlplan::policy::BooleanEffect* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void load_construct_data(Archive& /* ar */ , dlplan::policy::BooleanEffect* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<typename Archive>
+void serialize( Archive& /* ar */ , dlplan::policy::NumericalEffect& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::policy::BaseEffect>(t);
+}
+
+template<class Archive>
+void save_construct_data(Archive& /* ar */ , const dlplan::policy::NumericalEffect* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void load_construct_data(Archive& /* ar */ , dlplan::policy::NumericalEffect* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<typename Archive>
+void serialize(Archive& /* ar */ , dlplan::policy::PositiveBooleanEffect& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::policy::BooleanEffect>(t);
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const dlplan::policy::PositiveBooleanEffect* t, const unsigned int /* version */ )
+{
+    ar << t->m_boolean;
+    ar << t->m_index;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, dlplan::policy::PositiveBooleanEffect* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const core::Boolean> boolean;
+    dlplan::policy::EffectIndex index;
+    ar >> boolean;
+    ar >> index;
+    ::new(t)dlplan::policy::PositiveBooleanEffect(boolean, index);
+}
+
+template<typename Archive>
+void serialize(Archive& /* ar */ , dlplan::policy::NegativeBooleanEffect& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::policy::BooleanEffect>(t);
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const dlplan::policy::NegativeBooleanEffect* t, const unsigned int /* version */ )
+{
+    ar << t->m_boolean;
+    ar << t->m_index;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, dlplan::policy::NegativeBooleanEffect* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const core::Boolean> boolean;
+    dlplan::policy::EffectIndex index;
+    ar >> boolean;
+    ar >> index;
+    ::new(t)dlplan::policy::NegativeBooleanEffect(boolean, index);
+}
+
+template<typename Archive>
+void serialize( Archive& /* ar */ , dlplan::policy::UnchangedBooleanEffect& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::policy::BooleanEffect>(t);
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const dlplan::policy::UnchangedBooleanEffect* t, const unsigned int /* version */ )
+{
+    ar << t->m_boolean;
+    ar << t->m_index;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, dlplan::policy::UnchangedBooleanEffect* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const core::Boolean> boolean;
+    dlplan::policy::EffectIndex index;
+    ar >> boolean;
+    ar >> index;
+    ::new(t)dlplan::policy::UnchangedBooleanEffect(boolean, index);
+}
+
+template<typename Archive>
+void serialize(Archive& /* ar */ , dlplan::policy::IncrementNumericalEffect& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::policy::NumericalEffect>(t);
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const dlplan::policy::IncrementNumericalEffect* t, const unsigned int /* version */ )
+{
+    ar << t->m_numerical;
+    ar << t->m_index;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, dlplan::policy::IncrementNumericalEffect* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const core::Numerical> numerical;
+    dlplan::policy::EffectIndex index;
+    ar >> numerical;
+    ar >> index;
+    ::new(t)dlplan::policy::IncrementNumericalEffect(numerical, index);
+}
+
+template<typename Archive>
+void serialize(Archive& /* ar */ , dlplan::policy::DecrementNumericalEffect& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::policy::NumericalEffect>(t);
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const dlplan::policy::DecrementNumericalEffect* t, const unsigned int /* version */ )
+{
+    ar << t->m_numerical;
+    ar << t->m_index;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, dlplan::policy::DecrementNumericalEffect* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const core::Numerical> numerical;
+    dlplan::policy::EffectIndex index;
+    ar >> numerical;
+    ar >> index;
+    ::new(t)dlplan::policy::DecrementNumericalEffect(numerical, index);
+}
+
+template<typename Archive>
+void serialize(Archive& /* ar */ , dlplan::policy::UnchangedNumericalEffect& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::policy::NumericalEffect>(t);
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const dlplan::policy::UnchangedNumericalEffect* t, const unsigned int /* version */ )
+{
+    ar << t->m_numerical;
+    ar << t->m_index;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, dlplan::policy::UnchangedNumericalEffect* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const core::Numerical> numerical;
+    dlplan::policy::EffectIndex index;
+    ar >> numerical;
+    ar >> index;
+    ::new(t)dlplan::policy::UnchangedNumericalEffect(numerical, index);
+}
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::policy::BooleanEffect& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::policy::BooleanEffect& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const dlplan::policy::BooleanEffect* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    dlplan::policy::BooleanEffect* t, const unsigned int version);
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::policy::PositiveBooleanEffect& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::policy::PositiveBooleanEffect& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const dlplan::policy::PositiveBooleanEffect* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    dlplan::policy::PositiveBooleanEffect* t, const unsigned int version);
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::policy::NegativeBooleanEffect& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::policy::NegativeBooleanEffect& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const dlplan::policy::NegativeBooleanEffect* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    dlplan::policy::NegativeBooleanEffect* t, const unsigned int version);
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::policy::UnchangedBooleanEffect& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::policy::UnchangedBooleanEffect& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const dlplan::policy::UnchangedBooleanEffect* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    dlplan::policy::UnchangedBooleanEffect* t, const unsigned int version);
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::policy::NumericalEffect& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::policy::NumericalEffect& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const dlplan::policy::NumericalEffect* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    dlplan::policy::NumericalEffect* t, const unsigned int version);
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::policy::IncrementNumericalEffect& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::policy::IncrementNumericalEffect& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const dlplan::policy::IncrementNumericalEffect* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    dlplan::policy::IncrementNumericalEffect* t, const unsigned int version);
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::policy::DecrementNumericalEffect& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::policy::DecrementNumericalEffect& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const dlplan::policy::DecrementNumericalEffect* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    dlplan::policy::DecrementNumericalEffect* t, const unsigned int version);
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::policy::UnchangedNumericalEffect& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::policy::UnchangedNumericalEffect& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const dlplan::policy::UnchangedNumericalEffect* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    dlplan::policy::UnchangedNumericalEffect* t, const unsigned int version);
+}
+
+BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::BooleanEffect)
+BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::NumericalEffect)
 BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::PositiveBooleanEffect)
 BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::NegativeBooleanEffect)
 BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::UnchangedBooleanEffect)

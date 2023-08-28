@@ -83,17 +83,11 @@ protected:
 protected:
     BooleanCondition(std::shared_ptr<const core::Boolean> boolean, ConditionIndex index);
 
-    int compute_evaluate_time_score() const override {
-        return m_boolean->compute_evaluate_time_score();
-    }
+    int compute_evaluate_time_score() const override;
 
-    std::shared_ptr<const core::Boolean> get_boolean() const override {
-        return m_boolean;
-    }
+    std::shared_ptr<const core::Boolean> get_boolean() const override;
 
-    std::shared_ptr<const core::Numerical> get_numerical() const override {
-        return nullptr;
-    };
+    std::shared_ptr<const core::Numerical> get_numerical() const override;
 };
 
 
