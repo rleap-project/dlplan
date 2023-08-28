@@ -5,6 +5,11 @@
 #include <limits>
 #include <vector>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/serialization.hpp>
+
 #include "hash.h"
 
 
@@ -214,6 +219,39 @@ const Block DynamicBitset<Block>::zeros = Block(0);
 
 template<typename Block>
 const Block DynamicBitset<Block>::ones = ~DynamicBitset<Block>::zeros;
+}
+
+namespace boost::serialization {
+
+template<typename Archive, typename Block>
+inline void serialize(Archive& /* ar */ , dlplan::utils::DynamicBitset<Block>& /* t */, const unsigned int /* version */) {
+}
+
+template<class Archive, typename Block>
+inline void save_construct_data(
+    Archive & ar, const dlplan::utils::DynamicBitset<Block>* t, const unsigned int /* version */ ){
+    ar << t->blocks;
+    ar << t->num_bits;
+}
+
+template<class Archive, typename Block>
+inline void load_construct_data(
+    Archive & ar, dlplan::utils::DynamicBitset<Block>* t, const unsigned int /* version */ ){
+    std::vector<Block> num_blocks;
+    int num_bits;
+    ar >> num_blocks;
+    ar >> num_bits;
+    ::new(t)dlplan::utils::DynamicBitset<Block>(std::move(num_blocks), num_bits);
+}
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::utils::DynamicBitset<unsigned>& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::utils::DynamicBitset<unsigned>& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const dlplan::utils::DynamicBitset<unsigned>* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    dlplan::utils::DynamicBitset<unsigned>* t, const unsigned int version);
 }
 
 /*

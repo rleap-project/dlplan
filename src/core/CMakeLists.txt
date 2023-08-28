@@ -26,6 +26,9 @@ target_sources(dlplancore
         ../utils/system.cpp
         ../utils/timer.cpp
         ../utils/hash.cpp)
+target_link_libraries(dlplancore
+    PRIVATE
+        Boost::serialization)
 
 # Create an alias for simpler reference
 add_library(dlplan::core ALIAS dlplancore)

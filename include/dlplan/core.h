@@ -54,6 +54,9 @@ namespace boost::serialization {
     void load_construct_data(Archive& ar, dlplan::core::RoleDenotation* t, const unsigned int version);
 
     template <typename Archive>
+    void serialize(Archive& ar, dlplan::core::DenotationsCaches& t, const unsigned int version);
+
+    template <typename Archive>
     void serialize(Archive& ar, dlplan::core::Constant& t, const unsigned int version);
     template<class Archive>
     void save_construct_data(Archive& ar, const dlplan::core::Constant* t, const unsigned int version);

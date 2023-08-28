@@ -2,6 +2,10 @@
 
 #include <sstream>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/serialization.hpp>
+
 #include "../utils/logging.h"
 #include "../../include/dlplan/utils/hash.h"
 
@@ -131,5 +135,41 @@ std::size_t RoleDenotation::hash() const {
 int RoleDenotation::get_num_objects() const {
     return m_num_objects;
 }
+
+}
+
+
+namespace boost::serialization {
+
+template<typename Archive>
+inline void serialize(Archive& /* ar */ , dlplan::core::RoleDenotation& /* t */, const unsigned int /* version */) {
+}
+
+template<class Archive>
+inline void save_construct_data(
+    Archive & ar, const dlplan::core::RoleDenotation* t, const unsigned int /* version */ ){
+    ar << t->m_num_objects;
+    ar << &t->m_data;
+}
+
+template<class Archive>
+inline void load_construct_data(
+    Archive & ar, dlplan::core::RoleDenotation* t, const unsigned int /* version */ ){
+    int num_objects;
+    dlplan::utils::DynamicBitset<unsigned>* data;
+    ar >> num_objects;
+    ar >> data;
+    ::new(t)dlplan::core::RoleDenotation(num_objects, std::move(*data));
+    delete data;
+}
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::core::RoleDenotation& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::core::RoleDenotation& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const dlplan::core::RoleDenotation* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    dlplan::core::RoleDenotation* t, const unsigned int version);
 
 }
