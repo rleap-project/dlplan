@@ -62,9 +62,23 @@ TEST(DLPTests, SerializationGripperTest) {
     // Policy
     out_data.policies.emplace("0", policy);
 
+    // DenotationsCaches
+    auto denotations_caches_1 = std::make_shared<DenotationsCaches>();
+    for (const auto& pair : state_space_1->get_states()) {
+        numerical->evaluate(pair.second, *denotations_caches_1);
+    }
+    auto denotations_caches_2 = std::make_shared<DenotationsCaches>();
+    for (const auto& pair : state_space_2->get_states()) {
+        numerical->evaluate(pair.second, *denotations_caches_2);
+    }
+    out_data.denotations_caches.emplace("0", denotations_caches_1);
+    out_data.denotations_caches.emplace("1", denotations_caches_2);
+
     /* Deserialization */
     std::stringstream buffer;
     dlplan::serialization::serialize(out_data, buffer);
+
+    std::cout << buffer.str() << std::endl;
     dlplan::serialization::Data in_data = dlplan::serialization::deserialize(buffer);
     EXPECT_EQ(in_data.state_spaces.size(), 2);
     EXPECT_NE(in_data.state_spaces.at("0")->get_instance_info(), in_data.state_spaces.at("1")->get_instance_info());
@@ -79,6 +93,8 @@ TEST(DLPTests, SerializationGripperTest) {
 
     EXPECT_EQ(in_data.instance_infos.size(), 2);
     EXPECT_NE(in_data.instance_infos["0"], in_data.instance_infos["1"]);
+
+    EXPECT_EQ(in_data.denotations_caches.size(), 2);
 
     EXPECT_EQ(in_data.syntatic_element_factories.size(), 1);
 

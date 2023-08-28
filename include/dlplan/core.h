@@ -4,7 +4,6 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_CORE_H_
 #define DLPLAN_INCLUDE_DLPLAN_CORE_H_
 
-#include "phmap/phmap.h"
 #include "utils/pimpl.h"
 #include "utils/dynamic_bitset.h"
 
@@ -19,6 +18,7 @@
 namespace dlplan::core {
 class ConceptDenotation;
 class RoleDenotation;
+class DenotationsCaches;
 class Constant;
 class Predicate;
 class VocabularyInfo;
@@ -38,6 +38,23 @@ class SyntacticElementFactoryImpl;
 
 // Forward declarations of template spezializations for serialization
 namespace boost::serialization {
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::core::ConceptDenotation& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::core::ConceptDenotation* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::core::ConceptDenotation* t, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::core::RoleDenotation& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::core::RoleDenotation* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::core::RoleDenotation* t, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::core::DenotationsCaches& t, const unsigned int version);
+
     template <typename Archive>
     void serialize(Archive& ar, dlplan::core::Constant& t, const unsigned int version);
     template<class Archive>
@@ -216,6 +233,16 @@ private:
     int m_num_objects;
     dlplan::utils::DynamicBitset<unsigned> m_data;
 
+    /// @brief Constructor for serialization.
+    ConceptDenotation(int num_objects, dlplan::utils::DynamicBitset<unsigned>&& data);
+
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, ConceptDenotation& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive & ar, const ConceptDenotation* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive & ar, ConceptDenotation* t, const unsigned int version);
+
 public:
     explicit ConceptDenotation(int num_objects);
     ConceptDenotation(const ConceptDenotation& other);
@@ -281,6 +308,16 @@ class RoleDenotation {
 private:
     int m_num_objects;
     dlplan::utils::DynamicBitset<unsigned> m_data;
+
+    /// @brief Constructor for serialization.
+    RoleDenotation(int num_objects, dlplan::utils::DynamicBitset<unsigned>&& data);
+
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, RoleDenotation& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive & ar, const RoleDenotation* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive & ar, RoleDenotation* t, const unsigned int version);
 
 public:
     explicit RoleDenotation(int num_objects);
@@ -368,14 +405,14 @@ private:
         };
 
         // We use unique_ptr such that other raw pointers do not become invalid.
-        std::unordered_set<std::unique_ptr<const T>, UniquePtrHash, UniquePtrEqual> m_uniqueness;
-        std::unordered_map<Key, const T*, KeyHash> m_per_element_instance_state_mapping;
+        std::unordered_set<std::unique_ptr<const T>, UniquePtrHash, UniquePtrEqual> uniqueness;
+        std::unordered_map<Key, const T*, KeyHash> per_element_instance_state_mapping;
 
         /// @brief Inserts denotation uniquely and returns it raw pointer.
         /// @param denotation
         /// @return
         const T* insert_denotation(T&& denotation) {
-            return m_uniqueness.insert(std::make_unique<T>(std::move(denotation))).first->get();
+            return uniqueness.insert(std::make_unique<T>(std::move(denotation))).first->get();
         }
 
         /// @brief Inserts raw pointer of denotation into mapping from element, instance, and state.
@@ -385,13 +422,13 @@ private:
         /// @param denotation
         void insert_denotation(ElementIndex element, InstanceIndex instance, StateIndex state, const T* denotation) {
             Key key{element, instance, state};
-            m_per_element_instance_state_mapping.emplace(key, denotation);
+            per_element_instance_state_mapping.emplace(key, denotation);
         }
 
         const T* get_denotation(ElementIndex element, InstanceIndex instance, StateIndex state) const {
             Key key{element, instance, state};
-            auto iter = m_per_element_instance_state_mapping.find(key);
-            if (iter != m_per_element_instance_state_mapping.end()) {
+            auto iter = per_element_instance_state_mapping.find(key);
+            if (iter != per_element_instance_state_mapping.end()) {
                 return iter->second;
             }
             return nullptr;
@@ -399,7 +436,7 @@ private:
 
         void erase_denotation(ElementIndex element, InstanceIndex instance, StateIndex state) {
             Key key{element, instance, state};
-            m_per_element_instance_state_mapping.erase(key);
+            per_element_instance_state_mapping.erase(key);
         }
     };
 

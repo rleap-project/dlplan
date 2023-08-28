@@ -4,11 +4,13 @@
 
 #include "../utils/collections.h"
 
+#include <cmath>
+
 
 namespace dlplan::novelty {
 
 NoveltyTable::NoveltyTable(std::shared_ptr<const NoveltyBase> novelty_base)
-    : m_novelty_base(novelty_base), m_table(pow(novelty_base->get_num_atoms()+1, novelty_base->get_arity()), true) {
+    : m_novelty_base(novelty_base), m_table(std::pow(novelty_base->get_num_atoms()+1, novelty_base->get_arity()), true) {
 }
 
 NoveltyTable::NoveltyTable(const NoveltyTable& other) = default;
@@ -114,7 +116,7 @@ void NoveltyTable::resize(std::shared_ptr<const NoveltyBase> novelty_base) {
     if (novelty_base->get_arity() != m_novelty_base->get_arity()) {
         throw std::runtime_error("NoveltyTable::resize - missmatched arity of novelty_table and novelty_base.");
     }
-    m_table.resize(pow(novelty_base->get_num_atoms()+1, novelty_base->get_arity()), true);
+    m_table.resize(std::pow(novelty_base->get_num_atoms()+1, novelty_base->get_arity()), true);
     m_novelty_base = novelty_base;
 }
 

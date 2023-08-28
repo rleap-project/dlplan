@@ -100,6 +100,106 @@ BOOST_CLASS_EXPORT_GUID(dlplan::core::TransitiveReflexiveClosureRole, "dlplan::c
 
 namespace boost::serialization {
 template<typename Archive>
+inline void serialize(Archive& /* ar */ , dlplan::core::ConceptDenotation& /* t */, const unsigned int /* version */) {
+}
+
+template<class Archive>
+inline void save_construct_data(
+    Archive & ar, const dlplan::core::ConceptDenotation* t, const unsigned int /* version */ ){
+    ar << t->m_num_objects;
+    ar << &t->m_data;
+}
+
+template<class Archive>
+inline void load_construct_data(
+    Archive & ar, dlplan::core::ConceptDenotation* t, const unsigned int /* version */ ){
+    int num_objects;
+    dlplan::utils::DynamicBitset<unsigned>* data;
+    ar >> num_objects;
+    ar >> data;
+    ::new(t)dlplan::core::ConceptDenotation(num_objects, std::move(*data));
+    delete data;
+}
+
+template<typename Archive>
+inline void serialize(Archive& /* ar */ , dlplan::core::RoleDenotation& /* t */, const unsigned int /* version */) {
+}
+
+template<class Archive>
+inline void save_construct_data(
+    Archive & ar, const dlplan::core::RoleDenotation* t, const unsigned int /* version */ ){
+    ar << t->m_num_objects;
+    ar << &t->m_data;
+}
+
+template<class Archive>
+inline void load_construct_data(
+    Archive & ar, dlplan::core::RoleDenotation* t, const unsigned int /* version */ ){
+    int num_objects;
+    dlplan::utils::DynamicBitset<unsigned>* data;
+    ar >> num_objects;
+    ar >> data;
+    ::new(t)dlplan::core::RoleDenotation(num_objects, std::move(*data));
+    delete data;
+}
+
+template <typename Archive>
+inline void serialize(Archive& ar, bool& t, const unsigned int /* version */ ) {
+    ar & t;
+}
+
+template <typename Archive>
+inline void serialize(Archive& ar, int& t, const unsigned int /* version */ ) {
+    ar & t;
+}
+
+template<typename Archive, typename Block>
+inline void serialize(Archive& /* ar */ , dlplan::utils::DynamicBitset<Block>& /* t */, const unsigned int /* version */) {
+}
+
+template<class Archive, typename Block>
+inline void save_construct_data(
+    Archive & ar, const dlplan::utils::DynamicBitset<Block>* t, const unsigned int /* version */ ){
+    ar << t->blocks;
+    ar << t->num_bits;
+}
+
+template<class Archive, typename Block>
+inline void load_construct_data(
+    Archive & ar, dlplan::utils::DynamicBitset<Block>* t, const unsigned int /* version */ ){
+    std::vector<Block> num_blocks;
+    int num_bits;
+    ar >> num_blocks;
+    ar >> num_bits;
+    ::new(t)dlplan::utils::DynamicBitset<Block>(std::move(num_blocks), num_bits);
+}
+
+template <typename Archive>
+inline void serialize(Archive& ar, dlplan::core::DenotationsCaches& t, const unsigned int /* version */ ) {
+    ar & t.concept_denotation_cache;
+    ar & t.role_denotation_cache;
+    ar & t.boolean_denotation_cache;
+    ar & t.numerical_denotation_cache;
+    ar & t.concept_denotations_cache;
+    ar & t.role_denotations_cache;
+    ar & t.boolean_denotations_cache;
+    ar & t.numerical_denotations_cache;
+}
+
+template <typename Archive>
+inline void serialize(Archive& ar, dlplan::core::DenotationsCaches::Key& t, const unsigned int /* version */ ) {
+    ar & t.element;
+    ar & t.instance;
+    ar & t.state;
+}
+
+template <typename Archive, typename T>
+inline void serialize(Archive& ar, dlplan::core::DenotationsCaches::Cache<T>& t, const unsigned int /* version */ ) {
+    ar & t.uniqueness;
+    ar & t.per_element_instance_state_mapping;
+}
+
+template<typename Archive>
 inline void serialize(Archive& /* ar */ , dlplan::core::Constant& /* t */, const unsigned int /* version */) {
 }
 
@@ -1538,6 +1638,7 @@ void serialize( Archive& ar, dlplan::serialization::Data& t, const unsigned int 
     ar & t.vocabulary_infos;
     ar & t.instance_infos;
     ar & t.syntatic_element_factories;
+    ar & t.denotations_caches;
     ar & t.state_spaces;
     ar & t.tuple_graphs;
     ar & t.policies;

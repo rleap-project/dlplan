@@ -2,6 +2,7 @@
 
 #include "../utils/math.h"
 
+#include <cmath>
 #include <vector>
 #include <cassert>
 #include <iostream>

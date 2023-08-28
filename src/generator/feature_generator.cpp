@@ -5,6 +5,7 @@
 #include "../../include/dlplan/core.h"
 #include "../utils/logging.h"
 
+#include <algorithm>
 #include <iostream>
 #include <csignal>
 

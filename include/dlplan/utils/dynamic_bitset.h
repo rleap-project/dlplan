@@ -8,12 +8,28 @@
 #include <vector>
 
 
+namespace dlplan::utils {
+template<typename Block = unsigned int>
+class DynamicBitset;
+}
+
+
+namespace boost::serialization {
+    template <typename Archive, typename Block>
+    void serialize(Archive& ar, dlplan::utils::DynamicBitset<Block>& t, const unsigned int version);
+    template<class Archive, typename Block>
+    void save_construct_data(Archive& ar, const dlplan::utils::DynamicBitset<Block>* t, const unsigned int version);
+    template<class Archive, typename Block>
+    void load_construct_data(Archive& ar, dlplan::utils::DynamicBitset<Block>* t, const unsigned int version);
+}
+
+
 /*
   Poor man's version of boost::dynamic_bitset, mostly copied from there.
 */
 namespace dlplan::utils {
 
-template<typename Block = unsigned int>
+template<typename Block>
 class DynamicBitset {
     static_assert(
         !std::numeric_limits<Block>::is_signed,
@@ -56,6 +72,17 @@ class DynamicBitset {
             blocks.back() &= ~(ones << bits_in_last_block);
         }
     }
+
+    /// @brief Constructor for serialization.
+    DynamicBitset(std::vector<Block>&& blocks, int num_bits)
+        : blocks(std::move(blocks)), num_bits(num_bits) { }
+
+    template<typename Archive, typename Block_>
+    friend void boost::serialization::serialize(Archive& ar, DynamicBitset<Block_>& t, const unsigned int version);
+    template<class Archive, typename Block_>
+    friend void boost::serialization::save_construct_data(Archive & ar, const DynamicBitset<Block_>* t, const unsigned int version);
+    template<class Archive, typename Block_>
+    friend void boost::serialization::load_construct_data(Archive & ar, DynamicBitset<Block_>* t, const unsigned int version);
 
 public:
     explicit DynamicBitset(std::size_t num_bits)

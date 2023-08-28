@@ -7,6 +7,8 @@
 
 
 namespace dlplan::core {
+ConceptDenotation::ConceptDenotation(int num_objects, utils::DynamicBitset<unsigned>&& data)
+    : m_num_objects(num_objects), m_data(std::move(data)) { }
 
 ConceptDenotation::ConceptDenotation(int num_objects)
     : m_num_objects(num_objects), m_data(utils::DynamicBitset<unsigned>(num_objects)) { }
