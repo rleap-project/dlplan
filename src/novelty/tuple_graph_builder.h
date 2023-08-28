@@ -5,6 +5,7 @@
 
 using namespace dlplan::state_space;
 
+
 namespace dlplan::novelty {
 
 struct TupleGraphBuilderResult {

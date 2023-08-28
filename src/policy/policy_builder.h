@@ -1,38 +1,18 @@
 #ifndef DLPLAN_SRC_POLICY_POLICY_BUILDER_H_
 #define DLPLAN_SRC_POLICY_POLICY_BUILDER_H_
 
-#include "cache.h"
-
 #include <memory>
 #include <vector>
 #include <set>
 
+#include <boost/serialization/serialization.hpp>
 
-namespace dlplan::core {
-class Boolean;
-class Numerical;
-}
-
-
-namespace dlplan::policy {
-class PolicyBuilderImpl;
-}
-
-
-namespace boost::serialization {
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::policy::PolicyBuilderImpl& t, const unsigned int version);
-}
+#include "cache.h"
+#include "../../include/dlplan/core.h"
+#include "../../include/dlplan/policy.h"
 
 
 namespace dlplan::policy {
-class PolicyRoot;
-class BaseCondition;
-class BaseEffect;
-class Rule;
-class Policy;
-class PolicyMinimizer;
-
 class PolicyBuilderImpl {
 private:
     Caches m_caches;

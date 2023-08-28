@@ -1,14 +1,13 @@
 #include "../include/dlplan/policy.h"
 
+#include <iostream>
+
 #include "condition.h"
 #include "effect.h"
 #include "policy_builder.h"
 #include "reader.h"
 #include "writer.h"
-
 #include "../../include/dlplan/policy.h"
-
-#include <iostream>
 
 
 namespace dlplan::policy {

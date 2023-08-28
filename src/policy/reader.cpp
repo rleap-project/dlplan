@@ -2,7 +2,6 @@
 
 #include "parser/parser.h"
 #include "parser/expressions.h"
-
 #include "../../include/dlplan/policy.h"
 
 

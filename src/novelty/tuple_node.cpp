@@ -1,8 +1,8 @@
 #include "../../include/dlplan/novelty.h"
 
-#include "../utils/logging.h"
-
 #include <sstream>
+
+#include "../utils/logging.h"
 
 using namespace dlplan::state_space;
 

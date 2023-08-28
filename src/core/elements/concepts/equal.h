@@ -1,28 +1,15 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_EQUAL_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_EQUAL_H_
 
-#include "../utils.h"
+#include <sstream>
+#include <memory>
 
+#include <boost/serialization/serialization.hpp>
+
+#include "../utils.h"
 #include "../../../../include/dlplan/core.h"
 
-#include <sstream>
-
 using namespace std::string_literals;
-
-
-namespace dlplan::core {
-class EqualConcept;
-}
-
-
-namespace boost::serialization {
-    template<typename Archive>
-    void serialize(Archive& ar, dlplan::core::EqualConcept& concept, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::EqualConcept* concept, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::EqualConcept* concept, const unsigned int version);
-}
 
 
 namespace dlplan::core {

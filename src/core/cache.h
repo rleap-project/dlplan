@@ -1,10 +1,10 @@
 #ifndef DLPLAN_SRC_CORE_CACHE_H_
 #define DLPLAN_SRC_CORE_CACHE_H_
 
+#include <memory>
+
 #include "../../include/dlplan/core.h"
 #include "../utils/cache.h"
-
-#include <memory>
 
 
 namespace dlplan::core {

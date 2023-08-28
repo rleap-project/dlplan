@@ -1,14 +1,13 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_SERIALIZATION_H_
 #define DLPLAN_INCLUDE_DLPLAN_SERIALIZATION_H_
 
+#include <istream>
+#include <unordered_map>
 
 #include "core.h"
 #include "novelty.h"
 #include "policy.h"
 #include "state_space.h"
-
-#include <istream>
-#include <unordered_map>
 
 using namespace dlplan;
 

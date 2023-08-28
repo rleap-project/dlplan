@@ -1,24 +1,13 @@
 #ifndef DLPLAN_SRC_POLICY_EFFECT_H_
 #define DLPLAN_SRC_POLICY_EFFECT_H_
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/export.hpp>
-
-#include "../../include/dlplan/policy.h"
-
 #include <string>
 #include <memory>
 
+#include <boost/serialization/export.hpp>
+#include <boost/serialization/serialization.hpp>
 
-namespace boost::serialization {
-    template <typename Archive, typename T>
-    void serialize(Archive& ar, T& t, const unsigned int version);
-    template<class Archive, typename T>
-    void save_construct_data(Archive& ar, const T* t, const unsigned int version);
-    template<class Archive, typename T>
-    void load_construct_data(Archive& ar, T* t, const unsigned int version);
-}
+#include "../../include/dlplan/policy.h"
 
 
 namespace dlplan::policy {

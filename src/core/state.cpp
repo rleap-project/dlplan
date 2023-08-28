@@ -1,12 +1,12 @@
 #include "../../include/dlplan/core.h"
-#include "../../include/dlplan/utils/hash.h"
-
-#include "../utils/collections.h"
-#include "../utils/logging.h"
 
 #include <algorithm>
 #include <stdexcept>
 #include <sstream>
+
+#include "../utils/collections.h"
+#include "../utils/logging.h"
+#include "../../include/dlplan/utils/hash.h"
 
 
 namespace dlplan::core {

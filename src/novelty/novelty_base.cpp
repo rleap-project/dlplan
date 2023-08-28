@@ -1,12 +1,12 @@
 #include "../../include/dlplan/novelty.h"
 
-#include "../utils/math.h"
-
 #include <cmath>
 #include <vector>
 #include <cassert>
 #include <iostream>
 #include <sstream>
+
+#include "../utils/math.h"
 
 
 namespace dlplan::novelty {

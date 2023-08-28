@@ -1,12 +1,12 @@
 #include "../../include/dlplan/core.h"
 
-#include "../utils/collections.h"
-#include "../utils/logging.h"
-
 #include <string>
 #include <algorithm>
 #include <iostream>
 #include <sstream>
+
+#include "../utils/collections.h"
+#include "../utils/logging.h"
 
 using namespace std::string_literals;
 

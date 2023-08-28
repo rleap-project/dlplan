@@ -4,11 +4,11 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_GENERATOR_H_
 #define DLPLAN_INCLUDE_DLPLAN_GENERATOR_H_
 
-#include "core.h"
-#include "utils/pimpl.h"
-
 #include <string>
 #include <vector>
+
+#include "core.h"
+#include "utils/pimpl.h"
 
 
 namespace dlplan::generator {

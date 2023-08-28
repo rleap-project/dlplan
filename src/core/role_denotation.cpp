@@ -1,9 +1,9 @@
 #include "../../include/dlplan/core.h"
-#include "../../include/dlplan/utils/hash.h"
-
-#include "../utils/logging.h"
 
 #include <sstream>
+
+#include "../utils/logging.h"
+#include "../../include/dlplan/utils/hash.h"
 
 
 namespace dlplan::core {

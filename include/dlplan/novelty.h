@@ -3,23 +3,16 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_NOVELTY_H_
 #define DLPLAN_INCLUDE_DLPLAN_NOVELTY_H_
 
-#include "core.h"
-#include "state_space.h"
-
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
 #include <vector>
 
+#include <boost/serialization/serialization.hpp>
 
-namespace boost::serialization {
-    template <typename Archive, typename T>
-    void serialize(Archive& ar, T& t, const unsigned int version);
-    template<class Archive, typename T>
-    void save_construct_data(Archive& ar, const T* t, const unsigned int version);
-    template<class Archive, typename T>
-    void load_construct_data(Archive& ar, T* t, const unsigned int version);
-}
+#include "core.h"
+#include "state_space.h"
+
 
 namespace dlplan::novelty
 {

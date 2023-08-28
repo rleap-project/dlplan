@@ -4,9 +4,6 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_CORE_H_
 #define DLPLAN_INCLUDE_DLPLAN_CORE_H_
 
-#include "utils/pimpl.h"
-#include "utils/dynamic_bitset.h"
-
 #include <memory>
 #include <string>
 #include <unordered_set>
@@ -14,16 +11,10 @@
 #include <vector>
 #include <iostream>
 
+#include <boost/serialization/serialization.hpp>
 
-// Forward declarations of template spezializations for serialization
-namespace boost::serialization {
-    template <typename Archive, typename T>
-    void serialize(Archive& ar, T& t, const unsigned int version);
-    template<class Archive, typename T>
-    void save_construct_data(Archive& ar, const T* t, const unsigned int version);
-    template<class Archive, typename T>
-    void load_construct_data(Archive& ar, T* t, const unsigned int version);
-}
+#include "utils/pimpl.h"
+#include "utils/dynamic_bitset.h"
 
 
 namespace dlplan::core {
@@ -342,6 +333,7 @@ private:
             Key key{element, instance, state};
             per_element_instance_state_mapping.erase(key);
         }
+
     };
 
     DenotationsCaches(const DenotationsCaches& other) = delete;

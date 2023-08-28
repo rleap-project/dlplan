@@ -1,10 +1,10 @@
 #include "../../include/dlplan/core.h"
 
-#include "../utils/collections.h"
-#include "../utils/logging.h"
-
 #include <sstream>
 #include <cassert>
+
+#include "../utils/collections.h"
+#include "../utils/logging.h"
 
 using namespace std::string_literals;
 

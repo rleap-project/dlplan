@@ -1,10 +1,10 @@
 #ifndef DLPLAN_SRC_POLICY_CACHE_H_
 #define DLPLAN_SRC_POLICY_CACHE_H_
 
-#include "../../include/dlplan/policy.h"
-#include "../utils/cache.h"
-
 #include <memory>
+
+#include "../utils/cache.h"
+#include "../../include/dlplan/policy.h"
 
 
 namespace dlplan::policy {

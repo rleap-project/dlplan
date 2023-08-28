@@ -3,24 +3,16 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_POLICY_H_
 #define DLPLAN_INCLUDE_DLPLAN_POLICY_H_
 
-#include "core.h"
-#include "utils/pimpl.h"
-
 #include <unordered_set>
 #include <memory>
 #include <set>
 #include <string>
 #include <vector>
 
+#include <boost/serialization/serialization.hpp>
 
-namespace boost::serialization {
-    template <typename Archive, typename T>
-    void serialize(Archive& ar, T& t, const unsigned int version);
-    template<class Archive, typename T>
-    void save_construct_data(Archive& ar, const T* t, const unsigned int version);
-    template<class Archive, typename T>
-    void load_construct_data(Archive& ar, T* t, const unsigned int version);
-}
+#include "core.h"
+#include "utils/pimpl.h"
 
 
 namespace dlplan::policy {

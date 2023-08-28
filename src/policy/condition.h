@@ -1,27 +1,19 @@
 #ifndef DLPLAN_SRC_POLICY_CONDITION_H_
 #define DLPLAN_SRC_POLICY_CONDITION_H_
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/export.hpp>
-
-#include "../../include/dlplan/policy.h"
-
 #include <string>
 #include <memory>
 
+#include <boost/serialization/export.hpp>
+#include <boost/serialization/serialization.hpp>
 
-namespace boost::serialization {
-    template <typename Archive, typename T>
-    void serialize(Archive& ar, T& t, const unsigned int version);
-    template<class Archive, typename T>
-    void save_construct_data(Archive& ar, const T* t, const unsigned int version);
-    template<class Archive, typename T>
-    void load_construct_data(Archive& ar, T* t, const unsigned int version);
-}
+#include "../../include/dlplan/policy.h"
+
+using namespace dlplan;
 
 
 namespace dlplan::policy {
+
 class BooleanCondition : public BaseCondition {
 private:
     template<typename Archive>
@@ -145,6 +137,8 @@ public:
 
 }
 
+BOOST_CLASS_EXPORT_KEY2(dlplan::policy::BooleanCondition, "dlplan::policy::BooleanCondition")
+BOOST_CLASS_EXPORT_KEY2(dlplan::policy::NumericalCondition, "dlplan::policy::NumericalCondition")
 BOOST_CLASS_EXPORT_KEY2(dlplan::policy::PositiveBooleanCondition, "dlplan::policy::PositiveBooleanCondition")
 BOOST_CLASS_EXPORT_KEY2(dlplan::policy::NegativeBooleanCondition, "dlplan::policy::NegativeBooleanCondition")
 BOOST_CLASS_EXPORT_KEY2(dlplan::policy::GreaterNumericalCondition, "dlplan::policy::GreaterNumericalCondition")

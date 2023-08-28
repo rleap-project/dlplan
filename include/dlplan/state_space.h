@@ -3,18 +3,13 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_STATE_SPACE_H_
 #define DLPLAN_INCLUDE_DLPLAN_STATE_SPACE_H_
 
-#include "core.h"
-
 #include <functional>
 #include <unordered_map>
 #include <unordered_set>
 
+#include <boost/serialization/serialization.hpp>
 
-// Forward declarations of template spezializations for serialization
-namespace boost::serialization {
-    template <typename Archive, typename T>
-    void serialize(Archive& ar, T& t, const unsigned int version);
-}
+#include "core.h"
 
 
 namespace dlplan::state_space {

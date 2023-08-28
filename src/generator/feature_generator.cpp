@@ -1,13 +1,12 @@
 #include "feature_generator.h"
 
-#include "generator_data.h"
-
-#include "../../include/dlplan/core.h"
-#include "../utils/logging.h"
-
 #include <algorithm>
 #include <iostream>
 #include <csignal>
+
+#include "generator_data.h"
+#include "../utils/logging.h"
+#include "../../include/dlplan/core.h"
 
 
 namespace dlplan::generator {

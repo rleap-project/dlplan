@@ -1,11 +1,10 @@
 #include "policy_builder.h"
 
+#include <stdexcept>
+
 #include "condition.h"
 #include "effect.h"
-
 #include "../../include/dlplan/policy.h"
-
-#include <stdexcept>
 
 
 namespace dlplan::policy {

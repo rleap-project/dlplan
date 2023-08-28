@@ -7,12 +7,7 @@
 
 #include <memory>
 
-
-// Forward declare the serialize function template in boost::serialization namespace
-namespace boost::serialization {
-    template <typename Archive, typename T>
-    void serialize(Archive& ar, T& t, const unsigned int version);
-}
+#include <boost/serialization/serialization.hpp>
 
 
 namespace dlplan::utils {

@@ -1,27 +1,13 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_UTILS_DYNAMIC_BITSET_H
 #define DLPLAN_INCLUDE_DLPLAN_UTILS_DYNAMIC_BITSET_H
 
-#include "hash.h"
-
 #include <cassert>
 #include <limits>
 #include <vector>
 
+#include <boost/serialization/serialization.hpp>
 
-namespace dlplan::utils {
-template<typename Block = unsigned int>
-class DynamicBitset;
-}
-
-
-namespace boost::serialization {
-    template <typename Archive, typename T>
-    void serialize(Archive& ar, T& t, const unsigned int version);
-    template<class Archive, typename T>
-    void save_construct_data(Archive& ar, const T* t, const unsigned int version);
-    template<class Archive, typename T>
-    void load_construct_data(Archive& ar, T* t, const unsigned int version);
-}
+#include "hash.h"
 
 
 /*
@@ -29,7 +15,7 @@ namespace boost::serialization {
 */
 namespace dlplan::utils {
 
-template<typename Block>
+template<typename Block = unsigned int>
 class DynamicBitset {
     static_assert(
         !std::numeric_limits<Block>::is_signed,

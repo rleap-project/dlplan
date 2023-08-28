@@ -1,7 +1,7 @@
 #include "../../include/dlplan/core.h"
-#include "../../include/dlplan/utils/hash.h"
 
 #include "element_factory.h"
+#include "../../include/dlplan/utils/hash.h"
 
 
 namespace dlplan::core {

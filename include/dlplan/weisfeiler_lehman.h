@@ -3,9 +3,9 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_WEISFEILER_LEHMAN_H_
 #define DLPLAN_INCLUDE_DLPLAN_WEISFEILER_LEHMAN_H_
 
-#include "state_space.h"
-
 #include <vector>
+
+#include "state_space.h"
 
 
 namespace dlplan::weisfeiler_lehman {

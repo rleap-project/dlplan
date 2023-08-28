@@ -1,11 +1,9 @@
 #include "../../include/dlplan/core.h"
 
-#include "element_factory.h"
+#include <sstream>
 
 #include "../utils/collections.h"
 #include "../utils/logging.h"
-
-#include <sstream>
 
 using namespace std::string_literals;
 
