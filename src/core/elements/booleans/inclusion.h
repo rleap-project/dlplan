@@ -1,15 +1,30 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_BOOLEAN_INCLUSION_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_BOOLEAN_INCLUSION_H_
 
-#include <sstream>
-#include <memory>
-
-#include <boost/serialization/serialization.hpp>
-
 #include "../utils.h"
+
 #include "../../../../include/dlplan/core.h"
 
+#include <sstream>
+#include <type_traits>
+
 using namespace std::string_literals;
+
+
+namespace dlplan::core {
+template<typename T>
+class InclusionBoolean;
+}
+
+
+namespace boost::serialization {
+    template<typename Archive, typename T>
+    void serialize(Archive& ar, dlplan::core::InclusionBoolean<T>& boolean, const unsigned int version);
+    template<class Archive, typename T>
+    void save_construct_data(Archive& ar, const dlplan::core::InclusionBoolean<T>* boolean, const unsigned int version);
+    template<class Archive, typename T>
+    void load_construct_data(Archive& ar, dlplan::core::InclusionBoolean<T>* boolean, const unsigned int version);
+}
 
 
 namespace dlplan::core {

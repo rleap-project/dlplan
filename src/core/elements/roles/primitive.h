@@ -1,16 +1,30 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_ROLES_PRIMITIVE_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_ROLES_PRIMITIVE_H_
 
-#include <sstream>
-#include <memory>
-
-#include <boost/serialization/serialization.hpp>
-
 #include "../utils.h"
-#include "../../../utils/collections.h"
+
 #include "../../../../include/dlplan/core.h"
 
+#include "../../../utils/collections.h"
+
+#include <sstream>
+
 using namespace std::string_literals;
+
+
+namespace dlplan::core {
+class PrimitiveRole;
+}
+
+
+namespace boost::serialization {
+    template<typename Archive>
+    void serialize(Archive& ar, dlplan::core::PrimitiveRole& role, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::core::PrimitiveRole* role, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::core::PrimitiveRole* role, const unsigned int version);
+}
 
 
 namespace dlplan::core {

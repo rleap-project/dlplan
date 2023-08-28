@@ -1,15 +1,28 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_DIFF_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_DIFF_H_
 
-#include <sstream>
-#include <memory>
-
-#include <boost/serialization/serialization.hpp>
-
 #include "../utils.h"
+
 #include "../../../../include/dlplan/core.h"
 
+#include <sstream>
+
 using namespace std::string_literals;
+
+
+namespace dlplan::core {
+class DiffConcept;
+}
+
+
+namespace boost::serialization {
+    template<typename Archive>
+    void serialize(Archive& ar, dlplan::core::DiffConcept& concept, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::core::DiffConcept* concept, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::core::DiffConcept* concept, const unsigned int version);
+}
 
 
 namespace dlplan::core {

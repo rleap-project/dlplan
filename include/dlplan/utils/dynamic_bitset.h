@@ -5,9 +5,23 @@
 #include <limits>
 #include <vector>
 
-#include <boost/serialization/serialization.hpp>
-
 #include "hash.h"
+
+
+namespace dlplan::utils {
+template<typename Block>
+class DynamicBitset;
+}
+
+
+namespace boost::serialization {
+    template <typename Archive, typename Block>
+    void serialize(Archive& ar, dlplan::utils::DynamicBitset<Block>& t, const unsigned int version);
+    template<class Archive, typename Block>
+    void save_construct_data(Archive& ar, const dlplan::utils::DynamicBitset<Block>* t, const unsigned int version);
+    template<class Archive, typename Block>
+    void load_construct_data(Archive& ar, dlplan::utils::DynamicBitset<Block>* t, const unsigned int version);
+}
 
 
 /*

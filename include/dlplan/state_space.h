@@ -7,9 +7,20 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include <boost/serialization/serialization.hpp>
-
 #include "core.h"
+
+
+// Forward declarations of this header
+namespace dlplan::state_space {
+class StateSpace;
+}
+
+
+// Forward declarations of template spezializations for serialization
+namespace boost::serialization {
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::state_space::StateSpace& state_space, const unsigned int version);
+}
 
 
 namespace dlplan::state_space {

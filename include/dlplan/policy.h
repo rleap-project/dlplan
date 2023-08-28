@@ -9,12 +9,11 @@
 #include <string>
 #include <vector>
 
-#include <boost/serialization/serialization.hpp>
-
 #include "core.h"
 #include "utils/pimpl.h"
 
 
+// Forward declarations of this header
 namespace dlplan::policy {
 class PolicyBuilderImpl;
 class PolicyReaderImpl;
@@ -24,7 +23,45 @@ class BaseEffect;
 class Rule;
 class Policy;
 class PolicyBuilder;
+}
 
+
+// Forward declarations of template spezializations for serialization
+namespace boost::serialization {
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::BaseCondition& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::policy::BaseCondition* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::policy::BaseCondition* t, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::BaseEffect& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::policy::BaseEffect* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::policy::BaseEffect* t, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::Rule& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::policy::Rule* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::policy::Rule* t, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::Policy& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::policy::Policy* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::policy::Policy* t, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::PolicyBuilder& builder, const unsigned int version);
+}
+
+
+namespace dlplan::policy {
 /// @brief Sort elements in policy by their evaluate time score.
 /// @tparam T
 template<typename T>
