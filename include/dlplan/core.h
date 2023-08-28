@@ -347,6 +347,8 @@ private:
     DenotationsCaches(const DenotationsCaches& other) = delete;
     DenotationsCaches& operator=(const DenotationsCaches& other) = delete;
 
+    template <typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, DenotationsCaches::Key& t, const unsigned int version);
     template<typename Archive, typename T_>
     friend void boost::serialization::serialize(Archive& ar, DenotationsCaches::Cache<T_>& t, const unsigned int version);
 
