@@ -7,16 +7,11 @@
 
 #include <memory>
 
-// Forward declarations of this header.
-namespace dlplan::utils {
-template<typename T>
-class pimpl;
-}
 
 // Forward declare the serialize function template in boost::serialization namespace
 namespace boost::serialization {
     template <typename Archive, typename T>
-    void serialize(Archive& ar, dlplan::utils::pimpl<T>& factory, const unsigned int version);
+    void serialize(Archive& ar, T& t, const unsigned int version);
 }
 
 

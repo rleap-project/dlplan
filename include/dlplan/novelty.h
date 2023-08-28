@@ -12,40 +12,21 @@
 #include <vector>
 
 
-// Forward declarations of this header
-namespace dlplan::novelty {
-class NoveltyBase;
-class TupleNode;
-class TupleGraph;
-}
-
-
-// Forward declarations of template spezializations for serialization
 namespace boost::serialization {
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::novelty::NoveltyBase& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::novelty::NoveltyBase* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::novelty::NoveltyBase* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::novelty::TupleNode& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::novelty::TupleNode* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::novelty::TupleNode* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::novelty::TupleGraph& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::novelty::TupleGraph* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::novelty::TupleGraph* t, const unsigned int version);
+    template <typename Archive, typename T>
+    void serialize(Archive& ar, T& t, const unsigned int version);
+    template<class Archive, typename T>
+    void save_construct_data(Archive& ar, const T* t, const unsigned int version);
+    template<class Archive, typename T>
+    void load_construct_data(Archive& ar, T* t, const unsigned int version);
 }
 
 namespace dlplan::novelty
 {
+class NoveltyBase;
+class TupleNode;
+class TupleGraph;
+
 using AtomIndex = int;
 using AtomIndices = std::vector<AtomIndex>;
 

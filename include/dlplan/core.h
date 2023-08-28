@@ -14,7 +14,18 @@
 #include <vector>
 #include <iostream>
 
-// Forward declarations of this header
+
+// Forward declarations of template spezializations for serialization
+namespace boost::serialization {
+    template <typename Archive, typename T>
+    void serialize(Archive& ar, T& t, const unsigned int version);
+    template<class Archive, typename T>
+    void save_construct_data(Archive& ar, const T* t, const unsigned int version);
+    template<class Archive, typename T>
+    void load_construct_data(Archive& ar, T* t, const unsigned int version);
+}
+
+
 namespace dlplan::core {
 class ConceptDenotation;
 class RoleDenotation;
@@ -33,114 +44,7 @@ class Boolean;
 class Numerical;
 class SyntacticElementFactory;
 class SyntacticElementFactoryImpl;
-}
 
-
-// Forward declarations of template spezializations for serialization
-namespace boost::serialization {
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::ConceptDenotation& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::ConceptDenotation* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::ConceptDenotation* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::RoleDenotation& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::RoleDenotation* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::RoleDenotation* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::DenotationsCaches& t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::Constant& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::Constant* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::Constant* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::Predicate& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::Predicate* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::Predicate* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::Object& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::Object* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::Object* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::Atom& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::Atom* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::Atom* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::State& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::State* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::State* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::VocabularyInfo& t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::InstanceInfo& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::InstanceInfo* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::InstanceInfo* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::BaseElement& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::BaseElement* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::BaseElement* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::Concept& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::Concept* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::Concept* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::Role& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::Role* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::Role* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::Boolean& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::Boolean* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::Boolean* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::Numerical& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::Numerical* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::Numerical* t, const unsigned int version);
-
-    template<typename Archive>
-    void serialize(Archive& ar, dlplan::core::SyntacticElementFactory& t, const unsigned int version);
-}
-
-
-namespace dlplan::core {
 using ConceptDenotations = std::vector<const ConceptDenotation*>;
 using RoleDenotations = std::vector<const RoleDenotation*>;
 using BooleanDenotations = std::vector<bool>;
@@ -438,6 +342,9 @@ private:
             Key key{element, instance, state};
             per_element_instance_state_mapping.erase(key);
         }
+
+        template<typename Archive, typename T_>
+        friend void boost::serialization::serialize(Archive& ar, DenotationsCaches::Cache<T_>& t, const unsigned int version);
     };
 
     DenotationsCaches(const DenotationsCaches& other) = delete;

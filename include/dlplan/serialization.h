@@ -1,3 +1,7 @@
+#ifndef DLPLAN_INCLUDE_DLPLAN_SERIALIZATION_H_
+#define DLPLAN_INCLUDE_DLPLAN_SERIALIZATION_H_
+
+
 #include "core.h"
 #include "novelty.h"
 #include "policy.h"
@@ -44,3 +48,5 @@ void serialize(const Data& data, std::ostream& out_buffer);
 Data deserialize(std::istream& buffer);
 
 }
+
+#endif

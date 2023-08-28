@@ -15,12 +15,12 @@ class DynamicBitset;
 
 
 namespace boost::serialization {
-    template <typename Archive, typename Block>
-    void serialize(Archive& ar, dlplan::utils::DynamicBitset<Block>& t, const unsigned int version);
-    template<class Archive, typename Block>
-    void save_construct_data(Archive& ar, const dlplan::utils::DynamicBitset<Block>* t, const unsigned int version);
-    template<class Archive, typename Block>
-    void load_construct_data(Archive& ar, dlplan::utils::DynamicBitset<Block>* t, const unsigned int version);
+    template <typename Archive, typename T>
+    void serialize(Archive& ar, T& t, const unsigned int version);
+    template<class Archive, typename T>
+    void save_construct_data(Archive& ar, const T* t, const unsigned int version);
+    template<class Archive, typename T>
+    void load_construct_data(Archive& ar, T* t, const unsigned int version);
 }
 
 

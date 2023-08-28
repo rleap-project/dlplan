@@ -10,16 +10,10 @@
 #include <unordered_set>
 
 
-// Forward declarations of this header
-namespace dlplan::state_space {
-class StateSpace;
-}
-
-
 // Forward declarations of template spezializations for serialization
 namespace boost::serialization {
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::state_space::StateSpace& state_space, const unsigned int version);
+    template <typename Archive, typename T>
+    void serialize(Archive& ar, T& t, const unsigned int version);
 }
 
 
