@@ -5,11 +5,20 @@
 #include <vector>
 #include <set>
 
-#include <boost/serialization/serialization.hpp>
-
 #include "cache.h"
 #include "../../include/dlplan/core.h"
 #include "../../include/dlplan/policy.h"
+
+
+namespace dlplan::policy {
+class PolicyBuilderImpl;
+}
+
+
+namespace boost::serialization {
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::PolicyBuilderImpl& t, const unsigned int version);
+}
 
 
 namespace dlplan::policy {

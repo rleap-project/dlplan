@@ -54,9 +54,6 @@ namespace boost::serialization {
     void load_construct_data(Archive& ar, dlplan::core::RoleDenotation* t, const unsigned int version);
 
     template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::DenotationsCaches& t, const unsigned int version);
-
-    template <typename Archive>
     void serialize(Archive& ar, dlplan::core::Constant& t, const unsigned int version);
     template<class Archive>
     void save_construct_data(Archive& ar, const dlplan::core::Constant* t, const unsigned int version);
@@ -377,12 +374,9 @@ public:
 /// @brief Encapsulates caches for denotations and provides functionality to
 ///        insert and retrieve denotations into and respectively from the cache.
 class DenotationsCaches {
-private:
-    DenotationsCaches(const DenotationsCaches& other) = delete;
-    DenotationsCaches& operator=(const DenotationsCaches& other) = delete;
-
 public:
-    // We would prefer to keep this private but non-intrusive serialization with private members requires a forward declaration which we were not able to add.
+    // We would prefer to keep this private but non-intrusive serialization
+    // with private members requires a forward declaration which we were not able to add.
     struct Key {
         ElementIndex element;
         InstanceIndex instance;
@@ -449,6 +443,8 @@ public:
 
     DenotationsCaches();
     ~DenotationsCaches();
+    DenotationsCaches(const DenotationsCaches& other) = delete;
+    DenotationsCaches& operator=(const DenotationsCaches& other) = delete;
     DenotationsCaches(DenotationsCaches&& other);
     DenotationsCaches& operator=(DenotationsCaches&& other);
 
