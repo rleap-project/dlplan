@@ -20,19 +20,19 @@ namespace dlplan::serialization {
 /// The value is a shared_ptr<T> to the allow sharing between other objects.
 struct Data {
     // core
-    std::unordered_map<std::string, std::shared_ptr<core::VocabularyInfo>> vocabulary_infos;
-    std::unordered_map<std::string, std::shared_ptr<core::InstanceInfo>> instance_infos;
+    std::unordered_map<std::string, std::shared_ptr<const core::VocabularyInfo>> vocabulary_infos;
+    std::unordered_map<std::string, std::shared_ptr<const core::InstanceInfo>> instance_infos;
     std::unordered_map<std::string, std::shared_ptr<core::SyntacticElementFactory>> syntatic_element_factories;
     std::unordered_map<std::string, std::shared_ptr<core::DenotationsCaches>> denotations_caches;
 
     // state_space
-    std::unordered_map<std::string, std::shared_ptr<state_space::StateSpace>> state_spaces;
+    std::unordered_map<std::string, std::shared_ptr<const state_space::StateSpace>> state_spaces;
 
     // novelty
-    std::unordered_map<std::string, std::shared_ptr<novelty::TupleGraph>> tuple_graphs;
+    std::unordered_map<std::string, std::shared_ptr<const novelty::TupleGraph>> tuple_graphs;
 
     // policy
-    std::unordered_map<std::string, std::shared_ptr<policy::Policy>> policies;
+    std::unordered_map<std::string, std::shared_ptr<const policy::Policy>> policies;
     std::unordered_map<std::string, std::shared_ptr<policy::PolicyBuilder>> policy_builders;
 };
 
