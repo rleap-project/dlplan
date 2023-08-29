@@ -39,8 +39,8 @@ TEST(DLPTests, SerializationGripperTest) {
     }
 
     // VocabularyInfo
-    out_data.vocabulary_infos.emplace("0", state_space_1->get_instance_info()->get_vocabulary_info());
-    out_data.vocabulary_infos.emplace("1", state_space_2->get_instance_info()->get_vocabulary_info());
+    out_data.vocabulary_infos.emplace("0", std::const_pointer_cast<VocabularyInfo>(state_space_1->get_instance_info()->get_vocabulary_info()));
+    out_data.vocabulary_infos.emplace("1", std::const_pointer_cast<VocabularyInfo>(state_space_2->get_instance_info()->get_vocabulary_info()));
 
     // InstanceData
     out_data.instance_infos.emplace("0", state_space_1->get_instance_info());
