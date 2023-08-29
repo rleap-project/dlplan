@@ -75,7 +75,7 @@ protected:
     const int m_pos;
 
 public:
-    ProjectionConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, const std::shared_ptr<const Role>& role, int pos)
+    ProjectionConcept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, const std::shared_ptr<const Role>& role, int pos)
     : Concept(vocabulary_info, index, role->is_static()), m_role(role), m_pos(pos) {
         if (pos < 0 || pos > 1) {
             throw std::runtime_error("ProjectionConcept::ProjectionConcept - projection index out of range, should be 0 or 1 ("s + std::to_string(pos) + ")");
@@ -134,7 +134,7 @@ void save_construct_data(Archive& ar, const dlplan::core::ProjectionConcept* t, 
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::core::ProjectionConcept* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
     int index;
     std::shared_ptr<const dlplan::core::Role> role;
     int pos;

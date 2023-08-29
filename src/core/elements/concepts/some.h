@@ -80,7 +80,7 @@ protected:
     const std::shared_ptr<const Concept> m_concept;
 
 public:
-    SomeConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept)
+    SomeConcept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept)
     : Concept(vocabulary_info, index, role->is_static() && concept->is_static()),
       m_role(role), m_concept(concept) {
         if (!(role && concept)) {
@@ -140,7 +140,7 @@ void save_construct_data(Archive& ar, const dlplan::core::SomeConcept* t, const 
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::core::SomeConcept* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
     int index;
     std::shared_ptr<const dlplan::core::Role> role;
     std::shared_ptr<const dlplan::core::Concept> concept;

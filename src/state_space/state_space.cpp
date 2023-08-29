@@ -43,7 +43,7 @@ StateSpace::StateSpace()
       m_backward_successor_state_indices(AdjacencyList()) { }
 
 StateSpace::StateSpace(
-    std::shared_ptr<const InstanceInfo>&& instance_info,
+    std::shared_ptr<InstanceInfo>&& instance_info,
     StateMapping&& states,
     StateIndex initial_state_index,
     AdjacencyList&& forward_successor_state_indices,
@@ -360,14 +360,14 @@ const StateIndicesSet& StateSpace::get_goal_state_indices() const {
     return m_goal_state_indices;
 }
 
-std::shared_ptr<const InstanceInfo> StateSpace::get_instance_info() const {
+std::shared_ptr<InstanceInfo> StateSpace::get_instance_info() const {
     return m_instance_info;
 }
 
 GeneratorResult generate_state_space(
     const std::string& domain_file,
     const std::string& instance_file,
-    std::shared_ptr<const core::VocabularyInfo> vocabulary_info,
+    std::shared_ptr<core::VocabularyInfo> vocabulary_info,
     core::InstanceIndex index,
     int max_time,
     int max_num_states) {

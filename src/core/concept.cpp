@@ -1,11 +1,8 @@
 #include "../../include/dlplan/core.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-
 
 namespace dlplan::core {
-Concept::Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
+Concept::Concept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
     : BaseElement(vocabulary_info, index, is_static) {
 }
 
@@ -70,5 +67,6 @@ template void save_construct_data(boost::archive::text_oarchive& ar,
     const dlplan::core::Concept* t, const unsigned int version);
 template void load_construct_data(boost::archive::text_iarchive& ar,
     dlplan::core::Concept* t, const unsigned int version);
-
 }
+
+BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::core::Concept)

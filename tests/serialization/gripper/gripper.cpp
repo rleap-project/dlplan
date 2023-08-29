@@ -77,8 +77,8 @@ TEST(DLPTests, SerializationGripperTest) {
     /* Deserialization */
     std::stringstream buffer;
     dlplan::serialization::serialize(out_data, buffer);
-
     std::cout << buffer.str() << std::endl;
+
     dlplan::serialization::Data in_data = dlplan::serialization::deserialize(buffer);
     EXPECT_EQ(in_data.state_spaces.size(), 2);
     EXPECT_NE(in_data.state_spaces.at("0")->get_instance_info(), in_data.state_spaces.at("1")->get_instance_info());

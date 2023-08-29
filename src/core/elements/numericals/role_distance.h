@@ -105,7 +105,7 @@ protected:
     const std::shared_ptr<const Role> m_role_to;
 
 public:
-    RoleDistanceNumerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role_from, std::shared_ptr<const Role> role, std::shared_ptr<const Role> role_to)
+    RoleDistanceNumerical(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role_from, std::shared_ptr<const Role> role, std::shared_ptr<const Role> role_to)
     : Numerical(vocabulary_info, index, role_from->is_static() && role->is_static() && role_to->is_static()),
       m_role_from(role_from), m_role(role), m_role_to(role_to) {
         if (!(role_from && role && role_to)) {
@@ -174,7 +174,7 @@ void save_construct_data(Archive & ar, const dlplan::core::RoleDistanceNumerical
 template<class Archive>
 void load_construct_data(Archive & ar, dlplan::core::RoleDistanceNumerical* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
     int index;
     std::shared_ptr<const dlplan::core::Role> role_from;
     std::shared_ptr<const dlplan::core::Role> role;

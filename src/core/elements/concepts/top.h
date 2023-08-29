@@ -59,7 +59,7 @@ private:
     friend void boost::serialization::load_construct_data(Archive& ar, TopConcept* concept, const unsigned int version);
 
 public:
-    TopConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index)
+    TopConcept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index)
     : Concept(vocabulary_info, index, true) {
     }
 
@@ -106,7 +106,7 @@ void save_construct_data(Archive& ar, const dlplan::core::TopConcept* t, const u
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::core::TopConcept* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
     int index;
     ar >> vocabulary;
     ar >> index;

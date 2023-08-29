@@ -59,18 +59,18 @@ ObjectIndex Object::get_index() const {
 
 namespace boost::serialization {
 template<typename Archive>
-inline void serialize(Archive& /* ar */ , dlplan::core::Object& /* t */, const unsigned int /* version */) {
+void serialize(Archive& /* ar */ , dlplan::core::Object& /* t */, const unsigned int /* version */) {
 }
 
 template<class Archive>
-inline void save_construct_data(
+void save_construct_data(
     Archive & ar, const dlplan::core::Object* t, const unsigned int /* version */ ){
     ar << t->m_name;
     ar << t->m_index;
 }
 
 template<class Archive>
-inline void load_construct_data(
+void load_construct_data(
     Archive & ar, dlplan::core::Object* t, const unsigned int /* version */ ){
     std::string name;
     dlplan::core::ObjectIndex index;

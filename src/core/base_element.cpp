@@ -2,13 +2,10 @@
 
 #include <sstream>
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-
 
 namespace dlplan::core {
 
-BaseElement::BaseElement(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
+BaseElement::BaseElement(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
     : m_vocabulary_info(vocabulary_info), m_index(index), m_is_static(is_static) { }
 
 BaseElement::~BaseElement() { }
@@ -32,7 +29,7 @@ ElementIndex BaseElement::get_index() const {
     return m_index;
 }
 
-std::shared_ptr<const VocabularyInfo> BaseElement::get_vocabulary_info() const {
+std::shared_ptr<VocabularyInfo> BaseElement::get_vocabulary_info() const {
     return m_vocabulary_info;
 }
 
@@ -68,3 +65,5 @@ template void save_construct_data(boost::archive::text_oarchive& ar,
 template void load_construct_data(boost::archive::text_iarchive& ar,
     dlplan::core::BaseElement* t, const unsigned int version);
 }
+
+BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::core::BaseElement)

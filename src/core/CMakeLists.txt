@@ -25,7 +25,9 @@ target_sources(dlplancore
         ../utils/MurmurHash3.cpp
         ../utils/system.cpp
         ../utils/timer.cpp
-        ../utils/hash.cpp)
+        ../utils/hash.cpp
+        elements/concepts/primitive.cpp
+        elements/numericals/count.cpp)
 target_link_libraries(dlplancore
     PRIVATE
         Boost::serialization)

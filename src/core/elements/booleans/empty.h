@@ -75,7 +75,7 @@ protected:
     const std::shared_ptr<const T> m_element;
 
 public:
-    EmptyBoolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const T> element)
+    EmptyBoolean(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const T> element)
         : Boolean(vocabulary_info, index, element->is_static()), m_element(element) {
     }
 
@@ -133,7 +133,7 @@ void save_construct_data(Archive& ar, const dlplan::core::EmptyBoolean<T>* t, co
 template<class Archive, typename T>
 void load_construct_data(Archive& ar, dlplan::core::EmptyBoolean<T>* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
     int index;
     std::shared_ptr<const T> element;
     ar >> vocabulary;

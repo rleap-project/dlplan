@@ -181,7 +181,7 @@ static GeneratorExitCode parse_run_file(const std::string& filename) {
     return GeneratorExitCode::FAIL;
 }
 
-GeneratorResult read(std::shared_ptr<const VocabularyInfo> vocabulary_info, int index) {
+GeneratorResult read(std::shared_ptr<VocabularyInfo> vocabulary_info, int index) {
     auto exit_code = parse_run_file("run.log");
     if (exit_code == GeneratorExitCode::FAIL) {
         return GeneratorResult{

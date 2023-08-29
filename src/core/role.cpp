@@ -1,11 +1,8 @@
 #include "../../include/dlplan/core.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-
 
 namespace dlplan::core {
-Role::Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
+Role::Role(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
     : BaseElement(vocabulary_info, index, is_static) {
 }
 
@@ -71,3 +68,5 @@ template void save_construct_data(boost::archive::text_oarchive& ar,
 template void load_construct_data(boost::archive::text_iarchive& ar,
     dlplan::core::Role* t, const unsigned int version);
 }
+
+BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::core::Role)

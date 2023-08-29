@@ -56,7 +56,7 @@ private:
     friend void boost::serialization::load_construct_data(Archive& ar, BotConcept* concept, const unsigned int version);
 
 public:
-    BotConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index)
+    BotConcept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index)
     : Concept(vocabulary_info, index, true) { }
 
     ConceptDenotation evaluate(const State& state) const override {
@@ -100,7 +100,7 @@ void save_construct_data(Archive& ar, const dlplan::core::BotConcept* t, const u
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::core::BotConcept* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
     int index;
     ar >> vocabulary;
     ar >> index;

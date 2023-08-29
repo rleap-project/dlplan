@@ -73,7 +73,7 @@ protected:
     const std::shared_ptr<const Concept> m_concept;
 
 public:
-    NotConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Concept> concept)
+    NotConcept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Concept> concept)
     : Concept(vocabulary_info, index, concept->is_static()), m_concept(concept){
         if (!concept) {
             throw std::runtime_error("NotConcept::NotConcept - child is a nullptr");
@@ -128,7 +128,7 @@ void save_construct_data(Archive& ar, const dlplan::core::NotConcept* t, const u
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::core::NotConcept* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
     int index;
     std::shared_ptr<const dlplan::core::Concept> concept;
     ar >> vocabulary;

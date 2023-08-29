@@ -77,7 +77,7 @@ protected:
     std::shared_ptr<const Concept> m_concept_right;
 
 public:
-    AndConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Concept> concept_1, std::shared_ptr<const Concept> concept_2)
+    AndConcept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Concept> concept_1, std::shared_ptr<const Concept> concept_2)
     : Concept(vocabulary_info, index, concept_1->is_static() && concept_2->is_static()),
       m_concept_left(concept_1),
       m_concept_right(concept_2) {
@@ -143,7 +143,7 @@ void save_construct_data(Archive& ar, const dlplan::core::AndConcept* t, const u
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::core::AndConcept* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
     int index;
     std::shared_ptr<const dlplan::core::Concept> concept_left;
     std::shared_ptr<const dlplan::core::Concept> concept_right;

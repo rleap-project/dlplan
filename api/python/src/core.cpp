@@ -108,7 +108,7 @@ void init_core(py::module_ &m_core) {
     ;
 
     py::class_<InstanceInfo, std::shared_ptr<InstanceInfo>>(m_core, "InstanceInfo")
-        .def(py::init<std::shared_ptr<const VocabularyInfo>, int>(), py::arg("vocabulary_info"), py::arg("index") = -1)
+        .def(py::init<std::shared_ptr<VocabularyInfo>, int>(), py::arg("vocabulary_info"), py::arg("index") = -1)
         .def("__repr__", &InstanceInfo::compute_repr)
         .def("__str__", &InstanceInfo::str)
         .def("add_object", &InstanceInfo::add_object)
@@ -128,9 +128,9 @@ void init_core(py::module_ &m_core) {
     ;
 
     py::class_<State>(m_core, "State")
-        .def(py::init<std::shared_ptr<const InstanceInfo>, const std::vector<Atom>&, int>(), py::arg("instance_info"), py::arg("atoms"), py::arg("index") = -1)
-        .def(py::init<std::shared_ptr<const InstanceInfo>, const std::vector<int>&, int>(), py::arg("instance_info"), py::arg("atom_indices"), py::arg("index") = -1)
-        .def(py::init<std::shared_ptr<const InstanceInfo>, std::vector<int>&&, int>(), py::arg("instance_info"), py::arg("atom_indices"), py::arg("index") = -1)
+        .def(py::init<std::shared_ptr<InstanceInfo>, const std::vector<Atom>&, int>(), py::arg("instance_info"), py::arg("atoms"), py::arg("index") = -1)
+        .def(py::init<std::shared_ptr<InstanceInfo>, const std::vector<int>&, int>(), py::arg("instance_info"), py::arg("atom_indices"), py::arg("index") = -1)
+        .def(py::init<std::shared_ptr<InstanceInfo>, std::vector<int>&&, int>(), py::arg("instance_info"), py::arg("atom_indices"), py::arg("index") = -1)
         .def("__eq__", &State::operator==)
         .def("__ne__", &State::operator!=)
         .def("__repr__", &State::str)
@@ -175,7 +175,7 @@ void init_core(py::module_ &m_core) {
     ;
 
     py::class_<SyntacticElementFactory, std::shared_ptr<SyntacticElementFactory>>(m_core, "SyntacticElementFactory")
-        .def(py::init<std::shared_ptr<const VocabularyInfo>>())
+        .def(py::init<std::shared_ptr<VocabularyInfo>>())
 
         .def("parse_concept", &SyntacticElementFactory::parse_concept)
         .def("parse_role", &SyntacticElementFactory::parse_role)

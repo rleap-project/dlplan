@@ -80,7 +80,7 @@ protected:
     const Constant m_constant;
 
 public:
-    OneOfConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, const Constant& constant)
+    OneOfConcept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, const Constant& constant)
     : Concept(vocabulary_info, index, true), m_constant(constant) {
     }
 
@@ -128,7 +128,7 @@ void save_construct_data(Archive& ar, const dlplan::core::OneOfConcept* t, const
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::core::OneOfConcept* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
     int index;
     dlplan::core::Constant* constant;
     ar >> vocabulary;

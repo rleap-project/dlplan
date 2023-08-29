@@ -103,7 +103,7 @@ protected:
     const std::shared_ptr<const Concept> m_concept_to;
 
 public:
-    ConceptDistanceNumerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Concept> concept_from, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept_to)
+    ConceptDistanceNumerical(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Concept> concept_from, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept_to)
     : Numerical(vocabulary_info, index, concept_from->is_static() && role->is_static() && concept_to->is_static()),
       m_concept_from(concept_from), m_role(role), m_concept_to(concept_to) {
         if (!(concept_from && role && concept_to)) {
@@ -175,7 +175,7 @@ void save_construct_data(Archive& ar, const dlplan::core::ConceptDistanceNumeric
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::core::ConceptDistanceNumerical* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
     int index;
     std::shared_ptr<const dlplan::core::Concept> concept_from;
     std::shared_ptr<const dlplan::core::Role> role;

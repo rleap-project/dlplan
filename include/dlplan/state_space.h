@@ -39,7 +39,7 @@ const int UNDEFINED = -1;
 class StateSpace {
 private:
     /* Required information. */
-    std::shared_ptr<const core::InstanceInfo> m_instance_info;
+    std::shared_ptr<core::InstanceInfo> m_instance_info;
     StateMapping m_states;
     StateIndex m_initial_state_index;
     AdjacencyList m_forward_successor_state_indices;
@@ -54,7 +54,7 @@ private:
 public:
     StateSpace();
     StateSpace(
-        std::shared_ptr<const core::InstanceInfo>&& instance_info,
+        std::shared_ptr<core::InstanceInfo>&& instance_info,
         StateMapping&& index_to_state,
         StateIndex initial_state_index,
         AdjacencyList&& forward_successor_state_indices,
@@ -98,7 +98,7 @@ public:
 
     void set_initial_state_index(StateIndex initial_state);
     void set_goal_state_indices(const StateIndicesSet& goal_states);
-    std::shared_ptr<const core::InstanceInfo> get_instance_info() const;
+    std::shared_ptr<core::InstanceInfo> get_instance_info() const;
     const StateMapping& get_states() const;
     StateIndex get_initial_state_index() const;
     const AdjacencyList& get_forward_successor_state_indices() const;
@@ -132,7 +132,7 @@ struct GeneratorResult {
 extern GeneratorResult generate_state_space(
     const std::string& domain_file,
     const std::string& instance_file,
-    std::shared_ptr<const core::VocabularyInfo> vocabulary_info=nullptr,
+    std::shared_ptr<core::VocabularyInfo> vocabulary_info=nullptr,
     core::InstanceIndex index=-1,
     int max_time=std::numeric_limits<int>::max()-1,
     int max_num_states=std::numeric_limits<int>::max()-1);

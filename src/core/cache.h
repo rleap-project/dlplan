@@ -33,10 +33,10 @@ namespace boost::serialization {
 template<typename Archive>
 void serialize(Archive& ar, dlplan::core::Caches& t, const unsigned int /* version */ )
 {
-    ar & t.m_boolean_cache;
+    //ar & t.m_boolean_cache;
     ar & t.m_numerical_cache;
-    ar & t.m_concept_cache;
-    ar & t.m_role_cache;
+    //ar & t.m_concept_cache;
+    //ar & t.m_role_cache;
 }
 
 }

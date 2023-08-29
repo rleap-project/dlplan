@@ -14,6 +14,8 @@ class SyntacticElementFactoryImpl;
 }
 
 namespace boost::serialization {
+    class access;
+
     template<typename Archive>
     void serialize(Archive& ar, dlplan::core::SyntacticElementFactoryImpl& factory, const unsigned int version);
 }
@@ -22,16 +24,19 @@ namespace boost::serialization {
 namespace dlplan::core {
 class SyntacticElementFactoryImpl {
 private:
-    std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
+    std::shared_ptr<VocabularyInfo> m_vocabulary_info;
 
     Caches m_caches;
 
+    /// @brief Constructor for serialization.
+    SyntacticElementFactoryImpl();
+
+    friend class boost::serialization::access;
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, SyntacticElementFactoryImpl& factory, const unsigned int version);
 
 public:
-    SyntacticElementFactoryImpl();
-    SyntacticElementFactoryImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info);
+    SyntacticElementFactoryImpl(std::shared_ptr<VocabularyInfo> vocabulary_info);
 
     std::shared_ptr<const Concept> parse_concept(SyntacticElementFactory& parent, const std::string &description);
     std::shared_ptr<const Role> parse_role(SyntacticElementFactory& parent, const std::string &description);
@@ -81,7 +86,7 @@ public:
     /**
      * Getters.
      */
-    std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
+    std::shared_ptr<VocabularyInfo> get_vocabulary_info() const;
 };
 
 }

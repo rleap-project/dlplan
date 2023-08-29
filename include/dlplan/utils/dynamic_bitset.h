@@ -17,12 +17,10 @@ class DynamicBitset;
 
 
 namespace boost::serialization {
+    class access;
+
     template <typename Archive, typename Block>
     void serialize(Archive& ar, dlplan::utils::DynamicBitset<Block>& t, const unsigned int version);
-    template<class Archive, typename Block>
-    void save_construct_data(Archive& ar, const dlplan::utils::DynamicBitset<Block>* t, const unsigned int version);
-    template<class Archive, typename Block>
-    void load_construct_data(Archive& ar, dlplan::utils::DynamicBitset<Block>* t, const unsigned int version);
 }
 
 
@@ -76,15 +74,12 @@ class DynamicBitset {
     }
 
     /// @brief Constructor for serialization.
-    DynamicBitset(std::vector<Block>&& blocks, int num_bits)
-        : blocks(std::move(blocks)), num_bits(num_bits) { }
+    DynamicBitset()
+        : blocks(std::vector<Block>()), num_bits(0) { }
 
+    friend class boost::serialization::access;
     template<typename Archive, typename Block_>
     friend void boost::serialization::serialize(Archive& ar, DynamicBitset<Block_>& t, const unsigned int version);
-    template<class Archive, typename Block_>
-    friend void boost::serialization::save_construct_data(Archive & ar, const DynamicBitset<Block_>* t, const unsigned int version);
-    template<class Archive, typename Block_>
-    friend void boost::serialization::load_construct_data(Archive & ar, DynamicBitset<Block_>* t, const unsigned int version);
 
 public:
     explicit DynamicBitset(std::size_t num_bits)
@@ -221,25 +216,11 @@ const Block DynamicBitset<Block>::ones = ~DynamicBitset<Block>::zeros;
 namespace boost::serialization {
 
 template<typename Archive, typename Block>
-inline void serialize(Archive& /* ar */ , dlplan::utils::DynamicBitset<Block>& /* t */, const unsigned int /* version */) {
+void serialize(Archive& ar, dlplan::utils::DynamicBitset<Block>& t, const unsigned int /* version */) {
+    ar & t.blocks;
+    ar & t.num_bits;
 }
 
-template<class Archive, typename Block>
-inline void save_construct_data(
-    Archive & ar, const dlplan::utils::DynamicBitset<Block>* t, const unsigned int /* version */ ){
-    ar << t->blocks;
-    ar << t->num_bits;
-}
-
-template<class Archive, typename Block>
-inline void load_construct_data(
-    Archive & ar, dlplan::utils::DynamicBitset<Block>* t, const unsigned int /* version */ ){
-    std::vector<Block> num_blocks;
-    int num_bits;
-    ar >> num_blocks;
-    ar >> num_bits;
-    ::new(t)dlplan::utils::DynamicBitset<Block>(std::move(num_blocks), num_bits);
-}
 }
 
 /*

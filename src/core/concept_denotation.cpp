@@ -140,18 +140,18 @@ int ConceptDenotation::get_num_objects() const {
 
 namespace boost::serialization {
 template<typename Archive>
-inline void serialize(Archive& /* ar */ , dlplan::core::ConceptDenotation& /* t */, const unsigned int /* version */) {
+void serialize(Archive& /* ar */ , dlplan::core::ConceptDenotation& /* t */, const unsigned int /* version */) {
 }
 
 template<class Archive>
-inline void save_construct_data(
+void save_construct_data(
     Archive & ar, const dlplan::core::ConceptDenotation* t, const unsigned int /* version */ ){
     ar << t->m_num_objects;
     ar << &t->m_data;
 }
 
 template<class Archive>
-inline void load_construct_data(
+void load_construct_data(
     Archive & ar, dlplan::core::ConceptDenotation* t, const unsigned int /* version */ ){
     int num_objects;
     dlplan::utils::DynamicBitset<unsigned>* data;

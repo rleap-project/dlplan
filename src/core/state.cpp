@@ -21,7 +21,7 @@ static AtomIndices sort_atom_idxs(AtomIndices&& atom_idxs) {
     return atom_idxs;
 }
 
-State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms, StateIndex index)
+State::State(std::shared_ptr<InstanceInfo> instance_info, const std::vector<Atom>& atoms, StateIndex index)
     : m_instance_info(instance_info), m_index(index) {
     if (!std::all_of(atoms.begin(), atoms.end(), [&](const auto& atom){ return !atom.is_static(); })) {
         throw std::runtime_error("State::State - static atom is not allowed in State.");
@@ -36,7 +36,7 @@ State::State(std::shared_ptr<const InstanceInfo> instance_info, const std::vecto
     }
 }
 
-State::State(std::shared_ptr<const InstanceInfo> instance_info, const AtomIndices& atom_indices, StateIndex index)
+State::State(std::shared_ptr<InstanceInfo> instance_info, const AtomIndices& atom_indices, StateIndex index)
     : m_instance_info(instance_info),
       m_atom_indices(std::is_sorted(atom_indices.begin(), atom_indices.end()) ? atom_indices : sort_atom_idxs(AtomIndices(atom_indices))),
       m_index(index) {
@@ -46,7 +46,7 @@ State::State(std::shared_ptr<const InstanceInfo> instance_info, const AtomIndice
     }
 }
 
-State::State(std::shared_ptr<const InstanceInfo> instance_info, AtomIndices&& atom_indices, StateIndex index)
+State::State(std::shared_ptr<InstanceInfo> instance_info, AtomIndices&& atom_indices, StateIndex index)
     : m_instance_info(instance_info),
       m_atom_indices(std::is_sorted(atom_indices.begin(), atom_indices.end()) ? atom_indices : sort_atom_idxs(std::move(atom_indices))),
       m_index(index) {
@@ -75,7 +75,7 @@ bool State::operator!=(const State& other) const {
     return !(*this == other);
 }
 
-std::shared_ptr<const InstanceInfo> State::get_instance_info() const {
+std::shared_ptr<InstanceInfo> State::get_instance_info() const {
     return m_instance_info;
 }
 
@@ -138,7 +138,7 @@ void serialize(Archive& /* ar */ , dlplan::core::State& /* t */, const unsigned 
 }
 
 template<class Archive>
-inline void save_construct_data(
+void save_construct_data(
     Archive & ar, const dlplan::core::State* t, const unsigned int /* version */ ){
     ar << t->m_index;
     ar << t->m_instance_info;
@@ -146,10 +146,10 @@ inline void save_construct_data(
 }
 
 template<class Archive>
-inline void load_construct_data(
+void load_construct_data(
     Archive & ar, dlplan::core::State* t, const unsigned int /* version */ ){
     dlplan::core::InstanceIndex index;
-    std::shared_ptr<const dlplan::core::InstanceInfo> instance_info;
+    std::shared_ptr<dlplan::core::InstanceInfo> instance_info;
     dlplan::core::AtomIndices atom_indices;
     ar >> index;
     ar >> instance_info;
@@ -163,14 +163,14 @@ void serialize(Archive& /* ar */ , std::pair<const int, dlplan::core::State>& /*
 }
 
 template<class Archive>
-inline void save_construct_data(
+void save_construct_data(
     Archive & ar, const std::pair<const int, dlplan::core::State>* t, const unsigned int /* version */ ){
     ar << t->first;
     ar << &t->second;
 }
 
 template<class Archive>
-inline void load_construct_data(
+void load_construct_data(
     Archive & ar, std::pair<const int, dlplan::core::State>* t, const unsigned int /* version */ ){
     int first;
     dlplan::core::State* second;

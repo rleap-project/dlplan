@@ -89,7 +89,7 @@ protected:
     const int m_pos_2;
 
 public:
-    PrimitiveRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, const Predicate& predicate, int pos_1, int pos_2)
+    PrimitiveRole(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, const Predicate& predicate, int pos_1, int pos_2)
     : Role(vocabulary_info, index, predicate.is_static()), m_predicate(predicate), m_pos_1(pos_1), m_pos_2(pos_2) {
         if (m_pos_1 >= m_predicate.get_arity() || m_pos_2 >= m_predicate.get_arity()) {
             throw std::runtime_error("PrimitiveRole::evaluate_impl - object index does not match predicate arity ("s + std::to_string(m_pos_1) + " or " + std::to_string(m_pos_2)  + " > " + std::to_string(predicate.get_arity()) + ").");
@@ -146,7 +146,7 @@ void save_construct_data(Archive & ar, const dlplan::core::PrimitiveRole* t, con
 template<class Archive>
 void load_construct_data(Archive & ar, dlplan::core::PrimitiveRole* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
     int index;
     dlplan::core::Predicate* predicate;
     int pos_1;

@@ -42,7 +42,7 @@ std::size_t DenotationsCaches::KeyHash::operator()(const Key& key) const {
 namespace boost::serialization {
 
 template <typename Archive>
-inline void serialize(Archive& ar, dlplan::core::DenotationsCaches& t, const unsigned int /* version */ ) {
+void serialize(Archive& ar, dlplan::core::DenotationsCaches& t, const unsigned int /* version */ ) {
     ar & t.concept_denotation_cache;
     ar & t.role_denotation_cache;
     ar & t.boolean_denotation_cache;
@@ -54,25 +54,25 @@ inline void serialize(Archive& ar, dlplan::core::DenotationsCaches& t, const uns
 }
 
 template <typename Archive>
-inline void serialize(Archive& ar, dlplan::core::DenotationsCaches::Key& t, const unsigned int /* version */ ) {
+void serialize(Archive& ar, dlplan::core::DenotationsCaches::Key& t, const unsigned int /* version */ ) {
     ar & t.element;
     ar & t.instance;
     ar & t.state;
 }
 
 template <typename Archive, typename T>
-inline void serialize(Archive& ar, dlplan::core::DenotationsCaches::Cache<T>& t, const unsigned int /* version */ ) {
+void serialize(Archive& ar, dlplan::core::DenotationsCaches::Cache<T>& t, const unsigned int /* version */ ) {
     ar & t.uniqueness;
     ar & t.per_element_instance_state_mapping;
 }
 
 template <typename Archive>
-inline void serialize(Archive& ar, bool& t, const unsigned int /* version */ ) {
+void serialize(Archive& ar, bool& t, const unsigned int /* version */ ) {
     ar & t;
 }
 
 template <typename Archive>
-inline void serialize(Archive& ar, int& t, const unsigned int /* version */ ) {
+void serialize(Archive& ar, int& t, const unsigned int /* version */ ) {
     ar & t;
 }
 

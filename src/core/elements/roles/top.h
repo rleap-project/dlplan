@@ -59,7 +59,7 @@ private:
     friend void boost::serialization::load_construct_data(Archive& ar, TopRole* role, const unsigned int version);
 
 public:
-    TopRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index)
+    TopRole(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index)
     : Role(vocabulary_info, index, true) {
     }
 
@@ -107,7 +107,7 @@ void save_construct_data(Archive & ar, const dlplan::core::TopRole* t, const uns
 template<class Archive>
 void load_construct_data(Archive & ar, dlplan::core::TopRole* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
     int index;
     ar >> vocabulary;
     ar >> index;

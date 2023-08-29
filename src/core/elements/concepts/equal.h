@@ -83,7 +83,7 @@ protected:
     const std::shared_ptr<const Role> m_role_right;
 
 public:
-    EqualConcept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role_left, std::shared_ptr<const Role> role_right)
+    EqualConcept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role_left, std::shared_ptr<const Role> role_right)
     : Concept(vocabulary_info, index, role_left->is_static() && role_right->is_static()),
       m_role_left(role_left), m_role_right(role_right) {
         if (!(role_left && role_right)) {
@@ -143,7 +143,7 @@ void save_construct_data(Archive& ar, const dlplan::core::EqualConcept* t, const
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::core::EqualConcept* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
     int index;
     std::shared_ptr<const dlplan::core::Role> role_left;
     std::shared_ptr<const dlplan::core::Role> role_right;

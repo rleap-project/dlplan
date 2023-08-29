@@ -15,7 +15,7 @@ class Data:
     denotations_caches: Dict[str, DenotationsCaches]
     state_spaces: Dict[str, StateSpace]
     tuple_graphs: Dict[str, TupleGraph]
-    policies: Dict[str, Policies]
+    policies: Dict[str, Policy]
     policy_builders: Dict[str, PolicyBuilder]
     def __init__(self) -> None: ...
 

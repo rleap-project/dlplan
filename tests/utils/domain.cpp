@@ -2,7 +2,7 @@
 
 namespace dlplan::tests {
 namespace gripper {
-std::shared_ptr<const VocabularyInfo> construct_vocabulary_info() {
+std::shared_ptr<VocabularyInfo> construct_vocabulary_info() {
     auto vocabulary = std::make_shared<VocabularyInfo>();
     vocabulary->add_predicate("at", 2);
     vocabulary->add_predicate("at_g", 2);
@@ -12,7 +12,7 @@ std::shared_ptr<const VocabularyInfo> construct_vocabulary_info() {
     return vocabulary;
 }
 
-std::shared_ptr<const InstanceInfo> construct_instance_info(std::shared_ptr<const VocabularyInfo> vocabulary) {
+std::shared_ptr<InstanceInfo> construct_instance_info(std::shared_ptr<VocabularyInfo> vocabulary) {
     auto instance = std::make_shared<InstanceInfo>(vocabulary);
     instance->add_atom("at", {"p1", "A"});
     instance->add_atom("at", {"p1", "B"});
@@ -37,7 +37,7 @@ std::shared_ptr<const InstanceInfo> construct_instance_info(std::shared_ptr<cons
 }
 
 namespace blocks_4 {
-std::shared_ptr<const VocabularyInfo> construct_vocabulary_info() {
+std::shared_ptr<VocabularyInfo> construct_vocabulary_info() {
     auto vocabulary = std::make_shared<VocabularyInfo>();
     vocabulary->add_predicate("on", 2);
     vocabulary->add_predicate("on_g", 2);
@@ -49,7 +49,7 @@ std::shared_ptr<const VocabularyInfo> construct_vocabulary_info() {
 }
 }
 
-SyntacticElementFactory construct_syntactic_element_factory(std::shared_ptr<const VocabularyInfo> vocabulary) {
+SyntacticElementFactory construct_syntactic_element_factory(std::shared_ptr<VocabularyInfo> vocabulary) {
     return SyntacticElementFactory(vocabulary);
 }
 

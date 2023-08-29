@@ -11,6 +11,10 @@
 #include <vector>
 #include <iostream>
 
+#include <boost/serialization/export.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 #include "utils/pimpl.h"
 #include "utils/dynamic_bitset.h"
 
@@ -37,8 +41,11 @@ class SyntacticElementFactoryImpl;
 }
 
 
+
 // Forward declarations of template spezializations for serialization
 namespace boost::serialization {
+    class access;
+
     template <typename Archive>
     void serialize(Archive& ar, dlplan::core::ConceptDenotation& t, const unsigned int version);
     template<class Archive>
@@ -760,7 +767,7 @@ public:
 ///        to access it.
 class InstanceInfo {
 private:
-    std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
+    std::shared_ptr<VocabularyInfo> m_vocabulary_info;
     InstanceIndex m_index;
 
     std::unordered_map<std::string, AtomIndex> m_atom_name_to_index;
@@ -784,7 +791,7 @@ private:
     friend void boost::serialization::load_construct_data(Archive & ar, InstanceInfo* t, const unsigned int version);
 
 public:
-    InstanceInfo(std::shared_ptr<const VocabularyInfo> vocabulary_info, InstanceIndex index=-1);
+    InstanceInfo(std::shared_ptr<VocabularyInfo> vocabulary_info, InstanceIndex index=-1);
     InstanceInfo(const InstanceInfo& other);
     InstanceInfo& operator=(const InstanceInfo& other);
     InstanceInfo(InstanceInfo&& other);
@@ -830,7 +837,7 @@ public:
     /// @return A string representation of this instance.
     std::string str() const;
 
-    std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
+    std::shared_ptr<VocabularyInfo> get_vocabulary_info() const;
     InstanceIndex get_index() const;
     const std::vector<Atom>& get_atoms() const;
     const std::vector<Atom>& get_static_atoms() const;
@@ -844,7 +851,7 @@ public:
 ///        current situation and provides functionality to access it.
 class State {
 private:
-    std::shared_ptr<const InstanceInfo> m_instance_info;
+    std::shared_ptr<InstanceInfo> m_instance_info;
     AtomIndices m_atom_indices;
     int m_index;
 
@@ -856,9 +863,9 @@ private:
     friend void boost::serialization::load_construct_data(Archive & ar, State* t, const unsigned int version);
 
 public:
-    State(std::shared_ptr<const InstanceInfo> instance_info, const std::vector<Atom>& atoms, StateIndex index=-1);
-    State(std::shared_ptr<const InstanceInfo> instance_info, const AtomIndices& atom_indices, StateIndex index=-1);
-    State(std::shared_ptr<const InstanceInfo> instance_info, AtomIndices&& atom_indices, StateIndex index=-1);
+    State(std::shared_ptr<InstanceInfo> instance_info, const std::vector<Atom>& atoms, StateIndex index=-1);
+    State(std::shared_ptr<InstanceInfo> instance_info, const AtomIndices& atom_indices, StateIndex index=-1);
+    State(std::shared_ptr<InstanceInfo> instance_info, AtomIndices&& atom_indices, StateIndex index=-1);
     State(const State& other);
     State& operator=(const State& other);
     State(State&& other);
@@ -890,7 +897,7 @@ public:
     std::string str() const;
 
     size_t hash() const;
-    std::shared_ptr<const InstanceInfo> get_instance_info() const;
+    std::shared_ptr<InstanceInfo> get_instance_info() const;
     const AtomIndices& get_atom_indices() const;
     StateIndex get_index() const;
 };
@@ -900,7 +907,7 @@ public:
 ///        for computing string representations and its complexity.
 class BaseElement {
 protected:
-    std::shared_ptr<const VocabularyInfo> m_vocabulary_info;
+    std::shared_ptr<VocabularyInfo> m_vocabulary_info;
     ElementIndex m_index;
     /**
      * if true then element is evaluated per instance rather than per state.
@@ -915,7 +922,7 @@ protected:
     friend void boost::serialization::load_construct_data(Archive & ar, BaseElement* t, const unsigned int version);
 
 protected:
-    BaseElement(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
+    BaseElement(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
 
 public:
     virtual ~BaseElement();
@@ -948,7 +955,7 @@ public:
     std::string str() const;
 
     ElementIndex get_index() const;
-    std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
+    std::shared_ptr<VocabularyInfo> get_vocabulary_info() const;
     bool is_static() const;
 };
 
@@ -957,7 +964,7 @@ public:
 ///        on a given state. It can also make use of a cache during evaluation.
 class Concept : public BaseElement {
 protected:
-    Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
+    Concept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
 
     virtual ConceptDenotation evaluate_impl(const State& , DenotationsCaches& ) const = 0;
     virtual ConceptDenotations evaluate_impl(const States& , DenotationsCaches& ) const = 0;
@@ -986,7 +993,7 @@ public:
 ///        on a given state. It can also make use of a cache during evaluation.
 class Role : public BaseElement {
 protected:
-    Role(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
+    Role(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
 
     virtual RoleDenotation evaluate_impl(const State& , DenotationsCaches& ) const = 0;
     virtual RoleDenotations evaluate_impl(const States& , DenotationsCaches& ) const = 0;
@@ -1015,7 +1022,7 @@ public:
 ///        on a given state. It can also make use of a cache during evaluation.
 class Numerical : public BaseElement {
 protected:
-    Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
+    Numerical(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
 
     virtual int evaluate_impl(const State& , DenotationsCaches& ) const = 0;
     virtual NumericalDenotations evaluate_impl(const States& , DenotationsCaches& ) const = 0;
@@ -1044,7 +1051,7 @@ public:
 ///        on a given state. It can also make use of a cache during evaluation.
 class Boolean : public BaseElement {
 protected:
-    Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
+    Boolean(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
 
     virtual bool evaluate_impl(const State& , DenotationsCaches& ) const = 0;
     virtual BooleanDenotations evaluate_impl(const States& , DenotationsCaches& ) const = 0;
@@ -1070,19 +1077,22 @@ class SyntacticElementFactory {
 private:
     dlplan::utils::pimpl<SyntacticElementFactoryImpl> m_pImpl;
 
+    /// @brief Constructor for serialization
+    SyntacticElementFactory();
+
+    friend class boost::serialization::access;
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, SyntacticElementFactory& t, const unsigned int version);
 
 public:
-    SyntacticElementFactory();
-    SyntacticElementFactory(std::shared_ptr<const VocabularyInfo> vocabulary_info);
+    SyntacticElementFactory(std::shared_ptr<VocabularyInfo> vocabulary_info);
     SyntacticElementFactory(const SyntacticElementFactory& other);
     SyntacticElementFactory& operator=(const SyntacticElementFactory& other);
     SyntacticElementFactory(SyntacticElementFactory&& other);
     SyntacticElementFactory& operator=(SyntacticElementFactory&& other);
     ~SyntacticElementFactory();
 
-    std::shared_ptr<const VocabularyInfo> get_vocabulary_info() const;
+    std::shared_ptr<VocabularyInfo> get_vocabulary_info() const;
 
     /**
      * Returns a Concept if the description is correct.
@@ -1151,5 +1161,9 @@ public:
 
 }
 
+BOOST_CLASS_EXPORT_KEY2(dlplan::core::Concept, "dlplan::core::Concept")
+BOOST_CLASS_EXPORT_KEY2(dlplan::core::Role, "dlplan::core::Role")
+BOOST_CLASS_EXPORT_KEY2(dlplan::core::Boolean, "dlplan::core::Boolean")
+BOOST_CLASS_EXPORT_KEY2(dlplan::core::Numerical, "dlplan::core::Numerical")
 
 #endif

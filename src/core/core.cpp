@@ -48,10 +48,11 @@ size_t hash_impl<std::vector<int>>::operator()(const std::vector<int>& data) con
     return dlplan::utils::hash<std::vector<int>>()(data);
 }
 
+SyntacticElementFactory::SyntacticElementFactory()
+    : m_pImpl(nullptr) { }
 
-SyntacticElementFactory::SyntacticElementFactory() : m_pImpl(nullptr) { }
-
-SyntacticElementFactory::SyntacticElementFactory(std::shared_ptr<const VocabularyInfo> vocabulary_info) : m_pImpl(SyntacticElementFactoryImpl(vocabulary_info)) { }
+SyntacticElementFactory::SyntacticElementFactory(std::shared_ptr<VocabularyInfo> vocabulary_info)
+    : m_pImpl(SyntacticElementFactoryImpl(vocabulary_info)) { }
 
 SyntacticElementFactory::SyntacticElementFactory(const SyntacticElementFactory& other) : m_pImpl(*other.m_pImpl) { }
 
@@ -74,7 +75,7 @@ SyntacticElementFactory& SyntacticElementFactory::operator=(SyntacticElementFact
 
 SyntacticElementFactory::~SyntacticElementFactory() = default;
 
-std::shared_ptr<const VocabularyInfo> SyntacticElementFactory::get_vocabulary_info() const {
+std::shared_ptr<VocabularyInfo> SyntacticElementFactory::get_vocabulary_info() const {
     return m_pImpl->get_vocabulary_info();
 }
 

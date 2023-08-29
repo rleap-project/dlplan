@@ -76,7 +76,7 @@ protected:
     const std::shared_ptr<const Role> m_role_right;
 
 public:
-    DiffRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role_left, std::shared_ptr<const Role> role_right)
+    DiffRole(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role_left, std::shared_ptr<const Role> role_right)
     : Role(vocabulary_info, index, (role_left->is_static() && role_right->is_static())), m_role_left(role_left), m_role_right(role_right)  {
         if (!(role_left && role_right)) {
             throw std::runtime_error("DiffRole::DiffRole - at least one child is a nullptr.");
@@ -135,7 +135,7 @@ void save_construct_data(Archive & ar, const dlplan::core::DiffRole* t, const un
 template<class Archive>
 void load_construct_data(Archive & ar, dlplan::core::DiffRole* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
     int index;
     std::shared_ptr<const dlplan::core::Role> role_left;
     std::shared_ptr<const dlplan::core::Role> role_right;

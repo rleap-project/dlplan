@@ -10,16 +10,16 @@ using namespace dlplan::policy;
 namespace dlplan::tests {
 
 namespace gripper {
-extern std::shared_ptr<const VocabularyInfo> construct_vocabulary_info();
+extern std::shared_ptr<VocabularyInfo> construct_vocabulary_info();
 
-extern std::shared_ptr<const InstanceInfo> construct_instance_info(std::shared_ptr<const VocabularyInfo> vocabulary_info);
+extern std::shared_ptr<InstanceInfo> construct_instance_info(std::shared_ptr<VocabularyInfo> vocabulary_info);
 }
 
 namespace blocks_4 {
-extern std::shared_ptr<const VocabularyInfo> construct_vocabulary_info();
+extern std::shared_ptr<VocabularyInfo> construct_vocabulary_info();
 }
 
-extern SyntacticElementFactory construct_syntactic_element_factory(std::shared_ptr<const VocabularyInfo> vocabulary_info);
+extern SyntacticElementFactory construct_syntactic_element_factory(std::shared_ptr<VocabularyInfo> vocabulary_info);
 
 }
 

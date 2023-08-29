@@ -1,11 +1,8 @@
 #include "../../include/dlplan/core.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-
 
 namespace dlplan::core {
-Numerical::Numerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
+Numerical::Numerical(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
     : BaseElement(vocabulary_info, index, is_static) {
 }
 
@@ -49,7 +46,7 @@ namespace boost::serialization {
 template<typename Archive>
 void serialize(Archive& /* ar */ , dlplan::core::Numerical& t, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::core::BaseElement>(t);
+    // boost::serialization::base_object<dlplan::core::BaseElement>(t);
 }
 
 template<class Archive>
@@ -71,3 +68,5 @@ template void save_construct_data(boost::archive::text_oarchive& ar,
 template void load_construct_data(boost::archive::text_iarchive& ar,
     dlplan::core::Numerical* t, const unsigned int version);
 }
+
+// BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::core::Numerical)

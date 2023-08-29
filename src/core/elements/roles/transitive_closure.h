@@ -85,7 +85,7 @@ protected:
     const std::shared_ptr<const Role> m_role;
 
 public:
-    TransitiveClosureRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role)
+    TransitiveClosureRole(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role)
     : Role(vocabulary_info, index, role->is_static()), m_role(role) {
         if (!role) {
             throw std::runtime_error("TransitiveClosureRole::TransitiveClosureRole - child is a nullptr.");
@@ -140,7 +140,7 @@ void save_construct_data(Archive & ar, const dlplan::core::TransitiveClosureRole
 template<class Archive>
 void load_construct_data(Archive & ar, dlplan::core::TransitiveClosureRole* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
     int index;
     std::shared_ptr<const dlplan::core::Role> role;
     ar >> vocabulary;

@@ -41,11 +41,13 @@
 #include "parser/expressions/expression.h"
 
 
+
 namespace dlplan::core {
 SyntacticElementFactoryImpl::SyntacticElementFactoryImpl()
-    : m_vocabulary_info(nullptr), m_caches(Caches()) { }
+    : m_vocabulary_info(nullptr), m_caches(Caches()) {
+}
 
-SyntacticElementFactoryImpl::SyntacticElementFactoryImpl(std::shared_ptr<const VocabularyInfo> vocabulary_info)
+SyntacticElementFactoryImpl::SyntacticElementFactoryImpl(std::shared_ptr<VocabularyInfo> vocabulary_info)
     : m_vocabulary_info(vocabulary_info), m_caches(Caches()) {
 }
 
@@ -225,7 +227,7 @@ std::shared_ptr<const Role> SyntacticElementFactoryImpl::make_transitive_reflexi
     return m_caches.m_role_cache->insert(std::make_unique<TransitiveReflexiveClosureRole>(m_vocabulary_info, m_caches.m_role_cache->size(), role)).first;
 }
 
-std::shared_ptr<const VocabularyInfo> SyntacticElementFactoryImpl::get_vocabulary_info() const {
+std::shared_ptr<VocabularyInfo> SyntacticElementFactoryImpl::get_vocabulary_info() const {
     return m_vocabulary_info;
 }
 
@@ -244,5 +246,4 @@ template void serialize(boost::archive::text_iarchive& ar,
     dlplan::core::SyntacticElementFactoryImpl& t, const unsigned int version);
 template void serialize(boost::archive::text_oarchive& ar,
     dlplan::core::SyntacticElementFactoryImpl& t, const unsigned int version);
-
 }

@@ -4,11 +4,9 @@
 #include <sstream>
 #include <memory>
 
+#include <boost/serialization/export.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/export.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-#include <boost/serialization/serialization.hpp>
 
 #include "../utils.h"
 #include "../../../../include/dlplan/core.h"
@@ -74,7 +72,7 @@ protected:
     const std::shared_ptr<const T> m_element;
 
 public:
-    CountNumerical(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const T> element)
+    CountNumerical(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const T> element)
     : Numerical(vocabulary_info, index, element->is_static()), m_element(element) { }
 
     int evaluate(const State& state) const override {
@@ -114,32 +112,7 @@ public:
 
 }
 
-namespace boost::serialization {
-template<typename Archive, typename T>
-void serialize(Archive& /* ar */ , dlplan::core::CountNumerical<T>& t, const unsigned int /* version */ )
-{
-    boost::serialization::base_object<dlplan::core::Numerical>(t);
-}
-
-template<class Archive, typename T>
-void save_construct_data(Archive & ar, const dlplan::core::CountNumerical<T>* t, const unsigned int /* version */ )
-{
-    ar << t->m_vocabulary_info;
-    ar << t->m_index;
-    ar << t->m_element;
-}
-
-template<class Archive, typename T>
-void load_construct_data(Archive & ar, dlplan::core::CountNumerical<T>* t, const unsigned int /* version */ )
-{
-    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
-    int index;
-    std::shared_ptr<const T> element;
-    ar >> vocabulary;
-    ar >> index;
-    ar >> element;
-    ::new(t)dlplan::core::CountNumerical<T>(vocabulary, index, element);
-}
-}
+BOOST_CLASS_EXPORT_KEY2(dlplan::core::CountNumerical<dlplan::core::Concept>, "dlplan::core::CountNumerical<dlplan::core::Concept>")
+BOOST_CLASS_EXPORT_KEY2(dlplan::core::CountNumerical<dlplan::core::Role>, "dlplan::core::CountNumerical<dlplan::core::Role>")
 
 #endif

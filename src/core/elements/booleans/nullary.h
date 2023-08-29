@@ -76,7 +76,7 @@ protected:
     const Predicate m_predicate;
 
 public:
-    NullaryBoolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, const Predicate& predicate)
+    NullaryBoolean(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, const Predicate& predicate)
     : Boolean(vocabulary_info, index, predicate.is_static()), m_predicate(predicate) {
         if (predicate.get_arity() != 0) {
             throw std::runtime_error("NullaryBoolean::NullaryBoolean - expected predicate with arity 0.");
@@ -127,7 +127,7 @@ void save_construct_data(Archive& ar, const dlplan::core::NullaryBoolean* t, con
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::core::NullaryBoolean* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
     int index;
     dlplan::core::Predicate* predicate;
     ar >> vocabulary;

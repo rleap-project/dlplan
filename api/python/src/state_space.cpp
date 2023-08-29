@@ -18,7 +18,7 @@ using namespace dlplan::state_space;
 
 void init_state_space(py::module_ &m_state_space) {
     py::class_<StateSpace, std::shared_ptr<StateSpace>>(m_state_space, "StateSpace")
-        .def(py::init<std::shared_ptr<const InstanceInfo>, StateMapping, StateIndex, AdjacencyList, StateIndicesSet>())
+        .def(py::init<std::shared_ptr<InstanceInfo>, StateMapping, StateIndex, AdjacencyList, StateIndicesSet>())
         .def(py::init<const StateSpace&, const StateIndicesSet&>())
         .def("__str__", &StateSpace::str)
         .def("compute_distances", &StateSpace::compute_distances)

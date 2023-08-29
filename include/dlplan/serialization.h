@@ -20,8 +20,8 @@ namespace dlplan::serialization {
 /// The value is a shared_ptr<T> to the allow sharing between other objects.
 struct Data {
     // core
-    std::unordered_map<std::string, std::shared_ptr<const core::VocabularyInfo>> vocabulary_infos;
-    std::unordered_map<std::string, std::shared_ptr<const core::InstanceInfo>> instance_infos;
+    std::unordered_map<std::string, std::shared_ptr<core::VocabularyInfo>> vocabulary_infos;
+    std::unordered_map<std::string, std::shared_ptr<core::InstanceInfo>> instance_infos;
     std::unordered_map<std::string, std::shared_ptr<core::SyntacticElementFactory>> syntatic_element_factories;
     std::unordered_map<std::string, std::shared_ptr<core::DenotationsCaches>> denotations_caches;
 

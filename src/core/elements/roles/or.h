@@ -76,7 +76,7 @@ protected:
     std::shared_ptr<const Role> m_role_right;
 
 public:
-    OrRole(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role_1, std::shared_ptr<const Role> role_2)
+    OrRole(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role_1, std::shared_ptr<const Role> role_2)
     : Role(vocabulary_info, index, role_1->is_static() && role_2->is_static()),
       m_role_left(role_1),
       m_role_right(role_2) {
@@ -142,7 +142,7 @@ void save_construct_data(Archive & ar, const dlplan::core::OrRole* t, const unsi
 template<class Archive>
 void load_construct_data(Archive & ar, dlplan::core::OrRole* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
     int index;
     std::shared_ptr<const dlplan::core::Role> role_left;
     std::shared_ptr<const dlplan::core::Role> role_right;
