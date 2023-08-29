@@ -1,5 +1,9 @@
 #include "element_factory.h"
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+
 #include "elements/booleans/empty.h"
 #include "elements/booleans/inclusion.h"
 #include "elements/booleans/nullary.h"
@@ -224,5 +228,21 @@ std::shared_ptr<const Role> SyntacticElementFactoryImpl::make_transitive_reflexi
 std::shared_ptr<const VocabularyInfo> SyntacticElementFactoryImpl::get_vocabulary_info() const {
     return m_vocabulary_info;
 }
+
+}
+
+
+namespace boost::serialization {
+template<typename Archive>
+void serialize(Archive& ar, dlplan::core::SyntacticElementFactoryImpl& t, const unsigned int /* version */ )
+{
+    ar & t.m_vocabulary_info;
+    ar & t.m_caches;
+}
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::core::SyntacticElementFactoryImpl& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::core::SyntacticElementFactoryImpl& t, const unsigned int version);
 
 }

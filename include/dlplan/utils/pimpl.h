@@ -7,6 +7,8 @@
 
 #include <memory>
 
+#include <boost/serialization/unique_ptr.hpp>
+
 
 // Forward declarations of this header.
 namespace dlplan::utils {
@@ -56,6 +58,16 @@ public:
 
     const T& operator*() const { return *m.get(); }
 };
+
+}
+
+
+namespace boost::serialization {
+template<typename Archive, typename T>
+void serialize(Archive& ar, dlplan::utils::pimpl<T>& t, const unsigned int /* version */ )
+{
+    ar & t.m;
+}
 
 }
 

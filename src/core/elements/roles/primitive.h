@@ -1,13 +1,18 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_ROLES_PRIMITIVE_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_ROLES_PRIMITIVE_H_
 
-#include "../utils.h"
-
-#include "../../../../include/dlplan/core.h"
-
-#include "../../../utils/collections.h"
-
 #include <sstream>
+#include <memory>
+
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/export.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/serialization.hpp>
+
+#include "../utils.h"
+#include "../../../utils/collections.h"
+#include "../../../../include/dlplan/core.h"
 
 using namespace std::string_literals;
 
@@ -117,6 +122,43 @@ public:
         return m_predicate;
     }
 };
+
+}
+
+
+namespace boost::serialization {
+template<typename Archive>
+void serialize(Archive& /* ar */ , dlplan::core::PrimitiveRole& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::core::Role>(t);
+}
+
+template<class Archive>
+void save_construct_data(Archive & ar, const dlplan::core::PrimitiveRole* t, const unsigned int /* version */ )
+{
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << &t->m_predicate;
+    ar << t->m_pos_1;
+    ar << t->m_pos_2;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::PrimitiveRole* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    dlplan::core::Predicate* predicate;
+    int pos_1;
+    int pos_2;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> predicate;
+    ar >> pos_1;
+    ar >> pos_2;
+    ::new(t)dlplan::core::PrimitiveRole(vocabulary, index, *predicate, pos_1, pos_2);
+    delete predicate;
+}
 
 }
 

@@ -1,11 +1,17 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_TOP_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_TOP_H_
 
-#include "../utils.h"
-
-#include "../../../../include/dlplan/core.h"
-
 #include <sstream>
+#include <memory>
+
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/export.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/serialization.hpp>
+
+#include "../utils.h"
+#include "../../../../include/dlplan/core.h"
 
 using namespace std::string_literals;
 
@@ -79,6 +85,33 @@ public:
         return "c_top";
     }
 };
+
+}
+
+
+namespace boost::serialization {
+template<typename Archive>
+void serialize(Archive& /* ar */ , dlplan::core::TopConcept& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::core::Concept>(t);
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const dlplan::core::TopConcept* t, const unsigned int /* version */ )
+{
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, dlplan::core::TopConcept* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    ar >> vocabulary;
+    ar >> index;
+    ::new(t)dlplan::core::TopConcept(vocabulary, index);
+}
 
 }
 

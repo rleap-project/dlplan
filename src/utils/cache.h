@@ -6,6 +6,9 @@
 #include <mutex>
 #include <iostream>
 
+#include <boost/serialization/unordered_map.hpp>
+#include <boost/serialization/weak_ptr.hpp>
+
 
 namespace dlplan::utils {
 template<typename KEY, typename VALUE>
@@ -118,6 +121,14 @@ public:
     }
 };
 
+}
+
+namespace boost::serialization {
+template<typename Archive, typename KEY, typename VALUE>
+void serialize(Archive& ar, dlplan::utils::ReferenceCountedObjectCache<KEY, VALUE>& t, const unsigned int /* version */ )
+{
+    ar & t.m_cache;
+}
 
 }
 

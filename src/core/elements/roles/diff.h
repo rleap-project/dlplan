@@ -1,11 +1,17 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_ROLES_DIFF_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_ROLES_DIFF_H_
 
-#include "../utils.h"
-
-#include "../../../../include/dlplan/core.h"
-
 #include <sstream>
+#include <memory>
+
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/export.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/serialization.hpp>
+
+#include "../utils.h"
+#include "../../../../include/dlplan/core.h"
 
 using namespace std::string_literals;
 
@@ -106,6 +112,39 @@ public:
         return "r_diff";
     }
 };
+
+}
+
+
+namespace boost::serialization {
+template<typename Archive>
+void serialize(Archive& /* ar */ , dlplan::core::DiffRole& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::core::Role>(t);
+}
+
+template<class Archive>
+void save_construct_data(Archive & ar, const dlplan::core::DiffRole* t, const unsigned int /* version */ )
+{
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_role_left;
+    ar << t->m_role_right;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::core::DiffRole* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const dlplan::core::Role> role_left;
+    std::shared_ptr<const dlplan::core::Role> role_right;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> role_left;
+    ar >> role_right;
+    ::new(t)dlplan::core::DiffRole(vocabulary, index, role_left, role_right);
+}
 
 }
 

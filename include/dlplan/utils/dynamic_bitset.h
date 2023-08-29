@@ -5,10 +5,7 @@
 #include <limits>
 #include <vector>
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/vector.hpp>
-#include <boost/serialization/serialization.hpp>
 
 #include "hash.h"
 
@@ -243,15 +240,6 @@ inline void load_construct_data(
     ar >> num_bits;
     ::new(t)dlplan::utils::DynamicBitset<Block>(std::move(num_blocks), num_bits);
 }
-
-template void serialize(boost::archive::text_iarchive& ar,
-    dlplan::utils::DynamicBitset<unsigned>& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    dlplan::utils::DynamicBitset<unsigned>& t, const unsigned int version);
-template void save_construct_data(boost::archive::text_oarchive& ar,
-    const dlplan::utils::DynamicBitset<unsigned>* t, const unsigned int version);
-template void load_construct_data(boost::archive::text_iarchive& ar,
-    dlplan::utils::DynamicBitset<unsigned>* t, const unsigned int version);
 }
 
 /*

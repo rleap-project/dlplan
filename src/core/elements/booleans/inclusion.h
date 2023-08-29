@@ -1,12 +1,17 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_BOOLEAN_INCLUSION_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_BOOLEAN_INCLUSION_H_
 
-#include "../utils.h"
-
-#include "../../../../include/dlplan/core.h"
-
 #include <sstream>
-#include <type_traits>
+#include <memory>
+
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/export.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/serialization.hpp>
+
+#include "../utils.h"
+#include "../../../../include/dlplan/core.h"
 
 using namespace std::string_literals;
 
@@ -117,6 +122,40 @@ public:
         return "b_inclusion";
     }
 };
+
+}
+
+
+namespace boost::serialization {
+template<typename Archive, typename T>
+void serialize(Archive& /* ar */ , dlplan::core::InclusionBoolean<T>& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::core::Boolean>(t);
+}
+
+template<class Archive, typename T>
+void save_construct_data(Archive& ar, const dlplan::core::InclusionBoolean<T>* t, const unsigned int /* version */ )
+{
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_element_left;
+    ar << t->m_element_right;
+}
+
+template<class Archive, typename T>
+void load_construct_data(Archive& ar, dlplan::core::InclusionBoolean<T>* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const T> element_left;
+    std::shared_ptr<const T> element_right;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> element_left;
+    ar >> element_right;
+    ::new(t)dlplan::core::InclusionBoolean<T>(vocabulary, index, element_left, element_right);
+}
+
 
 }
 

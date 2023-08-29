@@ -1,5 +1,9 @@
 #include "../../include/dlplan/core.h"
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/unique_ptr.hpp>
+
 #include "element_factory.h"
 #include "../../include/dlplan/utils/hash.h"
 
@@ -233,6 +237,16 @@ std::shared_ptr<const Role>SyntacticElementFactory::make_transitive_closure(cons
 
 std::shared_ptr<const Role>SyntacticElementFactory::make_transitive_reflexive_closure(const std::shared_ptr<const Role>& role) {
     return m_pImpl->make_transitive_reflexive_closure(role);
+}
+
+}
+
+
+namespace boost::serialization {
+template<typename Archive>
+void serialize(Archive& ar, dlplan::core::SyntacticElementFactory& t, const unsigned int /* version */ )
+{
+    ar & t.m_pImpl;
 }
 
 }
