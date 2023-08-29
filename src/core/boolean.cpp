@@ -1,5 +1,9 @@
 #include "../../include/dlplan/core.h"
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/serialization.hpp>
+
 
 namespace dlplan::core {
 Boolean::Boolean(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
@@ -39,4 +43,32 @@ const BooleanDenotations* Boolean::evaluate(const States& states, DenotationsCac
     return result_denotations;
 }
 
+}
+
+
+namespace boost::serialization {
+template<typename Archive>
+void serialize(Archive& /* ar */ , dlplan::core::Boolean& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::core::BaseElement>(t);
+}
+
+template<class Archive>
+void save_construct_data(Archive& /* ar */ , const dlplan::core::Boolean* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void load_construct_data(Archive& /* ar */ , dlplan::core::Boolean* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::core::Boolean& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::core::Boolean& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const dlplan::core::Boolean* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    dlplan::core::Boolean* t, const unsigned int version);
 }

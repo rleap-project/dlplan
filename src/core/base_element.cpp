@@ -2,6 +2,10 @@
 
 #include <sstream>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/serialization.hpp>
+
 
 namespace dlplan::core {
 
@@ -37,4 +41,31 @@ bool BaseElement::is_static() const {
     return m_is_static;
 }
 
+}
+
+
+namespace boost::serialization {
+template<typename Archive>
+void serialize(Archive& /* ar */ , dlplan::core::BaseElement& /* t */, const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void save_construct_data(Archive& /* ar */ , const dlplan::core::BaseElement* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void load_construct_data(Archive& /* ar */ , dlplan::core::BaseElement* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::core::BaseElement& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::core::BaseElement& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const dlplan::core::BaseElement* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    dlplan::core::BaseElement* t, const unsigned int version);
 }

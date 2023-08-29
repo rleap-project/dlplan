@@ -1,5 +1,9 @@
 #include "../../include/dlplan/core.h"
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/serialization.hpp>
+
 
 namespace dlplan::core {
 Concept::Concept(std::shared_ptr<const VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
@@ -38,5 +42,34 @@ const ConceptDenotations* Concept::evaluate(const States& states, DenotationsCac
     caches.concept_denotations_cache.insert_denotation(get_index(), -1, -1, result_denotations);
     return result_denotations;
 }
+
+}
+
+
+namespace boost::serialization {
+template<typename Archive>
+void serialize(Archive& /* ar */ , dlplan::core::Concept& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::core::BaseElement>(t);
+}
+
+template<class Archive>
+void save_construct_data(Archive& /* ar */ , const dlplan::core::Concept* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void load_construct_data(Archive& /* ar */ , dlplan::core::Concept* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::core::Concept& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::core::Concept& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const dlplan::core::Concept* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    dlplan::core::Concept* t, const unsigned int version);
 
 }

@@ -3,6 +3,10 @@
 #include <sstream>
 #include <cassert>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/serialization.hpp>
+
 #include "../utils/collections.h"
 #include "../utils/logging.h"
 
@@ -81,4 +85,46 @@ bool Atom::is_static() const {
     return m_is_static;
 }
 
+}
+
+
+namespace boost::serialization {
+template<typename Archive>
+inline void serialize(Archive& /* ar */ , dlplan::core::Atom& /* t */, const unsigned int /* version */) {
+}
+
+template<class Archive>
+inline void save_construct_data(
+    Archive & ar, const dlplan::core::Atom* t, const unsigned int /* version */ ){
+    ar << t->m_name;
+    ar << t->m_index;
+    ar << t->m_predicate_index;
+    ar << t->m_object_indices;
+    ar << t->m_is_static;
+}
+
+template<class Archive>
+inline void load_construct_data(
+    Archive & ar, dlplan::core::Atom* t, const unsigned int /* version */ ){
+    std::string name;
+    dlplan::core::AtomIndex index;
+    dlplan::core::PredicateIndex predicate_index;
+    dlplan::core::ObjectIndices object_indices;
+    bool is_static;
+    ar >> name;
+    ar >> index;
+    ar >> predicate_index;
+    ar >> object_indices;
+    ar >> is_static;
+    ::new(t)dlplan::core::Atom(name, index, predicate_index, object_indices, is_static);
+}
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::core::Atom& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::core::Atom& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const dlplan::core::Atom* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    dlplan::core::Atom* t, const unsigned int version);
 }

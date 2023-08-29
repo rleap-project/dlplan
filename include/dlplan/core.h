@@ -92,6 +92,13 @@ namespace boost::serialization {
     void load_construct_data(Archive& ar, dlplan::core::State* t, const unsigned int version);
 
     template <typename Archive>
+    void serialize(Archive& ar, std::pair<const int, dlplan::core::State>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const int, dlplan::core::State>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const int, dlplan::core::State>* t, const unsigned int version);
+
+    template <typename Archive>
     void serialize(Archive& ar, dlplan::core::VocabularyInfo& t, const unsigned int version);
 
     template <typename Archive>

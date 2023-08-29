@@ -4,6 +4,12 @@
 #include <stdexcept>
 #include <sstream>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/serialization.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/vector.hpp>
+
 #include "../utils/collections.h"
 #include "../utils/logging.h"
 #include "../../include/dlplan/utils/hash.h"
@@ -124,4 +130,72 @@ size_t State::hash() const {
     return seed;
 }
 
+}
+
+namespace boost::serialization {
+template<typename Archive>
+void serialize(Archive& /* ar */ , dlplan::core::State& /* t */, const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+inline void save_construct_data(
+    Archive & ar, const dlplan::core::State* t, const unsigned int /* version */ ){
+    ar << t->m_index;
+    ar << t->m_instance_info;
+    ar << t->m_atom_indices;
+}
+
+template<class Archive>
+inline void load_construct_data(
+    Archive & ar, dlplan::core::State* t, const unsigned int /* version */ ){
+    dlplan::core::InstanceIndex index;
+    std::shared_ptr<const dlplan::core::InstanceInfo> instance_info;
+    dlplan::core::AtomIndices atom_indices;
+    ar >> index;
+    ar >> instance_info;
+    ar >> atom_indices;
+    ::new(t)dlplan::core::State(instance_info, std::move(atom_indices), index);
+}
+
+template<typename Archive>
+void serialize(Archive& /* ar */ , std::pair<const int, dlplan::core::State>& /* t */, const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+inline void save_construct_data(
+    Archive & ar, const std::pair<const int, dlplan::core::State>* t, const unsigned int /* version */ ){
+    ar << t->first;
+    ar << &t->second;
+}
+
+template<class Archive>
+inline void load_construct_data(
+    Archive & ar, std::pair<const int, dlplan::core::State>* t, const unsigned int /* version */ ){
+    int first;
+    dlplan::core::State* second;
+    ar >> first;
+    ar >> second;
+    ::new(t)std::pair<int, dlplan::core::State>(first, std::move(*second));
+    delete second;
+}
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::core::State& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::core::State& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const dlplan::core::State* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    dlplan::core::State* t, const unsigned int version);
+
+template void serialize(boost::archive::text_iarchive& ar,
+    std::pair<const int, dlplan::core::State>& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    std::pair<const int, dlplan::core::State>& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const std::pair<const int, dlplan::core::State>* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    std::pair<const int, dlplan::core::State>* t, const unsigned int version);
 }

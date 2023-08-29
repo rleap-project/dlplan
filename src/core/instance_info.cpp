@@ -5,6 +5,12 @@
 #include <iostream>
 #include <sstream>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/serialization.hpp>
+#include <boost/serialization/unordered_map.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+
 #include "../utils/collections.h"
 #include "../utils/logging.h"
 
@@ -184,4 +190,43 @@ const Atom& InstanceInfo::get_atom(const std::string& name) const {
     return m_atoms[m_atom_name_to_index.at(name)];
 }
 
+}
+
+
+namespace boost::serialization {
+template<typename Archive>
+inline void serialize(Archive& ar, dlplan::core::InstanceInfo& t, const unsigned int /* version */) {
+    ar & t.m_objects;
+    ar & t.m_object_name_to_index;
+    ar & t.m_atoms;
+    ar & t.m_atom_name_to_index;
+    ar & t.m_static_atoms;
+    ar & t.m_static_atom_name_to_index;
+}
+
+template<class Archive>
+inline void save_construct_data(
+    Archive & ar, const dlplan::core::InstanceInfo* t, const unsigned int /* version */ ){
+    ar & t->m_vocabulary_info;
+    ar & t->m_index;
+}
+
+template<class Archive>
+inline void load_construct_data(
+    Archive & ar, dlplan::core::InstanceInfo* t, const unsigned int /* version */ ){
+    std::shared_ptr<const dlplan::core::VocabularyInfo> vocabulary;
+    dlplan::core::InstanceIndex index;
+    ar & vocabulary;
+    ar & index;
+    ::new(t)dlplan::core::InstanceInfo(vocabulary, index);
+}
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::core::InstanceInfo& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::core::InstanceInfo& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const dlplan::core::InstanceInfo* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    dlplan::core::InstanceInfo* t, const unsigned int version);
 }

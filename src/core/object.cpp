@@ -2,6 +2,10 @@
 
 #include <sstream>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/serialization.hpp>
+
 
 namespace dlplan::core {
 Object::Object(const std::string& name, ObjectIndex index)
@@ -51,4 +55,37 @@ ObjectIndex Object::get_index() const {
     return m_index;
 }
 
+}
+
+
+namespace boost::serialization {
+template<typename Archive>
+inline void serialize(Archive& /* ar */ , dlplan::core::Object& /* t */, const unsigned int /* version */) {
+}
+
+template<class Archive>
+inline void save_construct_data(
+    Archive & ar, const dlplan::core::Object* t, const unsigned int /* version */ ){
+    ar << t->m_name;
+    ar << t->m_index;
+}
+
+template<class Archive>
+inline void load_construct_data(
+    Archive & ar, dlplan::core::Object* t, const unsigned int /* version */ ){
+    std::string name;
+    dlplan::core::ObjectIndex index;
+    ar >> name;
+    ar >> index;
+    ::new(t)dlplan::core::Object(name, index);
+}
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::core::Object& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::core::Object& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const dlplan::core::Object* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    dlplan::core::Object* t, const unsigned int version);
 }
