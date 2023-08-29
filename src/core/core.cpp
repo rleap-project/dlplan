@@ -249,4 +249,9 @@ void serialize(Archive& ar, dlplan::core::SyntacticElementFactory& t, const unsi
     ar & t.m_pImpl;
 }
 
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::core::SyntacticElementFactory& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::core::SyntacticElementFactory& t, const unsigned int version);
+
 }
