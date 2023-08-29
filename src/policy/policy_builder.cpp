@@ -2,6 +2,9 @@
 
 #include <stdexcept>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 #include "condition.h"
 #include "effect.h"
 #include "../../include/dlplan/policy.h"
@@ -64,5 +67,20 @@ std::shared_ptr<const Policy> PolicyBuilderImpl::add_policy(
     //}
     return m_caches.m_policy_cache->insert(std::unique_ptr<Policy>(new Policy(std::move(rules), m_caches.m_policy_cache->size()))).first;
 }
+
+}
+
+
+namespace boost::serialization {
+template<typename Archive>
+void serialize( Archive& ar, dlplan::policy::PolicyBuilderImpl& t, const unsigned int /* version */ )
+{
+    ar & t.m_caches;
+}
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::policy::PolicyBuilderImpl& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::policy::PolicyBuilderImpl& t, const unsigned int version);
 
 }

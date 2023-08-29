@@ -3,6 +3,11 @@
 #include <algorithm>
 #include <sstream>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/set.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+
 #include "condition.h"
 #include "effect.h"
 #include "../../include/dlplan/core.h"
@@ -168,5 +173,46 @@ const Numericals& Policy::get_numericals() const {
 const Rules& Policy::get_rules() const {
     return m_rules;
 }
+
+}
+
+
+namespace boost::serialization {
+template<typename Archive>
+void serialize(Archive& /* ar */ , dlplan::policy::Policy& /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void save_construct_data(Archive & ar, const dlplan::policy::Policy* t, const unsigned int /* version */ )
+{
+    ar << t->m_index;
+    ar << t->m_booleans;
+    ar << t->m_numericals;
+    ar << t->m_rules;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::policy::Policy* t, const unsigned int /* version */ )
+{
+    dlplan::policy::PolicyIndex index;
+    dlplan::policy::Booleans booleans;
+    dlplan::policy::Numericals numericals;
+    dlplan::policy::Rules rules;
+    ar >> index;
+    ar >> booleans;
+    ar >> numericals;
+    ar >> rules;
+    ::new(t)dlplan::policy::Policy(std::move(booleans), std::move(numericals), std::move(rules), index);
+}
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::policy::Policy& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::policy::Policy& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const dlplan::policy::Policy* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    dlplan::policy::Policy* t, const unsigned int version);
 
 }

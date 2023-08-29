@@ -1,16 +1,22 @@
 #include "../../include/dlplan/state_space.h"
 
-#include "generator.h"
-#include "reader.h"
-
-#include "../utils/collections.h"
-#include "../utils/memory.h"
-
 #include <algorithm>
 #include <deque>
 #include <iostream>
 #include <stdexcept>
 #include <sstream>
+
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/unordered_map.hpp>
+#include <boost/serialization/unordered_set.hpp>
+#include <boost/serialization/vector.hpp>
+
+#include "generator.h"
+#include "reader.h"
+#include "../utils/collections.h"
+#include "../utils/memory.h"
 
 
 using namespace dlplan::core;
@@ -368,5 +374,25 @@ GeneratorResult generate_state_space(
     generator::generate_state_space_files(domain_file, instance_file, max_time, max_num_states);
     return reader::read(vocabulary_info, index);
 }
+
+}
+
+
+namespace boost::serialization {
+template<typename Archive>
+void serialize( Archive& ar, dlplan::state_space::StateSpace& t, const unsigned int /* version */ )
+{
+    ar & t.m_instance_info;
+    ar & t.m_states;
+    ar & t.m_initial_state_index;
+    ar & t.m_goal_state_indices;
+    ar & t.m_forward_successor_state_indices;
+    ar & t.m_backward_successor_state_indices;
+}
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::state_space::StateSpace& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::state_space::StateSpace& t, const unsigned int version);
 
 }

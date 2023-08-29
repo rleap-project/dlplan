@@ -2,6 +2,9 @@
 
 #include <iostream>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 #include "condition.h"
 #include "effect.h"
 #include "policy_builder.h"
@@ -164,4 +167,66 @@ std::string PolicyWriter::write(const Policy& policy) const {
     return m_pImpl->write(policy);
 }
 
+}
+
+
+namespace boost::serialization {
+template<typename Archive>
+void serialize( Archive& /* ar */ , dlplan::policy::BaseCondition& /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void save_construct_data(Archive& /* ar */ , const dlplan::policy::BaseCondition* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void load_construct_data(Archive& /* ar */ , dlplan::policy::BaseCondition* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<typename Archive>
+void serialize( Archive& /* ar */ , dlplan::policy::BaseEffect& /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void save_construct_data(Archive& /* ar */ , const dlplan::policy::BaseEffect* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void load_construct_data(Archive& /* ar */ , dlplan::policy::BaseEffect* /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<typename Archive>
+void serialize( Archive& ar, dlplan::policy::PolicyBuilder& t, const unsigned int /* version */ )
+{
+    ar & t.m_pImpl;
+}
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::policy::BaseCondition& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::policy::BaseCondition& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const dlplan::policy::BaseCondition* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    dlplan::policy::BaseCondition* t, const unsigned int version);
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::policy::BaseEffect& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::policy::BaseEffect& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const dlplan::policy::BaseEffect* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    dlplan::policy::BaseEffect* t, const unsigned int version);
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::policy::PolicyBuilder& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::policy::PolicyBuilder& t, const unsigned int version);
 }

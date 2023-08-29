@@ -3,6 +3,8 @@
 
 #include <memory>
 
+#include <boost/serialization/shared_ptr.hpp>
+
 #include "../utils/cache.h"
 #include "../../include/dlplan/policy.h"
 
@@ -24,6 +26,18 @@ struct Caches {
           m_policy_cache(std::make_shared<dlplan::utils::ReferenceCountedObjectCache<std::string, Policy>>()) { }
 };
 
+}
+
+
+namespace boost::serialization {
+template<typename Archive>
+void serialize(Archive& ar, dlplan::policy::Caches& t, const unsigned int /* version */ )
+{
+    ar & t.m_condition_cache;
+    ar & t.m_effect_cache;
+    ar & t.m_rule_cache;
+    ar & t.m_policy_cache;
+}
 
 }
 

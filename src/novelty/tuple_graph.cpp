@@ -3,6 +3,11 @@
 #include <cassert>
 #include <sstream>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+
 #include "tuple_graph_builder.h"
 #include "tuple_index_generator.h"
 #include "../utils/logging.h"
@@ -228,5 +233,52 @@ const std::vector<TupleNodeIndices>& TupleGraph::get_tuple_node_indices_by_dista
 const std::vector<state_space::StateIndices>& TupleGraph::get_state_indices_by_distance() const {
     return m_state_indices_by_distance;
 }
+
+}
+
+
+namespace boost::serialization {
+template<typename Archive>
+void serialize( Archive& /* ar */ , dlplan::novelty::TupleGraph& /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void save_construct_data(Archive & ar, const dlplan::novelty::TupleGraph* t, const unsigned int /* version */ )
+{
+    ar << t->m_novelty_base;
+    ar << t->m_state_space;
+    ar << t->m_root_state_index;
+    ar << t->m_nodes;
+    ar << t->m_node_indices_by_distance;
+    ar << t->m_state_indices_by_distance;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::novelty::TupleGraph* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<const dlplan::novelty::NoveltyBase> novelty_base;
+    std::shared_ptr<const dlplan::state_space::StateSpace> state_space;
+    dlplan::state_space::StateIndex root_state_index;
+    dlplan::novelty::TupleNodes nodes;
+    std::vector<dlplan::novelty::TupleNodeIndices> node_indices_by_distance;
+    std::vector<dlplan::state_space::StateIndices> state_indices_by_distance;
+    ar >> novelty_base;
+    ar >> state_space;
+    ar >> root_state_index;
+    ar >> nodes;
+    ar >> node_indices_by_distance;
+    ar >> state_indices_by_distance;
+    ::new(t)dlplan::novelty::TupleGraph(novelty_base, state_space, root_state_index, std::move(nodes), std::move(node_indices_by_distance), std::move(state_indices_by_distance));
+}
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::novelty::TupleGraph& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::novelty::TupleGraph& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const dlplan::novelty::TupleGraph* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    dlplan::novelty::TupleGraph* t, const unsigned int version);
 
 }

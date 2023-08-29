@@ -6,6 +6,10 @@
 #include <iostream>
 #include <sstream>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/vector.hpp>
+
 #include "../utils/math.h"
 
 
@@ -71,5 +75,43 @@ int NoveltyBase::get_num_atoms() const {
 int NoveltyBase::get_arity() const {
     return m_arity;
 }
+
+}
+
+
+namespace boost::serialization {
+template<typename Archive>
+void serialize( Archive& /* ar */ , dlplan::novelty::NoveltyBase& /* t */ , const unsigned int /* version */ )
+{
+}
+
+template<class Archive>
+void save_construct_data(Archive & ar, const dlplan::novelty::NoveltyBase* t, const unsigned int /* version */ )
+{
+    ar << t->m_factors;
+    ar << t->m_num_atoms;
+    ar << t->m_arity;
+}
+
+template<class Archive>
+void load_construct_data(Archive & ar, dlplan::novelty::NoveltyBase* t, const unsigned int /* version */ )
+{
+    std::vector<int> factors;
+    int num_atoms;
+    int arity;
+    ar >> factors;
+    ar >> num_atoms;
+    ar >> arity;
+    ::new(t)dlplan::novelty::NoveltyBase(std::move(factors), num_atoms, arity);
+}
+
+template void serialize(boost::archive::text_iarchive& ar,
+    dlplan::novelty::NoveltyBase& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    dlplan::novelty::NoveltyBase& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const dlplan::novelty::NoveltyBase* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    dlplan::novelty::NoveltyBase* t, const unsigned int version);
 
 }
