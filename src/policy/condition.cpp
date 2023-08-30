@@ -306,8 +306,6 @@ template void load_construct_data(boost::archive::text_iarchive& ar,
     dlplan::policy::EqualNumericalCondition* t, const unsigned int version);
 }
 
-BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::BooleanCondition)
-BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::NumericalCondition)
 BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::PositiveBooleanCondition)
 BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::NegativeBooleanCondition)
 BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::GreaterNumericalCondition)

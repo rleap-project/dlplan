@@ -408,8 +408,6 @@ template void load_construct_data(boost::archive::text_iarchive& ar,
     dlplan::policy::UnchangedNumericalEffect* t, const unsigned int version);
 }
 
-BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::BooleanEffect)
-BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::NumericalEffect)
 BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::PositiveBooleanEffect)
 BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::NegativeBooleanEffect)
 BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::UnchangedBooleanEffect)

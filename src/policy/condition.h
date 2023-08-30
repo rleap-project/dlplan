@@ -191,8 +191,6 @@ public:
 
 }
 
-BOOST_CLASS_EXPORT_KEY2(dlplan::policy::BooleanCondition, "dlplan::policy::BooleanCondition")
-BOOST_CLASS_EXPORT_KEY2(dlplan::policy::NumericalCondition, "dlplan::policy::NumericalCondition")
 BOOST_CLASS_EXPORT_KEY2(dlplan::policy::PositiveBooleanCondition, "dlplan::policy::PositiveBooleanCondition")
 BOOST_CLASS_EXPORT_KEY2(dlplan::policy::NegativeBooleanCondition, "dlplan::policy::NegativeBooleanCondition")
 BOOST_CLASS_EXPORT_KEY2(dlplan::policy::GreaterNumericalCondition, "dlplan::policy::GreaterNumericalCondition")
