@@ -15,11 +15,11 @@
 
 namespace dlplan::policy {
 
-Policy::Policy(Booleans&& booleans, Numericals&& numericals, Rules&& rules, PolicyIndex index)
-    : m_booleans(std::move(booleans)),
-      m_numericals(std::move(numericals)),
-      m_rules(std::move(rules)),
-      m_index(index) { }
+Policy::Policy()
+    : m_booleans(Booleans()),
+      m_numericals(Numericals()),
+      m_rules(Rules()),
+      m_index(-1) { }
 
 Policy::Policy(Rules&& rules, PolicyIndex index)
     : m_rules(move(rules)), m_index(index) {
@@ -179,40 +179,16 @@ const Rules& Policy::get_rules() const {
 
 namespace boost::serialization {
 template<typename Archive>
-void serialize(Archive& /* ar */ , dlplan::policy::Policy& /* t */ , const unsigned int /* version */ )
+void serialize(Archive& ar, dlplan::policy::Policy& t, const unsigned int /* version */ )
 {
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::policy::Policy* t, const unsigned int /* version */ )
-{
-    ar << t->m_index;
-    ar << t->m_booleans;
-    ar << t->m_numericals;
-    ar << t->m_rules;
-}
-
-template<class Archive>
-void load_construct_data(Archive & ar, dlplan::policy::Policy* t, const unsigned int /* version */ )
-{
-    dlplan::policy::PolicyIndex index;
-    dlplan::policy::Booleans booleans;
-    dlplan::policy::Numericals numericals;
-    dlplan::policy::Rules rules;
-    ar >> index;
-    ar >> booleans;
-    ar >> numericals;
-    ar >> rules;
-    ::new(t)dlplan::policy::Policy(std::move(booleans), std::move(numericals), std::move(rules), index);
+    ar & t.m_index;
+    ar & t.m_booleans;
+    ar & t.m_numericals;
+    ar & t.m_rules;
 }
 
 template void serialize(boost::archive::text_iarchive& ar,
     dlplan::policy::Policy& t, const unsigned int version);
 template void serialize(boost::archive::text_oarchive& ar,
     dlplan::policy::Policy& t, const unsigned int version);
-template void save_construct_data(boost::archive::text_oarchive& ar,
-    const dlplan::policy::Policy* t, const unsigned int version);
-template void load_construct_data(boost::archive::text_iarchive& ar,
-    dlplan::policy::Policy* t, const unsigned int version);
-
 }

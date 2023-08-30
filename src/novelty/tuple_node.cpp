@@ -13,17 +13,12 @@ using namespace dlplan::state_space;
 
 namespace dlplan::novelty {
 
-TupleNode::TupleNode(
-    TupleNodeIndex index,
-    TupleIndex tuple_index,
-    state_space::StateIndices&& state_indices,
-    TupleNodeIndices&& predecessors,
-    TupleNodeIndices&& successors)
-    : m_index(index),
-      m_tuple_index(tuple_index),
-      m_state_indices(std::move(state_indices)),
-      m_predecessors(std::move(predecessors)),
-      m_successors(std::move(successors)) {
+TupleNode::TupleNode()
+    : m_index(-1),
+      m_tuple_index(-1),
+      m_state_indices(state_space::StateIndices()),
+      m_predecessors(TupleNodeIndices()),
+      m_successors(TupleNodeIndices()) {
 }
 
 TupleNode::TupleNode(TupleNodeIndex index, TupleIndex tuple_index, const StateIndices& state_indices)
@@ -104,42 +99,17 @@ const TupleIndices& TupleNode::get_successors() const {
 
 namespace boost::serialization {
 template<typename Archive>
-void serialize( Archive& /* ar */ , dlplan::novelty::TupleNode& /* t */ , const unsigned int /* version */ )
+void serialize(Archive& ar, dlplan::novelty::TupleNode& t, const unsigned int /* version */ )
 {
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::novelty::TupleNode* t, const unsigned int /* version */ )
-{
-    ar << t->m_index;
-    ar << t->m_tuple_index;
-    ar << t->m_state_indices;
-    ar << t->m_predecessors;
-    ar << t->m_successors;
-}
-
-template<class Archive>
-void load_construct_data(Archive & ar, dlplan::novelty::TupleNode* t, const unsigned int /* version */ )
-{
-    dlplan::novelty::TupleNodeIndex index;
-    dlplan::novelty::TupleIndex tuple_index;
-    dlplan::state_space::StateIndices state_indices;
-    dlplan::novelty::TupleNodeIndices predecessors;
-    dlplan::novelty::TupleNodeIndices successors;
-    ar >> index;
-    ar >> tuple_index;
-    ar >> state_indices;
-    ar >> predecessors;
-    ar >> successors;
-    ::new(t)dlplan::novelty::TupleNode(index, tuple_index, std::move(state_indices), std::move(predecessors), std::move(successors));
+    ar & t.m_index;
+    ar & t.m_tuple_index;
+    ar & t.m_state_indices;
+    ar & t.m_predecessors;
+    ar & t.m_successors;
 }
 
 template void serialize(boost::archive::text_iarchive& ar,
     dlplan::novelty::TupleNode& t, const unsigned int version);
 template void serialize(boost::archive::text_oarchive& ar,
     dlplan::novelty::TupleNode& t, const unsigned int version);
-template void save_construct_data(boost::archive::text_oarchive& ar,
-    const dlplan::novelty::TupleNode* t, const unsigned int version);
-template void load_construct_data(boost::archive::text_iarchive& ar,
-    dlplan::novelty::TupleNode* t, const unsigned int version);
 }

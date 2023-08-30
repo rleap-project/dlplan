@@ -14,9 +14,7 @@
 
 
 namespace dlplan::novelty {
-
-NoveltyBase::NoveltyBase(std::vector<int>&& factors, int num_atoms, int arity)
-    : m_factors(std::move(factors)), m_num_atoms(num_atoms), m_arity(arity) { }
+NoveltyBase::NoveltyBase() : m_factors(std::vector<int>()), m_num_atoms(0), m_arity(0) { }
 
 NoveltyBase::NoveltyBase(int num_atoms, int arity)
     : m_num_atoms(num_atoms), m_arity(arity) {
@@ -81,37 +79,15 @@ int NoveltyBase::get_arity() const {
 
 namespace boost::serialization {
 template<typename Archive>
-void serialize( Archive& /* ar */ , dlplan::novelty::NoveltyBase& /* t */ , const unsigned int /* version */ )
+void serialize(Archive& ar, dlplan::novelty::NoveltyBase& t, const unsigned int /* version */ )
 {
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::novelty::NoveltyBase* t, const unsigned int /* version */ )
-{
-    ar << t->m_factors;
-    ar << t->m_num_atoms;
-    ar << t->m_arity;
-}
-
-template<class Archive>
-void load_construct_data(Archive & ar, dlplan::novelty::NoveltyBase* t, const unsigned int /* version */ )
-{
-    std::vector<int> factors;
-    int num_atoms;
-    int arity;
-    ar >> factors;
-    ar >> num_atoms;
-    ar >> arity;
-    ::new(t)dlplan::novelty::NoveltyBase(std::move(factors), num_atoms, arity);
+    ar & t.m_factors;
+    ar & t.m_num_atoms;
+    ar & t.m_arity;
 }
 
 template void serialize(boost::archive::text_iarchive& ar,
     dlplan::novelty::NoveltyBase& t, const unsigned int version);
 template void serialize(boost::archive::text_oarchive& ar,
     dlplan::novelty::NoveltyBase& t, const unsigned int version);
-template void save_construct_data(boost::archive::text_oarchive& ar,
-    const dlplan::novelty::NoveltyBase* t, const unsigned int version);
-template void load_construct_data(boost::archive::text_iarchive& ar,
-    dlplan::novelty::NoveltyBase* t, const unsigned int version);
-
 }

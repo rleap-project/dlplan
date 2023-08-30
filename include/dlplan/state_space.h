@@ -18,6 +18,8 @@ class StateSpace;
 
 // Forward declarations of template spezializations for serialization
 namespace boost::serialization {
+    class access;
+
     template <typename Archive>
     void serialize(Archive& ar, dlplan::state_space::StateSpace& state_space, const unsigned int version);
 }
@@ -48,11 +50,14 @@ private:
     // for backward search
     AdjacencyList m_backward_successor_state_indices;
 
+    /// @brief Constructor for serialization
+    StateSpace();
+
+    friend class boost::serialization::access;
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, StateSpace& state_space, const unsigned int version);
 
 public:
-    StateSpace();
     StateSpace(
         std::shared_ptr<core::InstanceInfo>&& instance_info,
         StateMapping&& index_to_state,

@@ -13,6 +13,8 @@
 
 
 namespace dlplan::policy {
+Rule::Rule() : m_conditions(Conditions()), m_effects(Effects()), m_index(-1) { }
+
 Rule::Rule(Conditions&& conditions, Effects&& effects, RuleIndex index)
     : m_conditions(std::move(conditions)), m_effects(std::move(effects)), m_index(index) {
 }
@@ -125,37 +127,15 @@ const Effects& Rule::get_effects() const {
 
 namespace boost::serialization {
 template<typename Archive>
-void serialize(Archive& /* ar */ , dlplan::policy::Rule& /* t */ , const unsigned int /* version */ )
+void serialize(Archive& ar, dlplan::policy::Rule& t, const unsigned int /* version */ )
 {
-}
-
-template<class Archive>
-void save_construct_data(Archive& ar, const dlplan::policy::Rule* t, const unsigned int /* version */ )
-{
-    ar << t->m_index;
-    ar << t->m_conditions;
-    ar << t->m_effects;
-}
-
-template<class Archive>
-void load_construct_data(Archive& ar, dlplan::policy::Rule* t, const unsigned int /* version */ )
-{
-    dlplan::policy::RuleIndex index;
-    dlplan::policy::Conditions conditions;
-    dlplan::policy::Effects effects;
-    ar >> index;
-    ar >> conditions;
-    ar >> effects;
-    ::new(t)dlplan::policy::Rule(std::move(conditions), std::move(effects), index);
+    ar & t.m_index;
+    ar & t.m_conditions;
+    ar & t.m_effects;
 }
 
 template void serialize(boost::archive::text_iarchive& ar,
     dlplan::policy::Rule& t, const unsigned int version);
 template void serialize(boost::archive::text_oarchive& ar,
     dlplan::policy::Rule& t, const unsigned int version);
-template void save_construct_data(boost::archive::text_oarchive& ar,
-    const dlplan::policy::Rule* t, const unsigned int version);
-template void load_construct_data(boost::archive::text_iarchive& ar,
-    dlplan::policy::Rule* t, const unsigned int version);
-
 }

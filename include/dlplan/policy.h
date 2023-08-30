@@ -28,6 +28,8 @@ class PolicyBuilder;
 
 // Forward declarations of template spezializations for serialization
 namespace boost::serialization {
+    class access;
+
     template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::BaseCondition& t, const unsigned int version);
     template<class Archive>
@@ -44,17 +46,9 @@ namespace boost::serialization {
 
     template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::Rule& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::policy::Rule* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::policy::Rule* t, const unsigned int version);
 
     template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::Policy& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::policy::Policy* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::policy::Policy* t, const unsigned int version);
 
     template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::PolicyBuilder& builder, const unsigned int version);
@@ -180,15 +174,15 @@ private:
     Effects m_effects;
     RuleIndex m_index;
 
+    /// @brief Constructor for serialization.
+    Rule();
+
     Rule(Conditions&& conditions, Effects&& effects, RuleIndex index);
 
     friend class PolicyBuilderImpl;
+    friend class boost::serialization::access;
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, Rule& t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const Rule* t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, Rule* t, const unsigned int version);
 
 public:
     Rule(const Rule& other) = delete;
@@ -228,17 +222,14 @@ private:
     int m_index;
 
     /// @brief Constructor for serialization.
-    Policy(Booleans&& booleans, Numericals&& numericals, Rules&& rules, PolicyIndex index);
+    Policy();
 
     Policy(Rules&& rules, PolicyIndex index);
 
     friend class PolicyBuilderImpl;
+    friend class boost::serialization::access;
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, Policy& t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const Policy* t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, Policy* t, const unsigned int version);
 
 public:
     Policy(const Policy& other);

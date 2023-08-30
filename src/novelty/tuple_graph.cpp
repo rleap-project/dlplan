@@ -17,19 +17,13 @@ using namespace dlplan::state_space;
 
 namespace dlplan::novelty {
 
-TupleGraph::TupleGraph(
-    std::shared_ptr<const NoveltyBase> novelty_base,
-    std::shared_ptr<const state_space::StateSpace> state_space,
-    state_space::StateIndex root_state_index,
-    TupleNodes&& nodes,
-    std::vector<TupleNodeIndices>&& node_indices_by_distance,
-    std::vector<state_space::StateIndices>&& state_indices_by_distance)
-    : m_novelty_base(novelty_base),
-      m_state_space(state_space),
-      m_root_state_index(root_state_index),
-      m_nodes(std::move(nodes)),
-      m_node_indices_by_distance(std::move(node_indices_by_distance)),
-      m_state_indices_by_distance(std::move(state_indices_by_distance)) {
+TupleGraph::TupleGraph()
+    : m_novelty_base(nullptr),
+      m_state_space(nullptr),
+      m_root_state_index(-1),
+      m_nodes(TupleNodes()),
+      m_node_indices_by_distance(std::vector<TupleNodeIndices>()),
+      m_state_indices_by_distance(std::vector<TupleNodeIndices>()) {
 }
 
 TupleGraph::TupleGraph(
@@ -239,46 +233,18 @@ const std::vector<state_space::StateIndices>& TupleGraph::get_state_indices_by_d
 
 namespace boost::serialization {
 template<typename Archive>
-void serialize( Archive& /* ar */ , dlplan::novelty::TupleGraph& /* t */ , const unsigned int /* version */ )
+void serialize(Archive& ar, dlplan::novelty::TupleGraph& t, const unsigned int /* version */ )
 {
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::novelty::TupleGraph* t, const unsigned int /* version */ )
-{
-    ar << t->m_novelty_base;
-    ar << t->m_state_space;
-    ar << t->m_root_state_index;
-    ar << t->m_nodes;
-    ar << t->m_node_indices_by_distance;
-    ar << t->m_state_indices_by_distance;
-}
-
-template<class Archive>
-void load_construct_data(Archive & ar, dlplan::novelty::TupleGraph* t, const unsigned int /* version */ )
-{
-    std::shared_ptr<const dlplan::novelty::NoveltyBase> novelty_base;
-    std::shared_ptr<const dlplan::state_space::StateSpace> state_space;
-    dlplan::state_space::StateIndex root_state_index;
-    dlplan::novelty::TupleNodes nodes;
-    std::vector<dlplan::novelty::TupleNodeIndices> node_indices_by_distance;
-    std::vector<dlplan::state_space::StateIndices> state_indices_by_distance;
-    ar >> novelty_base;
-    ar >> state_space;
-    ar >> root_state_index;
-    ar >> nodes;
-    ar >> node_indices_by_distance;
-    ar >> state_indices_by_distance;
-    ::new(t)dlplan::novelty::TupleGraph(novelty_base, state_space, root_state_index, std::move(nodes), std::move(node_indices_by_distance), std::move(state_indices_by_distance));
+    ar & t.m_novelty_base;
+    ar & t.m_state_space;
+    ar & t.m_root_state_index;
+    ar & t.m_nodes;
+    ar & t.m_node_indices_by_distance;
+    ar & t.m_state_indices_by_distance;
 }
 
 template void serialize(boost::archive::text_iarchive& ar,
     dlplan::novelty::TupleGraph& t, const unsigned int version);
 template void serialize(boost::archive::text_oarchive& ar,
     dlplan::novelty::TupleGraph& t, const unsigned int version);
-template void save_construct_data(boost::archive::text_oarchive& ar,
-    const dlplan::novelty::TupleGraph* t, const unsigned int version);
-template void load_construct_data(boost::archive::text_iarchive& ar,
-    dlplan::novelty::TupleGraph* t, const unsigned int version);
-
 }
