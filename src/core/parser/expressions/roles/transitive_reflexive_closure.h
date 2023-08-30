@@ -9,6 +9,9 @@ using namespace std::string_literals;
 namespace dlplan::core::parser {
 
 class TransitiveReflexiveClosureRole : public Role {
+private:
+    static inline const std::string m_name = "r_transitive_reflexive_closure";
+
 public:
     TransitiveReflexiveClosureRole(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Role(name, std::move(children)) { }
@@ -26,6 +29,9 @@ public:
         return factory.make_transitive_reflexive_closure(role);
     }
 
+    static const std::string& get_name() {
+        return m_name;
+    }
 };
 
 }

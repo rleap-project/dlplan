@@ -2,7 +2,7 @@
 
 #include "../../generator_data.h"
 
-#include "../../../core/elements/concepts/one_of.h"
+#include "../../../core/parser/expressions/concepts/one_of.h"
 
 
 namespace dlplan::generator::rules {
@@ -22,8 +22,8 @@ void OneOfConcept::generate_impl(const core::States& states, int target_complexi
     }
 }
 
-std::string OneOfConcept::get_name() const {
-    return core::OneOfConcept::get_name();
+const std::string& OneOfConcept::get_name() const {
+    return core::parser::OneOfConcept::get_name();
 }
 
 }

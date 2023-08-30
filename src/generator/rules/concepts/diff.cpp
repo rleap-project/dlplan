@@ -2,7 +2,7 @@
 
 #include "../../generator_data.h"
 
-#include "../../../core/elements/concepts/diff.h"
+#include "../../../core/parser/expressions/concepts/diff.h"
 
 
 namespace dlplan::generator::rules {
@@ -26,8 +26,8 @@ void DiffConcept::generate_impl(const core::States& states, int target_complexit
     }
 }
 
-std::string DiffConcept::get_name() const {
-    return core::DiffConcept::get_name();
+const std::string& DiffConcept::get_name() const {
+    return core::parser::DiffConcept::get_name();
 }
 
 }

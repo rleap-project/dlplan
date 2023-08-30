@@ -8,9 +8,9 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/export.hpp>
 #include <boost/serialization/shared_ptr.hpp>
-#include <boost/serialization/serialization.hpp>
 
 #include "../utils.h"
+#include "../../parser/expressions/roles/and.h"
 #include "../../../../include/dlplan/core.h"
 
 using namespace std::string_literals;
@@ -104,7 +104,7 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << get_name() << "(";
+        out << parser::AndRole::get_name() << "(";
         m_role_left->compute_repr(out);
         out << ",";
         m_role_right->compute_repr(out);
@@ -113,10 +113,6 @@ public:
 
     int compute_evaluate_time_score() const override {
         return m_role_left->compute_evaluate_time_score() + m_role_right->compute_evaluate_time_score() + SCORE_QUADRATIC;
-    }
-
-    static std::string get_name() {
-        return "r_and";
     }
 };
 
@@ -154,5 +150,7 @@ void load_construct_data(Archive & ar, dlplan::core::AndRole* t, const unsigned 
 }
 
 }
+
+BOOST_CLASS_EXPORT_GUID(dlplan::core::AndRole, "dlplan::core::AndRole")
 
 #endif

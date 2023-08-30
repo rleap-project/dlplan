@@ -9,6 +9,9 @@ using namespace std::string_literals;
 namespace dlplan::core::parser {
 
 class EqualConcept : public Concept {
+private:
+    static inline const std::string m_name = "c_equal";
+
 public:
     EqualConcept(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Concept(name, std::move(children)) { }
@@ -25,6 +28,10 @@ public:
         }
         // 2. Construct element
         return factory.make_equal_concept(role_left, role_right);
+    }
+
+    static const std::string& get_name() {
+        return m_name;
     }
 };
 

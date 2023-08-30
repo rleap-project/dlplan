@@ -10,6 +10,9 @@ using namespace std::string_literals;
 namespace dlplan::core::parser {
 
 class PrimitiveRole : public Role {
+private:
+    static inline const std::string m_name = "r_primitive";
+
 public:
     PrimitiveRole(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Role(name, std::move(children)) { }
@@ -24,6 +27,10 @@ public:
         int pos_2 = try_parse_number(m_children[2]->get_name());
         // 2. Construct element
         return factory.make_primitive_role(factory.get_vocabulary_info()->get_predicate(predicate_name), pos_1, pos_2);
+    }
+
+    static const std::string& get_name() {
+        return m_name;
     }
 };
 

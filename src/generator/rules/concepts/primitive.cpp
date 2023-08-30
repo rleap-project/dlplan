@@ -24,7 +24,7 @@ void PrimitiveConcept::generate_impl(const core::States& states, int target_comp
     }
 }
 
-std::string PrimitiveConcept::get_name() const {
+const std::string& PrimitiveConcept::get_name() const {
     return core::parser::PrimitiveConcept::get_name();
 }
 

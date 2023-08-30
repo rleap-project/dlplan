@@ -7,10 +7,11 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/export.hpp>
+#include <boost/serialization/base_object.hpp>
 #include <boost/serialization/shared_ptr.hpp>
-#include <boost/serialization/serialization.hpp>
 
 #include "../utils.h"
+#include "../../parser/expressions/booleans/inclusion.h"
 #include "../../../../include/dlplan/core.h"
 
 using namespace std::string_literals;
@@ -99,7 +100,7 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-       out << get_name() << "(";
+       out << parser::InclusionBoolean::get_name() << "(";
        m_element_left->compute_repr(out);
        out << ",";
        m_element_right->compute_repr(out) ;
@@ -116,10 +117,6 @@ public:
             throw std::runtime_error("Inclusion::compute_evaluate_time_score - unknown template parameter.");
         }
         return score;
-    }
-
-    static std::string get_name() {
-        return "b_inclusion";
     }
 };
 
@@ -156,7 +153,9 @@ void load_construct_data(Archive& ar, dlplan::core::InclusionBoolean<T>* t, cons
     ::new(t)dlplan::core::InclusionBoolean<T>(vocabulary, index, element_left, element_right);
 }
 
-
 }
+
+BOOST_CLASS_EXPORT_GUID(dlplan::core::InclusionBoolean<dlplan::core::Concept>, "dlplan::core::InclusionBoolean<dlplan::core::Concept>")
+BOOST_CLASS_EXPORT_GUID(dlplan::core::InclusionBoolean<dlplan::core::Role>, "dlplan::core::InclusionBoolean<dlplan::core::Role>")
 
 #endif

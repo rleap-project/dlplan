@@ -10,6 +10,9 @@ using namespace std::string_literals;
 namespace dlplan::core::parser {
 
 class OneOfConcept : public Concept {
+private:
+    static inline const std::string m_name = "c_one_of";
+
 public:
     OneOfConcept(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Concept(name, std::move(children)) { }
@@ -20,6 +23,10 @@ public:
         }
         const auto& constant_name = m_children[0]->get_name();
         return factory.make_one_of_concept(factory.get_vocabulary_info()->get_constant(constant_name));
+    }
+
+    static const std::string& get_name() {
+        return m_name;
     }
 };
 

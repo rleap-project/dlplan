@@ -8,9 +8,9 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/export.hpp>
 #include <boost/serialization/shared_ptr.hpp>
-#include <boost/serialization/serialization.hpp>
 
 #include "../utils.h"
+#include "../../parser/expressions/roles/top.h"
 #include "../../../../include/dlplan/core.h"
 
 using namespace std::string_literals;
@@ -75,15 +75,11 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << get_name();
+        out << parser::TopRole::get_name();
     }
 
     int compute_evaluate_time_score() const override {
         return SCORE_CONSTANT;
-    }
-
-    static std::string get_name() {
-        return "r_top";
     }
 };
 
@@ -115,5 +111,7 @@ void load_construct_data(Archive & ar, dlplan::core::TopRole* t, const unsigned 
 }
 
 }
+
+BOOST_CLASS_EXPORT_GUID(dlplan::core::TopRole, "dlplan::core::TopRole")
 
 #endif

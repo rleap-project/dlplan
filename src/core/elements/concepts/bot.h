@@ -8,9 +8,9 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/export.hpp>
 #include <boost/serialization/shared_ptr.hpp>
-#include <boost/serialization/serialization.hpp>
 
 #include "../utils.h"
+#include "../../parser/expressions/concepts/bot.h"
 #include "../../../../include/dlplan/core.h"
 
 using namespace std::string_literals;
@@ -68,15 +68,11 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << get_name();
+        out << parser::BotConcept::get_name();
     }
 
     int compute_evaluate_time_score() const override {
         return SCORE_CONSTANT;
-    }
-
-    static std::string get_name() {
-        return "c_bot";
     }
 };
 
@@ -108,5 +104,7 @@ void load_construct_data(Archive& ar, dlplan::core::BotConcept* t, const unsigne
 }
 
 }
+
+BOOST_CLASS_EXPORT_GUID(dlplan::core::BotConcept, "dlplan::core::BotConcept")
 
 #endif

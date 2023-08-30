@@ -2,7 +2,7 @@
 
 #include "../../generator_data.h"
 
-#include "../../../core/elements/roles/transitive_closure.h"
+#include "../../../core/parser/expressions/roles/transitive_closure.h"
 
 
 namespace dlplan::generator::rules {
@@ -23,8 +23,8 @@ void TransitiveClosureRole::generate_impl(const core::States& states, int target
     }
 }
 
-std::string TransitiveClosureRole::get_name() const {
-    return core::TransitiveClosureRole::get_name();
+const std::string& TransitiveClosureRole::get_name() const {
+    return core::parser::TransitiveClosureRole::get_name();
 }
 
 }

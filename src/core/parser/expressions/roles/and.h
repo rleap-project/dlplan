@@ -10,6 +10,9 @@ using namespace std::string_literals;
 namespace dlplan::core::parser {
 
 class AndRole : public Role {
+private:
+    static inline const std::string m_name = "r_and";
+
 public:
     AndRole(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Role(name, sort_children_lexicographically(std::move(children))) { }
@@ -26,6 +29,10 @@ public:
         }
         // 2. Construct element
         return factory.make_and_role(role_left, role_right);
+    }
+
+    static const std::string& get_name() {
+        return m_name;
     }
 };
 

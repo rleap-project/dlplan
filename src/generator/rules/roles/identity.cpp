@@ -2,7 +2,7 @@
 
 #include "../../generator_data.h"
 
-#include "../../../core/elements/roles/identity.h"
+#include "../../../core/parser/expressions/roles/identity.h"
 
 
 namespace dlplan::generator::rules {
@@ -21,8 +21,8 @@ void IdentityRole::generate_impl(const core::States& states, int target_complexi
     }
 }
 
-std::string IdentityRole::get_name() const {
-    return core::IdentityRole::get_name();
+const std::string& IdentityRole::get_name() const {
+    return core::parser::IdentityRole::get_name();
 }
 
 }

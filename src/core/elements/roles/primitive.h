@@ -8,9 +8,9 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/export.hpp>
 #include <boost/serialization/shared_ptr.hpp>
-#include <boost/serialization/serialization.hpp>
 
 #include "../utils.h"
+#include "../../parser/expressions/roles/primitive.h"
 #include "../../../utils/collections.h"
 #include "../../../../include/dlplan/core.h"
 
@@ -107,15 +107,11 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << get_name() << "(" << m_predicate.get_name() << "," << std::to_string(m_pos_1) << "," << std::to_string(m_pos_2) << ")";
+        out << parser::PrimitiveRole::get_name() << "(" << m_predicate.get_name() << "," << std::to_string(m_pos_1) << "," << std::to_string(m_pos_2) << ")";
     }
 
     int compute_evaluate_time_score() const override {
         return SCORE_LINEAR;
-    }
-
-    static std::string get_name() {
-        return "r_primitive";
     }
 
     const Predicate& get_predicate() const {

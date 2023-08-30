@@ -2,7 +2,7 @@
 
 #include "../../generator_data.h"
 
-#include "../../../core/elements/booleans/inclusion.h"
+#include "../../../core/parser/expressions/booleans/inclusion.h"
 
 
 namespace dlplan::generator::rules {
@@ -42,8 +42,8 @@ void InclusionBoolean::generate_impl(const core::States& states, int target_comp
     }
 }
 
-std::string InclusionBoolean::get_name() const {
-    return core::InclusionBoolean<int>::get_name();
+const std::string& InclusionBoolean::get_name() const {
+    return core::parser::InclusionBoolean::get_name();
 }
 
 }

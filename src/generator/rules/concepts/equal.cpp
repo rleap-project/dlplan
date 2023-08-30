@@ -2,7 +2,7 @@
 
 #include "../../generator_data.h"
 
-#include "../../../core/elements/concepts/equal.h"
+#include "../../../core/parser/expressions/concepts/equal.h"
 #include "../../../core/elements/roles/primitive.h"
 
 
@@ -42,8 +42,8 @@ void EqualConcept::generate_impl(const core::States& states, int target_complexi
     }
 }
 
-std::string EqualConcept::get_name() const {
-    return core::EqualConcept::get_name();
+const std::string& EqualConcept::get_name() const {
+    return core::parser::EqualConcept::get_name();
 }
 
 }

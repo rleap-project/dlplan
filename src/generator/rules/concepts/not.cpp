@@ -2,7 +2,7 @@
 
 #include "../../generator_data.h"
 
-#include "../../../core/elements/concepts/not.h"
+#include "../../../core/parser/expressions/concepts/not.h"
 
 
 namespace dlplan::generator::rules {
@@ -21,8 +21,8 @@ void NotConcept::generate_impl(const core::States& states, int target_complexity
     }
 }
 
-std::string NotConcept::get_name() const {
-    return core::NotConcept::get_name();
+const std::string& NotConcept::get_name() const {
+    return core::parser::NotConcept::get_name();
 }
 
 }

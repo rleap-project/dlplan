@@ -2,7 +2,7 @@
 
 #include "../../generator_data.h"
 
-#include "../../../core/elements/concepts/top.h"
+#include "../../../core/parser/expressions/concepts/top.h"
 
 
 namespace dlplan::generator::rules {
@@ -20,8 +20,8 @@ void TopConcept::generate_impl(const core::States& states, int target_complexity
     }
 }
 
-std::string TopConcept::get_name() const {
-    return core::TopConcept::get_name();
+const std::string& TopConcept::get_name() const {
+    return core::parser::TopConcept::get_name();
 }
 
 }

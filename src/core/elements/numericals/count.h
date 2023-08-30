@@ -3,6 +3,8 @@
 
 #include <sstream>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/export.hpp>
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/shared_ptr.hpp>
@@ -89,7 +91,7 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << get_name() << "(";
+        out << parser::CountNumerical::get_name() << "(";
         m_element->compute_repr(out);
         out << ")";
     }
@@ -104,10 +106,6 @@ public:
             throw std::runtime_error("Inclusion::compute_evaluate_time_score - unknown template parameter.");
         }
         return score;
-    }
-
-    static const std::string& get_name() {
-        return parser::CountNumerical::get_name();
     }
 };
 

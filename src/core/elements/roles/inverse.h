@@ -8,9 +8,9 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/export.hpp>
 #include <boost/serialization/shared_ptr.hpp>
-#include <boost/serialization/serialization.hpp>
 
 #include "../utils.h"
+#include "../../parser/expressions/roles/inverse.h"
 #include "../../../../include/dlplan/core.h"
 
 using namespace std::string_literals;
@@ -93,17 +93,13 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << get_name() << "(";
+        out << parser::InverseRole::get_name() << "(";
         m_role->compute_repr(out);
         out << ")";
     }
 
     int compute_evaluate_time_score() const override {
         return m_role->compute_evaluate_time_score() + SCORE_QUADRATIC;
-    }
-
-    static std::string get_name() {
-        return "r_inverse";
     }
 };
 
@@ -137,7 +133,8 @@ void load_construct_data(Archive & ar, dlplan::core::InverseRole* t, const unsig
     ::new(t)dlplan::core::InverseRole(vocabulary, index, role);
 }
 
-
 }
+
+BOOST_CLASS_EXPORT_GUID(dlplan::core::InverseRole, "dlplan::core::InverseRole")
 
 #endif

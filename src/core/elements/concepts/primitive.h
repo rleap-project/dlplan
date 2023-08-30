@@ -3,6 +3,8 @@
 
 #include <sstream>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/export.hpp>
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/shared_ptr.hpp>
@@ -102,15 +104,11 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << get_name() << "(" << m_predicate.get_name() << "," << std::to_string(m_pos) << ")";
+        out << parser::PrimitiveConcept::get_name() << "(" << m_predicate.get_name() << "," << std::to_string(m_pos) << ")";
     }
 
     int compute_evaluate_time_score() const override {
         return SCORE_LINEAR;
-    }
-
-    static const std::string& get_name() {
-        return parser::PrimitiveConcept::get_name();
     }
 };
 
@@ -150,7 +148,6 @@ void load_construct_data(Archive& ar, dlplan::core::PrimitiveConcept* t, const u
 }
 
 }
-
 
 BOOST_CLASS_EXPORT_GUID(dlplan::core::PrimitiveConcept, "dlplan::core::PrimitiveConcept")
 

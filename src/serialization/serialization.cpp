@@ -17,14 +17,14 @@ namespace boost::serialization {
 template<typename Archive>
 void serialize( Archive& ar, dlplan::serialization::Data& t, const unsigned int /* version */ )
 {
-    //ar & t.vocabulary_infos;
-    //ar & t.instance_infos;
+    ar & t.vocabulary_infos;
+    ar & t.instance_infos;
     ar & t.syntatic_element_factories;
-    //ar & t.denotations_caches;
-    //ar & t.state_spaces;
-    //ar & t.tuple_graphs;
-    //ar & t.policies;
-    // ar & t.policy_builders;
+    ar & t.denotations_caches;
+    ar & t.state_spaces;
+    ar & t.tuple_graphs;
+    ar & t.policies;
+    ar & t.policy_builders;
 }
 
 }

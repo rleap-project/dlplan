@@ -2,7 +2,7 @@
 
 #include "../../generator_data.h"
 
-#include "../../../core/elements/roles/diff.h"
+#include "../../../core/parser/expressions/roles/diff.h"
 
 
 namespace dlplan::generator::rules {
@@ -26,8 +26,8 @@ void DiffRole::generate_impl(const core::States& states, int target_complexity, 
     }
 }
 
-std::string DiffRole::get_name() const {
-    return core::DiffRole::get_name();
+const std::string& DiffRole::get_name() const {
+    return core::parser::DiffRole::get_name();
 }
 
 }

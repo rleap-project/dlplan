@@ -10,6 +10,9 @@ using namespace std::string_literals;
 namespace dlplan::core::parser {
 
 class DiffRole : public Role {
+private:
+    static inline const std::string m_name = "r_diff";
+
 public:
     DiffRole(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Role(name, std::move(children)) { }
@@ -26,6 +29,10 @@ public:
         }
         // 2. Construct element
         return factory.make_diff_role(role_left, role_right);
+    }
+
+    static const std::string& get_name() {
+        return m_name;
     }
 };
 

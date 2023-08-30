@@ -8,9 +8,9 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/export.hpp>
 #include <boost/serialization/shared_ptr.hpp>
-#include <boost/serialization/serialization.hpp>
 
 #include "../utils.h"
+#include "../../parser/expressions/concepts/one_of.h"
 #include "../../../../include/dlplan/core.h"
 
 using namespace std::string_literals;
@@ -95,15 +95,11 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << get_name() << "(" << m_constant.get_name() << ")";
+        out << parser::OneOfConcept::get_name() << "(" << m_constant.get_name() << ")";
     }
 
     int compute_evaluate_time_score() const override {
         return SCORE_LINEAR;
-    }
-
-    static std::string get_name() {
-        return "c_one_of";
     }
 };
 
@@ -139,5 +135,7 @@ void load_construct_data(Archive& ar, dlplan::core::OneOfConcept* t, const unsig
 }
 
 }
+
+BOOST_CLASS_EXPORT_GUID(dlplan::core::OneOfConcept, "dlplan::core::OneOfConcept")
 
 #endif

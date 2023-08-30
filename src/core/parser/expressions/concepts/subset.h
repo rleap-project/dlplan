@@ -9,6 +9,9 @@ using namespace std::string_literals;
 namespace dlplan::core::parser {
 
 class SubsetConcept : public Concept {
+private:
+    static inline const std::string m_name = "c_subset";
+
 public:
     SubsetConcept(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Concept(name, std::move(children)) { }
@@ -25,6 +28,10 @@ public:
         }
         // 2. Construct element
         return factory.make_subset_concept(role_left, role_right);
+    }
+
+    static const std::string& get_name() {
+        return m_name;
     }
 };
 

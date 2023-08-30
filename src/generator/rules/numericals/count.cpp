@@ -32,7 +32,7 @@ void CountNumerical::generate_impl(const core::States& states, int target_comple
     }
 }
 
-std::string CountNumerical::get_name() const {
+const std::string& CountNumerical::get_name() const {
     return core::parser::CountNumerical::get_name();
 }
 

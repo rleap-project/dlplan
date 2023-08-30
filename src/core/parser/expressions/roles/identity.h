@@ -10,6 +10,9 @@ using namespace std::string_literals;
 namespace dlplan::core::parser {
 
 class IdentityRole : public Role {
+private:
+    static inline const std::string m_name = "r_identity";
+
 public:
     IdentityRole(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Role(name, std::move(children)) { }
@@ -25,6 +28,10 @@ public:
         }
         // 2. Construct element
         return factory.make_identity_role(concept);
+    }
+
+    static const std::string& get_name() {
+        return m_name;
     }
 };
 

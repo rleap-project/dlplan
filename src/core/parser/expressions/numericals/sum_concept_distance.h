@@ -9,6 +9,9 @@ using namespace std::string_literals;
 namespace dlplan::core::parser {
 
 class SumConceptDistanceNumerical : public Numerical {
+private:
+    static inline const std::string m_name = "n_sum_concept_distance";
+
 public:
     SumConceptDistanceNumerical(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Numerical(name, std::move(children)) { }
@@ -25,6 +28,10 @@ public:
             throw std::runtime_error("SumConceptDistanceNumerical::parse_numerical - child is not of type Concept, Role, Concept.");
         }
         return factory.make_sum_concept_distance_numerical(concept_from, role, concept_to);
+    }
+
+    static const std::string& get_name() {
+        return m_name;
     }
 };
 

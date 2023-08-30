@@ -9,6 +9,9 @@ using namespace std::string_literals;
 namespace dlplan::core::parser {
 
 class AllConcept : public Concept {
+private:
+    static inline const std::string m_name = "c_all";
+
 public:
     AllConcept(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Concept(name, std::move(children)) { }
@@ -27,6 +30,9 @@ public:
         return factory.make_all_concept(role, concept);
     }
 
+    static const std::string& get_name() {
+        return m_name;
+    }
 };
 
 }

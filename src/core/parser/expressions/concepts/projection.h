@@ -10,6 +10,9 @@ using namespace std::string_literals;
 namespace dlplan::core::parser {
 
 class ProjectionConcept : public Concept {
+private:
+    static inline const std::string m_name = "c_projection";
+
 public:
     ProjectionConcept(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Concept(name, std::move(children)) { }
@@ -27,6 +30,10 @@ public:
             throw std::runtime_error("ProjectionConcept::parse_concept - projection index out of range, should be 0 or 1 ("s + std::to_string(pos) + ")");
         }
         return factory.make_projection_concept(role, pos);
+    }
+
+    static const std::string& get_name() {
+        return m_name;
     }
 };
 

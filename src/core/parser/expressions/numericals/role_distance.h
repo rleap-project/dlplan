@@ -9,6 +9,9 @@ using namespace std::string_literals;
 namespace dlplan::core::parser {
 
 class RoleDistanceNumerical : public Numerical {
+private:
+    static inline const std::string m_name = "n_role_distance";
+
 public:
     RoleDistanceNumerical(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Numerical(name, std::move(children)) { }
@@ -25,6 +28,10 @@ public:
             throw std::runtime_error("RoleDistanceNumerical::parse_numerical - child is not of type Role, Role, Role.");
         }
         return factory.make_role_distance_numerical(role_from, role, role_to);
+    }
+
+    static const std::string& get_name() {
+        return m_name;
     }
 };
 

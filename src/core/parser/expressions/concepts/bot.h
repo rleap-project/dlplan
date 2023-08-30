@@ -9,6 +9,9 @@ using namespace std::string_literals;
 namespace dlplan::core::parser {
 
 class BotConcept : public Concept {
+private:
+    static inline const std::string m_name = "c_bot";
+
 public:
     BotConcept(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Concept(name, std::move(children)) { }
@@ -19,6 +22,10 @@ public:
         }
         // 2. Construct element
         return factory.make_bot_concept();
+    }
+
+    static const std::string& get_name() {
+        return m_name;
     }
 };
 

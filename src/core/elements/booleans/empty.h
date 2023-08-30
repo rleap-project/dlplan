@@ -7,8 +7,8 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/export.hpp>
+#include <boost/serialization/base_object.hpp>
 #include <boost/serialization/shared_ptr.hpp>
-#include <boost/serialization/serialization.hpp>
 
 #include "../utils.h"
 #include "../../parser/expressions/booleans/empty.h"
@@ -91,7 +91,7 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << get_name() << "(";
+        out << parser::EmptyBoolean::get_name() << "(";
         m_element->compute_repr(out);
         out << ")";
     }
@@ -106,10 +106,6 @@ public:
             throw std::runtime_error("Inclusion::compute_evaluate_time_score - unknown template parameter.");
         }
         return score;
-    }
-
-    const std::string& get_name() const {
-        return parser::EmptyBoolean::get_name();
     }
 };
 
@@ -144,5 +140,8 @@ void load_construct_data(Archive& ar, dlplan::core::EmptyBoolean<T>* t, const un
 }
 
 }
+
+BOOST_CLASS_EXPORT_GUID(dlplan::core::EmptyBoolean<dlplan::core::Concept>, "dlplan::core::EmptyBoolean<dlplan::core::Concept>")
+BOOST_CLASS_EXPORT_GUID(dlplan::core::EmptyBoolean<dlplan::core::Role>, "dlplan::core::EmptyBoolean<dlplan::core::Role>")
 
 #endif

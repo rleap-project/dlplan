@@ -9,6 +9,9 @@ using namespace std::string_literals;
 namespace dlplan::core::parser {
 
 class NotConcept : public Concept {
+private:
+    static inline const std::string m_name = "c_not";
+
 public:
     NotConcept(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Concept(name, std::move(children)) { }
@@ -24,6 +27,10 @@ public:
         }
         // 2. Construct element
         return factory.make_not_concept(concept);
+    }
+
+    static const std::string& get_name() {
+        return m_name;
     }
 };
 

@@ -8,9 +8,9 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/export.hpp>
 #include <boost/serialization/shared_ptr.hpp>
-#include <boost/serialization/serialization.hpp>
 
 #include "../utils.h"
+#include "../../parser/expressions/concepts/equal.h"
 #include "../../../../include/dlplan/core.h"
 
 using namespace std::string_literals;
@@ -105,7 +105,7 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << get_name() << "(";
+        out << parser::EqualConcept::get_name() << "(";
         m_role_left->compute_repr(out);
         out << ",";
         m_role_right->compute_repr(out);
@@ -114,10 +114,6 @@ public:
 
     int compute_evaluate_time_score() const override {
         return m_role_left->compute_evaluate_time_score() + m_role_right->compute_evaluate_time_score() + SCORE_QUADRATIC;
-    }
-
-    static std::string get_name() {
-        return "c_equal";
     }
 };
 
@@ -155,5 +151,7 @@ void load_construct_data(Archive& ar, dlplan::core::EqualConcept* t, const unsig
 }
 
 }
+
+BOOST_CLASS_EXPORT_GUID(dlplan::core::EqualConcept, "dlplan::core::EqualConcept")
 
 #endif

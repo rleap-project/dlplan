@@ -2,7 +2,7 @@
 
 #include "../../generator_data.h"
 
-#include "../../../core/elements/roles/or.h"
+#include "../../../core/parser/expressions/roles/or.h"
 
 
 namespace dlplan::generator::rules {
@@ -26,8 +26,8 @@ void OrRole::generate_impl(const core::States& states, int target_complexity, Ge
     }
 }
 
-std::string OrRole::get_name() const {
-    return core::OrRole::get_name();
+const std::string& OrRole::get_name() const {
+    return core::parser::OrRole::get_name();
 }
 
 }

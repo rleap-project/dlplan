@@ -2,7 +2,7 @@
 
 #include "../../generator_data.h"
 
-#include "../../../core/elements/roles/compose.h"
+#include "../../../core/parser/expressions/roles/compose.h"
 
 
 namespace dlplan::generator::rules {
@@ -27,8 +27,8 @@ void ComposeRole::generate_impl(const core::States& states, int target_complexit
     }
 }
 
-std::string ComposeRole::get_name() const {
-    return core::ComposeRole::get_name();
+const std::string& ComposeRole::get_name() const {
+    return core::parser::ComposeRole::get_name();
 }
 
 }
