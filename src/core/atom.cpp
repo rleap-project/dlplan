@@ -14,6 +14,8 @@ using namespace std::string_literals;
 
 namespace dlplan::core {
 
+Atom::Atom() : m_name(""), m_index(-1), m_predicate_index(-1), m_object_indices(ObjectIndices()), m_is_static(false) { }
+
 Atom::Atom(
     const std::string& name,
     AtomIndex index,
@@ -89,41 +91,16 @@ bool Atom::is_static() const {
 
 namespace boost::serialization {
 template<typename Archive>
-void serialize(Archive& /* ar */ , dlplan::core::Atom& /* t */, const unsigned int /* version */) {
-}
-
-template<class Archive>
-void save_construct_data(
-    Archive & ar, const dlplan::core::Atom* t, const unsigned int /* version */ ){
-    ar << t->m_name;
-    ar << t->m_index;
-    ar << t->m_predicate_index;
-    ar << t->m_object_indices;
-    ar << t->m_is_static;
-}
-
-template<class Archive>
-void load_construct_data(
-    Archive & ar, dlplan::core::Atom* t, const unsigned int /* version */ ){
-    std::string name;
-    dlplan::core::AtomIndex index;
-    dlplan::core::PredicateIndex predicate_index;
-    dlplan::core::ObjectIndices object_indices;
-    bool is_static;
-    ar >> name;
-    ar >> index;
-    ar >> predicate_index;
-    ar >> object_indices;
-    ar >> is_static;
-    ::new(t)dlplan::core::Atom(name, index, predicate_index, object_indices, is_static);
+void serialize(Archive& ar, dlplan::core::Atom& t, const unsigned int /* version */) {
+    ar & t.m_name;
+    ar & t.m_index;
+    ar & t.m_predicate_index;
+    ar & t.m_object_indices;
+    ar & t.m_is_static;
 }
 
 template void serialize(boost::archive::text_iarchive& ar,
     dlplan::core::Atom& t, const unsigned int version);
 template void serialize(boost::archive::text_oarchive& ar,
     dlplan::core::Atom& t, const unsigned int version);
-template void save_construct_data(boost::archive::text_oarchive& ar,
-    const dlplan::core::Atom* t, const unsigned int version);
-template void load_construct_data(boost::archive::text_iarchive& ar,
-    dlplan::core::Atom* t, const unsigned int version);
 }

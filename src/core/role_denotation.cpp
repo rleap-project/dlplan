@@ -10,8 +10,7 @@
 
 
 namespace dlplan::core {
-RoleDenotation::RoleDenotation(int num_objects, utils::DynamicBitset<unsigned>&& data)
-    : m_num_objects(num_objects), m_data(std::move(data)) { }
+RoleDenotation::RoleDenotation() : m_num_objects(0), m_data(utils::DynamicBitset(0)) { }
 
 RoleDenotation::RoleDenotation(int num_objects)
     : m_num_objects(num_objects), m_data(utils::DynamicBitset<unsigned>(num_objects * num_objects)) { }
@@ -139,36 +138,15 @@ int RoleDenotation::get_num_objects() const {
 
 
 namespace boost::serialization {
-
 template<typename Archive>
-void serialize(Archive& /* ar */ , dlplan::core::RoleDenotation& /* t */, const unsigned int /* version */) {
-}
-
-template<class Archive>
-void save_construct_data(
-    Archive & ar, const dlplan::core::RoleDenotation* t, const unsigned int /* version */ ){
-    ar << t->m_num_objects;
-    ar << &t->m_data;
-}
-
-template<class Archive>
-void load_construct_data(
-    Archive & ar, dlplan::core::RoleDenotation* t, const unsigned int /* version */ ){
-    int num_objects;
-    dlplan::utils::DynamicBitset<unsigned>* data;
-    ar >> num_objects;
-    ar >> data;
-    ::new(t)dlplan::core::RoleDenotation(num_objects, std::move(*data));
-    delete data;
+void serialize(Archive& ar, dlplan::core::RoleDenotation& t, const unsigned int /* version */) {
+    ar & t.m_num_objects;
+    ar & t.m_data;
 }
 
 template void serialize(boost::archive::text_iarchive& ar,
     dlplan::core::RoleDenotation& t, const unsigned int version);
 template void serialize(boost::archive::text_oarchive& ar,
     dlplan::core::RoleDenotation& t, const unsigned int version);
-template void save_construct_data(boost::archive::text_oarchive& ar,
-    const dlplan::core::RoleDenotation* t, const unsigned int version);
-template void load_construct_data(boost::archive::text_iarchive& ar,
-    dlplan::core::RoleDenotation* t, const unsigned int version);
 
 }

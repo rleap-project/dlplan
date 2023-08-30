@@ -7,6 +7,8 @@
 
 
 namespace dlplan::core {
+Predicate::Predicate() : m_name(""), m_index(-1), m_arity(0), m_is_static(false) { }
+
 Predicate::Predicate(const std::string& name, PredicateIndex index, int arity, bool is_static)
     : m_name(name), m_index(index), m_arity(arity), m_is_static(is_static) { }
 
@@ -70,38 +72,15 @@ bool Predicate::is_static() const {
 namespace boost::serialization {
 
 template<typename Archive>
-void serialize(Archive& /* ar */ , dlplan::core::Predicate& /* t */, const unsigned int /* version */) {
-}
-
-template<class Archive>
-void save_construct_data(
-    Archive & ar, const dlplan::core::Predicate* t, const unsigned int /* version */ ){
-    ar << t->m_name;
-    ar << t->m_index;
-    ar << t->m_arity;
-    ar << t->m_is_static;
-}
-
-template<class Archive>
-void load_construct_data(
-    Archive & ar, dlplan::core::Predicate* t, const unsigned int /* version */ ){
-    std::string name;
-    dlplan::core::PredicateIndex index;
-    int arity;
-    bool is_static;
-    ar >> name;
-    ar >> index;
-    ar >> arity;
-    ar >> is_static;
-    ::new(t)dlplan::core::Predicate(name, index, arity, is_static);
+void serialize(Archive& ar, dlplan::core::Predicate& t, const unsigned int /* version */) {
+    ar & t.m_name;
+    ar & t.m_index;
+    ar & t.m_arity;
+    ar & t.m_is_static;
 }
 
 template void serialize(boost::archive::text_iarchive& ar,
     dlplan::core::Predicate& t, const unsigned int version);
 template void serialize(boost::archive::text_oarchive& ar,
     dlplan::core::Predicate& t, const unsigned int version);
-template void save_construct_data(boost::archive::text_oarchive& ar,
-    const dlplan::core::Predicate* t, const unsigned int version);
-template void load_construct_data(boost::archive::text_iarchive& ar,
-    dlplan::core::Predicate* t, const unsigned int version);
 }

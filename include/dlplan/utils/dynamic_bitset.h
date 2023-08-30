@@ -74,8 +74,7 @@ class DynamicBitset {
     }
 
     /// @brief Constructor for serialization.
-    DynamicBitset()
-        : blocks(std::vector<Block>()), num_bits(0) { }
+    DynamicBitset() : blocks(std::vector<Block>()), num_bits(0) { }
 
     friend class boost::serialization::access;
     template<typename Archive, typename Block_>
