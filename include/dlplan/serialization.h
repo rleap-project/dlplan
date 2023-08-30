@@ -26,10 +26,10 @@ struct Data {
     std::unordered_map<std::string, std::shared_ptr<core::DenotationsCaches>> denotations_caches;
 
     // state_space
-    std::unordered_map<std::string, std::shared_ptr<const state_space::StateSpace>> state_spaces;
+    std::unordered_map<std::string, std::shared_ptr<state_space::StateSpace>> state_spaces;
 
     // novelty
-    std::unordered_map<std::string, std::shared_ptr<const novelty::TupleGraph>> tuple_graphs;
+    std::unordered_map<std::string, std::shared_ptr<novelty::TupleGraph>> tuple_graphs;
 
     // policy
     std::unordered_map<std::string, std::shared_ptr<const policy::Policy>> policies;
