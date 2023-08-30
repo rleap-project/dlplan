@@ -2,7 +2,7 @@
 
 #include "../../generator_data.h"
 
-#include "../../../core/elements/concepts/primitive.h"
+#include "../../../core/parser/expressions/concepts/primitive.h"
 
 
 namespace dlplan::generator::rules {
@@ -25,7 +25,7 @@ void PrimitiveConcept::generate_impl(const core::States& states, int target_comp
 }
 
 std::string PrimitiveConcept::get_name() const {
-    return core::PrimitiveConcept::get_name();
+    return core::parser::PrimitiveConcept::get_name();
 }
 
 }

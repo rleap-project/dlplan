@@ -46,3 +46,4 @@ Data deserialize(std::istream& buffer) {
 }
 
 }
+

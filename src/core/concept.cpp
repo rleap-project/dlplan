@@ -1,5 +1,7 @@
 #include "../../include/dlplan/core.h"
 
+#include <boost/serialization/base_object.hpp>
+
 
 namespace dlplan::core {
 Concept::Concept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
@@ -59,14 +61,5 @@ void load_construct_data(Archive& /* ar */ , dlplan::core::Concept* /* t */ , co
 {
 }
 
-template void serialize(boost::archive::text_iarchive& ar,
-    dlplan::core::Concept& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    dlplan::core::Concept& t, const unsigned int version);
-template void save_construct_data(boost::archive::text_oarchive& ar,
-    const dlplan::core::Concept* t, const unsigned int version);
-template void load_construct_data(boost::archive::text_iarchive& ar,
-    dlplan::core::Concept* t, const unsigned int version);
 }
 
-BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::core::Concept)

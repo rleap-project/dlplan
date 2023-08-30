@@ -9,6 +9,9 @@ using namespace std::string_literals;
 namespace dlplan::core::parser {
 
 class CountNumerical : public Numerical {
+private:
+    static inline const std::string m_name = "n_count";
+
 public:
     CountNumerical(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Numerical(name, std::move(children)) { }
@@ -28,6 +31,10 @@ public:
         }
         // 2. Construct element
         throw std::runtime_error("CountNumerical::parse_numerical - unable to construct children elements.");
+    }
+
+    static const std::string& get_name() {
+        return m_name;
     }
 };
 

@@ -9,6 +9,9 @@ using namespace std::string_literals;
 namespace dlplan::core::parser {
 
 class EmptyBoolean : public Boolean {
+private:
+    static inline const std::string m_name = "b_empty";
+
 public:
     EmptyBoolean(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Boolean(name, std::move(children)) { }
@@ -28,6 +31,10 @@ public:
         }
         // 2. If unsuccessful then throw a runtime error.
         throw std::runtime_error("EmptyBoolean::parse_boolean - unable to construct children elements.");
+    }
+
+    static const std::string& get_name() {
+        return m_name;
     }
 };
 

@@ -2,7 +2,7 @@
 
 #include "../../generator_data.h"
 
-#include "../../../core/elements/booleans/empty.h"
+#include "../../../core/parser/expressions/booleans/empty.h"
 
 
 namespace dlplan::generator::rules {
@@ -33,7 +33,7 @@ void EmptyBoolean::generate_impl(const core::States& states, int target_complexi
 }
 
 std::string EmptyBoolean::get_name() const {
-    return core::EmptyBoolean<int>::get_name();
+    return core::parser::EmptyBoolean::get_name();
 }
 
 }

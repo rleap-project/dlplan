@@ -11,10 +11,6 @@
 #include <vector>
 #include <iostream>
 
-#include <boost/serialization/export.hpp>
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-
 #include "utils/pimpl.h"
 #include "utils/dynamic_bitset.h"
 
@@ -1058,6 +1054,10 @@ protected:
 
     template <typename Archive>
     friend void boost::serialization::serialize(Archive& ar, Boolean& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive & ar, const Boolean* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive & ar, Boolean* t, const unsigned int version);
 
 public:
     Boolean(const Boolean& other);
@@ -1160,10 +1160,5 @@ public:
 };
 
 }
-
-BOOST_CLASS_EXPORT_KEY2(dlplan::core::Concept, "dlplan::core::Concept")
-BOOST_CLASS_EXPORT_KEY2(dlplan::core::Role, "dlplan::core::Role")
-BOOST_CLASS_EXPORT_KEY2(dlplan::core::Boolean, "dlplan::core::Boolean")
-BOOST_CLASS_EXPORT_KEY2(dlplan::core::Numerical, "dlplan::core::Numerical")
 
 #endif

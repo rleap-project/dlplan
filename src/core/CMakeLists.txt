@@ -20,14 +20,13 @@ target_sources(dlplancore
         object.cpp
         parser/parser.cpp
         parser/expression_factory.cpp
+        parser/utils.cpp
         elements/utils.cpp
         ../utils/logging.cpp
         ../utils/MurmurHash3.cpp
         ../utils/system.cpp
         ../utils/timer.cpp
-        ../utils/hash.cpp
-        elements/concepts/primitive.cpp
-        elements/numericals/count.cpp)
+        ../utils/hash.cpp)
 target_link_libraries(dlplancore
     PRIVATE
         Boost::serialization)

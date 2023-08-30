@@ -34,7 +34,6 @@
 #include "expressions/roles/transitive_closure.h"
 #include "expressions/roles/transitive_reflexive_closure.h"
 
-#include "../elements/booleans/empty.h"
 #include "../elements/booleans/inclusion.h"
 #include "../elements/booleans/nullary.h"
 #include "../elements/concepts/all.h"
@@ -45,13 +44,11 @@
 #include "../elements/concepts/not.h"
 #include "../elements/concepts/one_of.h"
 #include "../elements/concepts/or.h"
-#include "../elements/concepts/primitive.h"
 #include "../elements/concepts/projection.h"
 #include "../elements/concepts/some.h"
 #include "../elements/concepts/subset.h"
 #include "../elements/concepts/top.h"
 #include "../elements/numericals/concept_distance.h"
-#include "../elements/numericals/count.h"
 #include "../elements/numericals/role_distance.h"
 #include "../elements/numericals/sum_concept_distance.h"
 #include "../elements/numericals/sum_role_distance.h"
@@ -75,7 +72,7 @@
 namespace dlplan::core::parser {
 
 std::unique_ptr<Expression> ExpressionFactory::make_expression(const std::string& name, std::vector<std::unique_ptr<Expression>> &&children) {
-    if (name == dlplan::core::EmptyBoolean<int>::get_name()) {
+    if (name == EmptyBoolean::get_name()) {
         return std::make_unique<EmptyBoolean>(name, std::move(children));
     } else if (name == dlplan::core::InclusionBoolean<int>::get_name()) {
         return std::make_unique<InclusionBoolean>(name, std::move(children));
@@ -97,7 +94,7 @@ std::unique_ptr<Expression> ExpressionFactory::make_expression(const std::string
         return std::make_unique<OneOfConcept>(name, std::move(children));
     } else if (name == dlplan::core::OrConcept::get_name()) {
         return std::make_unique<OrConcept>(name, std::move(children));
-    } else if (name == dlplan::core::PrimitiveConcept::get_name()) {
+    } else if (name == PrimitiveConcept::get_name()) {
         return std::make_unique<PrimitiveConcept>(name, std::move(children));
     } else if (name == dlplan::core::ProjectionConcept::get_name()) {
         return std::make_unique<ProjectionConcept>(name, std::move(children));
@@ -109,7 +106,7 @@ std::unique_ptr<Expression> ExpressionFactory::make_expression(const std::string
         return std::make_unique<TopConcept>(name, std::move(children));
     } else if (name == dlplan::core::ConceptDistanceNumerical::get_name()) {
         return std::make_unique<ConceptDistanceNumerical>(name, std::move(children));
-    } else if (name == dlplan::core::CountNumerical<int>::get_name()) {
+    } else if (name == CountNumerical::get_name()) {
         return std::make_unique<CountNumerical>(name, std::move(children));
     } else if (name == dlplan::core::RoleDistanceNumerical::get_name()) {
         return std::make_unique<RoleDistanceNumerical>(name, std::move(children));

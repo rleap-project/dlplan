@@ -11,6 +11,7 @@
 #include <boost/serialization/serialization.hpp>
 
 #include "../utils.h"
+#include "../../parser/expressions/booleans/empty.h"
 #include "../../../../include/dlplan/core.h"
 
 using namespace std::string_literals;
@@ -107,8 +108,8 @@ public:
         return score;
     }
 
-    static std::string get_name() {
-        return "b_empty";
+    const std::string& get_name() const {
+        return parser::EmptyBoolean::get_name();
     }
 };
 

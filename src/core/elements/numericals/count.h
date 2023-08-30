@@ -2,13 +2,14 @@
 #define DLPLAN_SRC_CORE_ELEMENTS_NUMERICAL_COUNT_H_
 
 #include <sstream>
-#include <memory>
 
 #include <boost/serialization/export.hpp>
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+
 
 #include "../utils.h"
+#include "../../parser/expressions/numericals/count.h"
 #include "../../../../include/dlplan/core.h"
 
 using namespace std::string_literals;
@@ -105,14 +106,45 @@ public:
         return score;
     }
 
-    static std::string get_name() {
-        return "n_count";
+    static const std::string& get_name() {
+        return parser::CountNumerical::get_name();
     }
 };
 
 }
 
-BOOST_CLASS_EXPORT_KEY2(dlplan::core::CountNumerical<dlplan::core::Concept>, "dlplan::core::CountNumerical<dlplan::core::Concept>")
-BOOST_CLASS_EXPORT_KEY2(dlplan::core::CountNumerical<dlplan::core::Role>, "dlplan::core::CountNumerical<dlplan::core::Role>")
+
+namespace boost::serialization {
+template<typename Archive, typename T>
+void serialize(Archive& /* ar */ , dlplan::core::CountNumerical<T>& t, const unsigned int /* version */ )
+{
+    boost::serialization::base_object<dlplan::core::Numerical>(t);
+}
+
+template<class Archive, typename T>
+void save_construct_data(Archive & ar, const dlplan::core::CountNumerical<T>* t, const unsigned int /* version */ )
+{
+    ar << t->m_vocabulary_info;
+    ar << t->m_index;
+    ar << t->m_element;
+}
+
+template<class Archive, typename T>
+void load_construct_data(Archive & ar, dlplan::core::CountNumerical<T>* t, const unsigned int /* version */ )
+{
+    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
+    int index;
+    std::shared_ptr<const T> element;
+    ar >> vocabulary;
+    ar >> index;
+    ar >> element;
+    ::new(t)dlplan::core::CountNumerical<T>(vocabulary, index, element);
+}
+
+}
+
+
+BOOST_CLASS_EXPORT_GUID(dlplan::core::CountNumerical<dlplan::core::Concept>, "dlplan::core::CountNumerical<dlplan::core::Concept>")
+BOOST_CLASS_EXPORT_GUID(dlplan::core::CountNumerical<dlplan::core::Role>, "dlplan::core::CountNumerical<dlplan::core::Role>")
 
 #endif

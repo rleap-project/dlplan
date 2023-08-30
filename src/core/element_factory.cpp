@@ -41,7 +41,6 @@
 #include "parser/expressions/expression.h"
 
 
-
 namespace dlplan::core {
 SyntacticElementFactoryImpl::SyntacticElementFactoryImpl()
     : m_vocabulary_info(nullptr), m_caches(Caches()) {

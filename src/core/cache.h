@@ -35,7 +35,7 @@ void serialize(Archive& ar, dlplan::core::Caches& t, const unsigned int /* versi
 {
     //ar & t.m_boolean_cache;
     ar & t.m_numerical_cache;
-    //ar & t.m_concept_cache;
+    ar & t.m_concept_cache;
     //ar & t.m_role_cache;
 }
 

@@ -2,6 +2,8 @@
 
 #include <sstream>
 
+#include <boost/serialization/base_object.hpp>
+
 
 namespace dlplan::core {
 
@@ -55,15 +57,4 @@ template<class Archive>
 void load_construct_data(Archive& /* ar */ , dlplan::core::BaseElement* /* t */ , const unsigned int /* version */ )
 {
 }
-
-template void serialize(boost::archive::text_iarchive& ar,
-    dlplan::core::BaseElement& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    dlplan::core::BaseElement& t, const unsigned int version);
-template void save_construct_data(boost::archive::text_oarchive& ar,
-    const dlplan::core::BaseElement* t, const unsigned int version);
-template void load_construct_data(boost::archive::text_iarchive& ar,
-    dlplan::core::BaseElement* t, const unsigned int version);
 }
-
-BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::core::BaseElement)

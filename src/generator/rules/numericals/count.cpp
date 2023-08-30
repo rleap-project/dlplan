@@ -2,7 +2,7 @@
 
 #include "../../generator_data.h"
 
-#include "../../../core/elements/numericals/count.h"
+#include "../../../core/parser/expressions/numericals/count.h"
 
 
 namespace dlplan::generator::rules {
@@ -33,7 +33,7 @@ void CountNumerical::generate_impl(const core::States& states, int target_comple
 }
 
 std::string CountNumerical::get_name() const {
-    return core::CountNumerical<int>::get_name();
+    return core::parser::CountNumerical::get_name();
 }
 
 }

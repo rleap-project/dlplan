@@ -10,6 +10,9 @@ using namespace std::string_literals;
 namespace dlplan::core::parser {
 
 class PrimitiveConcept : public Concept {
+private:
+    static inline const std::string m_name = "c_primitive";
+
 public:
     PrimitiveConcept(const std::string &name, std::vector<std::unique_ptr<Expression>> &&children)
     : Concept(name, std::move(children)) { }
@@ -23,6 +26,10 @@ public:
         int pos = try_parse_number(m_children[1]->get_name());
         // 2. Construct element
         return factory.make_primitive_concept(factory.get_vocabulary_info()->get_predicate(predicate_name), pos);
+    }
+
+    static const std::string& get_name() {
+        return m_name;
     }
 };
 
