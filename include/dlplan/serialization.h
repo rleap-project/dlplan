@@ -1,3 +1,5 @@
+/// @brief Provides functionality for serialization of the whole library state.
+
 #ifndef DLPLAN_INCLUDE_DLPLAN_SERIALIZATION_H_
 #define DLPLAN_INCLUDE_DLPLAN_SERIALIZATION_H_
 
