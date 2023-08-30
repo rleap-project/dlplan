@@ -41,8 +41,6 @@
 #include "parser/expressions/expression.h"
 
 
-BOOST_CLASS_EXPORT_GUID(dlplan::core::PrimitiveRole, "dlplan::core::PrimitiveRole")
-
 namespace dlplan::core {
 SyntacticElementFactoryImpl::SyntacticElementFactoryImpl()
     : m_vocabulary_info(nullptr), m_caches(Caches()) {

@@ -13,6 +13,7 @@ target_sources(dlplancore
         core.cpp
         denotations_caches.cpp
         element_factory.cpp
+        elements/roles/primitive.cpp
         instance_info.cpp
         numerical.cpp
         vocabulary_info.cpp

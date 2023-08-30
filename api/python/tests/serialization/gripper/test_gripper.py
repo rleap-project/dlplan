@@ -50,6 +50,7 @@ def test_serialization_gripper():
     # SyntacticElementFactory
     factory = SyntacticElementFactory(result_1.state_space.get_instance_info().get_vocabulary_info())
     numerical = factory.parse_numerical("n_count(c_primitive(free, 0))")
+    boolean = factory.parse_boolean("b_empty(r_and(r_primitive(at, 0, 1), r_primitive(at_g, 0, 1)))");
     syntactic_element_factories = {
         "0": factory
     }
@@ -59,8 +60,11 @@ def test_serialization_gripper():
     builder = PolicyBuilder()
     c_n_gt = builder.add_gt_condition(numerical)
     e_n_dec = builder.add_dec_effect(numerical)
-    rule = builder.add_rule({c_n_gt}, {e_n_dec})
-    policy = builder.add_policy({rule})
+    c_b_pos = builder.add_pos_condition(boolean)
+    e_b_neg = builder.add_neg_effect(boolean)
+    rule_1 = builder.add_rule({c_n_gt}, {e_n_dec})
+    rule_2 = builder.add_rule({c_b_pos}, {e_b_neg})
+    policy = builder.add_policy({rule_1, rule_2})
     policy_builders = {
         "0": builder
     }

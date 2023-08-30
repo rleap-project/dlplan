@@ -49,14 +49,18 @@ TEST(DLPTests, SerializationGripperTest) {
     // SyntacticElementFactory
     auto factory = std::make_shared<SyntacticElementFactory>(state_space_1->get_instance_info()->get_vocabulary_info());
     auto numerical = factory->parse_numerical("n_count(c_primitive(free, 0))");
+    auto boolean = factory->parse_boolean("b_empty(r_and(r_primitive(at, 0, 1), r_primitive(at_g, 0, 1)))");
     out_data.syntatic_element_factories.emplace("0", factory);
 
     // PolicyBuilder
     auto builder = std::make_shared<PolicyBuilder>();
     auto c_n_gt = builder->add_gt_condition(numerical);
     auto e_n_dec = builder->add_dec_effect(numerical);
-    auto rule = builder->add_rule({c_n_gt}, {e_n_dec});
-    auto policy = builder->add_policy({rule});
+    auto c_b_pos = builder->add_pos_condition(boolean);
+    auto e_b_neg = builder->add_neg_effect(boolean);
+    auto rule_1 = builder->add_rule({c_n_gt}, {e_n_dec});
+    auto rule_2 = builder->add_rule({c_b_pos}, {e_b_neg});
+    auto policy = builder->add_policy({rule_1, rule_2});
     out_data.policy_builders.emplace("0", builder);
 
     // Policy
