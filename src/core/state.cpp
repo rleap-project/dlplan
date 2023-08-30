@@ -21,6 +21,8 @@ static AtomIndices sort_atom_idxs(AtomIndices&& atom_idxs) {
     return atom_idxs;
 }
 
+State::State() : m_instance_info(nullptr), m_atom_indices(AtomIndices()), m_index(-1) { }
+
 State::State(std::shared_ptr<InstanceInfo> instance_info, const std::vector<Atom>& atoms, StateIndex index)
     : m_instance_info(instance_info), m_index(index) {
     if (!std::all_of(atoms.begin(), atoms.end(), [&](const auto& atom){ return !atom.is_static(); })) {
@@ -133,28 +135,11 @@ size_t State::hash() const {
 
 namespace boost::serialization {
 template<typename Archive>
-void serialize(Archive& /* ar */ , dlplan::core::State& /* t */, const unsigned int /* version */ )
+void serialize(Archive& ar , dlplan::core::State& t, const unsigned int /* version */ )
 {
-}
-
-template<class Archive>
-void save_construct_data(
-    Archive & ar, const dlplan::core::State* t, const unsigned int /* version */ ){
-    ar << t->m_index;
-    ar << t->m_instance_info;
-    ar << t->m_atom_indices;
-}
-
-template<class Archive>
-void load_construct_data(
-    Archive & ar, dlplan::core::State* t, const unsigned int /* version */ ){
-    dlplan::core::InstanceIndex index;
-    std::shared_ptr<dlplan::core::InstanceInfo> instance_info;
-    dlplan::core::AtomIndices atom_indices;
-    ar >> index;
-    ar >> instance_info;
-    ar >> atom_indices;
-    ::new(t)dlplan::core::State(instance_info, std::move(atom_indices), index);
+    ar & t.m_index;
+    ar & t.m_instance_info;
+    ar & t.m_atom_indices;
 }
 
 template<typename Archive>
@@ -184,10 +169,6 @@ template void serialize(boost::archive::text_iarchive& ar,
     dlplan::core::State& t, const unsigned int version);
 template void serialize(boost::archive::text_oarchive& ar,
     dlplan::core::State& t, const unsigned int version);
-template void save_construct_data(boost::archive::text_oarchive& ar,
-    const dlplan::core::State* t, const unsigned int version);
-template void load_construct_data(boost::archive::text_iarchive& ar,
-    dlplan::core::State* t, const unsigned int version);
 
 template void serialize(boost::archive::text_iarchive& ar,
     std::pair<const int, dlplan::core::State>& t, const unsigned int version);

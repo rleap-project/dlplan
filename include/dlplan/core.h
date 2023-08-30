@@ -65,10 +65,6 @@ namespace boost::serialization {
 
     template <typename Archive>
     void serialize(Archive& ar, dlplan::core::State& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::State* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::State* t, const unsigned int version);
 
     template <typename Archive>
     void serialize(Archive& ar, std::pair<const int, dlplan::core::State>& t, const unsigned int version);
@@ -817,12 +813,12 @@ private:
     AtomIndices m_atom_indices;
     int m_index;
 
+    /// @brief Constructor for serialization.
+    State();
+
+    friend class boost::serialization::access;
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, State& t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive & ar, const State* t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive & ar, State* t, const unsigned int version);
 
 public:
     State(std::shared_ptr<InstanceInfo> instance_info, const std::vector<Atom>& atoms, StateIndex index=-1);
