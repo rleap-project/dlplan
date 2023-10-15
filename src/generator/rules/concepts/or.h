@@ -9,7 +9,7 @@ class OrConcept : public Rule {
 public:
     void generate_impl(const core::States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) override;
 
-    const std::string& get_name() const override;
+    std::string get_name() const override;
 };
 
 }

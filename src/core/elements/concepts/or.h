@@ -10,7 +10,6 @@
 #include <boost/serialization/shared_ptr.hpp>
 
 #include "../utils.h"
-#include "../../parser/expressions/concepts/or.h"
 #include "../../../../include/dlplan/core.h"
 
 using namespace std::string_literals;
@@ -105,7 +104,7 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << parser::OrConcept::get_name() << "(";
+        out << "c_or" << "(";
         m_concept_left->compute_repr(out);
         out << ",";
         m_concept_right->compute_repr(out);

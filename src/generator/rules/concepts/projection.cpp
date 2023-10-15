@@ -2,8 +2,6 @@
 
 #include "../../generator_data.h"
 
-#include "../../../core/parser/expressions/concepts/projection.h"
-
 
 namespace dlplan::generator::rules {
 void ProjectionConcept::generate_impl(const core::States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) {
@@ -23,8 +21,8 @@ void ProjectionConcept::generate_impl(const core::States& states, int target_com
     }
 }
 
-const std::string& ProjectionConcept::get_name() const {
-    return core::parser::ProjectionConcept::get_name();
+std::string ProjectionConcept::get_name() const {
+    return "c_projection";
 }
 
 }

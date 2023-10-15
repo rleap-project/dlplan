@@ -2,8 +2,6 @@
 
 #include "../../generator_data.h"
 
-#include "../../../core/parser/expressions/numericals/count.h"
-
 
 namespace dlplan::generator::rules {
 void CountNumerical::generate_impl(const core::States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) {
@@ -32,8 +30,8 @@ void CountNumerical::generate_impl(const core::States& states, int target_comple
     }
 }
 
-const std::string& CountNumerical::get_name() const {
-    return core::parser::CountNumerical::get_name();
+std::string CountNumerical::get_name() const {
+    return "n_count";
 }
 
 }

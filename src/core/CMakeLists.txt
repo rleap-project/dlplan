@@ -19,9 +19,11 @@ target_sources(dlplancore
         vocabulary_info.cpp
         predicate.cpp
         object.cpp
-        parser/parser.cpp
-        parser/expression_factory.cpp
-        parser/utils.cpp
+        parsers/common/file_system.cpp
+        parsers/common/utility.cpp
+        parsers/elements/driver.cpp
+        parsers/elements/stage_1_ast/parser_instantiations.cpp
+        parsers/elements/stage_1_ast/parser.cpp
         elements/utils.cpp
         ../utils/logging.cpp
         ../utils/MurmurHash3.cpp

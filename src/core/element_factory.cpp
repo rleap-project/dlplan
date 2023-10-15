@@ -1,5 +1,7 @@
 #include "element_factory.h"
 
+#include <string>
+
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/shared_ptr.hpp>
@@ -37,8 +39,8 @@
 #include "elements/roles/top.h"
 #include "elements/roles/transitive_closure.h"
 #include "elements/roles/transitive_reflexive_closure.h"
-#include "parser/parser.h"
-#include "parser/expressions/expression.h"
+
+#include "parsers/elements/driver.hpp"
 
 
 namespace dlplan::core {
@@ -50,36 +52,44 @@ SyntacticElementFactoryImpl::SyntacticElementFactoryImpl(std::shared_ptr<Vocabul
     : m_vocabulary_info(vocabulary_info), m_caches(Caches()) {
 }
 
-std::shared_ptr<const Concept> SyntacticElementFactoryImpl::parse_concept(SyntacticElementFactory& parent, const std::string &description) {
-    auto concept = parser::Parser().parse(description)->parse_concept(parent);
-    if (!concept) {
-        throw std::runtime_error("SyntacticElementFactoryImpl::parse_concept - Unable to parse concept.");
-    }
-    return concept;
+std::shared_ptr<const Concept> SyntacticElementFactoryImpl::parse_concept(SyntacticElementFactory& parent,
+    const std::string &description, const std::string& filename) {
+    return parsers::elements::Driver(parent).parse_concept(description, filename);
 }
 
-std::shared_ptr<const Role> SyntacticElementFactoryImpl::parse_role(SyntacticElementFactory& parent, const std::string &description) {
-    auto role = parser::Parser().parse(description)->parse_role(parent);
-    if (!role) {
-        throw std::runtime_error("SyntacticElementFactoryImpl::parse_role - Unable to parse role.");
-    }
-    return role;
+std::shared_ptr<const Concept> SyntacticElementFactoryImpl::parse_concept(SyntacticElementFactory& parent,
+    std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename) {
+    return parsers::elements::Driver(parent).parse_concept(iter, end, filename);
 }
 
-std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::parse_numerical(SyntacticElementFactory& parent, const std::string &description) {
-    auto numerical = parser::Parser().parse(description)->parse_numerical(parent);
-    if (!numerical) {
-        throw std::runtime_error("SyntacticElementFactoryImpl::parse_numerical - Unable to parse numerical.");
-    }
-    return numerical;
+std::shared_ptr<const Role> SyntacticElementFactoryImpl::parse_role(SyntacticElementFactory& parent,
+    const std::string &description, const std::string& filename) {
+    return parsers::elements::Driver(parent).parse_role(description, filename);
 }
 
-std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::parse_boolean(SyntacticElementFactory& parent, const std::string &description) {
-    auto boolean = parser::Parser().parse(description)->parse_boolean(parent);
-    if (!boolean) {
-        throw std::runtime_error("SyntacticElementFactoryImpl::parse_boolean - Unable to parse boolean.");
-    }
-    return boolean;
+std::shared_ptr<const Role> SyntacticElementFactoryImpl::parse_role(SyntacticElementFactory& parent,
+    std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename) {
+    return parsers::elements::Driver(parent).parse_role(iter, end, filename);
+}
+
+std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::parse_boolean(SyntacticElementFactory& parent,
+    const std::string &description, const std::string& filename) {
+    return parsers::elements::Driver(parent).parse_boolean(description, filename);
+}
+
+std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::parse_boolean(SyntacticElementFactory& parent,
+    std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename) {
+    return parsers::elements::Driver(parent).parse_boolean(iter, end, filename);
+}
+
+std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::parse_numerical(SyntacticElementFactory& parent,
+    const std::string &description, const std::string& filename) {
+    return parsers::elements::Driver(parent).parse_numerical(description, filename);
+}
+
+std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::parse_numerical(SyntacticElementFactory& parent,
+    std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename) {
+    return parsers::elements::Driver(parent).parse_numerical(iter, end, filename);
 }
 
 std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::make_empty_boolean(const std::shared_ptr<const Concept>& concept) {

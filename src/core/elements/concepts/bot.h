@@ -10,7 +10,6 @@
 #include <boost/serialization/shared_ptr.hpp>
 
 #include "../utils.h"
-#include "../../parser/expressions/concepts/bot.h"
 #include "../../../../include/dlplan/core.h"
 
 using namespace std::string_literals;
@@ -68,7 +67,7 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << parser::BotConcept::get_name();
+        out << "c_bot";
     }
 
     int compute_evaluate_time_score() const override {

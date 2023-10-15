@@ -10,7 +10,6 @@
 #include <boost/serialization/shared_ptr.hpp>
 
 #include "../utils.h"
-#include "../../parser/expressions/roles/top.h"
 #include "../../../../include/dlplan/core.h"
 
 using namespace std::string_literals;
@@ -75,7 +74,7 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << parser::TopRole::get_name();
+        out << "r_top";
     }
 
     int compute_evaluate_time_score() const override {

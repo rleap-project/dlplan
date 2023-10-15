@@ -10,7 +10,6 @@
 #include <boost/serialization/shared_ptr.hpp>
 
 #include "../utils.h"
-#include "../../parser/expressions/numericals/sum_role_distance.h"
 #include "../../../../include/dlplan/core.h"
 
 using namespace std::string_literals;
@@ -135,7 +134,7 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << parser::SumRoleDistanceNumerical::get_name() << "(";
+        out << "n_sum_role_distance" << "(";
         m_role_from->compute_repr(out);
         out << ",";
         m_role->compute_repr(out);

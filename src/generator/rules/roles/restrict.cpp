@@ -2,8 +2,6 @@
 
 #include "../../generator_data.h"
 
-#include "../../../core/parser/expressions/roles/restrict.h"
-
 
 namespace dlplan::generator::rules {
 void RestrictRole::generate_impl(const core::States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) {
@@ -28,8 +26,8 @@ void RestrictRole::generate_impl(const core::States& states, int target_complexi
     }
 }
 
-const std::string& RestrictRole::get_name() const {
-    return core::parser::RestrictRole::get_name();
+std::string RestrictRole::get_name() const {
+    return "r_restrict";
 }
 
 }

@@ -79,20 +79,44 @@ std::shared_ptr<VocabularyInfo> SyntacticElementFactory::get_vocabulary_info() c
     return m_pImpl->get_vocabulary_info();
 }
 
-std::shared_ptr<const Concept> SyntacticElementFactory::parse_concept(const std::string &description) {
-    return m_pImpl->parse_concept(*this, description);
+std::shared_ptr<const Concept> SyntacticElementFactory::parse_concept(
+    const std::string &description, const std::string& filename) {
+    return m_pImpl->parse_concept(*this, description, filename);
 }
 
-std::shared_ptr<const Role>SyntacticElementFactory::parse_role(const std::string &description) {
-    return m_pImpl->parse_role(*this, description);
+std::shared_ptr<const Concept> SyntacticElementFactory::parse_concept(
+    std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename) {
+    return m_pImpl->parse_concept(*this, iter, end, filename);
 }
 
-std::shared_ptr<const Numerical>SyntacticElementFactory::parse_numerical(const std::string &description) {
-    return m_pImpl->parse_numerical(*this, description);
+std::shared_ptr<const Role> SyntacticElementFactory::parse_role(
+    const std::string &description, const std::string& filename) {
+    return m_pImpl->parse_role(*this, description, filename);
 }
 
-std::shared_ptr<const Boolean>SyntacticElementFactory::parse_boolean(const std::string &description) {
-    return m_pImpl->parse_boolean(*this, description);
+std::shared_ptr<const Role> SyntacticElementFactory::parse_role(
+    std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename) {
+    return m_pImpl->parse_role(*this, iter, end, filename);
+}
+
+std::shared_ptr<const Boolean> SyntacticElementFactory::parse_boolean(
+    const std::string &description, const std::string& filename) {
+    return m_pImpl->parse_boolean(*this, description, filename);
+}
+
+std::shared_ptr<const Boolean> SyntacticElementFactory::parse_boolean(
+    std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename) {
+    return m_pImpl->parse_boolean(*this, iter, end, filename);
+}
+
+std::shared_ptr<const Numerical> SyntacticElementFactory::parse_numerical(
+    const std::string &description, const std::string& filename) {
+    return m_pImpl->parse_numerical(*this, description, filename);
+}
+
+std::shared_ptr<const Numerical> SyntacticElementFactory::parse_numerical(
+    std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename) {
+    return m_pImpl->parse_numerical(*this, iter, end, filename);
 }
 
 

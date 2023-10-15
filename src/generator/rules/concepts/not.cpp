@@ -2,8 +2,6 @@
 
 #include "../../generator_data.h"
 
-#include "../../../core/parser/expressions/concepts/not.h"
-
 
 namespace dlplan::generator::rules {
 void NotConcept::generate_impl(const core::States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) {
@@ -21,8 +19,8 @@ void NotConcept::generate_impl(const core::States& states, int target_complexity
     }
 }
 
-const std::string& NotConcept::get_name() const {
-    return core::parser::NotConcept::get_name();
+std::string NotConcept::get_name() const {
+    return "c_not";
 }
 
 }

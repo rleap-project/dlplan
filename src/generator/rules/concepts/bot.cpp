@@ -2,8 +2,6 @@
 
 #include "../../generator_data.h"
 
-#include "../../../core/parser/expressions/concepts/bot.h"
-
 
 namespace dlplan::generator::rules {
 void BotConcept::generate_impl(const core::States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) {
@@ -20,8 +18,8 @@ void BotConcept::generate_impl(const core::States& states, int target_complexity
     }
 }
 
-const std::string& BotConcept::get_name() const {
-    return core::parser::BotConcept::get_name();
+std::string BotConcept::get_name() const {
+    return "c_bot";
 }
 
 }

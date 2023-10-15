@@ -10,7 +10,6 @@
 #include <boost/serialization/shared_ptr.hpp>
 
 #include "../utils.h"
-#include "../../parser/expressions/numericals/sum_concept_distance.h"
 #include "../../../../include/dlplan/core.h"
 
 using namespace std::string_literals;
@@ -130,7 +129,7 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << parser::SumConceptDistanceNumerical::get_name() << "(";
+        out << "n_sum_concept_distance" << "(";
         m_concept_from->compute_repr(out);
         out << ",";
         m_role->compute_repr(out);

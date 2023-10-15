@@ -10,7 +10,6 @@
 #include <boost/serialization/shared_ptr.hpp>
 
 #include "../utils.h"
-#include "../../parser/expressions/roles/not.h"
 #include "../../../../include/dlplan/core.h"
 
 using namespace std::string_literals;
@@ -92,7 +91,7 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << parser::NotRole::get_name() << "(";
+        out << "r_not" << "(";
         m_role->compute_repr(out);
         out << ")";
     }

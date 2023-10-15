@@ -1060,25 +1060,41 @@ public:
      * Returns a Concept if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    std::shared_ptr<const Concept> parse_concept(const std::string &description);
+    std::shared_ptr<const Concept> parse_concept(
+        const std::string &description, const std::string& filename="");
+
+    std::shared_ptr<const Concept> parse_concept(
+        std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename="");
 
     /**
      * Returns a Role if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    std::shared_ptr<const Role> parse_role(const std::string &description);
+    std::shared_ptr<const Role> parse_role(
+        const std::string &description, const std::string& filename="");
+
+    std::shared_ptr<const Role> parse_role(
+        std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename="");
 
     /**
      * Returns a Numerical if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    std::shared_ptr<const Numerical> parse_numerical(const std::string &description);
+    std::shared_ptr<const Numerical> parse_numerical(
+        const std::string &description, const std::string& filename="");
+
+    std::shared_ptr<const Numerical> parse_numerical(
+        std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename="");
 
     /**
      * Returns a Boolean if the description is correct.
      * If description is incorrect, throw an error with human readable information.
      */
-    std::shared_ptr<const Boolean> parse_boolean(const std::string &description);
+    std::shared_ptr<const Boolean> parse_boolean(
+        const std::string &description, const std::string& filename="");
+
+    std::shared_ptr<const Boolean> parse_boolean(
+        std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename="");
 
     std::shared_ptr<const Boolean> make_empty_boolean(const std::shared_ptr<const Concept>& concept);
     std::shared_ptr<const Boolean> make_empty_boolean(const std::shared_ptr<const Role>& role);

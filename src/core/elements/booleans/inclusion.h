@@ -11,7 +11,6 @@
 #include <boost/serialization/shared_ptr.hpp>
 
 #include "../utils.h"
-#include "../../parser/expressions/booleans/inclusion.h"
 #include "../../../../include/dlplan/core.h"
 
 using namespace std::string_literals;
@@ -100,7 +99,7 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-       out << parser::InclusionBoolean::get_name() << "(";
+       out << "b_inclusion" << "(";
        m_element_left->compute_repr(out);
        out << ",";
        m_element_right->compute_repr(out) ;

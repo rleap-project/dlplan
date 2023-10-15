@@ -53,7 +53,7 @@ public:
         m_enabled = enabled;
     }
 
-    virtual const std::string& get_name() const = 0;
+    virtual std::string get_name() const = 0;
 
     void increment_generated() {
         ++m_count;

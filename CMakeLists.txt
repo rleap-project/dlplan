@@ -64,6 +64,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 ##############################################################
 
 include_directories(include/)
+include_directories("${PROJECT_SOURCE_DIR}")
 
 add_subdirectory(src)
 add_subdirectory(examples)

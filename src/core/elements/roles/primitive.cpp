@@ -5,7 +5,6 @@
 #include <boost/serialization/shared_ptr.hpp>
 
 #include "../utils.h"
-#include "../../parser/expressions/roles/primitive.h"
 #include "../../../utils/collections.h"
 
 using namespace std::string_literals;
@@ -72,7 +71,7 @@ int PrimitiveRole::compute_complexity() const {
 }
 
 void PrimitiveRole::compute_repr(std::stringstream& out) const {
-    out << parser::PrimitiveRole::get_name() << "(" << m_predicate.get_name() << "," << std::to_string(m_pos_1) << "," << std::to_string(m_pos_2) << ")";
+    out << "r_primitive" << "(" << m_predicate.get_name() << "," << std::to_string(m_pos_1) << "," << std::to_string(m_pos_2) << ")";
 }
 
 int PrimitiveRole::compute_evaluate_time_score() const {

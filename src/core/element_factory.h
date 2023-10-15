@@ -38,10 +38,25 @@ private:
 public:
     SyntacticElementFactoryImpl(std::shared_ptr<VocabularyInfo> vocabulary_info);
 
-    std::shared_ptr<const Concept> parse_concept(SyntacticElementFactory& parent, const std::string &description);
-    std::shared_ptr<const Role> parse_role(SyntacticElementFactory& parent, const std::string &description);
-    std::shared_ptr<const Numerical> parse_numerical(SyntacticElementFactory& parent, const std::string &description);
-    std::shared_ptr<const Boolean> parse_boolean(SyntacticElementFactory& parent, const std::string &description);
+    // Root calls
+    std::shared_ptr<const Concept> parse_concept(SyntacticElementFactory& parent,
+        const std::string &description, const std::string& filename);
+    std::shared_ptr<const Role> parse_role(SyntacticElementFactory& parent,
+        const std::string &description, const std::string& filename);
+    std::shared_ptr<const Numerical> parse_numerical(SyntacticElementFactory& parent,
+        const std::string &description, const std::string& filename);
+    std::shared_ptr<const Boolean> parse_boolean(SyntacticElementFactory& parent,
+        const std::string &description, const std::string& filename);
+
+    // Nested calls
+    std::shared_ptr<const Concept> parse_concept(SyntacticElementFactory& parent,
+        std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename);
+    std::shared_ptr<const Role> parse_role(SyntacticElementFactory& parent,
+        std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename);
+    std::shared_ptr<const Numerical> parse_numerical(SyntacticElementFactory& parent,
+        std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename);
+    std::shared_ptr<const Boolean> parse_boolean(SyntacticElementFactory& parent,
+        std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename);
 
     std::shared_ptr<const Boolean> make_empty_boolean(const std::shared_ptr<const Concept>& concept);
     std::shared_ptr<const Boolean> make_empty_boolean(const std::shared_ptr<const Role>& role);

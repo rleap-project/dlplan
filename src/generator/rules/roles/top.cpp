@@ -2,8 +2,6 @@
 
 #include "../../generator_data.h"
 
-#include "../../../core/parser/expressions/roles/top.h"
-
 
 namespace dlplan::generator::rules {
 
@@ -21,8 +19,8 @@ void TopRole::generate_impl(const core::States& states, int target_complexity, G
     }
 }
 
-const std::string& TopRole::get_name() const {
-    return core::parser::TopRole::get_name();
+std::string TopRole::get_name() const {
+    return "r_top";
 }
 
 }

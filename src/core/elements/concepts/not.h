@@ -10,7 +10,6 @@
 #include <boost/serialization/shared_ptr.hpp>
 
 #include "../utils.h"
-#include "../../parser/expressions/concepts/not.h"
 #include "../../../../include/dlplan/core.h"
 
 using namespace std::string_literals;
@@ -93,7 +92,7 @@ public:
     }
 
     void compute_repr(std::stringstream& out) const override {
-        out << parser::NotConcept::get_name() << "(";
+        out << "c_not" << "(";
         m_concept->compute_repr(out);
         out << ")";
     }
