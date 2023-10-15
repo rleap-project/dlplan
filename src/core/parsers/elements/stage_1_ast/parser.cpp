@@ -17,14 +17,14 @@
 
 namespace dlplan::core::parsers::elements::stage_1::parser {
 
-ast::Element parse_ast(
+ast::ElementWrapper parse_ast(
     iterator_type& iter,
     iterator_type end,
     error_handler_type& error_handler) {
     assert(in_bounds(error_handler, iter, end));
 
     // Our AST
-    dlplan::core::parsers::elements::stage_1::ast::Element ast;
+    dlplan::core::parsers::elements::stage_1::ast::ElementWrapper ast;
 
     // Our parser
     using boost::spirit::x3::with;

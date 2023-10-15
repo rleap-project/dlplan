@@ -138,6 +138,10 @@ namespace dlplan::core::parsers::elements::stage_1::ast
         using base_type::operator=;
     };
 
+    struct ElementWrapper : x3::position_tagged {
+        Element element;
+    };
+
     struct EmptyBoolean : x3::position_tagged {
         x3::variant<Concept, Role> element;
     };

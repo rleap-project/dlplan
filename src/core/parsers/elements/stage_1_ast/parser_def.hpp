@@ -19,6 +19,7 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     using x3::lit;
     using x3::lexeme;
     using x3::int_;
+    using x3::eps;
 
     using ascii::alpha;
     using ascii::alnum;
@@ -37,6 +38,7 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     struct ConceptClass;
     struct NumericalClass;
     struct RoleClass;
+    struct ElementClass;
     struct EmptyBooleanClass;
     struct InclusionBooleanClass;
     struct NullaryBooleanClass;
@@ -98,6 +100,9 @@ namespace dlplan::core::parsers::elements::stage_1::parser
 
     x3::rule<RoleClass, ast::Role> const
         role = "role";
+
+    x3::rule<ElementClass, ast::Element> const
+        element = "element";
 
     x3::rule<EmptyBooleanClass, ast::EmptyBoolean> const
         empty_boolean = "empty_boolean";
@@ -198,7 +203,7 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     x3::rule<TransitiveReflexiveClosureRoleClass, ast::TransitiveReflexiveClosureRole> const
         transitive_reflexive_closure_role = "transitive_reflexive_closure_role";
 
-    element_type const element = "element";
+    element_type const element_wrapper = "element_wrapper";
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -224,6 +229,8 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     const auto role_def = primitive_role | and_role | compose_role | diff_role | identity_role | inverse_role | not_role | or_role | restrict_role | top_role | transitive_closure_role | transitive_reflexive_closure_role;
 
     const auto element_def = boolean | concept | numerical | role;
+
+    const auto element_wrapper_def = eps > element;
 
     const auto empty_boolean_def = lit("b_empty") > lit('(') > (concept | role) > lit(')');
 
@@ -296,7 +303,7 @@ namespace dlplan::core::parsers::elements::stage_1::parser
 
     BOOST_SPIRIT_DEFINE(
         name, constant, predicate, position,
-        boolean, concept, numerical, role, element,
+        boolean, concept, numerical, role, element, element_wrapper,
         empty_boolean, inclusion_boolean, nullary_boolean,
         all_concept, and_concept, bot_concept, diff_concept, equal_concept, not_concept, one_of_concept, or_concept, primitive_concept, projection_concept, some_concept, subset_concept, top_concept,
         concept_distance_numerical, count_numerical, role_distance_numerical, sum_concept_distance_numerical, sum_role_distance_numerical,
@@ -347,14 +354,15 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     struct TopRoleClass : x3::annotate_on_success {};
     struct TransitiveClosureRoleClass : x3::annotate_on_success {};
     struct TransitiveReflexiveClosureRoleClass : x3::annotate_on_success {};
-    struct ElementClass : x3::annotate_on_success, error_handler_base {};
+    struct ElementClass : x3::annotate_on_success {};
+    struct ElementWrapperClass : x3::annotate_on_success, error_handler_base {};
 }
 
 namespace dlplan::core::parsers::elements::stage_1
 {
     parser::element_type const& element()
     {
-        return parser::element;
+        return parser::element_wrapper;
     }
 }
 
