@@ -5,7 +5,8 @@
 
 #include "common/error_handler.hpp"
 #include "stage_1_ast/parser.hpp"
-//#include "stage_2_sketch/parser.hpp"
+#include "stage_2_feature/context.hpp"
+#include "stage_2_feature/parser.hpp"
 
 
 namespace dlplan::core::parsers::elements {
@@ -36,10 +37,10 @@ std::shared_ptr<const Boolean> Driver::parse_boolean(
     auto root_node = stage_1::parser::parse_ast(iter, end, error_handler);
 
     // Stage 2 parse
-    //stage_2::Context context(domain_description, element_factory, policy_builder);
-    //auto sketch = stage_2::parser::parse_sketch(context, error_handler, root_node);
+    stage_2::Context context(element_factory);
+    auto feature = stage_2::parser::parse_boolean(context, error_handler, root_node);
 
-    return nullptr;  // TODO
+    return feature;
 }
 
 std::shared_ptr<const Numerical> Driver::parse_numerical(
@@ -66,10 +67,10 @@ std::shared_ptr<const Numerical> Driver::parse_numerical(
     auto root_node = stage_1::parser::parse_ast(iter, end, error_handler);
 
     // Stage 2 parse
-    //stage_2::Context context(domain_description, element_factory, policy_builder);
-    //auto sketch = stage_2::parser::parse_sketch(context, error_handler, root_node);
+    stage_2::Context context(element_factory);
+    auto feature = stage_2::parser::parse_numerical(context, error_handler, root_node);
 
-    return nullptr;  // TODO
+    return feature;
 }
 
 std::shared_ptr<const Concept> Driver::parse_concept(
@@ -94,10 +95,10 @@ std::shared_ptr<const Concept> Driver::parse_concept(
     auto root_node = stage_1::parser::parse_ast(iter, end, error_handler);
 
     // Stage 2 parse
-    //stage_2::Context context(domain_description, element_factory, policy_builder);
-    //auto sketch = stage_2::parser::parse_sketch(context, error_handler, root_node);
+    stage_2::Context context(element_factory);
+    auto feature = stage_2::parser::parse_concept(context, error_handler, root_node);
 
-    return nullptr;  // TODO
+    return feature;
 }
 
 std::shared_ptr<const Role> Driver::parse_role(
@@ -122,10 +123,10 @@ std::shared_ptr<const Role> Driver::parse_role(
     auto root_node = stage_1::parser::parse_ast(iter, end, error_handler);
 
     // Stage 2 parse
-    //stage_2::Context context(domain_description, element_factory, policy_builder);
-    //auto sketch = stage_2::parser::parse_sketch(context, error_handler, root_node);
+    stage_2::Context context(element_factory);
+    auto feature = stage_2::parser::parse_role(context, error_handler, root_node);
 
-    return nullptr;  // TODO
+    return feature;
 }
 
 }
