@@ -12,6 +12,7 @@
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::Name, alphabetical, suffix)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::Constant, name)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::Predicate, name)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::Position, value)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::EmptyBoolean, element)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::InclusionBoolean, element)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::NullaryBoolean, predicate)

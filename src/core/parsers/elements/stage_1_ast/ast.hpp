@@ -5,6 +5,7 @@
 
 #include <boost/spirit/home/x3/support/ast/position_tagged.hpp>
 #include <boost/spirit/home/x3/support/ast/variant.hpp>
+#include <boost/variant/recursive_wrapper.hpp>
 
 
 namespace dlplan::core::parsers::elements::stage_1::ast
@@ -17,6 +18,7 @@ namespace dlplan::core::parsers::elements::stage_1::ast
     struct Name;
     struct Constant;
     struct Predicate;
+    struct Position;
     struct EmptyBoolean;
     struct InclusionBoolean;
     struct NullaryBoolean;
@@ -39,6 +41,9 @@ namespace dlplan::core::parsers::elements::stage_1::ast
     struct SumConceptDistanceNumerical;
     struct SumRoleDistanceNumerical;
     struct AndRole;
+    struct Arg1Role;
+    struct Arg2Role;
+    struct Arg3Role;
     struct ComposeRole;
     struct DiffRole;
     struct IdentityRole;
@@ -63,6 +68,10 @@ namespace dlplan::core::parsers::elements::stage_1::ast
 
     struct Predicate : x3::position_tagged {
         Name name;
+    };
+
+    struct Position : x3::position_tagged {
+        int value;
     };
 
     struct Boolean : x3::position_tagged, x3::variant<
@@ -91,6 +100,7 @@ namespace dlplan::core::parsers::elements::stage_1::ast
         using base_type::operator=;
     };
 
+
     struct Numerical : x3::position_tagged, x3::variant<
         x3::forward_ast<ConceptDistanceNumerical>,
         x3::forward_ast<CountNumerical>,
@@ -117,6 +127,7 @@ namespace dlplan::core::parsers::elements::stage_1::ast
         using base_type::base_type;
         using base_type::operator=;
     };
+
 
     struct Element : x3::position_tagged, x3::variant<
         x3::forward_ast<Concept>,
@@ -181,12 +192,12 @@ namespace dlplan::core::parsers::elements::stage_1::ast
 
     struct PrimitiveConcept : x3::position_tagged {
         Predicate predicate;
-        int pos;
+        Position pos;
     };
 
     struct ProjectionConcept : x3::position_tagged {
         Role role;
-        int pos;
+        Position pos;
     };
 
     struct SomeConcept : x3::position_tagged {
@@ -266,8 +277,8 @@ namespace dlplan::core::parsers::elements::stage_1::ast
 
     struct PrimitiveRole : x3::position_tagged {
         Predicate predicate;
-        int pos_1;
-        int pos_2;
+        Position pos_1;
+        Position pos_2;
     };
 
     struct RestrictRole : x3::position_tagged {
