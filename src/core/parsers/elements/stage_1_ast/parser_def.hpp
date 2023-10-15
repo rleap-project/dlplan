@@ -34,11 +34,17 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     struct ConstantClass;
     struct PredicateClass;
     struct PositionClass;
+    struct BooleanInnerClass;
     struct BooleanClass;
+    struct ConceptInnerClass;
     struct ConceptClass;
+    struct NumericalInnerClass;
     struct NumericalClass;
+    struct RoleInnerClass;
     struct RoleClass;
-    struct ElementClass;
+    struct ElementInnerClass;
+    struct ConceptOrRoleInnerClass;
+    struct ConceptOrRoleClass;
     struct EmptyBooleanClass;
     struct InclusionBooleanClass;
     struct NullaryBooleanClass;
@@ -89,20 +95,38 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     x3::rule<PositionClass, ast::Position> const
         position = "position";
 
+    x3::rule<BooleanInnerClass, ast::BooleanInner> const
+        boolean_inner = "boolean_inner";
+
     x3::rule<BooleanClass, ast::Boolean> const
         boolean = "boolean";
+
+    x3::rule<ConceptInnerClass, ast::ConceptInner> const
+        concept_inner = "concept_inner";
 
     x3::rule<ConceptClass, ast::Concept> const
         concept = "concept";
 
+    x3::rule<NumericalInnerClass, ast::NumericalInner> const
+        numerical_inner = "numerical_inner";
+
     x3::rule<NumericalClass, ast::Numerical> const
         numerical = "numerical";
+
+    x3::rule<RoleInnerClass, ast::RoleInner> const
+        role_inner = "role_inner";
 
     x3::rule<RoleClass, ast::Role> const
         role = "role";
 
-    x3::rule<ElementClass, ast::Element> const
-        element = "element";
+    x3::rule<ElementInnerClass, ast::ElementInner> const
+        element_inner = "element_inner";
+
+    x3::rule<ConceptOrRoleInnerClass, ast::ConceptOrRoleInner> const
+        concept_or_role_inner = "concept_or_role_inner";
+
+    x3::rule<ConceptOrRoleClass, ast::ConceptOrRole> const
+        concept_or_role = "concept_or_role";
 
     x3::rule<EmptyBooleanClass, ast::EmptyBoolean> const
         empty_boolean = "empty_boolean";
@@ -203,7 +227,7 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     x3::rule<TransitiveReflexiveClosureRoleClass, ast::TransitiveReflexiveClosureRole> const
         transitive_reflexive_closure_role = "transitive_reflexive_closure_role";
 
-    element_type const element_wrapper = "element_wrapper";
+    element_type const element = "element";
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -218,23 +242,35 @@ namespace dlplan::core::parsers::elements::stage_1::parser
 
     const auto position_def = int_;
 
-    const auto boolean_def = empty_boolean | inclusion_boolean | nullary_boolean;
+    const auto boolean_inner_def = empty_boolean | inclusion_boolean | nullary_boolean;
+
+    const auto boolean_def = boolean_inner_def;
 
     // Note: non recursive comes first, i.e., primitive_concept
-    const auto concept_def = primitive_concept | all_concept | and_concept | bot_concept | diff_concept | equal_concept | not_concept | one_of_concept | or_concept | projection_concept | some_concept | subset_concept | top_concept;
+    const auto concept_inner_def = primitive_concept | all_concept | and_concept | bot_concept | diff_concept | equal_concept | not_concept | one_of_concept | or_concept | projection_concept | some_concept | subset_concept | top_concept;
 
-    const auto numerical_def = concept_distance_numerical | count_numerical | role_distance_numerical | sum_concept_distance_numerical | sum_role_distance_numerical;
+    const auto concept_def = concept_inner_def;
+
+    const auto numerical_inner_def = concept_distance_numerical | count_numerical | role_distance_numerical | sum_concept_distance_numerical | sum_role_distance_numerical;
+
+    const auto numerical_def = numerical_inner;
 
     // Note: non recursive comes first, i.e., primitive_role
-    const auto role_def = primitive_role | and_role | compose_role | diff_role | identity_role | inverse_role | not_role | or_role | restrict_role | top_role | transitive_closure_role | transitive_reflexive_closure_role;
+    const auto role_inner_def = primitive_role | and_role | compose_role | diff_role | identity_role | inverse_role | not_role | or_role | restrict_role | top_role | transitive_closure_role | transitive_reflexive_closure_role;
 
-    const auto element_def = boolean | concept | numerical | role;
+    const auto role_def = role_inner;
 
-    const auto element_wrapper_def = eps > element;
+    const auto element_inner_def = boolean | concept | numerical | role;
 
-    const auto empty_boolean_def = lit("b_empty") > lit('(') > (concept | role) > lit(')');
+    const auto element_def = eps > element_inner;
 
-    const auto inclusion_boolean_def = lit("b_inclusion") > lit('(') > (concept | role) > lit(')');
+    const auto concept_or_role_inner_def = concept | role;
+
+    const auto concept_or_role_def = concept_or_role_inner;
+
+    const auto empty_boolean_def = lit("b_empty") > lit('(') > concept_or_role > lit(')');
+
+    const auto inclusion_boolean_def = lit("b_inclusion") > lit('(') > concept_or_role > lit(')');
 
     const auto nullary_boolean_def = lit("b_nullary") > lit('(') > predicate > lit(')');
 
@@ -268,7 +304,7 @@ namespace dlplan::core::parsers::elements::stage_1::parser
 
     const auto concept_distance_numerical_def = lit("n_concept_distance") > lit('(') > concept > lit(',') > role > lit(',') > concept > lit(')');
 
-    const auto count_numerical_def = lit("n_count") > lit('(') > (concept | role) > lit(')');
+    const auto count_numerical_def = lit("n_count") > lit('(') > concept_or_role > lit(')');
 
     const auto role_distance_numerical_def = lit("n_role_distance") > lit('(') > role > lit(',') > role > lit(',') > role > lit(')');
 
@@ -303,7 +339,7 @@ namespace dlplan::core::parsers::elements::stage_1::parser
 
     BOOST_SPIRIT_DEFINE(
         name, constant, predicate, position,
-        boolean, concept, numerical, role, element, element_wrapper,
+        boolean_inner, boolean, concept_inner, concept, numerical_inner, numerical, role_inner, role, element_inner, element, concept_or_role_inner, concept_or_role,
         empty_boolean, inclusion_boolean, nullary_boolean,
         all_concept, and_concept, bot_concept, diff_concept, equal_concept, not_concept, one_of_concept, or_concept, primitive_concept, projection_concept, some_concept, subset_concept, top_concept,
         concept_distance_numerical, count_numerical, role_distance_numerical, sum_concept_distance_numerical, sum_role_distance_numerical,
@@ -317,10 +353,16 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     struct ConstantClass : x3::annotate_on_success {};
     struct PredicateClass : x3::annotate_on_success {};
     struct PositionClass : x3::annotate_on_success {};
+    struct BooleanInnerClass : x3::annotate_on_success {};
     struct BooleanClass : x3::annotate_on_success {};
+    struct ConceptInnerClass : x3::annotate_on_success {};
     struct ConceptClass : x3::annotate_on_success {};
+    struct NumericalInnerClass : x3::annotate_on_success {};
     struct NumericalClass : x3::annotate_on_success {};
+    struct RoleInnerClass : x3::annotate_on_success {};
     struct RoleClass : x3::annotate_on_success {};
+    struct ConceptOrRoleInnerClass : x3::annotate_on_success {};
+    struct ConceptOrRoleClass : x3::annotate_on_success {};
     struct EmptyBooleanClass : x3::annotate_on_success {};
     struct InclusionBooleanClass : x3::annotate_on_success {};
     struct NullaryBooleanClass : x3::annotate_on_success {};
@@ -354,15 +396,15 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     struct TopRoleClass : x3::annotate_on_success {};
     struct TransitiveClosureRoleClass : x3::annotate_on_success {};
     struct TransitiveReflexiveClosureRoleClass : x3::annotate_on_success {};
-    struct ElementClass : x3::annotate_on_success {};
-    struct ElementWrapperClass : x3::annotate_on_success, error_handler_base {};
+    struct ElementInnerClass : x3::annotate_on_success {};
+    struct ElementClass : x3::annotate_on_success, error_handler_base {};
 }
 
 namespace dlplan::core::parsers::elements::stage_1
 {
     parser::element_type const& element()
     {
-        return parser::element_wrapper;
+        return parser::element;
     }
 }
 

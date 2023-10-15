@@ -14,8 +14,8 @@ namespace dlplan::core::parsers::elements::stage_1
     // rexpr public interface
     ///////////////////////////////////////////////////////////////////////////
     namespace parser {
-        struct ElementWrapperClass;
-        typedef x3::rule<ElementWrapperClass, ast::ElementWrapper> element_type;
+        struct ElementClass;
+        typedef x3::rule<ElementClass, ast::Element> element_type;
         BOOST_SPIRIT_DECLARE(element_type)
     }
     parser::element_type const& element();

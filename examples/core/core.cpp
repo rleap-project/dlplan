@@ -68,7 +68,7 @@ int main() {
     State state_1(instance, {atom_1, atom_3, atom_6}, 1);  // b on a
     States states{state_0, state_1};
 
-    auto numerical = factory.parse_numerical("n_cunt(c_and(c_primitive(on_g,0),c_primitive(on,0)))");
+    auto numerical = factory.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))");
     std::cout << "Element repr: " << numerical->compute_repr() << std::endl << std::endl;
 
     std::cout << "Evaluate for single state without cache." << std::endl;
