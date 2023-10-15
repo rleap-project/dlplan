@@ -242,32 +242,6 @@ namespace dlplan::core::parsers::elements::stage_1::parser
 
     const auto position_def = int_;
 
-    const auto boolean_inner_def = empty_boolean | inclusion_boolean | nullary_boolean;
-
-    const auto boolean_def = boolean_inner_def;
-
-    // Note: non recursive comes first, i.e., primitive_concept
-    const auto concept_inner_def = primitive_concept | all_concept | and_concept | bot_concept | diff_concept | equal_concept | not_concept | one_of_concept | or_concept | projection_concept | some_concept | subset_concept | top_concept;
-
-    const auto concept_def = concept_inner_def;
-
-    const auto numerical_inner_def = concept_distance_numerical | count_numerical | role_distance_numerical | sum_concept_distance_numerical | sum_role_distance_numerical;
-
-    const auto numerical_def = numerical_inner;
-
-    // Note: non recursive comes first, i.e., primitive_role
-    const auto role_inner_def = primitive_role | and_role | compose_role | diff_role | identity_role | inverse_role | not_role | or_role | restrict_role | top_role | transitive_closure_role | transitive_reflexive_closure_role;
-
-    const auto role_def = role_inner;
-
-    const auto element_inner_def = boolean | concept | numerical | role;
-
-    const auto element_def = eps > element_inner;
-
-    const auto concept_or_role_inner_def = concept | role;
-
-    const auto concept_or_role_def = concept_or_role_inner;
-
     const auto empty_boolean_def = lit("b_empty") > lit('(') > concept_or_role > lit(')');
 
     const auto inclusion_boolean_def = lit("b_inclusion") > lit('(') > concept_or_role > lit(')');
@@ -336,6 +310,33 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     const auto transitive_closure_role_def = lit("r_transitive_closure") > lit('(') > role > lit(')');
 
     const auto transitive_reflexive_closure_role_def = lit("r_transitive_reflexive_closure") > lit('(') > role > lit(')');
+
+    const auto boolean_inner_def = empty_boolean | inclusion_boolean | nullary_boolean;
+
+    const auto boolean_def = boolean_inner_def;
+
+    // Note: non recursive comes first, i.e., primitive_concept
+    const auto concept_inner_def = primitive_concept | all_concept | and_concept | bot_concept | diff_concept | equal_concept | not_concept | one_of_concept | or_concept | projection_concept | some_concept | subset_concept | top_concept;
+
+    const auto concept_def = concept_inner_def;
+
+    const auto numerical_inner_def = concept_distance_numerical | count_numerical | role_distance_numerical | sum_concept_distance_numerical | sum_role_distance_numerical;
+
+    const auto numerical_def = numerical_inner;
+
+    // Note: non recursive comes first, i.e., primitive_role
+    const auto role_inner_def = primitive_role | and_role | compose_role | diff_role | identity_role | inverse_role | not_role | or_role | restrict_role | top_role | transitive_closure_role | transitive_reflexive_closure_role;
+
+    const auto role_def = role_inner;
+
+    const auto concept_or_role_inner_def = concept | role;
+
+    const auto concept_or_role_def = concept_or_role_inner;
+
+    const auto element_inner_def = boolean | concept | numerical | role;
+
+    const auto element_def = eps > element_inner;
+
 
     BOOST_SPIRIT_DEFINE(
         name, constant, predicate, position,

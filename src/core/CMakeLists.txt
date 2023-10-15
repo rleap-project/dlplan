@@ -24,6 +24,8 @@ target_sources(dlplancore
         parsers/elements/driver.cpp
         parsers/elements/stage_1_ast/parser_instantiations.cpp
         parsers/elements/stage_1_ast/parser.cpp
+        parsers/elements/stage_2_feature/context.cpp
+        parsers/elements/stage_2_feature/parser.cpp
         elements/utils.cpp
         ../utils/logging.cpp
         ../utils/MurmurHash3.cpp
