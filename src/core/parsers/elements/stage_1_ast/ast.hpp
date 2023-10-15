@@ -83,6 +83,7 @@ namespace dlplan::core::parsers::elements::stage_1::ast
     };
 
     struct Concept : x3::position_tagged, x3::variant<
+        x3::forward_ast<PrimitiveConcept>,
         x3::forward_ast<AllConcept>,
         x3::forward_ast<AndConcept>,
         x3::forward_ast<BotConcept>,
@@ -91,7 +92,6 @@ namespace dlplan::core::parsers::elements::stage_1::ast
         x3::forward_ast<NotConcept>,
         x3::forward_ast<OneOfConcept>,
         x3::forward_ast<OrConcept>,
-        x3::forward_ast<PrimitiveConcept>,
         x3::forward_ast<ProjectionConcept>,
         x3::forward_ast<SomeConcept>,
         x3::forward_ast<SubsetConcept>,
@@ -112,6 +112,7 @@ namespace dlplan::core::parsers::elements::stage_1::ast
     };
 
     struct Role : x3::position_tagged, x3::variant<
+        x3::forward_ast<PrimitiveRole>,
         x3::forward_ast<AndRole>,
         x3::forward_ast<ComposeRole>,
         x3::forward_ast<DiffRole>,
@@ -119,7 +120,6 @@ namespace dlplan::core::parsers::elements::stage_1::ast
         x3::forward_ast<InverseRole>,
         x3::forward_ast<NotRole>,
         x3::forward_ast<OrRole>,
-        x3::forward_ast<PrimitiveRole>,
         x3::forward_ast<RestrictRole>,
         x3::forward_ast<TopRole>,
         x3::forward_ast<TransitiveClosureRole>,
@@ -139,15 +139,11 @@ namespace dlplan::core::parsers::elements::stage_1::ast
     };
 
     struct EmptyBoolean : x3::position_tagged {
-        x3::variant<
-            x3::forward_ast<Concept>,
-            x3::forward_ast<Role>> element;
+        x3::variant<Concept, Role> element;
     };
 
     struct InclusionBoolean : x3::position_tagged {
-        x3::variant<
-            x3::forward_ast<Concept>,
-            x3::forward_ast<Role>> element;
+        x3::variant<Concept, Role> element;
     };
 
     struct NullaryBoolean : x3::position_tagged {
@@ -220,9 +216,7 @@ namespace dlplan::core::parsers::elements::stage_1::ast
     };
 
     struct CountNumerical : x3::position_tagged {
-        x3::variant<
-            x3::forward_ast<Concept>,
-            x3::forward_ast<Role>> element;
+        x3::variant<Concept, Role> element;
     };
 
     struct RoleDistanceNumerical : x3::position_tagged {

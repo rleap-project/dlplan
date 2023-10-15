@@ -62,12 +62,8 @@ std::shared_ptr<const Numerical> Driver::parse_numerical(
     // Our error handler
     error_handler_type error_handler(iter, end, std::cerr, filename);
 
-    std::cout << "parse_ast" << std::endl;
-
     // Stage 1 parse
     auto root_node = stage_1::parser::parse_ast(iter, end, error_handler);
-
-    std::cout << "parse success" << std::endl;
 
     // Stage 2 parse
     //stage_2::Context context(domain_description, element_factory, policy_builder);

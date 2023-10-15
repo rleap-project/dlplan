@@ -215,11 +215,13 @@ namespace dlplan::core::parsers::elements::stage_1::parser
 
     const auto boolean_def = empty_boolean | inclusion_boolean | nullary_boolean;
 
-    const auto concept_def = all_concept | and_concept | bot_concept | diff_concept | equal_concept | not_concept | one_of_concept | or_concept | primitive_concept | projection_concept | some_concept | subset_concept | top_concept;
+    // Note: non recursive comes first, i.e., primitive_concept
+    const auto concept_def = primitive_concept | all_concept | and_concept | bot_concept | diff_concept | equal_concept | not_concept | one_of_concept | or_concept | projection_concept | some_concept | subset_concept | top_concept;
 
     const auto numerical_def = concept_distance_numerical | count_numerical | role_distance_numerical | sum_concept_distance_numerical | sum_role_distance_numerical;
 
-    const auto role_def = and_role | compose_role | diff_role | identity_role | inverse_role | not_role | or_role | primitive_role | restrict_role | top_role | transitive_closure_role | transitive_reflexive_closure_role;
+    // Note: non recursive comes first, i.e., primitive_role
+    const auto role_def = primitive_role | and_role | compose_role | diff_role | identity_role | inverse_role | not_role | or_role | restrict_role | top_role | transitive_closure_role | transitive_reflexive_closure_role;
 
     const auto element_def = boolean | concept | numerical | role;
 
@@ -233,7 +235,8 @@ namespace dlplan::core::parsers::elements::stage_1::parser
 
     const auto and_concept_def = lit("c_and") > lit('(') > concept > lit(',') > concept > lit(')');
 
-    const auto bot_concept_def = lit("c_bot") >> x3::attr(ast::BotConcept{});  // need this semantic action to synthesize the empty struct
+    // Note: Need this semantic action to synthesize the empty struct
+    const auto bot_concept_def = lit("c_bot") >> x3::attr(ast::BotConcept{});
 
     const auto diff_concept_def = lit("c_diff") > lit('(') > concept > lit(',') > concept > lit(')');
 
@@ -253,11 +256,12 @@ namespace dlplan::core::parsers::elements::stage_1::parser
 
     const auto subset_concept_def = lit("c_subset") > lit('(') > role > lit(',') > role > lit(')');
 
-    const auto top_concept_def = lit("c_top") >> x3::attr(ast::TopConcept{});  // need this semantic action to synthesize the empty struct
+    // Note: Need this semantic action to synthesize the empty struct
+    const auto top_concept_def = lit("c_top") >> x3::attr(ast::TopConcept{});
 
     const auto concept_distance_numerical_def = lit("n_concept_distance") > lit('(') > concept > lit(',') > role > lit(',') > concept > lit(')');
 
-    const auto count_numerical_def = lit("n_cout") > lit('(') > (concept | role) > lit(')');
+    const auto count_numerical_def = lit("n_count") > lit('(') > (concept | role) > lit(')');
 
     const auto role_distance_numerical_def = lit("n_role_distance") > lit('(') > role > lit(',') > role > lit(',') > role > lit(')');
 
@@ -283,7 +287,8 @@ namespace dlplan::core::parsers::elements::stage_1::parser
 
     const auto restrict_role_def = lit("r_restrict") > lit('(') > role > lit(',') > concept > lit(')');
 
-    const auto top_role_def = lit("r_top") >> x3::attr(ast::TopRole{});  // need this semantic action to synthesize the empty struct
+    // Note: Need this semantic action to synthesize the empty struct
+    const auto top_role_def = lit("r_top") >> x3::attr(ast::TopRole{});
 
     const auto transitive_closure_role_def = lit("r_transitive_closure") > lit('(') > role > lit(')');
 
