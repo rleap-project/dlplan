@@ -17,11 +17,6 @@ namespace dlplan::core::parsers::elements::stage_1::ast
     struct Name;
     struct Constant;
     struct Predicate;
-    struct Boolean;
-    struct Concept;
-    struct Numerical;
-    struct Role;
-    struct Element;
     struct EmptyBoolean;
     struct InclusionBoolean;
     struct NullaryBoolean;
