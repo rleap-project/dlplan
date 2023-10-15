@@ -347,7 +347,7 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     struct TopRoleClass : x3::annotate_on_success {};
     struct TransitiveClosureRoleClass : x3::annotate_on_success {};
     struct TransitiveReflexiveClosureRoleClass : x3::annotate_on_success {};
-    struct Element : x3::annotate_on_success, error_handler_base {};
+    struct ElementClass : x3::annotate_on_success, error_handler_base {};
 }
 
 namespace dlplan::core::parsers::elements::stage_1
