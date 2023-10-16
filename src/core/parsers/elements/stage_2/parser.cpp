@@ -81,7 +81,6 @@ public:
     }
 };
 
-
 static std::shared_ptr<const core::Boolean>
 parse(const stage_1::ast::EmptyBoolean& node, const error_handler_type& error_handler, SyntacticElementFactory& element_factory) {
     auto concept_or_role = parse(node.element, error_handler, element_factory);
@@ -207,7 +206,13 @@ parse(const stage_1::ast::TopConcept&, const error_handler_type&, SyntacticEleme
     return element_factory.make_top_concept();
 }
 
-struct ConceptDistanceNumerical;
+static std::shared_ptr<const core::Numerical>
+parse(const stage_1::ast::ConceptDistanceNumerical& node, const error_handler_type& error_handler, SyntacticElementFactory& element_factory) {
+    return element_factory.make_concept_distance_numerical(
+        parse(node.concept_left, error_handler, element_factory),
+        parse(node.role, error_handler, element_factory),
+        parse(node.concept_right, error_handler, element_factory));
+}
 
 static std::shared_ptr<const core::Numerical>
 parse(const stage_1::ast::CountNumerical& node, const error_handler_type& error_handler, SyntacticElementFactory& element_factory) {
@@ -222,23 +227,107 @@ parse(const stage_1::ast::CountNumerical& node, const error_handler_type& error_
     throw std::runtime_error("Failed parse");
 }
 
-struct RoleDistanceNumerical;
-struct SumConceptDistanceNumerical;
-struct SumRoleDistanceNumerical;
-struct AndRole;
-struct ComposeRole;
-struct DiffRole;
-struct IdentityRole;
-struct InverseRole;
-struct NotRole;
-struct OrRole;
-struct PrimitiveRole;
-struct RestrictRole;
-struct TopRole;
-struct TransitiveClosureRole;
-struct TransitiveReflexiveClosureRole;
+static std::shared_ptr<const core::Numerical>
+parse(const stage_1::ast::RoleDistanceNumerical& node, const error_handler_type& error_handler, SyntacticElementFactory& element_factory) {
+    return element_factory.make_role_distance_numerical(
+        parse(node.role_left, error_handler, element_factory),
+        parse(node.role, error_handler, element_factory),
+        parse(node.role_right, error_handler, element_factory));
+}
 
+static std::shared_ptr<const core::Numerical>
+parse(const stage_1::ast::SumConceptDistanceNumerical& node, const error_handler_type& error_handler, SyntacticElementFactory& element_factory) {
+    return element_factory.make_sum_concept_distance_numerical(
+        parse(node.concept_left, error_handler, element_factory),
+        parse(node.role, error_handler, element_factory),
+        parse(node.concept_right, error_handler, element_factory));
+}
 
+static std::shared_ptr<const core::Numerical>
+parse(const stage_1::ast::SumRoleDistanceNumerical& node, const error_handler_type& error_handler, SyntacticElementFactory& element_factory) {
+    return element_factory.make_sum_role_distance_numerical(
+        parse(node.role_left, error_handler, element_factory),
+        parse(node.role, error_handler, element_factory),
+        parse(node.role_right, error_handler, element_factory));
+}
+
+static std::shared_ptr<const core::Role>
+parse(const stage_1::ast::AndRole& node, const error_handler_type& error_handler, SyntacticElementFactory& element_factory) {
+    return element_factory.make_and_role(
+        parse(node.role_left, error_handler, element_factory),
+        parse(node.role_right, error_handler, element_factory));
+}
+
+static std::shared_ptr<const core::Role>
+parse(const stage_1::ast::ComposeRole& node, const error_handler_type& error_handler, SyntacticElementFactory& element_factory) {
+    return element_factory.make_compose_role(
+        parse(node.role_left, error_handler, element_factory),
+        parse(node.role_right, error_handler, element_factory));
+}
+
+static std::shared_ptr<const core::Role>
+parse(const stage_1::ast::DiffRole& node, const error_handler_type& error_handler, SyntacticElementFactory& element_factory) {
+    return element_factory.make_diff_role(
+        parse(node.role_left, error_handler, element_factory),
+        parse(node.role_right, error_handler, element_factory));
+}
+
+static std::shared_ptr<const core::Role>
+parse(const stage_1::ast::IdentityRole& node, const error_handler_type& error_handler, SyntacticElementFactory& element_factory) {
+    return element_factory.make_identity_role(
+        parse(node.concept_, error_handler, element_factory));
+}
+
+static std::shared_ptr<const core::Role>
+parse(const stage_1::ast::InverseRole& node, const error_handler_type& error_handler, SyntacticElementFactory& element_factory) {
+    return element_factory.make_inverse_role(
+        parse(node.role, error_handler, element_factory));
+}
+
+static std::shared_ptr<const core::Role>
+parse(const stage_1::ast::NotRole& node, const error_handler_type& error_handler, SyntacticElementFactory& element_factory) {
+    return element_factory.make_not_role(
+        parse(node.role, error_handler, element_factory));
+}
+
+static std::shared_ptr<const core::Role>
+parse(const stage_1::ast::OrRole& node, const error_handler_type& error_handler, SyntacticElementFactory& element_factory) {
+    return element_factory.make_or_role(
+        parse(node.role_left, error_handler, element_factory),
+        parse(node.role_right, error_handler, element_factory));
+}
+
+static std::shared_ptr<const core::Role>
+parse(const stage_1::ast::PrimitiveRole& node, const error_handler_type& error_handler, SyntacticElementFactory& element_factory) {
+    return element_factory.make_primitive_role(
+        parse(node.predicate, error_handler, element_factory),
+        parse(node.pos_1, error_handler, element_factory),
+        parse(node.pos_2, error_handler, element_factory));
+}
+
+static std::shared_ptr<const core::Role>
+parse(const stage_1::ast::RestrictRole& node, const error_handler_type& error_handler, SyntacticElementFactory& element_factory) {
+    return element_factory.make_restrict_role(
+        parse(node.role, error_handler, element_factory),
+        parse(node.concept_, error_handler, element_factory));
+}
+
+static std::shared_ptr<const core::Role>
+parse(const stage_1::ast::TopRole&, const error_handler_type&, SyntacticElementFactory& element_factory) {
+    return element_factory.make_top_role();
+}
+
+static std::shared_ptr<const core::Role>
+parse(const stage_1::ast::TransitiveClosureRole& node, const error_handler_type& error_handler, SyntacticElementFactory& element_factory) {
+    return element_factory.make_transitive_closure(
+        parse(node.role, error_handler, element_factory));
+}
+
+static std::shared_ptr<const core::Role>
+parse(const stage_1::ast::TransitiveReflexiveClosureRole& node, const error_handler_type& error_handler, SyntacticElementFactory& element_factory) {
+    return element_factory.make_transitive_reflexive_closure(
+        parse(node.role, error_handler, element_factory));
+};
 
 class ConceptInnerVisitor {
 private:
