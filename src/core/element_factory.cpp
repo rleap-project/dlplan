@@ -94,7 +94,7 @@ std::shared_ptr<const Concept> SyntacticElementFactoryImpl::parse_concept(Syntac
     }
 
     /* Stage 2 parse */
-    auto feature = parsers::elements::stage_2::parser::parse_concept(ast, error_handler, parent);
+    auto feature = parsers::elements::stage_2::parser::parse(ast, error_handler, parent);
 
     return feature;
 }
@@ -135,7 +135,7 @@ std::shared_ptr<const Role> SyntacticElementFactoryImpl::parse_role(SyntacticEle
     }
 
     /* Stage 2 parse */
-    auto feature = parsers::elements::stage_2::parser::parse_role(ast, error_handler, parent);
+    auto feature = parsers::elements::stage_2::parser::parse(ast, error_handler, parent);
 
     return feature;
 }
@@ -176,7 +176,7 @@ std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::parse_boolean(Syntac
     }
 
     /* Stage 2 parse */
-    auto feature = parsers::elements::stage_2::parser::parse_boolean(ast, error_handler, parent);
+    auto feature = parsers::elements::stage_2::parser::parse(ast, error_handler, parent);
 
     return feature;
 }
@@ -217,7 +217,7 @@ std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::parse_numerical(Sy
     }
 
     /* Stage 2 parse */
-    auto feature = parsers::elements::stage_2::parser::parse_numerical(ast, error_handler, parent);
+    auto feature = parsers::elements::stage_2::parser::parse(ast, error_handler, parent);
 
     return feature;
 }

@@ -46,6 +46,16 @@ const Constant& VocabularyInfo::add_constant(const std::string& constant_name) {
     return m_constants.back();
 }
 
+const std::unordered_map<std::string, PredicateIndex>
+VocabularyInfo::get_predicates_mapping() const {
+    return m_predicate_name_to_index;
+}
+
+const std::unordered_map<std::string, ConstantIndex>
+VocabularyInfo::get_constants_mapping() const {
+    return m_constant_name_to_index;
+}
+
 const std::vector<Predicate>& VocabularyInfo::get_predicates() const {
     return m_predicates;
 }

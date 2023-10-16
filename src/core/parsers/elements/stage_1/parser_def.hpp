@@ -239,7 +239,8 @@ namespace dlplan::core::parsers::elements::stage_1::parser
 
     const auto empty_boolean_def = lit("b_empty") > lit('(') > concept_or_role > lit(')');
 
-    const auto inclusion_boolean_def = lit("b_inclusion") > lit('(') > concept_or_role > lit(')');
+    // could change this to two_concept_or_two_role to produce more verbose error
+    const auto inclusion_boolean_def = lit("b_inclusion") > lit('(') > concept_or_role > lit(',') > concept_or_role > lit(')');
 
     const auto nullary_boolean_def = lit("b_nullary") > lit('(') > predicate > lit(')');
 

@@ -40,9 +40,6 @@ namespace dlplan::core::parsers::elements::stage_1::ast
     struct SumConceptDistanceNumerical;
     struct SumRoleDistanceNumerical;
     struct AndRole;
-    struct Arg1Role;
-    struct Arg2Role;
-    struct Arg3Role;
     struct ComposeRole;
     struct DiffRole;
     struct IdentityRole;
@@ -171,7 +168,8 @@ namespace dlplan::core::parsers::elements::stage_1::ast
     };
 
     struct InclusionBoolean : x3::position_tagged {
-        ConceptOrRole element;
+        ConceptOrRole element_left;
+        ConceptOrRole element_right;
     };
 
     struct NullaryBoolean : x3::position_tagged {

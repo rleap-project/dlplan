@@ -595,6 +595,9 @@ public:
     const Predicate& add_predicate(const std::string &name, int arity, bool is_static=false);
     const Constant& add_constant(const std::string& name);
 
+    const std::unordered_map<std::string, PredicateIndex> get_predicates_mapping() const;
+    const std::unordered_map<std::string, ConstantIndex> get_constants_mapping() const;
+
     const std::vector<Predicate>& get_predicates() const;
     const std::vector<Constant>& get_constants() const;
 

@@ -12,22 +12,22 @@
 
 namespace dlplan::core::parsers::elements::stage_2::parser {
 
-extern std::shared_ptr<const Boolean> parse_boolean(
+extern std::shared_ptr<const Boolean> parse(
     const stage_1::ast::Boolean& node,
     const error_handler_type& error_handler,
     SyntacticElementFactory& element_factory);
 
-extern std::shared_ptr<const Numerical> parse_numerical(
+extern std::shared_ptr<const Numerical> parse(
     const stage_1::ast::Numerical& node,
     const error_handler_type& error_handler,
     SyntacticElementFactory& element_factory);
 
-extern std::shared_ptr<const Concept> parse_concept(
+extern std::shared_ptr<const Concept> parse(
     const stage_1::ast::Concept& node,
     const error_handler_type& error_handler,
     SyntacticElementFactory& element_factory);
 
-extern std::shared_ptr<const Role> parse_role(
+extern std::shared_ptr<const Role> parse(
     const stage_1::ast::Role& node,
     const error_handler_type& error_handler,
     SyntacticElementFactory& element_factory);
