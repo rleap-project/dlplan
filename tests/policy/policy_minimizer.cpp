@@ -29,11 +29,11 @@ TEST(DLPTests, StructuralMinimization) {
         ")";
 
     auto vocabulary_info = gripper::construct_vocabulary_info();
-    auto syntactic_element_factory = construct_syntactic_element_factory(vocabulary_info);
-    auto builder = PolicyBuilder();
-    auto input_policy = PolicyReader().read(policy_textual, builder, syntactic_element_factory);
-    auto minimized_policy = PolicyMinimizer().minimize(input_policy, builder);
-    auto result_policy = PolicyReader().read(minimized_policy_textual, builder, syntactic_element_factory);
+    auto element_factory = construct_syntactic_element_factory(vocabulary_info);
+    auto policy_factory = PolicyFactory(element_factory);
+    auto input_policy = policy_factory.parse_policy(policy_textual);
+    auto minimized_policy = PolicyMinimizer().minimize(input_policy, policy_factory);
+    auto result_policy = policy_factory.parse_policy(minimized_policy_textual);
     std::cout << "Input policy:" << std::endl
               << input_policy->compute_repr() << std::endl << std::endl
               << "Minimized policy:" << std::endl
@@ -60,11 +60,11 @@ TEST(DLPTests, StructuralMinimization2) {
         ")";
 
     auto vocabulary_info = gripper::construct_vocabulary_info();
-    auto syntactic_element_factory = construct_syntactic_element_factory(vocabulary_info);
-    auto builder = PolicyBuilder();
-    auto input_policy = PolicyReader().read(policy_textual, builder, syntactic_element_factory);
-    auto minimized_policy = PolicyMinimizer().minimize(input_policy, builder);
-    auto result_policy = PolicyReader().read(minimized_policy_textual, builder, syntactic_element_factory);
+    auto element_factory = construct_syntactic_element_factory(vocabulary_info);
+    auto policy_factory = PolicyFactory(element_factory);
+    auto input_policy = policy_factory.parse_policy(policy_textual);
+    auto minimized_policy = PolicyMinimizer().minimize(input_policy, policy_factory);
+    auto result_policy = policy_factory.parse_policy(minimized_policy_textual);
     std::cout << "Input policy:" << std::endl
               << input_policy->compute_repr() << std::endl << std::endl
               << "Minimized policy:" << std::endl
@@ -92,11 +92,11 @@ TEST(DLPTests, StructuralMinimization3) {
         ")";
 
     auto vocabulary_info = blocks_4::construct_vocabulary_info();
-    auto syntactic_element_factory = construct_syntactic_element_factory(vocabulary_info);
-    auto builder = PolicyBuilder();
-    auto input_policy = PolicyReader().read(policy_textual, builder, syntactic_element_factory);
-    auto minimized_policy = PolicyMinimizer().minimize(input_policy, builder);
-    auto result_policy = PolicyReader().read(minimized_policy_textual, builder, syntactic_element_factory);
+    auto element_factory = construct_syntactic_element_factory(vocabulary_info);
+    auto policy_factory = PolicyFactory(element_factory);
+    auto input_policy = policy_factory.parse_policy(policy_textual);
+    auto minimized_policy = PolicyMinimizer().minimize(input_policy, policy_factory);
+    auto result_policy = policy_factory.parse_policy(minimized_policy_textual);
     std::cout << "Input policy:" << std::endl
               << input_policy->compute_repr() << std::endl << std::endl
               << "Minimized policy:" << std::endl
@@ -122,11 +122,11 @@ TEST(DLPTests, StructuralMinimization4) {
         "(:rule (:conditions ) (:effects (:e_n_inc 0)))\n"
         ")";
     auto vocabulary_info = blocks_4::construct_vocabulary_info();
-    auto syntactic_element_factory = construct_syntactic_element_factory(vocabulary_info);
-    auto builder = PolicyBuilder();
-    auto input_policy = PolicyReader().read(policy_textual, builder, syntactic_element_factory);
-    auto minimized_policy = PolicyMinimizer().minimize(input_policy, builder);
-    auto result_policy = PolicyReader().read(minimized_policy_textual, builder, syntactic_element_factory);
+    auto element_factory = construct_syntactic_element_factory(vocabulary_info);
+    auto policy_factory = PolicyFactory(element_factory);
+    auto input_policy = policy_factory.parse_policy(policy_textual);
+    auto minimized_policy = PolicyMinimizer().minimize(input_policy, policy_factory);
+    auto result_policy = policy_factory.parse_policy(minimized_policy_textual);
     std::cout << "Input policy:" << std::endl
               << input_policy->compute_repr() << std::endl << std::endl
               << "Minimized policy:" << std::endl
@@ -174,11 +174,11 @@ TEST(DLPTests, EmpiricalMinimization) {
     auto true_state_pairs = {A_A_A_B_A_H_A_B, B_A_A_B_B_A_A_H};  // picking up is good
     auto false_state_pairs =  {A_A_A_B_B_A_A_B, B_A_A_B_A_A_A_B};  // not picking up a package is bad
 
-    auto syntactic_element_factory = construct_syntactic_element_factory(vocabulary_info);
-    auto builder = PolicyBuilder();
-    auto input_policy = PolicyReader().read(policy_textual, builder, syntactic_element_factory);
-    auto minimized_policy = PolicyMinimizer().minimize(input_policy, true_state_pairs, false_state_pairs, builder);
-    auto result_policy = PolicyReader().read(minimized_policy_textual, builder, syntactic_element_factory);
+    auto element_factory = construct_syntactic_element_factory(vocabulary_info);
+    auto policy_factory = PolicyFactory(element_factory);
+    auto input_policy = policy_factory.parse_policy(policy_textual);
+    auto minimized_policy = PolicyMinimizer().minimize(input_policy, policy_factory);
+    auto result_policy = policy_factory.parse_policy(minimized_policy_textual);
     std::cout << "Input policy:" << std::endl
               << input_policy->compute_repr() << std::endl << std::endl
               << "Minimized policy:" << std::endl

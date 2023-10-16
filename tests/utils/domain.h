@@ -19,7 +19,7 @@ namespace blocks_4 {
 extern std::shared_ptr<VocabularyInfo> construct_vocabulary_info();
 }
 
-extern SyntacticElementFactory construct_syntactic_element_factory(std::shared_ptr<VocabularyInfo> vocabulary_info);
+extern std::shared_ptr<SyntacticElementFactory> construct_syntactic_element_factory(std::shared_ptr<VocabularyInfo> vocabulary_info);
 
 }
 

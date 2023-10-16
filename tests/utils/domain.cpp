@@ -49,8 +49,8 @@ std::shared_ptr<VocabularyInfo> construct_vocabulary_info() {
 }
 }
 
-SyntacticElementFactory construct_syntactic_element_factory(std::shared_ptr<VocabularyInfo> vocabulary) {
-    return SyntacticElementFactory(vocabulary);
+std::shared_ptr<SyntacticElementFactory> construct_syntactic_element_factory(std::shared_ptr<VocabularyInfo> vocabulary) {
+    return std::make_shared<SyntacticElementFactory>(vocabulary);
 }
 
 }

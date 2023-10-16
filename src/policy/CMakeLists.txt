@@ -3,16 +3,11 @@ target_sources(dlplanpolicy
     PRIVATE
         condition.cpp
         effect.cpp
-        policy_builder.cpp
+        policy_factory.cpp
         policy_impl.cpp
         policy_minimizer.cpp
         policy.cpp
-        reader.cpp
-        rule.cpp
-        writer.cpp
-        parser/expression_factory.cpp
-        parser/parser.cpp
-        parser/utils.cpp)
+        rule.cpp)
 
 target_link_libraries(dlplanpolicy
     PRIVATE

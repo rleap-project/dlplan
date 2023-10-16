@@ -15,8 +15,8 @@
 namespace dlplan::policy {
 Rule::Rule() : m_conditions(Conditions()), m_effects(Effects()), m_index(-1) { }
 
-Rule::Rule(Conditions&& conditions, Effects&& effects, RuleIndex index)
-    : m_conditions(std::move(conditions)), m_effects(std::move(effects)), m_index(index) {
+Rule::Rule(const Conditions& conditions, const Effects& effects, RuleIndex index)
+    : m_conditions(conditions), m_effects(effects), m_index(index) {
 }
 
 Rule::~Rule() = default;

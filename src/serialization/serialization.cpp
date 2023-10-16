@@ -24,7 +24,7 @@ void serialize( Archive& ar, dlplan::serialization::Data& t, const unsigned int 
     ar & t.state_spaces;
     ar & t.tuple_graphs;
     ar & t.policies;
-    ar & t.policy_builders;
+    ar & t.policy_factories;
 }
 
 }

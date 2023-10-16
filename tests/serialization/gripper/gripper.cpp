@@ -47,21 +47,21 @@ TEST(DLPTests, SerializationGripperTest) {
     out_data.instance_infos.emplace("1", state_space_2->get_instance_info());
 
     // SyntacticElementFactory
-    auto factory = std::make_shared<SyntacticElementFactory>(state_space_1->get_instance_info()->get_vocabulary_info());
-    auto numerical = factory->parse_numerical("n_count(c_primitive(free, 0))");
-    auto boolean = factory->parse_boolean("b_empty(r_and(r_primitive(at, 0, 1), r_primitive(at_g, 0, 1)))");
-    out_data.syntatic_element_factories.emplace("0", factory);
+    auto element_factory = std::make_shared<SyntacticElementFactory>(state_space_1->get_instance_info()->get_vocabulary_info());
+    auto numerical = element_factory->parse_numerical("n_count(c_primitive(free, 0))");
+    auto boolean = element_factory->parse_boolean("b_empty(r_and(r_primitive(at, 0, 1), r_primitive(at_g, 0, 1)))");
+    out_data.syntatic_element_factories.emplace("0", element_factory);
 
-    // PolicyBuilder
-    auto builder = std::make_shared<PolicyBuilder>();
-    auto c_n_gt = builder->add_gt_condition(numerical);
-    auto e_n_dec = builder->add_dec_effect(numerical);
-    auto c_b_pos = builder->add_pos_condition(boolean);
-    auto e_b_neg = builder->add_neg_effect(boolean);
-    auto rule_1 = builder->add_rule({c_n_gt}, {e_n_dec});
-    auto rule_2 = builder->add_rule({c_b_pos}, {e_b_neg});
-    auto policy = builder->add_policy({rule_1, rule_2});
-    out_data.policy_builders.emplace("0", builder);
+    // PolicyFactory
+    auto policy_factory = std::make_shared<PolicyFactory>(element_factory);
+    auto c_n_gt = policy_factory->make_gt_condition(numerical);
+    auto e_n_dec = policy_factory->make_dec_effect(numerical);
+    auto c_b_pos = policy_factory->make_pos_condition(boolean);
+    auto e_b_neg = policy_factory->make_neg_effect(boolean);
+    auto rule_1 = policy_factory->make_rule({c_n_gt}, {e_n_dec});
+    auto rule_2 = policy_factory->make_rule({c_b_pos}, {e_b_neg});
+    auto policy = policy_factory->make_policy({rule_1, rule_2});
+    out_data.policy_factories.emplace("0", policy_factory);
 
     // Policy
     out_data.policies.emplace("0", policy);
@@ -104,7 +104,7 @@ TEST(DLPTests, SerializationGripperTest) {
 
     EXPECT_EQ(in_data.policies.size(), 1);
 
-    EXPECT_EQ(in_data.policy_builders.size(), 1);
+    EXPECT_EQ(in_data.policy_factories.size(), 1);
 }
 
 }

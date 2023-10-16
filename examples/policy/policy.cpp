@@ -86,22 +86,22 @@ int main() {
     auto vocabulary = construct_vocabulary_info();
     auto instance = construct_instance_info(vocabulary);
 
-    dlplan::core::SyntacticElementFactory factory(vocabulary);
+    auto element_factory = std::make_shared<dlplan::core::SyntacticElementFactory>(vocabulary);
     // boolean_1 represents whether the hand is empty or not
-    auto boolean_1 = factory.parse_boolean("b_nullary(arm-empty)");
+    auto boolean_1 = element_factory->parse_boolean("b_nullary(arm-empty)");
     // numerical_1 representes the number of blocks on top of another block
-    auto numerical_1 = factory.parse_numerical("n_count(r_primitive(on,0,1))");
-    PolicyBuilder builder;
-    auto b_pos_condition_0 = builder.add_pos_condition(boolean_1);
-    auto b_bot_effect_0 = builder.add_bot_effect(boolean_1);
-    auto n_gt_condition_0 = builder.add_gt_condition(numerical_1);
-    auto n_dec_effect_0 = builder.add_dec_effect(numerical_1);
+    auto numerical_1 = element_factory->parse_numerical("n_count(r_primitive(on,0,1))");
+    PolicyFactory policy_factory(element_factory);
+    auto b_pos_condition_0 = policy_factory.make_pos_condition(boolean_1);
+    auto b_bot_effect_0 = policy_factory.make_bot_effect(boolean_1);
+    auto n_gt_condition_0 = policy_factory.make_gt_condition(numerical_1);
+    auto n_dec_effect_0 = policy_factory.make_dec_effect(numerical_1);
     // rule_1 represents that picking up a block that is on top of another block is good
-    auto rule_1 = builder.add_rule(
+    auto rule_1 = policy_factory.make_rule(
         {b_pos_condition_0, n_gt_condition_0},
         {b_bot_effect_0, n_dec_effect_0}
     );
-    auto policy = builder.add_policy({rule_1});
+    auto policy = policy_factory.make_policy({rule_1});
 
     const auto& atoms = instance->get_atoms();
     const Atom& atom_0 = atoms[0];
@@ -126,8 +126,8 @@ int main() {
     std::cout << policy->compute_repr() << std::endl << std::endl;
     std::cout << policy->str() << std::endl << std::endl;
 
-    write_to_file("policy.txt", PolicyWriter().write(*policy));
-    auto policy_in = PolicyReader().read(read_from_file("policy.txt"), builder, factory);
+    write_to_file("policy.txt", policy->str());
+    auto policy_in = policy_factory.parse_policy(read_from_file("policy.txt"));
 
     std::cout << "Read policy:" << std::endl;
     std::cout << policy_in->compute_repr() << std::endl << std::endl;

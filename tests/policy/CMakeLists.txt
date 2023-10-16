@@ -4,7 +4,7 @@ add_executable(
 target_sources(
     policy_tests
     PRIVATE
-        policy_builder.cpp
+        policy_factory.cpp
         policy_minimizer.cpp
         ../utils/domain.cpp
 )

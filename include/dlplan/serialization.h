@@ -35,7 +35,7 @@ struct Data {
 
     // policy
     std::unordered_map<std::string, std::shared_ptr<const policy::Policy>> policies;
-    std::unordered_map<std::string, std::shared_ptr<policy::PolicyBuilder>> policy_builders;
+    std::unordered_map<std::string, std::shared_ptr<policy::PolicyFactory>> policy_factories;
 };
 
 /// @brief Serializes the data and places it into the out_buffer.

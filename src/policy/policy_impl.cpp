@@ -21,8 +21,8 @@ Policy::Policy()
       m_rules(Rules()),
       m_index(-1) { }
 
-Policy::Policy(Rules&& rules, PolicyIndex index)
-    : m_rules(move(rules)), m_index(index) {
+Policy::Policy(const Rules& rules, PolicyIndex index)
+    : m_rules(rules), m_index(index) {
     // Retrieve boolean and numericals from the rules.
     for (const auto& rule : m_rules) {
         for (const auto& condition : rule->get_conditions()) {
