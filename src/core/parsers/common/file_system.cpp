@@ -2,6 +2,7 @@
 
 #include <string>
 #include <fstream>
+#include <sstream>
 
 
 namespace dlplan::core::parsers {
