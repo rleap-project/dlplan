@@ -9,7 +9,7 @@ namespace dlplan::core::parsers::elements
 {
     struct error_messages
     {
-        error_messages();
+        error_messages() = default;
 
         static std::map<std::string, std::string> id_map;
     };

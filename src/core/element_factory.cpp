@@ -42,7 +42,6 @@
 #include "elements/roles/transitive_reflexive_closure.h"
 
 #include "include/dlplan/common/parsers/config.hpp"
-#include "include/dlplan/core/parsers/elements/common/error_handler.hpp"
 #include "include/dlplan/core/parsers/elements/stage_1/parser.hpp"
 #include "include/dlplan/core/parsers/elements/stage_2/parser.hpp"
 
