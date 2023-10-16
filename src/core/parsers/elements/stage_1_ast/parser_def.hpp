@@ -35,13 +35,9 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     struct PredicateClass;
     struct PositionClass;
     struct BooleanInnerClass;
-    struct BooleanClass;
     struct ConceptInnerClass;
-    struct ConceptClass;
     struct NumericalInnerClass;
-    struct NumericalClass;
     struct RoleInnerClass;
-    struct RoleClass;
     struct ElementInnerClass;
     struct ConceptOrRoleInnerClass;
     struct ConceptOrRoleClass;
@@ -98,26 +94,14 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     x3::rule<BooleanInnerClass, ast::BooleanInner> const
         boolean_inner = "boolean_inner";
 
-    x3::rule<BooleanClass, ast::Boolean> const
-        boolean = "boolean";
-
     x3::rule<ConceptInnerClass, ast::ConceptInner> const
         concept_inner = "concept_inner";
-
-    x3::rule<ConceptClass, ast::Concept> const
-        concept = "concept";
 
     x3::rule<NumericalInnerClass, ast::NumericalInner> const
         numerical_inner = "numerical_inner";
 
-    x3::rule<NumericalClass, ast::Numerical> const
-        numerical = "numerical";
-
     x3::rule<RoleInnerClass, ast::RoleInner> const
         role_inner = "role_inner";
-
-    x3::rule<RoleClass, ast::Role> const
-        role = "role";
 
     x3::rule<ElementInnerClass, ast::ElementInner> const
         element_inner = "element_inner";
@@ -227,6 +211,17 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     x3::rule<TransitiveReflexiveClosureRoleClass, ast::TransitiveReflexiveClosureRole> const
         transitive_reflexive_closure_role = "transitive_reflexive_closure_role";
 
+    boolean_type const
+        boolean = "boolean";
+
+    numerical_type const
+        numerical = "numerical";
+
+    concept_type const
+        concept = "concept";
+
+    role_type const role = "role";
+
     element_type const element = "element";
 
 
@@ -329,11 +324,11 @@ namespace dlplan::core::parsers::elements::stage_1::parser
 
     const auto role_def = role_inner;
 
-    const auto concept_or_role_inner_def = concept | role;
+    const auto concept_or_role_inner_def = concept_inner | role_inner;
 
     const auto concept_or_role_def = concept_or_role_inner;
 
-    const auto element_inner_def = boolean | concept | numerical | role;
+    const auto element_inner_def = boolean_inner | concept_inner | numerical_inner | role_inner;
 
     const auto element_def = eps > element_inner;
 
@@ -355,13 +350,13 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     struct PredicateClass : x3::annotate_on_success {};
     struct PositionClass : x3::annotate_on_success {};
     struct BooleanInnerClass : x3::annotate_on_success {};
-    struct BooleanClass : x3::annotate_on_success {};
+    struct BooleanClass : x3::annotate_on_success, error_handler_base {};
     struct ConceptInnerClass : x3::annotate_on_success {};
-    struct ConceptClass : x3::annotate_on_success {};
+    struct ConceptClass : x3::annotate_on_success, error_handler_base {};
     struct NumericalInnerClass : x3::annotate_on_success {};
-    struct NumericalClass : x3::annotate_on_success {};
+    struct NumericalClass : x3::annotate_on_success, error_handler_base {};
     struct RoleInnerClass : x3::annotate_on_success {};
-    struct RoleClass : x3::annotate_on_success {};
+    struct RoleClass : x3::annotate_on_success, error_handler_base {};
     struct ConceptOrRoleInnerClass : x3::annotate_on_success {};
     struct ConceptOrRoleClass : x3::annotate_on_success {};
     struct EmptyBooleanClass : x3::annotate_on_success {};
@@ -406,6 +401,26 @@ namespace dlplan::core::parsers::elements::stage_1
     parser::element_type const& element()
     {
         return parser::element;
+    }
+
+    parser::boolean_type const& boolean()
+    {
+        return parser::boolean;
+    }
+
+    parser::numerical_type const& numerical()
+    {
+        return parser::numerical;
+    }
+
+    parser::concept_type const& concept()
+    {
+        return parser::concept;
+    }
+
+    parser::role_type const& role()
+    {
+        return parser::role;
     }
 }
 

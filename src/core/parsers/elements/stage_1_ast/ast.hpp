@@ -144,10 +144,10 @@ namespace dlplan::core::parsers::elements::stage_1::ast
     };
 
     struct ElementInner : x3::position_tagged, x3::variant<
-        x3::forward_ast<Concept>,
-        x3::forward_ast<Role>,
-        x3::forward_ast<Boolean>,
-        x3::forward_ast<Numerical>> {
+        x3::forward_ast<ConceptInner>,
+        x3::forward_ast<RoleInner>,
+        x3::forward_ast<BooleanInner>,
+        x3::forward_ast<NumericalInner>> {
         using base_type::base_type;
         using base_type::operator=;
     };
@@ -157,8 +157,8 @@ namespace dlplan::core::parsers::elements::stage_1::ast
     };
 
     struct ConceptOrRoleInner : x3::position_tagged, x3::variant<
-        x3::forward_ast<Concept>,
-        x3::forward_ast<Role>> {
+        x3::forward_ast<ConceptInner>,
+        x3::forward_ast<RoleInner>> {
         using base_type::base_type;
         using base_type::operator=;
     };
