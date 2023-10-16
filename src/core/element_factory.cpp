@@ -41,12 +41,12 @@
 #include "elements/roles/transitive_closure.h"
 #include "elements/roles/transitive_reflexive_closure.h"
 
-#include "include/dlplan/core/parsers/common/config.hpp"
+#include "include/dlplan/common/parsers/config.hpp"
 #include "include/dlplan/core/parsers/elements/common/error_handler.hpp"
 #include "include/dlplan/core/parsers/elements/stage_1/parser.hpp"
 #include "include/dlplan/core/parsers/elements/stage_2/parser.hpp"
 
-#include "parsers/common/utility.hpp"
+#include "include/dlplan/common/parsers/utility.hpp"
 
 
 namespace dlplan::core {
@@ -60,15 +60,15 @@ SyntacticElementFactoryImpl::SyntacticElementFactoryImpl(std::shared_ptr<Vocabul
 
 std::shared_ptr<const Concept> SyntacticElementFactoryImpl::parse_concept(SyntacticElementFactory& parent,
     const std::string &description, const std::string& filename) {
-    parsers::iterator_type iter(description.begin());
+    dlplan::parsers::iterator_type iter(description.begin());
     std::string::const_iterator const end(description.end());
     return parse_concept(parent, iter, end, filename);
 }
 
 std::shared_ptr<const Concept> SyntacticElementFactoryImpl::parse_concept(SyntacticElementFactory& parent,
-    parsers::iterator_type& iter, parsers::iterator_type end, const std::string& filename) {
+    dlplan::parsers::iterator_type& iter, dlplan::parsers::iterator_type end, const std::string& filename) {
     // Our error handler
-    parsers::error_handler_type error_handler(iter, end, std::cerr, filename);
+    dlplan::parsers::error_handler_type error_handler(iter, end, std::cerr, filename);
 
     /* Stage 1 parse */
     // Our AST
@@ -76,9 +76,9 @@ std::shared_ptr<const Concept> SyntacticElementFactoryImpl::parse_concept(Syntac
 
     // Our parser
     using boost::spirit::x3::with;
-    using dlplan::core::parsers::error_handler_tag;
-    using dlplan::core::parsers::error_counter_tag;
-    parsers::error_counter_type error_counter;
+    using dlplan::parsers::error_handler_tag;
+    using dlplan::parsers::error_counter_tag;
+    dlplan::parsers::error_counter_type error_counter;
     auto const parser =
         // we pass our error handler to the parser so we can access
         // it later on in our on_error and on_sucess handlers
@@ -104,7 +104,7 @@ std::shared_ptr<const Concept> SyntacticElementFactoryImpl::parse_concept(Syntac
 
 std::shared_ptr<const Role> SyntacticElementFactoryImpl::parse_role(SyntacticElementFactory& parent,
     const std::string &description, const std::string& filename) {
-    parsers::iterator_type iter(description.begin());
+    dlplan::parsers::iterator_type iter(description.begin());
     std::string::const_iterator const end(description.end());
     return parse_role(parent, iter, end, filename);
 }
@@ -112,7 +112,7 @@ std::shared_ptr<const Role> SyntacticElementFactoryImpl::parse_role(SyntacticEle
 std::shared_ptr<const Role> SyntacticElementFactoryImpl::parse_role(SyntacticElementFactory& parent,
     std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename) {
     // Our error handler
-    parsers::error_handler_type error_handler(iter, end, std::cerr, filename);
+    dlplan::parsers::error_handler_type error_handler(iter, end, std::cerr, filename);
 
     /* Stage 1 parse */
     // Our AST
@@ -120,9 +120,9 @@ std::shared_ptr<const Role> SyntacticElementFactoryImpl::parse_role(SyntacticEle
 
     // Our parser
     using boost::spirit::x3::with;
-    using dlplan::core::parsers::error_handler_tag;
-    using dlplan::core::parsers::error_counter_tag;
-    parsers::error_counter_type error_counter;
+    using dlplan::parsers::error_handler_tag;
+    using dlplan::parsers::error_counter_tag;
+    dlplan::parsers::error_counter_type error_counter;
     auto const parser =
         // we pass our error handler to the parser so we can access
         // it later on in our on_error and on_sucess handlers
@@ -148,7 +148,7 @@ std::shared_ptr<const Role> SyntacticElementFactoryImpl::parse_role(SyntacticEle
 
 std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::parse_boolean(SyntacticElementFactory& parent,
     const std::string &description, const std::string& filename) {
-    parsers::iterator_type iter(description.begin());
+    dlplan::parsers::iterator_type iter(description.begin());
     std::string::const_iterator const end(description.end());
     return parse_boolean(parent, iter, end, filename);
 }
@@ -156,7 +156,7 @@ std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::parse_boolean(Syntac
 std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::parse_boolean(SyntacticElementFactory& parent,
     std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename) {
     // Our error handler
-    parsers::error_handler_type error_handler(iter, end, std::cerr, filename);
+    dlplan::parsers::error_handler_type error_handler(iter, end, std::cerr, filename);
 
     /* Stage 1 parse */
     // Our AST
@@ -164,10 +164,9 @@ std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::parse_boolean(Syntac
 
     // Our parser
     using boost::spirit::x3::with;
-    using dlplan::core::parsers::error_handler_tag;
-
-    using dlplan::core::parsers::error_counter_tag;
-    parsers::error_counter_type error_counter;
+    using dlplan::parsers::error_handler_tag;
+    using dlplan::parsers::error_counter_tag;
+    dlplan::parsers::error_counter_type error_counter;
     auto const parser =
         // we pass our error handler to the parser so we can access
         // it later on in our on_error and on_sucess handlers
@@ -193,7 +192,7 @@ std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::parse_boolean(Syntac
 
 std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::parse_numerical(SyntacticElementFactory& parent,
     const std::string &description, const std::string& filename) {
-    parsers::iterator_type iter(description.begin());
+    dlplan::parsers::iterator_type iter(description.begin());
     std::string::const_iterator const end(description.end());
     return parse_numerical(parent, iter, end, filename);
 }
@@ -201,7 +200,7 @@ std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::parse_numerical(Sy
 std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::parse_numerical(SyntacticElementFactory& parent,
     std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename) {
     // Our error handler
-    parsers::error_handler_type error_handler(iter, end, std::cerr, filename);
+    dlplan::parsers::error_handler_type error_handler(iter, end, std::cerr, filename);
 
     /* Stage 1 parse */
     // Our AST
@@ -209,10 +208,9 @@ std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::parse_numerical(Sy
 
     // Our parser
     using boost::spirit::x3::with;
-    using dlplan::core::parsers::error_handler_tag;
-
-    using dlplan::core::parsers::error_counter_tag;
-    parsers::error_counter_type error_counter;
+    using dlplan::parsers::error_handler_tag;
+    using dlplan::parsers::error_counter_tag;
+    dlplan::parsers::error_counter_type error_counter;
     auto const parser =
         // we pass our error handler to the parser so we can access
         // it later on in our on_error and on_sucess handlers

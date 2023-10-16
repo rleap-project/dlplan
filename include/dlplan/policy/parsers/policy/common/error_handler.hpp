@@ -1,9 +1,10 @@
-#ifndef DLPLAN_INCLUDE_DLPLAN_POLICY_PARSERS_POLICY_COMMON_ERROR_HANDLER_HPP_
-#define DLPLAN_INCLUDE_DLPLAN_POLICY_PARSERS_POLICY_COMMON_ERROR_HANDLER_HPP_
+#ifndef DLPLAN_SRC_POLICY_PARSERS_POLICY_COMMON_ERROR_HANDLER_HPP_
+#define DLPLAN_SRC_POLICY_PARSERS_POLICY_COMMON_ERROR_HANDLER_HPP_
 
 #include <map>
+#include <iostream>
 
-#include "include/dlplan/core/parsers/common/config.hpp"
+#include "include/dlplan/common/parsers/config.hpp"
 
 
 namespace dlplan::policy::parsers::policy
@@ -26,6 +27,8 @@ namespace dlplan::policy::parsers::policy
         std::map<std::string, std::string> id_map;
     };
 
+    //std::map<std::string, std::string> error_handler_base::id_map = {};
+
     ////////////////////////////////////////////////////////////////////////////
     // Implementation
     ////////////////////////////////////////////////////////////////////////////
@@ -39,9 +42,17 @@ namespace dlplan::policy::parsers::policy
     template <typename Iterator, typename Exception, typename Context>
     inline x3::error_handler_result
     error_handler_base::on_error(
-        Iterator&, Iterator const&
+        Iterator& /*first*/, Iterator const& /*last*/
       , Exception const& x, Context const& context)
     {
+        auto& error_counter = x3::get<error_counter_tag>(context).get();
+        if (error_counter.count > 0) {
+            // We only print the first occurence of an error
+            return x3::error_handler_result::fail;
+        }
+        error_counter.increment();
+
+        // Construct a nice error message using the map.
         std::string which = x.which();
         auto iter = id_map.find(which);
         if (iter != id_map.end())
@@ -50,6 +61,7 @@ namespace dlplan::policy::parsers::policy
         std::string message = "Error! Expecting: " + which + " here:";
         auto& error_handler = x3::get<error_handler_tag>(context).get();
         error_handler(x.where(), message);
+
         return x3::error_handler_result::fail;
     }
 }

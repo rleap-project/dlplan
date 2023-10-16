@@ -6,7 +6,7 @@
 
 #include "include/dlplan/core.h"
 
-#include "include/dlplan/core/parsers/common/config.hpp"
+#include "include/dlplan/common/parsers/config.hpp"
 #include "include/dlplan/core/parsers/elements/stage_1/ast.hpp"
 
 

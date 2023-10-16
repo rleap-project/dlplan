@@ -1,12 +1,12 @@
-#ifndef DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_COMMON_CONFIG_HPP_
-#define DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_COMMON_CONFIG_HPP_
+#ifndef DLPLAN_INCLUDE_DLPLAN_COMMON_PARSERS_CONFIG_HPP_
+#define DLPLAN_INCLUDE_DLPLAN_COMMON_PARSERS_CONFIG_HPP_
 
 #include <boost/spirit/home/x3.hpp>
 #include <boost/spirit/home/x3/support/ast/position_tagged.hpp>
 #include <boost/spirit/home/x3/support/utility/error_reporting.hpp>
 
 
-namespace dlplan::core::parsers
+namespace dlplan::parsers
 {
     namespace x3 = boost::spirit::x3;
 
@@ -49,7 +49,7 @@ namespace dlplan::core::parsers
                 error_counter_tag,
                 std::reference_wrapper<error_counter_type>,
                 phrase_context_type>>
-    context_type_2;
+    context_type;
 
 }
 

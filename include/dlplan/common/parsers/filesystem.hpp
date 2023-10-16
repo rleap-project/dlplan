@@ -1,5 +1,5 @@
-#ifndef SRC_CORE_PARSERS_COMMON_FILESYSTEM_HPP_
-#define SRC_CORE_PARSERS_COMMON_FILESYSTEM_HPP_
+#ifndef DLPLAN_INCLUDE_DLPLAN_COMMON_PARSERS_FILESYSTEM_HPP_
+#define DLPLAN_INCLUDE_DLPLAN_COMMON_PARSERS_FILESYSTEM_HPP_
 
 
 // Older versions of LibC++ does not have filesystem (e.g., ubuntu 18.04), use the experimental version
@@ -20,7 +20,7 @@
 #endif
 
 
-namespace dlplan::core::parsers
+namespace dlplan::parsers
 {
 
 extern std::string read_file(const fs::path& file_path);

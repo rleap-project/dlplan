@@ -19,8 +19,7 @@ target_sources(dlplancore
         vocabulary_info.cpp
         predicate.cpp
         object.cpp
-        parsers/common/file_system.cpp
-        parsers/common/utility.cpp
+        parsers/elements/stage_1/error_messages.cpp
         parsers/elements/stage_1/parser_instantiations.cpp
         parsers/elements/stage_2/parser.cpp
         elements/utils.cpp
@@ -28,7 +27,9 @@ target_sources(dlplancore
         ../utils/MurmurHash3.cpp
         ../utils/system.cpp
         ../utils/timer.cpp
-        ../utils/hash.cpp)
+        ../utils/hash.cpp
+        ../common/parsers/utility.cpp
+        ../common/parsers/filesystem.cpp)
 target_link_libraries(dlplancore
     PRIVATE
         Boost::serialization)

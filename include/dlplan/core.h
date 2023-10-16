@@ -11,7 +11,7 @@
 #include <vector>
 #include <iostream>
 
-#include "core/parsers/common/config.hpp"
+#include "common/parsers/config.hpp"
 #include "utils/pimpl.h"
 #include "utils/dynamic_bitset.h"
 

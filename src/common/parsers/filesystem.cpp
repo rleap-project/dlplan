@@ -1,11 +1,11 @@
-#include "filesystem.hpp"
+#include "include/dlplan/common/parsers/filesystem.hpp"
 
 #include <string>
 #include <fstream>
 #include <sstream>
 
 
-namespace dlplan::core::parsers {
+namespace dlplan::parsers {
 
 std::string read_file(const fs::path& file_path) {
     std::ifstream file(file_path.c_str());
