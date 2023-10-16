@@ -27,7 +27,7 @@ void init_serialization(py::module_ &m_serialization) {
         .def_readwrite("state_spaces", &Data::state_spaces)
         .def_readwrite("tuple_graphs", &Data::tuple_graphs)
         .def_readwrite("policies", &Data::policies)
-        .def_readwrite("policy_builders", &Data::policy_builders)
+        .def_readwrite("policy_factories", &Data::policy_factories)
     ;
 
     m_serialization.def("serialize", [](const Data& data){

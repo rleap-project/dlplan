@@ -1,2 +1,2 @@
-from _dlplan import BaseCondition, BaseEffect, Rule, Policy, PolicyBuilder, \
-    PolicyMinimizer, PolicyReader, PolicyWriter
+from _dlplan import BaseCondition, BaseEffect, Rule, Policy, PolicyFactory, \
+    PolicyMinimizer

@@ -52,22 +52,22 @@ def main():
     vocabulary = construct_vocabulary_info()
     instance = construct_instance_info(vocabulary)
 
-    factory = SyntacticElementFactory(vocabulary)
+    element_factory = SyntacticElementFactory(vocabulary)
     # boolean_1 represents whether the hand is empty or not
-    boolean_1 = factory.parse_boolean("b_nullary(arm-empty)")
+    boolean_1 = element_factory.parse_boolean("b_nullary(arm-empty)")
     # numerical_1 representes the number of blocks on top of another block
-    numerical_1 = factory.parse_numerical("n_count(r_primitive(on,0,1))")
+    numerical_1 = element_factory.parse_numerical("n_count(r_primitive(on,0,1))")
 
-    builder = PolicyBuilder()
-    b_pos_condition_0 = builder.add_pos_condition(boolean_1)
-    b_bot_effect_0 = builder.add_bot_effect(boolean_1)
-    n_gt_condition_0 = builder.add_gt_condition(numerical_1)
-    n_dec_effect_0 = builder.add_dec_effect(numerical_1)
-    rule_1 = builder.add_rule(
+    policy_builder = PolicyBuilder(element_factory)
+    b_pos_condition_0 = policy_builder.make_pos_condition(boolean_1)
+    b_bot_effect_0 = policy_builder.make_bot_effect(boolean_1)
+    n_gt_condition_0 = policy_builder.make_gt_condition(numerical_1)
+    n_dec_effect_0 = policy_builder.make_dec_effect(numerical_1)
+    rule_1 = policy_builder.make_rule(
         {b_pos_condition_0, n_gt_condition_0},
         {b_bot_effect_0, n_dec_effect_0}
     )
-    policy = builder.add_policy({rule_1})
+    policy = policy_builder.make_policy({rule_1})
 
     atoms = instance.get_atoms()
     atom_0 = atoms[0]
@@ -97,7 +97,7 @@ def main():
 
     print("Read policy:")
     with open("policy.txt", "r", encoding="iso8859-1") as file:
-        policy_in = PolicyReader().read("\n".join(file.readlines()), builder, factory)
+        policy_in = PolicyReader().read("\n".join(file.readlines()), policy_builder, element_factory)
     print(repr(policy_in))
     print(str(policy_in))
     print()

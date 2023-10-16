@@ -63,34 +63,25 @@ void init_policy(py::module_ &m_policy) {
     ;
 
     py::class_<PolicyFactory, std::shared_ptr<PolicyFactory>>(m_policy, "PolicyFactory")
-        .def(py::init<>())
-        .def("add_pos_condition", &PolicyFactory::add_pos_condition)
-        .def("add_neg_condition", &PolicyFactory::add_neg_condition)
-        .def("add_gt_condition", &PolicyFactory::add_gt_condition)
-        .def("add_eq_condition", &PolicyFactory::add_eq_condition)
-        .def("add_pos_effect", &PolicyFactory::add_pos_effect)
-        .def("add_neg_effect", &PolicyFactory::add_neg_effect)
-        .def("add_inc_effect", &PolicyFactory::add_inc_effect)
-        .def("add_dec_effect", &PolicyFactory::add_dec_effect)
-        .def("add_bot_effect", py::overload_cast<const std::shared_ptr<const Boolean>&>(&PolicyFactory::add_bot_effect))
-        .def("add_bot_effect", py::overload_cast<const std::shared_ptr<const Numerical>&>(&PolicyFactory::add_bot_effect))
-        .def("add_rule", &PolicyFactory::add_rule)
-        .def("add_policy", &PolicyFactory::add_policy)
+        .def(py::init<std::shared_ptr<dlplan::core::SyntacticElementFactory>>())
+        .def("make_pos_condition", &PolicyFactory::make_pos_condition)
+        .def("make_neg_condition", &PolicyFactory::make_neg_condition)
+        .def("make_gt_condition", &PolicyFactory::make_gt_condition)
+        .def("make_eq_condition", &PolicyFactory::make_eq_condition)
+        .def("make_pos_effect", &PolicyFactory::make_pos_effect)
+        .def("make_neg_effect", &PolicyFactory::make_neg_effect)
+        .def("make_inc_effect", &PolicyFactory::make_inc_effect)
+        .def("make_dec_effect", &PolicyFactory::make_dec_effect)
+        .def("make_bot_effect", py::overload_cast<const std::shared_ptr<const Boolean>&>(&PolicyFactory::make_bot_effect))
+        .def("make_bot_effect", py::overload_cast<const std::shared_ptr<const Numerical>&>(&PolicyFactory::make_bot_effect))
+        .def("make_rule", &PolicyFactory::make_rule)
+        .def("make_policy", &PolicyFactory::make_policy)
+        .def("parse_policy", py::overload_cast<const std::string&, const std::string&>(&PolicyFactory::parse_policy), py::arg("description"), py::arg("filename") = "")
     ;
 
     py::class_<PolicyMinimizer>(m_policy, "PolicyMinimizer")
         .def(py::init<>())
         .def("minimize", py::overload_cast<const std::shared_ptr<const Policy>&, PolicyFactory&>(&PolicyMinimizer::minimize, py::const_))
         .def("minimize", py::overload_cast<const std::shared_ptr<const Policy>&, const StatePairs&, const StatePairs&, PolicyFactory&>(&PolicyMinimizer::minimize, py::const_))
-    ;
-
-    py::class_<PolicyReader>(m_policy, "PolicyReader")
-        .def(py::init<>())
-        .def("read", &PolicyReader::read)
-    ;
-
-    py::class_<PolicyWriter>(m_policy, "PolicyWriter")
-        .def(py::init<>())
-        .def("write", &PolicyWriter::write)
     ;
 }
