@@ -177,10 +177,10 @@ void init_core(py::module_ &m_core) {
     py::class_<SyntacticElementFactory, std::shared_ptr<SyntacticElementFactory>>(m_core, "SyntacticElementFactory")
         .def(py::init<std::shared_ptr<VocabularyInfo>>())
 
-        .def("parse_concept", &SyntacticElementFactory::parse_concept)
-        .def("parse_role", &SyntacticElementFactory::parse_role)
-        .def("parse_numerical", &SyntacticElementFactory::parse_numerical)
-        .def("parse_boolean", &SyntacticElementFactory::parse_boolean)
+        .def("parse_concept", py::overload_cast<const std::string&, const std::string&>(&SyntacticElementFactory::parse_concept), py::arg("description"), py::arg("filename") = "")
+        .def("parse_role", py::overload_cast<const std::string&, const std::string&>(&SyntacticElementFactory::parse_role), py::arg("description"), py::arg("filename") = "")
+        .def("parse_numerical", py::overload_cast<const std::string&, const std::string&>(&SyntacticElementFactory::parse_numerical), py::arg("description"), py::arg("filename") = "")
+        .def("parse_boolean", py::overload_cast<const std::string&, const std::string&>(&SyntacticElementFactory::parse_boolean), py::arg("description"), py::arg("filename") = "")
 
         .def("make_empty_boolean", py::overload_cast<const std::shared_ptr<const Concept>&>(&SyntacticElementFactory::make_empty_boolean))
         .def("make_empty_boolean", py::overload_cast<const std::shared_ptr<const Role>&>(&SyntacticElementFactory::make_empty_boolean))
