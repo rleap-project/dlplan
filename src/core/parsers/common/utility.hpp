@@ -3,7 +3,7 @@
 
 #include <map>
 
-#include "config.hpp"
+#include "include/dlplan/core/parsers/common/config.hpp"
 
 
 namespace dlplan::core::parsers {

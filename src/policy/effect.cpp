@@ -213,7 +213,7 @@ void save_construct_data(Archive& ar, const dlplan::policy::PositiveBooleanEffec
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::policy::PositiveBooleanEffect* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const core::Boolean> boolean;
+    std::shared_ptr<const dlplan::core::Boolean> boolean;
     dlplan::policy::EffectIndex index;
     ar >> boolean;
     ar >> index;
@@ -236,7 +236,7 @@ void save_construct_data(Archive& ar, const dlplan::policy::NegativeBooleanEffec
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::policy::NegativeBooleanEffect* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const core::Boolean> boolean;
+    std::shared_ptr<const dlplan::core::Boolean> boolean;
     dlplan::policy::EffectIndex index;
     ar >> boolean;
     ar >> index;
@@ -259,7 +259,7 @@ void save_construct_data(Archive& ar, const dlplan::policy::UnchangedBooleanEffe
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::policy::UnchangedBooleanEffect* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const core::Boolean> boolean;
+    std::shared_ptr<const dlplan::core::Boolean> boolean;
     dlplan::policy::EffectIndex index;
     ar >> boolean;
     ar >> index;
@@ -282,7 +282,7 @@ void save_construct_data(Archive& ar, const dlplan::policy::IncrementNumericalEf
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::policy::IncrementNumericalEffect* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const core::Numerical> numerical;
+    std::shared_ptr<const dlplan::core::Numerical> numerical;
     dlplan::policy::EffectIndex index;
     ar >> numerical;
     ar >> index;
@@ -305,7 +305,7 @@ void save_construct_data(Archive& ar, const dlplan::policy::DecrementNumericalEf
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::policy::DecrementNumericalEffect* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const core::Numerical> numerical;
+    std::shared_ptr<const dlplan::core::Numerical> numerical;
     dlplan::policy::EffectIndex index;
     ar >> numerical;
     ar >> index;
@@ -328,7 +328,7 @@ void save_construct_data(Archive& ar, const dlplan::policy::UnchangedNumericalEf
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::policy::UnchangedNumericalEffect* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const core::Numerical> numerical;
+    std::shared_ptr<const dlplan::core::Numerical> numerical;
     dlplan::policy::EffectIndex index;
     ar >> numerical;
     ar >> index;

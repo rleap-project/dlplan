@@ -1,10 +1,9 @@
-#ifndef SRC_PARSERS_EXTENDED_SKETCH_COMMON_ERROR_HANDLER_HPP_
-#define SRC_PARSERS_EXTENDED_SKETCH_COMMON_ERROR_HANDLER_HPP_
+#ifndef DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_ELEMENTS_COMMON_ERROR_HANDLER_HPP_
+#define DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_ELEMENTS_COMMON_ERROR_HANDLER_HPP_
 
 #include <map>
-#include <iostream>
 
-#include "src/core/parsers/common/config.hpp"
+#include "include/dlplan/core/parsers/common/config.hpp"
 
 
 namespace dlplan::core::parsers::elements

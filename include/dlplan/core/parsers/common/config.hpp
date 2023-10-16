@@ -1,5 +1,5 @@
-#ifndef SRC_CORE_PARSERS_COMMON_CONFIG_HPP_
-#define SRC_CORE_PARSERS_COMMON_CONFIG_HPP_
+#ifndef DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_COMMON_CONFIG_HPP_
+#define DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_COMMON_CONFIG_HPP_
 
 #include <boost/spirit/home/x3.hpp>
 #include <boost/spirit/home/x3/support/ast/position_tagged.hpp>

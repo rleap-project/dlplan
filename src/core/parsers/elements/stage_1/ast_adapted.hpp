@@ -4,7 +4,7 @@
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/fusion/include/std_pair.hpp>
 
-#include "ast.hpp"
+#include "include/dlplan/core/parsers/elements/stage_1/ast.hpp"
 
 
 // We need to tell fusion about our rexpr and rexpr_key_value

@@ -11,6 +11,7 @@
 #include <vector>
 #include <iostream>
 
+#include "core/parsers/common/config.hpp"
 #include "utils/pimpl.h"
 #include "utils/dynamic_bitset.h"
 
@@ -1064,7 +1065,7 @@ public:
         const std::string &description, const std::string& filename="");
 
     std::shared_ptr<const Concept> parse_concept(
-        std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename="");
+        parsers::iterator_type& iter, parsers::iterator_type end, const std::string& filename="");
 
     /**
      * Returns a Role if the description is correct.
@@ -1074,7 +1075,7 @@ public:
         const std::string &description, const std::string& filename="");
 
     std::shared_ptr<const Role> parse_role(
-        std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename="");
+        parsers::iterator_type& iter, parsers::iterator_type end, const std::string& filename="");
 
     /**
      * Returns a Numerical if the description is correct.
@@ -1084,7 +1085,7 @@ public:
         const std::string &description, const std::string& filename="");
 
     std::shared_ptr<const Numerical> parse_numerical(
-        std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename="");
+        parsers::iterator_type& iter, parsers::iterator_type end, const std::string& filename="");
 
     /**
      * Returns a Boolean if the description is correct.
@@ -1094,7 +1095,7 @@ public:
         const std::string &description, const std::string& filename="");
 
     std::shared_ptr<const Boolean> parse_boolean(
-        std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename="");
+        parsers::iterator_type& iter, parsers::iterator_type end, const std::string& filename="");
 
     std::shared_ptr<const Boolean> make_empty_boolean(const std::shared_ptr<const Concept>& concept);
     std::shared_ptr<const Boolean> make_empty_boolean(const std::shared_ptr<const Role>& role);

@@ -175,7 +175,7 @@ void save_construct_data(Archive& ar, const dlplan::policy::PositiveBooleanCondi
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::policy::PositiveBooleanCondition* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const core::Boolean> boolean;
+    std::shared_ptr<const dlplan::core::Boolean> boolean;
     dlplan::policy::ConditionIndex index;
     ar >> boolean;
     ar >> index;
@@ -198,7 +198,7 @@ void save_construct_data(Archive & ar, const dlplan::policy::NegativeBooleanCond
 template<class Archive>
 void load_construct_data(Archive & ar, dlplan::policy::NegativeBooleanCondition* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const core::Boolean> boolean;
+    std::shared_ptr<const dlplan::core::Boolean> boolean;
     dlplan::policy::ConditionIndex index;
     ar >> boolean;
     ar >> index;
@@ -221,7 +221,7 @@ void save_construct_data(Archive& ar, const dlplan::policy::GreaterNumericalCond
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::policy::GreaterNumericalCondition* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const core::Numerical> numerical;
+    std::shared_ptr<const dlplan::core::Numerical> numerical;
     dlplan::policy::ConditionIndex index;
     ar >> numerical;
     ar >> index;
@@ -244,7 +244,7 @@ void save_construct_data(Archive& ar, const dlplan::policy::EqualNumericalCondit
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::policy::EqualNumericalCondition* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const core::Numerical> numerical;
+    std::shared_ptr<const dlplan::core::Numerical> numerical;
     dlplan::policy::ConditionIndex index;
     ar >> numerical;
     ar >> index;
