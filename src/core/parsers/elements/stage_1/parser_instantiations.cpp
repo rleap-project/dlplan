@@ -5,18 +5,33 @@
 
 namespace dlplan::core::parsers::elements::stage_1::parser
 {
-    BOOST_SPIRIT_INSTANTIATE(
-        element_type, iterator_type, context_type)
+    //BOOST_SPIRIT_INSTANTIATE(
+    //    element_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        boolean_type, iterator_type, context_type)
+        element_type, iterator_type, context_type_2)
+
+    //BOOST_SPIRIT_INSTANTIATE(
+    //    boolean_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        numerical_type, iterator_type, context_type)
+        boolean_type, iterator_type, context_type_2)
+
+    //BOOST_SPIRIT_INSTANTIATE(
+    //    numerical_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        concept_type, iterator_type, context_type)
+        numerical_type, iterator_type, context_type_2)
+
+    //BOOST_SPIRIT_INSTANTIATE(
+    //    concept_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        role_type, iterator_type, context_type)
+        concept_type, iterator_type, context_type_2)
+
+    //BOOST_SPIRIT_INSTANTIATE(
+    //    role_type, iterator_type, context_type)
+
+    BOOST_SPIRIT_INSTANTIATE(
+        role_type, iterator_type, context_type_2)
 }

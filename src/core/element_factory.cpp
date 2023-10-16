@@ -77,12 +77,15 @@ std::shared_ptr<const Concept> SyntacticElementFactoryImpl::parse_concept(Syntac
     // Our parser
     using boost::spirit::x3::with;
     using dlplan::core::parsers::error_handler_tag;
+    using dlplan::core::parsers::error_counter_tag;
+    parsers::error_counter_type error_counter;
     auto const parser =
         // we pass our error handler to the parser so we can access
         // it later on in our on_error and on_sucess handlers
-        with<error_handler_tag>(std::ref(error_handler))
-        [
-            dlplan::core::parsers::elements::stage_1::concept()
+        with<error_counter_tag>(std::ref(error_counter)) [
+            with<error_handler_tag>(std::ref(error_handler)) [
+                dlplan::core::parsers::elements::stage_1::concept()
+            ]
         ];
 
     // Go forth and parse!
@@ -118,12 +121,15 @@ std::shared_ptr<const Role> SyntacticElementFactoryImpl::parse_role(SyntacticEle
     // Our parser
     using boost::spirit::x3::with;
     using dlplan::core::parsers::error_handler_tag;
+    using dlplan::core::parsers::error_counter_tag;
+    parsers::error_counter_type error_counter;
     auto const parser =
         // we pass our error handler to the parser so we can access
         // it later on in our on_error and on_sucess handlers
-        with<error_handler_tag>(std::ref(error_handler))
-        [
-            dlplan::core::parsers::elements::stage_1::role()
+        with<error_counter_tag>(std::ref(error_counter)) [
+            with<error_handler_tag>(std::ref(error_handler)) [
+                dlplan::core::parsers::elements::stage_1::role()
+            ]
         ];
 
     // Go forth and parse!
@@ -159,12 +165,16 @@ std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::parse_boolean(Syntac
     // Our parser
     using boost::spirit::x3::with;
     using dlplan::core::parsers::error_handler_tag;
+
+    using dlplan::core::parsers::error_counter_tag;
+    parsers::error_counter_type error_counter;
     auto const parser =
         // we pass our error handler to the parser so we can access
         // it later on in our on_error and on_sucess handlers
-        with<error_handler_tag>(std::ref(error_handler))
-        [
-            dlplan::core::parsers::elements::stage_1::boolean()
+        with<error_counter_tag>(std::ref(error_counter)) [
+            with<error_handler_tag>(std::ref(error_handler)) [
+                dlplan::core::parsers::elements::stage_1::boolean()
+            ]
         ];
 
     // Go forth and parse!
@@ -200,12 +210,16 @@ std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::parse_numerical(Sy
     // Our parser
     using boost::spirit::x3::with;
     using dlplan::core::parsers::error_handler_tag;
+
+    using dlplan::core::parsers::error_counter_tag;
+    parsers::error_counter_type error_counter;
     auto const parser =
         // we pass our error handler to the parser so we can access
         // it later on in our on_error and on_sucess handlers
-        with<error_handler_tag>(std::ref(error_handler))
-        [
-            dlplan::core::parsers::elements::stage_1::numerical()
+        with<error_counter_tag>(std::ref(error_counter)) [
+            with<error_handler_tag>(std::ref(error_handler)) [
+                dlplan::core::parsers::elements::stage_1::numerical()
+            ]
         ];
 
     // Go forth and parse!

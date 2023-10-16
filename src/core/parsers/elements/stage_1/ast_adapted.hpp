@@ -7,7 +7,7 @@
 #include "include/dlplan/core/parsers/elements/stage_1/ast.hpp"
 
 
-// We need to tell fusion about our rexpr and rexpr_key_value
+// We need to tell fusion about our ast nodes
 // to make them a first-class fusion citizens
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::Name, alphabetical, suffix)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::Constant, name)
@@ -20,7 +20,7 @@ BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::Role, r
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::Element, element)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::ConceptOrRole, inner)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::EmptyBoolean, element)
-BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::InclusionBoolean, element_left, element_right)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::InclusionBoolean, element_left, element_left)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::NullaryBoolean, predicate)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::AllConcept, role, concept_)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::AndConcept, concept_left, concept_right)
