@@ -1,4 +1,4 @@
-#include "../../include/dlplan/core.h"
+#include "include/dlplan/core.h"
 
 #include <sstream>
 #include <cassert>
@@ -6,8 +6,8 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
-#include "../utils/collections.h"
-#include "../utils/logging.h"
+#include "src/utils/collections.h"
+#include "src/utils/logging.h"
 
 using namespace std::string_literals;
 

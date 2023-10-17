@@ -4,7 +4,7 @@
 #define STRINGIFY(x) #x
 #define MACRO_STRINGIFY(x) STRINGIFY(x)
 
-#include "../../../include/dlplan/novelty.h"
+#include "include/dlplan/novelty.h"
 
 namespace py = pybind11;
 

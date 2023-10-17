@@ -1,4 +1,4 @@
-#include "../../include/dlplan/core.h"
+#include "include/dlplan/core.h"
 
 #include <algorithm>
 #include <stdexcept>
@@ -9,9 +9,9 @@
 #include <boost/serialization/shared_ptr.hpp>
 #include <boost/serialization/vector.hpp>
 
-#include "../utils/collections.h"
-#include "../utils/logging.h"
-#include "../../include/dlplan/utils/hash.h"
+#include "src/utils/collections.h"
+#include "src/utils/logging.h"
+#include "include/dlplan/utils/hash.h"
 
 
 namespace dlplan::core {

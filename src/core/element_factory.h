@@ -6,7 +6,7 @@
 #include <memory>
 #include <string>
 
-#include "../../include/dlplan/core.h"
+#include "include/dlplan/core.h"
 
 
 namespace dlplan::core {

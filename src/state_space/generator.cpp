@@ -5,7 +5,7 @@
 #include <sstream>
 #include <iostream>
 
-#include "../utils/command.h"
+#include "src/utils/command.h"
 
 using namespace dlplan::core;
 using namespace std::string_literals;

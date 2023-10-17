@@ -37,7 +37,7 @@
 #include <vector>
 
 
-#include "../../include/dlplan/core.h"
+#include "include/dlplan/core.h"
 
 namespace dlplan::utils::threadpool {
 

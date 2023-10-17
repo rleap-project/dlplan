@@ -1,4 +1,4 @@
-#include "../../include/dlplan/core.h"
+#include "include/dlplan/core.h"
 
 #include <string>
 #include <algorithm>
@@ -11,8 +11,8 @@
 #include <boost/serialization/shared_ptr.hpp>
 #include <boost/serialization/vector.hpp>
 
-#include "../utils/collections.h"
-#include "../utils/logging.h"
+#include "src/utils/collections.h"
+#include "src/utils/logging.h"
 
 using namespace std::string_literals;
 

@@ -5,8 +5,8 @@
 #include <vector>
 #include <functional>
 
-#include "../utils/logging.h"
-#include "../../include/dlplan/novelty.h"
+#include "src/utils/logging.h"
+#include "include/dlplan/novelty.h"
 
 
 namespace dlplan::novelty {

@@ -7,7 +7,7 @@
 #define STRINGIFY(x) #x
 #define MACRO_STRINGIFY(x) STRINGIFY(x)
 
-#include "../../../include/dlplan/state_space.h"
+#include "include/dlplan/state_space.h"
 
 
 namespace py = pybind11;

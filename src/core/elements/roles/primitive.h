@@ -6,7 +6,7 @@
 
 #include <boost/serialization/export.hpp>
 
-#include "../../../../include/dlplan/core.h"
+#include "include/dlplan/core.h"
 
 
 namespace dlplan::core {

@@ -2,7 +2,7 @@ from pathlib import Path
 
 from dlplan.core import SyntacticElementFactory, DenotationsCaches
 from dlplan.novelty import NoveltyBase, TupleGraph
-from dlplan.policy import PolicyBuilder
+from dlplan.policy import PolicyFactory
 from dlplan.serialization import Data, serialize, deserialize
 from dlplan.state_space import generate_state_space
 
@@ -48,27 +48,27 @@ def test_serialization_gripper():
     out_data.instance_infos = instance_infos
 
     # SyntacticElementFactory
-    factory = SyntacticElementFactory(result_1.state_space.get_instance_info().get_vocabulary_info())
-    numerical = factory.parse_numerical("n_count(c_primitive(free, 0))")
-    boolean = factory.parse_boolean("b_empty(r_and(r_primitive(at, 0, 1), r_primitive(at_g, 0, 1)))");
+    element_factory = SyntacticElementFactory(result_1.state_space.get_instance_info().get_vocabulary_info())
+    numerical = element_factory.parse_numerical("n_count(c_primitive(free, 0))")
+    boolean = element_factory.parse_boolean("b_empty(r_and(r_primitive(at, 0, 1), r_primitive(at_g, 0, 1)))");
     syntactic_element_factories = {
-        "0": factory
+        "0": element_factory
     }
     out_data.syntactic_element_factories = syntactic_element_factories
 
     # PolicyBuilder
-    builder = PolicyBuilder()
-    c_n_gt = builder.add_gt_condition(numerical)
-    e_n_dec = builder.add_dec_effect(numerical)
-    c_b_pos = builder.add_pos_condition(boolean)
-    e_b_neg = builder.add_neg_effect(boolean)
-    rule_1 = builder.add_rule({c_n_gt}, {e_n_dec})
-    rule_2 = builder.add_rule({c_b_pos}, {e_b_neg})
-    policy = builder.add_policy({rule_1, rule_2})
-    policy_builders = {
-        "0": builder
+    policy_factory = PolicyFactory(element_factory)
+    c_n_gt = policy_factory.make_gt_condition(numerical)
+    e_n_dec = policy_factory.make_dec_effect(numerical)
+    c_b_pos = policy_factory.make_pos_condition(boolean)
+    e_b_neg = policy_factory.make_neg_effect(boolean)
+    rule_1 = policy_factory.make_rule({c_n_gt}, {e_n_dec})
+    rule_2 = policy_factory.make_rule({c_b_pos}, {e_b_neg})
+    policy = policy_factory.make_policy({rule_1, rule_2})
+    policy_factories = {
+        "0": policy_factory
     }
-    out_data.policy_builders = policy_builders
+    out_data.policy_factories = policy_factories
 
     # Policy
     policies = {
@@ -109,4 +109,4 @@ def test_serialization_gripper():
 
     assert len(in_data.policies) == 1
 
-    assert len(in_data.policy_builders) == 1
+    assert len(in_data.policy_factories) == 1

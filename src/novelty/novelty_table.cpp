@@ -1,9 +1,9 @@
-#include "../../include/dlplan/novelty.h"
+#include "include/dlplan/novelty.h"
 
 #include <cmath>
 
 #include "tuple_index_generator.h"
-#include "../utils/collections.h"
+#include "src/utils/collections.h"
 
 
 namespace dlplan::novelty {

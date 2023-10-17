@@ -1,4 +1,4 @@
-#include "../../include/dlplan/novelty.h"
+#include "include/dlplan/novelty.h"
 
 #include <cassert>
 #include <sstream>
@@ -10,7 +10,7 @@
 
 #include "tuple_graph_builder.h"
 #include "tuple_index_generator.h"
-#include "../utils/logging.h"
+#include "src/utils/logging.h"
 
 using namespace dlplan::state_space;
 

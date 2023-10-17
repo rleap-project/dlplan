@@ -1,12 +1,12 @@
-#include "../../include/dlplan/core.h"
+#include "include/dlplan/core.h"
 
 #include <sstream>
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
-#include "../utils/logging.h"
-#include "../../include/dlplan/utils/hash.h"
+#include "src/utils/logging.h"
+#include "include/dlplan/utils/hash.h"
 
 
 namespace dlplan::core {

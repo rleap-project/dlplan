@@ -1,4 +1,4 @@
-#include "../../include/dlplan/policy.h"
+#include "include/dlplan/policy.h"
 
 #include <iostream>
 
@@ -8,7 +8,7 @@
 #include "condition.h"
 #include "effect.h"
 #include "policy_factory.h"
-#include "../../include/dlplan/policy.h"
+#include "include/dlplan/policy.h"
 
 
 using namespace dlplan::common::parsers;

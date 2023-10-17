@@ -1,4 +1,4 @@
-#include "../../include/dlplan/policy.h"
+#include "include/dlplan/policy.h"
 
 #include <algorithm>
 #include <sstream>

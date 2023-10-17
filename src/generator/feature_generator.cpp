@@ -5,8 +5,8 @@
 #include <csignal>
 
 #include "generator_data.h"
-#include "../utils/logging.h"
-#include "../../include/dlplan/core.h"
+#include "src/utils/logging.h"
+#include "include/dlplan/core.h"
 
 
 namespace dlplan::generator {

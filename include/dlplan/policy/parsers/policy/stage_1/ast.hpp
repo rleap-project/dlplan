@@ -160,7 +160,7 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
         std::vector<RuleEntry> rules;
     };
 
-    /* Sketch */
+    /* Policy */
     struct Policy : x3::position_tagged {
         BooleansEntry booleans;
         NumericalsEntry numericals;

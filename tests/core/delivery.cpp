@@ -3,9 +3,9 @@
 #include <iostream>
 #include <vector>
 
-#include "../../../include/dlplan/core.h"
-#include "../../../include/dlplan/generator.h"
-#include "../../../include/dlplan/state_space.h"
+#include "include/dlplan/core.h"
+#include "include/dlplan/generator.h"
+#include "include/dlplan/state_space.h"
 
 using namespace dlplan::core;
 using namespace dlplan::generator;

@@ -5,8 +5,8 @@
 
 #include <boost/serialization/shared_ptr.hpp>
 
-#include "../utils/cache.h"
-#include "../../include/dlplan/policy.h"
+#include "src/utils/cache.h"
+#include "include/dlplan/policy.h"
 
 
 namespace dlplan::policy {

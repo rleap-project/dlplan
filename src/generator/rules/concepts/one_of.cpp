@@ -1,6 +1,6 @@
 #include "one_of.h"
 
-#include "../../generator_data.h"
+#include "src/generator/generator_data.h"
 
 
 namespace dlplan::generator::rules {

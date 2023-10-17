@@ -6,7 +6,7 @@
 
 #include <boost/serialization/export.hpp>
 
-#include "../../include/dlplan/policy.h"
+#include "include/dlplan/policy.h"
 
 using namespace dlplan;
 

@@ -1,4 +1,4 @@
-#include "../../include/dlplan/novelty.h"
+#include "include/dlplan/novelty.h"
 
 #include <sstream>
 
@@ -6,7 +6,7 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/vector.hpp>
 
-#include "../utils/logging.h"
+#include "src/utils/logging.h"
 
 using namespace dlplan::state_space;
 

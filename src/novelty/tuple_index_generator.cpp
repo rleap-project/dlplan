@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-#include "../utils/logging.h"
+#include "src/utils/logging.h"
 
 
 namespace dlplan::novelty {

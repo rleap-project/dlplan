@@ -1,4 +1,4 @@
-#include "../../include/dlplan/novelty.h"
+#include "include/dlplan/novelty.h"
 
 #include <cmath>
 #include <vector>
@@ -10,7 +10,7 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/vector.hpp>
 
-#include "../utils/math.h"
+#include "src/utils/math.h"
 
 
 namespace dlplan::novelty {

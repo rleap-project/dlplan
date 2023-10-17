@@ -9,9 +9,9 @@
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/shared_ptr.hpp>
 
-#include "../utils.h"
-#include "../../../utils/collections.h"
-#include "../../../../include/dlplan/core.h"
+#include "src/core/elements/utils.h"
+#include "src/utils/collections.h"
+#include "include/dlplan/core.h"
 
 using namespace std::string_literals;
 

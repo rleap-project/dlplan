@@ -1,4 +1,4 @@
-#include "../../include/dlplan/state_space.h"
+#include "include/dlplan/state_space.h"
 
 #include <algorithm>
 #include <deque>
@@ -16,8 +16,8 @@
 
 #include "generator.h"
 #include "reader.h"
-#include "../utils/collections.h"
-#include "../utils/memory.h"
+#include "src/utils/collections.h"
+#include "src/utils/memory.h"
 
 
 using namespace dlplan::core;

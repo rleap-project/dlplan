@@ -5,8 +5,8 @@
 
 #include <boost/serialization/shared_ptr.hpp>
 
-#include "../../include/dlplan/core.h"
-#include "../utils/cache.h"
+#include "include/dlplan/core.h"
+#include "src/utils/cache.h"
 
 
 namespace dlplan::core {
