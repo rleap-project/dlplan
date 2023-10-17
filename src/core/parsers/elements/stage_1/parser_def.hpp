@@ -9,7 +9,7 @@
 #include "include/dlplan/core/parsers/elements/stage_1/parser.hpp"
 
 #include "ast_adapted.hpp"
-#include "error_messages.hpp"
+#include "error_handler.hpp"
 
 
 namespace dlplan::core::parsers::elements::stage_1::parser
@@ -347,57 +347,57 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     // Annotation and Error handling
     ///////////////////////////////////////////////////////////////////////////
 
-    typedef dlplan::common::parsers::error_handler_base<error_messages> error_handler_core;
+    typedef dlplan::common::parsers::error_handler_base error_handler_base;
 
-    struct NameClass : x3::annotate_on_success, error_handler_core {};
-    struct ConstantClass : x3::annotate_on_success, error_handler_core {};
-    struct PredicateClass : x3::annotate_on_success, error_handler_core {};
-    struct PositionClass : x3::annotate_on_success, error_handler_core {};
-    struct BooleanInnerClass : x3::annotate_on_success, error_handler_core {};
-    struct BooleanClass : x3::annotate_on_success, error_handler_core {};
-    struct ConceptInnerClass : x3::annotate_on_success, error_handler_core {};
-    struct ConceptClass : x3::annotate_on_success, error_handler_core {};
-    struct NumericalInnerClass : x3::annotate_on_success, error_handler_core {};
-    struct NumericalClass : x3::annotate_on_success, error_handler_core {};
-    struct RoleInnerClass : x3::annotate_on_success, error_handler_core {};
-    struct RoleClass : x3::annotate_on_success, error_handler_core {};
-    struct ConceptOrRoleInnerClass : x3::annotate_on_success, error_handler_core {};
-    struct ConceptOrRoleClass : x3::annotate_on_success, error_handler_core {};
-    struct EmptyBooleanClass : x3::annotate_on_success, error_handler_core {};
-    struct InclusionBooleanClass : x3::annotate_on_success, error_handler_core {};
-    struct NullaryBooleanClass : x3::annotate_on_success, error_handler_core {};
-    struct AllConceptClass : x3::annotate_on_success, error_handler_core {};
-    struct AndConceptClass : x3::annotate_on_success, error_handler_core {};
-    struct BotConceptClass : x3::annotate_on_success, error_handler_core {};
-    struct DiffConceptClass : x3::annotate_on_success, error_handler_core {};
-    struct EqualConceptClass : x3::annotate_on_success, error_handler_core {};
-    struct NotConceptClass : x3::annotate_on_success, error_handler_core {};
-    struct OneOfConceptClass : x3::annotate_on_success, error_handler_core {};
-    struct OrConceptClass : x3::annotate_on_success, error_handler_core {};
-    struct PrimitiveConceptClass : x3::annotate_on_success, error_handler_core {};
-    struct ProjectionConceptClass : x3::annotate_on_success, error_handler_core {};
-    struct SomeConceptClass : x3::annotate_on_success, error_handler_core {};
-    struct SubsetConceptClass : x3::annotate_on_success, error_handler_core {};
-    struct TopConceptClass : x3::annotate_on_success, error_handler_core {};
-    struct ConceptDistanceNumericalClass : x3::annotate_on_success, error_handler_core {};
-    struct CountNumericalClass : x3::annotate_on_success, error_handler_core {};
-    struct RoleDistanceNumericalClass : x3::annotate_on_success, error_handler_core {};
-    struct SumConceptDistanceNumericalClass : x3::annotate_on_success, error_handler_core {};
-    struct SumRoleDistanceNumericalClass : x3::annotate_on_success, error_handler_core {};
-    struct AndRoleClass : x3::annotate_on_success, error_handler_core {};
-    struct ComposeRoleClass : x3::annotate_on_success, error_handler_core {};
-    struct DiffRoleClass : x3::annotate_on_success, error_handler_core {};
-    struct IdentityRoleClass : x3::annotate_on_success, error_handler_core {};
-    struct InverseRoleClass : x3::annotate_on_success, error_handler_core {};
-    struct NotRoleClass : x3::annotate_on_success, error_handler_core {};
-    struct OrRoleClass : x3::annotate_on_success, error_handler_core {};
-    struct PrimitiveRoleClass : x3::annotate_on_success, error_handler_core {};
-    struct RestrictRoleClass : x3::annotate_on_success, error_handler_core {};
-    struct TopRoleClass : x3::annotate_on_success, error_handler_core {};
-    struct TransitiveClosureRoleClass : x3::annotate_on_success, error_handler_core {};
-    struct TransitiveReflexiveClosureRoleClass : x3::annotate_on_success, error_handler_core {};
-    struct ElementInnerClass : x3::annotate_on_success, error_handler_core {};
-    struct ElementClass : x3::annotate_on_success, error_handler_core {};
+    struct NameClass : x3::annotate_on_success, error_handler_base {};
+    struct ConstantClass : x3::annotate_on_success, error_handler_base {};
+    struct PredicateClass : x3::annotate_on_success, error_handler_base {};
+    struct PositionClass : x3::annotate_on_success, error_handler_base {};
+    struct BooleanInnerClass : x3::annotate_on_success, error_handler_base {};
+    struct BooleanClass : x3::annotate_on_success, error_handler_base {};
+    struct ConceptInnerClass : x3::annotate_on_success, error_handler_base {};
+    struct ConceptClass : x3::annotate_on_success, error_handler_base {};
+    struct NumericalInnerClass : x3::annotate_on_success, error_handler_base {};
+    struct NumericalClass : x3::annotate_on_success, error_handler_base {};
+    struct RoleInnerClass : x3::annotate_on_success, error_handler_base {};
+    struct RoleClass : x3::annotate_on_success, error_handler_base {};
+    struct ConceptOrRoleInnerClass : x3::annotate_on_success, error_handler_base {};
+    struct ConceptOrRoleClass : x3::annotate_on_success, error_handler_base {};
+    struct EmptyBooleanClass : x3::annotate_on_success, error_handler_base {};
+    struct InclusionBooleanClass : x3::annotate_on_success, error_handler_base {};
+    struct NullaryBooleanClass : x3::annotate_on_success, error_handler_base {};
+    struct AllConceptClass : x3::annotate_on_success, error_handler_base {};
+    struct AndConceptClass : x3::annotate_on_success, error_handler_base {};
+    struct BotConceptClass : x3::annotate_on_success, error_handler_base {};
+    struct DiffConceptClass : x3::annotate_on_success, error_handler_base {};
+    struct EqualConceptClass : x3::annotate_on_success, error_handler_base {};
+    struct NotConceptClass : x3::annotate_on_success, error_handler_base {};
+    struct OneOfConceptClass : x3::annotate_on_success, error_handler_base {};
+    struct OrConceptClass : x3::annotate_on_success, error_handler_base {};
+    struct PrimitiveConceptClass : x3::annotate_on_success, error_handler_base {};
+    struct ProjectionConceptClass : x3::annotate_on_success, error_handler_base {};
+    struct SomeConceptClass : x3::annotate_on_success, error_handler_base {};
+    struct SubsetConceptClass : x3::annotate_on_success, error_handler_base {};
+    struct TopConceptClass : x3::annotate_on_success, error_handler_base {};
+    struct ConceptDistanceNumericalClass : x3::annotate_on_success, error_handler_base {};
+    struct CountNumericalClass : x3::annotate_on_success, error_handler_base {};
+    struct RoleDistanceNumericalClass : x3::annotate_on_success, error_handler_base {};
+    struct SumConceptDistanceNumericalClass : x3::annotate_on_success, error_handler_base {};
+    struct SumRoleDistanceNumericalClass : x3::annotate_on_success, error_handler_base {};
+    struct AndRoleClass : x3::annotate_on_success, error_handler_base {};
+    struct ComposeRoleClass : x3::annotate_on_success, error_handler_base {};
+    struct DiffRoleClass : x3::annotate_on_success, error_handler_base {};
+    struct IdentityRoleClass : x3::annotate_on_success, error_handler_base {};
+    struct InverseRoleClass : x3::annotate_on_success, error_handler_base {};
+    struct NotRoleClass : x3::annotate_on_success, error_handler_base {};
+    struct OrRoleClass : x3::annotate_on_success, error_handler_base {};
+    struct PrimitiveRoleClass : x3::annotate_on_success, error_handler_base {};
+    struct RestrictRoleClass : x3::annotate_on_success, error_handler_base {};
+    struct TopRoleClass : x3::annotate_on_success, error_handler_base {};
+    struct TransitiveClosureRoleClass : x3::annotate_on_success, error_handler_base {};
+    struct TransitiveReflexiveClosureRoleClass : x3::annotate_on_success, error_handler_base {};
+    struct ElementInnerClass : x3::annotate_on_success, error_handler_base {};
+    struct ElementClass : x3::annotate_on_success, error_handler_base {};
 }
 
 namespace dlplan::core::parsers::elements::stage_1

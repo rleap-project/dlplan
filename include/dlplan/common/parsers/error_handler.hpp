@@ -15,11 +15,16 @@ namespace dlplan::common::parsers
     //  Our error handler
     ////////////////////////////////////////////////////////////////////////////
 
-    // ErrorMessages must be default constructible
-    template<typename ErrorMessages>
     struct error_handler_base
     {
-        error_handler_base() { }
+        std::string error_message;
+
+        // Spirit calls the default constructor
+        error_handler_base() : error_message("") { }
+
+        error_handler_base(const std::string& message) : error_message(message) { }
+
+        virtual ~error_handler_base() { }
 
         template <typename Iterator, typename Exception, typename Context>
         x3::error_handler_result on_error(
@@ -33,12 +38,11 @@ namespace dlplan::common::parsers
                 }
                 error_counter.increment();
 
-                // Construct a nice error message using the map.
                 std::string which = x.which();
-                const auto& id_map = error_messages.id_map;
-                auto iter = id_map.find(which);
-                if (iter != id_map.end())
-                    which = iter->second;
+                // Use our message if defined
+                if (error_message != "") {
+                    which = error_message;
+                }
 
                 std::string message = "Error! Expecting: " + which + " here:";
                 auto& error_handler = x3::get<dlplan::parsers::error_handler_tag>(context).get();
@@ -47,9 +51,8 @@ namespace dlplan::common::parsers
                 return x3::error_handler_result::fail;
             }
         }
-
-        ErrorMessages error_messages;
     };
+
 
 
 

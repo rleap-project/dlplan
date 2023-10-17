@@ -19,7 +19,6 @@ target_sources(dlplancore
         vocabulary_info.cpp
         predicate.cpp
         object.cpp
-        parsers/elements/stage_1/error_messages.cpp
         parsers/elements/stage_1/parser_instantiations.cpp
         parsers/elements/stage_2/parser.cpp
         elements/utils.cpp
