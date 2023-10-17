@@ -316,14 +316,14 @@ public:
      * Uniquely adds a rule and returns it.
      */
     std::shared_ptr<const Rule> make_rule(
-        Conditions&& conditions,
-        Effects&& effects);
+        const Conditions& conditions,
+        const Effects& effects);
 
     /**
      * Uniquely adds a policy and returns it.
      */
     std::shared_ptr<const Policy> make_policy(
-        Rules&& rules);
+        const Rules& rules);
 
     std::shared_ptr<core::SyntacticElementFactory> get_element_factory() const;
 };

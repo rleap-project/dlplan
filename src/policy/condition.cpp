@@ -59,7 +59,7 @@ std::string PositiveBooleanCondition::compute_repr() const {
 }
 
 std::string PositiveBooleanCondition::str() const {
-    return "(:c_b_pos " + std::to_string(m_boolean->get_index()) + ")";
+    return "(:c_b_pos " + std::string("b") + std::to_string(m_boolean->get_index()) + ")";
 }
 
 
@@ -79,7 +79,7 @@ std::string NegativeBooleanCondition::compute_repr() const {
 }
 
 std::string NegativeBooleanCondition::str() const {
-    return "(:c_b_neg " + std::to_string(m_boolean->get_index()) + ")";
+    return "(:c_b_neg " + std::string("b") + std::to_string(m_boolean->get_index()) + ")";
 }
 
 
@@ -99,7 +99,7 @@ std::string EqualNumericalCondition::compute_repr() const {
 }
 
 std::string EqualNumericalCondition::str() const {
-    return "(:c_n_eq " + std::to_string(m_numerical->get_index()) + ")";
+    return "(:c_n_eq " + std::string("n") + std::to_string(m_numerical->get_index()) + ")";
 }
 
 
@@ -119,7 +119,7 @@ std::string GreaterNumericalCondition::compute_repr() const {
 }
 
 std::string GreaterNumericalCondition::str() const {
-    return "(:c_n_gt " + std::to_string(m_numerical->get_index()) + ")";
+    return "(:c_n_gt " + std::string("n") + std::to_string(m_numerical->get_index()) + ")";
 }
 
 }

@@ -115,14 +115,14 @@ std::shared_ptr<const BaseEffect> PolicyFactory::make_bot_effect(const std::shar
 }
 
 std::shared_ptr<const Rule> PolicyFactory::make_rule(
-    Conditions&& conditions,
-    Effects&& effects) {
-    return m_pImpl->make_rule(std::move(conditions), std::move(effects));
+    const Conditions& conditions,
+    const Effects& effects) {
+    return m_pImpl->make_rule(conditions, effects);
 }
 
 std::shared_ptr<const Policy> PolicyFactory::make_policy(
-    Rules&& rules) {
-    return m_pImpl->make_policy(std::move(rules));
+    const Rules& rules) {
+    return m_pImpl->make_policy(rules);
 }
 
 std::shared_ptr<core::SyntacticElementFactory> PolicyFactory::get_element_factory() const {

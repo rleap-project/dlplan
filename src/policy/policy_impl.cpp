@@ -133,13 +133,13 @@ std::string Policy::str() const {
     ss << "(:policy\n";
     ss << "(:booleans ";
     for (const auto& boolean : m_booleans) {
-        ss << "(" << boolean->get_index() << " \"" << boolean->compute_repr() << "\")";
+        ss << "(" << "b" << boolean->get_index() << " \"" << boolean->compute_repr() << "\")";
         if (boolean != *m_booleans.rbegin()) ss << " ";
     }
     ss << ")\n";
     ss << "(:numericals ";
     for (const auto& numerical : m_numericals) {
-        ss << "(" << numerical->get_index() << " \"" << numerical->compute_repr() << "\")";
+        ss << "(" << "n" << numerical->get_index() << " \"" << numerical->compute_repr() << "\")";
         if (numerical != *m_numericals.rbegin()) ss << " ";
     }
     ss << ")\n";

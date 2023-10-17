@@ -59,7 +59,7 @@ std::string PositiveBooleanEffect::compute_repr() const{
 }
 
 std::string PositiveBooleanEffect::str() const {
-    return "(:e_b_pos " + std::to_string(m_boolean->get_index()) + ")";
+    return "(:e_b_pos " + std::string("b") + std::to_string(m_boolean->get_index()) + ")";
 }
 
 
@@ -79,7 +79,7 @@ std::string NegativeBooleanEffect::compute_repr() const{
 }
 
 std::string NegativeBooleanEffect::str() const {
-    return "(:e_b_neg " + std::to_string(m_boolean->get_index()) + ")";
+    return "(:e_b_neg " + std::string("b") + std::to_string(m_boolean->get_index()) + ")";
 }
 
 
@@ -99,7 +99,7 @@ std::string UnchangedBooleanEffect::compute_repr() const{
 }
 
 std::string UnchangedBooleanEffect::str() const {
-    return "(:e_b_bot " + std::to_string(m_boolean->get_index()) + ")";
+    return "(:e_b_bot " + std::string("b") + std::to_string(m_boolean->get_index()) + ")";
 }
 
 
@@ -119,7 +119,7 @@ std::string IncrementNumericalEffect::compute_repr() const{
 }
 
 std::string IncrementNumericalEffect::str() const {
-    return "(:e_n_inc " + std::to_string(m_numerical->get_index()) + ")";
+    return "(:e_n_inc " + std::string("n") + std::to_string(m_numerical->get_index()) + ")";
 }
 
 
@@ -139,7 +139,7 @@ std::string DecrementNumericalEffect::compute_repr() const{
 }
 
 std::string DecrementNumericalEffect::str() const {
-    return "(:e_n_dec " + std::to_string(m_numerical->get_index()) + ")";
+    return "(:e_n_dec " + std::string("n") + std::to_string(m_numerical->get_index()) + ")";
 }
 
 
@@ -159,7 +159,7 @@ std::string UnchangedNumericalEffect::compute_repr() const{
 }
 
 std::string UnchangedNumericalEffect::str() const {
-    return "(:e_n_bot " + std::to_string(m_numerical->get_index()) + ")";
+    return "(:e_n_bot " + std::string("n") + std::to_string(m_numerical->get_index()) + ")";
 }
 
 }

@@ -8,6 +8,7 @@
 #include "include/dlplan/policy.h"
 #include "include/dlplan/policy/parsers/policy/stage_1/ast.hpp"
 #include "include/dlplan/policy/parsers/policy/stage_1/parser.hpp"
+#include "include/dlplan/policy/parsers/policy/stage_2/context.hpp"
 #include "include/dlplan/policy/parsers/policy/stage_2/parser.hpp"
 
 #include "condition.h"
@@ -66,7 +67,8 @@ std::shared_ptr<const Policy> PolicyFactoryImpl::parse_policy(
     }
 
     /* Stage 2 parse */
-    std::shared_ptr<const Policy> policy = parsers::policy::stage_2::parser::parse(ast, error_handler, parent);
+    parsers::policy::stage_2::parser::Context context(parent);
+    std::shared_ptr<const Policy> policy = parsers::policy::stage_2::parser::parse(ast, error_handler, context);
 
     return policy;
 }
