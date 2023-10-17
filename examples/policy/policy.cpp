@@ -127,7 +127,15 @@ int main() {
     std::cout << policy->str() << std::endl << std::endl;
 
     write_to_file("policy.txt", policy->str());
-    auto policy_in = policy_factory.parse_policy(read_from_file("policy.txt"));
+
+    std::string pol = 
+        "(:policy\n"
+        "(:booleans )\n"
+        "(:numericals (n0 \"n_count(c_primitive(holding,0))\") (n1 \"n_count(c_equal(r_primitive(at,0,1),r_primitive(at_g,0,1)))\") (n2 \"n_count(r_and(r_primitive(at,0,1),r_primitive(at_g,0,1)))\"))\n"
+        "(:rule (:conditions (:c_n_gt n0) (:c_n_gt n1) (:c_n_gt n2)) (:effects (:e_n_inc n0) (:e_n_bot n1) (:e_n_bot n2)))\n"
+        ")";
+   // auto policy_in = policy_factory.parse_policy(read_from_file("policy.txt"));
+    auto policy_in = policy_factory.parse_policy(pol);
 
     std::cout << "Read policy:" << std::endl;
     std::cout << policy_in->compute_repr() << std::endl << std::endl;

@@ -7,16 +7,12 @@ using namespace dlplan::common::parsers;
 
 namespace dlplan::core::parsers::elements::stage_2::parser {
 
-// forward declarations
-static boost::variant<std::shared_ptr<const core::Concept>, std::shared_ptr<const core::Role>>
-parse(const stage_1::ast::ConceptOrRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context);
-
-
 
 static std::string
 parse(const stage_1::ast::Name& node, const error_handler_type&, SyntacticElementFactory&) {
     std::stringstream ss;
     ss << node.alphabetical << node.suffix;
+    std::cout << ss.str() << std::endl;
     return ss.str();
 }
 
@@ -34,7 +30,7 @@ parse(const stage_1::ast::Constant& node, const error_handler_type& error_handle
 static core::Predicate
 parse(const stage_1::ast::Predicate& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     const auto name = parse(node.name, error_handler, context);
-    const auto& predicates_mapping = context.get_vocabulary_info()->get_predicates_mapping();
+    const auto predicates_mapping = context.get_vocabulary_info()->get_predicates_mapping();
     auto it = predicates_mapping.find(name);
     if (it == predicates_mapping.end()) {
         error_handler(node, "undefined predicate");
@@ -98,12 +94,23 @@ parse(const stage_1::ast::EmptyBoolean& node, const error_handler_type& error_ha
 
 static std::shared_ptr<const core::Boolean>
 parse(const stage_1::ast::InclusionBoolean& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+    /*
+    auto concept_left = parse(node.element_left, error_handler, context);
+    auto concept_right = parse(node.element_left, error_handler, context);
+    return context.make_inclusion_boolean(concept_left, concept_right);
+    */
+    
+    std::cout << "a" << std::endl;
     auto concept_or_role_left = parse(node.element_left, error_handler, context);
+    std::cout << "b" << std::endl;
     auto concept_or_role_right = parse(node.element_right, error_handler, context);
+    std::cout << "c" << std::endl;
     ConceptVisitor concept_visitor_left(error_handler, context);
     ConceptVisitor concept_visitor_right(error_handler, context);
     boost::apply_visitor(concept_visitor_left, concept_or_role_left);
+    std::cout << "d" << std::endl;
     boost::apply_visitor(concept_visitor_right, concept_or_role_right);
+    std::cout << "e" << std::endl;
     if (concept_visitor_left.result != nullptr && concept_visitor_right.result != nullptr) {
         return context.make_inclusion_boolean(concept_visitor_left.result, concept_visitor_right.result);
     }
@@ -116,6 +123,7 @@ parse(const stage_1::ast::InclusionBoolean& node, const error_handler_type& erro
     }
     error_handler(node, "expected two concepts or two roles");
     throw std::runtime_error("Failed parse");
+    
 }
 
 static std::shared_ptr<const core::Boolean>
@@ -448,7 +456,7 @@ public:
     }
 };
 
-static boost::variant<std::shared_ptr<const core::Concept>, std::shared_ptr<const core::Role>>
+boost::variant<std::shared_ptr<const core::Concept>, std::shared_ptr<const core::Role>>
 parse(const stage_1::ast::ConceptOrRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     ConceptOrRoleInnerVisitor visitor(error_handler, context);
     boost::apply_visitor(visitor, node.inner);

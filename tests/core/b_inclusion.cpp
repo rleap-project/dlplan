@@ -22,7 +22,7 @@ TEST(DLPTests, ConceptInclusion) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    auto boolean_0 = factory.parse_boolean("b_inclusion(c_primitive(concept_1,0),c_primitive(concept_2,0))");
+    auto boolean_0 = factory.parse_boolean("b_inclusion(c_primitive(concept_1,0), c_primitive(concept_2,0))");
     EXPECT_EQ(boolean_0->evaluate(state_0), true);
     EXPECT_EQ(boolean_0->evaluate(state_1), false);
 }

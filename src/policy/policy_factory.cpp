@@ -60,10 +60,12 @@ std::shared_ptr<const Policy> PolicyFactoryImpl::parse_policy(
 
     // Go forth and parse!
     using boost::spirit::x3::ascii::space;
-    bool success = phrase_parse(iter, end, parser, space, ast) && iter == end;
-    if (!success)
-    {
+    bool success = phrase_parse(iter, end, parser, space, ast);
+    if (!success) {
         throw std::runtime_error("Unsuccessful parse.");
+    } 
+    if (iter != end) {
+        throw std::runtime_error("Unsuccessful parse. Did not consume whole input.");
     }
 
     /* Stage 2 parse */

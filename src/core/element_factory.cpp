@@ -91,10 +91,12 @@ std::shared_ptr<const Concept> SyntacticElementFactoryImpl::parse_concept(Syntac
 
     // Go forth and parse!
     using boost::spirit::x3::ascii::space;
-    bool success = phrase_parse(iter, end, parser, space, ast) && iter == end;
-    if (!success)
-    {
+    bool success = phrase_parse(iter, end, parser, space, ast);
+    if (!success) {
         throw std::runtime_error("Unsuccessful parse.");
+    } 
+    if (iter != end) {
+        throw std::runtime_error("Unsuccessful parse. Did not consume whole input.");
     }
 
     /* Stage 2 parse */
@@ -134,10 +136,12 @@ std::shared_ptr<const Role> SyntacticElementFactoryImpl::parse_role(SyntacticEle
 
     // Go forth and parse!
     using boost::spirit::x3::ascii::space;
-    bool success = phrase_parse(iter, end, parser, space, ast) && iter == end;
-    if (!success)
-    {
+    bool success = phrase_parse(iter, end, parser, space, ast);
+    if (!success) {
         throw std::runtime_error("Unsuccessful parse.");
+    } 
+    if (iter != end) {
+        throw std::runtime_error("Unsuccessful parse. Did not consume whole input.");
     }
 
     /* Stage 2 parse */
@@ -177,10 +181,12 @@ std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::parse_boolean(Syntac
 
     // Go forth and parse!
     using boost::spirit::x3::ascii::space;
-    bool success = phrase_parse(iter, end, parser, space, ast) && iter == end;
-    if (!success)
-    {
+    bool success = phrase_parse(iter, end, parser, space, ast);
+    if (!success) {
         throw std::runtime_error("Unsuccessful parse.");
+    } 
+    if (iter != end) {
+        throw std::runtime_error("Unsuccessful parse. Did not consume whole input.");
     }
 
     /* Stage 2 parse */
@@ -220,10 +226,12 @@ std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::parse_numerical(Sy
 
     // Go forth and parse!
     using boost::spirit::x3::ascii::space;
-    bool success = phrase_parse(iter, end, parser, space, ast) && iter == end;
-    if (!success)
-    {
+    bool success = phrase_parse(iter, end, parser, space, ast);
+    if (!success) {
         throw std::runtime_error("Unsuccessful parse.");
+    } 
+    if (iter != end) {
+        throw std::runtime_error("Unsuccessful parse. Did not consume whole input.");
     }
 
     /* Stage 2 parse */
