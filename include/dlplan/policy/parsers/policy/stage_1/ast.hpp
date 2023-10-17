@@ -34,7 +34,9 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
     struct IncrementNumericalEffectEntry;
     struct DecrementNumericalEffectEntry;
     struct UnchangedNumericalEffectEntry;
+    struct FeatureConditionEntryInner;
     struct FeatureConditionEntry;
+    struct FeatureEffectEntryInner;
     struct FeatureEffectEntry;
     struct RuleEntry;
     struct Rules;
@@ -66,7 +68,7 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
     /* Numerical entry and references */
     struct NumericalDefinition : x3::position_tagged {
         Name key;
-        core::parsers::elements::stage_1::ast::Boolean numerical;
+        core::parsers::elements::stage_1::ast::Numerical numerical;
     };
 
     struct NumericalReference : x3::position_tagged {
@@ -95,7 +97,7 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
         NumericalReference reference;
     };
 
-    struct FeatureConditionInnerEntry : x3::position_tagged,
+    struct FeatureConditionEntryInner : x3::position_tagged,
         x3::variant<
             x3::forward_ast<PositiveBooleanConditionEntry>,
             x3::forward_ast<NegativeBooleanConditionEntry>,
@@ -106,7 +108,7 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
     };
 
     struct FeatureConditionEntry : x3::position_tagged {
-        FeatureConditionInnerEntry condition;
+        FeatureConditionEntryInner condition;
     };
 
     struct PositiveBooleanEffectEntry : x3::position_tagged {
@@ -133,7 +135,7 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
         NumericalReference reference;
     };
 
-    struct FeatureEffectInnerEntry : x3::position_tagged,
+    struct FeatureEffectEntryInner : x3::position_tagged,
         x3::variant<
             x3::forward_ast<PositiveBooleanEffectEntry>,
             x3::forward_ast<NegativeBooleanEffectEntry>,
@@ -146,7 +148,7 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
     };
 
     struct FeatureEffectEntry : x3::position_tagged {
-        FeatureEffectInnerEntry effect;
+        FeatureEffectEntryInner effect;
     };
 
     struct RuleEntry : x3::position_tagged {

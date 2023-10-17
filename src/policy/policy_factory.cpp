@@ -6,6 +6,9 @@
 #include <boost/archive/text_iarchive.hpp>
 
 #include "include/dlplan/policy.h"
+#include "include/dlplan/policy/parsers/policy/stage_1/ast.hpp"
+#include "include/dlplan/policy/parsers/policy/stage_1/parser.hpp"
+#include "include/dlplan/policy/parsers/policy/stage_2/parser.hpp"
 
 #include "condition.h"
 #include "effect.h"
@@ -16,21 +19,56 @@ using namespace dlplan::common::parsers;
 
 namespace dlplan::policy {
 
-PolicyFactoryImpl::PolicyFactoryImpl() : element_factory(nullptr) { }
+PolicyFactoryImpl::PolicyFactoryImpl() : m_element_factory(nullptr) { }
 
 PolicyFactoryImpl::PolicyFactoryImpl(std::shared_ptr<core::SyntacticElementFactory> element_factory)
-    : element_factory(element_factory) { }
+    : m_element_factory(element_factory) { }
 
 std::shared_ptr<const Policy> PolicyFactoryImpl::parse_policy(
+    PolicyFactory& parent,
     const std::string& description,
     const std::string& filename) {
-
+    iterator_type iter(description.begin());
+    iterator_type const end(description.end());
+    return parse_policy(parent, iter, end, filename);
 }
 
 std::shared_ptr<const Policy> PolicyFactoryImpl::parse_policy(
+    PolicyFactory& parent,
     iterator_type& iter, iterator_type end,
     const std::string& filename) {
+    /* Stage 1 parse */
+    // Our parser
+    using boost::spirit::x3::with;
 
+    // Our error handler
+    error_handler_type error_handler(iter, end, std::cerr, filename);
+    // Our error counter
+    error_counter_type error_counter;
+    auto const parser =
+        // we pass our error handler to the parser so we can access
+        // it later on in our on_error and on_sucess handlers
+        with<error_counter_tag>(std::ref(error_counter)) [
+            with<error_handler_tag>(std::ref(error_handler)) [
+                dlplan::policy::parsers::policy::stage_1::policy()
+            ]
+        ];
+
+    // Our AST
+    dlplan::policy::parsers::policy::stage_1::ast::Policy ast;
+
+    // Go forth and parse!
+    using boost::spirit::x3::ascii::space;
+    bool success = phrase_parse(iter, end, parser, space, ast) && iter == end;
+    if (!success)
+    {
+        throw std::runtime_error("Unsuccessful parse.");
+    }
+
+    /* Stage 2 parse */
+    std::shared_ptr<const Policy> policy = parsers::policy::stage_2::parser::parse(ast, error_handler, parent);
+
+    return policy;
 }
 
 std::shared_ptr<const BaseCondition> PolicyFactoryImpl::make_pos_condition(const std::shared_ptr<const core::Boolean>& boolean) {
@@ -80,6 +118,10 @@ std::shared_ptr<const Rule> PolicyFactoryImpl::make_rule(const Conditions& condi
 std::shared_ptr<const Policy> PolicyFactoryImpl::make_policy(
     const Rules& rules) {
     return m_caches.m_policy_cache->insert(std::unique_ptr<Policy>(new Policy(rules, m_caches.m_policy_cache->size()))).first;
+}
+
+std::shared_ptr<core::SyntacticElementFactory> PolicyFactoryImpl::get_element_factory() const {
+    return m_element_factory;
 }
 
 }

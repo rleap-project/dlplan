@@ -27,7 +27,7 @@ namespace boost::serialization {
 namespace dlplan::policy {
 class PolicyFactoryImpl {
 private:
-    std::shared_ptr<core::SyntacticElementFactory> element_factory;
+    std::shared_ptr<core::SyntacticElementFactory> m_element_factory;
     Caches m_caches;
 
     /// @brief Constructor for serialization.
@@ -41,10 +41,12 @@ public:
     explicit PolicyFactoryImpl(std::shared_ptr<core::SyntacticElementFactory> element_factory);
 
     std::shared_ptr<const Policy> parse_policy(
+        PolicyFactory& parent,
         const std::string& description,
         const std::string& filename);
 
     std::shared_ptr<const Policy> parse_policy(
+        PolicyFactory& parent,
         common::parsers::iterator_type& iter, common::parsers::iterator_type end,
         const std::string& filename);
 
@@ -62,6 +64,8 @@ public:
     std::shared_ptr<const Rule> make_rule(const Conditions& conditions, const Effects& effects);
 
     std::shared_ptr<const Policy> make_policy(const Rules& rules);
+
+    std::shared_ptr<core::SyntacticElementFactory> get_element_factory() const;
 };
 
 }

@@ -52,7 +52,7 @@ namespace dlplan::policy::parsers::policy::stage_1
         typedef x3::rule<NegativeBooleanEffectEntryClass, ast::NegativeBooleanEffectEntry> negative_boolean_effect_entry_type;
         typedef x3::rule<UnchangedBooleanEffectEntryClass, ast::UnchangedBooleanEffectEntry> unchanged_boolean_effect_entry_type;
         typedef x3::rule<IncrementNumericalEffectEntryClass, ast::IncrementNumericalEffectEntry> increment_numerical_effect_entry_type;
-        typedef x3::rule<DecrementNumericalEffectEntryClass, ast::DecrementNumericalEffectEntry> decrement_numerical_effect_type;
+        typedef x3::rule<DecrementNumericalEffectEntryClass, ast::DecrementNumericalEffectEntry> decrement_numerical_effect_entry_type;
         typedef x3::rule<UnchangedNumericalEffectEntryClass, ast::UnchangedNumericalEffectEntry> unchanged_numerical_effect_entry_type;
         typedef x3::rule<FeatureConditionEntryClass, ast::FeatureConditionEntry> feature_condition_entry_type;
         typedef x3::rule<FeatureEffectEntryClass, ast::FeatureEffectEntry> feature_effect_entry_type;
@@ -66,7 +66,7 @@ namespace dlplan::policy::parsers::policy::stage_1
             positive_boolean_condition_entry_type, negative_boolean_condition_entry_type,
             greater_numerical_condition_entry_type, equal_numerical_condition_entry_type,
             positive_boolean_effect_entry_type, negative_boolean_effect_entry_type, unchanged_boolean_effect_entry_type,
-            increment_numerical_effect_entry_type, decrement_numerical_effect_type, unchanged_numerical_effect_entry_type,
+            increment_numerical_effect_entry_type, decrement_numerical_effect_entry_type, unchanged_numerical_effect_entry_type,
             feature_condition_entry_type, feature_effect_entry_type,
             rule_entry_type, rules_type, policy_type)
     }
@@ -86,7 +86,7 @@ namespace dlplan::policy::parsers::policy::stage_1
     parser::negative_boolean_effect_entry_type const& negative_boolean_effect_entry();
     parser::unchanged_boolean_effect_entry_type const& unchanged_boolean_effect_entry();
     parser::increment_numerical_effect_entry_type const& increment_numerical_effect_entry();
-    parser::decrement_numerical_effect_type const& decrement_numerical_effect();
+    parser::decrement_numerical_effect_entry_type const& decrement_numerical_effect_entry();
     parser::unchanged_numerical_effect_entry_type const& unchanged_numerical_effect_entry();
     parser::feature_condition_entry_type const& feature_condition_entry();
     parser::feature_effect_entry_type const& feature_effect_entry();

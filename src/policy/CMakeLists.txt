@@ -7,7 +7,11 @@ target_sources(dlplanpolicy
         policy_impl.cpp
         policy_minimizer.cpp
         policy.cpp
-        rule.cpp)
+        rule.cpp
+        parsers/policy/stage_1/parser_instantiations.cpp
+        parsers/policy/stage_2/parser.cpp
+        ../common/parsers/utility.cpp
+        ../common/parsers/filesystem.cpp)
 
 target_link_libraries(dlplanpolicy
     PRIVATE

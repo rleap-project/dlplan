@@ -55,7 +55,7 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
         increment_numerical_effect_entry_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        decrement_numerical_effect_type, iterator_type, context_type)
+        decrement_numerical_effect_entry_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
         unchanged_numerical_effect_entry_type, iterator_type, context_type)

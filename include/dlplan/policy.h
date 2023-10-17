@@ -324,6 +324,8 @@ public:
      */
     std::shared_ptr<const Policy> make_policy(
         Rules&& rules);
+
+    std::shared_ptr<core::SyntacticElementFactory> get_element_factory() const;
 };
 
 

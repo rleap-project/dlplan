@@ -65,13 +65,13 @@ PolicyFactory::~PolicyFactory() = default;
 std::shared_ptr<const Policy> PolicyFactory::parse_policy(
     const std::string& description,
     const std::string& filename) {
-    return m_pImpl->parse_policy(description, filename);
+    return m_pImpl->parse_policy(*this, description, filename);
 }
 
 std::shared_ptr<const Policy> PolicyFactory::parse_policy(
     iterator_type& iter, iterator_type end,
     const std::string& filename) {
-    return m_pImpl->parse_policy(iter, end, filename);
+    return m_pImpl->parse_policy(*this, iter, end, filename);
 }
 
 std::shared_ptr<const BaseCondition> PolicyFactory::make_pos_condition(const std::shared_ptr<const core::Boolean>& boolean) {
@@ -123,6 +123,10 @@ std::shared_ptr<const Rule> PolicyFactory::make_rule(
 std::shared_ptr<const Policy> PolicyFactory::make_policy(
     Rules&& rules) {
     return m_pImpl->make_policy(std::move(rules));
+}
+
+std::shared_ptr<core::SyntacticElementFactory> PolicyFactory::get_element_factory() const {
+    return m_pImpl->get_element_factory();
 }
 
 }
