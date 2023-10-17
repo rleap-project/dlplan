@@ -9,7 +9,6 @@
 #include "include/dlplan/core/parsers/elements/stage_1/parser.hpp"
 
 #include "ast_adapted.hpp"
-#include "error_handler.hpp"
 
 
 namespace dlplan::core::parsers::elements::stage_1::parser
@@ -26,6 +25,8 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     using ascii::alnum;
     using ascii::char_;
     using ascii::string;
+
+    using error_handler_base = dlplan::common::parsers::error_handler_base;
 
     ///////////////////////////////////////////////////////////////////////////
     // Rule IDs
@@ -346,8 +347,6 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     ///////////////////////////////////////////////////////////////////////////
     // Annotation and Error handling
     ///////////////////////////////////////////////////////////////////////////
-
-    typedef dlplan::common::parsers::error_handler_base error_handler_base;
 
     struct NameClass : x3::annotate_on_success, error_handler_base {};
     struct ConstantClass : x3::annotate_on_success, error_handler_base {};

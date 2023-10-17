@@ -4,8 +4,7 @@
 #include <boost/spirit/home/x3.hpp>
 #include <boost/spirit/home/x3/support/utility/annotate_on_success.hpp>
 
-#include "src/policy/parsers/policy/common/error_handler.hpp"
-
+#include "include/dlplan/common/parsers/error_handler.hpp"
 #include "include/dlplan/policy/parsers/policy/stage_1/ast.hpp"
 #include "include/dlplan/policy/parsers/policy/stage_1/parser.hpp"
 
@@ -26,6 +25,8 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
     using ascii::alnum;
     using ascii::char_;
     using ascii::string;
+
+    using error_handler_base = dlplan::common::parsers::error_handler_base;
 
     ///////////////////////////////////////////////////////////////////////////
     // Rule IDs

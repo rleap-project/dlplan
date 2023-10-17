@@ -63,7 +63,6 @@ include_directories(${Boost_INCLUDE_DIRS})
 # Add library and executable targets
 ##############################################################
 
-include_directories(include/)
 include_directories("${PROJECT_SOURCE_DIR}")
 
 add_subdirectory(src)

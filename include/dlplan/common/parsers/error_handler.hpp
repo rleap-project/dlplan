@@ -31,7 +31,7 @@ namespace dlplan::common::parsers
             Iterator& /*first*/, Iterator const& /*last*/
           , Exception const& x, Context const& context) {
             {
-                auto& error_counter = x3::get<dlplan::parsers::error_counter_tag>(context).get();
+                auto& error_counter = x3::get<error_counter_tag>(context).get();
                 if (error_counter.count > 0) {
                     // We only print the first occurence of an error
                     return x3::error_handler_result::fail;
@@ -45,7 +45,7 @@ namespace dlplan::common::parsers
                 }
 
                 std::string message = "Error! Expecting: " + which + " here:";
-                auto& error_handler = x3::get<dlplan::parsers::error_handler_tag>(context).get();
+                auto& error_handler = x3::get<error_handler_tag>(context).get();
                 error_handler(x.where(), message);
 
                 return x3::error_handler_result::fail;

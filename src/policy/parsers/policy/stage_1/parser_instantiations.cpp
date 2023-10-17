@@ -1,12 +1,13 @@
 #include "parser_def.hpp"
 
-#include "include/dlplan/core/parsers/common/config.hpp"
+#include "include/dlplan/common/parsers/config.hpp"
+
 
 
 namespace dlplan::policy::parsers::policy::stage_1::parser
 {
-    using dlplan::core::parsers::iterator_type;
-    using dlplan::core::parsers::context_type;
+    using iterator_type = dlplan::common::parsers::iterator_type;
+    using context_type = dlplan::common::parsers::context_type;
 
     BOOST_SPIRIT_INSTANTIATE(
         name_type, iterator_type, context_type)

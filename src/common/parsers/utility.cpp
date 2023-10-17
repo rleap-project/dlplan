@@ -1,7 +1,7 @@
 #include "include/dlplan/common/parsers/utility.hpp"
 
 
-namespace dlplan::parsers {
+namespace dlplan::common::parsers {
 
 bool in_bounds(
     const error_handler_type& error_handler,

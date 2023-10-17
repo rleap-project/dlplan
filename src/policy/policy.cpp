@@ -1,4 +1,4 @@
-#include "../include/dlplan/policy.h"
+#include "../../include/dlplan/policy.h"
 
 #include <iostream>
 
@@ -9,6 +9,9 @@
 #include "effect.h"
 #include "policy_factory.h"
 #include "../../include/dlplan/policy.h"
+
+
+using namespace dlplan::common::parsers;
 
 
 namespace dlplan::policy {
@@ -66,7 +69,7 @@ std::shared_ptr<const Policy> PolicyFactory::parse_policy(
 }
 
 std::shared_ptr<const Policy> PolicyFactory::parse_policy(
-    parsers::iterator_type& iter, parsers::iterator_type end,
+    iterator_type& iter, iterator_type end,
     const std::string& filename) {
     return m_pImpl->parse_policy(iter, end, filename);
 }

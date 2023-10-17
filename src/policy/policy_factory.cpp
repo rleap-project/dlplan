@@ -11,6 +11,9 @@
 #include "effect.h"
 
 
+using namespace dlplan::common::parsers;
+
+
 namespace dlplan::policy {
 
 PolicyFactoryImpl::PolicyFactoryImpl() : element_factory(nullptr) { }
@@ -25,7 +28,7 @@ std::shared_ptr<const Policy> PolicyFactoryImpl::parse_policy(
 }
 
 std::shared_ptr<const Policy> PolicyFactoryImpl::parse_policy(
-    parsers::iterator_type& iter, parsers::iterator_type end,
+    iterator_type& iter, iterator_type end,
     const std::string& filename) {
 
 }

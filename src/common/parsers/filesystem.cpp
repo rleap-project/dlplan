@@ -5,7 +5,7 @@
 #include <sstream>
 
 
-namespace dlplan::parsers {
+namespace dlplan::common::parsers {
 
 std::string read_file(const fs::path& file_path) {
     std::ifstream file(file_path.c_str());
