@@ -83,13 +83,13 @@ endif()
 
 # Install header files
 install(
-    DIRECTORY "${PROJECT_SOURCE_DIR}/include/dlplan"
-    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/dlplan"
+    DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/"
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
 )
 
 # Install cmake scripts
 install(
-    DIRECTORY "${PROJECT_SOURCE_DIR}/cmake"
+    DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/cmake/"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dlplan"
 )
 
