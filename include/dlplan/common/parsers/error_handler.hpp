@@ -15,6 +15,10 @@ namespace dlplan::common::parsers
     //  Our error handler
     ////////////////////////////////////////////////////////////////////////////
 
+    /// @brief The error_handler_base only print error message for the first occurence
+    ///        The expectation failures of the parent grammar rules are not printed.
+    ///        We do not throw an exception because, as a general rule, 
+    ///        the caller should have the option to recover from a failed parse.
     struct error_handler_base
     {
         std::string error_message;
