@@ -23,15 +23,11 @@ namespace dlplan::common::parsers
     typedef error_handler<iterator_type> error_handler_type;
 
 
-    /* The error counter */
-    struct error_counter_tag;
+    /* In case we need to provide context in the future. */
+    struct parsing_context_tag;
 
-    struct error_counter_type {
-        int count = 0;
-
-        void increment() {
-            count += 1;
-        }
+    struct parsing_context_type {
+        bool error_reported = false;
     };
 
 
@@ -46,8 +42,8 @@ namespace dlplan::common::parsers
             error_handler_tag,
             std::reference_wrapper<error_handler_type>,
             x3::context<
-                error_counter_tag,
-                std::reference_wrapper<error_counter_type>,
+                parsing_context_tag,
+                std::reference_wrapper<parsing_context_type>,
                 phrase_context_type>>
     context_type;
 

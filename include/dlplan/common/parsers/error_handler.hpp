@@ -31,12 +31,12 @@ namespace dlplan::common::parsers
             Iterator& /*first*/, Iterator const& /*last*/
           , Exception const& x, Context const& context) {
             {
-                auto& error_counter = x3::get<error_counter_tag>(context).get();
-                if (error_counter.count > 0) {
+                auto& parsing_context = x3::get<parsing_context_tag>(context).get();
+                if (parsing_context.error_reported) {
                     // We only print the first occurence of an error
                     return x3::error_handler_result::fail;
                 }
-                error_counter.increment();
+                parsing_context.error_reported = true;
 
                 std::string which = x.which();
                 // Use our message if defined

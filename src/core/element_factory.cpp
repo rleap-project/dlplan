@@ -75,14 +75,13 @@ std::shared_ptr<const Concept> SyntacticElementFactoryImpl::parse_concept(Syntac
 
     // Our error handler
     error_handler_type error_handler(iter, end, std::cerr, filename);
-    // Our error counter
-    error_counter_type error_counter;
+    parsing_context_type parsing_context;
     auto const parser =
         // we pass our error handler to the parser so we can access
         // it later on in our on_error and on_sucess handlers
-        with<error_counter_tag>(std::ref(error_counter)) [
+        with<parsing_context_tag>(std::ref(parsing_context)) [
             with<error_handler_tag>(std::ref(error_handler)) [
-                dlplan::core::parsers::elements::stage_1::concept()
+              dlplan::core::parsers::elements::stage_1::concept()
             ]
         ];
 
@@ -93,10 +92,10 @@ std::shared_ptr<const Concept> SyntacticElementFactoryImpl::parse_concept(Syntac
     using boost::spirit::x3::ascii::space;
     bool success = phrase_parse(iter, end, parser, space, ast);
     if (!success) {
-        throw std::runtime_error("Unsuccessful parse.");
+        throw std::runtime_error("Failed parse.");
     } 
     if (iter != end) {
-        throw std::runtime_error("Unsuccessful parse. Did not consume whole input.");
+        throw std::runtime_error("Failed parse. Did not consume whole input.");
     }
 
     /* Stage 2 parse */
@@ -120,12 +119,11 @@ std::shared_ptr<const Role> SyntacticElementFactoryImpl::parse_role(SyntacticEle
 
     // Our error handler
     error_handler_type error_handler(iter, end, std::cerr, filename);
-    // Our error counter
-    error_counter_type error_counter;
+    parsing_context_type parsing_context;
     auto const parser =
         // we pass our error handler to the parser so we can access
         // it later on in our on_error and on_sucess handlers
-        with<error_counter_tag>(std::ref(error_counter)) [
+        with<parsing_context_tag>(std::ref(parsing_context)) [
             with<error_handler_tag>(std::ref(error_handler)) [
                 dlplan::core::parsers::elements::stage_1::role()
             ]
@@ -138,10 +136,10 @@ std::shared_ptr<const Role> SyntacticElementFactoryImpl::parse_role(SyntacticEle
     using boost::spirit::x3::ascii::space;
     bool success = phrase_parse(iter, end, parser, space, ast);
     if (!success) {
-        throw std::runtime_error("Unsuccessful parse.");
+        throw std::runtime_error("Failed parse.");
     } 
     if (iter != end) {
-        throw std::runtime_error("Unsuccessful parse. Did not consume whole input.");
+        throw std::runtime_error("Failed parse. Did not consume whole input.");
     }
 
     /* Stage 2 parse */
@@ -165,12 +163,11 @@ std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::parse_boolean(Syntac
 
     // Our error handler
     error_handler_type error_handler(iter, end, std::cerr, filename);
-    // Our error counter
-    error_counter_type error_counter;
+    parsing_context_type parsing_context;
     auto const parser =
         // we pass our error handler to the parser so we can access
         // it later on in our on_error and on_sucess handlers
-        with<error_counter_tag>(std::ref(error_counter)) [
+        with<parsing_context_tag>(std::ref(parsing_context)) [
             with<error_handler_tag>(std::ref(error_handler)) [
                 dlplan::core::parsers::elements::stage_1::boolean()
             ]
@@ -183,10 +180,10 @@ std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::parse_boolean(Syntac
     using boost::spirit::x3::ascii::space;
     bool success = phrase_parse(iter, end, parser, space, ast);
     if (!success) {
-        throw std::runtime_error("Unsuccessful parse.");
+        throw std::runtime_error("Failed parse.");
     } 
     if (iter != end) {
-        throw std::runtime_error("Unsuccessful parse. Did not consume whole input.");
+        throw std::runtime_error("Failed parse. Did not consume whole input.");
     }
 
     /* Stage 2 parse */
@@ -210,12 +207,11 @@ std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::parse_numerical(Sy
 
     // Our error handler
     error_handler_type error_handler(iter, end, std::cerr, filename);
-    // Our error counter
-    error_counter_type error_counter;
+    parsing_context_type parsing_context;
     auto const parser =
         // we pass our error handler to the parser so we can access
         // it later on in our on_error and on_sucess handlers
-        with<error_counter_tag>(std::ref(error_counter)) [
+        with<parsing_context_tag>(std::ref(parsing_context)) [
             with<error_handler_tag>(std::ref(error_handler)) [
                 dlplan::core::parsers::elements::stage_1::numerical()
             ]
@@ -228,10 +224,10 @@ std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::parse_numerical(Sy
     using boost::spirit::x3::ascii::space;
     bool success = phrase_parse(iter, end, parser, space, ast);
     if (!success) {
-        throw std::runtime_error("Unsuccessful parse.");
+        throw std::runtime_error("Failed parse.");
     } 
     if (iter != end) {
-        throw std::runtime_error("Unsuccessful parse. Did not consume whole input.");
+        throw std::runtime_error("Failed parse. Did not consume whole input.");
     }
 
     /* Stage 2 parse */
