@@ -29,6 +29,7 @@ void init_novelty(py::module_ &m_novelty) {
         .def("insert_atom_indices", py::overload_cast<const AtomIndices&, const AtomIndices&, bool>(&NoveltyTable::insert_atom_indices), py::arg("atom_indices"), py::arg("add_atom_indices"), py::arg("stop_if_novel") = false)
         .def("insert_tuple_indices", py::overload_cast<const TupleIndices&, bool>(&NoveltyTable::insert_tuple_indices), py::arg("tuple_indices"), py::arg("stop_if_novel") = false)
         .def("resize", &NoveltyTable::resize)
+        .def("get_novelty_base", &NoveltyTable::get_novelty_base)
     ;
 
     py::class_<TupleNode, std::shared_ptr<TupleNode>>(m_novelty, "TupleNode")

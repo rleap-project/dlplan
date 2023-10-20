@@ -11,6 +11,7 @@
 #include <boost/serialization/vector.hpp>
 
 #include "src/utils/math.h"
+#include "src/utils/logging.h"
 
 
 namespace dlplan::novelty {
@@ -38,7 +39,6 @@ NoveltyBase& NoveltyBase::operator=(NoveltyBase&& other) = default;
 NoveltyBase::~NoveltyBase() = default;
 
 TupleIndex NoveltyBase::atom_indices_to_tuple_index(const AtomIndices& atom_indices) const {
-    assert(static_cast<int>(atom_indices.size()) == m_arity);
     assert(std::is_sorted(atom_indices.begin(), atom_indices.end()));
     TupleIndex result = 0;
     int i = 0;

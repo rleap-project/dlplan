@@ -115,8 +115,23 @@ void NoveltyTable::resize(std::shared_ptr<const NoveltyBase> novelty_base) {
     if (novelty_base->get_arity() != m_novelty_base->get_arity()) {
         throw std::runtime_error("NoveltyTable::resize - missmatched arity of novelty_table and novelty_base.");
     }
-    m_table.resize(std::pow(novelty_base->get_num_atoms()+1, novelty_base->get_arity()), true);
-    m_novelty_base = novelty_base;
+    NoveltyTable new_table(novelty_base);
+    // mark tuples in new table
+    AtomIndices atom_indices;
+    int new_tuple_index;
+    for (int old_tuple_index = 0; old_tuple_index < m_table.size(); ++old_tuple_index) {
+        if (!m_table[old_tuple_index]) {
+            atom_indices = m_novelty_base->tuple_index_to_atom_indices(old_tuple_index);
+            new_tuple_index = novelty_base->atom_indices_to_tuple_index(atom_indices);
+            new_table.m_table[new_tuple_index] = false;
+        }
+    }
+    m_table = std::move(new_table.m_table);
+    m_novelty_base = std::move(novelty_base);
+}
+
+const std::shared_ptr<const NoveltyBase> NoveltyTable::get_novelty_base() const {
+    return m_novelty_base;
 }
 
 }
