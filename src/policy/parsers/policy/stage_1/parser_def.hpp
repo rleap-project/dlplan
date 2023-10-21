@@ -264,7 +264,7 @@ namespace dlplan::policy::parsers::policy::stage_1
         return parser::increment_numerical_effect_entry;
     }
 
-    parser::decrement_numerical_effect_entry_type const& decrement_numerical_effect() {
+    parser::decrement_numerical_effect_entry_type const& decrement_numerical_effect_entry() {
         return parser::decrement_numerical_effect_entry;
     }
 
