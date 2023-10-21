@@ -1,7 +1,7 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_CORE_COMMON_PARSERS_ERROR_HANDLER_HPP_
 #define DLPLAN_INCLUDE_DLPLAN_CORE_COMMON_PARSERS_ERROR_HANDLER_HPP_
 
-#include <map>
+#include <unordered_map>
 #include <iostream>
 
 #include "include/dlplan/common/parsers/config.hpp"
