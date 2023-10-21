@@ -16,6 +16,7 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
     ///////////////////////////////////////////////////////////////////////////
     namespace x3 = boost::spirit::x3;
 
+    struct NameInner;
     struct Name;
     struct NameEntry;
     struct BooleanDefinition;
@@ -44,9 +45,13 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
 
 
     /* Basic character compounds */
-    struct Name : x3::position_tagged {
+    struct NameInner : x3::position_tagged {
         char alphabetical;
         std::string suffix;
+    };
+
+    struct Name : x3::position_tagged {
+        NameInner name;
     };
 
 

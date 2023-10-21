@@ -32,6 +32,7 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
     // Rule IDs
     ///////////////////////////////////////////////////////////////////////////
 
+    struct NameInnerClass;
     struct FeatureConditionEntryInnerClass;
     struct FeatureEffectEntryInnerClass;
 
@@ -41,6 +42,9 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
     ///////////////////////////////////////////////////////////////////////////
 
     /* Private rules with annotations */
+    x3::rule<NameInnerClass, ast::NameInner> const
+        name_inner = "name_inner";
+
     x3::rule<FeatureConditionEntryInnerClass, ast::FeatureConditionEntryInner> const
         feature_condition_entry_inner = "feature_condition_entry_inner";
 
@@ -100,17 +104,18 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
     // Grammar
     ///////////////////////////////////////////////////////////////////////////
 
-    const auto name_def = alpha >> lexeme[*(alnum | char_('-') | char_('_'))];
+    const auto name_inner_def = alpha >> lexeme[*(alnum | char_('-') | char_('_'))];
+    const auto name_def = eps > name_inner;
 
     const auto boolean_definition_def = lit('(') > name > lit('"') > dlplan::core::parsers::elements::stage_1::boolean() > lit('"') > lit(')');
 
-    const auto boolean_reference_def = name;
+    const auto boolean_reference_def = eps > name;
 
     const auto booleans_entry_def = lit('(') >> lit(":booleans") > *boolean_definition > lit(')');
 
     const auto numerical_definition_def = lit('(') > name > lit('"') > dlplan::core::parsers::elements::stage_1::numerical() > lit('"') > lit(')');
 
-    const auto numerical_reference_def = name;
+    const auto numerical_reference_def = eps > name;
 
     const auto numericals_entry_def = lit('(') >> lit(":numericals") > *numerical_definition > lit(')');
 
@@ -160,7 +165,7 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
     const auto policy_root_def = policy;
 
     BOOST_SPIRIT_DEFINE(
-        name, boolean_definition, boolean_reference, booleans_entry, numerical_definition, numerical_reference, numericals_entry,
+        name_inner, name, boolean_definition, boolean_reference, booleans_entry, numerical_definition, numerical_reference, numericals_entry,
         positive_boolean_condition_entry, negative_boolean_condition_entry, greater_numerical_condition_entry, equal_numerical_condition_entry,
         positive_boolean_effect_entry, negative_boolean_effect_entry, unchanged_boolean_effect_entry, increment_numerical_effect_entry, decrement_numerical_effect_entry, unchanged_numerical_effect_entry,
         feature_condition_entry_inner, feature_condition_entry, feature_effect_entry_inner, feature_effect_entry, rule_entry, rules, policy, policy_root)
@@ -169,6 +174,7 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
     // Annotation and Error handling
     ///////////////////////////////////////////////////////////////////////////
 
+    struct NameInnerClass : x3::annotate_on_success {};
     struct NameClass : x3::annotate_on_success {};
     struct BooleanDefinitionClass : x3::annotate_on_success {};
     struct BooleanReferenceClass : x3::annotate_on_success {};

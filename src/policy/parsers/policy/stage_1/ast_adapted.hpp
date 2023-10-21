@@ -9,7 +9,8 @@
 
 // We need to tell fusion about our ast nodes
 // to make them a first-class fusion citizens
-BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::Name, alphabetical, suffix)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::NameInner, alphabetical, suffix)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::Name, name)
 
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::BooleanDefinition, key, boolean)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::BooleanReference, key)

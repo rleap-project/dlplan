@@ -53,9 +53,13 @@ namespace dlplan::core::parsers::elements::stage_1::ast
     struct TransitiveReflexiveClosureRole;
 
     /* Basic character compounds */
-    struct Name : x3::position_tagged {
+    struct NameInner : x3::position_tagged {
         char alphabetical;
         std::string suffix;
+    };
+
+    struct Name : x3::position_tagged {
+        NameInner name;
     };
 
     struct Constant : x3::position_tagged {
@@ -152,15 +156,11 @@ namespace dlplan::core::parsers::elements::stage_1::ast
         ElementInner element;
     };
 
-    struct ConceptOrRoleInner : x3::position_tagged, x3::variant<
+    struct ConceptOrRole : x3::position_tagged, x3::variant<
         x3::forward_ast<ConceptInner>,
         x3::forward_ast<RoleInner>> {
         using base_type::base_type;
         using base_type::operator=;
-    };
-
-    struct ConceptOrRole : x3::position_tagged {
-        ConceptOrRoleInner inner;
     };
 
     struct EmptyBoolean : x3::position_tagged {

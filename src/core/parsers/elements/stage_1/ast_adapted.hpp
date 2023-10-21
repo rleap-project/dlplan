@@ -9,7 +9,8 @@
 
 // We need to tell fusion about our ast nodes
 // to make them a first-class fusion citizens
-BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::Name, alphabetical, suffix)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::NameInner, alphabetical, suffix)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::Name, name)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::Constant, name)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::Predicate, name)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::Position, value)
@@ -18,7 +19,6 @@ BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::Concept
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::Numerical, numerical)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::Role, role)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::Element, element)
-BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::ConceptOrRole, inner)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::EmptyBoolean, element)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::InclusionBoolean, element_left, element_right)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::parsers::elements::stage_1::ast::NullaryBoolean, predicate)

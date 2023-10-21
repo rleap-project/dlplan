@@ -9,10 +9,15 @@ namespace dlplan::core::parsers::elements::stage_2::parser {
 
 
 static std::string
-parse(const stage_1::ast::Name& node, const error_handler_type&, SyntacticElementFactory&) {
+parse(const stage_1::ast::NameInner& node, const error_handler_type&, SyntacticElementFactory&) {
     std::stringstream ss;
     ss << node.alphabetical << node.suffix;
     return ss.str();
+}
+
+static std::string
+parse(const stage_1::ast::Name& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+    return parse(node.name, error_handler, context);
 }
 
 static core::Constant
@@ -428,13 +433,13 @@ parse(const stage_1::ast::NumericalInner& node, const error_handler_type& error_
     return visitor.result;
 }
 
-class ConceptOrRoleInnerVisitor {
+class ConceptOrRoleVisitor {
 private:
     const error_handler_type& error_handler;
     SyntacticElementFactory& context;
 
 public:
-    ConceptOrRoleInnerVisitor(const error_handler_type& error_handler, SyntacticElementFactory& context)
+    ConceptOrRoleVisitor(const error_handler_type& error_handler, SyntacticElementFactory& context)
         : error_handler(error_handler), context(context) { }
 
     boost::variant<std::shared_ptr<const core::Concept>, std::shared_ptr<const core::Role>> result;
@@ -447,8 +452,8 @@ public:
 
 boost::variant<std::shared_ptr<const core::Concept>, std::shared_ptr<const core::Role>>
 parse(const stage_1::ast::ConceptOrRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
-    ConceptOrRoleInnerVisitor visitor(error_handler, context);
-    boost::apply_visitor(visitor, node.inner);
+    ConceptOrRoleVisitor visitor(error_handler, context);
+    boost::apply_visitor(visitor, node);
     return visitor.result;
 }
 

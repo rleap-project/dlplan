@@ -107,7 +107,7 @@ int main() {
         "(:policy\n"
         "(:booleans (b0 \"b_nullary(arm-empty)\"))\n"
         "(:numericals (n0 \"n_count(r_primitive(on,0,1))\"))\n"
-        "(:rule (:conditions (:c_b_pos b0) (:c_n_gt n0)) (:effects (:e_b_bot b42) (:e_n_dec n0)))\n"
+        "(:rule (:conditions (:c_b_pos b0) (:c_n_gt n0)) (:effects (:e_b_bot b0) (:e_n_dec n0)))\n"
         ")";
     auto policy_in = policy_factory.parse_policy(policy_str);
     std::cout << policy_in->compute_repr() << std::endl << std::endl;
