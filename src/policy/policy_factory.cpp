@@ -7,7 +7,7 @@
 
 #include "include/dlplan/policy.h"
 #include "include/dlplan/policy/parsers/policy/stage_1/ast.hpp"
-#include "include/dlplan/policy/parsers/policy/stage_1/parser.hpp"
+#include "src/policy/parsers/policy/stage_1/parser.hpp"
 #include "include/dlplan/policy/parsers/policy/stage_2/context.hpp"
 #include "include/dlplan/policy/parsers/policy/stage_2/parser.hpp"
 
@@ -44,14 +44,11 @@ std::shared_ptr<const Policy> PolicyFactoryImpl::parse_policy(
 
     // Our error handler
     error_handler_type error_handler(iter, end, std::cerr, filename);
-    parsing_context_type parsing_context;
     auto const parser =
         // we pass our error handler to the parser so we can access
         // it later on in our on_error and on_sucess handlers
-        with<parsing_context_tag>(std::ref(parsing_context)) [
-            with<error_handler_tag>(std::ref(error_handler)) [
-                dlplan::policy::parsers::policy::stage_1::policy()
-            ]
+        with<error_handler_tag>(std::ref(error_handler)) [
+            dlplan::policy::parsers::policy::stage_1::policy_root()
         ];
 
     // Our AST
@@ -62,7 +59,7 @@ std::shared_ptr<const Policy> PolicyFactoryImpl::parse_policy(
     bool success = phrase_parse(iter, end, parser, space, ast);
     if (!success) {
         throw std::runtime_error("Failed parse.");
-    } 
+    }
     if (iter != end) {
         throw std::runtime_error("Failed parse. Did not consume whole input.");
     }

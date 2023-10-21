@@ -1,5 +1,5 @@
-#ifndef DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_ELEMENTS_COMMON_ERROR_HANDLER_HPP_
-#define DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_ELEMENTS_COMMON_ERROR_HANDLER_HPP_
+#ifndef DLPLAN_INCLUDE_DLPLAN_CORE_COMMON_PARSERS_ERROR_HANDLER_HPP_
+#define DLPLAN_INCLUDE_DLPLAN_CORE_COMMON_PARSERS_ERROR_HANDLER_HPP_
 
 #include <map>
 #include <iostream>
@@ -12,40 +12,24 @@ namespace dlplan::common::parsers
     namespace x3 = boost::spirit::x3;
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Our error handler
+    // Our error handler
     ////////////////////////////////////////////////////////////////////////////
 
-    /// @brief The error_handler_base only print error message for the first occurence
-    ///        The expectation failures of the parent grammar rules are not printed.
-    ///        We do not throw an exception because, as a general rule, 
-    ///        the caller should have the option to recover from a failed parse.
     struct error_handler_base
     {
-        std::string error_message;
+        std::unordered_map<std::string, std::string> id_map;
 
-        // Spirit calls the default constructor
-        error_handler_base() : error_message("") { }
-
-        error_handler_base(const std::string& message) : error_message(message) { }
-
-        virtual ~error_handler_base() { }
+        error_handler_base() { }
 
         template <typename Iterator, typename Exception, typename Context>
         x3::error_handler_result on_error(
             Iterator& /*first*/, Iterator const& /*last*/
           , Exception const& x, Context const& context) {
             {
-                auto& parsing_context = x3::get<parsing_context_tag>(context).get();
-                if (parsing_context.error_reported) {
-                    // We only print the first occurence of an error
-                    return x3::error_handler_result::fail;
-                }
-                parsing_context.error_reported = true;
-
                 std::string which = x.which();
-                // Use our message if defined
-                if (error_message != "") {
-                    which = error_message;
+                auto iter = id_map.find(which);
+                if (iter != id_map.end()) {
+                    which = iter->second;
                 }
 
                 std::string message = "Error! Expecting: " + which + " here:";
@@ -56,10 +40,6 @@ namespace dlplan::common::parsers
             }
         }
     };
-
-
-
-
 }
 
 #endif

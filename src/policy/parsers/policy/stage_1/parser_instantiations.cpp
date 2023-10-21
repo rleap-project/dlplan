@@ -74,4 +74,7 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
 
     BOOST_SPIRIT_INSTANTIATE(
         policy_type, iterator_type, context_type)
+
+    BOOST_SPIRIT_INSTANTIATE(
+        policy_root_type, iterator_type, context_type)
 }

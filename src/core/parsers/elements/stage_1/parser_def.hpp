@@ -4,11 +4,12 @@
 #include <boost/spirit/home/x3.hpp>
 #include <boost/spirit/home/x3/support/utility/annotate_on_success.hpp>
 
-#include "include/dlplan/common/parsers/error_handler.hpp"
+#include "include/dlplan/core/parsers/elements/stage_1/error_handler.hpp"
 #include "include/dlplan/core/parsers/elements/stage_1/ast.hpp"
 #include "include/dlplan/core/parsers/elements/stage_1/parser.hpp"
 
 #include "ast_adapted.hpp"
+#include "parser.hpp"
 
 
 namespace dlplan::core::parsers::elements::stage_1::parser
@@ -26,7 +27,6 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     using ascii::char_;
     using ascii::string;
 
-    using error_handler_base = dlplan::common::parsers::error_handler_base;
 
     ///////////////////////////////////////////////////////////////////////////
     // Rule IDs
@@ -81,6 +81,7 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     // Rules
     ///////////////////////////////////////////////////////////////////////////
 
+    /* Private rules with annotation */
     x3::rule<NameClass, ast::Name> const
         name = "name";
 
@@ -213,6 +214,23 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     x3::rule<TransitiveReflexiveClosureRoleClass, ast::TransitiveReflexiveClosureRole> const
         transitive_reflexive_closure_role = "transitive_reflexive_closure_role";
 
+    /* Privates rules with annotation and error handling */
+    boolean_root_type const
+        boolean_root = "boolean";
+
+    numerical_root_type const
+        numerical_root = "numerical";
+
+    concept_root_type const
+        concept_root = "concept";
+
+    role_root_type const
+        role_root = "role";
+
+    element_root_type const
+        element_root = "element";
+
+    /* Public rules with annotation */
     boolean_type const
         boolean = "boolean";
 
@@ -310,35 +328,39 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     const auto transitive_reflexive_closure_role_def = lit("r_transitive_reflexive_closure") > lit('(') > role > lit(')');
 
     const auto boolean_inner_def = empty_boolean | inclusion_boolean | nullary_boolean;
-
-    const auto boolean_def = boolean_inner_def;
+    const auto boolean_def = boolean_inner;
+    const auto boolean_root_def = boolean_inner;
 
     // Note: non recursive comes first, i.e., primitive_concept
     const auto concept_inner_def = primitive_concept | all_concept | and_concept | bot_concept | diff_concept | equal_concept | not_concept | one_of_concept | or_concept | projection_concept | some_concept | subset_concept | top_concept;
-
-    const auto concept_def = concept_inner_def;
+    const auto concept_def = concept_inner;
+    const auto concept_root_def = concept_inner;
 
     const auto numerical_inner_def = concept_distance_numerical | count_numerical | role_distance_numerical | sum_concept_distance_numerical | sum_role_distance_numerical;
-
     const auto numerical_def = numerical_inner;
+    const auto numerical_root_def = numerical_inner;
 
     // Note: non recursive comes first, i.e., primitive_role
     const auto role_inner_def = primitive_role | and_role | compose_role | diff_role | identity_role | inverse_role | not_role | or_role | restrict_role | top_role | transitive_closure_role | transitive_reflexive_closure_role;
-
     const auto role_def = role_inner;
+    const auto role_root_def = role_inner;
 
     const auto concept_or_role_inner_def = concept_inner | role_inner;
-
     const auto concept_or_role_def = concept_or_role_inner;
 
     const auto element_inner_def = boolean_inner | concept_inner | numerical_inner | role_inner;
-
     const auto element_def = eps > element_inner;
+    const auto element_root_def = eps > element_inner;
 
 
     BOOST_SPIRIT_DEFINE(
         name, constant, predicate, position,
-        boolean_inner, boolean, concept_inner, concept, numerical_inner, numerical, role_inner, role, element_inner, element, concept_or_role_inner, concept_or_role,
+        boolean_inner, boolean, boolean_root,
+        concept_inner, concept, concept_root,
+        numerical_inner, numerical, numerical_root,
+        role_inner, role, role_root,
+        element_inner, element, element_root,
+        concept_or_role_inner, concept_or_role,
         empty_boolean, inclusion_boolean, nullary_boolean,
         all_concept, and_concept, bot_concept, diff_concept, equal_concept, not_concept, one_of_concept, or_concept, primitive_concept, projection_concept, some_concept, subset_concept, top_concept,
         concept_distance_numerical, count_numerical, role_distance_numerical, sum_concept_distance_numerical, sum_role_distance_numerical,
@@ -348,55 +370,66 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     // Annotation and Error handling
     ///////////////////////////////////////////////////////////////////////////
 
-    struct NameClass : x3::annotate_on_success, error_handler_base {};
-    struct ConstantClass : x3::annotate_on_success, error_handler_base {};
-    struct PredicateClass : x3::annotate_on_success, error_handler_base {};
-    struct PositionClass : x3::annotate_on_success, error_handler_base {};
-    struct BooleanInnerClass : x3::annotate_on_success, error_handler_base {};
-    struct BooleanClass : x3::annotate_on_success, error_handler_base {};
-    struct ConceptInnerClass : x3::annotate_on_success, error_handler_base {};
-    struct ConceptClass : x3::annotate_on_success, error_handler_base {};
-    struct NumericalInnerClass : x3::annotate_on_success, error_handler_base {};
-    struct NumericalClass : x3::annotate_on_success, error_handler_base {};
-    struct RoleInnerClass : x3::annotate_on_success, error_handler_base {};
-    struct RoleClass : x3::annotate_on_success, error_handler_base {};
-    struct ConceptOrRoleInnerClass : x3::annotate_on_success, error_handler_base {};
-    struct ConceptOrRoleClass : x3::annotate_on_success, error_handler_base {};
-    struct EmptyBooleanClass : x3::annotate_on_success, error_handler_base {};
-    struct InclusionBooleanClass : x3::annotate_on_success, error_handler_base {};
-    struct NullaryBooleanClass : x3::annotate_on_success, error_handler_base {};
-    struct AllConceptClass : x3::annotate_on_success, error_handler_base {};
-    struct AndConceptClass : x3::annotate_on_success, error_handler_base {};
-    struct BotConceptClass : x3::annotate_on_success, error_handler_base {};
-    struct DiffConceptClass : x3::annotate_on_success, error_handler_base {};
-    struct EqualConceptClass : x3::annotate_on_success, error_handler_base {};
-    struct NotConceptClass : x3::annotate_on_success, error_handler_base {};
-    struct OneOfConceptClass : x3::annotate_on_success, error_handler_base {};
-    struct OrConceptClass : x3::annotate_on_success, error_handler_base {};
-    struct PrimitiveConceptClass : x3::annotate_on_success, error_handler_base {};
-    struct ProjectionConceptClass : x3::annotate_on_success, error_handler_base {};
-    struct SomeConceptClass : x3::annotate_on_success, error_handler_base {};
-    struct SubsetConceptClass : x3::annotate_on_success, error_handler_base {};
-    struct TopConceptClass : x3::annotate_on_success, error_handler_base {};
-    struct ConceptDistanceNumericalClass : x3::annotate_on_success, error_handler_base {};
-    struct CountNumericalClass : x3::annotate_on_success, error_handler_base {};
-    struct RoleDistanceNumericalClass : x3::annotate_on_success, error_handler_base {};
-    struct SumConceptDistanceNumericalClass : x3::annotate_on_success, error_handler_base {};
-    struct SumRoleDistanceNumericalClass : x3::annotate_on_success, error_handler_base {};
-    struct AndRoleClass : x3::annotate_on_success, error_handler_base {};
-    struct ComposeRoleClass : x3::annotate_on_success, error_handler_base {};
-    struct DiffRoleClass : x3::annotate_on_success, error_handler_base {};
-    struct IdentityRoleClass : x3::annotate_on_success, error_handler_base {};
-    struct InverseRoleClass : x3::annotate_on_success, error_handler_base {};
-    struct NotRoleClass : x3::annotate_on_success, error_handler_base {};
-    struct OrRoleClass : x3::annotate_on_success, error_handler_base {};
-    struct PrimitiveRoleClass : x3::annotate_on_success, error_handler_base {};
-    struct RestrictRoleClass : x3::annotate_on_success, error_handler_base {};
-    struct TopRoleClass : x3::annotate_on_success, error_handler_base {};
-    struct TransitiveClosureRoleClass : x3::annotate_on_success, error_handler_base {};
-    struct TransitiveReflexiveClosureRoleClass : x3::annotate_on_success, error_handler_base {};
-    struct ElementInnerClass : x3::annotate_on_success, error_handler_base {};
-    struct ElementClass : x3::annotate_on_success, error_handler_base {};
+    struct NameClass : x3::annotate_on_success {};
+    struct ConstantClass : x3::annotate_on_success {};
+    struct PredicateClass : x3::annotate_on_success {};
+    struct PositionClass : x3::annotate_on_success {};
+    struct EmptyBooleanClass : x3::annotate_on_success {};
+    struct InclusionBooleanClass : x3::annotate_on_success {};
+    struct NullaryBooleanClass : x3::annotate_on_success {};
+    struct AllConceptClass : x3::annotate_on_success {};
+    struct AndConceptClass : x3::annotate_on_success {};
+    struct BotConceptClass : x3::annotate_on_success {};
+    struct DiffConceptClass : x3::annotate_on_success {};
+    struct EqualConceptClass : x3::annotate_on_success {};
+    struct NotConceptClass : x3::annotate_on_success {};
+    struct OneOfConceptClass : x3::annotate_on_success {};
+    struct OrConceptClass : x3::annotate_on_success {};
+    struct PrimitiveConceptClass : x3::annotate_on_success {};
+    struct ProjectionConceptClass : x3::annotate_on_success {};
+    struct SomeConceptClass : x3::annotate_on_success {};
+    struct SubsetConceptClass : x3::annotate_on_success {};
+    struct TopConceptClass : x3::annotate_on_success {};
+    struct ConceptDistanceNumericalClass : x3::annotate_on_success {};
+    struct CountNumericalClass : x3::annotate_on_success {};
+    struct RoleDistanceNumericalClass : x3::annotate_on_success {};
+    struct SumConceptDistanceNumericalClass : x3::annotate_on_success {};
+    struct SumRoleDistanceNumericalClass : x3::annotate_on_success {};
+    struct AndRoleClass : x3::annotate_on_success {};
+    struct ComposeRoleClass : x3::annotate_on_success {};
+    struct DiffRoleClass : x3::annotate_on_success {};
+    struct IdentityRoleClass : x3::annotate_on_success {};
+    struct InverseRoleClass : x3::annotate_on_success {};
+    struct NotRoleClass : x3::annotate_on_success {};
+    struct OrRoleClass : x3::annotate_on_success {};
+    struct PrimitiveRoleClass : x3::annotate_on_success {};
+    struct RestrictRoleClass : x3::annotate_on_success {};
+    struct TopRoleClass : x3::annotate_on_success {};
+    struct TransitiveClosureRoleClass : x3::annotate_on_success {};
+    struct TransitiveReflexiveClosureRoleClass : x3::annotate_on_success {};
+
+    struct BooleanInnerClass : x3::annotate_on_success {};
+    struct BooleanClass : x3::annotate_on_success {};
+    struct BooleanRootClass : x3::annotate_on_success, error_handler_core {};
+
+    struct NumericalInnerClass : x3::annotate_on_success {};
+    struct NumericalClass : x3::annotate_on_success {};
+    struct NumericalRootClass : x3::annotate_on_success, dlplan::common::parsers::error_handler_base {};
+
+    struct ConceptInnerClass : x3::annotate_on_success {};
+    struct ConceptClass : x3::annotate_on_success {};
+    struct ConceptRootClass : x3::annotate_on_success, error_handler_core {};
+
+    struct RoleInnerClass : x3::annotate_on_success {};
+    struct RoleClass : x3::annotate_on_success {};
+    struct RoleRootClass : x3::annotate_on_success, error_handler_core {};
+
+    struct ElementInnerClass : x3::annotate_on_success {};
+    struct ElementClass : x3::annotate_on_success {};
+    struct ElementRootClass : x3::annotate_on_success, error_handler_core  {};
+
+    struct ConceptOrRoleInnerClass : x3::annotate_on_success {};
+    struct ConceptOrRoleClass : x3::annotate_on_success {};
 }
 
 namespace dlplan::core::parsers::elements::stage_1
@@ -426,5 +459,35 @@ namespace dlplan::core::parsers::elements::stage_1
         return parser::role;
     }
 }
+
+
+namespace dlplan::core::parsers::elements::stage_1
+{
+    parser::element_root_type const& element_root()
+    {
+        return parser::element_root;
+    }
+
+    parser::boolean_root_type const& boolean_root()
+    {
+        return parser::boolean_root;
+    }
+
+    parser::numerical_root_type const& numerical_root()
+    {
+        return parser::numerical_root;
+    }
+
+    parser::concept_root_type const& concept_root()
+    {
+        return parser::concept_root;
+    }
+
+    parser::role_root_type const& role_root()
+    {
+        return parser::role_root;
+    }
+}
+
 
 #endif

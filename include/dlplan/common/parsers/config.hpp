@@ -8,7 +8,6 @@
 
 /// @brief Defines types of our parsers.
 ///        The configuration is relevant when reusing the parsers instantiated by the library.
-///        The additional parsing context can be modified if additional information is needed.
 namespace dlplan::common::parsers
 {
     namespace x3 = boost::spirit::x3;
@@ -26,29 +25,16 @@ namespace dlplan::common::parsers
     typedef error_handler<iterator_type> error_handler_type;
 
 
-    /* In case we need to provide context in the future. */
-    struct parsing_context_tag;
-
-    struct parsing_context_type {
-        bool error_reported = false;
-    };
-
     /* The phrase parse context */
     typedef
-        x3::phrase_parse_context<x3::ascii::space_type>::type
-    phrase_context_type;
+        x3::phrase_parse_context<x3::ascii::space_type>::type phrase_context_type;
 
-
-    /* Combined error handler, parsing, and phrase parse Context */
+    /* Combined error handler and phrase parse Context */
     typedef x3::context<
             error_handler_tag,
             std::reference_wrapper<error_handler_type>,
-            x3::context<
-                parsing_context_tag,
-                std::reference_wrapper<parsing_context_type>,
-                phrase_context_type>>
+            phrase_context_type>
     context_type;
-
 }
 
 #endif

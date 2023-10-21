@@ -30,7 +30,7 @@ std::shared_ptr<const core::Boolean> parse(
     auto it = context.booleans.find(key);
     if (it == context.booleans.end()) {
         error_handler(node, "Undefined boolean " + key);
-        throw std::runtime_error("Unsuccessful parse.");
+        throw std::runtime_error("Failed parse.");
     }
     return it->second;
 }
@@ -58,7 +58,7 @@ std::shared_ptr<const core::Numerical> parse(
     auto it = context.numericals.find(key);
     if (it == context.numericals.end()) {
         error_handler(node, "Undefined numerical " + key);
-        throw std::runtime_error("Unsuccessful parse.");
+        throw std::runtime_error("Failed parse.");
     }
     return it->second;
 }

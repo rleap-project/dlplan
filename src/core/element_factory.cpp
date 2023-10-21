@@ -42,7 +42,7 @@
 #include "elements/roles/transitive_reflexive_closure.h"
 
 #include "include/dlplan/common/parsers/config.hpp"
-#include "include/dlplan/core/parsers/elements/stage_1/parser.hpp"
+#include "parsers/elements/stage_1/parser.hpp"
 #include "include/dlplan/core/parsers/elements/stage_2/parser.hpp"
 
 #include "include/dlplan/common/parsers/utility.hpp"
@@ -75,14 +75,11 @@ std::shared_ptr<const Concept> SyntacticElementFactoryImpl::parse_concept(Syntac
 
     // Our error handler
     error_handler_type error_handler(iter, end, std::cerr, filename);
-    parsing_context_type parsing_context;
     auto const parser =
         // we pass our error handler to the parser so we can access
         // it later on in our on_error and on_sucess handlers
-        with<parsing_context_tag>(std::ref(parsing_context)) [
-            with<error_handler_tag>(std::ref(error_handler)) [
-              dlplan::core::parsers::elements::stage_1::concept()
-            ]
+        with<error_handler_tag>(std::ref(error_handler)) [
+            dlplan::core::parsers::elements::stage_1::concept_root()
         ];
 
     // Our AST
@@ -93,7 +90,7 @@ std::shared_ptr<const Concept> SyntacticElementFactoryImpl::parse_concept(Syntac
     bool success = phrase_parse(iter, end, parser, space, ast);
     if (!success) {
         throw std::runtime_error("Failed parse.");
-    } 
+    }
     if (iter != end) {
         throw std::runtime_error("Failed parse. Did not consume whole input.");
     }
@@ -119,14 +116,11 @@ std::shared_ptr<const Role> SyntacticElementFactoryImpl::parse_role(SyntacticEle
 
     // Our error handler
     error_handler_type error_handler(iter, end, std::cerr, filename);
-    parsing_context_type parsing_context;
     auto const parser =
         // we pass our error handler to the parser so we can access
         // it later on in our on_error and on_sucess handlers
-        with<parsing_context_tag>(std::ref(parsing_context)) [
-            with<error_handler_tag>(std::ref(error_handler)) [
-                dlplan::core::parsers::elements::stage_1::role()
-            ]
+        with<error_handler_tag>(std::ref(error_handler)) [
+            dlplan::core::parsers::elements::stage_1::role_root()
         ];
 
     // Our AST
@@ -137,7 +131,7 @@ std::shared_ptr<const Role> SyntacticElementFactoryImpl::parse_role(SyntacticEle
     bool success = phrase_parse(iter, end, parser, space, ast);
     if (!success) {
         throw std::runtime_error("Failed parse.");
-    } 
+    }
     if (iter != end) {
         throw std::runtime_error("Failed parse. Did not consume whole input.");
     }
@@ -163,14 +157,11 @@ std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::parse_boolean(Syntac
 
     // Our error handler
     error_handler_type error_handler(iter, end, std::cerr, filename);
-    parsing_context_type parsing_context;
     auto const parser =
         // we pass our error handler to the parser so we can access
         // it later on in our on_error and on_sucess handlers
-        with<parsing_context_tag>(std::ref(parsing_context)) [
-            with<error_handler_tag>(std::ref(error_handler)) [
-                dlplan::core::parsers::elements::stage_1::boolean()
-            ]
+        with<error_handler_tag>(std::ref(error_handler)) [
+            dlplan::core::parsers::elements::stage_1::boolean_root()
         ];
 
     // Our AST
@@ -181,7 +172,7 @@ std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::parse_boolean(Syntac
     bool success = phrase_parse(iter, end, parser, space, ast);
     if (!success) {
         throw std::runtime_error("Failed parse.");
-    } 
+    }
     if (iter != end) {
         throw std::runtime_error("Failed parse. Did not consume whole input.");
     }
@@ -207,14 +198,11 @@ std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::parse_numerical(Sy
 
     // Our error handler
     error_handler_type error_handler(iter, end, std::cerr, filename);
-    parsing_context_type parsing_context;
     auto const parser =
         // we pass our error handler to the parser so we can access
         // it later on in our on_error and on_sucess handlers
-        with<parsing_context_tag>(std::ref(parsing_context)) [
-            with<error_handler_tag>(std::ref(error_handler)) [
-                dlplan::core::parsers::elements::stage_1::numerical()
-            ]
+        with<error_handler_tag>(std::ref(error_handler)) [
+            dlplan::core::parsers::elements::stage_1::numerical_root()
         ];
 
     // Our AST
@@ -225,7 +213,7 @@ std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::parse_numerical(Sy
     bool success = phrase_parse(iter, end, parser, space, ast);
     if (!success) {
         throw std::runtime_error("Failed parse.");
-    } 
+    }
     if (iter != end) {
         throw std::runtime_error("Failed parse. Did not consume whole input.");
     }

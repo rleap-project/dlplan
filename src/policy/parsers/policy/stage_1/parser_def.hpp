@@ -4,12 +4,13 @@
 #include <boost/spirit/home/x3.hpp>
 #include <boost/spirit/home/x3/support/utility/annotate_on_success.hpp>
 
-#include "include/dlplan/common/parsers/error_handler.hpp"
 #include "include/dlplan/core/parsers/elements/stage_1/parser.hpp"
+#include "include/dlplan/policy/parsers/policy/stage_1/error_handler.hpp"
 #include "include/dlplan/policy/parsers/policy/stage_1/ast.hpp"
 #include "include/dlplan/policy/parsers/policy/stage_1/parser.hpp"
 
 #include "ast_adapted.hpp"
+#include "parser.hpp"
 
 
 namespace dlplan::policy::parsers::policy::stage_1::parser
@@ -27,8 +28,6 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
     using ascii::char_;
     using ascii::string;
 
-    using error_handler_base = dlplan::common::parsers::error_handler_base;
-
     ///////////////////////////////////////////////////////////////////////////
     // Rule IDs
     ///////////////////////////////////////////////////////////////////////////
@@ -41,6 +40,17 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
     // Rules
     ///////////////////////////////////////////////////////////////////////////
 
+    /* Private rules with annotations */
+    x3::rule<FeatureConditionEntryInnerClass, ast::FeatureConditionEntryInner> const
+        feature_condition_entry_inner = "feature_condition_entry_inner";
+
+    x3::rule<FeatureEffectEntryInnerClass, ast::FeatureEffectEntryInner> const
+        feature_effect_entry_inner = "feature_effect_entry_inner";
+
+    /* Privates rules with annotatations and error handler */
+    policy_root_type const policy_root = "policy";
+
+    /* Public rules with annotations */
     name_type const name = "name";
 
     boolean_definition_type const boolean_definition = "boolean_definition";
@@ -74,12 +84,6 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
     decrement_numerical_effect_entry_type const decrement_numerical_effect_entry = "decrement_numerical_effect_entry";
 
     unchanged_numerical_effect_entry_type const unchanged_numerical_effect_entry = "unchanged_numerical_effect_entry";
-
-    x3::rule<FeatureConditionEntryInnerClass, ast::FeatureConditionEntryInner> const
-        feature_condition_entry_inner = "feature_condition_entry_inner";
-
-    x3::rule<FeatureEffectEntryInnerClass, ast::FeatureEffectEntryInner> const
-        feature_effect_entry_inner = "feature_effect_entry_inner";
 
     feature_condition_entry_type const feature_condition_entry = "feature_condition_entry";
 
@@ -140,7 +144,7 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
 
     const auto feature_effect_entry_def = lit('(') > feature_effect_entry_inner > lit(')');
 
-    const auto rule_entry_def = lit('(') >> lit(":rule") 
+    const auto rule_entry_def = lit('(') >> lit(":rule")
         > lit('(') > lit(":conditions") > *feature_condition_entry > lit(')')
         > lit('(') > lit(":effects") > *feature_effect_entry > lit(')')
         > lit(')');
@@ -149,44 +153,47 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
 
     const auto policy_def = lit('(') > lit(":policy")
         > booleans_entry
-        > numericals_entry 
+        > numericals_entry
         > rules
         > lit(')');
+
+    const auto policy_root_def = policy;
 
     BOOST_SPIRIT_DEFINE(
         name, boolean_definition, boolean_reference, booleans_entry, numerical_definition, numerical_reference, numericals_entry,
         positive_boolean_condition_entry, negative_boolean_condition_entry, greater_numerical_condition_entry, equal_numerical_condition_entry,
         positive_boolean_effect_entry, negative_boolean_effect_entry, unchanged_boolean_effect_entry, increment_numerical_effect_entry, decrement_numerical_effect_entry, unchanged_numerical_effect_entry,
-        feature_condition_entry_inner, feature_condition_entry, feature_effect_entry_inner, feature_effect_entry, rule_entry, rules, policy)
+        feature_condition_entry_inner, feature_condition_entry, feature_effect_entry_inner, feature_effect_entry, rule_entry, rules, policy, policy_root)
 
     ///////////////////////////////////////////////////////////////////////////
     // Annotation and Error handling
     ///////////////////////////////////////////////////////////////////////////
 
-    struct NameClass : x3::annotate_on_success, error_handler_base {};
-    struct BooleanDefinitionClass : x3::annotate_on_success, error_handler_base {};
-    struct BooleanReferenceClass : x3::annotate_on_success, error_handler_base {};
-    struct BooleansEntryClass : x3::annotate_on_success, error_handler_base {};
-    struct NumericalDefinitionClass : x3::annotate_on_success, error_handler_base {};
-    struct NumericalReferenceClass : x3::annotate_on_success, error_handler_base {};
-    struct NumericalsEntryClass : x3::annotate_on_success, error_handler_base {};
-    struct PositiveBooleanConditionEntryClass : x3::annotate_on_success, error_handler_base {};
-    struct NegativeBooleanConditionEntryClass : x3::annotate_on_success, error_handler_base {};
-    struct GreaterNumericalConditionEntryClass : x3::annotate_on_success, error_handler_base {};
-    struct EqualNumericalConditionEntryClass : x3::annotate_on_success, error_handler_base {};
-    struct PositiveBooleanEffectEntryClass : x3::annotate_on_success, error_handler_base {};
-    struct NegativeBooleanEffectEntryClass : x3::annotate_on_success, error_handler_base {};
-    struct UnchangedBooleanEffectEntryClass : x3::annotate_on_success, error_handler_base {};
-    struct IncrementNumericalEffectEntryClass : x3::annotate_on_success, error_handler_base {};
-    struct DecrementNumericalEffectEntryClass : x3::annotate_on_success, error_handler_base {};
-    struct UnchangedNumericalEffectEntryClass : x3::annotate_on_success, error_handler_base {};
-    struct FeatureConditionEntryInnerClass : x3::annotate_on_success, error_handler_base {};
-    struct FeatureConditionEntryClass : x3::annotate_on_success, error_handler_base {};
-    struct FeatureEffectEntryInnerClass : x3::annotate_on_success, error_handler_base {};
-    struct FeatureEffectEntryClass : x3::annotate_on_success, error_handler_base {};
-    struct RuleEntryClass : x3::annotate_on_success, error_handler_base {};
-    struct RulesClass : x3::annotate_on_success, error_handler_base {};
-    struct PolicyClass : x3::annotate_on_success, error_handler_base {};
+    struct NameClass : x3::annotate_on_success {};
+    struct BooleanDefinitionClass : x3::annotate_on_success {};
+    struct BooleanReferenceClass : x3::annotate_on_success {};
+    struct BooleansEntryClass : x3::annotate_on_success {};
+    struct NumericalDefinitionClass : x3::annotate_on_success {};
+    struct NumericalReferenceClass : x3::annotate_on_success {};
+    struct NumericalsEntryClass : x3::annotate_on_success {};
+    struct PositiveBooleanConditionEntryClass : x3::annotate_on_success {};
+    struct NegativeBooleanConditionEntryClass : x3::annotate_on_success {};
+    struct GreaterNumericalConditionEntryClass : x3::annotate_on_success {};
+    struct EqualNumericalConditionEntryClass : x3::annotate_on_success {};
+    struct PositiveBooleanEffectEntryClass : x3::annotate_on_success {};
+    struct NegativeBooleanEffectEntryClass : x3::annotate_on_success {};
+    struct UnchangedBooleanEffectEntryClass : x3::annotate_on_success {};
+    struct IncrementNumericalEffectEntryClass : x3::annotate_on_success {};
+    struct DecrementNumericalEffectEntryClass : x3::annotate_on_success {};
+    struct UnchangedNumericalEffectEntryClass : x3::annotate_on_success {};
+    struct FeatureConditionEntryInnerClass : x3::annotate_on_success {};
+    struct FeatureConditionEntryClass : x3::annotate_on_success {};
+    struct FeatureEffectEntryInnerClass : x3::annotate_on_success {};
+    struct FeatureEffectEntryClass : x3::annotate_on_success {};
+    struct RuleEntryClass : x3::annotate_on_success {};
+    struct RulesClass : x3::annotate_on_success {};
+    struct PolicyClass : x3::annotate_on_success {};
+    struct PolicyRootClass : x3::annotate_on_success, error_handler_policy {};
 }
 
 namespace dlplan::policy::parsers::policy::stage_1
@@ -277,6 +284,13 @@ namespace dlplan::policy::parsers::policy::stage_1
 
     parser::policy_type const& policy() {
         return parser::policy;
+    }
+}
+
+
+namespace dlplan::policy::parsers::policy::stage_1 {
+    parser::policy_root_type const& policy_root() {
+        return parser::policy_root;
     }
 }
 

@@ -22,6 +22,7 @@ parse(const stage_1::ast::Constant& node, const error_handler_type& error_handle
     auto it = constants_mapping.find(name);
     if (it == constants_mapping.end()) {
         error_handler(node, "undefined constant");
+        throw std::runtime_error("Failed parse.");
     }
     return context.get_vocabulary_info()->get_constant(name);
 }
@@ -33,6 +34,7 @@ parse(const stage_1::ast::Predicate& node, const error_handler_type& error_handl
     auto it = predicates_mapping.find(name);
     if (it == predicates_mapping.end()) {
         error_handler(node, "undefined predicate");
+        throw std::runtime_error("Failed parse.");
     }
     return context.get_vocabulary_info()->get_predicate(name);
 }
@@ -88,7 +90,7 @@ parse(const stage_1::ast::EmptyBoolean& node, const error_handler_type& error_ha
     boost::apply_visitor(role_visitor, concept_or_role);
     if (role_visitor.result != nullptr) return context.make_empty_boolean(role_visitor.result);
     error_handler(node, "expected two concepts or two roles");
-    throw std::runtime_error("Failed parse");
+    throw std::runtime_error("Failed parse.");
 }
 
 static std::shared_ptr<const core::Boolean>
@@ -110,8 +112,7 @@ parse(const stage_1::ast::InclusionBoolean& node, const error_handler_type& erro
         return context.make_inclusion_boolean(role_visitor_left.result, role_visitor_right.result);
     }
     error_handler(node, "expected two concepts or two roles");
-    throw std::runtime_error("Failed parse");
-
+    throw std::runtime_error("Failed parse.");
 }
 
 static std::shared_ptr<const core::Boolean>
@@ -222,7 +223,7 @@ parse(const stage_1::ast::CountNumerical& node, const error_handler_type& error_
     boost::apply_visitor(role_visitor, concept_or_role);
     if (role_visitor.result != nullptr) return context.make_count_numerical(role_visitor.result);
     error_handler(node, "expected two concepts or two roles");
-    throw std::runtime_error("Failed parse");
+    throw std::runtime_error("Failed parse.");
 }
 
 static std::shared_ptr<const core::Numerical>

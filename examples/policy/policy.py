@@ -6,7 +6,7 @@ Example illustrating the policy component.
 
 from dlplan.core import VocabularyInfo, InstanceInfo, State, SyntacticElementFactory, \
     DenotationsCaches
-from dlplan.policy import PolicyBuilder, PolicyWriter, PolicyReader
+from dlplan.policy import PolicyFactory
 
 
 def construct_vocabulary_info():
@@ -51,23 +51,24 @@ def construct_instance_info(vocabulary):
 def main():
     vocabulary = construct_vocabulary_info()
     instance = construct_instance_info(vocabulary)
-
     element_factory = SyntacticElementFactory(vocabulary)
+
+    print("Constructing policy:")
     # boolean_1 represents whether the hand is empty or not
     boolean_1 = element_factory.parse_boolean("b_nullary(arm-empty)")
     # numerical_1 representes the number of blocks on top of another block
     numerical_1 = element_factory.parse_numerical("n_count(r_primitive(on,0,1))")
 
-    policy_builder = PolicyBuilder(element_factory)
-    b_pos_condition_0 = policy_builder.make_pos_condition(boolean_1)
-    b_bot_effect_0 = policy_builder.make_bot_effect(boolean_1)
-    n_gt_condition_0 = policy_builder.make_gt_condition(numerical_1)
-    n_dec_effect_0 = policy_builder.make_dec_effect(numerical_1)
-    rule_1 = policy_builder.make_rule(
+    policy_factory = PolicyFactory(element_factory)
+    b_pos_condition_0 = policy_factory.make_pos_condition(boolean_1)
+    b_bot_effect_0 = policy_factory.make_bot_effect(boolean_1)
+    n_gt_condition_0 = policy_factory.make_gt_condition(numerical_1)
+    n_dec_effect_0 = policy_factory.make_dec_effect(numerical_1)
+    rule_1 = policy_factory.make_rule(
         {b_pos_condition_0, n_gt_condition_0},
         {b_bot_effect_0, n_dec_effect_0}
     )
-    policy = policy_builder.make_policy({rule_1})
+    policy = policy_factory.make_policy({rule_1})
 
     atoms = instance.get_atoms()
     atom_0 = atoms[0]
@@ -84,24 +85,24 @@ def main():
 
     caches = DenotationsCaches()
     assert policy.evaluate(state_0, state_2, caches)
-    assert not policy.evaluate(state_1, state_2, caches)
+    assert policy.evaluate(state_1, state_2, caches)
     assert not policy.evaluate(state_2, state_0, caches)
     assert not policy.evaluate(state_2, state_1, caches)
 
-    print("Write policy:")
     print(repr(policy))
     print(str(policy))
     print()
-    with open("policy.txt", "w", encoding="iso8859-1") as file:
-        file.write(PolicyWriter().write(policy))
 
-    print("Read policy:")
-    with open("policy.txt", "r", encoding="iso8859-1") as file:
-        policy_in = PolicyReader().read("\n".join(file.readlines()), policy_builder, element_factory)
+    print("Parsing policy:")
+    policy_str = "(:policy" \
+        "(:booleans (b0 \"b_nullary(arm-empty)\"))" \
+        "(:numericals (n0 \"n_count(r_primitive(on,0,1))\"))" \
+        "(:rule (:conditions (:c_b_pos b0) (:c_n_gt n0)) (:effects (:e_b_bot b42) (:e_n_dec n0)))" \
+        ")"
+    policy_in = policy_factory.parse_policy(policy_str)
     print(repr(policy_in))
     print(str(policy_in))
     print()
-
 
 
 if __name__ == "__main__":
