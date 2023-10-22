@@ -70,8 +70,16 @@ namespace dlplan::core::parsers::elements::stage_1::ast
         Name name;
     };
 
-    struct Position : x3::position_tagged {
+    struct IntegerInner : x3::position_tagged {
         int value;
+    };
+
+    struct Integer : x3::position_tagged {
+        IntegerInner integer;
+    };
+
+    struct Position : x3::position_tagged {
+        Integer integer;
     };
 
     struct BooleanInner : x3::position_tagged, x3::variant<

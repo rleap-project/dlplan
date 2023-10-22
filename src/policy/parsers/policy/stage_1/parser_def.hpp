@@ -109,13 +109,13 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
 
     const auto boolean_definition_def = lit('(') > name > lit('"') > dlplan::core::parsers::elements::stage_1::boolean() > lit('"') > lit(')');
 
-    const auto boolean_reference_def = eps > name;
+    const auto boolean_reference_def = name;
 
     const auto booleans_entry_def = lit('(') >> lit(":booleans") > *boolean_definition > lit(')');
 
     const auto numerical_definition_def = lit('(') > name > lit('"') > dlplan::core::parsers::elements::stage_1::numerical() > lit('"') > lit(')');
 
-    const auto numerical_reference_def = eps > name;
+    const auto numerical_reference_def = name;
 
     const auto numericals_entry_def = lit('(') >> lit(":numericals") > *numerical_definition > lit(')');
 

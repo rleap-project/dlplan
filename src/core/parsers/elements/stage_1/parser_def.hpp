@@ -36,6 +36,8 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     struct NameClass;
     struct ConstantClass;
     struct PredicateClass;
+    struct IntegerInnerClass;
+    struct IntegerClass;
     struct PositionClass;
     struct BooleanInnerClass;
     struct ConceptInnerClass;
@@ -94,6 +96,12 @@ namespace dlplan::core::parsers::elements::stage_1::parser
 
     x3::rule<PredicateClass, ast::Predicate> const
         predicate = "predicate";
+
+    x3::rule<IntegerInnerClass, ast::IntegerInner> const
+        integer_inner = "integer_inner";
+
+    x3::rule<IntegerClass, ast::Integer> const
+        integer = "integer";
 
     x3::rule<PositionClass, ast::Position> const
         position = "position";
@@ -245,11 +253,14 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     const auto name_inner_def = alpha >> lexeme[*(alnum | char_('-') | char_('_'))];
     const auto name_def = eps > name_inner;
 
-    const auto constant_def = eps > name;
+    const auto integer_inner_def = int_;
+    const auto integer_def = eps > integer_inner;
 
-    const auto predicate_def = eps > name;
+    const auto constant_def = name;
 
-    const auto position_def = eps > int_;
+    const auto predicate_def = name;
+
+    const auto position_def = integer;
 
     const auto empty_boolean_def = lit("b_empty") > lit('(') > concept_or_role > lit(')');
 
@@ -258,68 +269,68 @@ namespace dlplan::core::parsers::elements::stage_1::parser
 
     const auto nullary_boolean_def = lit("b_nullary") > lit('(') > predicate > lit(')');
 
-    const auto all_concept_def = lit("c_all") > lit('(') > role_inner > lit(',') > concept_inner > lit(')');
+    const auto all_concept_def = lit("c_all") > lit('(') > role > lit(',') > concept > lit(')');
 
-    const auto and_concept_def = lit("c_and") > lit('(') > concept_inner > lit(',') > concept_inner > lit(')');
+    const auto and_concept_def = lit("c_and") > lit('(') > concept > lit(',') > concept > lit(')');
 
     // Note: Need this semantic action to synthesize the empty struct
     const auto bot_concept_def = lit("c_bot") >> x3::attr(ast::BotConcept{});
 
-    const auto diff_concept_def = lit("c_diff") > lit('(') > concept_inner > lit(',') > concept_inner > lit(')');
+    const auto diff_concept_def = lit("c_diff") > lit('(') > concept > lit(',') > concept > lit(')');
 
-    const auto equal_concept_def = lit("c_equal") > lit('(') > role_inner > lit(',') > role_inner > lit(')');
+    const auto equal_concept_def = lit("c_equal") > lit('(') > role > lit(',') > role > lit(')');
 
-    const auto not_concept_def = lit("c_not") > lit('(') > concept_inner > lit(')');
+    const auto not_concept_def = lit("c_not") > lit('(') > concept > lit(')');
 
     const auto one_of_concept_def = lit("c_one_of") > lit('(') > constant > lit(')');
 
-    const auto or_concept_def = lit("c_or") > lit('(') > concept_inner > lit(',') > concept_inner > lit(')');
+    const auto or_concept_def = lit("c_or") > lit('(') > concept > lit(',') > concept > lit(')');
 
     const auto primitive_concept_def = lit("c_primitive") > lit('(') > predicate > lit(',') > position > lit(')');
 
-    const auto projection_concept_def = lit("c_projection") > lit('(') > role_inner > lit(',') > position > lit(')');
+    const auto projection_concept_def = lit("c_projection") > lit('(') > role > lit(',') > position > lit(')');
 
-    const auto some_concept_def = lit("c_some") > lit('(') > role_inner > lit(',') > concept_inner > lit(')');
+    const auto some_concept_def = lit("c_some") > lit('(') > role > lit(',') > concept > lit(')');
 
-    const auto subset_concept_def = lit("c_subset") > lit('(') > role_inner > lit(',') > role_inner > lit(')');
+    const auto subset_concept_def = lit("c_subset") > lit('(') > role > lit(',') > role > lit(')');
 
     // Note: Need this semantic action to synthesize the empty struct
     const auto top_concept_def = lit("c_top") >> x3::attr(ast::TopConcept{});
 
-    const auto concept_distance_numerical_def = lit("n_concept_distance") > lit('(') > concept_inner > lit(',') > role_inner > lit(',') > concept_inner > lit(')');
+    const auto concept_distance_numerical_def = lit("n_concept_distance") > lit('(') > concept > lit(',') > role > lit(',') > concept > lit(')');
 
     const auto count_numerical_def = lit("n_count") > lit('(') > concept_or_role > lit(')');
 
-    const auto role_distance_numerical_def = lit("n_role_distance") > lit('(') > role_inner > lit(',') > role_inner > lit(',') > role_inner > lit(')');
+    const auto role_distance_numerical_def = lit("n_role_distance") > lit('(') > role > lit(',') > role > lit(',') > role > lit(')');
 
-    const auto sum_concept_distance_numerical_def = lit("n_sum_concept_distance") > lit('(') > concept_inner > lit(',') > role_inner > lit(',') > concept_inner > lit(')');
+    const auto sum_concept_distance_numerical_def = lit("n_sum_concept_distance") > lit('(') > concept > lit(',') > role > lit(',') > concept > lit(')');
 
-    const auto sum_role_distance_numerical_def = lit("n_sum_role_distance") > lit('(') > role_inner > lit(',') > role_inner > lit(',') > role_inner > lit(')');
+    const auto sum_role_distance_numerical_def = lit("n_sum_role_distance") > lit('(') > role > lit(',') > role > lit(',') > role > lit(')');
 
-    const auto and_role_def = lit("r_and") > lit('(') > role_inner > lit(',') > role_inner > lit(')');
+    const auto and_role_def = lit("r_and") > lit('(') > role > lit(',') > role > lit(')');
 
-    const auto compose_role_def = lit("r_compose") > lit('(') > role_inner > lit(',') > role_inner > lit(')');
+    const auto compose_role_def = lit("r_compose") > lit('(') > role > lit(',') > role > lit(')');
 
-    const auto diff_role_def = lit("r_diff") > lit('(') > role_inner > lit(',') > role_inner > lit(')');
+    const auto diff_role_def = lit("r_diff") > lit('(') > role > lit(',') > role > lit(')');
 
-    const auto identity_role_def = lit("r_identity") > lit('(') > concept_inner > lit(')');
+    const auto identity_role_def = lit("r_identity") > lit('(') > concept > lit(')');
 
-    const auto inverse_role_def = lit("r_inverse") > lit('(') > role_inner > lit(')');
+    const auto inverse_role_def = lit("r_inverse") > lit('(') > role > lit(')');
 
-    const auto not_role_def = lit("r_not") > lit('(') > role_inner > lit(')');
+    const auto not_role_def = lit("r_not") > lit('(') > role > lit(')');
 
-    const auto or_role_def = lit("r_or") > lit('(') > role_inner > lit(',') > role_inner > lit(')');
+    const auto or_role_def = lit("r_or") > lit('(') > role > lit(',') > role > lit(')');
 
     const auto primitive_role_def = lit("r_primitive") > lit('(') > predicate > lit(',') > position  > lit(',') > position > lit(')');
 
-    const auto restrict_role_def = lit("r_restrict") > lit('(') > role_inner > lit(',') > concept_inner > lit(')');
+    const auto restrict_role_def = lit("r_restrict") > lit('(') > role > lit(',') > concept > lit(')');
 
     // Note: Need this semantic action to synthesize the empty struct
     const auto top_role_def = lit("r_top") >> x3::attr(ast::TopRole{});
 
-    const auto transitive_closure_role_def = lit("r_transitive_closure") > lit('(') > role_inner > lit(')');
+    const auto transitive_closure_role_def = lit("r_transitive_closure") > lit('(') > role > lit(')');
 
-    const auto transitive_reflexive_closure_role_def = lit("r_transitive_reflexive_closure") > lit('(') > role_inner > lit(')');
+    const auto transitive_reflexive_closure_role_def = lit("r_transitive_reflexive_closure") > lit('(') > role > lit(')');
 
     const auto boolean_inner_def = empty_boolean | inclusion_boolean | nullary_boolean;
     const auto boolean_def = eps > boolean_inner;
@@ -347,7 +358,7 @@ namespace dlplan::core::parsers::elements::stage_1::parser
 
 
     BOOST_SPIRIT_DEFINE(
-        name_inner, name, constant, predicate, position,
+        name_inner, name, constant, predicate, integer_inner, integer, position,
         boolean_inner, boolean, boolean_root,
         concept_inner, concept, concept_root,
         numerical_inner, numerical, numerical_root,
@@ -367,6 +378,8 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     struct NameClass : x3::annotate_on_success {};
     struct ConstantClass : x3::annotate_on_success {};
     struct PredicateClass : x3::annotate_on_success {};
+    struct IntegerInnerClass : x3::annotate_on_success {};
+    struct IntegerClass : x3::annotate_on_success {};
     struct PositionClass : x3::annotate_on_success {};
     struct EmptyBooleanClass : x3::annotate_on_success {};
     struct InclusionBooleanClass : x3::annotate_on_success {};

@@ -45,8 +45,18 @@ parse(const stage_1::ast::Predicate& node, const error_handler_type& error_handl
 }
 
 static int
-parse(const stage_1::ast::Position& node, const error_handler_type&, SyntacticElementFactory&) {
+parse(const stage_1::ast::IntegerInner& node, const error_handler_type&, SyntacticElementFactory&) {
     return node.value;
+}
+
+static int
+parse(const stage_1::ast::Integer& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+    return parse(node.integer, error_handler, context);
+}
+
+static int
+parse(const stage_1::ast::Position& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+    return parse(node.integer, error_handler, context);
 }
 
 class ConceptVisitor {

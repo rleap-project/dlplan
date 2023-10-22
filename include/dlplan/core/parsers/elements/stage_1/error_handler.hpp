@@ -14,6 +14,7 @@ namespace dlplan::core::parsers::elements::stage_1
     struct error_handler_core : dlplan::common::parsers::error_handler_base {
         error_handler_core() : dlplan::common::parsers::error_handler_base() {
             id_map["name_inner"] = "Name";
+            id_map["integer_inner"] = "Integer";
             id_map["constant"] = "Constant";
             id_map["predicate"] = "Predicate";
             id_map["position"] = "Position";
