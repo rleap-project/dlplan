@@ -45,15 +45,10 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
 
 
     /* Basic character compounds */
-    struct NameInner : x3::position_tagged {
+    struct Name : x3::position_tagged {
         char alphabetical;
         std::string suffix;
     };
-
-    struct Name : x3::position_tagged {
-        NameInner name;
-    };
-
 
     /* Boolean entry and references */
     struct BooleanDefinition : x3::position_tagged {

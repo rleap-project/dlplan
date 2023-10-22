@@ -9,16 +9,11 @@ using namespace dlplan::common::parsers;
 
 namespace dlplan::policy::parsers::policy::stage_2::parser {
 
-static std::string parse(
-    const stage_1::ast::NameInner& node, const error_handler_type&, Context&) {
+std::string parse(
+    const stage_1::ast::Name& node, const error_handler_type&, Context&) {
     std::stringstream ss;
     ss << node.alphabetical << node.suffix;
     return ss.str();
-}
-
-std::string parse(
-    const stage_1::ast::Name& node, const error_handler_type& error_handler, Context& context) {
-    return parse(node.name, error_handler, context);
 }
 
 std::pair<std::string, std::shared_ptr<const core::Boolean>> parse(

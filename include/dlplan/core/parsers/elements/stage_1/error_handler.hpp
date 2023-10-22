@@ -13,16 +13,16 @@ namespace dlplan::core::parsers::elements::stage_1
 
     struct error_handler_core : dlplan::common::parsers::error_handler_base {
         error_handler_core() : dlplan::common::parsers::error_handler_base() {
-            id_map["name_inner"] = "Name";
-            id_map["integer_inner"] = "Integer";
+            id_map["name"] = "Name";
+            id_map["integer"] = "Integer";
             id_map["constant"] = "Constant";
             id_map["predicate"] = "Predicate";
             id_map["position"] = "Position";
-            id_map["boolean_inner"] = "Boolean";
-            id_map["numerical_inner"] = "Numerical";
-            id_map["concept_inner"] = "Concept";
-            id_map["role_inner"] = "Role";
-            id_map["element_inner"] = "Element";
+            id_map["boolean"] = "Boolean";
+            id_map["numerical"] = "Numerical";
+            id_map["concept"] = "Concept";
+            id_map["role"] = "Role";
+            id_map["element"] = "Element";
             id_map["concept_or_role"] = "Concept or Role";
         }
     };

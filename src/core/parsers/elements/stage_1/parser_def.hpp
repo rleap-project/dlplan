@@ -32,19 +32,11 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     // Rule IDs
     ///////////////////////////////////////////////////////////////////////////
 
-    struct NameInnerClass;
     struct NameClass;
     struct ConstantClass;
     struct PredicateClass;
-    struct IntegerInnerClass;
     struct IntegerClass;
     struct PositionClass;
-    struct BooleanInnerClass;
-    struct ConceptInnerClass;
-    struct NumericalInnerClass;
-    struct RoleInnerClass;
-    struct ElementInnerClass;
-    struct ConceptOrRoleInnerClass;
     struct ConceptOrRoleClass;
     struct EmptyBooleanClass;
     struct InclusionBooleanClass;
@@ -85,9 +77,6 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     ///////////////////////////////////////////////////////////////////////////
 
     /* Private rules with annotation */
-    x3::rule<NameInnerClass, ast::NameInner> const
-        name_inner = "name_inner";
-
     x3::rule<NameClass, ast::Name> const
         name = "name";
 
@@ -97,29 +86,11 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     x3::rule<PredicateClass, ast::Predicate> const
         predicate = "predicate";
 
-    x3::rule<IntegerInnerClass, ast::IntegerInner> const
-        integer_inner = "integer_inner";
-
     x3::rule<IntegerClass, ast::Integer> const
         integer = "integer";
 
     x3::rule<PositionClass, ast::Position> const
         position = "position";
-
-    x3::rule<BooleanInnerClass, ast::BooleanInner> const
-        boolean_inner = "boolean_inner";
-
-    x3::rule<ConceptInnerClass, ast::ConceptInner> const
-        concept_inner = "concept_inner";
-
-    x3::rule<NumericalInnerClass, ast::NumericalInner> const
-        numerical_inner = "numerical_inner";
-
-    x3::rule<RoleInnerClass, ast::RoleInner> const
-        role_inner = "role_inner";
-
-    x3::rule<ElementInnerClass, ast::ElementInner> const
-        element_inner = "element_inner";
 
     x3::rule<ConceptOrRoleClass, ast::ConceptOrRole> const
         concept_or_role = "concept_or_role";
@@ -250,11 +221,9 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     // Grammar
     ///////////////////////////////////////////////////////////////////////////
 
-    const auto name_inner_def = alpha >> lexeme[*(alnum | char_('-') | char_('_'))];
-    const auto name_def = eps > name_inner;
+    const auto name_def = alpha >> lexeme[*(alnum | char_('-') | char_('_'))];
 
-    const auto integer_inner_def = int_;
-    const auto integer_def = eps > integer_inner;
+    const auto integer_def = int_;
 
     const auto constant_def = name;
 
@@ -332,38 +301,33 @@ namespace dlplan::core::parsers::elements::stage_1::parser
 
     const auto transitive_reflexive_closure_role_def = lit("r_transitive_reflexive_closure") > lit('(') > role > lit(')');
 
-    const auto boolean_inner_def = empty_boolean | inclusion_boolean | nullary_boolean;
-    const auto boolean_def = eps > boolean_inner;
-    const auto boolean_root_def = eps > boolean_inner;
+    const auto boolean_def = empty_boolean | inclusion_boolean | nullary_boolean;
+    const auto boolean_root_def = eps > boolean;
 
     // Note: non recursive comes first, i.e., primitive_concept
-    const auto concept_inner_def = primitive_concept | all_concept | and_concept | bot_concept | diff_concept | equal_concept | not_concept | one_of_concept | or_concept | projection_concept | some_concept | subset_concept | top_concept;
-    const auto concept_def = eps > concept_inner;
-    const auto concept_root_def = eps > concept_inner;
+    const auto concept_def = primitive_concept | all_concept | and_concept | bot_concept | diff_concept | equal_concept | not_concept | one_of_concept | or_concept | projection_concept | some_concept | subset_concept | top_concept;
+    const auto concept_root_def = eps > concept;
 
-    const auto numerical_inner_def = concept_distance_numerical | count_numerical | role_distance_numerical | sum_concept_distance_numerical | sum_role_distance_numerical;
-    const auto numerical_def = eps > numerical_inner;
-    const auto numerical_root_def = eps > numerical_inner;
+    const auto numerical_def = concept_distance_numerical | count_numerical | role_distance_numerical | sum_concept_distance_numerical | sum_role_distance_numerical;
+    const auto numerical_root_def = eps > numerical;
 
     // Note: non recursive comes first, i.e., primitive_role
-    const auto role_inner_def = primitive_role | and_role | compose_role | diff_role | identity_role | inverse_role | not_role | or_role | restrict_role | top_role | transitive_closure_role | transitive_reflexive_closure_role;
-    const auto role_def = eps > role_inner;
-    const auto role_root_def = eps > role_inner;
+    const auto role_def = primitive_role | and_role | compose_role | diff_role | identity_role | inverse_role | not_role | or_role | restrict_role | top_role | transitive_closure_role | transitive_reflexive_closure_role;
+    const auto role_root_def = eps > role;
 
-    const auto concept_or_role_def = concept_inner | role_inner;
+    const auto concept_or_role_def = concept | role;
 
-    const auto element_inner_def = boolean_inner | concept_inner | numerical_inner | role_inner;
-    const auto element_def = eps > element_inner;
-    const auto element_root_def = eps > element_inner;
+    const auto element_def = boolean | concept | numerical | role;
+    const auto element_root_def = eps > element;
 
 
     BOOST_SPIRIT_DEFINE(
-        name_inner, name, constant, predicate, integer_inner, integer, position,
-        boolean_inner, boolean, boolean_root,
-        concept_inner, concept, concept_root,
-        numerical_inner, numerical, numerical_root,
-        role_inner, role, role_root,
-        element_inner, element, element_root,
+        name, constant, predicate, integer, position,
+        boolean, boolean_root,
+        concept, concept_root,
+        numerical, numerical_root,
+        role, role_root,
+        element, element_root,
         concept_or_role,
         empty_boolean, inclusion_boolean, nullary_boolean,
         all_concept, and_concept, bot_concept, diff_concept, equal_concept, not_concept, one_of_concept, or_concept, primitive_concept, projection_concept, some_concept, subset_concept, top_concept,
@@ -374,11 +338,9 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     // Annotation and Error handling
     ///////////////////////////////////////////////////////////////////////////
 
-    struct NameInnerClass : x3::annotate_on_success {};
     struct NameClass : x3::annotate_on_success {};
     struct ConstantClass : x3::annotate_on_success {};
     struct PredicateClass : x3::annotate_on_success {};
-    struct IntegerInnerClass : x3::annotate_on_success {};
     struct IntegerClass : x3::annotate_on_success {};
     struct PositionClass : x3::annotate_on_success {};
     struct EmptyBooleanClass : x3::annotate_on_success {};
@@ -415,23 +377,18 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     struct TransitiveClosureRoleClass : x3::annotate_on_success {};
     struct TransitiveReflexiveClosureRoleClass : x3::annotate_on_success {};
 
-    struct BooleanInnerClass : x3::annotate_on_success {};
     struct BooleanClass : x3::annotate_on_success {};
     struct BooleanRootClass : x3::annotate_on_success, error_handler_core {};
 
-    struct NumericalInnerClass : x3::annotate_on_success {};
     struct NumericalClass : x3::annotate_on_success {};
     struct NumericalRootClass : x3::annotate_on_success, error_handler_core {};
 
-    struct ConceptInnerClass : x3::annotate_on_success {};
     struct ConceptClass : x3::annotate_on_success {};
     struct ConceptRootClass : x3::annotate_on_success, error_handler_core {};
 
-    struct RoleInnerClass : x3::annotate_on_success {};
     struct RoleClass : x3::annotate_on_success {};
     struct RoleRootClass : x3::annotate_on_success, error_handler_core {};
 
-    struct ElementInnerClass : x3::annotate_on_success {};
     struct ElementClass : x3::annotate_on_success {};
     struct ElementRootClass : x3::annotate_on_success, error_handler_core  {};
 
