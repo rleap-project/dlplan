@@ -11,12 +11,12 @@ namespace dlplan::policy::parsers::policy::stage_2::parser {
 
 struct Context {
     PolicyFactory& policy_factory;
-    std::unordered_map<std::string, std::shared_ptr<const core::Boolean>> booleans;
-    std::unordered_map<std::string, std::shared_ptr<const core::Numerical>> numericals;
+    std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedBoolean>> booleans;
+    std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedNumerical>> numericals;
 
     explicit Context(PolicyFactory& policy_factory);
 };
 
 }
 
-#endif 
+#endif

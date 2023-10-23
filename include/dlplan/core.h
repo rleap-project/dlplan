@@ -799,6 +799,11 @@ public:
     /// @return A string representation of this instance.
     std::string str() const;
 
+    /// @brief Removes all atoms from the instance.
+    void clear_atoms();
+    /// @brief Removes all static atoms from the instance.
+    void clear_static_atoms();
+
     std::shared_ptr<VocabularyInfo> get_vocabulary_info() const;
     InstanceIndex get_index() const;
     const std::vector<Atom>& get_atoms() const;

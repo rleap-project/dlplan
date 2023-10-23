@@ -11,115 +11,115 @@ using namespace dlplan;
 
 namespace dlplan::policy {
 
-BooleanCondition::BooleanCondition(std::shared_ptr<const core::Boolean> boolean, ConditionIndex index)
+BooleanCondition::BooleanCondition(std::shared_ptr<const NamedBoolean> boolean, ConditionIndex index)
     : BaseCondition(index), m_boolean(boolean) { }
 
 int BooleanCondition::compute_evaluate_time_score() const {
     return m_boolean->compute_evaluate_time_score();
 }
 
-std::shared_ptr<const core::Boolean> BooleanCondition::get_boolean() const {
+std::shared_ptr<const NamedBoolean> BooleanCondition::get_boolean() const {
     return m_boolean;
 }
 
-std::shared_ptr<const core::Numerical> BooleanCondition::get_numerical() const {
+std::shared_ptr<const NamedNumerical> BooleanCondition::get_numerical() const {
     return nullptr;
 }
 
 
-NumericalCondition::NumericalCondition(std::shared_ptr<const core::Numerical> numerical, ConditionIndex index)
+NumericalCondition::NumericalCondition(std::shared_ptr<const NamedNumerical> numerical, ConditionIndex index)
     : BaseCondition(index), m_numerical(numerical) { }
 
 int NumericalCondition::compute_evaluate_time_score() const {
     return m_numerical->compute_evaluate_time_score();
 }
 
-std::shared_ptr<const core::Boolean> NumericalCondition::get_boolean() const {
+std::shared_ptr<const NamedBoolean> NumericalCondition::get_boolean() const {
     return nullptr;
 }
 
-std::shared_ptr<const core::Numerical> NumericalCondition::get_numerical() const {
+std::shared_ptr<const NamedNumerical> NumericalCondition::get_numerical() const {
     return m_numerical;
 }
 
 
-PositiveBooleanCondition::PositiveBooleanCondition(std::shared_ptr<const core::Boolean> boolean, ConditionIndex index)
+PositiveBooleanCondition::PositiveBooleanCondition(std::shared_ptr<const NamedBoolean> boolean, ConditionIndex index)
     : BooleanCondition(boolean, index) { }
 
 bool PositiveBooleanCondition::evaluate(const core::State& source_state) const {
-    return m_boolean->evaluate(source_state);
+    return m_boolean->get_boolean()->evaluate(source_state);
 }
 
 bool PositiveBooleanCondition::evaluate(const core::State& source_state, core::DenotationsCaches& caches) const {
-    return m_boolean->evaluate(source_state, caches);
+    return m_boolean->get_boolean()->evaluate(source_state, caches);
 }
 
 std::string PositiveBooleanCondition::compute_repr() const {
-    return "(:c_b_pos \"" + m_boolean->compute_repr() + "\")";
+    return "(:c_b_pos \"" + m_boolean->get_boolean()->compute_repr() + "\")";
 }
 
 std::string PositiveBooleanCondition::str() const {
-    return "(:c_b_pos " + std::string("b") + std::to_string(m_boolean->get_index()) + ")";
+    return "(:c_b_pos " + m_boolean->get_key() + ")";
 }
 
 
-NegativeBooleanCondition::NegativeBooleanCondition(std::shared_ptr<const core::Boolean> boolean, ConditionIndex index)
+NegativeBooleanCondition::NegativeBooleanCondition(std::shared_ptr<const NamedBoolean> boolean, ConditionIndex index)
     : BooleanCondition(boolean, index) { }
 
 bool NegativeBooleanCondition::evaluate(const core::State& source_state) const {
-    return !m_boolean->evaluate(source_state);
+    return !m_boolean->get_boolean()->evaluate(source_state);
 }
 
 bool NegativeBooleanCondition::evaluate(const core::State& source_state, core::DenotationsCaches& caches) const {
-    return !m_boolean->evaluate(source_state, caches);
+    return !m_boolean->get_boolean()->evaluate(source_state, caches);
 }
 
 std::string NegativeBooleanCondition::compute_repr() const {
-    return "(:c_b_neg \"" + m_boolean->compute_repr() + "\")";
+    return "(:c_b_neg \"" + m_boolean->get_boolean()->compute_repr() + "\")";
 }
 
 std::string NegativeBooleanCondition::str() const {
-    return "(:c_b_neg " + std::string("b") + std::to_string(m_boolean->get_index()) + ")";
+    return "(:c_b_neg " + m_boolean->get_key() + ")";
 }
 
 
-EqualNumericalCondition::EqualNumericalCondition(std::shared_ptr<const core::Numerical> numerical, ConditionIndex index)
+EqualNumericalCondition::EqualNumericalCondition(std::shared_ptr<const NamedNumerical> numerical, ConditionIndex index)
     : NumericalCondition(numerical, index) { }
 
 bool EqualNumericalCondition::evaluate(const core::State& source_state) const {
-    return m_numerical->evaluate(source_state) == 0;
+    return m_numerical->get_numerical()->evaluate(source_state) == 0;
 }
 
 bool EqualNumericalCondition::evaluate(const core::State& source_state, core::DenotationsCaches& caches) const {
-    return m_numerical->evaluate(source_state, caches) == 0;
+    return m_numerical->get_numerical()->evaluate(source_state, caches) == 0;
 }
 
 std::string EqualNumericalCondition::compute_repr() const {
-    return "(:c_n_eq \"" + m_numerical->compute_repr() + "\")";
+    return "(:c_n_eq \"" + m_numerical->get_numerical()->compute_repr() + "\")";
 }
 
 std::string EqualNumericalCondition::str() const {
-    return "(:c_n_eq " + std::string("n") + std::to_string(m_numerical->get_index()) + ")";
+    return "(:c_n_eq " + m_numerical->get_key() + ")";
 }
 
 
-GreaterNumericalCondition::GreaterNumericalCondition(std::shared_ptr<const core::Numerical> numerical, ConditionIndex index)
+GreaterNumericalCondition::GreaterNumericalCondition(std::shared_ptr<const NamedNumerical> numerical, ConditionIndex index)
     : NumericalCondition(numerical, index) { }
 
 bool GreaterNumericalCondition::evaluate(const core::State& source_state) const {
-    return m_numerical->evaluate(source_state) > 0;
+    return m_numerical->get_numerical()->evaluate(source_state) > 0;
 }
 
 bool GreaterNumericalCondition::evaluate(const core::State& source_state, core::DenotationsCaches& caches) const {
-    return m_numerical->evaluate(source_state, caches) > 0;
+    return m_numerical->get_numerical()->evaluate(source_state, caches) > 0;
 }
 
 std::string GreaterNumericalCondition::compute_repr() const {
-    return "(:c_n_gt \"" + m_numerical->compute_repr() + "\")";
+    return "(:c_n_gt \"" + m_numerical->get_numerical()->compute_repr() + "\")";
 }
 
 std::string GreaterNumericalCondition::str() const {
-    return "(:c_n_gt " + std::string("n") + std::to_string(m_numerical->get_index()) + ")";
+    return "(:c_n_gt " + m_numerical->get_key() + ")";
 }
 
 }
@@ -175,7 +175,7 @@ void save_construct_data(Archive& ar, const dlplan::policy::PositiveBooleanCondi
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::policy::PositiveBooleanCondition* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const dlplan::core::Boolean> boolean;
+    std::shared_ptr<const dlplan::policy::NamedBoolean> boolean;
     dlplan::policy::ConditionIndex index;
     ar >> boolean;
     ar >> index;
@@ -198,7 +198,7 @@ void save_construct_data(Archive & ar, const dlplan::policy::NegativeBooleanCond
 template<class Archive>
 void load_construct_data(Archive & ar, dlplan::policy::NegativeBooleanCondition* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const dlplan::core::Boolean> boolean;
+    std::shared_ptr<const dlplan::policy::NamedBoolean> boolean;
     dlplan::policy::ConditionIndex index;
     ar >> boolean;
     ar >> index;
@@ -221,7 +221,7 @@ void save_construct_data(Archive& ar, const dlplan::policy::GreaterNumericalCond
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::policy::GreaterNumericalCondition* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const dlplan::core::Numerical> numerical;
+    std::shared_ptr<const dlplan::policy::NamedNumerical> numerical;
     dlplan::policy::ConditionIndex index;
     ar >> numerical;
     ar >> index;
@@ -244,7 +244,7 @@ void save_construct_data(Archive& ar, const dlplan::policy::EqualNumericalCondit
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::policy::EqualNumericalCondition* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<const dlplan::core::Numerical> numerical;
+    std::shared_ptr<const dlplan::policy::NamedNumerical> numerical;
     dlplan::policy::ConditionIndex index;
     ar >> numerical;
     ar >> index;

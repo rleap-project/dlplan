@@ -91,15 +91,15 @@ private:
     friend void boost::serialization::load_construct_data(Archive& ar, BooleanEffect* t, const unsigned int version);
 
 protected:
-    std::shared_ptr<const core::Boolean> m_boolean;
+    std::shared_ptr<const NamedBoolean> m_boolean;
 
 protected:
-    BooleanEffect(std::shared_ptr<const core::Boolean> boolean, EffectIndex index);
+    BooleanEffect(std::shared_ptr<const NamedBoolean> boolean, EffectIndex index);
 
     int compute_evaluate_time_score() const override;
 
-    std::shared_ptr<const core::Boolean> get_boolean() const override;
-    std::shared_ptr<const core::Numerical> get_numerical() const override;
+    std::shared_ptr<const NamedBoolean> get_boolean() const override;
+    std::shared_ptr<const NamedNumerical> get_numerical() const override;
 };
 
 
@@ -113,15 +113,15 @@ private:
     friend void boost::serialization::load_construct_data(Archive& ar, NumericalEffect* t, const unsigned int version);
 
 protected:
-    std::shared_ptr<const core::Numerical> m_numerical;
+    std::shared_ptr<const NamedNumerical> m_numerical;
 
 protected:
-    NumericalEffect(std::shared_ptr<const core::Numerical> numerical, EffectIndex index);
+    NumericalEffect(std::shared_ptr<const NamedNumerical> numerical, EffectIndex index);
 
     int compute_evaluate_time_score() const override;
 
-    std::shared_ptr<const core::Boolean> get_boolean() const override;
-    std::shared_ptr<const core::Numerical> get_numerical() const override;
+    std::shared_ptr<const NamedBoolean> get_boolean() const override;
+    std::shared_ptr<const NamedNumerical> get_numerical() const override;
 };
 
 
@@ -135,7 +135,7 @@ private:
     friend void boost::serialization::load_construct_data(Archive& ar, PositiveBooleanEffect* t, const unsigned int version);
 
 public:
-    PositiveBooleanEffect(std::shared_ptr<const core::Boolean> boolean, EffectIndex index);
+    PositiveBooleanEffect(std::shared_ptr<const NamedBoolean> boolean, EffectIndex index);
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
@@ -154,7 +154,7 @@ private:
     friend void boost::serialization::load_construct_data(Archive& ar, NegativeBooleanEffect* t, const unsigned int version);
 
 public:
-    NegativeBooleanEffect(std::shared_ptr<const core::Boolean> boolean, EffectIndex index);
+    NegativeBooleanEffect(std::shared_ptr<const NamedBoolean> boolean, EffectIndex index);
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
@@ -173,7 +173,7 @@ private:
     friend void boost::serialization::load_construct_data(Archive& ar, UnchangedBooleanEffect* t, const unsigned int version);
 
 public:
-    UnchangedBooleanEffect(std::shared_ptr<const core::Boolean> boolean, EffectIndex index);
+    UnchangedBooleanEffect(std::shared_ptr<const NamedBoolean> boolean, EffectIndex index);
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
@@ -192,7 +192,7 @@ private:
     friend void boost::serialization::load_construct_data(Archive& ar, IncrementNumericalEffect* t, const unsigned int version);
 
 public:
-    IncrementNumericalEffect(std::shared_ptr<const core::Numerical> numerical, EffectIndex index);
+    IncrementNumericalEffect(std::shared_ptr<const NamedNumerical> numerical, EffectIndex index);
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
@@ -211,7 +211,7 @@ private:
     friend void boost::serialization::load_construct_data(Archive& ar, DecrementNumericalEffect* t, const unsigned int version);
 
 public:
-    DecrementNumericalEffect(std::shared_ptr<const core::Numerical> numerical, EffectIndex index);
+    DecrementNumericalEffect(std::shared_ptr<const NamedNumerical> numerical, EffectIndex index);
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
@@ -230,7 +230,7 @@ private:
     friend void boost::serialization::load_construct_data(Archive& ar, UnchangedNumericalEffect* t, const unsigned int version);
 
 public:
-    UnchangedNumericalEffect(std::shared_ptr<const core::Numerical> numerical, EffectIndex index);
+    UnchangedNumericalEffect(std::shared_ptr<const NamedNumerical> numerical, EffectIndex index);
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;

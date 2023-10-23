@@ -1,5 +1,8 @@
 #include "domain.h"
 
+using namespace dlplan::core;
+
+
 namespace dlplan::tests {
 namespace gripper {
 std::shared_ptr<VocabularyInfo> construct_vocabulary_info() {

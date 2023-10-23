@@ -1,8 +1,11 @@
 add_library(dlplanpolicy STATIC)
 target_sources(dlplanpolicy
     PRIVATE
+        base_element.cpp
+        boolean.cpp
         condition.cpp
         effect.cpp
+        numerical.cpp
         policy_factory.cpp
         policy_impl.cpp
         policy_minimizer.cpp

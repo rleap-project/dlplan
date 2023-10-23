@@ -74,43 +74,51 @@ std::shared_ptr<const Policy> PolicyFactory::parse_policy(
     return m_pImpl->parse_policy(*this, iter, end, filename);
 }
 
-std::shared_ptr<const BaseCondition> PolicyFactory::make_pos_condition(const std::shared_ptr<const core::Boolean>& boolean) {
+std::shared_ptr<const NamedBoolean> PolicyFactory::make_boolean(const std::string& key, const std::shared_ptr<const core::Boolean>& boolean) {
+    return m_pImpl->make_boolean(key, boolean);
+}
+
+std::shared_ptr<const NamedNumerical> PolicyFactory::make_numerical(const std::string& key, const std::shared_ptr<const core::Numerical>& numerical) {
+    return m_pImpl->make_numerical(key, numerical);
+}
+
+std::shared_ptr<const BaseCondition> PolicyFactory::make_pos_condition(const std::shared_ptr<const NamedBoolean>& boolean) {
     return m_pImpl->make_pos_condition(boolean);
 }
 
-std::shared_ptr<const BaseCondition> PolicyFactory::make_neg_condition(const std::shared_ptr<const core::Boolean>& boolean) {
+std::shared_ptr<const BaseCondition> PolicyFactory::make_neg_condition(const std::shared_ptr<const NamedBoolean>& boolean) {
     return m_pImpl->make_neg_condition(boolean);
 }
 
-std::shared_ptr<const BaseCondition> PolicyFactory::make_gt_condition(const std::shared_ptr<const core::Numerical>& numerical) {
+std::shared_ptr<const BaseCondition> PolicyFactory::make_gt_condition(const std::shared_ptr<const NamedNumerical>& numerical) {
     return m_pImpl->make_gt_condition(numerical);
 }
 
-std::shared_ptr<const BaseCondition> PolicyFactory::make_eq_condition(const std::shared_ptr<const core::Numerical>& numerical) {
+std::shared_ptr<const BaseCondition> PolicyFactory::make_eq_condition(const std::shared_ptr<const NamedNumerical>& numerical) {
     return m_pImpl->make_eq_condition(numerical);
 }
 
-std::shared_ptr<const BaseEffect> PolicyFactory::make_pos_effect(const std::shared_ptr<const core::Boolean>& boolean) {
+std::shared_ptr<const BaseEffect> PolicyFactory::make_pos_effect(const std::shared_ptr<const NamedBoolean>& boolean) {
     return m_pImpl->make_pos_effect(boolean);
 }
 
-std::shared_ptr<const BaseEffect> PolicyFactory::make_neg_effect(const std::shared_ptr<const core::Boolean>& boolean) {
+std::shared_ptr<const BaseEffect> PolicyFactory::make_neg_effect(const std::shared_ptr<const NamedBoolean>& boolean) {
     return m_pImpl->make_neg_effect(boolean);
 }
 
-std::shared_ptr<const BaseEffect> PolicyFactory::make_bot_effect(const std::shared_ptr<const core::Boolean>& boolean) {
+std::shared_ptr<const BaseEffect> PolicyFactory::make_bot_effect(const std::shared_ptr<const NamedBoolean>& boolean) {
     return m_pImpl->make_bot_effect(boolean);
 }
 
-std::shared_ptr<const BaseEffect> PolicyFactory::make_inc_effect(const std::shared_ptr<const core::Numerical>& numerical) {
+std::shared_ptr<const BaseEffect> PolicyFactory::make_inc_effect(const std::shared_ptr<const NamedNumerical>& numerical) {
     return m_pImpl->make_inc_effect(numerical);
 }
 
-std::shared_ptr<const BaseEffect> PolicyFactory::make_dec_effect(const std::shared_ptr<const core::Numerical>& numerical) {
+std::shared_ptr<const BaseEffect> PolicyFactory::make_dec_effect(const std::shared_ptr<const NamedNumerical>& numerical) {
     return m_pImpl->make_dec_effect(numerical);
 }
 
-std::shared_ptr<const BaseEffect> PolicyFactory::make_bot_effect(const std::shared_ptr<const core::Numerical>& numerical) {
+std::shared_ptr<const BaseEffect> PolicyFactory::make_bot_effect(const std::shared_ptr<const NamedNumerical>& numerical) {
     return m_pImpl->make_bot_effect(numerical);
 }
 

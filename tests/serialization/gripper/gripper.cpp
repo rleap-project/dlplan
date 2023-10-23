@@ -54,10 +54,12 @@ TEST(DLPTests, SerializationGripperTest) {
 
     // PolicyFactory
     auto policy_factory = std::make_shared<PolicyFactory>(element_factory);
-    auto c_n_gt = policy_factory->make_gt_condition(numerical);
-    auto e_n_dec = policy_factory->make_dec_effect(numerical);
-    auto c_b_pos = policy_factory->make_pos_condition(boolean);
-    auto e_b_neg = policy_factory->make_neg_effect(boolean);
+    auto policy_boolean = policy_factory->make_boolean("b0", boolean);
+    auto policy_numerical = policy_factory->make_numerical("n0", numerical);
+    auto c_n_gt = policy_factory->make_gt_condition(policy_numerical);
+    auto e_n_dec = policy_factory->make_dec_effect(policy_numerical);
+    auto c_b_pos = policy_factory->make_pos_condition(policy_boolean);
+    auto e_b_neg = policy_factory->make_neg_effect(policy_boolean);
     auto rule_1 = policy_factory->make_rule({c_n_gt}, {e_n_dec});
     auto rule_2 = policy_factory->make_rule({c_b_pos}, {e_b_neg});
     auto policy = policy_factory->make_policy({rule_1, rule_2});

@@ -5,7 +5,6 @@
 #include "include/dlplan/policy.h"
 
 using namespace std;
-using namespace dlplan::core;
 using namespace dlplan::policy;
 
 
@@ -16,8 +15,8 @@ TEST(DLPTests, PolicyBuilderTest) {
     auto element_factory = construct_syntactic_element_factory(vocabulary_info);
     PolicyFactory policy_factory(element_factory);
     // add some features
-    std::shared_ptr<const Boolean> boolean_1 = element_factory->parse_boolean("b_empty(r_primitive(at,0,1))");
-    std::shared_ptr<const Boolean> boolean_2 = element_factory->parse_boolean("b_empty(c_primitive(package, 0))");
+    std::shared_ptr<const NamedBoolean> boolean_1 = policy_factory.make_boolean("b0", element_factory->parse_boolean("b_empty(r_primitive(at,0,1))"));
+    std::shared_ptr<const NamedBoolean> boolean_2 = policy_factory.make_boolean("b1", element_factory->parse_boolean("b_empty(c_primitive(package, 0))"));
     // add some conditions
     std::shared_ptr<const BaseCondition> c_b_pos_1 = policy_factory.make_pos_condition(boolean_1);
     std::shared_ptr<const BaseCondition> c_b_pos_2 = policy_factory.make_pos_condition(boolean_2);

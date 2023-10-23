@@ -1,2 +1,3 @@
-from _dlplan import BaseCondition, BaseEffect, Rule, Policy, PolicyFactory, \
+from _dlplan import NamedBaseElement, NamedBoolean, NamedNumerical, \
+    BaseCondition, BaseEffect, Rule, Policy, PolicyFactory, \
     PolicyMinimizer

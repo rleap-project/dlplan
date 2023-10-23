@@ -78,16 +78,16 @@ private:
     friend void boost::serialization::load_construct_data(Archive& ar, BooleanCondition* t, const unsigned int version);
 
 protected:
-    const std::shared_ptr<const core::Boolean> m_boolean;
+    const std::shared_ptr<const NamedBoolean> m_boolean;
 
 protected:
-    BooleanCondition(std::shared_ptr<const core::Boolean> boolean, ConditionIndex index);
+    BooleanCondition(std::shared_ptr<const NamedBoolean> boolean, ConditionIndex index);
 
     int compute_evaluate_time_score() const override;
 
-    std::shared_ptr<const core::Boolean> get_boolean() const override;
+    std::shared_ptr<const NamedBoolean> get_boolean() const override;
 
-    std::shared_ptr<const core::Numerical> get_numerical() const override;
+    std::shared_ptr<const NamedNumerical> get_numerical() const override;
 };
 
 
@@ -101,15 +101,15 @@ private:
     friend void boost::serialization::load_construct_data(Archive& ar, NumericalCondition* t, const unsigned int version);
 
 protected:
-    const std::shared_ptr<const core::Numerical> m_numerical;
+    const std::shared_ptr<const NamedNumerical> m_numerical;
 
 protected:
-    NumericalCondition(std::shared_ptr<const core::Numerical> numerical, ConditionIndex index);
+    NumericalCondition(std::shared_ptr<const NamedNumerical> numerical, ConditionIndex index);
 
     int compute_evaluate_time_score() const override;
 
-    std::shared_ptr<const core::Boolean> get_boolean() const override;
-    std::shared_ptr<const core::Numerical> get_numerical() const override;
+    std::shared_ptr<const NamedBoolean> get_boolean() const override;
+    std::shared_ptr<const NamedNumerical> get_numerical() const override;
 };
 
 
@@ -123,7 +123,7 @@ private:
     friend void boost::serialization::load_construct_data(Archive& ar, PositiveBooleanCondition* t, const unsigned int version);
 
 public:
-    PositiveBooleanCondition(std::shared_ptr<const core::Boolean> boolean, ConditionIndex index);
+    PositiveBooleanCondition(std::shared_ptr<const NamedBoolean> boolean, ConditionIndex index);
 
     bool evaluate(const core::State& source_state) const override;
     bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const override;
@@ -142,7 +142,7 @@ private:
     friend void boost::serialization::load_construct_data(Archive& ar, NegativeBooleanCondition* t, const unsigned int version);
 
 public:
-    NegativeBooleanCondition(std::shared_ptr<const core::Boolean> boolean, ConditionIndex index);
+    NegativeBooleanCondition(std::shared_ptr<const NamedBoolean> boolean, ConditionIndex index);
 
     bool evaluate(const core::State& source_state) const override;
     bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const override;
@@ -161,7 +161,7 @@ private:
     friend void boost::serialization::load_construct_data(Archive& ar, EqualNumericalCondition* t, const unsigned int version);
 
 public:
-    EqualNumericalCondition(std::shared_ptr<const core::Numerical> numerical, ConditionIndex index);
+    EqualNumericalCondition(std::shared_ptr<const NamedNumerical> numerical, ConditionIndex index);
 
     bool evaluate(const core::State& source_state) const override;
     bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const override;
@@ -180,7 +180,7 @@ private:
     friend void boost::serialization::load_construct_data(Archive& ar, GreaterNumericalCondition* t, const unsigned int version);
 
 public:
-    GreaterNumericalCondition(std::shared_ptr<const core::Numerical> numerical, ConditionIndex index);
+    GreaterNumericalCondition(std::shared_ptr<const NamedNumerical> numerical, ConditionIndex index);
 
     bool evaluate(const core::State& source_state) const override;
     bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const override;

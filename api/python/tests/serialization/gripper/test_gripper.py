@@ -58,10 +58,12 @@ def test_serialization_gripper():
 
     # PolicyBuilder
     policy_factory = PolicyFactory(element_factory)
-    c_n_gt = policy_factory.make_gt_condition(numerical)
-    e_n_dec = policy_factory.make_dec_effect(numerical)
-    c_b_pos = policy_factory.make_pos_condition(boolean)
-    e_b_neg = policy_factory.make_neg_effect(boolean)
+    named_numerical = policy_factory.make_numerical("n0", numerical)
+    named_boolean = policy_factory.make_boolean("b0", boolean)
+    c_n_gt = policy_factory.make_gt_condition(named_numerical)
+    e_n_dec = policy_factory.make_dec_effect(named_numerical)
+    c_b_pos = policy_factory.make_pos_condition(named_boolean)
+    e_b_neg = policy_factory.make_neg_effect(named_boolean)
     rule_1 = policy_factory.make_rule({c_n_gt}, {e_n_dec})
     rule_2 = policy_factory.make_rule({c_b_pos}, {e_b_neg})
     policy = policy_factory.make_policy({rule_1, rule_2})

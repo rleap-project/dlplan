@@ -23,9 +23,9 @@ TEST(DLPTests, StructuralMinimization) {
         ")";
     std::string minimized_policy_textual =
         "(:policy\n"
-        "(:booleans (b0 \"b_empty(c_primitive(package,0))\") (b1 \"b_empty(r_primitive(at,0,1))\"))\n"
+        "(:booleans (b1 \"b_empty(c_primitive(package,0))\") (b0 \"b_empty(r_primitive(at,0,1))\"))\n"
         "(:numericals (n0 \"n_count(r_primitive(at,0,1))\"))\n"
-        "(:rule (:conditions (:c_b_pos b0) (:c_b_pos b1) (:c_n_gt n0)) (:effects (:e_b_neg b0) (:e_n_dec n0)))\n"
+        "(:rule (:conditions (:c_b_pos b1) (:c_b_pos b0) (:c_n_gt n0)) (:effects (:e_b_neg b1) (:e_n_dec n0)))\n"
         ")";
 
     auto vocabulary_info = gripper::construct_vocabulary_info();

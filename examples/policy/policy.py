@@ -54,16 +54,15 @@ def main():
     element_factory = SyntacticElementFactory(vocabulary)
 
     print("Constructing policy:")
-    # boolean_1 represents whether the hand is empty or not
-    boolean_1 = element_factory.parse_boolean("b_nullary(arm-empty)")
-    # numerical_1 representes the number of blocks on top of another block
-    numerical_1 = element_factory.parse_numerical("n_count(r_primitive(on,0,1))")
-
     policy_factory = PolicyFactory(element_factory)
-    b_pos_condition_0 = policy_factory.make_pos_condition(boolean_1)
-    b_bot_effect_0 = policy_factory.make_bot_effect(boolean_1)
-    n_gt_condition_0 = policy_factory.make_gt_condition(numerical_1)
-    n_dec_effect_0 = policy_factory.make_dec_effect(numerical_1)
+    # boolean represents whether the hand is empty or not
+    boolean = policy_factory.make_boolean("b0", element_factory.parse_boolean("b_nullary(arm-empty)"))
+    # numerical representes the number of blocks on top of another block
+    numerical = policy_factory.make_numerical("n1", element_factory.parse_numerical("n_count(r_primitive(on,0,1))"))
+    b_pos_condition_0 = policy_factory.make_pos_condition(boolean)
+    b_bot_effect_0 = policy_factory.make_bot_effect(boolean)
+    n_gt_condition_0 = policy_factory.make_gt_condition(numerical)
+    n_dec_effect_0 = policy_factory.make_dec_effect(numerical)
     rule_1 = policy_factory.make_rule(
         {b_pos_condition_0, n_gt_condition_0},
         {b_bot_effect_0, n_dec_effect_0}
@@ -97,7 +96,7 @@ def main():
     policy_str = "(:policy\n" \
         "(:booleans (b0 \"b_nullary(arm-empty)\"))\n" \
         "(:numericals (n0 \"n_count(r_primitive(on,0,1))\"))\n" \
-        "(:rule (:conditions (:c_b_pos b0) (:c_n_gt n0)) (:effects (:e_b_bot b42) (:e_n_dec n0)))\n" \
+        "(:rule (:conditions (:c_b_pos b0) (:c_n_gt n0)) (:effects (:e_b_bot b0) (:e_n_dec n0)))\n" \
         ")"
     policy_in = policy_factory.parse_policy(policy_str)
     print(repr(policy_in))

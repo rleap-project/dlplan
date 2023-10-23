@@ -62,17 +62,17 @@ int main() {
     auto vocabulary = construct_vocabulary_info();
     auto instance = construct_instance_info(vocabulary);
     auto element_factory = std::make_shared<dlplan::core::SyntacticElementFactory>(vocabulary);
+    PolicyFactory policy_factory(element_factory);
 
     std::cout << "Constructing policy:" << std::endl;
-    // boolean_1 represents whether the hand is empty or not
-    auto boolean_1 = element_factory->parse_boolean("b_nullary(arm-empty)");
-    // numerical_1 representes the number of blocks on top of another block
-    auto numerical_1 = element_factory->parse_numerical("n_count(r_primitive(on,0,1))");
-    PolicyFactory policy_factory(element_factory);
-    auto b_pos_condition_0 = policy_factory.make_pos_condition(boolean_1);
-    auto b_bot_effect_0 = policy_factory.make_bot_effect(boolean_1);
-    auto n_gt_condition_0 = policy_factory.make_gt_condition(numerical_1);
-    auto n_dec_effect_0 = policy_factory.make_dec_effect(numerical_1);
+    // boolean represents whether the hand is empty or not
+    auto boolean = policy_factory.make_boolean("b0", element_factory->parse_boolean("b_nullary(arm-empty)"));
+    // numerical representes the number of blocks on top of another block
+    auto numerical = policy_factory.make_numerical("n1", element_factory->parse_numerical("n_count(r_primitive(on,0,1))"));
+    auto b_pos_condition_0 = policy_factory.make_pos_condition(boolean);
+    auto b_bot_effect_0 = policy_factory.make_bot_effect(boolean);
+    auto n_gt_condition_0 = policy_factory.make_gt_condition(numerical);
+    auto n_dec_effect_0 = policy_factory.make_dec_effect(numerical);
     // rule_1 represents that picking up a block that is on top of another block is good
     auto rule_1 = policy_factory.make_rule(
         {b_pos_condition_0, n_gt_condition_0},

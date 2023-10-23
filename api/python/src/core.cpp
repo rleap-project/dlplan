@@ -125,6 +125,8 @@ void init_core(py::module_ &m_core) {
         .def("get_object", &InstanceInfo::get_object)
         .def("get_atom", &InstanceInfo::get_atom)
         .def("get_vocabulary_info", &InstanceInfo::get_vocabulary_info)
+        .def("clear_atoms", &InstanceInfo::clear_atoms)
+        .def("clear_static_atoms", &InstanceInfo::clear_static_atoms)
     ;
 
     py::class_<State>(m_core, "State")

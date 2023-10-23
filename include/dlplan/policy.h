@@ -16,6 +16,9 @@
 
 // Forward declarations of this header
 namespace dlplan::policy {
+class NamedBaseElement;
+class NamedBoolean;
+class NamedNumerical;
 class PolicyFactoryImpl;
 class BaseCondition;
 class BaseEffect;
@@ -28,6 +31,27 @@ class PolicyFactory;
 // Forward declarations of template spezializations for serialization
 namespace boost::serialization {
     class access;
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::NamedBaseElement& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::policy::NamedBaseElement* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::policy::NamedBaseElement* t, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::NamedBoolean& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::policy::NamedBoolean* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::policy::NamedBoolean* t, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::NamedNumerical& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::policy::NamedNumerical* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::policy::NamedNumerical* t, const unsigned int version);
 
     template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::BaseCondition& t, const unsigned int version);
@@ -69,8 +93,8 @@ struct ScoreCompare {
     }
 };
 
-using Booleans = std::set<std::shared_ptr<const dlplan::core::Boolean>, ScoreCompare<const dlplan::core::Boolean>>;
-using Numericals = std::set<std::shared_ptr<const dlplan::core::Numerical>, ScoreCompare<const dlplan::core::Numerical>>;
+using Booleans = std::set<std::shared_ptr<const NamedBoolean>, ScoreCompare<const NamedBoolean>>;
+using Numericals = std::set<std::shared_ptr<const NamedNumerical>, ScoreCompare<const NamedNumerical>>;
 using Conditions = std::set<std::shared_ptr<const BaseCondition>, ScoreCompare<const BaseCondition>>;
 using Effects = std::set<std::shared_ptr<const BaseEffect>, ScoreCompare<const BaseEffect>>;
 using Rules = std::set<std::shared_ptr<const Rule>, ScoreCompare<const Rule>>;
@@ -83,6 +107,92 @@ using ConditionIndex = int;
 using EffectIndex = int;
 using RuleIndex = int;
 using PolicyIndex = int;
+
+
+/// @brief Wrappers around core elements to add an additional key
+///        that can potentially add some more human readable meaning.
+class NamedBaseElement {
+protected:
+    std::string m_key;
+
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, NamedBaseElement& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive& ar, const NamedBaseElement* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive& ar, NamedBaseElement* t, const unsigned int version);
+
+public:
+    explicit NamedBaseElement(const std::string& key);
+    NamedBaseElement(const NamedBaseElement& other);
+    NamedBaseElement& operator=(const NamedBaseElement& other);
+    NamedBaseElement(NamedBaseElement&& other);
+    NamedBaseElement& operator=(NamedBaseElement&& other);
+    virtual ~NamedBaseElement();
+
+    /// @brief Computes a time score for evaluating this condition relative to other conditions.
+    ///        The scoring assumes evaluation that uses caching.
+    /// @return An integer that represents the score.
+    virtual int compute_evaluate_time_score() const = 0;
+    virtual std::string compute_repr() const = 0;
+    virtual std::string str() const = 0;
+
+    const std::string& get_key() const;
+};
+
+
+class NamedBoolean : public NamedBaseElement {
+private:
+    std::shared_ptr<const core::Boolean> m_boolean;
+
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, NamedBoolean& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive& ar, const NamedBoolean* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive& ar, NamedBoolean* t, const unsigned int version);
+
+public:
+    NamedBoolean(const std::string& key, std::shared_ptr<const core::Boolean> boolean);
+    NamedBoolean(const NamedBoolean& other);
+    NamedBoolean& operator=(const NamedBoolean& other);
+    NamedBoolean(NamedBoolean&& other);
+    NamedBoolean& operator=(NamedBoolean&& other);
+    ~NamedBoolean() override;
+
+    int compute_evaluate_time_score() const override;
+    std::string compute_repr() const override;
+    std::string str() const override;
+
+    std::shared_ptr<const core::Boolean> get_boolean() const;
+};
+
+
+class NamedNumerical : public NamedBaseElement {
+private:
+    std::shared_ptr<const core::Numerical> m_numerical;
+
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, NamedNumerical& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive& ar, const NamedNumerical* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive& ar, NamedNumerical* t, const unsigned int version);
+
+public:
+    NamedNumerical(const std::string& key, std::shared_ptr<const core::Numerical> numerical);
+    NamedNumerical(const NamedNumerical& other);
+    NamedNumerical& operator=(const NamedNumerical& other);
+    NamedNumerical(NamedNumerical&& other);
+    NamedNumerical& operator=(NamedNumerical&& other);
+    ~NamedNumerical() override;
+
+    int compute_evaluate_time_score() const override;
+    std::string compute_repr() const override;
+    std::string str() const override;
+
+    std::shared_ptr<const core::Numerical> get_numerical() const;
+};
 
 
 /// @brief Represents the abstract base class of a feature condition and
@@ -118,8 +228,8 @@ public:
     /// @return An integer that represents the score.
     virtual int compute_evaluate_time_score() const = 0;
 
-    virtual std::shared_ptr<const core::Boolean> get_boolean() const = 0;
-    virtual std::shared_ptr<const core::Numerical> get_numerical() const = 0;
+    virtual std::shared_ptr<const NamedBoolean> get_boolean() const = 0;
+    virtual std::shared_ptr<const NamedNumerical> get_numerical() const = 0;
     ConditionIndex get_index() const;
 };
 
@@ -158,8 +268,8 @@ public:
     virtual int compute_evaluate_time_score() const = 0;
 
     EffectIndex get_index() const;
-    virtual std::shared_ptr<const core::Boolean> get_boolean() const = 0;
-    virtual std::shared_ptr<const core::Numerical> get_numerical() const = 0;
+    virtual std::shared_ptr<const NamedBoolean> get_boolean() const = 0;
+    virtual std::shared_ptr<const NamedNumerical> get_numerical() const = 0;
 };
 
 
@@ -280,7 +390,7 @@ private:
     friend void boost::serialization::serialize(Archive& ar, PolicyFactory& t, const unsigned int version);
 
 public:
-    explicit PolicyFactory(std::shared_ptr<core::SyntacticElementFactory> element_factory);
+    PolicyFactory(std::shared_ptr<core::SyntacticElementFactory> element_factory);
     PolicyFactory(const PolicyFactory& other);
     PolicyFactory& operator=(const PolicyFactory& other);
     PolicyFactory(PolicyFactory&& other);
@@ -299,18 +409,24 @@ public:
         const std::string& filename="");
 
     /**
+     *  Uniquely adds a boolean (resp. numerical) and returns it.
+     */
+    std::shared_ptr<const NamedBoolean> make_boolean(const std::string& key, const std::shared_ptr<const core::Boolean>& boolean);
+    std::shared_ptr<const NamedNumerical> make_numerical(const std::string& key, const std::shared_ptr<const core::Numerical>& numerical);
+
+    /**
      * Uniquely adds a condition (resp. effect) and returns it.
      */
-    std::shared_ptr<const BaseCondition> make_pos_condition(const std::shared_ptr<const core::Boolean>& boolean);
-    std::shared_ptr<const BaseCondition> make_neg_condition(const std::shared_ptr<const core::Boolean>& boolean);
-    std::shared_ptr<const BaseCondition> make_gt_condition(const std::shared_ptr<const core::Numerical>& numerical);
-    std::shared_ptr<const BaseCondition> make_eq_condition(const std::shared_ptr<const core::Numerical>& numerical);
-    std::shared_ptr<const BaseEffect> make_pos_effect(const std::shared_ptr<const core::Boolean>& boolean);
-    std::shared_ptr<const BaseEffect> make_neg_effect(const std::shared_ptr<const core::Boolean>& boolean);
-    std::shared_ptr<const BaseEffect> make_bot_effect(const std::shared_ptr<const core::Boolean>& boolean);
-    std::shared_ptr<const BaseEffect> make_inc_effect(const std::shared_ptr<const core::Numerical>& numerical);
-    std::shared_ptr<const BaseEffect> make_dec_effect(const std::shared_ptr<const core::Numerical>& numerical);
-    std::shared_ptr<const BaseEffect> make_bot_effect(const std::shared_ptr<const core::Numerical>& numerical);
+    std::shared_ptr<const BaseCondition> make_pos_condition(const std::shared_ptr<const NamedBoolean>& boolean);
+    std::shared_ptr<const BaseCondition> make_neg_condition(const std::shared_ptr<const NamedBoolean>& boolean);
+    std::shared_ptr<const BaseCondition> make_gt_condition(const std::shared_ptr<const NamedNumerical>& numerical);
+    std::shared_ptr<const BaseCondition> make_eq_condition(const std::shared_ptr<const NamedNumerical>& numerical);
+    std::shared_ptr<const BaseEffect> make_pos_effect(const std::shared_ptr<const NamedBoolean>& boolean);
+    std::shared_ptr<const BaseEffect> make_neg_effect(const std::shared_ptr<const NamedBoolean>& boolean);
+    std::shared_ptr<const BaseEffect> make_bot_effect(const std::shared_ptr<const NamedBoolean>& boolean);
+    std::shared_ptr<const BaseEffect> make_inc_effect(const std::shared_ptr<const NamedNumerical>& numerical);
+    std::shared_ptr<const BaseEffect> make_dec_effect(const std::shared_ptr<const NamedNumerical>& numerical);
+    std::shared_ptr<const BaseEffect> make_bot_effect(const std::shared_ptr<const NamedNumerical>& numerical);
 
     /**
      * Uniquely adds a rule and returns it.

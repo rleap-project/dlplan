@@ -16,17 +16,17 @@ namespace dlplan::policy::parsers::policy::stage_2::parser {
 
 extern std::string parse(const stage_1::ast::Name& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 
-extern std::pair<std::string, std::shared_ptr<const core::Boolean>> parse(const stage_1::ast::BooleanDefinition& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
+extern std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedBoolean>> parse(const stage_1::ast::BooleanDefinition& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 
-extern std::shared_ptr<const core::Boolean> parse(const stage_1::ast::BooleanReference& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
+extern std::shared_ptr<const dlplan::policy::NamedBoolean> parse(const stage_1::ast::BooleanReference& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 
-extern std::unordered_map<std::string, std::shared_ptr<const core::Boolean>> parse(const stage_1::ast::BooleansEntry& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
+extern std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedBoolean>> parse(const stage_1::ast::BooleansEntry& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 
-extern std::pair<std::string, std::shared_ptr<const core::Numerical>> parse(const stage_1::ast::NumericalDefinition& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
+extern std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedNumerical>> parse(const stage_1::ast::NumericalDefinition& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 
-extern std::shared_ptr<const core::Numerical> parse(const stage_1::ast::NumericalReference& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
+extern std::shared_ptr<const dlplan::policy::NamedNumerical> parse(const stage_1::ast::NumericalReference& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 
-extern std::unordered_map<std::string, std::shared_ptr<const core::Numerical>> parse(const stage_1::ast::NumericalsEntry& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
+extern std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedNumerical>> parse(const stage_1::ast::NumericalsEntry& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 
 extern std::shared_ptr<const BaseCondition> parse(const stage_1::ast::PositiveBooleanConditionEntry& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 

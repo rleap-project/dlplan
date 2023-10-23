@@ -16,15 +16,16 @@ std::string parse(
     return ss.str();
 }
 
-std::pair<std::string, std::shared_ptr<const core::Boolean>> parse(
+std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedBoolean>> parse(
     const stage_1::ast::BooleanDefinition& node, const error_handler_type& error_handler, Context& context) {
+    const auto key = parse(node.key, error_handler, context);
     return *context.booleans.emplace(
-            parse(node.key, error_handler, context),
-            dlplan::core::parsers::elements::stage_2::parser::parse(
-                node.boolean, error_handler, *context.policy_factory.get_element_factory())).first;
+            key,
+            context.policy_factory.make_boolean(key, dlplan::core::parsers::elements::stage_2::parser::parse(
+                node.boolean, error_handler, *context.policy_factory.get_element_factory()))).first;
 }
 
-std::shared_ptr<const core::Boolean> parse(
+std::shared_ptr<const dlplan::policy::NamedBoolean> parse(
     const stage_1::ast::BooleanReference& node, const error_handler_type& error_handler, Context& context) {
     auto key = parse(node.key, error_handler, context);
     auto it = context.booleans.find(key);
@@ -35,24 +36,25 @@ std::shared_ptr<const core::Boolean> parse(
     return it->second;
 }
 
-std::unordered_map<std::string, std::shared_ptr<const core::Boolean>> parse(
+std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedBoolean>> parse(
     const stage_1::ast::BooleansEntry& node, const error_handler_type& error_handler, Context& context) {
-    std::unordered_map<std::string, std::shared_ptr<const core::Boolean>> booleans;
+    std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedBoolean>> booleans;
     for (const auto& child : node.definitions) {
         booleans.insert(parse(child, error_handler, context));
     }
     return booleans;
 }
 
-std::pair<std::string, std::shared_ptr<const core::Numerical>> parse(
+std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedNumerical>> parse(
     const stage_1::ast::NumericalDefinition& node, const error_handler_type& error_handler, Context& context) {
+    const auto key = parse(node.key, error_handler, context);
     return *context.numericals.emplace(
-            parse(node.key, error_handler, context),
-            dlplan::core::parsers::elements::stage_2::parser::parse(
-                node.numerical, error_handler, *context.policy_factory.get_element_factory())).first;
+            key,
+            context.policy_factory.make_numerical(key, dlplan::core::parsers::elements::stage_2::parser::parse(
+                node.numerical, error_handler, *context.policy_factory.get_element_factory()))).first;
 }
 
-std::shared_ptr<const core::Numerical> parse(
+std::shared_ptr<const dlplan::policy::NamedNumerical> parse(
     const stage_1::ast::NumericalReference& node, const error_handler_type& error_handler, Context& context) {
     auto key = parse(node.key, error_handler, context);
     auto it = context.numericals.find(key);
@@ -63,9 +65,9 @@ std::shared_ptr<const core::Numerical> parse(
     return it->second;
 }
 
-std::unordered_map<std::string, std::shared_ptr<const core::Numerical>> parse(
+std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedNumerical>> parse(
     const stage_1::ast::NumericalsEntry& node, const error_handler_type& error_handler, Context& context) {
-    std::unordered_map<std::string, std::shared_ptr<const core::Numerical>> numericals;
+    std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedNumerical>> numericals;
     for (const auto& child : node.definitions) {
         numericals.insert(parse(child, error_handler, context));
     }

@@ -192,6 +192,16 @@ const Atom& InstanceInfo::get_atom(const std::string& name) const {
     return m_atoms[m_atom_name_to_index.at(name)];
 }
 
+void InstanceInfo::clear_atoms() {
+    m_atoms.clear();
+    m_atom_name_to_index.clear();
+}
+
+void InstanceInfo::clear_static_atoms() {
+    m_static_atoms.clear();
+    m_static_atom_name_to_index.clear();
+}
+
 }
 
 
