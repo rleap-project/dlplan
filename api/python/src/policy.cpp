@@ -29,6 +29,14 @@ void init_policy(py::module_ &m_policy) {
         .def("get_numerical", &policy::NamedNumerical::get_numerical)
     ;
 
+    py::class_<policy::NamedConcept, policy::NamedBaseElement, std::shared_ptr<policy::NamedConcept>>(m_policy, "NamedConcept")
+        .def("get_concept", &policy::NamedConcept::get_concept)
+    ;
+
+    py::class_<policy::NamedRole, policy::NamedBaseElement, std::shared_ptr<policy::NamedRole>>(m_policy, "NamedRole")
+        .def("get_role", &policy::NamedRole::get_role)
+    ;
+
     py::class_<policy::BaseCondition, std::shared_ptr<policy::BaseCondition>>(m_policy, "BaseCondition")
         .def("__repr__", &policy::BaseCondition::compute_repr)
         .def("__str__", &policy::BaseCondition::str)
@@ -79,6 +87,8 @@ void init_policy(py::module_ &m_policy) {
         .def(py::init<std::shared_ptr<core::SyntacticElementFactory>>())
         .def("make_boolean", &policy::PolicyFactory::make_boolean)
         .def("make_numerical", &policy::PolicyFactory::make_numerical)
+        .def("make_concept", &policy::PolicyFactory::make_concept)
+        .def("make_role", &policy::PolicyFactory::make_role)
         .def("make_pos_condition", &policy::PolicyFactory::make_pos_condition)
         .def("make_neg_condition", &policy::PolicyFactory::make_neg_condition)
         .def("make_gt_condition", &policy::PolicyFactory::make_gt_condition)

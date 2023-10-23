@@ -119,7 +119,7 @@ void NoveltyTable::resize(std::shared_ptr<const NoveltyBase> novelty_base) {
     // mark tuples in new table
     AtomIndices atom_indices;
     int new_tuple_index;
-    for (int old_tuple_index = 0; old_tuple_index < m_table.size(); ++old_tuple_index) {
+    for (int old_tuple_index = 0; old_tuple_index < static_cast<int>(m_table.size()); ++old_tuple_index) {
         if (!m_table[old_tuple_index]) {
             atom_indices = m_novelty_base->tuple_index_to_atom_indices(old_tuple_index);
             new_tuple_index = novelty_base->atom_indices_to_tuple_index(atom_indices);

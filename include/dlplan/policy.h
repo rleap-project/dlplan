@@ -19,6 +19,8 @@ namespace dlplan::policy {
 class NamedBaseElement;
 class NamedBoolean;
 class NamedNumerical;
+class NamedConcept;
+class NamedRole;
 class PolicyFactoryImpl;
 class BaseCondition;
 class BaseEffect;
@@ -52,6 +54,20 @@ namespace boost::serialization {
     void save_construct_data(Archive& ar, const dlplan::policy::NamedNumerical* t, const unsigned int version);
     template<class Archive>
     void load_construct_data(Archive& ar, dlplan::policy::NamedNumerical* t, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::NamedConcept& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::policy::NamedConcept* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::policy::NamedConcept* t, const unsigned int version);
+
+    template <typename Archive>
+    void serialize(Archive& ar, dlplan::policy::NamedRole& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const dlplan::policy::NamedRole* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, dlplan::policy::NamedRole* t, const unsigned int version);
 
     template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::BaseCondition& t, const unsigned int version);
@@ -95,6 +111,8 @@ struct ScoreCompare {
 
 using Booleans = std::set<std::shared_ptr<const NamedBoolean>, ScoreCompare<const NamedBoolean>>;
 using Numericals = std::set<std::shared_ptr<const NamedNumerical>, ScoreCompare<const NamedNumerical>>;
+using Concepts = std::set<std::shared_ptr<const NamedConcept>, ScoreCompare<const NamedConcept>>;
+using Roles = std::set<std::shared_ptr<const NamedRole>, ScoreCompare<const NamedRole>>;
 using Conditions = std::set<std::shared_ptr<const BaseCondition>, ScoreCompare<const BaseCondition>>;
 using Effects = std::set<std::shared_ptr<const BaseEffect>, ScoreCompare<const BaseEffect>>;
 using Rules = std::set<std::shared_ptr<const Rule>, ScoreCompare<const Rule>>;
@@ -192,6 +210,60 @@ public:
     std::string str() const override;
 
     std::shared_ptr<const core::Numerical> get_numerical() const;
+};
+
+
+class NamedConcept : public NamedBaseElement {
+private:
+    std::shared_ptr<const core::Concept> m_concept;
+
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, NamedConcept& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive& ar, const NamedConcept* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive& ar, NamedConcept* t, const unsigned int version);
+
+public:
+    NamedConcept(const std::string& key, std::shared_ptr<const core::Concept> concept);
+    NamedConcept(const NamedConcept& other);
+    NamedConcept& operator=(const NamedConcept& other);
+    NamedConcept(NamedConcept&& other);
+    NamedConcept& operator=(NamedConcept&& other);
+    ~NamedConcept() override;
+
+    int compute_evaluate_time_score() const override;
+    std::string compute_repr() const override;
+    std::string str() const override;
+
+    std::shared_ptr<const core::Concept> get_concept() const;
+};
+
+
+class NamedRole : public NamedBaseElement {
+private:
+    std::shared_ptr<const core::Role> m_role;
+
+    template<typename Archive>
+    friend void boost::serialization::serialize(Archive& ar, NamedRole& t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::save_construct_data(Archive& ar, const NamedRole* t, const unsigned int version);
+    template<class Archive>
+    friend void boost::serialization::load_construct_data(Archive& ar, NamedRole* t, const unsigned int version);
+
+public:
+    NamedRole(const std::string& key, std::shared_ptr<const core::Role> role);
+    NamedRole(const NamedRole& other);
+    NamedRole& operator=(const NamedRole& other);
+    NamedRole(NamedRole&& other);
+    NamedRole& operator=(NamedRole&& other);
+    ~NamedRole() override;
+
+    int compute_evaluate_time_score() const override;
+    std::string compute_repr() const override;
+    std::string str() const override;
+
+    std::shared_ptr<const core::Role> get_role() const;
 };
 
 
@@ -413,6 +485,8 @@ public:
      */
     std::shared_ptr<const NamedBoolean> make_boolean(const std::string& key, const std::shared_ptr<const core::Boolean>& boolean);
     std::shared_ptr<const NamedNumerical> make_numerical(const std::string& key, const std::shared_ptr<const core::Numerical>& numerical);
+    std::shared_ptr<const NamedConcept> make_concept(const std::string& key, const std::shared_ptr<const core::Concept>& concept);
+    std::shared_ptr<const NamedRole> make_role(const std::string& key, const std::shared_ptr<const core::Role>& role);
 
     /**
      * Uniquely adds a condition (resp. effect) and returns it.

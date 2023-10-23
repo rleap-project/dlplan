@@ -87,6 +87,22 @@ std::shared_ptr<const NamedNumerical> PolicyFactoryImpl::make_numerical(const st
     return it.first;
 }
 
+std::shared_ptr<const NamedConcept> PolicyFactoryImpl::make_concept(const std::string& key, const std::shared_ptr<const core::Concept>& concept) {
+    auto it = m_caches.m_concept_cache->insert(std::make_unique<NamedConcept>(key, concept));
+    if (!it.second && (it.first->get_concept() != concept)) {
+        throw std::runtime_error("Failed to make concept because a different concept with the same key already exists.");
+    }
+    return it.first;
+}
+
+std::shared_ptr<const NamedRole> PolicyFactoryImpl::make_role(const std::string& key, const std::shared_ptr<const core::Role>& role) {
+    auto it = m_caches.m_role_cache->insert(std::make_unique<NamedRole>(key, role));
+    if (!it.second && (it.first->get_role() != role)) {
+        throw std::runtime_error("Failed to make role because a different role with the same key already exists.");
+    }
+    return it.first;
+}
+
 std::shared_ptr<const BaseCondition> PolicyFactoryImpl::make_pos_condition(const std::shared_ptr<const NamedBoolean>& boolean) {
     return m_caches.m_condition_cache->insert(std::make_unique<PositiveBooleanCondition>(boolean, m_caches.m_condition_cache->size())).first;
 }

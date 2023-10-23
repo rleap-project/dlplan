@@ -3,6 +3,7 @@ target_sources(dlplanpolicy
     PRIVATE
         base_element.cpp
         boolean.cpp
+        concept.cpp
         condition.cpp
         effect.cpp
         numerical.cpp
@@ -10,6 +11,7 @@ target_sources(dlplanpolicy
         policy_impl.cpp
         policy_minimizer.cpp
         policy.cpp
+        role.cpp
         rule.cpp
         parsers/policy/stage_1/parser_instantiations.cpp
         parsers/policy/stage_2/context.cpp

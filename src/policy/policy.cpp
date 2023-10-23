@@ -82,6 +82,14 @@ std::shared_ptr<const NamedNumerical> PolicyFactory::make_numerical(const std::s
     return m_pImpl->make_numerical(key, numerical);
 }
 
+std::shared_ptr<const NamedConcept> PolicyFactory::make_concept(const std::string& key, const std::shared_ptr<const core::Concept>& concept) {
+    return m_pImpl->make_concept(key, concept);
+}
+
+std::shared_ptr<const NamedRole> PolicyFactory::make_role(const std::string& key, const std::shared_ptr<const core::Role>& role) {
+    return m_pImpl->make_role(key, role);
+}
+
 std::shared_ptr<const BaseCondition> PolicyFactory::make_pos_condition(const std::shared_ptr<const NamedBoolean>& boolean) {
     return m_pImpl->make_pos_condition(boolean);
 }
