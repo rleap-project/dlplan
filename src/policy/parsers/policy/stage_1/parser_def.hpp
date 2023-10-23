@@ -123,17 +123,17 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
     const auto role_reference_def = name;
     const auto roles_entry_def = lit('(') >> lit(":roles") > *role_definition > lit(')');
 
-    const auto positive_boolean_condition_entry_def = lit(":c_b_pos") > boolean_reference;
-    const auto negative_boolean_condition_entry_def = lit(":c_b_neg") > boolean_reference;
-    const auto greater_numerical_condition_entry_def = lit(":c_n_gt") > numerical_reference;
-    const auto equal_numerical_condition_entry_def = lit(":c_n_eq") > numerical_reference;
+    const auto positive_boolean_condition_entry_def = lit('(') >> lit(":c_b_pos") > boolean_reference > lit(')');
+    const auto negative_boolean_condition_entry_def = lit('(') >> lit(":c_b_neg") > boolean_reference > lit(')');
+    const auto greater_numerical_condition_entry_def = lit('(') >> lit(":c_n_gt") > numerical_reference > lit(')');
+    const auto equal_numerical_condition_entry_def = lit('(') >> lit(":c_n_eq") > numerical_reference > lit(')');
 
-    const auto positive_boolean_effect_entry_def = lit(":e_b_pos") > boolean_reference;
-    const auto negative_boolean_effect_entry_def = lit(":e_b_neg") > boolean_reference;
-    const auto unchanged_boolean_effect_entry_def = lit(":e_b_bot") > boolean_reference;
-    const auto increment_numerical_effect_entry_def = lit(":e_n_inc") > numerical_reference;
-    const auto decrement_numerical_effect_entry_def = lit(":e_n_dec") > numerical_reference;
-    const auto unchanged_numerical_effect_entry_def = lit(":e_n_bot") > numerical_reference;
+    const auto positive_boolean_effect_entry_def = lit('(') >> lit(":e_b_pos") > boolean_reference > lit(')');
+    const auto negative_boolean_effect_entry_def = lit('(') >> lit(":e_b_neg") > boolean_reference > lit(')');
+    const auto unchanged_boolean_effect_entry_def = lit('(') >> lit(":e_b_bot") > boolean_reference > lit(')');
+    const auto increment_numerical_effect_entry_def = lit('(') >> lit(":e_n_inc") > numerical_reference > lit(')');
+    const auto decrement_numerical_effect_entry_def = lit('(') >> lit(":e_n_dec") > numerical_reference > lit(')');
+    const auto unchanged_numerical_effect_entry_def = lit('(') >> lit(":e_n_bot") > numerical_reference > lit(')');
 
     const auto feature_condition_entry_def =
         positive_boolean_condition_entry | negative_boolean_condition_entry | greater_numerical_condition_entry | equal_numerical_condition_entry;
@@ -142,8 +142,8 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
         positive_boolean_effect_entry | negative_boolean_effect_entry | unchanged_boolean_effect_entry | increment_numerical_effect_entry | decrement_numerical_effect_entry | unchanged_numerical_effect_entry;
 
     const auto rule_entry_def = lit('(') >> lit(":rule")
-        > lit('(') > lit(":conditions") > *(lit('(') >> feature_condition_entry > lit(')')) > lit(')')
-        > lit('(') > lit(":effects") > *(lit('(') >> feature_effect_entry > lit(')')) > lit(')')
+        > lit('(') > lit(":conditions") >> *feature_condition_entry > lit(')')
+        > lit('(') > lit(":effects") >> *feature_effect_entry > lit(')')
         > lit(')');
     const auto rules_def = *rule_entry;
 
