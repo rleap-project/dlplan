@@ -13,6 +13,8 @@ struct Context {
     PolicyFactory& policy_factory;
     std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedBoolean>> booleans;
     std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedNumerical>> numericals;
+    std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedConcept>> concepts;
+    std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedRole>> roles;
 
     explicit Context(PolicyFactory& policy_factory);
 };

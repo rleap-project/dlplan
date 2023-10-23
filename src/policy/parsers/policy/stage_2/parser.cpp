@@ -74,6 +74,64 @@ std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedNumer
     return numericals;
 }
 
+std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedConcept>> parse(
+    const stage_1::ast::ConceptDefinition& node, const error_handler_type& error_handler, Context& context) {
+    const auto key = parse(node.key, error_handler, context);
+    return *context.concepts.emplace(
+            key,
+            context.policy_factory.make_concept(key, dlplan::core::parsers::elements::stage_2::parser::parse(
+                node.concept, error_handler, *context.policy_factory.get_element_factory()))).first;
+}
+
+std::shared_ptr<const dlplan::policy::NamedConcept> parse(
+    const stage_1::ast::ConceptReference& node, const error_handler_type& error_handler, Context& context) {
+    auto key = parse(node.key, error_handler, context);
+    auto it = context.concepts.find(key);
+    if (it == context.concepts.end()) {
+        error_handler(node, "Undefined concept " + key);
+        throw std::runtime_error("Failed parse.");
+    }
+    return it->second;
+}
+
+std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedConcept>> parse(
+    const stage_1::ast::ConceptsEntry& node, const error_handler_type& error_handler, Context& context) {
+    std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedConcept>> concepts;
+    for (const auto& child : node.definitions) {
+        concepts.insert(parse(child, error_handler, context));
+    }
+    return concepts;
+}
+
+std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedRole>> parse(
+    const stage_1::ast::RoleDefinition& node, const error_handler_type& error_handler, Context& context) {
+    const auto key = parse(node.key, error_handler, context);
+    return *context.roles.emplace(
+            key,
+            context.policy_factory.make_role(key, dlplan::core::parsers::elements::stage_2::parser::parse(
+                node.role, error_handler, *context.policy_factory.get_element_factory()))).first;
+}
+
+std::shared_ptr<const dlplan::policy::NamedRole> parse(
+    const stage_1::ast::RoleReference& node, const error_handler_type& error_handler, Context& context) {
+    auto key = parse(node.key, error_handler, context);
+    auto it = context.roles.find(key);
+    if (it == context.roles.end()) {
+        error_handler(node, "Undefined role " + key);
+        throw std::runtime_error("Failed parse.");
+    }
+    return it->second;
+}
+
+std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedRole>> parse(
+    const stage_1::ast::RolesEntry& node, const error_handler_type& error_handler, Context& context) {
+    std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedRole>> roles;
+    for (const auto& child : node.definitions) {
+        roles.insert(parse(child, error_handler, context));
+    }
+    return roles;
+}
+
 std::shared_ptr<const BaseCondition> parse(
     const stage_1::ast::PositiveBooleanConditionEntry& node, const error_handler_type& error_handler, Context& context) {
     return context.policy_factory.make_pos_condition(parse(node.reference, error_handler, context));

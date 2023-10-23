@@ -80,6 +80,36 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
     };
 
 
+    /* Concept entry and references */
+    struct ConceptDefinition : x3::position_tagged {
+        Name key;
+        core::parsers::elements::stage_1::ast::Concept concept;
+    };
+
+    struct ConceptReference : x3::position_tagged {
+        Name key;
+    };
+
+    struct ConceptsEntry : x3::position_tagged {
+        std::vector<ConceptDefinition> definitions;
+    };
+
+
+    /* Role entry and references */
+    struct RoleDefinition : x3::position_tagged {
+        Name key;
+        core::parsers::elements::stage_1::ast::Role role;
+    };
+
+    struct RoleReference : x3::position_tagged {
+        Name key;
+    };
+
+    struct RolesEntry : x3::position_tagged {
+        std::vector<RoleDefinition> definitions;
+    };
+
+
     /* Condition and effects */
     struct PositiveBooleanConditionEntry : x3::position_tagged {
         BooleanReference reference;

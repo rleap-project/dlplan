@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-#include "include/dlplan/common/parsers/config.hpp"
+#include "common/parsers/config.hpp"
 #include "core.h"
 #include "utils/pimpl.h"
 

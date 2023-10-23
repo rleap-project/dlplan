@@ -21,6 +21,12 @@ namespace dlplan::policy::parsers::policy::stage_1
         struct NumericalDefinitionClass;
         struct NumericalReferenceClass;
         struct NumericalsEntryClass;
+        struct ConceptDefinitionClass;
+        struct ConceptReferenceClass;
+        struct ConceptsEntryClass;
+        struct RoleDefinitionClass;
+        struct RoleReferenceClass;
+        struct RolesEntryClass;
         struct PositiveBooleanConditionEntryClass;
         struct NegativeBooleanConditionEntryClass;
         struct GreaterNumericalConditionEntryClass;
@@ -44,6 +50,12 @@ namespace dlplan::policy::parsers::policy::stage_1
         typedef x3::rule<NumericalDefinitionClass, ast::NumericalDefinition> numerical_definition_type;
         typedef x3::rule<NumericalReferenceClass, ast::NumericalReference> numerical_reference_type;
         typedef x3::rule<NumericalsEntryClass, ast::NumericalsEntry> numericals_entry_type;
+        typedef x3::rule<ConceptDefinitionClass, ast::ConceptDefinition> concept_definition_type;
+        typedef x3::rule<ConceptReferenceClass, ast::ConceptReference> concept_reference_type;
+        typedef x3::rule<ConceptsEntryClass, ast::ConceptsEntry> concepts_entry_type;
+        typedef x3::rule<RoleDefinitionClass, ast::RoleDefinition> role_definition_type;
+        typedef x3::rule<RoleReferenceClass, ast::RoleReference> role_reference_type;
+        typedef x3::rule<RolesEntryClass, ast::RolesEntry> roles_entry_type;
         typedef x3::rule<PositiveBooleanConditionEntryClass, ast::PositiveBooleanConditionEntry> positive_boolean_condition_entry_type;
         typedef x3::rule<NegativeBooleanConditionEntryClass, ast::NegativeBooleanConditionEntry> negative_boolean_condition_entry_type;
         typedef x3::rule<GreaterNumericalConditionEntryClass, ast::GreaterNumericalConditionEntry> greater_numerical_condition_entry_type;
@@ -63,6 +75,8 @@ namespace dlplan::policy::parsers::policy::stage_1
         BOOST_SPIRIT_DECLARE(name_type,
             boolean_definition_type, boolean_reference_type, booleans_entry_type,
             numerical_definition_type, numerical_reference_type, numericals_entry_type,
+            concept_definition_type, concept_reference_type, concepts_entry_type,
+            role_definition_type, role_reference_type, roles_entry_type,
             positive_boolean_condition_entry_type, negative_boolean_condition_entry_type,
             greater_numerical_condition_entry_type, equal_numerical_condition_entry_type,
             positive_boolean_effect_entry_type, negative_boolean_effect_entry_type, unchanged_boolean_effect_entry_type,
@@ -78,6 +92,12 @@ namespace dlplan::policy::parsers::policy::stage_1
     parser::numerical_definition_type const& numerical_definition();
     parser::numerical_reference_type const& numerical_reference();
     parser::numericals_entry_type const& numericals_entry();
+    parser::concept_definition_type const& concept_definition();
+    parser::concept_reference_type const& concept_reference();
+    parser::concepts_entry_type const& concepts_entry();
+    parser::role_definition_type const& role_definition();
+    parser::role_reference_type const& role_reference();
+    parser::roles_entry_type const& roles_entry();
     parser::positive_boolean_condition_entry_type const& positive_boolean_condition_entry();
     parser::negative_boolean_condition_entry_type const& negative_boolean_condition_entry();
     parser::greater_numerical_condition_entry_type const& greater_numerical_condition_entry();

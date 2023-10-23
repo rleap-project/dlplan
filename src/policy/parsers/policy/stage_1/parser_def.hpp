@@ -65,6 +65,18 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
 
     numericals_entry_type const numericals_entry = "numericals_entry";
 
+    concept_definition_type const concept_definition = "concept_definition";
+
+    concept_reference_type const concept_reference = "concept_reference";
+
+    concepts_entry_type const concepts_entry = "concepts_entry";
+
+    role_definition_type const role_definition = "role_definition";
+
+    role_reference_type const role_reference = "role_reference";
+
+    roles_entry_type const roles_entry = "roles_entry";
+
     positive_boolean_condition_entry_type const positive_boolean_condition_entry = "positive_boolean_condition_entry";
 
     negative_boolean_condition_entry_type const negative_boolean_condition_entry = "negative_boolean_condition_entry";
@@ -103,52 +115,45 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
     const auto name_def = alpha >> lexeme[*(alnum | char_('-') | char_('_'))];
 
     const auto boolean_definition_def = lit('(') > name > lit('"') > dlplan::core::parsers::elements::stage_1::boolean() > lit('"') > lit(')');
-
     const auto boolean_reference_def = name;
-
     const auto booleans_entry_def = lit('(') >> lit(":booleans") > *boolean_definition > lit(')');
 
     const auto numerical_definition_def = lit('(') > name > lit('"') > dlplan::core::parsers::elements::stage_1::numerical() > lit('"') > lit(')');
-
     const auto numerical_reference_def = name;
-
     const auto numericals_entry_def = lit('(') >> lit(":numericals") > *numerical_definition > lit(')');
 
+    const auto concept_definition_def = lit('(') > name > lit('"') > dlplan::core::parsers::elements::stage_1::concept() > lit('"') > lit(')');
+    const auto concept_reference_def = name;
+    const auto concepts_entry_def = lit('(') >> lit(":concepts") > *concept_definition > lit(')');
+
+    const auto role_definition_def = lit('(') > name > lit('"') > dlplan::core::parsers::elements::stage_1::role() > lit('"') > lit(')');
+    const auto role_reference_def = name;
+    const auto roles_entry_def = lit('(') >> lit(":roles") > *role_definition > lit(')');
+
     const auto positive_boolean_condition_entry_def = lit(":c_b_pos") > boolean_reference;
-
     const auto negative_boolean_condition_entry_def = lit(":c_b_neg") > boolean_reference;
-
     const auto greater_numerical_condition_entry_def = lit(":c_n_gt") > numerical_reference;
-
     const auto equal_numerical_condition_entry_def = lit(":c_n_eq") > numerical_reference;
 
     const auto positive_boolean_effect_entry_def = lit(":e_b_pos") > boolean_reference;
-
     const auto negative_boolean_effect_entry_def = lit(":e_b_neg") > boolean_reference;
-
     const auto unchanged_boolean_effect_entry_def = lit(":e_b_bot") > boolean_reference;
-
     const auto increment_numerical_effect_entry_def = lit(":e_n_inc") > numerical_reference;
-
     const auto decrement_numerical_effect_entry_def = lit(":e_n_dec") > numerical_reference;
-
     const auto unchanged_numerical_effect_entry_def = lit(":e_n_bot") > numerical_reference;
 
     const auto feature_condition_entry_inner_def =
         positive_boolean_condition_entry | negative_boolean_condition_entry | greater_numerical_condition_entry | equal_numerical_condition_entry;
-
     const auto feature_condition_entry_def = lit('(') > feature_condition_entry_inner > lit(')');
 
     const auto feature_effect_entry_inner_def =
         positive_boolean_effect_entry | negative_boolean_effect_entry | unchanged_boolean_effect_entry | increment_numerical_effect_entry | decrement_numerical_effect_entry | unchanged_numerical_effect_entry;
-
     const auto feature_effect_entry_def = lit('(') > feature_effect_entry_inner > lit(')');
 
     const auto rule_entry_def = lit('(') >> lit(":rule")
         > lit('(') > lit(":conditions") > *feature_condition_entry > lit(')')
         > lit('(') > lit(":effects") > *feature_effect_entry > lit(')')
         > lit(')');
-
     const auto rules_def = *rule_entry;
 
     const auto policy_def = lit('(') > lit(":policy")
@@ -156,11 +161,14 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
         > numericals_entry
         > rules
         > lit(')');
-
     const auto policy_root_def = policy;
 
     BOOST_SPIRIT_DEFINE(
-        name, boolean_definition, boolean_reference, booleans_entry, numerical_definition, numerical_reference, numericals_entry,
+        name,
+        boolean_definition, boolean_reference, booleans_entry,
+        numerical_definition, numerical_reference, numericals_entry,
+        concept_definition, concept_reference, concepts_entry,
+        role_definition, role_reference, roles_entry,
         positive_boolean_condition_entry, negative_boolean_condition_entry, greater_numerical_condition_entry, equal_numerical_condition_entry,
         positive_boolean_effect_entry, negative_boolean_effect_entry, unchanged_boolean_effect_entry, increment_numerical_effect_entry, decrement_numerical_effect_entry, unchanged_numerical_effect_entry,
         feature_condition_entry_inner, feature_condition_entry, feature_effect_entry_inner, feature_effect_entry, rule_entry, rules, policy, policy_root)
@@ -224,6 +232,30 @@ namespace dlplan::policy::parsers::policy::stage_1
 
     parser::numericals_entry_type const& numericals_entry() {
         return parser::numericals_entry;
+    }
+
+    parser::concept_definition_type const& concept_definition() {
+        return parser::concept_definition;
+    }
+
+    parser::concept_reference_type const& concept_reference() {
+        return parser::concept_reference;
+    }
+
+    parser::concepts_entry_type const& concepts_entry() {
+        return parser::concepts_entry;
+    }
+
+    parser::role_definition_type const& role_definition() {
+        return parser::role_definition;
+    }
+
+    parser::role_reference_type const& role_reference() {
+        return parser::role_reference;
+    }
+
+    parser::roles_entry_type const& roles_entry() {
+        return parser::roles_entry;
     }
 
     parser::positive_boolean_condition_entry_type const& positive_boolean_condition_entry() {

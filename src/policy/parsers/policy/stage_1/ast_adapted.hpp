@@ -19,6 +19,14 @@ BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::Numeric
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::NumericalReference, key)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::NumericalsEntry, definitions)
 
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::ConceptDefinition, key, concept)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::ConceptReference, key)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::ConceptsEntry, definitions)
+
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::RoleDefinition, key, role)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::RoleReference, key)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::RolesEntry, definitions)
+
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::PositiveBooleanConditionEntry, reference)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::NegativeBooleanConditionEntry, reference)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::GreaterNumericalConditionEntry, reference)
