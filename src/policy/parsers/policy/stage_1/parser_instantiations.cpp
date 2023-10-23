@@ -31,6 +31,24 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
         numericals_entry_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
+        concept_definition_type, iterator_type, context_type)
+
+    BOOST_SPIRIT_INSTANTIATE(
+        concept_reference_type, iterator_type, context_type)
+
+    BOOST_SPIRIT_INSTANTIATE(
+        concepts_entry_type, iterator_type, context_type)
+
+    BOOST_SPIRIT_INSTANTIATE(
+        role_definition_type, iterator_type, context_type)
+
+    BOOST_SPIRIT_INSTANTIATE(
+        role_reference_type, iterator_type, context_type)
+
+    BOOST_SPIRIT_INSTANTIATE(
+        roles_entry_type, iterator_type, context_type)
+
+    BOOST_SPIRIT_INSTANTIATE(
         positive_boolean_condition_entry_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(

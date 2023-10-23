@@ -184,6 +184,12 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
     struct NumericalDefinitionClass : x3::annotate_on_success {};
     struct NumericalReferenceClass : x3::annotate_on_success {};
     struct NumericalsEntryClass : x3::annotate_on_success {};
+    struct ConceptDefinitionClass : x3::annotate_on_success {};
+    struct ConceptReferenceClass : x3::annotate_on_success {};
+    struct ConceptsEntryClass : x3::annotate_on_success {};
+    struct RoleDefinitionClass : x3::annotate_on_success {};
+    struct RoleReferenceClass : x3::annotate_on_success {};
+    struct RolesEntryClass : x3::annotate_on_success {};
     struct PositiveBooleanConditionEntryClass : x3::annotate_on_success {};
     struct NegativeBooleanConditionEntryClass : x3::annotate_on_success {};
     struct GreaterNumericalConditionEntryClass : x3::annotate_on_success {};
