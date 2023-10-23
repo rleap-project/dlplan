@@ -40,13 +40,6 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
     // Rules
     ///////////////////////////////////////////////////////////////////////////
 
-    /* Private rules with annotations */
-    x3::rule<FeatureConditionEntryInnerClass, ast::FeatureConditionEntryInner> const
-        feature_condition_entry_inner = "feature_condition_entry_inner";
-
-    x3::rule<FeatureEffectEntryInnerClass, ast::FeatureEffectEntryInner> const
-        feature_effect_entry_inner = "feature_effect_entry_inner";
-
     /* Privates rules with annotatations and error handler */
     policy_root_type const policy_root = "policy";
 
@@ -142,17 +135,15 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
     const auto decrement_numerical_effect_entry_def = lit(":e_n_dec") > numerical_reference;
     const auto unchanged_numerical_effect_entry_def = lit(":e_n_bot") > numerical_reference;
 
-    const auto feature_condition_entry_inner_def =
+    const auto feature_condition_entry_def =
         positive_boolean_condition_entry | negative_boolean_condition_entry | greater_numerical_condition_entry | equal_numerical_condition_entry;
-    const auto feature_condition_entry_def = lit('(') > feature_condition_entry_inner > lit(')');
 
-    const auto feature_effect_entry_inner_def =
+    const auto feature_effect_entry_def =
         positive_boolean_effect_entry | negative_boolean_effect_entry | unchanged_boolean_effect_entry | increment_numerical_effect_entry | decrement_numerical_effect_entry | unchanged_numerical_effect_entry;
-    const auto feature_effect_entry_def = lit('(') > feature_effect_entry_inner > lit(')');
 
     const auto rule_entry_def = lit('(') >> lit(":rule")
-        > lit('(') > lit(":conditions") > *feature_condition_entry > lit(')')
-        > lit('(') > lit(":effects") > *feature_effect_entry > lit(')')
+        > lit('(') > lit(":conditions") > *(lit('(') >> feature_condition_entry > lit(')')) > lit(')')
+        > lit('(') > lit(":effects") > *(lit('(') >> feature_effect_entry > lit(')')) > lit(')')
         > lit(')');
     const auto rules_def = *rule_entry;
 
@@ -171,7 +162,7 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
         role_definition, role_reference, roles_entry,
         positive_boolean_condition_entry, negative_boolean_condition_entry, greater_numerical_condition_entry, equal_numerical_condition_entry,
         positive_boolean_effect_entry, negative_boolean_effect_entry, unchanged_boolean_effect_entry, increment_numerical_effect_entry, decrement_numerical_effect_entry, unchanged_numerical_effect_entry,
-        feature_condition_entry_inner, feature_condition_entry, feature_effect_entry_inner, feature_effect_entry, rule_entry, rules, policy, policy_root)
+        feature_condition_entry, feature_effect_entry, rule_entry, rules, policy, policy_root)
 
     ///////////////////////////////////////////////////////////////////////////
     // Annotation and Error handling
@@ -200,9 +191,7 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
     struct IncrementNumericalEffectEntryClass : x3::annotate_on_success {};
     struct DecrementNumericalEffectEntryClass : x3::annotate_on_success {};
     struct UnchangedNumericalEffectEntryClass : x3::annotate_on_success {};
-    struct FeatureConditionEntryInnerClass : x3::annotate_on_success {};
     struct FeatureConditionEntryClass : x3::annotate_on_success {};
-    struct FeatureEffectEntryInnerClass : x3::annotate_on_success {};
     struct FeatureEffectEntryClass : x3::annotate_on_success {};
     struct RuleEntryClass : x3::annotate_on_success {};
     struct RulesClass : x3::annotate_on_success {};

@@ -44,10 +44,8 @@ extern std::shared_ptr<const BaseEffect> parse(const stage_1::ast::IncrementNume
 extern std::shared_ptr<const BaseEffect> parse(const stage_1::ast::DecrementNumericalEffectEntry& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 extern std::shared_ptr<const BaseEffect> parse(const stage_1::ast::UnchangedNumericalEffectEntry& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 
-extern std::shared_ptr<const BaseCondition> parse(const stage_1::ast::FeatureConditionEntryInner& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 extern std::shared_ptr<const BaseCondition> parse(const stage_1::ast::FeatureConditionEntry& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 
-extern std::shared_ptr<const BaseEffect> parse(const stage_1::ast::FeatureEffectEntryInner& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 extern std::shared_ptr<const BaseEffect> parse(const stage_1::ast::FeatureEffectEntry& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 
 extern std::shared_ptr<const Rule> parse(const stage_1::ast::RuleEntry& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);

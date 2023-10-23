@@ -127,7 +127,7 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
         NumericalReference reference;
     };
 
-    struct FeatureConditionEntryInner : x3::position_tagged,
+    struct FeatureConditionEntry : x3::position_tagged,
         x3::variant<
             x3::forward_ast<PositiveBooleanConditionEntry>,
             x3::forward_ast<NegativeBooleanConditionEntry>,
@@ -137,9 +137,6 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
         using base_type::operator=;
     };
 
-    struct FeatureConditionEntry : x3::position_tagged {
-        FeatureConditionEntryInner condition;
-    };
 
     struct PositiveBooleanEffectEntry : x3::position_tagged {
         BooleanReference reference;
@@ -165,7 +162,7 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
         NumericalReference reference;
     };
 
-    struct FeatureEffectEntryInner : x3::position_tagged,
+    struct FeatureEffectEntry : x3::position_tagged,
         x3::variant<
             x3::forward_ast<PositiveBooleanEffectEntry>,
             x3::forward_ast<NegativeBooleanEffectEntry>,
@@ -175,10 +172,6 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
             x3::forward_ast<UnchangedNumericalEffectEntry>> {
         using base_type::base_type;
         using base_type::operator=;
-    };
-
-    struct FeatureEffectEntry : x3::position_tagged {
-        FeatureEffectEntryInner effect;
     };
 
     struct RuleEntry : x3::position_tagged {

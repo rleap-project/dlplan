@@ -182,7 +182,7 @@ std::shared_ptr<const BaseEffect> parse(
     return context.policy_factory.make_bot_effect(parse(node.reference, error_handler, context));
 }
 
-class FeatureConditionEntryInnerVisitor : public boost::static_visitor<> {
+class FeatureConditionEntryVisitor : public boost::static_visitor<> {
 private:
     const error_handler_type& error_handler;
     Context& context;
@@ -190,7 +190,7 @@ private:
 public:
     std::shared_ptr<const BaseCondition> result;
 
-    FeatureConditionEntryInnerVisitor(const error_handler_type& error_handler, Context& context)
+    FeatureConditionEntryVisitor(const error_handler_type& error_handler, Context& context)
         : error_handler(error_handler), context(context) { }
 
     template<typename Node>
@@ -200,19 +200,14 @@ public:
 };
 
 std::shared_ptr<const BaseCondition> parse(
-    const stage_1::ast::FeatureConditionEntryInner& node, const error_handler_type& error_handler, Context& context) {
-    FeatureConditionEntryInnerVisitor visitor(error_handler, context);
+    const stage_1::ast::FeatureConditionEntry& node, const error_handler_type& error_handler, Context& context) {
+    FeatureConditionEntryVisitor visitor(error_handler, context);
     boost::apply_visitor(visitor, node);
     return visitor.result;
 }
 
-std::shared_ptr<const BaseCondition> parse(
-    const stage_1::ast::FeatureConditionEntry& node, const error_handler_type& error_handler, Context& context) {
-    return parse(node.condition, error_handler, context);
-}
 
-
-class FeatureEffectEntryInnerVisitor : public boost::static_visitor<> {
+class FeatureEffectEntryVisitor : public boost::static_visitor<> {
 private:
     const error_handler_type& error_handler;
     Context& context;
@@ -220,7 +215,7 @@ private:
 public:
     std::shared_ptr<const BaseEffect> result;
 
-    FeatureEffectEntryInnerVisitor(const error_handler_type& error_handler, Context& context)
+    FeatureEffectEntryVisitor(const error_handler_type& error_handler, Context& context)
         : error_handler(error_handler), context(context) { }
 
     template<typename Node>
@@ -230,15 +225,10 @@ public:
 };
 
 std::shared_ptr<const BaseEffect> parse(
-    const stage_1::ast::FeatureEffectEntryInner& node, const error_handler_type& error_handler, Context& context) {
-    FeatureEffectEntryInnerVisitor visitor(error_handler, context);
+    const stage_1::ast::FeatureEffectEntry& node, const error_handler_type& error_handler, Context& context) {
+    FeatureEffectEntryVisitor visitor(error_handler, context);
     boost::apply_visitor(visitor, node);
     return visitor.result;
-}
-
-std::shared_ptr<const BaseEffect> parse(
-    const stage_1::ast::FeatureEffectEntry& node, const error_handler_type& error_handler, Context& context) {
-    return parse(node.effect, error_handler, context);
 }
 
 
