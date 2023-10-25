@@ -18,17 +18,17 @@ extern std::string parse(const stage_1::ast::Name& node, const dlplan::common::p
 
 extern std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedBoolean>> parse(const stage_1::ast::Boolean& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 extern std::shared_ptr<const dlplan::policy::NamedBoolean> parse(const stage_1::ast::BooleanReference& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
-extern std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedBoolean>> parse(const stage_1::ast::BooleansEntry& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
+extern std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedBoolean>> parse(const stage_1::ast::Booleans& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 
 extern std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedNumerical>> parse(const stage_1::ast::Numerical& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 extern std::shared_ptr<const dlplan::policy::NamedNumerical> parse(const stage_1::ast::NumericalReference& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
-extern std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedNumerical>> parse(const stage_1::ast::NumericalsEntry& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
+extern std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedNumerical>> parse(const stage_1::ast::Numericals& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 
 extern std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedConcept>> parse(const stage_1::ast::Concept& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 extern std::shared_ptr<const dlplan::policy::NamedConcept> parse(const stage_1::ast::ConceptReference& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 extern std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedConcept>> parse(const stage_1::ast::Concepts& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 
-extern std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedRole>> parse(const stage_1::ast::RoleVariant& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
+extern std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedRole>> parse(const stage_1::ast::Role& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 extern std::shared_ptr<const dlplan::policy::NamedRole> parse(const stage_1::ast::RoleReference& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 extern std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedRole>> parse(const stage_1::ast::Roles& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context);
 

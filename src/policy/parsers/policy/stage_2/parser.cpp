@@ -37,7 +37,7 @@ std::shared_ptr<const dlplan::policy::NamedBoolean> parse(
 }
 
 std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedBoolean>> parse(
-    const stage_1::ast::BooleansEntry& node, const error_handler_type& error_handler, Context& context) {
+    const stage_1::ast::Booleans& node, const error_handler_type& error_handler, Context& context) {
     std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedBoolean>> booleans;
     for (const auto& child : node.definitions) {
         booleans.insert(parse(child, error_handler, context));
@@ -66,7 +66,7 @@ std::shared_ptr<const dlplan::policy::NamedNumerical> parse(
 }
 
 std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedNumerical>> parse(
-    const stage_1::ast::NumericalsEntry& node, const error_handler_type& error_handler, Context& context) {
+    const stage_1::ast::Numericals& node, const error_handler_type& error_handler, Context& context) {
     std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedNumerical>> numericals;
     for (const auto& child : node.definitions) {
         numericals.insert(parse(child, error_handler, context));
@@ -104,7 +104,7 @@ std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedConce
 }
 
 std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedRole>> parse(
-    const stage_1::ast::RoleVariant& node, const error_handler_type& error_handler, Context& context) {
+    const stage_1::ast::Role& node, const error_handler_type& error_handler, Context& context) {
     const auto key = parse(node.key, error_handler, context);
     return *context.roles.emplace(
             key,

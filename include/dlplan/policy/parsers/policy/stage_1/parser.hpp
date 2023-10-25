@@ -46,14 +46,14 @@ namespace dlplan::policy::parsers::policy::stage_1
         typedef x3::rule<NameClass, ast::Name> name_type;
         typedef x3::rule<BooleanClass, ast::Boolean> boolean_type;
         typedef x3::rule<BooleanReferenceClass, ast::BooleanReference> boolean_reference_type;
-        typedef x3::rule<BooleansClass, ast::BooleansEntry> booleans_type;
+        typedef x3::rule<BooleansClass, ast::Booleans> booleans_type;
         typedef x3::rule<NumericalClass, ast::Numerical> numerical_type;
         typedef x3::rule<NumericalReferenceClass, ast::NumericalReference> numerical_reference_type;
-        typedef x3::rule<NumericalsClass, ast::NumericalsEntry> numericals_type;
+        typedef x3::rule<NumericalsClass, ast::Numericals> numericals_type;
         typedef x3::rule<ConceptClass, ast::Concept> concept_type;
         typedef x3::rule<ConceptReferenceClass, ast::ConceptReference> concept_reference_type;
         typedef x3::rule<ConceptsClass, ast::Concepts> concepts_type;
-        typedef x3::rule<RoleClass, ast::RoleVariant> role_type;
+        typedef x3::rule<RoleClass, ast::Role> role_type;
         typedef x3::rule<RoleReferenceClass, ast::RoleReference> role_reference_type;
         typedef x3::rule<RolesClass, ast::Roles> roles_type;
         typedef x3::rule<PositiveBooleanConditionClass, ast::PositiveBooleanConditionEntry> positive_boolean_condition_type;

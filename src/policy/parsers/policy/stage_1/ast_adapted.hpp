@@ -13,17 +13,17 @@ BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::Name, a
 
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::Boolean, key, boolean)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::BooleanReference, key)
-BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::BooleansEntry, definitions)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::Booleans, definitions)
 
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::Numerical, key, numerical)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::NumericalReference, key)
-BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::NumericalsEntry, definitions)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::Numericals, definitions)
 
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::Concept, key, concept)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::ConceptReference, key)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::Concepts, definitions)
 
-BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::RoleVariant, key, role)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::Role, key, role)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::RoleReference, key)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::parsers::policy::stage_1::ast::Roles, definitions)
 

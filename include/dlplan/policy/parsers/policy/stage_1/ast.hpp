@@ -21,23 +21,24 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
     struct NameEntry;
     struct Boolean;
     struct BooleanReference;
-    struct BooleansEntry;
+    struct Booleans;
     struct Numerical;
     struct NumericalReference;
-    struct NumericalsEntry;
-    struct PositiveBooleanConditionEntry;
-    struct NegativeBooleanConditionEntry;
-    struct GreaterNumericalConditionEntry;
-    struct EqualNumericalConditionEntry;
-    struct PositiveBooleanEffectEntry;
-    struct NegativeBooleanEffectEntry;
-    struct UnchangedBooleanEffectEntry;
-    struct IncrementNumericalEffectEntry;
+    struct Numericals;
+    struct Concept;
+    struct ConceptReference;
+    struct Concepts;
+    struct PositiveBooleanCondition;
+    struct NegativeBooleanCondition;
+    struct GreaterNumericalCondition;
+    struct EqualNumericalCondition;
+    struct PositiveBooleanEffect;
+    struct NegativeBooleanEffect;
+    struct UnchangedBooleanEffect;
+    struct IncrementNumericalEffect;
     struct DecrementNumericalEffect;
     struct UnchangedNumericalEffect;
-    struct FeatureConditionEntryInner;
     struct FeatureCondition;
-    struct FeatureEffectEntryInner;
     struct FeatureEffect;
     struct Rule;
     struct Rules;
@@ -60,7 +61,7 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
         Name key;
     };
 
-    struct BooleansEntry : x3::position_tagged {
+    struct Booleans : x3::position_tagged {
         std::vector<Boolean> definitions;
     };
 
@@ -75,7 +76,7 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
         Name key;
     };
 
-    struct NumericalsEntry : x3::position_tagged {
+    struct Numericals : x3::position_tagged {
         std::vector<Numerical> definitions;
     };
 
@@ -96,7 +97,7 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
 
 
     /* Role entry and references */
-    struct RoleVariant : x3::position_tagged {
+    struct Role : x3::position_tagged {
         Name key;
         core::parsers::elements::stage_1::ast::Role role;
     };
@@ -106,7 +107,7 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
     };
 
     struct Roles : x3::position_tagged {
-        std::vector<RoleVariant> definitions;
+        std::vector<Role> definitions;
     };
 
 
@@ -185,8 +186,8 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
 
     /* Policy */
     struct Policy : x3::position_tagged {
-        BooleansEntry booleans;
-        NumericalsEntry numericals;
+        Booleans booleans;
+        Numericals numericals;
         Rules rules;
     };
 }
