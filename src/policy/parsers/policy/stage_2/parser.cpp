@@ -17,7 +17,7 @@ std::string parse(
 }
 
 std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedBoolean>> parse(
-    const stage_1::ast::BooleanDefinition& node, const error_handler_type& error_handler, Context& context) {
+    const stage_1::ast::Boolean& node, const error_handler_type& error_handler, Context& context) {
     const auto key = parse(node.key, error_handler, context);
     return *context.booleans.emplace(
             key,
@@ -46,7 +46,7 @@ std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedBoole
 }
 
 std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedNumerical>> parse(
-    const stage_1::ast::NumericalDefinition& node, const error_handler_type& error_handler, Context& context) {
+    const stage_1::ast::Numerical& node, const error_handler_type& error_handler, Context& context) {
     const auto key = parse(node.key, error_handler, context);
     return *context.numericals.emplace(
             key,
@@ -75,7 +75,7 @@ std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedNumer
 }
 
 std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedConcept>> parse(
-    const stage_1::ast::ConceptDefinition& node, const error_handler_type& error_handler, Context& context) {
+    const stage_1::ast::Concept& node, const error_handler_type& error_handler, Context& context) {
     const auto key = parse(node.key, error_handler, context);
     return *context.concepts.emplace(
             key,
@@ -95,7 +95,7 @@ std::shared_ptr<const dlplan::policy::NamedConcept> parse(
 }
 
 std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedConcept>> parse(
-    const stage_1::ast::ConceptsEntry& node, const error_handler_type& error_handler, Context& context) {
+    const stage_1::ast::Concepts& node, const error_handler_type& error_handler, Context& context) {
     std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedConcept>> concepts;
     for (const auto& child : node.definitions) {
         concepts.insert(parse(child, error_handler, context));
@@ -104,7 +104,7 @@ std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedConce
 }
 
 std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedRole>> parse(
-    const stage_1::ast::RoleDefinition& node, const error_handler_type& error_handler, Context& context) {
+    const stage_1::ast::RoleVariant& node, const error_handler_type& error_handler, Context& context) {
     const auto key = parse(node.key, error_handler, context);
     return *context.roles.emplace(
             key,
@@ -124,7 +124,7 @@ std::shared_ptr<const dlplan::policy::NamedRole> parse(
 }
 
 std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedRole>> parse(
-    const stage_1::ast::RolesEntry& node, const error_handler_type& error_handler, Context& context) {
+    const stage_1::ast::Roles& node, const error_handler_type& error_handler, Context& context) {
     std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedRole>> roles;
     for (const auto& child : node.definitions) {
         roles.insert(parse(child, error_handler, context));
@@ -173,12 +173,12 @@ std::shared_ptr<const BaseEffect> parse(
 }
 
 std::shared_ptr<const BaseEffect> parse(
-    const stage_1::ast::DecrementNumericalEffectEntry& node, const error_handler_type& error_handler, Context& context) {
+    const stage_1::ast::DecrementNumericalEffect& node, const error_handler_type& error_handler, Context& context) {
     return context.policy_factory.make_dec_effect(parse(node.reference, error_handler, context));
 }
 
 std::shared_ptr<const BaseEffect> parse(
-    const stage_1::ast::UnchangedNumericalEffectEntry& node, const error_handler_type& error_handler, Context& context) {
+    const stage_1::ast::UnchangedNumericalEffect& node, const error_handler_type& error_handler, Context& context) {
     return context.policy_factory.make_bot_effect(parse(node.reference, error_handler, context));
 }
 
@@ -200,7 +200,7 @@ public:
 };
 
 std::shared_ptr<const BaseCondition> parse(
-    const stage_1::ast::FeatureConditionEntry& node, const error_handler_type& error_handler, Context& context) {
+    const stage_1::ast::FeatureCondition& node, const error_handler_type& error_handler, Context& context) {
     FeatureConditionEntryVisitor visitor(error_handler, context);
     boost::apply_visitor(visitor, node);
     return visitor.result;
@@ -225,7 +225,7 @@ public:
 };
 
 std::shared_ptr<const BaseEffect> parse(
-    const stage_1::ast::FeatureEffectEntry& node, const error_handler_type& error_handler, Context& context) {
+    const stage_1::ast::FeatureEffect& node, const error_handler_type& error_handler, Context& context) {
     FeatureEffectEntryVisitor visitor(error_handler, context);
     boost::apply_visitor(visitor, node);
     return visitor.result;
@@ -233,7 +233,7 @@ std::shared_ptr<const BaseEffect> parse(
 
 
 std::shared_ptr<const Rule> parse(
-    const stage_1::ast::RuleEntry& node, const error_handler_type& error_handler, Context& context) {
+    const stage_1::ast::Rule& node, const error_handler_type& error_handler, Context& context) {
     Conditions conditions;
     for (const auto& child : node.feature_conditions) {
         conditions.insert(parse(child, error_handler, context));

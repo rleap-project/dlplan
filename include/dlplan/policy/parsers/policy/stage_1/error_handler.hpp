@@ -13,8 +13,8 @@ namespace dlplan::policy::parsers::policy::stage_1
 
     struct error_handler_policy : dlplan::core::parsers::elements::stage_1::error_handler_core {
         error_handler_policy() : dlplan::core::parsers::elements::stage_1::error_handler_core() {
-            id_map["feature_condition_entry"] = "BaseCondition";
-            id_map["feature_effect_entry"] = "BaseEffect";
+            id_map["feature_condition"] = "BaseCondition";
+            id_map["feature_effect"] = "BaseEffect";
 
         }
     };

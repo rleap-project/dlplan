@@ -19,10 +19,10 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
     struct NameInner;
     struct Name;
     struct NameEntry;
-    struct BooleanDefinition;
+    struct Boolean;
     struct BooleanReference;
     struct BooleansEntry;
-    struct NumericalDefinition;
+    struct Numerical;
     struct NumericalReference;
     struct NumericalsEntry;
     struct PositiveBooleanConditionEntry;
@@ -33,13 +33,13 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
     struct NegativeBooleanEffectEntry;
     struct UnchangedBooleanEffectEntry;
     struct IncrementNumericalEffectEntry;
-    struct DecrementNumericalEffectEntry;
-    struct UnchangedNumericalEffectEntry;
+    struct DecrementNumericalEffect;
+    struct UnchangedNumericalEffect;
     struct FeatureConditionEntryInner;
-    struct FeatureConditionEntry;
+    struct FeatureCondition;
     struct FeatureEffectEntryInner;
-    struct FeatureEffectEntry;
-    struct RuleEntry;
+    struct FeatureEffect;
+    struct Rule;
     struct Rules;
     struct Policy;
 
@@ -51,7 +51,7 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
     };
 
     /* Boolean entry and references */
-    struct BooleanDefinition : x3::position_tagged {
+    struct Boolean : x3::position_tagged {
         Name key;
         core::parsers::elements::stage_1::ast::Boolean boolean;
     };
@@ -61,12 +61,12 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
     };
 
     struct BooleansEntry : x3::position_tagged {
-        std::vector<BooleanDefinition> definitions;
+        std::vector<Boolean> definitions;
     };
 
 
     /* Numerical entry and references */
-    struct NumericalDefinition : x3::position_tagged {
+    struct Numerical : x3::position_tagged {
         Name key;
         core::parsers::elements::stage_1::ast::Numerical numerical;
     };
@@ -76,12 +76,12 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
     };
 
     struct NumericalsEntry : x3::position_tagged {
-        std::vector<NumericalDefinition> definitions;
+        std::vector<Numerical> definitions;
     };
 
 
     /* Concept entry and references */
-    struct ConceptDefinition : x3::position_tagged {
+    struct Concept : x3::position_tagged {
         Name key;
         core::parsers::elements::stage_1::ast::Concept concept;
     };
@@ -90,13 +90,13 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
         Name key;
     };
 
-    struct ConceptsEntry : x3::position_tagged {
-        std::vector<ConceptDefinition> definitions;
+    struct Concepts : x3::position_tagged {
+        std::vector<Concept> definitions;
     };
 
 
     /* Role entry and references */
-    struct RoleDefinition : x3::position_tagged {
+    struct RoleVariant : x3::position_tagged {
         Name key;
         core::parsers::elements::stage_1::ast::Role role;
     };
@@ -105,8 +105,8 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
         Name key;
     };
 
-    struct RolesEntry : x3::position_tagged {
-        std::vector<RoleDefinition> definitions;
+    struct Roles : x3::position_tagged {
+        std::vector<RoleVariant> definitions;
     };
 
 
@@ -127,7 +127,7 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
         NumericalReference reference;
     };
 
-    struct FeatureConditionEntry : x3::position_tagged,
+    struct FeatureCondition : x3::position_tagged,
         x3::variant<
             x3::forward_ast<PositiveBooleanConditionEntry>,
             x3::forward_ast<NegativeBooleanConditionEntry>,
@@ -154,33 +154,33 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
         NumericalReference reference;
     };
 
-    struct DecrementNumericalEffectEntry : x3::position_tagged {
+    struct DecrementNumericalEffect : x3::position_tagged {
         NumericalReference reference;
     };
 
-    struct UnchangedNumericalEffectEntry : x3::position_tagged {
+    struct UnchangedNumericalEffect : x3::position_tagged {
         NumericalReference reference;
     };
 
-    struct FeatureEffectEntry : x3::position_tagged,
+    struct FeatureEffect : x3::position_tagged,
         x3::variant<
             x3::forward_ast<PositiveBooleanEffectEntry>,
             x3::forward_ast<NegativeBooleanEffectEntry>,
             x3::forward_ast<UnchangedBooleanEffectEntry>,
             x3::forward_ast<IncrementNumericalEffectEntry>,
-            x3::forward_ast<DecrementNumericalEffectEntry>,
-            x3::forward_ast<UnchangedNumericalEffectEntry>> {
+            x3::forward_ast<DecrementNumericalEffect>,
+            x3::forward_ast<UnchangedNumericalEffect>> {
         using base_type::base_type;
         using base_type::operator=;
     };
 
-    struct RuleEntry : x3::position_tagged {
-        std::vector<FeatureConditionEntry> feature_conditions;
-        std::vector<FeatureEffectEntry> feature_effects;
+    struct Rule : x3::position_tagged {
+        std::vector<FeatureCondition> feature_conditions;
+        std::vector<FeatureEffect> feature_effects;
     };
 
     struct Rules : x3::position_tagged {
-        std::vector<RuleEntry> rules;
+        std::vector<Rule> rules;
     };
 
     /* Policy */

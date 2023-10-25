@@ -13,79 +13,79 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
         name_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        boolean_definition_type, iterator_type, context_type)
+        boolean_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
         boolean_reference_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        booleans_entry_type, iterator_type, context_type)
+        booleans_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        numerical_definition_type, iterator_type, context_type)
+        numerical_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
         numerical_reference_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        numericals_entry_type, iterator_type, context_type)
+        numericals_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        concept_definition_type, iterator_type, context_type)
+        concept_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
         concept_reference_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        concepts_entry_type, iterator_type, context_type)
+        concepts_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        role_definition_type, iterator_type, context_type)
+        role_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
         role_reference_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        roles_entry_type, iterator_type, context_type)
+        roles_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        positive_boolean_condition_entry_type, iterator_type, context_type)
+        positive_boolean_condition_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        negative_boolean_condition_entry_type, iterator_type, context_type)
+        negative_boolean_condition_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        greater_numerical_condition_entry_type, iterator_type, context_type)
+        greater_numerical_condition_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        equal_numerical_condition_entry_type, iterator_type, context_type)
+        equal_numerical_condition_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        positive_boolean_effect_entry_type, iterator_type, context_type)
+        positive_boolean_effect_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        negative_boolean_effect_entry_type, iterator_type, context_type)
+        negative_boolean_effect_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        unchanged_boolean_effect_entry_type, iterator_type, context_type)
+        unchanged_boolean_effect_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        increment_numerical_effect_entry_type, iterator_type, context_type)
+        increment_numerical_effect_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        decrement_numerical_effect_entry_type, iterator_type, context_type)
+        decrement_numerical_effect_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        unchanged_numerical_effect_entry_type, iterator_type, context_type)
+        unchanged_numerical_effect_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        feature_condition_entry_type, iterator_type, context_type)
+        feature_condition_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        feature_effect_entry_type, iterator_type, context_type)
+        feature_effect_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
-        rule_entry_type, iterator_type, context_type)
+        rule_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
         rules_type, iterator_type, context_type)

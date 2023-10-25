@@ -15,102 +15,102 @@ namespace dlplan::policy::parsers::policy::stage_1
     ///////////////////////////////////////////////////////////////////////////
     namespace parser {
         struct NameClass;
-        struct BooleanDefinitionClass;
+        struct BooleanClass;
         struct BooleanReferenceClass;
-        struct BooleansEntryClass;
-        struct NumericalDefinitionClass;
+        struct BooleansClass;
+        struct NumericalClass;
         struct NumericalReferenceClass;
-        struct NumericalsEntryClass;
-        struct ConceptDefinitionClass;
+        struct NumericalsClass;
+        struct ConceptClass;
         struct ConceptReferenceClass;
-        struct ConceptsEntryClass;
-        struct RoleDefinitionClass;
+        struct ConceptsClass;
+        struct RoleClass;
         struct RoleReferenceClass;
-        struct RolesEntryClass;
-        struct PositiveBooleanConditionEntryClass;
-        struct NegativeBooleanConditionEntryClass;
-        struct GreaterNumericalConditionEntryClass;
-        struct EqualNumericalConditionEntryClass;
-        struct PositiveBooleanEffectEntryClass;
-        struct NegativeBooleanEffectEntryClass;
-        struct UnchangedBooleanEffectEntryClass;
-        struct IncrementNumericalEffectEntryClass;
-        struct DecrementNumericalEffectEntryClass;
-        struct UnchangedNumericalEffectEntryClass;
-        struct FeatureConditionEntryClass;
-        struct FeatureEffectEntryClass;
-        struct RuleEntryClass;
+        struct RolesClass;
+        struct PositiveBooleanConditionClass;
+        struct NegativeBooleanConditionClass;
+        struct GreaterNumericalConditionClass;
+        struct EqualNumericalConditionClass;
+        struct PositiveBooleanEffectClass;
+        struct NegativeBooleanEffectClass;
+        struct UnchangedBooleanEffectClass;
+        struct IncrementNumericalEffectClass;
+        struct DecrementNumericalEffectClass;
+        struct UnchangedNumericalEffectClass;
+        struct FeatureConditionClass;
+        struct FeatureEffectClass;
+        struct RuleClass;
         struct RulesClass;
         struct PolicyClass;
 
         typedef x3::rule<NameClass, ast::Name> name_type;
-        typedef x3::rule<BooleanDefinitionClass, ast::BooleanDefinition> boolean_definition_type;
+        typedef x3::rule<BooleanClass, ast::Boolean> boolean_type;
         typedef x3::rule<BooleanReferenceClass, ast::BooleanReference> boolean_reference_type;
-        typedef x3::rule<BooleansEntryClass, ast::BooleansEntry> booleans_entry_type;
-        typedef x3::rule<NumericalDefinitionClass, ast::NumericalDefinition> numerical_definition_type;
+        typedef x3::rule<BooleansClass, ast::BooleansEntry> booleans_type;
+        typedef x3::rule<NumericalClass, ast::Numerical> numerical_type;
         typedef x3::rule<NumericalReferenceClass, ast::NumericalReference> numerical_reference_type;
-        typedef x3::rule<NumericalsEntryClass, ast::NumericalsEntry> numericals_entry_type;
-        typedef x3::rule<ConceptDefinitionClass, ast::ConceptDefinition> concept_definition_type;
+        typedef x3::rule<NumericalsClass, ast::NumericalsEntry> numericals_type;
+        typedef x3::rule<ConceptClass, ast::Concept> concept_type;
         typedef x3::rule<ConceptReferenceClass, ast::ConceptReference> concept_reference_type;
-        typedef x3::rule<ConceptsEntryClass, ast::ConceptsEntry> concepts_entry_type;
-        typedef x3::rule<RoleDefinitionClass, ast::RoleDefinition> role_definition_type;
+        typedef x3::rule<ConceptsClass, ast::Concepts> concepts_type;
+        typedef x3::rule<RoleClass, ast::RoleVariant> role_type;
         typedef x3::rule<RoleReferenceClass, ast::RoleReference> role_reference_type;
-        typedef x3::rule<RolesEntryClass, ast::RolesEntry> roles_entry_type;
-        typedef x3::rule<PositiveBooleanConditionEntryClass, ast::PositiveBooleanConditionEntry> positive_boolean_condition_entry_type;
-        typedef x3::rule<NegativeBooleanConditionEntryClass, ast::NegativeBooleanConditionEntry> negative_boolean_condition_entry_type;
-        typedef x3::rule<GreaterNumericalConditionEntryClass, ast::GreaterNumericalConditionEntry> greater_numerical_condition_entry_type;
-        typedef x3::rule<EqualNumericalConditionEntryClass, ast::EqualNumericalConditionEntry> equal_numerical_condition_entry_type;
-        typedef x3::rule<PositiveBooleanEffectEntryClass, ast::PositiveBooleanEffectEntry> positive_boolean_effect_entry_type;
-        typedef x3::rule<NegativeBooleanEffectEntryClass, ast::NegativeBooleanEffectEntry> negative_boolean_effect_entry_type;
-        typedef x3::rule<UnchangedBooleanEffectEntryClass, ast::UnchangedBooleanEffectEntry> unchanged_boolean_effect_entry_type;
-        typedef x3::rule<IncrementNumericalEffectEntryClass, ast::IncrementNumericalEffectEntry> increment_numerical_effect_entry_type;
-        typedef x3::rule<DecrementNumericalEffectEntryClass, ast::DecrementNumericalEffectEntry> decrement_numerical_effect_entry_type;
-        typedef x3::rule<UnchangedNumericalEffectEntryClass, ast::UnchangedNumericalEffectEntry> unchanged_numerical_effect_entry_type;
-        typedef x3::rule<FeatureConditionEntryClass, ast::FeatureConditionEntry> feature_condition_entry_type;
-        typedef x3::rule<FeatureEffectEntryClass, ast::FeatureEffectEntry> feature_effect_entry_type;
-        typedef x3::rule<RuleEntryClass, ast::RuleEntry> rule_entry_type;
+        typedef x3::rule<RolesClass, ast::Roles> roles_type;
+        typedef x3::rule<PositiveBooleanConditionClass, ast::PositiveBooleanConditionEntry> positive_boolean_condition_type;
+        typedef x3::rule<NegativeBooleanConditionClass, ast::NegativeBooleanConditionEntry> negative_boolean_condition_type;
+        typedef x3::rule<GreaterNumericalConditionClass, ast::GreaterNumericalConditionEntry> greater_numerical_condition_type;
+        typedef x3::rule<EqualNumericalConditionClass, ast::EqualNumericalConditionEntry> equal_numerical_condition_type;
+        typedef x3::rule<PositiveBooleanEffectClass, ast::PositiveBooleanEffectEntry> positive_boolean_effect_type;
+        typedef x3::rule<NegativeBooleanEffectClass, ast::NegativeBooleanEffectEntry> negative_boolean_effect_type;
+        typedef x3::rule<UnchangedBooleanEffectClass, ast::UnchangedBooleanEffectEntry> unchanged_boolean_effect_type;
+        typedef x3::rule<IncrementNumericalEffectClass, ast::IncrementNumericalEffectEntry> increment_numerical_effect_type;
+        typedef x3::rule<DecrementNumericalEffectClass, ast::DecrementNumericalEffect> decrement_numerical_effect_type;
+        typedef x3::rule<UnchangedNumericalEffectClass, ast::UnchangedNumericalEffect> unchanged_numerical_effect_type;
+        typedef x3::rule<FeatureConditionClass, ast::FeatureCondition> feature_condition_type;
+        typedef x3::rule<FeatureEffectClass, ast::FeatureEffect> feature_effect_type;
+        typedef x3::rule<RuleClass, ast::Rule> rule_type;
         typedef x3::rule<RulesClass, ast::Rules> rules_type;
         typedef x3::rule<PolicyClass, ast::Policy> policy_type;
 
         BOOST_SPIRIT_DECLARE(name_type,
-            boolean_definition_type, boolean_reference_type, booleans_entry_type,
-            numerical_definition_type, numerical_reference_type, numericals_entry_type,
-            concept_definition_type, concept_reference_type, concepts_entry_type,
-            role_definition_type, role_reference_type, roles_entry_type,
-            positive_boolean_condition_entry_type, negative_boolean_condition_entry_type,
-            greater_numerical_condition_entry_type, equal_numerical_condition_entry_type,
-            positive_boolean_effect_entry_type, negative_boolean_effect_entry_type, unchanged_boolean_effect_entry_type,
-            increment_numerical_effect_entry_type, decrement_numerical_effect_entry_type, unchanged_numerical_effect_entry_type,
-            feature_condition_entry_type, feature_effect_entry_type,
-            rule_entry_type, rules_type, policy_type)
+            boolean_type, boolean_reference_type, booleans_type,
+            numerical_type, numerical_reference_type, numericals_type,
+            concept_type, concept_reference_type, concepts_type,
+            role_type, role_reference_type, roles_type,
+            positive_boolean_condition_type, negative_boolean_condition_type,
+            greater_numerical_condition_type, equal_numerical_condition_type,
+            positive_boolean_effect_type, negative_boolean_effect_type, unchanged_boolean_effect_type,
+            increment_numerical_effect_type, decrement_numerical_effect_type, unchanged_numerical_effect_type,
+            feature_condition_type, feature_effect_type,
+            rule_type, rules_type, policy_type)
     }
 
     parser::name_type const& name();
-    parser::boolean_definition_type const& boolean_definition();
+    parser::boolean_type const& boolean();
     parser::boolean_reference_type const& boolean_reference();
-    parser::booleans_entry_type const& booleans_entry();
-    parser::numerical_definition_type const& numerical_definition();
+    parser::booleans_type const& booleans();
+    parser::numerical_type const& numerical();
     parser::numerical_reference_type const& numerical_reference();
-    parser::numericals_entry_type const& numericals_entry();
-    parser::concept_definition_type const& concept_definition();
+    parser::numericals_type const& numericals();
+    parser::concept_type const& concept();
     parser::concept_reference_type const& concept_reference();
-    parser::concepts_entry_type const& concepts_entry();
-    parser::role_definition_type const& role_definition();
+    parser::concepts_type const& concepts();
+    parser::role_type const& role();
     parser::role_reference_type const& role_reference();
-    parser::roles_entry_type const& roles_entry();
-    parser::positive_boolean_condition_entry_type const& positive_boolean_condition_entry();
-    parser::negative_boolean_condition_entry_type const& negative_boolean_condition_entry();
-    parser::greater_numerical_condition_entry_type const& greater_numerical_condition_entry();
-    parser::equal_numerical_condition_entry_type const& equal_numerical_condition_entry();
-    parser::positive_boolean_effect_entry_type const& positive_boolean_effect_entry();
-    parser::negative_boolean_effect_entry_type const& negative_boolean_effect_entry();
-    parser::unchanged_boolean_effect_entry_type const& unchanged_boolean_effect_entry();
-    parser::increment_numerical_effect_entry_type const& increment_numerical_effect_entry();
-    parser::decrement_numerical_effect_entry_type const& decrement_numerical_effect_entry();
-    parser::unchanged_numerical_effect_entry_type const& unchanged_numerical_effect_entry();
-    parser::feature_condition_entry_type const& feature_condition_entry();
-    parser::feature_effect_entry_type const& feature_effect_entry();
-    parser::rule_entry_type const& rule_entry();
+    parser::roles_type const& roles();
+    parser::positive_boolean_condition_type const& positive_boolean_condition();
+    parser::negative_boolean_condition_type const& negative_boolean_condition();
+    parser::greater_numerical_condition_type const& greater_numerical_condition();
+    parser::equal_numerical_condition_type const& equal_numerical_condition();
+    parser::positive_boolean_effect_type const& positive_boolean_effect();
+    parser::negative_boolean_effect_type const& negative_boolean_effect();
+    parser::unchanged_boolean_effect_type const& unchanged_boolean_effect();
+    parser::increment_numerical_effect_type const& increment_numerical_effect();
+    parser::decrement_numerical_effect_type const& decrement_numerical_effect();
+    parser::unchanged_numerical_effect_type const& unchanged_numerical_effect();
+    parser::feature_condition_type const& feature_condition();
+    parser::feature_effect_type const& feature_effect();
+    parser::rule_type const& rule();
     parser::rules_type const& rules();
     parser::policy_type const& policy();
 }
