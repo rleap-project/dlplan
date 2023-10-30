@@ -6,6 +6,8 @@
 
 #include "include/dlplan/core.h"
 
+#include "src/core/elements/utils.h"
+
 using namespace dlplan;
 
 
@@ -111,7 +113,11 @@ bool IncrementNumericalEffect::evaluate(const core::State& source_state, const c
 }
 
 bool IncrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
-    return m_numerical->get_numerical()->evaluate(source_state, caches) < m_numerical->get_numerical()->evaluate(target_state, caches);
+    int source_eval = m_numerical->get_numerical()->evaluate(source_state, caches);
+    int target_eval = m_numerical->get_numerical()->evaluate(target_state, caches);
+    if (source_eval == INF) return false;
+    if (target_eval == INF) return false;
+    return source_eval < target_eval;
 }
 
 std::string IncrementNumericalEffect::compute_repr() const{
@@ -131,7 +137,11 @@ bool DecrementNumericalEffect::evaluate(const core::State& source_state, const c
 }
 
 bool DecrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
-    return m_numerical->get_numerical()->evaluate(source_state, caches) > m_numerical->get_numerical()->evaluate(target_state, caches);
+    int source_eval = m_numerical->get_numerical()->evaluate(source_state, caches);
+    int target_eval = m_numerical->get_numerical()->evaluate(target_state, caches);
+    if (source_eval == INF) return false;
+    if (target_eval == INF) return false;
+    return source_eval > target_eval;
 }
 
 std::string DecrementNumericalEffect::compute_repr() const{
@@ -151,7 +161,9 @@ bool UnchangedNumericalEffect::evaluate(const core::State& source_state, const c
 }
 
 bool UnchangedNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
-    return m_numerical->get_numerical()->evaluate(source_state, caches) == m_numerical->get_numerical()->evaluate(target_state, caches);
+    int source_eval = m_numerical->get_numerical()->evaluate(source_state, caches);
+    int target_eval = m_numerical->get_numerical()->evaluate(target_state, caches);
+    return source_eval == target_eval;
 }
 
 std::string UnchangedNumericalEffect::compute_repr() const{
