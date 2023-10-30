@@ -3,6 +3,7 @@
 #include <sstream>
 
 #include "include/dlplan/core/parsers/elements/stage_2/parser.hpp"
+#include "include/dlplan/policy/parsers/policy/stage_2/context.hpp"
 
 using namespace dlplan::common::parsers;
 
@@ -19,14 +20,17 @@ std::string parse(
 std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedBoolean>> parse(
     const stage_1::ast::Boolean& node, const error_handler_type& error_handler, Context& context) {
     const auto key = parse(node.key, error_handler, context);
-    if (context.booleans.count(key)) {
+    auto it = context.booleans.find(key);
+    if (it != context.booleans.end()) {
         error_handler(node, "Multiple definitions of boolean " + key);
+        error_handler(it->second.node, "Previous definition: ");
         throw std::runtime_error("Failed parse.");
     }
-    return *context.booleans.emplace(
-            key,
-            context.policy_factory.make_boolean(key, dlplan::core::parsers::elements::stage_2::parser::parse(
-                node.boolean, error_handler, *context.policy_factory.get_element_factory()))).first;
+    auto named_boolean = context.policy_factory.make_boolean(
+        key, dlplan::core::parsers::elements::stage_2::parser::parse(
+            node.boolean, error_handler, *context.policy_factory.get_element_factory()));
+    context.booleans.emplace(key, NamedBooleanData{ node, named_boolean });
+    return {key, named_boolean};
 }
 
 std::shared_ptr<const dlplan::policy::NamedBoolean> parse(
@@ -37,7 +41,7 @@ std::shared_ptr<const dlplan::policy::NamedBoolean> parse(
         error_handler(node, "Undefined boolean " + key);
         throw std::runtime_error("Failed parse.");
     }
-    return it->second;
+    return it->second.result;
 }
 
 std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedBoolean>> parse(
@@ -52,14 +56,17 @@ std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedBoole
 std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedNumerical>> parse(
     const stage_1::ast::Numerical& node, const error_handler_type& error_handler, Context& context) {
     const auto key = parse(node.key, error_handler, context);
-    if (context.numericals.count(key)) {
+    auto it = context.numericals.find(key);
+    if (it != context.numericals.end()) {
         error_handler(node, "Multiple definitions of numerical " + key);
+        error_handler(it->second.node, "Previous definition: ");
         throw std::runtime_error("Failed parse.");
     }
-    return *context.numericals.emplace(
-            key,
-            context.policy_factory.make_numerical(key, dlplan::core::parsers::elements::stage_2::parser::parse(
-                node.numerical, error_handler, *context.policy_factory.get_element_factory()))).first;
+    auto named_numerical = context.policy_factory.make_numerical(
+        key, dlplan::core::parsers::elements::stage_2::parser::parse(
+            node.numerical, error_handler, *context.policy_factory.get_element_factory()));
+    context.numericals.emplace(key, NamedNumericalData{ node, named_numerical });
+    return {key, named_numerical};
 }
 
 std::shared_ptr<const dlplan::policy::NamedNumerical> parse(
@@ -70,7 +77,7 @@ std::shared_ptr<const dlplan::policy::NamedNumerical> parse(
         error_handler(node, "Undefined numerical " + key);
         throw std::runtime_error("Failed parse.");
     }
-    return it->second;
+    return it->second.result;
 }
 
 std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedNumerical>> parse(
@@ -85,14 +92,17 @@ std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedNumer
 std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedConcept>> parse(
     const stage_1::ast::Concept& node, const error_handler_type& error_handler, Context& context) {
     const auto key = parse(node.key, error_handler, context);
-    if (context.concepts.count(key)) {
+    auto it = context.concepts.find(key);
+    if (it != context.concepts.end()) {
         error_handler(node, "Multiple definitions of concept " + key);
+        error_handler(it->second.node, "Previous definition: ");
         throw std::runtime_error("Failed parse.");
     }
-    return *context.concepts.emplace(
-            key,
-            context.policy_factory.make_concept(key, dlplan::core::parsers::elements::stage_2::parser::parse(
-                node.concept, error_handler, *context.policy_factory.get_element_factory()))).first;
+    auto named_concept = context.policy_factory.make_concept(
+        key, dlplan::core::parsers::elements::stage_2::parser::parse(
+            node.concept, error_handler, *context.policy_factory.get_element_factory()));
+    context.concepts.emplace(key, NamedConceptData{ node, named_concept });
+    return {key, named_concept};
 }
 
 std::shared_ptr<const dlplan::policy::NamedConcept> parse(
@@ -103,7 +113,7 @@ std::shared_ptr<const dlplan::policy::NamedConcept> parse(
         error_handler(node, "Undefined concept " + key);
         throw std::runtime_error("Failed parse.");
     }
-    return it->second;
+    return it->second.result;
 }
 
 std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedConcept>> parse(
@@ -118,14 +128,17 @@ std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedConce
 std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedRole>> parse(
     const stage_1::ast::Role& node, const error_handler_type& error_handler, Context& context) {
     const auto key = parse(node.key, error_handler, context);
-    if (context.roles.count(key)) {
+    auto it = context.roles.find(key);
+    if (it != context.roles.end()) {
         error_handler(node, "Multiple definitions of role " + key);
+        error_handler(it->second.node, "Previous definition: ");
         throw std::runtime_error("Failed parse.");
     }
-    return *context.roles.emplace(
-            key,
-            context.policy_factory.make_role(key, dlplan::core::parsers::elements::stage_2::parser::parse(
-                node.role, error_handler, *context.policy_factory.get_element_factory()))).first;
+    auto named_role = context.policy_factory.make_role(
+        key, dlplan::core::parsers::elements::stage_2::parser::parse(
+            node.role, error_handler, *context.policy_factory.get_element_factory()));
+    context.roles.emplace(key, NamedRoleData{ node, named_role });
+    return {key, named_role};
 }
 
 std::shared_ptr<const dlplan::policy::NamedRole> parse(
@@ -136,7 +149,7 @@ std::shared_ptr<const dlplan::policy::NamedRole> parse(
         error_handler(node, "Undefined role " + key);
         throw std::runtime_error("Failed parse.");
     }
-    return it->second;
+    return it->second.result;
 }
 
 std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedRole>> parse(
