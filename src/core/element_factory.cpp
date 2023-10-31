@@ -91,9 +91,6 @@ std::shared_ptr<const Concept> SyntacticElementFactoryImpl::parse_concept(Syntac
     if (!success) {
         throw std::runtime_error("Failed parse.");
     }
-    if (iter != end) {
-        throw std::runtime_error("Failed parse. Did not consume whole input.");
-    }
 
     /* Stage 2 parse */
     auto feature = parse(ast, error_handler, parent);
@@ -131,9 +128,6 @@ std::shared_ptr<const Role> SyntacticElementFactoryImpl::parse_role(SyntacticEle
     bool success = phrase_parse(iter, end, parser, space, ast);
     if (!success) {
         throw std::runtime_error("Failed parse.");
-    }
-    if (iter != end) {
-        throw std::runtime_error("Failed parse. Did not consume whole input.");
     }
 
     /* Stage 2 parse */
@@ -173,9 +167,6 @@ std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::parse_boolean(Syntac
     if (!success) {
         throw std::runtime_error("Failed parse.");
     }
-    if (iter != end) {
-        throw std::runtime_error("Failed parse. Did not consume whole input.");
-    }
 
     /* Stage 2 parse */
     auto feature = parse(ast, error_handler, parent);
@@ -213,9 +204,6 @@ std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::parse_numerical(Sy
     bool success = phrase_parse(iter, end, parser, space, ast);
     if (!success) {
         throw std::runtime_error("Failed parse.");
-    }
-    if (iter != end) {
-        throw std::runtime_error("Failed parse. Did not consume whole input.");
     }
 
     /* Stage 2 parse */

@@ -61,9 +61,6 @@ std::shared_ptr<const Policy> PolicyFactoryImpl::parse_policy(
     if (!success) {
         throw std::runtime_error("Failed parse.");
     }
-    if (iter != end) {
-        throw std::runtime_error("Failed parse. Did not consume whole input.");
-    }
 
     /* Stage 2 parse */
     Context context(parent);

@@ -85,7 +85,7 @@ std::shared_ptr<const Concept> SyntacticElementFactory::parse_concept(
 }
 
 std::shared_ptr<const Concept> SyntacticElementFactory::parse_concept(
-    std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename) {
+    iterator_type& iter, iterator_type end, const std::string& filename) {
     return m_pImpl->parse_concept(*this, iter, end, filename);
 }
 
@@ -95,7 +95,7 @@ std::shared_ptr<const Role> SyntacticElementFactory::parse_role(
 }
 
 std::shared_ptr<const Role> SyntacticElementFactory::parse_role(
-    std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename) {
+    iterator_type& iter, iterator_type end, const std::string& filename) {
     return m_pImpl->parse_role(*this, iter, end, filename);
 }
 
@@ -105,7 +105,7 @@ std::shared_ptr<const Boolean> SyntacticElementFactory::parse_boolean(
 }
 
 std::shared_ptr<const Boolean> SyntacticElementFactory::parse_boolean(
-    std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename) {
+    iterator_type& iter, iterator_type end, const std::string& filename) {
     return m_pImpl->parse_boolean(*this, iter, end, filename);
 }
 
@@ -115,7 +115,7 @@ std::shared_ptr<const Numerical> SyntacticElementFactory::parse_numerical(
 }
 
 std::shared_ptr<const Numerical> SyntacticElementFactory::parse_numerical(
-    std::string::const_iterator& iter, std::string::const_iterator end, const std::string& filename) {
+    iterator_type& iter, iterator_type end, const std::string& filename) {
     return m_pImpl->parse_numerical(*this, iter, end, filename);
 }
 
