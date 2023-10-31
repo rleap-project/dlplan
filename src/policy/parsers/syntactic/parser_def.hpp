@@ -1,19 +1,19 @@
-#ifndef DLPLAN_SRC_POLICY_PARSERS_POLICY_STAGE_1_PARSER_DEF_HPP_
-#define DLPLAN_SRC_POLICY_PARSERS_POLICY_STAGE_1_PARSER_DEF_HPP_
+#ifndef DLPLAN_SRC_POLICY_PARSERS_SYNTACTIC_PARSER_DEF_HPP_
+#define DLPLAN_SRC_POLICY_PARSERS_SYNTACTIC_PARSER_DEF_HPP_
 
 #include <boost/spirit/home/x3.hpp>
 #include <boost/spirit/home/x3/support/utility/annotate_on_success.hpp>
 
-#include "include/dlplan/core/parsers/elements/stage_1/parser.hpp"
-#include "include/dlplan/policy/parsers/policy/stage_1/error_handler.hpp"
-#include "include/dlplan/policy/parsers/policy/stage_1/ast.hpp"
-#include "include/dlplan/policy/parsers/policy/stage_1/parser.hpp"
+#include "include/dlplan/core/parsers/syntactic/parser.hpp"
+#include "include/dlplan/policy/parsers/syntactic/error_handler.hpp"
+#include "include/dlplan/policy/parsers/syntactic/ast.hpp"
+#include "include/dlplan/policy/parsers/syntactic/parser.hpp"
 
 #include "ast_adapted.hpp"
 #include "parser.hpp"
 
 
-namespace dlplan::policy::parsers::policy::stage_1::parser
+namespace dlplan::policy::parser
 {
     namespace x3 = boost::spirit::x3;
     namespace ascii = boost::spirit::x3::ascii;
@@ -107,19 +107,19 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
 
     const auto name_def = alpha >> lexeme[*(alnum | char_('-') | char_('_'))];
 
-    const auto boolean_def = lit('(') > name > lit('"') > dlplan::core::parsers::elements::stage_1::boolean() > lit('"') > lit(')');
+    const auto boolean_def = lit('(') > name > lit('"') > dlplan::core::boolean() > lit('"') > lit(')');
     const auto boolean_reference_def = name;
     const auto booleans_def = lit('(') >> lit(":booleans") > *boolean > lit(')');
 
-    const auto numerical_def = lit('(') > name > lit('"') > dlplan::core::parsers::elements::stage_1::numerical() > lit('"') > lit(')');
+    const auto numerical_def = lit('(') > name > lit('"') > dlplan::core::numerical() > lit('"') > lit(')');
     const auto numerical_reference_def = name;
     const auto numericals_def = lit('(') >> lit(":numericals") > *numerical > lit(')');
 
-    const auto concept_def = lit('(') > name > lit('"') > dlplan::core::parsers::elements::stage_1::concept() > lit('"') > lit(')');
+    const auto concept_def = lit('(') > name > lit('"') > dlplan::core::concept() > lit('"') > lit(')');
     const auto concept_reference_def = name;
     const auto concepts_def = lit('(') >> lit(":concepts") > *concept > lit(')');
 
-    const auto role_def = lit('(') > name > lit('"') > dlplan::core::parsers::elements::stage_1::role() > lit('"') > lit(')');
+    const auto role_def = lit('(') > name > lit('"') > dlplan::core::role() > lit('"') > lit(')');
     const auto role_reference_def = name;
     const auto roles_def = lit('(') >> lit(":roles") > *role > lit(')');
 
@@ -199,7 +199,7 @@ namespace dlplan::policy::parsers::policy::stage_1::parser
     struct PolicyRootClass : x3::annotate_on_success, error_handler_policy {};
 }
 
-namespace dlplan::policy::parsers::policy::stage_1
+namespace dlplan::policy
 {
     parser::name_type const& name() {
         return parser::name;
@@ -315,7 +315,7 @@ namespace dlplan::policy::parsers::policy::stage_1
 }
 
 
-namespace dlplan::policy::parsers::policy::stage_1 {
+namespace dlplan::policy {
     parser::policy_root_type const& policy_root() {
         return parser::policy_root;
     }

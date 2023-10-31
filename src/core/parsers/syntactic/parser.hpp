@@ -1,12 +1,12 @@
-#ifndef DLPLAN_SRC_CORE_PARSERS_ELEMENTS_STAGE_1_PARSER_API_HPP_
-#define DLPLAN_SRC_CORE_PARSERS_ELEMENTS_STAGE_1_PARSER_API_HPP_
+#ifndef DLPLAN_SRC_CORE_PARSERS_SYNTACTIC_PARSER_API_HPP_
+#define DLPLAN_SRC_CORE_PARSERS_SYNTACTIC_PARSER_API_HPP_
 
 #include <boost/spirit/home/x3.hpp>
 
-#include "include/dlplan/core/parsers/elements/stage_1/ast.hpp"
+#include "include/dlplan/core/parsers/syntactic/ast.hpp"
 
 
-namespace dlplan::core::parsers::elements::stage_1
+namespace dlplan::core
 {
     namespace x3 = boost::spirit::x3;
 

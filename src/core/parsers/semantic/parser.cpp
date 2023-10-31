@@ -1,11 +1,11 @@
-#include "include/dlplan/core/parsers/elements/stage_2/parser.hpp"
+#include "include/dlplan/core/parsers/semantic/parser.hpp"
 
 #include <sstream>
 
-using namespace dlplan::common::parsers;
+using namespace dlplan;
 
 
-namespace dlplan::core::parsers::elements::stage_2::parser {
+namespace dlplan::core {
 class BooleanVisitor {
 private:
     const error_handler_type& error_handler;
@@ -122,14 +122,14 @@ public:
 };
 
 std::string
-parse(const stage_1::ast::Name& node, const error_handler_type&, SyntacticElementFactory&) {
+parse(const ast::Name& node, const error_handler_type&, SyntacticElementFactory&) {
     std::stringstream ss;
     ss << node.alphabetical << node.suffix;
     return ss.str();
 }
 
 core::Constant
-parse(const stage_1::ast::Constant& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::Constant& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     const auto name = parse(node.name, error_handler, context);
     const auto& constants_mapping = context.get_vocabulary_info()->get_constants_mapping();
     auto it = constants_mapping.find(name);
@@ -141,7 +141,7 @@ parse(const stage_1::ast::Constant& node, const error_handler_type& error_handle
 }
 
 core::Predicate
-parse(const stage_1::ast::Predicate& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::Predicate& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     const auto name = parse(node.name, error_handler, context);
     const auto predicates_mapping = context.get_vocabulary_info()->get_predicates_mapping();
     auto it = predicates_mapping.find(name);
@@ -153,18 +153,18 @@ parse(const stage_1::ast::Predicate& node, const error_handler_type& error_handl
 }
 
 int
-parse(const stage_1::ast::Integer& node, const error_handler_type&, SyntacticElementFactory&) {
+parse(const ast::Integer& node, const error_handler_type&, SyntacticElementFactory&) {
     return node.value;
 }
 
 int
-parse(const stage_1::ast::Position& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::Position& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return parse(node.integer, error_handler, context);
 }
 
 
 std::shared_ptr<const core::Boolean>
-parse(const stage_1::ast::EmptyBoolean& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::EmptyBoolean& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     auto concept_or_role = parse(node.element, error_handler, context);
     ConceptInnerVisitor concept_visitor;
     boost::apply_visitor(concept_visitor, concept_or_role);
@@ -177,7 +177,7 @@ parse(const stage_1::ast::EmptyBoolean& node, const error_handler_type& error_ha
 }
 
 std::shared_ptr<const core::Boolean>
-parse(const stage_1::ast::InclusionBoolean& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::InclusionBoolean& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     auto concept_or_role_left = parse(node.element_left, error_handler, context);
     auto concept_or_role_right = parse(node.element_right, error_handler, context);
     ConceptInnerVisitor concept_visitor_left;
@@ -199,97 +199,97 @@ parse(const stage_1::ast::InclusionBoolean& node, const error_handler_type& erro
 }
 
 std::shared_ptr<const core::Boolean>
-parse(const stage_1::ast::NullaryBoolean& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::NullaryBoolean& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_nullary_boolean(parse(node.predicate, error_handler, context));
 }
 
 std::shared_ptr<const core::Concept>
-parse(const stage_1::ast::AllConcept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::AllConcept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_all_concept(
         parse(node.role, error_handler, context),
         parse(node.concept_, error_handler, context));
 }
 
 std::shared_ptr<const core::Concept>
-parse(const stage_1::ast::AndConcept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::AndConcept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_and_concept(
         parse(node.concept_left, error_handler, context),
         parse(node.concept_right, error_handler, context));
 }
 
 std::shared_ptr<const core::Concept>
-parse(const stage_1::ast::BotConcept&, const error_handler_type&, SyntacticElementFactory& context) {
+parse(const ast::BotConcept&, const error_handler_type&, SyntacticElementFactory& context) {
     return context.make_bot_concept();
 }
 
 std::shared_ptr<const core::Concept>
-parse(const stage_1::ast::DiffConcept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::DiffConcept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_diff_concept(
         parse(node.concept_left, error_handler, context),
         parse(node.concept_right, error_handler, context));
 }
 
 std::shared_ptr<const core::Concept>
-parse(const stage_1::ast::EqualConcept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::EqualConcept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_equal_concept(
         parse(node.role_left, error_handler, context),
         parse(node.role_right, error_handler, context));
 }
 
 std::shared_ptr<const core::Concept>
-parse(const stage_1::ast::NotConcept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::NotConcept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_not_concept(
         parse(node.concept_, error_handler, context));
 }
 
 std::shared_ptr<const core::Concept>
-parse(const stage_1::ast::OneOfConcept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::OneOfConcept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_one_of_concept(
         parse(node.constant, error_handler, context));
 }
 
 std::shared_ptr<const core::Concept>
-parse(const stage_1::ast::OrConcept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::OrConcept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_or_concept(
         parse(node.concept_left, error_handler, context),
         parse(node.concept_right, error_handler, context));
 }
 
 std::shared_ptr<const core::Concept>
-parse(const stage_1::ast::PrimitiveConcept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::PrimitiveConcept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_primitive_concept(
         parse(node.predicate, error_handler, context),
         parse(node.pos, error_handler, context));
 }
 
 std::shared_ptr<const core::Concept>
-parse(const stage_1::ast::ProjectionConcept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::ProjectionConcept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_projection_concept(
         parse(node.role, error_handler, context),
         parse(node.pos, error_handler, context));
 }
 
 std::shared_ptr<const core::Concept>
-parse(const stage_1::ast::SomeConcept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::SomeConcept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_some_concept(
         parse(node.role, error_handler, context),
         parse(node.concept_, error_handler, context));
 }
 
 std::shared_ptr<const core::Concept>
-parse(const stage_1::ast::SubsetConcept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::SubsetConcept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_subset_concept(
         parse(node.role_left, error_handler, context),
         parse(node.role_right, error_handler, context));
 }
 
 std::shared_ptr<const core::Concept>
-parse(const stage_1::ast::TopConcept&, const error_handler_type&, SyntacticElementFactory& context) {
+parse(const ast::TopConcept&, const error_handler_type&, SyntacticElementFactory& context) {
     return context.make_top_concept();
 }
 
 std::shared_ptr<const core::Numerical>
-parse(const stage_1::ast::ConceptDistanceNumerical& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::ConceptDistanceNumerical& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_concept_distance_numerical(
         parse(node.concept_left, error_handler, context),
         parse(node.role, error_handler, context),
@@ -297,7 +297,7 @@ parse(const stage_1::ast::ConceptDistanceNumerical& node, const error_handler_ty
 }
 
 std::shared_ptr<const core::Numerical>
-parse(const stage_1::ast::CountNumerical& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::CountNumerical& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     auto concept_or_role = parse(node.element, error_handler, context);
     ConceptInnerVisitor concept_visitor;
     boost::apply_visitor(concept_visitor, concept_or_role);
@@ -310,7 +310,7 @@ parse(const stage_1::ast::CountNumerical& node, const error_handler_type& error_
 }
 
 std::shared_ptr<const core::Numerical>
-parse(const stage_1::ast::RoleDistanceNumerical& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::RoleDistanceNumerical& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_role_distance_numerical(
         parse(node.role_left, error_handler, context),
         parse(node.role, error_handler, context),
@@ -318,7 +318,7 @@ parse(const stage_1::ast::RoleDistanceNumerical& node, const error_handler_type&
 }
 
 std::shared_ptr<const core::Numerical>
-parse(const stage_1::ast::SumConceptDistanceNumerical& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::SumConceptDistanceNumerical& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_sum_concept_distance_numerical(
         parse(node.concept_left, error_handler, context),
         parse(node.role, error_handler, context),
@@ -326,7 +326,7 @@ parse(const stage_1::ast::SumConceptDistanceNumerical& node, const error_handler
 }
 
 std::shared_ptr<const core::Numerical>
-parse(const stage_1::ast::SumRoleDistanceNumerical& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::SumRoleDistanceNumerical& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_sum_role_distance_numerical(
         parse(node.role_left, error_handler, context),
         parse(node.role, error_handler, context),
@@ -334,53 +334,53 @@ parse(const stage_1::ast::SumRoleDistanceNumerical& node, const error_handler_ty
 }
 
 std::shared_ptr<const core::Role>
-parse(const stage_1::ast::AndRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::AndRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_and_role(
         parse(node.role_left, error_handler, context),
         parse(node.role_right, error_handler, context));
 }
 
 std::shared_ptr<const core::Role>
-parse(const stage_1::ast::ComposeRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::ComposeRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_compose_role(
         parse(node.role_left, error_handler, context),
         parse(node.role_right, error_handler, context));
 }
 
 std::shared_ptr<const core::Role>
-parse(const stage_1::ast::DiffRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::DiffRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_diff_role(
         parse(node.role_left, error_handler, context),
         parse(node.role_right, error_handler, context));
 }
 
 std::shared_ptr<const core::Role>
-parse(const stage_1::ast::IdentityRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::IdentityRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_identity_role(
         parse(node.concept_, error_handler, context));
 }
 
 std::shared_ptr<const core::Role>
-parse(const stage_1::ast::InverseRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::InverseRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_inverse_role(
         parse(node.role, error_handler, context));
 }
 
 std::shared_ptr<const core::Role>
-parse(const stage_1::ast::NotRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::NotRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_not_role(
         parse(node.role, error_handler, context));
 }
 
 std::shared_ptr<const core::Role>
-parse(const stage_1::ast::OrRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::OrRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_or_role(
         parse(node.role_left, error_handler, context),
         parse(node.role_right, error_handler, context));
 }
 
 std::shared_ptr<const core::Role>
-parse(const stage_1::ast::PrimitiveRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::PrimitiveRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_primitive_role(
         parse(node.predicate, error_handler, context),
         parse(node.pos_1, error_handler, context),
@@ -388,38 +388,38 @@ parse(const stage_1::ast::PrimitiveRole& node, const error_handler_type& error_h
 }
 
 std::shared_ptr<const core::Role>
-parse(const stage_1::ast::RestrictRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::RestrictRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_restrict_role(
         parse(node.role, error_handler, context),
         parse(node.concept_, error_handler, context));
 }
 
 std::shared_ptr<const core::Role>
-parse(const stage_1::ast::TopRole&, const error_handler_type&, SyntacticElementFactory& context) {
+parse(const ast::TopRole&, const error_handler_type&, SyntacticElementFactory& context) {
     return context.make_top_role();
 }
 
 std::shared_ptr<const core::Role>
-parse(const stage_1::ast::TransitiveClosureRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::TransitiveClosureRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_transitive_closure(
         parse(node.role, error_handler, context));
 }
 
 std::shared_ptr<const core::Role>
-parse(const stage_1::ast::TransitiveReflexiveClosureRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::TransitiveReflexiveClosureRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_transitive_reflexive_closure(
         parse(node.role, error_handler, context));
 }
 
 boost::variant<std::shared_ptr<const core::Concept>, std::shared_ptr<const core::Role>>
-parse(const stage_1::ast::ConceptOrRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::ConceptOrRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     ConceptOrRoleVisitor visitor(error_handler, context);
     boost::apply_visitor(visitor, node);
     return visitor.result;
 }
 
 std::shared_ptr<const core::Concept>
-parse(const stage_1::ast::Concept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::Concept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     ConceptVisitor visitor(error_handler, context);
     boost::apply_visitor(visitor, node);
     return visitor.result;
@@ -427,7 +427,7 @@ parse(const stage_1::ast::Concept& node, const error_handler_type& error_handler
 
 
 std::shared_ptr<const core::Role>
-parse(const stage_1::ast::Role& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::Role& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     RoleVisitor visitor(error_handler, context);
     boost::apply_visitor(visitor, node);
     return visitor.result;
@@ -435,14 +435,14 @@ parse(const stage_1::ast::Role& node, const error_handler_type& error_handler, S
 
 
 std::shared_ptr<const core::Boolean>
-parse(const stage_1::ast::Boolean& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::Boolean& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     BooleanVisitor visitor(error_handler, context);
     boost::apply_visitor(visitor, node);
     return visitor.result;
 }
 
 std::shared_ptr<const core::Numerical>
-parse(const stage_1::ast::Numerical& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+parse(const ast::Numerical& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     NumericalVisitor visitor(error_handler, context);
     boost::apply_visitor(visitor, node);
     return visitor.result;

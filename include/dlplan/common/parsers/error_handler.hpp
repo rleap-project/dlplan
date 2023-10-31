@@ -7,7 +7,7 @@
 #include "include/dlplan/common/parsers/config.hpp"
 
 
-namespace dlplan::common::parsers
+namespace dlplan
 {
     namespace x3 = boost::spirit::x3;
 

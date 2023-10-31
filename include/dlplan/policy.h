@@ -477,7 +477,7 @@ public:
         const std::string& filename="");
 
     std::shared_ptr<const Policy> parse_policy(
-        common::parsers::iterator_type& iter, common::parsers::iterator_type end,
+        iterator_type& iter, iterator_type end,
         const std::string& filename="");
 
     /**

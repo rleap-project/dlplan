@@ -1,5 +1,5 @@
-#ifndef DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_ELEMENTS_STAGE_1_AST_HPP_
-#define DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_ELEMENTS_STAGE_1_AST_HPP_
+#ifndef DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_SYNTACTIC_AST_HPP_
+#define DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_SYNTACTIC_AST_HPP_
 
 #include <vector>
 
@@ -7,7 +7,7 @@
 #include <boost/spirit/home/x3/support/ast/variant.hpp>
 
 
-namespace dlplan::core::parsers::elements::stage_1::ast
+namespace dlplan::core::ast
 {
     ///////////////////////////////////////////////////////////////////////////
     //  The AST

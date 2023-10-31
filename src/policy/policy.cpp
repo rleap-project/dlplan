@@ -11,7 +11,7 @@
 #include "include/dlplan/policy.h"
 
 
-using namespace dlplan::common::parsers;
+using namespace dlplan;
 
 
 namespace dlplan::policy {

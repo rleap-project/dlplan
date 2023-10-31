@@ -1,15 +1,15 @@
-#ifndef DLPLAN_INCLUDE_DLPLAN_POLICY_PARSERS_POLICY_STAGE_1_AST_HPP_
-#define DLPLAN_INCLUDE_DLPLAN_POLICY_PARSERS_POLICY_STAGE_1_AST_HPP_
+#ifndef DLPLAN_INCLUDE_DLPLAN_POLICY_PARSERS_SYNTACTIC_AST_HPP_
+#define DLPLAN_INCLUDE_DLPLAN_POLICY_PARSERS_SYNTACTIC_AST_HPP_
 
 #include <vector>
 
 #include <boost/spirit/home/x3/support/ast/position_tagged.hpp>
 #include <boost/spirit/home/x3/support/ast/variant.hpp>
 
-#include "include/dlplan/core/parsers/elements/stage_1/ast.hpp"
+#include "include/dlplan/core/parsers/syntactic/ast.hpp"
 
 
-namespace dlplan::policy::parsers::policy::stage_1::ast
+namespace dlplan::policy::ast
 {
     ///////////////////////////////////////////////////////////////////////////
     //  The AST
@@ -54,7 +54,7 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
     /* Boolean entry and references */
     struct Boolean : x3::position_tagged {
         Name key;
-        core::parsers::elements::stage_1::ast::Boolean boolean;
+        core::ast::Boolean boolean;
     };
 
     struct BooleanReference : x3::position_tagged {
@@ -69,7 +69,7 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
     /* Numerical entry and references */
     struct Numerical : x3::position_tagged {
         Name key;
-        core::parsers::elements::stage_1::ast::Numerical numerical;
+        core::ast::Numerical numerical;
     };
 
     struct NumericalReference : x3::position_tagged {
@@ -84,7 +84,7 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
     /* Concept entry and references */
     struct Concept : x3::position_tagged {
         Name key;
-        core::parsers::elements::stage_1::ast::Concept concept;
+        core::ast::Concept concept;
     };
 
     struct ConceptReference : x3::position_tagged {
@@ -99,7 +99,7 @@ namespace dlplan::policy::parsers::policy::stage_1::ast
     /* Role entry and references */
     struct Role : x3::position_tagged {
         Name key;
-        core::parsers::elements::stage_1::ast::Role role;
+        core::ast::Role role;
     };
 
     struct RoleReference : x3::position_tagged {

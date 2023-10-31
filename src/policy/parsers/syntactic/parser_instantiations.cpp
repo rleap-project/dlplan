@@ -4,10 +4,10 @@
 
 
 
-namespace dlplan::policy::parsers::policy::stage_1::parser
+namespace dlplan::policy::parser
 {
-    using iterator_type = dlplan::common::parsers::iterator_type;
-    using context_type = dlplan::common::parsers::context_type;
+    using iterator_type = dlplan::iterator_type;
+    using context_type = dlplan::context_type;
 
     BOOST_SPIRIT_INSTANTIATE(
         name_type, iterator_type, context_type)

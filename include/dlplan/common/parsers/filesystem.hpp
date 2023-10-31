@@ -20,7 +20,7 @@
 #endif
 
 
-namespace dlplan::common::parsers
+namespace dlplan
 {
 
 extern std::string read_file(const fs::path& file_path);

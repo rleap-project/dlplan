@@ -3,11 +3,11 @@
 #include "include/dlplan/common/parsers/config.hpp"
 
 
-namespace dlplan::core::parsers::elements::stage_1::parser
+namespace dlplan::core::parser
 {
-    using iterator_type = dlplan::common::parsers::iterator_type;
-    using phrase_context_type = dlplan::common::parsers::phrase_context_type;
-    using context_type = dlplan::common::parsers::context_type;
+    using iterator_type = dlplan::iterator_type;
+    using phrase_context_type = dlplan::phrase_context_type;
+    using context_type = dlplan::context_type;
 
     BOOST_SPIRIT_INSTANTIATE(
         element_type, iterator_type, context_type)

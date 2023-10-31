@@ -47,7 +47,7 @@ public:
 
     std::shared_ptr<const Policy> parse_policy(
         PolicyFactory& parent,
-        common::parsers::iterator_type& iter, common::parsers::iterator_type end,
+        iterator_type& iter, iterator_type end,
         const std::string& filename);
 
     std::shared_ptr<const NamedBoolean> make_boolean(const std::string& key, const std::shared_ptr<const core::Boolean>& boolean);

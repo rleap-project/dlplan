@@ -1,18 +1,18 @@
-#ifndef SRC_CORE_PARSERS_ELEMENTS_STAGE_1_PARSER_DEF_HPP_
-#define SRC_CORE_PARSERS_ELEMENTS_STAGE_1_PARSER_DEF_HPP_
+#ifndef SRC_CORE_PARSERS_SYNTACTIC_PARSER_DEF_HPP_
+#define SRC_CORE_PARSERS_SYNTACTIC_PARSER_DEF_HPP_
 
 #include <boost/spirit/home/x3.hpp>
 #include <boost/spirit/home/x3/support/utility/annotate_on_success.hpp>
 
-#include "include/dlplan/core/parsers/elements/stage_1/error_handler.hpp"
-#include "include/dlplan/core/parsers/elements/stage_1/ast.hpp"
-#include "include/dlplan/core/parsers/elements/stage_1/parser.hpp"
+#include "include/dlplan/core/parsers/syntactic/error_handler.hpp"
+#include "include/dlplan/core/parsers/syntactic/ast.hpp"
+#include "include/dlplan/core/parsers/syntactic/parser.hpp"
 
 #include "ast_adapted.hpp"
 #include "parser.hpp"
 
 
-namespace dlplan::core::parsers::elements::stage_1::parser
+namespace dlplan::core::parser
 {
     namespace x3 = boost::spirit::x3;
     namespace ascii = boost::spirit::x3::ascii;
@@ -395,7 +395,7 @@ namespace dlplan::core::parsers::elements::stage_1::parser
     struct ConceptOrRoleClass : x3::annotate_on_success {};
 }
 
-namespace dlplan::core::parsers::elements::stage_1
+namespace dlplan::core
 {
     parser::element_type const& element()
     {
@@ -424,7 +424,7 @@ namespace dlplan::core::parsers::elements::stage_1
 }
 
 
-namespace dlplan::core::parsers::elements::stage_1
+namespace dlplan::core
 {
     parser::element_root_type const& element_root()
     {

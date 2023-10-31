@@ -1,5 +1,5 @@
-#ifndef DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_ELEMENTS_STAGE_1_ERROR_HANDLER_HPP_
-#define DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_ELEMENTS_STAGE_1_ERROR_HANDLER_HPP_
+#ifndef DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_SYNTACTIC_ERROR_HANDLER_HPP_
+#define DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_SYNTACTIC_ERROR_HANDLER_HPP_
 
 #include <map>
 #include <iostream>
@@ -7,12 +7,12 @@
 #include "include/dlplan/common/parsers/error_handler.hpp"
 
 
-namespace dlplan::core::parsers::elements::stage_1
+namespace dlplan::core
 {
     namespace x3 = boost::spirit::x3;
 
-    struct error_handler_core : dlplan::common::parsers::error_handler_base {
-        error_handler_core() : dlplan::common::parsers::error_handler_base() {
+    struct error_handler_core : dlplan::error_handler_base {
+        error_handler_core() : dlplan::error_handler_base() {
             id_map["name"] = "Name";
             id_map["integer"] = "Integer";
             id_map["constant"] = "Constant";

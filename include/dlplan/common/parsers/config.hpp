@@ -8,7 +8,7 @@
 
 /// @brief Defines types of our parsers.
 ///        The configuration is relevant when reusing the parsers instantiated by the library.
-namespace dlplan::common::parsers
+namespace dlplan
 {
     namespace x3 = boost::spirit::x3;
 

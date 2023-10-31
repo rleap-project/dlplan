@@ -6,16 +6,17 @@
 #include <boost/archive/text_iarchive.hpp>
 
 #include "include/dlplan/policy.h"
-#include "include/dlplan/policy/parsers/policy/stage_1/ast.hpp"
-#include "src/policy/parsers/policy/stage_1/parser.hpp"
-#include "include/dlplan/policy/parsers/policy/stage_2/context.hpp"
-#include "include/dlplan/policy/parsers/policy/stage_2/parser.hpp"
+#include "include/dlplan/policy/parsers/syntactic/ast.hpp"
+#include "include/dlplan/policy/parsers/semantic/context.hpp"
+#include "include/dlplan/policy/parsers/semantic/parser.hpp"
+
+#include "parsers/syntactic/parser.hpp"
 
 #include "condition.h"
 #include "effect.h"
 
 
-using namespace dlplan::common::parsers;
+using namespace dlplan;
 
 
 namespace dlplan::policy {
@@ -48,11 +49,11 @@ std::shared_ptr<const Policy> PolicyFactoryImpl::parse_policy(
         // we pass our error handler to the parser so we can access
         // it later on in our on_error and on_sucess handlers
         with<error_handler_tag>(std::ref(error_handler)) [
-            dlplan::policy::parsers::policy::stage_1::policy_root()
+            policy_root()
         ];
 
     // Our AST
-    dlplan::policy::parsers::policy::stage_1::ast::Policy ast;
+    ast::Policy ast;
 
     // Go forth and parse!
     using boost::spirit::x3::ascii::space;
@@ -65,8 +66,8 @@ std::shared_ptr<const Policy> PolicyFactoryImpl::parse_policy(
     }
 
     /* Stage 2 parse */
-    parsers::policy::stage_2::parser::Context context(parent);
-    std::shared_ptr<const Policy> policy = parsers::policy::stage_2::parser::parse(ast, error_handler, context);
+    Context context(parent);
+    std::shared_ptr<const Policy> policy = parse(ast, error_handler, context);
 
     return policy;
 }

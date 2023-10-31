@@ -1,24 +1,24 @@
-#include "include/dlplan/policy/parsers/policy/stage_2/parser.hpp"
+#include "include/dlplan/policy/parsers/semantic/parser.hpp"
 
 #include <sstream>
 
-#include "include/dlplan/core/parsers/elements/stage_2/parser.hpp"
-#include "include/dlplan/policy/parsers/policy/stage_2/context.hpp"
+#include "include/dlplan/core/parsers/semantic/parser.hpp"
+#include "include/dlplan/policy/parsers/semantic/context.hpp"
 
-using namespace dlplan::common::parsers;
+using namespace dlplan;
 
 
-namespace dlplan::policy::parsers::policy::stage_2::parser {
+namespace dlplan::policy {
 
 std::string parse(
-    const stage_1::ast::Name& node, const error_handler_type&, Context&) {
+    const ast::Name& node, const error_handler_type&, Context&) {
     std::stringstream ss;
     ss << node.alphabetical << node.suffix;
     return ss.str();
 }
 
 std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedBoolean>> parse(
-    const stage_1::ast::Boolean& node, const error_handler_type& error_handler, Context& context) {
+    const ast::Boolean& node, const error_handler_type& error_handler, Context& context) {
     const auto key = parse(node.key, error_handler, context);
     auto it = context.booleans.find(key);
     if (it != context.booleans.end()) {
@@ -27,14 +27,14 @@ std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedBoolean>> pars
         throw std::runtime_error("Failed parse.");
     }
     auto named_boolean = context.policy_factory.make_boolean(
-        key, dlplan::core::parsers::elements::stage_2::parser::parse(
+        key, dlplan::core::parse(
             node.boolean, error_handler, *context.policy_factory.get_element_factory()));
     context.booleans.emplace(key, NamedBooleanData{ node, named_boolean });
     return {key, named_boolean};
 }
 
 std::shared_ptr<const dlplan::policy::NamedBoolean> parse(
-    const stage_1::ast::BooleanReference& node, const error_handler_type& error_handler, Context& context) {
+    const ast::BooleanReference& node, const error_handler_type& error_handler, Context& context) {
     auto key = parse(node.key, error_handler, context);
     auto it = context.booleans.find(key);
     if (it == context.booleans.end()) {
@@ -45,7 +45,7 @@ std::shared_ptr<const dlplan::policy::NamedBoolean> parse(
 }
 
 std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedBoolean>> parse(
-    const stage_1::ast::Booleans& node, const error_handler_type& error_handler, Context& context) {
+    const ast::Booleans& node, const error_handler_type& error_handler, Context& context) {
     std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedBoolean>> booleans;
     for (const auto& child : node.definitions) {
         booleans.insert(parse(child, error_handler, context));
@@ -54,7 +54,7 @@ std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedBoole
 }
 
 std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedNumerical>> parse(
-    const stage_1::ast::Numerical& node, const error_handler_type& error_handler, Context& context) {
+    const ast::Numerical& node, const error_handler_type& error_handler, Context& context) {
     const auto key = parse(node.key, error_handler, context);
     auto it = context.numericals.find(key);
     if (it != context.numericals.end()) {
@@ -63,14 +63,14 @@ std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedNumerical>> pa
         throw std::runtime_error("Failed parse.");
     }
     auto named_numerical = context.policy_factory.make_numerical(
-        key, dlplan::core::parsers::elements::stage_2::parser::parse(
+        key, dlplan::core::parse(
             node.numerical, error_handler, *context.policy_factory.get_element_factory()));
     context.numericals.emplace(key, NamedNumericalData{ node, named_numerical });
     return {key, named_numerical};
 }
 
 std::shared_ptr<const dlplan::policy::NamedNumerical> parse(
-    const stage_1::ast::NumericalReference& node, const error_handler_type& error_handler, Context& context) {
+    const ast::NumericalReference& node, const error_handler_type& error_handler, Context& context) {
     auto key = parse(node.key, error_handler, context);
     auto it = context.numericals.find(key);
     if (it == context.numericals.end()) {
@@ -81,7 +81,7 @@ std::shared_ptr<const dlplan::policy::NamedNumerical> parse(
 }
 
 std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedNumerical>> parse(
-    const stage_1::ast::Numericals& node, const error_handler_type& error_handler, Context& context) {
+    const ast::Numericals& node, const error_handler_type& error_handler, Context& context) {
     std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedNumerical>> numericals;
     for (const auto& child : node.definitions) {
         numericals.insert(parse(child, error_handler, context));
@@ -90,7 +90,7 @@ std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedNumer
 }
 
 std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedConcept>> parse(
-    const stage_1::ast::Concept& node, const error_handler_type& error_handler, Context& context) {
+    const ast::Concept& node, const error_handler_type& error_handler, Context& context) {
     const auto key = parse(node.key, error_handler, context);
     auto it = context.concepts.find(key);
     if (it != context.concepts.end()) {
@@ -99,14 +99,14 @@ std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedConcept>> pars
         throw std::runtime_error("Failed parse.");
     }
     auto named_concept = context.policy_factory.make_concept(
-        key, dlplan::core::parsers::elements::stage_2::parser::parse(
+        key, dlplan::core::parse(
             node.concept, error_handler, *context.policy_factory.get_element_factory()));
     context.concepts.emplace(key, NamedConceptData{ node, named_concept });
     return {key, named_concept};
 }
 
 std::shared_ptr<const dlplan::policy::NamedConcept> parse(
-    const stage_1::ast::ConceptReference& node, const error_handler_type& error_handler, Context& context) {
+    const ast::ConceptReference& node, const error_handler_type& error_handler, Context& context) {
     auto key = parse(node.key, error_handler, context);
     auto it = context.concepts.find(key);
     if (it == context.concepts.end()) {
@@ -117,7 +117,7 @@ std::shared_ptr<const dlplan::policy::NamedConcept> parse(
 }
 
 std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedConcept>> parse(
-    const stage_1::ast::Concepts& node, const error_handler_type& error_handler, Context& context) {
+    const ast::Concepts& node, const error_handler_type& error_handler, Context& context) {
     std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedConcept>> concepts;
     for (const auto& child : node.definitions) {
         concepts.insert(parse(child, error_handler, context));
@@ -126,7 +126,7 @@ std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedConce
 }
 
 std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedRole>> parse(
-    const stage_1::ast::Role& node, const error_handler_type& error_handler, Context& context) {
+    const ast::Role& node, const error_handler_type& error_handler, Context& context) {
     const auto key = parse(node.key, error_handler, context);
     auto it = context.roles.find(key);
     if (it != context.roles.end()) {
@@ -135,14 +135,14 @@ std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedRole>> parse(
         throw std::runtime_error("Failed parse.");
     }
     auto named_role = context.policy_factory.make_role(
-        key, dlplan::core::parsers::elements::stage_2::parser::parse(
+        key, dlplan::core::parse(
             node.role, error_handler, *context.policy_factory.get_element_factory()));
     context.roles.emplace(key, NamedRoleData{ node, named_role });
     return {key, named_role};
 }
 
 std::shared_ptr<const dlplan::policy::NamedRole> parse(
-    const stage_1::ast::RoleReference& node, const error_handler_type& error_handler, Context& context) {
+    const ast::RoleReference& node, const error_handler_type& error_handler, Context& context) {
     auto key = parse(node.key, error_handler, context);
     auto it = context.roles.find(key);
     if (it == context.roles.end()) {
@@ -153,7 +153,7 @@ std::shared_ptr<const dlplan::policy::NamedRole> parse(
 }
 
 std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedRole>> parse(
-    const stage_1::ast::Roles& node, const error_handler_type& error_handler, Context& context) {
+    const ast::Roles& node, const error_handler_type& error_handler, Context& context) {
     std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedRole>> roles;
     for (const auto& child : node.definitions) {
         roles.insert(parse(child, error_handler, context));
@@ -162,52 +162,52 @@ std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedRole>
 }
 
 std::shared_ptr<const BaseCondition> parse(
-    const stage_1::ast::PositiveBooleanConditionEntry& node, const error_handler_type& error_handler, Context& context) {
+    const ast::PositiveBooleanConditionEntry& node, const error_handler_type& error_handler, Context& context) {
     return context.policy_factory.make_pos_condition(parse(node.reference, error_handler, context));
 }
 
 std::shared_ptr<const BaseCondition> parse(
-    const stage_1::ast::NegativeBooleanConditionEntry& node, const error_handler_type& error_handler, Context& context) {
+    const ast::NegativeBooleanConditionEntry& node, const error_handler_type& error_handler, Context& context) {
     return context.policy_factory.make_neg_condition(parse(node.reference, error_handler, context));
 }
 
 std::shared_ptr<const BaseCondition> parse(
-    const stage_1::ast::GreaterNumericalConditionEntry& node, const error_handler_type& error_handler, Context& context) {
+    const ast::GreaterNumericalConditionEntry& node, const error_handler_type& error_handler, Context& context) {
     return context.policy_factory.make_gt_condition(parse(node.reference, error_handler, context));
 }
 
 std::shared_ptr<const BaseCondition> parse(
-    const stage_1::ast::EqualNumericalConditionEntry& node, const error_handler_type& error_handler, Context& context) {
+    const ast::EqualNumericalConditionEntry& node, const error_handler_type& error_handler, Context& context) {
     return context.policy_factory.make_eq_condition(parse(node.reference, error_handler, context));
 }
 
 std::shared_ptr<const BaseEffect> parse(
-    const stage_1::ast::PositiveBooleanEffectEntry& node, const error_handler_type& error_handler, Context& context) {
+    const ast::PositiveBooleanEffectEntry& node, const error_handler_type& error_handler, Context& context) {
     return context.policy_factory.make_pos_effect(parse(node.reference, error_handler, context));
 }
 
 std::shared_ptr<const BaseEffect> parse(
-    const stage_1::ast::NegativeBooleanEffectEntry& node, const error_handler_type& error_handler, Context& context) {
+    const ast::NegativeBooleanEffectEntry& node, const error_handler_type& error_handler, Context& context) {
     return context.policy_factory.make_neg_effect(parse(node.reference, error_handler, context));
 }
 
 std::shared_ptr<const BaseEffect> parse(
-    const stage_1::ast::UnchangedBooleanEffectEntry& node, const error_handler_type& error_handler, Context& context) {
+    const ast::UnchangedBooleanEffectEntry& node, const error_handler_type& error_handler, Context& context) {
     return context.policy_factory.make_bot_effect(parse(node.reference, error_handler, context));
 }
 
 std::shared_ptr<const BaseEffect> parse(
-    const stage_1::ast::IncrementNumericalEffectEntry& node, const error_handler_type& error_handler, Context& context) {
+    const ast::IncrementNumericalEffectEntry& node, const error_handler_type& error_handler, Context& context) {
     return context.policy_factory.make_inc_effect(parse(node.reference, error_handler, context));
 }
 
 std::shared_ptr<const BaseEffect> parse(
-    const stage_1::ast::DecrementNumericalEffect& node, const error_handler_type& error_handler, Context& context) {
+    const ast::DecrementNumericalEffect& node, const error_handler_type& error_handler, Context& context) {
     return context.policy_factory.make_dec_effect(parse(node.reference, error_handler, context));
 }
 
 std::shared_ptr<const BaseEffect> parse(
-    const stage_1::ast::UnchangedNumericalEffect& node, const error_handler_type& error_handler, Context& context) {
+    const ast::UnchangedNumericalEffect& node, const error_handler_type& error_handler, Context& context) {
     return context.policy_factory.make_bot_effect(parse(node.reference, error_handler, context));
 }
 
@@ -229,7 +229,7 @@ public:
 };
 
 std::shared_ptr<const BaseCondition> parse(
-    const stage_1::ast::FeatureCondition& node, const error_handler_type& error_handler, Context& context) {
+    const ast::FeatureCondition& node, const error_handler_type& error_handler, Context& context) {
     FeatureConditionEntryVisitor visitor(error_handler, context);
     boost::apply_visitor(visitor, node);
     return visitor.result;
@@ -254,7 +254,7 @@ public:
 };
 
 std::shared_ptr<const BaseEffect> parse(
-    const stage_1::ast::FeatureEffect& node, const error_handler_type& error_handler, Context& context) {
+    const ast::FeatureEffect& node, const error_handler_type& error_handler, Context& context) {
     FeatureEffectEntryVisitor visitor(error_handler, context);
     boost::apply_visitor(visitor, node);
     return visitor.result;
@@ -262,7 +262,7 @@ std::shared_ptr<const BaseEffect> parse(
 
 
 std::shared_ptr<const Rule> parse(
-    const stage_1::ast::Rule& node, const error_handler_type& error_handler, Context& context) {
+    const ast::Rule& node, const error_handler_type& error_handler, Context& context) {
     Conditions conditions;
     for (const auto& child : node.feature_conditions) {
         conditions.insert(parse(child, error_handler, context));
@@ -275,7 +275,7 @@ std::shared_ptr<const Rule> parse(
 }
 
 Rules parse(
-    const stage_1::ast::Rules& node, const error_handler_type& error_handler, Context& context) {
+    const ast::Rules& node, const error_handler_type& error_handler, Context& context) {
     Rules rules;
     for (const auto& child : node.rules) {
         rules.insert(parse(child, error_handler, context));
@@ -284,7 +284,7 @@ Rules parse(
 }
 
 std::shared_ptr<const Policy> parse(
-    const stage_1::ast::Policy& node, const dlplan::common::parsers::error_handler_type& error_handler, Context& context) {
+    const ast::Policy& node, const dlplan::error_handler_type& error_handler, Context& context) {
     parse(node.booleans, error_handler, context);
     parse(node.numericals, error_handler, context);
     return context.policy_factory.make_policy(parse(node.rules, error_handler, context));

@@ -1073,7 +1073,7 @@ public:
         const std::string &description, const std::string& filename="");
 
     std::shared_ptr<const Concept> parse_concept(
-        common::parsers::iterator_type& iter, common::parsers::iterator_type end, const std::string& filename="");
+        iterator_type& iter, iterator_type end, const std::string& filename="");
 
     /**
      * Returns a Role if the description is correct.
@@ -1083,7 +1083,7 @@ public:
         const std::string &description, const std::string& filename="");
 
     std::shared_ptr<const Role> parse_role(
-        common::parsers::iterator_type& iter, common::parsers::iterator_type end, const std::string& filename="");
+        iterator_type& iter, iterator_type end, const std::string& filename="");
 
     /**
      * Returns a Numerical if the description is correct.
@@ -1093,7 +1093,7 @@ public:
         const std::string &description, const std::string& filename="");
 
     std::shared_ptr<const Numerical> parse_numerical(
-        common::parsers::iterator_type& iter, common::parsers::iterator_type end, const std::string& filename="");
+        iterator_type& iter, iterator_type end, const std::string& filename="");
 
     /**
      * Returns a Boolean if the description is correct.
@@ -1103,7 +1103,7 @@ public:
         const std::string &description, const std::string& filename="");
 
     std::shared_ptr<const Boolean> parse_boolean(
-        common::parsers::iterator_type& iter, common::parsers::iterator_type end, const std::string& filename="");
+        iterator_type& iter, iterator_type end, const std::string& filename="");
 
     std::shared_ptr<const Boolean> make_empty_boolean(const std::shared_ptr<const Concept>& concept);
     std::shared_ptr<const Boolean> make_empty_boolean(const std::shared_ptr<const Role>& role);

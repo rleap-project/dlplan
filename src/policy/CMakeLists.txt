@@ -13,9 +13,9 @@ target_sources(dlplanpolicy
         policy.cpp
         role.cpp
         rule.cpp
-        parsers/policy/stage_1/parser_instantiations.cpp
-        parsers/policy/stage_2/context.cpp
-        parsers/policy/stage_2/parser.cpp
+        parsers/syntactic/parser_instantiations.cpp
+        parsers/semantic/context.cpp
+        parsers/semantic/parser.cpp
         ../common/parsers/utility.cpp
         ../common/parsers/filesystem.cpp)
 
