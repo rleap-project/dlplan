@@ -17,10 +17,10 @@ struct Data {
     Result result;
 };
 
-using NamedBooleanData = Data<ast::Boolean, std::shared_ptr<const NamedBoolean>>;
-using NamedNumericalData = Data<ast::Numerical, std::shared_ptr<const NamedNumerical>>;
-using NamedConceptData = Data<ast::Concept, std::shared_ptr<const NamedConcept>>;
-using NamedRoleData = Data<ast::Role, std::shared_ptr<const NamedRole>>;
+using NamedBooleanData = Data<ast::BooleanDefinition, std::shared_ptr<const NamedBoolean>>;
+using NamedNumericalData = Data<ast::NumericalDefinition, std::shared_ptr<const NamedNumerical>>;
+using NamedConceptData = Data<ast::ConceptDefinition, std::shared_ptr<const NamedConcept>>;
+using NamedRoleData = Data<ast::RoleDefinition, std::shared_ptr<const NamedRole>>;
 
 
 struct Context {

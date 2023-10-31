@@ -17,8 +17,8 @@ std::string parse(
     return ss.str();
 }
 
-std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedBoolean>> parse(
-    const ast::Boolean& node, const error_handler_type& error_handler, Context& context) {
+std::string parse(
+    const ast::BooleanDefinition& node, const dlplan::error_handler_type& error_handler, Context& context) {
     const auto key = parse(node.key, error_handler, context);
     auto it = context.booleans.find(key);
     if (it != context.booleans.end()) {
@@ -26,11 +26,20 @@ std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedBoolean>> pars
         error_handler(it->second.node, "Previous definition: ");
         throw std::runtime_error("Failed parse.");
     }
-    auto named_boolean = context.policy_factory.make_boolean(
-        key, dlplan::core::parse(
-            node.boolean, error_handler, *context.policy_factory.get_element_factory()));
-    context.booleans.emplace(key, NamedBooleanData{ node, named_boolean });
-    return {key, named_boolean};
+    return key;
+}
+std::shared_ptr<const dlplan::core::Boolean> parse(
+    const ast::BooleanImplementation& node, const dlplan::error_handler_type& error_handler, Context& context) {
+    return dlplan::core::parse(node.boolean, error_handler, *context.policy_factory.get_element_factory());
+}
+
+std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedBoolean>> parse(
+    const ast::Boolean& node, const error_handler_type& error_handler, Context& context) {
+    const auto definition = parse(node.definition, error_handler, context);
+    const auto implementation = parse(node.implementation, error_handler, context);
+    auto named_boolean = context.policy_factory.make_boolean(definition, implementation);
+    context.booleans.emplace(definition, NamedBooleanData{ node.definition, named_boolean });
+    return {definition, named_boolean};
 }
 
 std::shared_ptr<const dlplan::policy::NamedBoolean> parse(
@@ -53,8 +62,8 @@ std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedBoole
     return booleans;
 }
 
-std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedNumerical>> parse(
-    const ast::Numerical& node, const error_handler_type& error_handler, Context& context) {
+std::string parse(
+    const ast::NumericalDefinition& node, const dlplan::error_handler_type& error_handler, Context& context) {
     const auto key = parse(node.key, error_handler, context);
     auto it = context.numericals.find(key);
     if (it != context.numericals.end()) {
@@ -62,11 +71,20 @@ std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedNumerical>> pa
         error_handler(it->second.node, "Previous definition: ");
         throw std::runtime_error("Failed parse.");
     }
-    auto named_numerical = context.policy_factory.make_numerical(
-        key, dlplan::core::parse(
-            node.numerical, error_handler, *context.policy_factory.get_element_factory()));
-    context.numericals.emplace(key, NamedNumericalData{ node, named_numerical });
-    return {key, named_numerical};
+    return key;
+}
+std::shared_ptr<const dlplan::core::Numerical> parse(
+    const ast::NumericalImplementation& node, const dlplan::error_handler_type& error_handler, Context& context) {
+    return dlplan::core::parse(node.numerical, error_handler, *context.policy_factory.get_element_factory());
+}
+
+std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedNumerical>> parse(
+    const ast::Numerical& node, const error_handler_type& error_handler, Context& context) {
+    const auto definition = parse(node.definition, error_handler, context);
+    const auto implementation = parse(node.implementation, error_handler, context);
+    auto named_numerical = context.policy_factory.make_numerical(definition, implementation);
+    context.numericals.emplace(definition, NamedNumericalData{ node.definition, named_numerical });
+    return {definition, named_numerical};
 }
 
 std::shared_ptr<const dlplan::policy::NamedNumerical> parse(
@@ -89,8 +107,8 @@ std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedNumer
     return numericals;
 }
 
-std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedConcept>> parse(
-    const ast::Concept& node, const error_handler_type& error_handler, Context& context) {
+std::string parse(
+    const ast::ConceptDefinition& node, const dlplan::error_handler_type& error_handler, Context& context) {
     const auto key = parse(node.key, error_handler, context);
     auto it = context.concepts.find(key);
     if (it != context.concepts.end()) {
@@ -98,11 +116,20 @@ std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedConcept>> pars
         error_handler(it->second.node, "Previous definition: ");
         throw std::runtime_error("Failed parse.");
     }
-    auto named_concept = context.policy_factory.make_concept(
-        key, dlplan::core::parse(
-            node.concept, error_handler, *context.policy_factory.get_element_factory()));
-    context.concepts.emplace(key, NamedConceptData{ node, named_concept });
-    return {key, named_concept};
+    return key;
+}
+std::shared_ptr<const dlplan::core::Concept> parse(
+    const ast::ConceptImplementation& node, const dlplan::error_handler_type& error_handler, Context& context) {
+    return dlplan::core::parse(node.concept, error_handler, *context.policy_factory.get_element_factory());
+}
+
+std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedConcept>> parse(
+    const ast::Concept& node, const error_handler_type& error_handler, Context& context) {
+    const auto definition = parse(node.definition, error_handler, context);
+    const auto implementation = parse(node.implementation, error_handler, context);
+    auto named_concept = context.policy_factory.make_concept(definition, implementation);
+    context.concepts.emplace(definition, NamedConceptData{ node.definition, named_concept });
+    return {definition, named_concept};
 }
 
 std::shared_ptr<const dlplan::policy::NamedConcept> parse(
@@ -125,8 +152,8 @@ std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedConce
     return concepts;
 }
 
-std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedRole>> parse(
-    const ast::Role& node, const error_handler_type& error_handler, Context& context) {
+std::string parse(
+    const ast::RoleDefinition& node, const dlplan::error_handler_type& error_handler, Context& context) {
     const auto key = parse(node.key, error_handler, context);
     auto it = context.roles.find(key);
     if (it != context.roles.end()) {
@@ -134,11 +161,20 @@ std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedRole>> parse(
         error_handler(it->second.node, "Previous definition: ");
         throw std::runtime_error("Failed parse.");
     }
-    auto named_role = context.policy_factory.make_role(
-        key, dlplan::core::parse(
-            node.role, error_handler, *context.policy_factory.get_element_factory()));
-    context.roles.emplace(key, NamedRoleData{ node, named_role });
-    return {key, named_role};
+    return key;
+}
+std::shared_ptr<const dlplan::core::Role> parse(
+    const ast::RoleImplementation& node, const dlplan::error_handler_type& error_handler, Context& context) {
+    return dlplan::core::parse(node.role, error_handler, *context.policy_factory.get_element_factory());
+}
+
+std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedRole>> parse(
+    const ast::Role& node, const error_handler_type& error_handler, Context& context) {
+    const auto definition = parse(node.definition, error_handler, context);
+    const auto implementation = parse(node.implementation, error_handler, context);
+    auto named_role = context.policy_factory.make_role(definition, implementation);
+    context.roles.emplace(definition, NamedRoleData{ node.definition, named_role });
+    return {definition, named_role};
 }
 
 std::shared_ptr<const dlplan::policy::NamedRole> parse(

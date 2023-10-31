@@ -11,19 +11,27 @@
 // to make them a first-class fusion citizens
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Name, alphabetical, suffix)
 
-BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Boolean, key, boolean)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::BooleanDefinition, key)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::BooleanImplementation, boolean)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Boolean, definition, implementation)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::BooleanReference, key)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Booleans, definitions)
 
-BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Numerical, key, numerical)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::NumericalDefinition, key)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::NumericalImplementation, numerical)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Numerical, definition, implementation)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::NumericalReference, key)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Numericals, definitions)
 
-BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Concept, key, concept)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::ConceptDefinition, key)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::ConceptImplementation, concept)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Concept, definition, implementation)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::ConceptReference, key)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Concepts, definitions)
 
-BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Role, key, role)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::RoleDefinition, key)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::RoleImplementation, role)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Role, definition, implementation)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::RoleReference, key)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Roles, definitions)
 

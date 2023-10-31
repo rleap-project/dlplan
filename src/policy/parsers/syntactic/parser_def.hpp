@@ -46,56 +46,45 @@ namespace dlplan::policy::parser
     /* Public rules with annotations */
     name_type const name = "name";
 
+    boolean_definition_type const boolean_definition = "boolean_definition";
+    boolean_implementation_type const boolean_implementation = "boolean_implementation";
     boolean_type const boolean = "boolean";
-
     boolean_reference_type const boolean_reference = "boolean_reference";
-
     booleans_type const booleans = "booleans";
 
+    numerical_definition_type const numerical_definition = "numerical_definition";
+    numerical_implementation_type const numerical_implementation = "numerical_implementation";
     numerical_type const numerical = "numerical";
-
     numerical_reference_type const numerical_reference = "numerical_reference";
-
     numericals_type const numericals = "numericals";
 
+    concept_definition_type const concept_definition = "concept_definition";
+    concept_implementation_type const concept_implementation = "concept_implementation";
     concept_type const concept = "concept";
-
     concept_reference_type const concept_reference = "concept_reference";
-
     concepts_type const concepts = "concepts";
 
+    role_definition_type const role_definition = "role_definition";
+    role_implementation_type const role_implementation = "role_implementation";
     role_type const role = "role";
-
     role_reference_type const role_reference = "role_reference";
-
     roles_type const roles = "roles";
 
     positive_boolean_condition_type const positive_boolean_condition = "positive_boolean_condition";
-
     negative_boolean_condition_type const negative_boolean_condition = "negative_boolean_condition";
-
     greater_numerical_condition_type const greater_numerical_condition = "greater_numerical_condition";
-
     equal_numerical_condition_type const equal_numerical_condition = "equal_numerical_condition";
-
     positive_boolean_effect_type const positive_boolean_effect = "positive_boolean_effect";
-
     negative_boolean_effect_type const negative_boolean_effect = "negative_boolean_effect";
-
     unchanged_boolean_effect_type const unchanged_boolean_effect = "unchanged_boolean_effect";
-
     increment_numerical_effect_type const increment_numerical_effect = "increment_numerical_effect";
-
     decrement_numerical_effect_type const decrement_numerical_effect = "decrement_numerical_effect";
-
     unchanged_numerical_effect_type const unchanged_numerical_effect = "unchanged_numerical_effect";
 
     feature_condition_type const feature_condition = "feature_condition";
-
     feature_effect_type const feature_effect = "feature_effect";
 
     rule_type const rule = "rule";
-
     rules_type const rules = "rules";
 
     policy_type const policy = "policy";
@@ -107,19 +96,27 @@ namespace dlplan::policy::parser
 
     const auto name_def = alpha >> lexeme[*(alnum | char_('-') | char_('_'))];
 
-    const auto boolean_def = lit('(') > name > lit('"') > dlplan::core::boolean() > lit('"') > lit(')');
+    const auto boolean_definition_def = name;
+    const auto boolean_implementation_def = dlplan::core::boolean();
+    const auto boolean_def = lit('(') > boolean_definition > lit('"') > boolean_implementation > lit('"') > lit(')');
     const auto boolean_reference_def = name;
     const auto booleans_def = lit('(') >> lit(":booleans") > *boolean > lit(')');
 
-    const auto numerical_def = lit('(') > name > lit('"') > dlplan::core::numerical() > lit('"') > lit(')');
+    const auto numerical_definition_def = name;
+    const auto numerical_implementation_def = dlplan::core::numerical();
+    const auto numerical_def = lit('(') > numerical_definition > lit('"') > numerical_implementation > lit('"') > lit(')');
     const auto numerical_reference_def = name;
     const auto numericals_def = lit('(') >> lit(":numericals") > *numerical > lit(')');
 
-    const auto concept_def = lit('(') > name > lit('"') > dlplan::core::concept() > lit('"') > lit(')');
+    const auto concept_definition_def = name;
+    const auto concept_implementation_def = dlplan::core::concept();
+    const auto concept_def = lit('(') > concept_definition > lit('"') > concept_implementation > lit('"') > lit(')');
     const auto concept_reference_def = name;
     const auto concepts_def = lit('(') >> lit(":concepts") > *concept > lit(')');
 
-    const auto role_def = lit('(') > name > lit('"') > dlplan::core::role() > lit('"') > lit(')');
+    const auto role_definition_def = name;
+    const auto role_implementation_def = dlplan::core::role();
+    const auto role_def = lit('(') > role_definition > lit('"') > role_implementation > lit('"') > lit(')');
     const auto role_reference_def = name;
     const auto roles_def = lit('(') >> lit(":roles") > *role > lit(')');
 
@@ -156,10 +153,10 @@ namespace dlplan::policy::parser
 
     BOOST_SPIRIT_DEFINE(
         name,
-        boolean, boolean_reference, booleans,
-        numerical, numerical_reference, numericals,
-        concept, concept_reference, concepts,
-        role, role_reference, roles,
+        boolean_definition, boolean_implementation, boolean, boolean_reference, booleans,
+        numerical_definition, numerical_implementation, numerical, numerical_reference, numericals,
+        concept_definition, concept_implementation, concept, concept_reference, concepts,
+        role_definition, role_implementation, role, role_reference, roles,
         positive_boolean_condition, negative_boolean_condition, greater_numerical_condition, equal_numerical_condition,
         positive_boolean_effect, negative_boolean_effect, unchanged_boolean_effect, increment_numerical_effect, decrement_numerical_effect, unchanged_numerical_effect,
         feature_condition, feature_effect, rule, rules, policy, policy_root)
@@ -169,15 +166,23 @@ namespace dlplan::policy::parser
     ///////////////////////////////////////////////////////////////////////////
 
     struct NameClass : x3::annotate_on_success {};
+    struct BooleanDefinitionClass : x3::annotate_on_success {};
+    struct BooleanImplementationClass : x3::annotate_on_success {};
     struct BooleanClass : x3::annotate_on_success {};
     struct BooleanReferenceClass : x3::annotate_on_success {};
     struct BooleansClass : x3::annotate_on_success {};
+    struct NumericalDefinitionClass : x3::annotate_on_success {};
+    struct NumericalImplementationClass : x3::annotate_on_success {};
     struct NumericalClass : x3::annotate_on_success {};
     struct NumericalReferenceClass : x3::annotate_on_success {};
     struct NumericalsClass : x3::annotate_on_success {};
+    struct ConceptDefinitionClass : x3::annotate_on_success {};
+    struct ConceptImplementationClass : x3::annotate_on_success {};
     struct ConceptClass : x3::annotate_on_success {};
     struct ConceptReferenceClass : x3::annotate_on_success {};
     struct ConceptsClass : x3::annotate_on_success {};
+    struct RoleDefinitionClass : x3::annotate_on_success {};
+    struct RoleImplementationClass : x3::annotate_on_success {};
     struct RoleClass : x3::annotate_on_success {};
     struct RoleReferenceClass : x3::annotate_on_success {};
     struct RolesClass : x3::annotate_on_success {};
@@ -205,50 +210,66 @@ namespace dlplan::policy
         return parser::name;
     }
 
+    parser::boolean_definition_type const& boolean_definition() {
+        return parser::boolean_definition;
+    }
+    parser::boolean_implementation_type const& boolean_implementation() {
+        return parser::boolean_implementation;
+    }
     parser::boolean_type const& boolean() {
         return parser::boolean;
     }
-
     parser::boolean_reference_type const& boolean_reference() {
         return parser::boolean_reference;
     }
-
     parser::booleans_type const& booleans() {
         return parser::booleans;
     }
 
+    parser::numerical_definition_type const& numerical_definition() {
+        return parser::numerical_definition;
+    }
+    parser::numerical_implementation_type const& numerical_implementation() {
+        return parser::numerical_implementation;
+    }
     parser::numerical_type const& numerical() {
         return parser::numerical;
     }
-
     parser::numerical_reference_type const& numerical_reference() {
         return parser::numerical_reference;
     }
-
     parser::numericals_type const& numericals() {
         return parser::numericals;
     }
 
-    parser::concept_type const& concept_definition() {
+    parser::concept_definition_type const& concept_definition() {
+        return parser::concept_definition;
+    }
+    parser::concept_implementation_type const& concept_implementation() {
+        return parser::concept_implementation;
+    }
+    parser::concept_type const& concept() {
         return parser::concept;
     }
-
     parser::concept_reference_type const& concept_reference() {
         return parser::concept_reference;
     }
-
     parser::concepts_type const& concepts() {
         return parser::concepts;
     }
 
+    parser::role_definition_type const& role_definition() {
+        return parser::role_definition;
+    }
+    parser::role_implementation_type const& role_implementation() {
+        return parser::role_implementation;
+    }
     parser::role_type const& role() {
         return parser::role;
     }
-
     parser::role_reference_type const& role_reference() {
         return parser::role_reference;
     }
-
     parser::roles_type const& roles() {
         return parser::roles;
     }
@@ -256,39 +277,30 @@ namespace dlplan::policy
     parser::positive_boolean_condition_type const& positive_boolean_condition() {
         return parser::positive_boolean_condition;
     }
-
     parser::negative_boolean_condition_type const& negative_boolean_condition() {
         return parser::negative_boolean_condition;
     }
-
     parser::greater_numerical_condition_type const& greater_numerical_condition() {
         return parser::greater_numerical_condition;
     }
-
     parser::equal_numerical_condition_type const& equal_numerical_condition() {
         return parser::equal_numerical_condition;
     }
-
     parser::positive_boolean_effect_type const& positive_boolean_effect() {
         return parser::positive_boolean_effect;
     }
-
     parser::negative_boolean_effect_type const& negative_boolean_effect() {
         return parser::negative_boolean_effect;
     }
-
     parser::unchanged_boolean_effect_type const& unchanged_boolean_effect() {
         return parser::unchanged_boolean_effect;
     }
-
     parser::increment_numerical_effect_type const& increment_numerical_effect() {
         return parser::increment_numerical_effect;
     }
-
     parser::decrement_numerical_effect_type const& decrement_numerical_effect() {
         return parser::decrement_numerical_effect;
     }
-
     parser::unchanged_numerical_effect_type const& unchanged_numerical_effect() {
         return parser::unchanged_numerical_effect;
     }
@@ -296,7 +308,6 @@ namespace dlplan::policy
     parser::feature_condition_type const& feature_condition() {
         return parser::feature_condition;
     }
-
     parser::feature_effect_type const& feature_effect() {
         return parser::feature_effect;
     }
@@ -304,7 +315,6 @@ namespace dlplan::policy
     parser::rule_type const& rule() {
         return parser::rule;
     }
-
     parser::rules_type const& rules() {
         return parser::rules;
     }

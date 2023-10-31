@@ -19,15 +19,27 @@ namespace dlplan::policy::ast
     struct NameInner;
     struct Name;
     struct NameEntry;
+
+    struct BooleanDefinition;
+    struct BooleanImplementation;
     struct Boolean;
     struct BooleanReference;
     struct Booleans;
+
+    struct NumericalDefinition;
+    struct NumericalImplementation;
     struct Numerical;
     struct NumericalReference;
     struct Numericals;
+
+    struct ConceptDefinition;
+    struct ConceptImplementation;
     struct Concept;
     struct ConceptReference;
     struct Concepts;
+
+    struct BooleanDefinition;
+    struct BooleanImplementation;
     struct PositiveBooleanCondition;
     struct NegativeBooleanCondition;
     struct GreaterNumericalCondition;
@@ -38,10 +50,13 @@ namespace dlplan::policy::ast
     struct IncrementNumericalEffect;
     struct DecrementNumericalEffect;
     struct UnchangedNumericalEffect;
+
     struct FeatureCondition;
     struct FeatureEffect;
+
     struct Rule;
     struct Rules;
+
     struct Policy;
 
 
@@ -52,9 +67,17 @@ namespace dlplan::policy::ast
     };
 
     /* Boolean entry and references */
-    struct Boolean : x3::position_tagged {
+    struct BooleanDefinition : x3::position_tagged {
         Name key;
+    };
+
+    struct BooleanImplementation {
         core::ast::Boolean boolean;
+    };
+
+    struct Boolean : x3::position_tagged {
+        BooleanDefinition definition;
+        BooleanImplementation implementation;
     };
 
     struct BooleanReference : x3::position_tagged {
@@ -67,9 +90,17 @@ namespace dlplan::policy::ast
 
 
     /* Numerical entry and references */
-    struct Numerical : x3::position_tagged {
+    struct NumericalDefinition : x3::position_tagged {
         Name key;
+    };
+
+    struct NumericalImplementation {
         core::ast::Numerical numerical;
+    };
+
+    struct Numerical : x3::position_tagged {
+        NumericalDefinition definition;
+        NumericalImplementation implementation;
     };
 
     struct NumericalReference : x3::position_tagged {
@@ -82,9 +113,17 @@ namespace dlplan::policy::ast
 
 
     /* Concept entry and references */
-    struct Concept : x3::position_tagged {
+    struct ConceptDefinition : x3::position_tagged {
         Name key;
+    };
+
+    struct ConceptImplementation {
         core::ast::Concept concept;
+    };
+
+    struct Concept : x3::position_tagged {
+        ConceptDefinition definition;
+        ConceptImplementation implementation;
     };
 
     struct ConceptReference : x3::position_tagged {
@@ -97,9 +136,17 @@ namespace dlplan::policy::ast
 
 
     /* Role entry and references */
-    struct Role : x3::position_tagged {
+    struct RoleDefinition : x3::position_tagged {
         Name key;
+    };
+
+    struct RoleImplementation {
         core::ast::Role role;
+    };
+
+    struct Role : x3::position_tagged {
+        RoleDefinition definition;
+        RoleImplementation implementation;
     };
 
     struct RoleReference : x3::position_tagged {
