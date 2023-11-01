@@ -1,3 +1,9 @@
+#include "../../include/dlplan/serialization.h"
+
+#include "../../include/dlplan/core.h"
+#include "../../include/dlplan/novelty.h"
+#include "../../include/dlplan/policy.h"
+#include "../../include/dlplan/state_space.h"
 
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/unordered_map.hpp>
@@ -6,11 +12,6 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
-#include "include/dlplan/serialization.h"
-#include "include/dlplan/core.h"
-#include "include/dlplan/novelty.h"
-#include "include/dlplan/policy.h"
-#include "include/dlplan/state_space.h"
 
 
 namespace boost::serialization {

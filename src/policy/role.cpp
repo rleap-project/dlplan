@@ -1,13 +1,13 @@
-#include "include/dlplan/policy.h"
+#include "../../include/dlplan/policy.h"
 
-#include <sstream>
+#include "../../include/dlplan/core.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/export.hpp>
 #include <boost/serialization/shared_ptr.hpp>
 
-#include "include/dlplan/core.h"
+#include <sstream>
 
 
 namespace dlplan::policy {

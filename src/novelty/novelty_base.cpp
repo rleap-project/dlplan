@@ -1,17 +1,17 @@
-#include "include/dlplan/novelty.h"
+#include "../../include/dlplan/novelty.h"
+
+#include "../utils/math.h"
+#include "../utils/logging.h"
+
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/vector.hpp>
 
 #include <cmath>
 #include <vector>
 #include <cassert>
 #include <iostream>
 #include <sstream>
-
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/vector.hpp>
-
-#include "src/utils/math.h"
-#include "src/utils/logging.h"
 
 
 namespace dlplan::novelty {

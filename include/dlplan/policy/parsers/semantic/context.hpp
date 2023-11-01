@@ -1,12 +1,13 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_POLICY_PARSERS_SEMANTIC_CONTEXT_HPP_
 #define DLPLAN_INCLUDE_DLPLAN_POLICY_PARSERS_SEMANTIC_CONTEXT_HPP_
 
+#include "../../../policy/parsers/syntactic/ast.hpp"
+#include "../../../policy.h"
+#include "../../../core.h"
+
 #include <unordered_map>
 
-#include "include/dlplan/policy.h"
-#include "include/dlplan/core.h"
 
-#include "include/dlplan/policy/parsers/syntactic/ast.hpp"
 
 
 namespace dlplan::policy {

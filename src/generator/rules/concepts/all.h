@@ -1,7 +1,7 @@
 #ifndef DLPLAN_SRC_GENERATOR_RULES_CONCEPTS_ALL_H_
 #define DLPLAN_SRC_GENERATOR_RULES_CONCEPTS_ALL_H_
 
-#include "src/generator/rules/rule.h"
+#include "../rule.h"
 
 
 namespace dlplan::generator::rules {

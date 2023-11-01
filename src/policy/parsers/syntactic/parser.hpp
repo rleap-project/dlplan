@@ -1,9 +1,9 @@
 #ifndef DLPLAN_SRC_CORE_PARSERS_ELEMENTS_SYNTACTIC_API_HPP_
 #define DLPLAN_SRC_CORE_PARSERS_ELEMENTS_SYNTACTIC_API_HPP_
 
-#include <boost/spirit/home/x3.hpp>
+#include "../../../../include/dlplan/policy/parsers/syntactic/ast.hpp"
 
-#include "include/dlplan/policy/parsers/syntactic/ast.hpp"
+#include <boost/spirit/home/x3.hpp>
 
 
 namespace dlplan::policy

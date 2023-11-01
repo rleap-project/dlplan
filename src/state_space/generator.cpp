@@ -1,11 +1,11 @@
 #include "generator.h"
 
+#include "../utils/command.h"
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <iostream>
-
-#include "src/utils/command.h"
 
 using namespace dlplan::core;
 using namespace std::string_literals;

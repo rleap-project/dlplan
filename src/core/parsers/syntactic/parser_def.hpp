@@ -1,15 +1,15 @@
 #ifndef SRC_CORE_PARSERS_SYNTACTIC_PARSER_DEF_HPP_
 #define SRC_CORE_PARSERS_SYNTACTIC_PARSER_DEF_HPP_
 
-#include <boost/spirit/home/x3.hpp>
-#include <boost/spirit/home/x3/support/utility/annotate_on_success.hpp>
-
-#include "include/dlplan/core/parsers/syntactic/error_handler.hpp"
-#include "include/dlplan/core/parsers/syntactic/ast.hpp"
-#include "include/dlplan/core/parsers/syntactic/parser.hpp"
-
 #include "ast_adapted.hpp"
 #include "parser.hpp"
+
+#include "../../../../include/dlplan/core/parsers/syntactic/error_handler.hpp"
+#include "../../../../include/dlplan/core/parsers/syntactic/ast.hpp"
+#include "../../../../include/dlplan/core/parsers/syntactic/parser.hpp"
+
+#include <boost/spirit/home/x3.hpp>
+#include <boost/spirit/home/x3/support/utility/annotate_on_success.hpp>
 
 
 namespace dlplan::core::parser

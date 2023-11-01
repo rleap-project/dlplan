@@ -1,11 +1,11 @@
-#include "include/dlplan/core.h"
+#include "../../include/dlplan/core.h"
+
+#include "element_factory.h"
+#include "../../include/dlplan/utils/hash.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/unique_ptr.hpp>
-
-#include "element_factory.h"
-#include "include/dlplan/utils/hash.h"
 
 
 namespace dlplan::core {

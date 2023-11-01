@@ -1,9 +1,9 @@
-#include "include/dlplan/policy/parsers/semantic/parser.hpp"
+#include "../../../../include/dlplan/policy/parsers/semantic/parser.hpp"
+
+#include "../../../../include/dlplan/core/parsers/semantic/parser.hpp"
+#include "../../../../include/dlplan/policy/parsers/semantic/context.hpp"
 
 #include <sstream>
-
-#include "include/dlplan/core/parsers/semantic/parser.hpp"
-#include "include/dlplan/policy/parsers/semantic/context.hpp"
 
 using namespace dlplan;
 

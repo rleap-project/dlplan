@@ -1,14 +1,13 @@
-#include "include/dlplan/policy.h"
-
-#include <iostream>
-
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
+#include "../../include/dlplan/policy.h"
 
 #include "condition.h"
 #include "effect.h"
 #include "policy_factory.h"
-#include "include/dlplan/policy.h"
+
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
+#include <iostream>
 
 
 using namespace dlplan;

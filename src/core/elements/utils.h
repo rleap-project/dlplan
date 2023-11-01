@@ -1,7 +1,8 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_UTILS_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_UTILS_H_
 
-#include "include/dlplan/core.h"
+#include "../../../include/dlplan/core.h"
+
 
 const int SCORE_CONSTANT = 1;
 const int SCORE_LINEAR = 100;

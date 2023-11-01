@@ -1,6 +1,6 @@
 #include "inclusion.h"
 
-#include "src/generator/generator_data.h"
+#include "../../generator_data.h"
 
 namespace dlplan::generator::rules {
 void InclusionBoolean::generate_impl(const core::States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) {

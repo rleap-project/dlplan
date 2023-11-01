@@ -1,7 +1,7 @@
 #ifndef DLPLAN_TESTS_UTILS_DOMAIN_H_
 #define DLPLAN_TESTS_UTILS_DOMAIN_H_
 
-#include "include/dlplan/core.h"
+#include "../../include/dlplan/core.h"
 
 using namespace dlplan::core;
 

@@ -1,12 +1,12 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_ROLES_PRIMITIVE_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_ROLES_PRIMITIVE_H_
 
-#include <sstream>
-#include <memory>
+#include "../../../../include/dlplan/core.h"
 
 #include <boost/serialization/export.hpp>
 
-#include "include/dlplan/core.h"
+#include <sstream>
+#include <memory>
 
 
 namespace dlplan::core {

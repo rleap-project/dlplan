@@ -1,11 +1,11 @@
-#include "include/dlplan/state_space.h"
+#include "../../include/dlplan/state_space.h"
+
+#include "../utils/tokenizer.h"
 
 #include <iostream>
 #include <fstream>
 #include <regex>
 #include <sstream>
-
-#include "src/utils/tokenizer.h"
 
 
 using namespace dlplan::core;

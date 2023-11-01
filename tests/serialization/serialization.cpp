@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "include/dlplan/state_space.h"
-#include "include/dlplan/serialization.h"
+#include "../../include/dlplan/state_space.h"
+#include "../../include/dlplan/serialization.h"
 
 #include <sstream>
 

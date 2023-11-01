@@ -1,19 +1,18 @@
 #include "policy_factory.h"
 
-#include <stdexcept>
+#include "condition.h"
+#include "effect.h"
+#include "parsers/syntactic/parser.hpp"
+
+#include "../../include/dlplan/policy.h"
+#include "../../include/dlplan/policy/parsers/syntactic/ast.hpp"
+#include "../../include/dlplan/policy/parsers/semantic/context.hpp"
+#include "../../include/dlplan/policy/parsers/semantic/parser.hpp"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
-#include "include/dlplan/policy.h"
-#include "include/dlplan/policy/parsers/syntactic/ast.hpp"
-#include "include/dlplan/policy/parsers/semantic/context.hpp"
-#include "include/dlplan/policy/parsers/semantic/parser.hpp"
-
-#include "parsers/syntactic/parser.hpp"
-
-#include "condition.h"
-#include "effect.h"
+#include <stdexcept>
 
 
 using namespace dlplan;

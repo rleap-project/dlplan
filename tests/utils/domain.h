@@ -1,7 +1,7 @@
 #ifndef DLPLAN_TESTS_UTILS_DOMAIN_H_
 #define DLPLAN_TESTS_UTILS_DOMAIN_H_
 
-#include "include/dlplan/policy.h"
+#include "../../include/dlplan/policy.h"
 
 
 namespace dlplan::tests {

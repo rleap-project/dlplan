@@ -1,4 +1,4 @@
-#include "include/dlplan/weisfeiler_lehman.h"
+#include "../../include/dlplan/weisfeiler_lehman.h"
 
 #include <numeric>
 #include <map>

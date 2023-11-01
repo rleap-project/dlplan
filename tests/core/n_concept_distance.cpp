@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "tests/utils/denotation.h"
+#include "../utils/denotation.h"
 
-#include "include/dlplan/core.h"
+#include "../../include/dlplan/core.h"
 
 #include <limits>
 

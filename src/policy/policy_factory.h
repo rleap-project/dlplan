@@ -1,14 +1,13 @@
 #ifndef DLPLAN_SRC_POLICY_POLICY_BUILDER_H_
 #define DLPLAN_SRC_POLICY_POLICY_BUILDER_H_
 
+#include "cache.h"
+#include "../../include/dlplan/core.h"
+#include "../../include/dlplan/policy.h"
+
 #include <memory>
 #include <vector>
 #include <set>
-
-#include "include/dlplan/core.h"
-#include "include/dlplan/policy.h"
-
-#include "cache.h"
 
 
 namespace dlplan::policy {

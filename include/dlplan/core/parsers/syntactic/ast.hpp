@@ -1,10 +1,10 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_SYNTACTIC_AST_HPP_
 #define DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_SYNTACTIC_AST_HPP_
 
-#include <vector>
-
 #include <boost/spirit/home/x3/support/ast/position_tagged.hpp>
 #include <boost/spirit/home/x3/support/ast/variant.hpp>
+
+#include <vector>
 
 
 namespace dlplan::core::ast

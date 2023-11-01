@@ -1,12 +1,5 @@
 #include "element_factory.h"
 
-#include <cassert>
-#include <string>
-
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-
 #include "elements/booleans/empty.h"
 #include "elements/booleans/inclusion.h"
 #include "elements/booleans/nullary.h"
@@ -40,12 +33,17 @@
 #include "elements/roles/top.h"
 #include "elements/roles/transitive_closure.h"
 #include "elements/roles/transitive_reflexive_closure.h"
-
-#include "include/dlplan/common/parsers/config.hpp"
 #include "parsers/syntactic/parser.hpp"
-#include "include/dlplan/core/parsers/semantic/parser.hpp"
+#include "../../include/dlplan/common/parsers/config.hpp"
+#include "../../include/dlplan/core/parsers/semantic/parser.hpp"
+#include "../../include/dlplan/common/parsers/utility.hpp"
 
-#include "include/dlplan/common/parsers/utility.hpp"
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+
+#include <cassert>
+#include <string>
 
 using namespace dlplan;
 

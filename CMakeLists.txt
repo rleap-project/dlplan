@@ -63,7 +63,8 @@ include_directories(${Boost_INCLUDE_DIRS})
 # Add library and executable targets
 ##############################################################
 
-include_directories("${PROJECT_SOURCE_DIR}")
+# include_directories("${PROJECT_SOURCE_DIR}")
+include_directories("${CMAKE_CURRENT_LIST_DIR}")
 
 add_subdirectory(src)
 add_subdirectory(examples)

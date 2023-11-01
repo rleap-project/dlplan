@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "include/dlplan/novelty.h"
+#include "../../include/dlplan/novelty.h"
 
-#include "src/novelty/tuple_index_generator.h"
+#include "../../src/novelty/tuple_index_generator.h"
 
 #include <iostream>
 

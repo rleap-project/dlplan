@@ -1,8 +1,8 @@
-#include "include/dlplan/core.h"
-
-#include <sstream>
+#include "../../include/dlplan/core.h"
 
 #include <boost/serialization/base_object.hpp>
+
+#include <sstream>
 
 
 namespace dlplan::core {

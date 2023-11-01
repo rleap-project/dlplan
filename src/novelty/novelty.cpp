@@ -1,4 +1,4 @@
-#include "include/dlplan/novelty.h"
+#include "../../include/dlplan/novelty.h"
 
 
 namespace dlplan::novelty {

@@ -1,9 +1,8 @@
 #ifndef DLPLAN_SRC_GENERATOR_GENERATOR_DATA_H_
 #define DLPLAN_SRC_GENERATOR_GENERATOR_DATA_H_
 
-#include "src/utils/countdown_timer.h"
-
-#include "include/dlplan/core.h"
+#include "../utils/countdown_timer.h"
+#include "../../include/dlplan/core.h"
 
 #include <iostream>
 #include <numeric>

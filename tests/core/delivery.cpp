@@ -3,9 +3,9 @@
 #include <iostream>
 #include <vector>
 
-#include "include/dlplan/core.h"
-#include "include/dlplan/generator.h"
-#include "include/dlplan/state_space.h"
+#include "../../include/dlplan/core.h"
+#include "../../include/dlplan/generator.h"
+#include "../../include/dlplan/state_space.h"
 
 using namespace dlplan::core;
 using namespace dlplan::generator;
@@ -17,7 +17,7 @@ namespace dlplan::tests::core {
 TEST(DLPTests, GeneratorDeliveryTest) {
     auto result = generate_state_space("domain.pddl", "instance_4_2_29.pddl", nullptr, 0);
     auto state_space = result.state_space;
-    auto vocabulary_info = state_space.get_instance_info()->get_vocabulary_info();
+    auto vocabulary_info = state_space->get_instance_info()->get_vocabulary_info();
     auto feature_generator = FeatureGenerator();
     feature_generator.set_generate_inclusion_boolean(false);
     feature_generator.set_generate_diff_concept(false);
@@ -34,7 +34,7 @@ TEST(DLPTests, GeneratorDeliveryTest) {
     feature_generator.set_generate_transitive_reflexive_closure_role(false);
     SyntacticElementFactory syntactic_element_factory(vocabulary_info);
     States states;
-    std::for_each(state_space.get_states().begin(), state_space.get_states().end(), [&](const auto& pair){states.push_back(pair.second); });
+    std::for_each(state_space->get_states().begin(), state_space->get_states().end(), [&](const auto& pair){states.push_back(pair.second); });
     auto feature_reprs = feature_generator.generate(syntactic_element_factory, states, 9, 9, 9, 9, 15, 1000, 100000);
     std::vector<std::shared_ptr<const Boolean>> generated_boolean_features;
     std::vector<std::shared_ptr<const Numerical>> generated_numerical_features;

@@ -1,17 +1,17 @@
-#include "include/dlplan/core.h"
+#include "../../include/dlplan/core.h"
 
-#include <algorithm>
-#include <stdexcept>
-#include <sstream>
+#include "../utils/collections.h"
+#include "../utils/logging.h"
+#include "../../include/dlplan/utils/hash.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/shared_ptr.hpp>
 #include <boost/serialization/vector.hpp>
 
-#include "src/utils/collections.h"
-#include "src/utils/logging.h"
-#include "include/dlplan/utils/hash.h"
+#include <algorithm>
+#include <stdexcept>
+#include <sstream>
 
 
 namespace dlplan::core {

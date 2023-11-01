@@ -1,7 +1,7 @@
 /// Example illustrating the policy component.
 
-#include "include/dlplan/core.h"
-#include "include/dlplan/policy.h"
+#include "../../include/dlplan/core.h"
+#include "../../include/dlplan/policy.h"
 
 #include <fstream>
 #include <cassert>

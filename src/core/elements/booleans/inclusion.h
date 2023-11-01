@@ -1,8 +1,8 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_BOOLEAN_INCLUSION_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_BOOLEAN_INCLUSION_H_
 
-#include <sstream>
-#include <memory>
+#include "../utils.h"
+#include "../../../../include/dlplan/core.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -10,8 +10,8 @@
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/shared_ptr.hpp>
 
-#include "src/core/elements/utils.h"
-#include "include/dlplan/core.h"
+#include <sstream>
+#include <memory>
 
 using namespace std::string_literals;
 

@@ -1,9 +1,9 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_SYNTACTIC_PARSER_API_HPP_
 #define DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_SYNTACTIC_PARSER_API_HPP_
 
-#include <boost/spirit/home/x3.hpp>
-
 #include "ast.hpp"
+
+#include <boost/spirit/home/x3.hpp>
 
 
 namespace dlplan::core

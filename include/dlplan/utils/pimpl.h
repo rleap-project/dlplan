@@ -5,9 +5,9 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_UTILS_PIMPL_H_
 #define DLPLAN_INCLUDE_DLPLAN_UTILS_PIMPL_H_
 
-#include <memory>
-
 #include <boost/serialization/unique_ptr.hpp>
+
+#include <memory>
 
 
 // Forward declarations of this header.

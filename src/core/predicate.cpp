@@ -1,9 +1,9 @@
-#include "include/dlplan/core.h"
-
-#include <sstream>
+#include "../../include/dlplan/core.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
+
+#include <sstream>
 
 
 namespace dlplan::core {

@@ -1,7 +1,7 @@
 /// Example illustrating the state_space component.
 
-#include "include/dlplan/core.h"
-#include "include/dlplan/state_space.h"
+#include "../../../include/dlplan/core.h"
+#include "../../../include/dlplan/state_space.h"
 
 #include <cassert>
 #include <iostream>

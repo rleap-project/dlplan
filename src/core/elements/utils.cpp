@@ -3,8 +3,6 @@
 #include <deque>
 #include <iostream>
 
-#include "include/dlplan/core.h"
-
 
 namespace dlplan::core::utils {
 

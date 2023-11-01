@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "tests/utils/domain.h"
+#include "../utils/domain.h"
 
-#include "include/dlplan/policy.h"
+#include "../../include/dlplan/policy.h"
 
 using namespace dlplan::core;
 using namespace dlplan::policy;

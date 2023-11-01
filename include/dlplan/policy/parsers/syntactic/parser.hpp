@@ -1,9 +1,9 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_POLICY_PARSERS_SYNTACTIC_PARSER_HPP_
 #define DLPLAN_INCLUDE_DLPLAN_POLICY_PARSERS_SYNTACTIC_PARSER_HPP_
 
-#include <boost/spirit/home/x3.hpp>
-
 #include "ast.hpp"
+
+#include <boost/spirit/home/x3.hpp>
 
 
 namespace dlplan::policy

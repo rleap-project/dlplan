@@ -2,11 +2,10 @@
 #define DLPLAN_SRC_CORE_ELEMENT_FACTORY_H_
 
 #include "cache.h"
+#include "../../include/dlplan/core.h"
 
 #include <memory>
 #include <string>
-
-#include "include/dlplan/core.h"
 
 
 namespace dlplan::core {
