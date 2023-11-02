@@ -26,10 +26,14 @@ namespace dlplan::utils {
 class Log {
 private:
     bool line_has_started = false;
+    const bool silent = true;
 
 public:
     template<typename T>
     Log &operator<<(const T &elem) {
+        if (silent) {
+          return *this;
+        }
         if (!line_has_started) {
             line_has_started = true;
             std::cout << "[t=" << g_timer << ", "
@@ -44,6 +48,9 @@ public:
     Log &operator<<(manip_function f) {
         if (f == static_cast<manip_function>(&std::endl)) {
             line_has_started = false;
+        }
+        if (silent) {
+          return *this;
         }
 
         std::cout << f;
