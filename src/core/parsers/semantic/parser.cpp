@@ -6,120 +6,36 @@ using namespace dlplan;
 
 
 namespace dlplan::core {
-class BooleanVisitor {
+template<typename T>
+class ParseVisitor : public boost::static_visitor<T> {
 private:
     const error_handler_type& error_handler;
     SyntacticElementFactory& context;
 
 public:
-    BooleanVisitor(
-        const error_handler_type& error_handler, SyntacticElementFactory& context)
+    ParseVisitor(const error_handler_type& error_handler, SyntacticElementFactory& context)
         : error_handler(error_handler), context(context) { }
 
-    std::shared_ptr<const core::Boolean> result;
-
     template<typename Node>
-    void operator()(const Node& node) {
-        result = parse(node, error_handler, context);
+    T operator()(const Node& node) const {
+        return parse(node, error_handler, context);
     }
 };
 
-class NumericalVisitor {
-private:
-    const error_handler_type& error_handler;
-    SyntacticElementFactory& context;
 
+template<typename T>
+class PointerTypeVisitor : public boost::static_visitor<T> {
 public:
-    NumericalVisitor(
-        const error_handler_type& error_handler, SyntacticElementFactory& context)
-        : error_handler(error_handler), context(context) { }
-
-    std::shared_ptr<const core::Numerical> result;
-
     template<typename Node>
-    void operator()(const Node& node) {
-        result = parse(node, error_handler, context);
+    T operator()(const Node&) const {
+        return nullptr;
+    }
+
+    T operator()(const T& node) const {
+        return node;
     }
 };
 
-class ConceptVisitor {
-private:
-    const error_handler_type& error_handler;
-    SyntacticElementFactory& context;
-
-public:
-    ConceptVisitor(
-        const error_handler_type& error_handler, SyntacticElementFactory& context)
-        : error_handler(error_handler), context(context) { }
-
-    std::shared_ptr<const core::Concept> result;
-
-    template<typename Node>
-    void operator()(const Node& node) {
-        result = parse(node, error_handler, context);
-    }
-};
-
-class RoleVisitor {
-private:
-    const error_handler_type& error_handler;
-    SyntacticElementFactory& context;
-
-public:
-    RoleVisitor(
-        const error_handler_type& error_handler, SyntacticElementFactory& context)
-        : error_handler(error_handler), context(context) { }
-
-    std::shared_ptr<const core::Role> result;
-
-    template<typename Node>
-    void operator()(const Node& node) {
-        result = parse(node, error_handler, context);
-    }
-};
-
-class ConceptInnerVisitor {
-public:
-    ConceptInnerVisitor() { }
-
-    std::shared_ptr<const core::Concept> result;
-
-    void operator()(const std::shared_ptr<const core::Role>&) { }
-
-    void operator()(const std::shared_ptr<const core::Concept>& concept) {
-        result = concept;
-    }
-};
-
-class RoleInnerVisitor {
-public:
-    RoleInnerVisitor() { }
-
-    std::shared_ptr<const core::Role> result;
-
-    void operator()(const std::shared_ptr<const core::Role>& role) {
-        result = role;
-    }
-
-    void operator()(const std::shared_ptr<const core::Concept>&) { }
-};
-
-class ConceptOrRoleVisitor {
-private:
-    const error_handler_type& error_handler;
-    SyntacticElementFactory& context;
-
-public:
-    ConceptOrRoleVisitor(const error_handler_type& error_handler, SyntacticElementFactory& context)
-        : error_handler(error_handler), context(context) { }
-
-    boost::variant<std::shared_ptr<const core::Concept>, std::shared_ptr<const core::Role>> result;
-
-    template<typename Node>
-    void operator()(const Node& node) {
-        result = parse(node, error_handler, context);
-    }
-};
 
 std::string
 parse(const ast::Name& node, const error_handler_type&, SyntacticElementFactory&) {
@@ -166,12 +82,12 @@ parse(const ast::Position& node, const error_handler_type& error_handler, Syntac
 std::shared_ptr<const core::Boolean>
 parse(const ast::EmptyBoolean& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     auto concept_or_role = parse(node.element, error_handler, context);
-    ConceptInnerVisitor concept_visitor;
-    boost::apply_visitor(concept_visitor, concept_or_role);
-    if (concept_visitor.result != nullptr) return context.make_empty_boolean(concept_visitor.result);
-    RoleInnerVisitor role_visitor;
-    boost::apply_visitor(role_visitor, concept_or_role);
-    if (role_visitor.result != nullptr) return context.make_empty_boolean(role_visitor.result);
+    PointerTypeVisitor<std::shared_ptr<const core::Concept>> concept_visitor;
+    auto concept = boost::apply_visitor(concept_visitor, concept_or_role);
+    if (concept != nullptr) return context.make_empty_boolean(concept);
+    PointerTypeVisitor<std::shared_ptr<const core::Role>> role_visitor;
+    auto role = boost::apply_visitor(role_visitor, concept_or_role);
+    if (role != nullptr) return context.make_empty_boolean(role);
     error_handler(node, "expected two concepts or two roles");
     throw std::runtime_error("Failed parse.");
 }
@@ -180,19 +96,19 @@ std::shared_ptr<const core::Boolean>
 parse(const ast::InclusionBoolean& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     auto concept_or_role_left = parse(node.element_left, error_handler, context);
     auto concept_or_role_right = parse(node.element_right, error_handler, context);
-    ConceptInnerVisitor concept_visitor_left;
-    ConceptInnerVisitor concept_visitor_right;
-    boost::apply_visitor(concept_visitor_left, concept_or_role_left);
-    boost::apply_visitor(concept_visitor_right, concept_or_role_right);
-    if (concept_visitor_left.result != nullptr && concept_visitor_right.result != nullptr) {
-        return context.make_inclusion_boolean(concept_visitor_left.result, concept_visitor_right.result);
+    PointerTypeVisitor<std::shared_ptr<const core::Concept>> concept_visitor_left;
+    PointerTypeVisitor<std::shared_ptr<const core::Concept>> concept_visitor_right;
+    auto concept_left = boost::apply_visitor(concept_visitor_left, concept_or_role_left);
+    auto concept_right = boost::apply_visitor(concept_visitor_right, concept_or_role_right);
+    if (concept_left != nullptr && concept_right != nullptr) {
+        return context.make_inclusion_boolean(concept_left, concept_right);
     }
-    RoleInnerVisitor role_visitor_left;
-    RoleInnerVisitor role_visitor_right;
-    boost::apply_visitor(role_visitor_left, concept_or_role_left);
-    boost::apply_visitor(role_visitor_right, concept_or_role_right);
-    if (role_visitor_left.result != nullptr && role_visitor_right.result != nullptr) {
-        return context.make_inclusion_boolean(role_visitor_left.result, role_visitor_right.result);
+    PointerTypeVisitor<std::shared_ptr<const core::Role>> role_visitor_left;
+    PointerTypeVisitor<std::shared_ptr<const core::Role>> role_visitor_right;
+    auto role_left = boost::apply_visitor(role_visitor_left, concept_or_role_left);
+    auto role_right = boost::apply_visitor(role_visitor_right, concept_or_role_right);
+    if (role_left != nullptr && role_right != nullptr) {
+        return context.make_inclusion_boolean(role_left, role_right);
     }
     error_handler(node, "expected two concepts or two roles");
     throw std::runtime_error("Failed parse.");
@@ -299,12 +215,12 @@ parse(const ast::ConceptDistanceNumerical& node, const error_handler_type& error
 std::shared_ptr<const core::Numerical>
 parse(const ast::CountNumerical& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     auto concept_or_role = parse(node.element, error_handler, context);
-    ConceptInnerVisitor concept_visitor;
-    boost::apply_visitor(concept_visitor, concept_or_role);
-    if (concept_visitor.result != nullptr) return context.make_count_numerical(concept_visitor.result);
-    RoleInnerVisitor role_visitor;
-    boost::apply_visitor(role_visitor, concept_or_role);
-    if (role_visitor.result != nullptr) return context.make_count_numerical(role_visitor.result);
+    PointerTypeVisitor<std::shared_ptr<const core::Concept>> concept_visitor;
+    auto concept = boost::apply_visitor(concept_visitor, concept_or_role);
+    if (concept != nullptr) return context.make_count_numerical(concept);
+    PointerTypeVisitor<std::shared_ptr<const core::Role>> role_visitor;
+    auto role = boost::apply_visitor(role_visitor, concept_or_role);
+    if (role != nullptr) return context.make_count_numerical(role);
     error_handler(node, "expected two concepts or two roles");
     throw std::runtime_error("Failed parse.");
 }
@@ -413,39 +329,34 @@ parse(const ast::TransitiveReflexiveClosureRole& node, const error_handler_type&
 
 boost::variant<std::shared_ptr<const core::Concept>, std::shared_ptr<const core::Role>>
 parse(const ast::ConceptOrRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
-    ConceptOrRoleVisitor visitor(error_handler, context);
-    boost::apply_visitor(visitor, node);
-    return visitor.result;
+    ParseVisitor<boost::variant<std::shared_ptr<const core::Concept>, std::shared_ptr<const core::Role>>> visitor(error_handler, context);
+    return boost::apply_visitor(visitor, node);
 }
 
 std::shared_ptr<const core::Concept>
 parse(const ast::Concept& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
-    ConceptVisitor visitor(error_handler, context);
-    boost::apply_visitor(visitor, node);
-    return visitor.result;
+    ParseVisitor<std::shared_ptr<const core::Concept>> visitor(error_handler, context);
+    return boost::apply_visitor(visitor, node);
 }
 
 
 std::shared_ptr<const core::Role>
 parse(const ast::Role& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
-    RoleVisitor visitor(error_handler, context);
-    boost::apply_visitor(visitor, node);
-    return visitor.result;
+    ParseVisitor<std::shared_ptr<const core::Role>> visitor(error_handler, context);
+    return boost::apply_visitor(visitor, node);
 }
 
 
 std::shared_ptr<const core::Boolean>
 parse(const ast::Boolean& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
-    BooleanVisitor visitor(error_handler, context);
-    boost::apply_visitor(visitor, node);
-    return visitor.result;
+    ParseVisitor<std::shared_ptr<const core::Boolean>> visitor(error_handler, context);
+    return boost::apply_visitor(visitor, node);
 }
 
 std::shared_ptr<const core::Numerical>
 parse(const ast::Numerical& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
-    NumericalVisitor visitor(error_handler, context);
-    boost::apply_visitor(visitor, node);
-    return visitor.result;
+    ParseVisitor<std::shared_ptr<const core::Numerical>> visitor(error_handler, context);
+    return boost::apply_visitor(visitor, node);
 }
 
 
