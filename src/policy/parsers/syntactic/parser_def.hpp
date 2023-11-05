@@ -94,7 +94,7 @@ namespace dlplan::policy::parser
     // Grammar
     ///////////////////////////////////////////////////////////////////////////
 
-    const auto name_def = alpha >> lexeme[*(alnum | char_('-') | char_('_'))];
+    const auto name_def = lexeme[alpha >> *(alnum | char_('-') | char_('_'))];
 
     const auto boolean_definition_def = name;
     const auto boolean_implementation_def = dlplan::core::boolean();

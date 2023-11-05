@@ -221,7 +221,7 @@ namespace dlplan::core::parser
     // Grammar
     ///////////////////////////////////////////////////////////////////////////
 
-    const auto name_def = alpha >> lexeme[*(alnum | char_('-') | char_('_'))];
+    const auto name_def = lexeme[alpha >> *(alnum | char_('-') | char_('_'))];
 
     const auto integer_def = int_;
 
