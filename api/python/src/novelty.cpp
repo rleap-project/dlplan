@@ -37,9 +37,9 @@ void init_novelty(py::module_ &m_novelty) {
         .def("__str__", &TupleNode::str)
         .def("get_index", &TupleNode::get_index)
         .def("get_tuple_index", &TupleNode::get_tuple_index)
-        .def("get_state_indices", &TupleNode::get_state_indices, py::return_value_policy::reference)
-        .def("get_predecessors", &TupleNode::get_predecessors, py::return_value_policy::reference)
-        .def("get_successors", &TupleNode::get_successors, py::return_value_policy::reference)
+        .def("get_state_indices", &TupleNode::get_state_indices)
+        .def("get_predecessors", &TupleNode::get_predecessors)
+        .def("get_successors", &TupleNode::get_successors)
     ;
 
     py::class_<TupleGraph, std::shared_ptr<TupleGraph>>(m_novelty, "TupleGraph")
@@ -50,8 +50,8 @@ void init_novelty(py::module_ &m_novelty) {
         .def("get_novelty_base", &TupleGraph::get_novelty_base)
         .def("get_state_space", &TupleGraph::get_state_space)
         .def("get_root_state_index", &TupleGraph::get_root_state_index)
-        .def("get_tuple_nodes", &TupleGraph::get_tuple_nodes, py::return_value_policy::reference)
-        .def("get_tuple_node_indices_by_distance", &TupleGraph::get_tuple_node_indices_by_distance, py::return_value_policy::reference)
-        .def("get_state_indices_by_distance", &TupleGraph::get_state_indices_by_distance, py::return_value_policy::reference)
+        .def("get_tuple_nodes", &TupleGraph::get_tuple_nodes)
+        .def("get_tuple_node_indices_by_distance", &TupleGraph::get_tuple_node_indices_by_distance)
+        .def("get_state_indices_by_distance", &TupleGraph::get_state_indices_by_distance)
     ;
 }

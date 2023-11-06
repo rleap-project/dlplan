@@ -65,8 +65,8 @@ void init_policy(py::module_ &m_policy) {
         .def("evaluate_effects", py::overload_cast<const core::State&, const core::State&>(&policy::Rule::evaluate_effects, py::const_))
         .def("evaluate_effects", py::overload_cast<const core::State&, const core::State&, core::DenotationsCaches&>(&policy::Rule::evaluate_effects, py::const_))
         .def("get_index", &policy::Rule::get_index)
-        .def("get_conditions", &policy::Rule::get_conditions, py::return_value_policy::reference)
-        .def("get_effects", &policy::Rule::get_effects, py::return_value_policy::reference)
+        .def("get_conditions", &policy::Rule::get_conditions)
+        .def("get_effects", &policy::Rule::get_effects)
     ;
 
     py::class_<policy::Policy, std::shared_ptr<policy::Policy>>(m_policy, "Policy")
@@ -78,9 +78,9 @@ void init_policy(py::module_ &m_policy) {
         .def("evaluate_conditions", py::overload_cast<const core::State&, core::DenotationsCaches&>(&policy::Policy::evaluate_conditions, py::const_))
         .def("evaluate_effects", py::overload_cast<const core::State&, const core::State&, const std::vector<std::shared_ptr<const policy::Rule>>&>(&policy::Policy::evaluate_effects, py::const_))
         .def("evaluate_effects", py::overload_cast<const core::State&, const core::State&, const std::vector<std::shared_ptr<const policy::Rule>>&, core::DenotationsCaches&>(&policy::Policy::evaluate_effects, py::const_))
-        .def("get_rules", &policy::Policy::get_rules, py::return_value_policy::reference)
-        .def("get_booleans", &policy::Policy::get_booleans, py::return_value_policy::reference)
-        .def("get_numericals", &policy::Policy::get_numericals, py::return_value_policy::reference)
+        .def("get_rules", &policy::Policy::get_rules)
+        .def("get_booleans", &policy::Policy::get_booleans)
+        .def("get_numericals", &policy::Policy::get_numericals)
     ;
 
     py::class_<policy::PolicyFactory, std::shared_ptr<policy::PolicyFactory>>(m_policy, "PolicyFactory")
