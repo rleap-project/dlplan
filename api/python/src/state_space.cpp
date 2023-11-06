@@ -27,11 +27,11 @@ void init_state_space(py::module_ &m_state_space) {
         .def("to_dot", &StateSpace::to_dot)
         .def("set_initial_state_index", &StateSpace::set_initial_state_index)
         .def("set_goal_state_indices", &StateSpace::set_goal_state_indices)
-        .def("get_states", &StateSpace::get_states, py::return_value_policy::reference)
+        .def("get_states", &StateSpace::get_states)
         .def("get_initial_state_index", &StateSpace::get_initial_state_index)
-        .def("get_forward_successor_state_indices", &StateSpace::get_forward_successor_state_indices, py::return_value_policy::reference)
-        .def("get_backward_successor_state_indices", &StateSpace::get_backward_successor_state_indices, py::return_value_policy::reference)
-        .def("get_goal_state_indices", &StateSpace::get_goal_state_indices, py::return_value_policy::reference)
+        .def("get_forward_successor_state_indices", &StateSpace::get_forward_successor_state_indices)
+        .def("get_backward_successor_state_indices", &StateSpace::get_backward_successor_state_indices)
+        .def("get_goal_state_indices", &StateSpace::get_goal_state_indices)
         .def("get_instance_info", &StateSpace::get_instance_info)
     ;
 
