@@ -91,7 +91,7 @@ install(
 # Install cmake scripts
 install(
     DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/cmake/"
-    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dlplan"
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dlplan/cmake"
 )
 
 ###########
