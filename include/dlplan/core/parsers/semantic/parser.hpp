@@ -10,8 +10,6 @@
 #include <variant>
 
 
-
-
 namespace dlplan::core {
 
 extern std::string parse(const ast::Name& node, const dlplan::error_handler_type&, SyntacticElementFactory&);

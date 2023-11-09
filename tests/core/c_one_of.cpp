@@ -21,8 +21,8 @@ TEST(DLPTests, ConceptOneOf) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    auto concept = factory.parse_concept("c_one_of(A)");
-    EXPECT_EQ(concept->evaluate(state_0), create_concept_denotation(*instance, {"A"}));
+    auto concept_ = factory.parse_concept("c_one_of(A)");
+    EXPECT_EQ(concept_->evaluate(state_0), create_concept_denotation(*instance, {"A"}));
 }
 
 }

@@ -84,9 +84,9 @@ std::shared_ptr<const NamedNumerical> PolicyFactoryImpl::make_numerical(const st
     return it.first;
 }
 
-std::shared_ptr<const NamedConcept> PolicyFactoryImpl::make_concept(const std::string& key, const std::shared_ptr<const core::Concept>& concept) {
-    auto it = m_caches.m_concept_cache->insert(std::make_unique<NamedConcept>(key, concept));
-    if (!it.second && (it.first->get_concept() != concept)) {
+std::shared_ptr<const NamedConcept> PolicyFactoryImpl::make_concept(const std::string& key, const std::shared_ptr<const core::Concept>& concept_) {
+    auto it = m_caches.m_concept_cache->insert(std::make_unique<NamedConcept>(key, concept_));
+    if (!it.second && (it.first->get_concept() != concept_)) {
         throw std::runtime_error("Failed to make concept because a different concept with the same key already exists.");
     }
     return it.first;

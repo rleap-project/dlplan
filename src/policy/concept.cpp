@@ -62,10 +62,10 @@ template<class Archive>
 void load_construct_data(Archive& ar, dlplan::policy::NamedConcept* t, const unsigned int /* version */ )
 {
     std::string key;
-    std::shared_ptr<const dlplan::core::Concept> concept;
+    std::shared_ptr<const dlplan::core::Concept> concept_;
     ar >> key;
-    ar >> concept;
-    ::new(t)dlplan::policy::NamedConcept(key, concept);
+    ar >> concept_;
+    ::new(t)dlplan::policy::NamedConcept(key, concept_);
 }
 
 template void serialize(boost::archive::text_iarchive& ar,

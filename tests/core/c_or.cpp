@@ -23,8 +23,8 @@ TEST(DLPTests, ConceptOr) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    auto concept = factory.parse_concept("c_or(c_primitive(concept_1,0),c_primitive(concept_2,0))");
-    EXPECT_EQ(concept->evaluate(state_0), create_concept_denotation(*instance, {"A", "B", "C"}));
+    auto concept_ = factory.parse_concept("c_or(c_primitive(concept_1,0),c_primitive(concept_2,0))");
+    EXPECT_EQ(concept_->evaluate(state_0), create_concept_denotation(*instance, {"A", "B", "C"}));
 }
 
 }

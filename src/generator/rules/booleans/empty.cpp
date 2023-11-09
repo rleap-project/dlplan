@@ -6,8 +6,8 @@
 namespace dlplan::generator::rules {
 void EmptyBoolean::generate_impl(const core::States& states, int target_complexity, dlplan::generator::GeneratorData& data, core::DenotationsCaches& caches) {
     core::SyntacticElementFactory& factory = data.m_factory;
-    for (const auto& concept : data.m_concepts_by_iteration[target_complexity-1]) {
-        auto element = factory.make_empty_boolean(concept);
+    for (const auto& concept_ : data.m_concepts_by_iteration[target_complexity-1]) {
+        auto element = factory.make_empty_boolean(concept_);
         auto denotations = element->evaluate(states, caches);
         if (data.m_boolean_and_numerical_hash_table.insert(denotations).second) {
             data.m_reprs.push_back(element->compute_repr());

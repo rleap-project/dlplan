@@ -127,11 +127,11 @@ void load_construct_data(Archive & ar, dlplan::core::IdentityRole* t, const unsi
 {
     std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
     int index;
-    std::shared_ptr<const dlplan::core::Concept> concept;
+    std::shared_ptr<const dlplan::core::Concept> concept_;
     ar >> vocabulary;
     ar >> index;
-    ar >> concept;
-    ::new(t)dlplan::core::IdentityRole(vocabulary, index, concept);
+    ar >> concept_;
+    ::new(t)dlplan::core::IdentityRole(vocabulary, index, concept_);
 }
 
 }

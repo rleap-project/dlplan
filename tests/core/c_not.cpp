@@ -23,8 +23,8 @@ TEST(DLPTests, ConceptNot) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    auto concept = factory.parse_concept("c_not(c_primitive(concept_1,0))");
-    EXPECT_EQ(concept->evaluate(state_0), create_concept_denotation(*instance, {"C"}));
+    auto concept_ = factory.parse_concept("c_not(c_primitive(concept_1,0))");
+    EXPECT_EQ(concept_->evaluate(state_0), create_concept_denotation(*instance, {"C"}));
 }
 
 }
