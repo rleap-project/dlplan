@@ -210,7 +210,7 @@ namespace dlplan::core::parser
 
     numerical_type const numerical = "numerical";
 
-    concept_type const concept = "concept";
+    concept_type const concept_ = "concept";
 
     role_type const role = "role";
 
@@ -238,41 +238,41 @@ namespace dlplan::core::parser
 
     const auto nullary_boolean_def = lit("b_nullary") > lit('(') > predicate > lit(')');
 
-    const auto all_concept_def = lit("c_all") > lit('(') > role > lit(',') > concept > lit(')');
+    const auto all_concept_def = lit("c_all") > lit('(') > role > lit(',') > concept_ > lit(')');
 
-    const auto and_concept_def = lit("c_and") > lit('(') > concept > lit(',') > concept > lit(')');
+    const auto and_concept_def = lit("c_and") > lit('(') > concept_ > lit(',') > concept_ > lit(')');
 
     // Note: Need this semantic action to synthesize the empty struct
     const auto bot_concept_def = lit("c_bot") >> x3::attr(ast::BotConcept{});
 
-    const auto diff_concept_def = lit("c_diff") > lit('(') > concept > lit(',') > concept > lit(')');
+    const auto diff_concept_def = lit("c_diff") > lit('(') > concept_ > lit(',') > concept_ > lit(')');
 
     const auto equal_concept_def = lit("c_equal") > lit('(') > role > lit(',') > role > lit(')');
 
-    const auto not_concept_def = lit("c_not") > lit('(') > concept > lit(')');
+    const auto not_concept_def = lit("c_not") > lit('(') > concept_ > lit(')');
 
     const auto one_of_concept_def = lit("c_one_of") > lit('(') > constant > lit(')');
 
-    const auto or_concept_def = lit("c_or") > lit('(') > concept > lit(',') > concept > lit(')');
+    const auto or_concept_def = lit("c_or") > lit('(') > concept_ > lit(',') > concept_ > lit(')');
 
     const auto primitive_concept_def = lit("c_primitive") > lit('(') > predicate > lit(',') > position > lit(')');
 
     const auto projection_concept_def = lit("c_projection") > lit('(') > role > lit(',') > position > lit(')');
 
-    const auto some_concept_def = lit("c_some") > lit('(') > role > lit(',') > concept > lit(')');
+    const auto some_concept_def = lit("c_some") > lit('(') > role > lit(',') > concept_ > lit(')');
 
     const auto subset_concept_def = lit("c_subset") > lit('(') > role > lit(',') > role > lit(')');
 
     // Note: Need this semantic action to synthesize the empty struct
     const auto top_concept_def = lit("c_top") >> x3::attr(ast::TopConcept{});
 
-    const auto concept_distance_numerical_def = lit("n_concept_distance") > lit('(') > concept > lit(',') > role > lit(',') > concept > lit(')');
+    const auto concept_distance_numerical_def = lit("n_concept_distance") > lit('(') > concept_ > lit(',') > role > lit(',') > concept_ > lit(')');
 
     const auto count_numerical_def = lit("n_count") > lit('(') > concept_or_role > lit(')');
 
     const auto role_distance_numerical_def = lit("n_role_distance") > lit('(') > role > lit(',') > role > lit(',') > role > lit(')');
 
-    const auto sum_concept_distance_numerical_def = lit("n_sum_concept_distance") > lit('(') > concept > lit(',') > role > lit(',') > concept > lit(')');
+    const auto sum_concept_distance_numerical_def = lit("n_sum_concept_distance") > lit('(') > concept_ > lit(',') > role > lit(',') > concept_ > lit(')');
 
     const auto sum_role_distance_numerical_def = lit("n_sum_role_distance") > lit('(') > role > lit(',') > role > lit(',') > role > lit(')');
 
@@ -282,7 +282,7 @@ namespace dlplan::core::parser
 
     const auto diff_role_def = lit("r_diff") > lit('(') > role > lit(',') > role > lit(')');
 
-    const auto identity_role_def = lit("r_identity") > lit('(') > concept > lit(')');
+    const auto identity_role_def = lit("r_identity") > lit('(') > concept_ > lit(')');
 
     const auto inverse_role_def = lit("r_inverse") > lit('(') > role > lit(')');
 
@@ -292,7 +292,7 @@ namespace dlplan::core::parser
 
     const auto primitive_role_def = lit("r_primitive") > lit('(') > predicate > lit(',') > position  > lit(',') > position > lit(')');
 
-    const auto restrict_role_def = lit("r_restrict") > lit('(') > role > lit(',') > concept > lit(')');
+    const auto restrict_role_def = lit("r_restrict") > lit('(') > role > lit(',') > concept_ > lit(')');
 
     // Note: Need this semantic action to synthesize the empty struct
     const auto top_role_def = lit("r_top") >> x3::attr(ast::TopRole{});
@@ -305,8 +305,8 @@ namespace dlplan::core::parser
     const auto boolean_root_def = eps > boolean;
 
     // Note: non recursive comes first, i.e., primitive_concept
-    const auto concept_def = primitive_concept | all_concept | and_concept | bot_concept | diff_concept | equal_concept | not_concept | one_of_concept | or_concept | projection_concept | some_concept | subset_concept | top_concept;
-    const auto concept_root_def = eps > concept;
+    const auto concept__def = primitive_concept | all_concept | and_concept | bot_concept | diff_concept | equal_concept | not_concept | one_of_concept | or_concept | projection_concept | some_concept | subset_concept | top_concept;
+    const auto concept_root_def = eps > concept_;
 
     const auto numerical_def = concept_distance_numerical | count_numerical | role_distance_numerical | sum_concept_distance_numerical | sum_role_distance_numerical;
     const auto numerical_root_def = eps > numerical;
@@ -315,16 +315,16 @@ namespace dlplan::core::parser
     const auto role_def = primitive_role | and_role | compose_role | diff_role | identity_role | inverse_role | not_role | or_role | restrict_role | top_role | transitive_closure_role | transitive_reflexive_closure_role;
     const auto role_root_def = eps > role;
 
-    const auto concept_or_role_def = concept | role;
+    const auto concept_or_role_def = concept_ | role;
 
-    const auto element_def = boolean | concept | numerical | role;
+    const auto element_def = boolean | concept_ | numerical | role;
     const auto element_root_def = eps > element;
 
 
     BOOST_SPIRIT_DEFINE(
         name, constant, predicate, integer, position,
         boolean, boolean_root,
-        concept, concept_root,
+        concept_, concept_root,
         numerical, numerical_root,
         role, role_root,
         element, element_root,
@@ -412,9 +412,9 @@ namespace dlplan::core
         return parser::numerical;
     }
 
-    parser::concept_type const& concept()
+    parser::concept_type const& concept_()
     {
-        return parser::concept;
+        return parser::concept_;
     }
 
     parser::role_type const& role()

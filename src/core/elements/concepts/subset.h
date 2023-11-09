@@ -23,11 +23,11 @@ class SubsetConcept;
 
 namespace boost::serialization {
     template<typename Archive>
-    void serialize(Archive& ar, dlplan::core::SubsetConcept& concept, const unsigned int version);
+    void serialize(Archive& ar, dlplan::core::SubsetConcept& t, const unsigned int version);
     template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::SubsetConcept* concept, const unsigned int version);
+    void save_construct_data(Archive& ar, const dlplan::core::SubsetConcept* t, const unsigned int version);
     template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::SubsetConcept* concept, const unsigned int version);
+    void load_construct_data(Archive& ar, dlplan::core::SubsetConcept* t, const unsigned int version);
 }
 
 
@@ -69,11 +69,11 @@ private:
     }
 
     template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, SubsetConcept& concept, const unsigned int version);
+    friend void boost::serialization::serialize(Archive& ar, SubsetConcept& t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const SubsetConcept* concept, const unsigned int version);
+    friend void boost::serialization::save_construct_data(Archive& ar, const SubsetConcept* t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, SubsetConcept* concept, const unsigned int version);
+    friend void boost::serialization::load_construct_data(Archive& ar, SubsetConcept* t, const unsigned int version);
 
 protected:
     const std::shared_ptr<const Role> m_role_left;

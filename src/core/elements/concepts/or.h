@@ -23,11 +23,11 @@ class OrConcept;
 
 namespace boost::serialization {
     template<typename Archive>
-    void serialize(Archive& ar, dlplan::core::OrConcept& concept, const unsigned int version);
+    void serialize(Archive& ar, dlplan::core::OrConcept& t, const unsigned int version);
     template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::OrConcept* concept, const unsigned int version);
+    void save_construct_data(Archive& ar, const dlplan::core::OrConcept* t, const unsigned int version);
     template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::OrConcept* concept, const unsigned int version);
+    void load_construct_data(Archive& ar, dlplan::core::OrConcept* t, const unsigned int version);
 }
 
 
@@ -66,11 +66,11 @@ private:
     }
 
     template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, OrConcept& concept, const unsigned int version);
+    friend void boost::serialization::serialize(Archive& ar, OrConcept& t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const OrConcept* concept, const unsigned int version);
+    friend void boost::serialization::save_construct_data(Archive& ar, const OrConcept* t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, OrConcept* concept, const unsigned int version);
+    friend void boost::serialization::load_construct_data(Archive& ar, OrConcept* t, const unsigned int version);
 
 protected:
     std::shared_ptr<const Concept> m_concept_left;

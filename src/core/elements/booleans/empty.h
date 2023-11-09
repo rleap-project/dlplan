@@ -24,11 +24,11 @@ class EmptyBoolean;
 
 namespace boost::serialization {
     template<typename Archive, typename T>
-    void serialize(Archive& ar, dlplan::core::EmptyBoolean<T>& boolean, const unsigned int version);
+    void serialize(Archive& ar, dlplan::core::EmptyBoolean<T>& t, const unsigned int version);
     template<class Archive, typename T>
-    void save_construct_data(Archive& ar, const dlplan::core::EmptyBoolean<T>* boolean, const unsigned int version);
+    void save_construct_data(Archive& ar, const dlplan::core::EmptyBoolean<T>* t, const unsigned int version);
     template<class Archive, typename T>
-    void load_construct_data(Archive& ar, dlplan::core::EmptyBoolean<T>* boolean, const unsigned int version);
+    void load_construct_data(Archive& ar, dlplan::core::EmptyBoolean<T>* t, const unsigned int version);
 }
 
 
@@ -65,11 +65,11 @@ private:
     }
 
     template<typename Archive, typename T_>
-    friend void boost::serialization::serialize(Archive& ar, EmptyBoolean<T_>& boolean, const unsigned int version);
+    friend void boost::serialization::serialize(Archive& ar, EmptyBoolean<T_>& t, const unsigned int version);
     template<class Archive, typename T_>
-    friend void boost::serialization::save_construct_data(Archive & ar, const EmptyBoolean<T_>* boolean, const unsigned int version);
+    friend void boost::serialization::save_construct_data(Archive & ar, const EmptyBoolean<T_>* t, const unsigned int version);
     template<class Archive, typename T_>
-    friend void boost::serialization::load_construct_data(Archive & ar, EmptyBoolean<T_>* boolean, const unsigned int version);
+    friend void boost::serialization::load_construct_data(Archive & ar, EmptyBoolean<T_>* t, const unsigned int version);
 
 protected:
     const std::shared_ptr<const T> m_element;

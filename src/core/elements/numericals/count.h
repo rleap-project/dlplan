@@ -24,11 +24,11 @@ class CountNumerical;
 
 namespace boost::serialization {
     template<typename Archive, typename T>
-    void serialize(Archive& ar, dlplan::core::CountNumerical<T>& numerical, const unsigned int version);
+    void serialize(Archive& ar, dlplan::core::CountNumerical<T>& t, const unsigned int version);
     template<class Archive, typename T>
-    void save_construct_data(Archive& ar, const dlplan::core::CountNumerical<T>* numerical, const unsigned int version);
+    void save_construct_data(Archive& ar, const dlplan::core::CountNumerical<T>* t, const unsigned int version);
     template<class Archive, typename T>
-    void load_construct_data(Archive& ar, dlplan::core::CountNumerical<T>* numerical, const unsigned int version);
+    void load_construct_data(Archive& ar, dlplan::core::CountNumerical<T>* t, const unsigned int version);
 }
 
 namespace dlplan::core {
@@ -64,11 +64,11 @@ private:
     }
 
     template<typename Archive, typename T_>
-    friend void boost::serialization::serialize(Archive& ar, CountNumerical<T_>& numerical, const unsigned int version);
+    friend void boost::serialization::serialize(Archive& ar, CountNumerical<T_>& t, const unsigned int version);
     template<class Archive, typename T_>
-    friend void boost::serialization::save_construct_data(Archive& ar, const CountNumerical<T_>* numerical, const unsigned int version);
+    friend void boost::serialization::save_construct_data(Archive& ar, const CountNumerical<T_>* t, const unsigned int version);
     template<class Archive, typename T_>
-    friend void boost::serialization::load_construct_data(Archive& ar, CountNumerical<T_>* numerical, const unsigned int version);
+    friend void boost::serialization::load_construct_data(Archive& ar, CountNumerical<T_>* t, const unsigned int version);
 
 protected:
     const std::shared_ptr<const T> m_element;

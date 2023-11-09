@@ -25,11 +25,11 @@ class PrimitiveConcept;
 
 namespace boost::serialization {
     template<typename Archive>
-    void serialize(Archive& ar, dlplan::core::PrimitiveConcept& concept, const unsigned int version);
+    void serialize(Archive& ar, dlplan::core::PrimitiveConcept& t, const unsigned int version);
     template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::PrimitiveConcept* concept, const unsigned int version);
+    void save_construct_data(Archive& ar, const dlplan::core::PrimitiveConcept* t, const unsigned int version);
     template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::PrimitiveConcept* concept, const unsigned int version);
+    void load_construct_data(Archive& ar, dlplan::core::PrimitiveConcept* t, const unsigned int version);
 }
 
 
@@ -76,11 +76,11 @@ private:
     }
 
     template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, PrimitiveConcept& concept, const unsigned int version);
+    friend void boost::serialization::serialize(Archive& ar, PrimitiveConcept& t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const PrimitiveConcept* concept, const unsigned int version);
+    friend void boost::serialization::save_construct_data(Archive& ar, const PrimitiveConcept* t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, PrimitiveConcept* concept, const unsigned int version);
+    friend void boost::serialization::load_construct_data(Archive& ar, PrimitiveConcept* t, const unsigned int version);
 
 protected:
     const Predicate m_predicate;

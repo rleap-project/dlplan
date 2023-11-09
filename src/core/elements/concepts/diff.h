@@ -23,11 +23,11 @@ class DiffConcept;
 
 namespace boost::serialization {
     template<typename Archive>
-    void serialize(Archive& ar, dlplan::core::DiffConcept& concept, const unsigned int version);
+    void serialize(Archive& ar, dlplan::core::DiffConcept& t, const unsigned int version);
     template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::DiffConcept* concept, const unsigned int version);
+    void save_construct_data(Archive& ar, const dlplan::core::DiffConcept* t, const unsigned int version);
     template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::DiffConcept* concept, const unsigned int version);
+    void load_construct_data(Archive& ar, dlplan::core::DiffConcept* t, const unsigned int version);
 }
 
 
@@ -65,11 +65,11 @@ private:
     }
 
     template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, DiffConcept& concept, const unsigned int version);
+    friend void boost::serialization::serialize(Archive& ar, DiffConcept& t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const DiffConcept* concept, const unsigned int version);
+    friend void boost::serialization::save_construct_data(Archive& ar, const DiffConcept* t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, DiffConcept* concept, const unsigned int version);
+    friend void boost::serialization::load_construct_data(Archive& ar, DiffConcept* t, const unsigned int version);
 
 protected:
     const std::shared_ptr<const Concept> m_concept_left;

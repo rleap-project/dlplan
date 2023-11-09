@@ -23,11 +23,11 @@ class TopRole;
 
 namespace boost::serialization {
     template<typename Archive>
-    void serialize(Archive& ar, dlplan::core::TopRole& role, const unsigned int version);
+    void serialize(Archive& ar, dlplan::core::TopRole& t, const unsigned int version);
     template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::TopRole* role, const unsigned int version);
+    void save_construct_data(Archive& ar, const dlplan::core::TopRole* t, const unsigned int version);
     template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::TopRole* role, const unsigned int version);
+    void load_construct_data(Archive& ar, dlplan::core::TopRole* t, const unsigned int version);
 }
 
 
@@ -52,11 +52,11 @@ private:
     }
 
     template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, TopRole& role, const unsigned int version);
+    friend void boost::serialization::serialize(Archive& ar, TopRole& t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const TopRole* role, const unsigned int version);
+    friend void boost::serialization::save_construct_data(Archive& ar, const TopRole* t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, TopRole* role, const unsigned int version);
+    friend void boost::serialization::load_construct_data(Archive& ar, TopRole* t, const unsigned int version);
 
 public:
     TopRole(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index)

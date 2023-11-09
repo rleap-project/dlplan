@@ -32,7 +32,7 @@ namespace dlplan::core
     parser::element_type const& element();
     parser::boolean_type const& boolean();
     parser::numerical_type const& numerical();
-    parser::concept_type const& concept();
+    parser::concept_type const& concept_();
     parser::role_type const& role();
 }
 

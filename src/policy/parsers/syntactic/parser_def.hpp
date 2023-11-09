@@ -109,7 +109,7 @@ namespace dlplan::policy::parser
     const auto numericals_def = lit('(') >> lit(":numericals") > *numerical > lit(')');
 
     const auto concept_definition_def = name;
-    const auto concept_implementation_def = dlplan::core::concept();
+    const auto concept_implementation_def = dlplan::core::concept_();
     const auto concept_def = lit('(') > concept_definition > lit('"') > concept_implementation > lit('"') > lit(')');
     const auto concept_reference_def = name;
     const auto concepts_def = lit('(') >> lit(":concepts") > *concept > lit(')');

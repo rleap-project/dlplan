@@ -23,11 +23,11 @@ class NullaryBoolean;
 
 namespace boost::serialization {
     template<typename Archive>
-    void serialize(Archive& ar, dlplan::core::NullaryBoolean& boolean, const unsigned int version);
+    void serialize(Archive& ar, dlplan::core::NullaryBoolean& t, const unsigned int version);
     template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::NullaryBoolean* boolean, const unsigned int version);
+    void save_construct_data(Archive& ar, const dlplan::core::NullaryBoolean* t, const unsigned int version);
     template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::NullaryBoolean* boolean, const unsigned int version);
+    void load_construct_data(Archive& ar, dlplan::core::NullaryBoolean* t, const unsigned int version);
 }
 
 
@@ -66,11 +66,11 @@ private:
     }
 
     template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, NullaryBoolean& boolean, const unsigned int version);
+    friend void boost::serialization::serialize(Archive& ar, NullaryBoolean& t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const NullaryBoolean* boolean, const unsigned int version);
+    friend void boost::serialization::save_construct_data(Archive& ar, const NullaryBoolean* t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, NullaryBoolean* boolean, const unsigned int version);
+    friend void boost::serialization::load_construct_data(Archive& ar, NullaryBoolean* t, const unsigned int version);
 
 protected:
     const Predicate m_predicate;
