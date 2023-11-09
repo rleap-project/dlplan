@@ -1,10 +1,10 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_SYNTACTIC_ERROR_HANDLER_HPP_
 #define DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_SYNTACTIC_ERROR_HANDLER_HPP_
 
+#include "../../../common/parsers/error_handler.hpp"
+
 #include <map>
 #include <iostream>
-
-#include "include/dlplan/common/parsers/error_handler.hpp"
 
 
 namespace dlplan::core

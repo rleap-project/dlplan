@@ -1,6 +1,6 @@
 /// Example illustrating the novelty component.
 
-#include "include/dlplan/novelty.h"
+#include "../../include/dlplan/novelty.h"
 
 #include <iostream>
 

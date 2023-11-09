@@ -1,10 +1,10 @@
 #ifndef SRC_CORE_PARSERS_SYNTACTIC_AST_ADAPTED_HPP_
 #define SRC_CORE_PARSERS_SYNTACTIC_AST_ADAPTED_HPP_
 
+#include "../../../../include/dlplan/core/parsers/syntactic/ast.hpp"
+
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/fusion/include/std_pair.hpp>
-
-#include "include/dlplan/core/parsers/syntactic/ast.hpp"
 
 
 // We need to tell fusion about our ast nodes

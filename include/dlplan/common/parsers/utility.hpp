@@ -1,9 +1,9 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_COMMON_PARSERS_UTILITY_HPP_
 #define DLPLAN_INCLUDE_DLPLAN_COMMON_PARSERS_UTILITY_HPP_
 
-#include <map>
+#include "config.hpp"
 
-#include "include/dlplan/common/parsers/config.hpp"
+#include <map>
 
 
 namespace dlplan {

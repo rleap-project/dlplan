@@ -3,9 +3,9 @@
 #include <iostream>
 #include <vector>
 
-#include "include/dlplan/core.h"
-#include "include/dlplan/generator.h"
-#include "include/dlplan/state_space.h"
+#include "../../../include/dlplan/core.h"
+#include "../../../include/dlplan/generator.h"
+#include "../../../include/dlplan/state_space.h"
 
 using namespace dlplan::core;
 using namespace dlplan::generator;
@@ -60,8 +60,8 @@ TEST(DLPTests, GeneratorDeliveryTest) {
         generated_numerical_denotations.push_back(numerical->evaluate(states, caches));
     }
     std::vector<const ConceptDenotations*> generated_concept_denotations;
-    for (const auto& concept : generated_concept_features) {
-        generated_concept_denotations.push_back(concept->evaluate(states, caches));
+    for (const auto& concept_ : generated_concept_features) {
+        generated_concept_denotations.push_back(concept_->evaluate(states, caches));
     }
     std::vector<const RoleDenotations*> generated_role_denotations;
     for (const auto& role : generated_role_features) {
@@ -92,8 +92,8 @@ TEST(DLPTests, GeneratorDeliveryTest) {
         required_numerical_denotations.push_back(numerical->evaluate(states, caches));
     }
     std::vector<const ConceptDenotations*> required_concept_denotations;
-    for (const auto& concept : required_concept_features) {
-        required_concept_denotations.push_back(concept->evaluate(states, caches));
+    for (const auto& concept_ : required_concept_features) {
+        required_concept_denotations.push_back(concept_->evaluate(states, caches));
     }
     std::vector<const RoleDenotations*> required_role_denotations;
     for (const auto& role : required_role_features) {

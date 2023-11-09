@@ -1,14 +1,13 @@
 #ifndef DLPLAN_SRC_POLICY_POLICY_BUILDER_H_
 #define DLPLAN_SRC_POLICY_POLICY_BUILDER_H_
 
+#include "cache.h"
+#include "../../include/dlplan/core.h"
+#include "../../include/dlplan/policy.h"
+
 #include <memory>
 #include <vector>
 #include <set>
-
-#include "include/dlplan/core.h"
-#include "include/dlplan/policy.h"
-
-#include "cache.h"
 
 
 namespace dlplan::policy {
@@ -52,7 +51,7 @@ public:
 
     std::shared_ptr<const NamedBoolean> make_boolean(const std::string& key, const std::shared_ptr<const core::Boolean>& boolean);
     std::shared_ptr<const NamedNumerical> make_numerical(const std::string& key, const std::shared_ptr<const core::Numerical>& numerical);
-    std::shared_ptr<const NamedConcept> make_concept(const std::string& key, const std::shared_ptr<const core::Concept>& concept);
+    std::shared_ptr<const NamedConcept> make_concept(const std::string& key, const std::shared_ptr<const core::Concept>& concept_);
     std::shared_ptr<const NamedRole> make_role(const std::string& key, const std::shared_ptr<const core::Role>& role);
 
     std::shared_ptr<const BaseCondition> make_pos_condition(const std::shared_ptr<const NamedBoolean>& boolean);

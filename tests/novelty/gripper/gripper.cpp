@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "include/dlplan/state_space.h"
-#include "include/dlplan/novelty.h"
+#include "../../../include/dlplan/state_space.h"
+#include "../../../include/dlplan/novelty.h"
 
 #include <iostream>
 

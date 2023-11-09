@@ -1,13 +1,13 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_UTILS_DYNAMIC_BITSET_H
 #define DLPLAN_INCLUDE_DLPLAN_UTILS_DYNAMIC_BITSET_H
 
-#include <cassert>
-#include <limits>
-#include <vector>
+#include "hash.h"
 
 #include <boost/serialization/vector.hpp>
 
-#include "hash.h"
+#include <cassert>
+#include <limits>
+#include <vector>
 
 
 namespace dlplan::utils {

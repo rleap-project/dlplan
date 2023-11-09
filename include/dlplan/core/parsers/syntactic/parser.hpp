@@ -1,9 +1,9 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_SYNTACTIC_PARSER_API_HPP_
 #define DLPLAN_INCLUDE_DLPLAN_CORE_PARSERS_SYNTACTIC_PARSER_API_HPP_
 
-#include <boost/spirit/home/x3.hpp>
-
 #include "ast.hpp"
+
+#include <boost/spirit/home/x3.hpp>
 
 
 namespace dlplan::core
@@ -32,7 +32,7 @@ namespace dlplan::core
     parser::element_type const& element();
     parser::boolean_type const& boolean();
     parser::numerical_type const& numerical();
-    parser::concept_type const& concept();
+    parser::concept_type const& concept_();
     parser::role_type const& role();
 }
 

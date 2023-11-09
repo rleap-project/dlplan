@@ -1,13 +1,13 @@
-#include "include/dlplan/policy.h"
+#include "../../include/dlplan/policy.h"
 
-#include <sstream>
+#include "../../include/dlplan/core.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/export.hpp>
 #include <boost/serialization/shared_ptr.hpp>
 
-#include "include/dlplan/core.h"
+#include <sstream>
 
 
 namespace dlplan::policy {
@@ -62,10 +62,10 @@ template<class Archive>
 void load_construct_data(Archive& ar, dlplan::policy::NamedConcept* t, const unsigned int /* version */ )
 {
     std::string key;
-    std::shared_ptr<const dlplan::core::Concept> concept;
+    std::shared_ptr<const dlplan::core::Concept> concept_;
     ar >> key;
-    ar >> concept;
-    ::new(t)dlplan::policy::NamedConcept(key, concept);
+    ar >> concept_;
+    ::new(t)dlplan::policy::NamedConcept(key, concept_);
 }
 
 template void serialize(boost::archive::text_iarchive& ar,

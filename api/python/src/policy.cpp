@@ -5,8 +5,8 @@
 #define STRINGIFY(x) #x
 #define MACRO_STRINGIFY(x) STRINGIFY(x)
 
-#include "include/dlplan/core.h"
-#include "include/dlplan/policy.h"
+#include "../../../include/dlplan/core.h"
+#include "../../../include/dlplan/policy.h"
 
 
 namespace py = pybind11;

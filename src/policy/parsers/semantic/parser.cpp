@@ -1,14 +1,29 @@
-#include "include/dlplan/policy/parsers/semantic/parser.hpp"
+#include "../../../../include/dlplan/policy/parsers/semantic/parser.hpp"
+
+#include "../../../../include/dlplan/core/parsers/semantic/parser.hpp"
+#include "../../../../include/dlplan/policy/parsers/semantic/context.hpp"
 
 #include <sstream>
-
-#include "include/dlplan/core/parsers/semantic/parser.hpp"
-#include "include/dlplan/policy/parsers/semantic/context.hpp"
 
 using namespace dlplan;
 
 
 namespace dlplan::policy {
+template<typename T>
+class ParseVisitor : public boost::static_visitor<T> {
+private:
+    const error_handler_type& error_handler;
+    Context& context;
+
+public:
+    ParseVisitor(const error_handler_type& error_handler, Context& context)
+        : error_handler(error_handler), context(context) { }
+
+    template<typename Node>
+    T operator()(const Node& node) const {
+        return parse(node, error_handler, context);
+    }
+};
 
 std::string parse(
     const ast::Name& node, const error_handler_type&, Context&) {
@@ -247,55 +262,18 @@ std::shared_ptr<const BaseEffect> parse(
     return context.policy_factory.make_bot_effect(parse(node.reference, error_handler, context));
 }
 
-class FeatureConditionEntryVisitor : public boost::static_visitor<> {
-private:
-    const error_handler_type& error_handler;
-    Context& context;
-
-public:
-    std::shared_ptr<const BaseCondition> result;
-
-    FeatureConditionEntryVisitor(const error_handler_type& error_handler, Context& context)
-        : error_handler(error_handler), context(context) { }
-
-    template<typename Node>
-    void operator()(const Node& node) {
-        result = parse(node, error_handler, context);
-    }
-};
-
 std::shared_ptr<const BaseCondition> parse(
     const ast::FeatureCondition& node, const error_handler_type& error_handler, Context& context) {
-    FeatureConditionEntryVisitor visitor(error_handler, context);
-    boost::apply_visitor(visitor, node);
-    return visitor.result;
+    ParseVisitor<std::shared_ptr<const BaseCondition>> visitor(error_handler, context);
+    return boost::apply_visitor(visitor, node);
 }
 
-
-class FeatureEffectEntryVisitor : public boost::static_visitor<> {
-private:
-    const error_handler_type& error_handler;
-    Context& context;
-
-public:
-    std::shared_ptr<const BaseEffect> result;
-
-    FeatureEffectEntryVisitor(const error_handler_type& error_handler, Context& context)
-        : error_handler(error_handler), context(context) { }
-
-    template<typename Node>
-    void operator()(const Node& node) {
-        result = parse(node, error_handler, context);
-    }
-};
 
 std::shared_ptr<const BaseEffect> parse(
     const ast::FeatureEffect& node, const error_handler_type& error_handler, Context& context) {
-    FeatureEffectEntryVisitor visitor(error_handler, context);
-    boost::apply_visitor(visitor, node);
-    return visitor.result;
+    ParseVisitor<std::shared_ptr<const BaseEffect>> visitor(error_handler, context);
+    return boost::apply_visitor(visitor, node);
 }
-
 
 std::shared_ptr<const Rule> parse(
     const ast::Rule& node, const error_handler_type& error_handler, Context& context) {

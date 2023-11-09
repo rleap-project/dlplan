@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "tests/utils/denotation.h"
+#include "../utils/denotation.h"
 
-#include "include/dlplan/core.h"
+#include "../../include/dlplan/core.h"
 
 using namespace dlplan::core;
 
@@ -26,8 +26,8 @@ TEST(DLPTests, ConceptSome) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    auto concept = factory.parse_concept("c_some(r_primitive(role,0,1),c_primitive(concept,0))");
-    EXPECT_EQ(concept->evaluate(state_0), create_concept_denotation(*instance, {"A", "B"}));
+    auto concept_ = factory.parse_concept("c_some(r_primitive(role,0,1),c_primitive(concept,0))");
+    EXPECT_EQ(concept_->evaluate(state_0), create_concept_denotation(*instance, {"A", "B"}));
 }
 
 }

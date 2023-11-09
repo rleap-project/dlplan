@@ -1,11 +1,11 @@
-#include "include/dlplan/core.h"
+#include "../../include/dlplan/core.h"
+
+#include "element_factory.h"
+#include "../../include/dlplan/utils/hash.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/unique_ptr.hpp>
-
-#include "element_factory.h"
-#include "include/dlplan/utils/hash.h"
 
 
 namespace dlplan::core {
@@ -120,8 +120,8 @@ std::shared_ptr<const Numerical> SyntacticElementFactory::parse_numerical(
 }
 
 
-std::shared_ptr<const Boolean>SyntacticElementFactory::make_empty_boolean(const std::shared_ptr<const Concept>& concept) {
-    return m_pImpl->make_empty_boolean(concept);
+std::shared_ptr<const Boolean>SyntacticElementFactory::make_empty_boolean(const std::shared_ptr<const Concept>& concept_) {
+    return m_pImpl->make_empty_boolean(concept_);
 }
 
 std::shared_ptr<const Boolean>SyntacticElementFactory::make_empty_boolean(const std::shared_ptr<const Role>& role) {
@@ -140,8 +140,8 @@ std::shared_ptr<const Boolean>SyntacticElementFactory::make_nullary_boolean(cons
     return m_pImpl->make_nullary_boolean(predicate);
 }
 
-std::shared_ptr<const Concept>SyntacticElementFactory::make_all_concept(const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept) {
-    return m_pImpl->make_all_concept(role, concept);
+std::shared_ptr<const Concept>SyntacticElementFactory::make_all_concept(const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept_) {
+    return m_pImpl->make_all_concept(role, concept_);
 }
 
 std::shared_ptr<const Concept>SyntacticElementFactory::make_and_concept(const std::shared_ptr<const Concept>& concept_left, const std::shared_ptr<const Concept>& concept_right) {
@@ -160,8 +160,8 @@ std::shared_ptr<const Concept>SyntacticElementFactory::make_equal_concept(const 
     return m_pImpl->make_equal_concept(role_left, role_right);
 }
 
-std::shared_ptr<const Concept>SyntacticElementFactory::make_not_concept(const std::shared_ptr<const Concept>& concept) {
-    return m_pImpl->make_not_concept(concept);
+std::shared_ptr<const Concept>SyntacticElementFactory::make_not_concept(const std::shared_ptr<const Concept>& concept_) {
+    return m_pImpl->make_not_concept(concept_);
 }
 
 std::shared_ptr<const Concept>SyntacticElementFactory::make_one_of_concept(const Constant& constant) {
@@ -180,8 +180,8 @@ std::shared_ptr<const Concept>SyntacticElementFactory::make_primitive_concept(co
     return m_pImpl->make_primitive_concept(predicate, pos);
 }
 
-std::shared_ptr<const Concept>SyntacticElementFactory::make_some_concept(const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept) {
-    return m_pImpl->make_some_concept(role, concept);
+std::shared_ptr<const Concept>SyntacticElementFactory::make_some_concept(const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept_) {
+    return m_pImpl->make_some_concept(role, concept_);
 }
 
 std::shared_ptr<const Concept>SyntacticElementFactory::make_subset_concept(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right) {
@@ -196,8 +196,8 @@ std::shared_ptr<const Numerical>SyntacticElementFactory::make_concept_distance_n
     return m_pImpl->make_concept_distance_numerical(concept_from, role, concept_to);
 }
 
-std::shared_ptr<const Numerical>SyntacticElementFactory::make_count_numerical(const std::shared_ptr<const Concept>& concept) {
-    return m_pImpl->make_count_numerical(concept);
+std::shared_ptr<const Numerical>SyntacticElementFactory::make_count_numerical(const std::shared_ptr<const Concept>& concept_) {
+    return m_pImpl->make_count_numerical(concept_);
 }
 
 std::shared_ptr<const Numerical>SyntacticElementFactory::make_count_numerical(const std::shared_ptr<const Role>& role) {
@@ -228,8 +228,8 @@ std::shared_ptr<const Role>SyntacticElementFactory::make_diff_role(const std::sh
     return m_pImpl->make_diff_role(role_left, role_right);
 }
 
-std::shared_ptr<const Role>SyntacticElementFactory::make_identity_role(const std::shared_ptr<const Concept>& concept) {
-    return m_pImpl->make_identity_role(concept);
+std::shared_ptr<const Role>SyntacticElementFactory::make_identity_role(const std::shared_ptr<const Concept>& concept_) {
+    return m_pImpl->make_identity_role(concept_);
 }
 
 std::shared_ptr<const Role>SyntacticElementFactory::make_inverse_role(const std::shared_ptr<const Role>& role) {
@@ -248,8 +248,8 @@ std::shared_ptr<const Role>SyntacticElementFactory::make_primitive_role(const Pr
     return m_pImpl->make_primitive_role(predicate, pos_1, pos_2);
 }
 
-std::shared_ptr<const Role>SyntacticElementFactory::make_restrict_role(const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept) {
-    return m_pImpl->make_restrict_role(role, concept);
+std::shared_ptr<const Role>SyntacticElementFactory::make_restrict_role(const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept_) {
+    return m_pImpl->make_restrict_role(role, concept_);
 }
 
 std::shared_ptr<const Role>SyntacticElementFactory::make_top_role() {

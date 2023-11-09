@@ -1,14 +1,13 @@
-#include "include/dlplan/policy.h"
-
-#include <iostream>
-
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
+#include "../../include/dlplan/policy.h"
 
 #include "condition.h"
 #include "effect.h"
 #include "policy_factory.h"
-#include "include/dlplan/policy.h"
+
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
+#include <iostream>
 
 
 using namespace dlplan;
@@ -82,8 +81,8 @@ std::shared_ptr<const NamedNumerical> PolicyFactory::make_numerical(const std::s
     return m_pImpl->make_numerical(key, numerical);
 }
 
-std::shared_ptr<const NamedConcept> PolicyFactory::make_concept(const std::string& key, const std::shared_ptr<const core::Concept>& concept) {
-    return m_pImpl->make_concept(key, concept);
+std::shared_ptr<const NamedConcept> PolicyFactory::make_concept(const std::string& key, const std::shared_ptr<const core::Concept>& concept_) {
+    return m_pImpl->make_concept(key, concept_);
 }
 
 std::shared_ptr<const NamedRole> PolicyFactory::make_role(const std::string& key, const std::shared_ptr<const core::Role>& role) {

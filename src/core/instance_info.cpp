@@ -1,9 +1,7 @@
-#include "include/dlplan/core.h"
+#include "../../include/dlplan/core.h"
 
-#include <string>
-#include <algorithm>
-#include <iostream>
-#include <sstream>
+#include "../utils/collections.h"
+#include "../utils/logging.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -11,8 +9,10 @@
 #include <boost/serialization/shared_ptr.hpp>
 #include <boost/serialization/vector.hpp>
 
-#include "src/utils/collections.h"
-#include "src/utils/logging.h"
+#include <string>
+#include <algorithm>
+#include <iostream>
+#include <sstream>
 
 using namespace std::string_literals;
 

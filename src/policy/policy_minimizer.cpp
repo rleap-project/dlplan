@@ -1,10 +1,10 @@
-#include "include/dlplan/policy.h"
-
-#include <algorithm>
+#include "../../include/dlplan/policy.h"
 
 #include "condition.h"
 #include "effect.h"
-#include "include/dlplan/utils/hash.h"
+#include "../../include/dlplan/utils/hash.h"
+
+#include <algorithm>
 
 
 namespace dlplan::policy {

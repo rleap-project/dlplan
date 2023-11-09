@@ -1,6 +1,6 @@
 /// Example illustrating the core component.
 
-#include "include/dlplan/core.h"
+#include "../../include/dlplan/core.h"
 
 #include <iostream>
 

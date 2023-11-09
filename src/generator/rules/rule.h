@@ -1,7 +1,7 @@
 #ifndef DLPLAN_SRC_GENERATOR_FEATURE_GENERATOR_RULES_RULE_H_
 #define DLPLAN_SRC_GENERATOR_FEATURE_GENERATOR_RULES_RULE_H_
 
-#include "include/dlplan/core.h"
+#include "../../../include/dlplan/core.h"
 
 #include <string>
 #include <iostream>

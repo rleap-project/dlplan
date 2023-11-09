@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
 
-#include "include/dlplan/core.h"
-#include "include/dlplan/novelty.h"
-#include "include/dlplan/policy.h"
-#include "include/dlplan/state_space.h"
-#include "include/dlplan/serialization.h"
+#include "../../../include/dlplan/core.h"
+#include "../../../include/dlplan/novelty.h"
+#include "../../../include/dlplan/policy.h"
+#include "../../../include/dlplan/state_space.h"
+#include "../../../include/dlplan/serialization.h"
 
 #include <sstream>
 

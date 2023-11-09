@@ -1,10 +1,10 @@
 #include "condition.h"
 
+#include "../../include/dlplan/core.h"
+
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/shared_ptr.hpp>
-
-#include "include/dlplan/core.h"
 
 using namespace dlplan;
 

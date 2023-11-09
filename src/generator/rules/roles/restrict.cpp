@@ -1,6 +1,6 @@
 #include "restrict.h"
 
-#include "src/generator/generator_data.h"
+#include "../../generator_data.h"
 
 
 namespace dlplan::generator::rules {

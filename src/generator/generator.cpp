@@ -1,4 +1,4 @@
-#include "include/dlplan/generator.h"
+#include "../../include/dlplan/generator.h"
 
 #include "feature_generator.h"
 

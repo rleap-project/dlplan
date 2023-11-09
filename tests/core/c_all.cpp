@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "tests/utils/denotation.h"
+#include "../utils/denotation.h"
 
-#include "include/dlplan/core.h"
+#include "../../include/dlplan/core.h"
 
 using namespace dlplan::core;
 
@@ -26,8 +26,8 @@ TEST(DLPTests, ConceptAll) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    auto concept = factory.parse_concept("c_all(r_primitive(role,0,1),c_primitive(concept,0))");
-    EXPECT_EQ(concept->evaluate(state_0), create_concept_denotation(*instance, {"A", "C", "D"}));
+    auto concept_ = factory.parse_concept("c_all(r_primitive(role,0,1),c_primitive(concept,0))");
+    EXPECT_EQ(concept_->evaluate(state_0), create_concept_denotation(*instance, {"A", "C", "D"}));
 }
 
 TEST(DLPTests, ConceptAll2) {
@@ -45,9 +45,9 @@ TEST(DLPTests, ConceptAll2) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    auto concept = factory.parse_concept("c_all(r_primitive(at,1,0),c_primitive(man,0))");
-    EXPECT_EQ(concept->evaluate(state_0), create_concept_denotation(*instance, {"spanner_1", "spanner_2", "bob"}));
-    EXPECT_EQ(concept->evaluate(state_1), create_concept_denotation(*instance, {"spanner_1", "location_1", "spanner_2", "bob"}));
+    auto concept_ = factory.parse_concept("c_all(r_primitive(at,1,0),c_primitive(man,0))");
+    EXPECT_EQ(concept_->evaluate(state_0), create_concept_denotation(*instance, {"spanner_1", "spanner_2", "bob"}));
+    EXPECT_EQ(concept_->evaluate(state_1), create_concept_denotation(*instance, {"spanner_1", "location_1", "spanner_2", "bob"}));
 }
 
 }

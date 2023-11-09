@@ -1,16 +1,16 @@
-#include "include/dlplan/novelty.h"
+#include "../../include/dlplan/novelty.h"
 
-#include <cassert>
-#include <sstream>
+#include "tuple_graph_builder.h"
+#include "tuple_index_generator.h"
+#include "../utils/logging.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/shared_ptr.hpp>
 
-#include "tuple_graph_builder.h"
-#include "tuple_index_generator.h"
-#include "src/utils/logging.h"
+#include <cassert>
+#include <sstream>
 
 using namespace dlplan::state_space;
 

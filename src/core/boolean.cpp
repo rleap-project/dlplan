@@ -1,4 +1,4 @@
-#include "include/dlplan/core.h"
+#include "../../include/dlplan/core.h"
 
 #include <boost/serialization/base_object.hpp>
 

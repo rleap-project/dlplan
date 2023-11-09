@@ -1,12 +1,13 @@
-#include <sstream>
+#include "../../include/dlplan/core.h"
+
+#include "../utils/logging.h"
+#include "../../include/dlplan/utils/hash.h"
+#include "../../include/dlplan/utils/dynamic_bitset.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
-#include "src/utils/logging.h"
-#include "include/dlplan/core.h"
-#include "include/dlplan/utils/hash.h"
-#include "include/dlplan/utils/dynamic_bitset.h"
+#include <sstream>
 
 
 namespace dlplan::core {

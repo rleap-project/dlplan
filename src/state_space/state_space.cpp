@@ -1,10 +1,9 @@
-#include "include/dlplan/state_space.h"
+#include "../../include/dlplan/state_space.h"
 
-#include <algorithm>
-#include <deque>
-#include <iostream>
-#include <stdexcept>
-#include <sstream>
+#include "generator.h"
+#include "reader.h"
+#include "../utils/collections.h"
+#include "../utils/memory.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -14,11 +13,11 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/utility.hpp>
 
-#include "generator.h"
-#include "reader.h"
-#include "src/utils/collections.h"
-#include "src/utils/memory.h"
-
+#include <algorithm>
+#include <deque>
+#include <iostream>
+#include <stdexcept>
+#include <sstream>
 
 using namespace dlplan::core;
 

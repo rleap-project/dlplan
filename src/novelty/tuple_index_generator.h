@@ -1,12 +1,12 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_TUPLE_INDEX_GENERATOR_H_
 #define DLPLAN_INCLUDE_DLPLAN_TUPLE_INDEX_GENERATOR_H_
 
+#include "../utils/logging.h"
+#include "../../include/dlplan/novelty.h"
+
 #include <array>
 #include <vector>
 #include <functional>
-
-#include "src/utils/logging.h"
-#include "include/dlplan/novelty.h"
 
 
 namespace dlplan::novelty {

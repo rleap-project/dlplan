@@ -1,16 +1,17 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_ROLES_RESTRICT_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_ROLES_RESTRICT_H_
 
-#include <sstream>
-#include <memory>
+#include "../utils.h"
+#include "../../../../include/dlplan/core.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/export.hpp>
+#include <boost/serialization/base_object.hpp>
 #include <boost/serialization/shared_ptr.hpp>
 
-#include "src/core/elements/utils.h"
-#include "include/dlplan/core.h"
+#include <sstream>
+#include <memory>
 
 using namespace std::string_literals;
 
@@ -22,11 +23,11 @@ class RestrictRole;
 
 namespace boost::serialization {
     template<typename Archive>
-    void serialize(Archive& ar, dlplan::core::RestrictRole& role, const unsigned int version);
+    void serialize(Archive& ar, dlplan::core::RestrictRole& t, const unsigned int version);
     template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::RestrictRole* role, const unsigned int version);
+    void save_construct_data(Archive& ar, const dlplan::core::RestrictRole* t, const unsigned int version);
     template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::RestrictRole* role, const unsigned int version);
+    void load_construct_data(Archive& ar, dlplan::core::RestrictRole* t, const unsigned int version);
 }
 
 
@@ -68,11 +69,11 @@ private:
     }
 
     template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, RestrictRole& role, const unsigned int version);
+    friend void boost::serialization::serialize(Archive& ar, RestrictRole& t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const RestrictRole* role, const unsigned int version);
+    friend void boost::serialization::save_construct_data(Archive& ar, const RestrictRole* t, const unsigned int version);
     template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, RestrictRole* role, const unsigned int version);
+    friend void boost::serialization::load_construct_data(Archive& ar, RestrictRole* t, const unsigned int version);
 
 protected:
     const std::shared_ptr<const Role> m_role;
@@ -139,12 +140,12 @@ void load_construct_data(Archive & ar, dlplan::core::RestrictRole* t, const unsi
     std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
     int index;
     std::shared_ptr<const dlplan::core::Role> role;
-    std::shared_ptr<const dlplan::core::Concept> concept;
+    std::shared_ptr<const dlplan::core::Concept> concept_;
     ar >> vocabulary;
     ar >> index;
     ar >> role;
-    ar >> concept;
-    ::new(t)dlplan::core::RestrictRole(vocabulary, index, role, concept);
+    ar >> concept_;
+    ::new(t)dlplan::core::RestrictRole(vocabulary, index, role, concept_);
 }
 
 }

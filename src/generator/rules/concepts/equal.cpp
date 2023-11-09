@@ -1,8 +1,8 @@
 #include "equal.h"
 
-#include "src/generator/generator_data.h"
+#include "../../generator_data.h"
 
-#include "src/core/elements/roles/primitive.h"
+#include "../../../core/elements/roles/primitive.h"
 
 
 namespace dlplan::generator::rules {

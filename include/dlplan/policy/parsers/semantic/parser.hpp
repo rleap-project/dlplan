@@ -1,16 +1,16 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_POLICY_PARSERS_SEMANTIC_PARSER_HPP_
 #define DLPLAN_INCLUDE_DLPLAN_POLICY_PARSERS_SEMANTIC_PARSER_HPP_
 
+#include "context.hpp"
+
+#include "../../../core.h"
+#include "../../../policy.h"
+
+#include "../../../common/parsers/config.hpp"
+#include "../../../policy/parsers/syntactic/ast.hpp"
+
 #include <tuple>
 #include <variant>
-
-#include "include/dlplan/core.h"
-#include "include/dlplan/policy.h"
-
-#include "include/dlplan/common/parsers/config.hpp"
-#include "include/dlplan/policy/parsers/syntactic/ast.hpp"
-
-#include "context.hpp"
 
 
 namespace dlplan::policy {

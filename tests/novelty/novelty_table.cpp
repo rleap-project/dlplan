@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "include/dlplan/novelty.h"
+#include "../../include/dlplan/novelty.h"
 
 #include <iostream>
 

@@ -1,13 +1,13 @@
-#include "include/dlplan/core.h"
+#include "../../include/dlplan/core.h"
 
-#include <sstream>
+#include "../utils/collections.h"
+#include "../utils/logging.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/unordered_map.hpp>
 
-#include "src/utils/collections.h"
-#include "src/utils/logging.h"
+#include <sstream>
 
 using namespace std::string_literals;
 

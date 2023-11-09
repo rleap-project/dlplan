@@ -1,10 +1,10 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_POLICY_PARSERS_SYNTACTIC_ERROR_HANDLER_HPP_
 #define DLPLAN_INCLUDE_DLPLAN_POLICY_PARSERS_SYNTACTIC_ERROR_HANDLER_HPP_
 
+#include "../../../core/parsers/syntactic/error_handler.hpp"
+
 #include <map>
 #include <iostream>
-
-#include "include/dlplan/core/parsers/syntactic/error_handler.hpp"
 
 
 namespace dlplan::policy

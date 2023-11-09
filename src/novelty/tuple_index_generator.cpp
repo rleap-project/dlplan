@@ -1,8 +1,8 @@
 #include "tuple_index_generator.h"
 
-#include <cmath>
+#include "../utils/logging.h"
 
-#include "src/utils/logging.h"
+#include <cmath>
 
 
 namespace dlplan::novelty {

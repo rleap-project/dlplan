@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "include/dlplan/state_space.h"
+#include "../../../../include/dlplan/state_space.h"
 
 using namespace dlplan::core;
 using namespace dlplan::state_space;

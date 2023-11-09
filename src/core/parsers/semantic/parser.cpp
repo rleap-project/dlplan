@@ -1,4 +1,4 @@
-#include "include/dlplan/core/parsers/semantic/parser.hpp"
+#include "../../../../include/dlplan/core/parsers/semantic/parser.hpp"
 
 #include <sstream>
 
@@ -86,8 +86,8 @@ public:
 
     void operator()(const std::shared_ptr<const core::Role>&) { }
 
-    void operator()(const std::shared_ptr<const core::Concept>& concept) {
-        result = concept;
+    void operator()(const std::shared_ptr<const core::Concept>& concept_) {
+        result = concept_;
     }
 };
 

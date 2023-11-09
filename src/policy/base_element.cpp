@@ -1,8 +1,8 @@
-#include "include/dlplan/policy.h"
+#include "../../include/dlplan/policy.h"
+
+#include "../../include/dlplan/core.h"
 
 #include <sstream>
-
-#include "include/dlplan/core.h"
 
 
 namespace dlplan::policy {

@@ -1,7 +1,7 @@
 /// Example illustrating the generator component.
 
 
-#include "include/dlplan/generator.h"
+#include "../../include/dlplan/generator.h"
 
 #include <iostream>
 

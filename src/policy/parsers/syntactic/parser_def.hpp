@@ -1,16 +1,16 @@
 #ifndef DLPLAN_SRC_POLICY_PARSERS_SYNTACTIC_PARSER_DEF_HPP_
 #define DLPLAN_SRC_POLICY_PARSERS_SYNTACTIC_PARSER_DEF_HPP_
 
-#include <boost/spirit/home/x3.hpp>
-#include <boost/spirit/home/x3/support/utility/annotate_on_success.hpp>
-
-#include "include/dlplan/core/parsers/syntactic/parser.hpp"
-#include "include/dlplan/policy/parsers/syntactic/error_handler.hpp"
-#include "include/dlplan/policy/parsers/syntactic/ast.hpp"
-#include "include/dlplan/policy/parsers/syntactic/parser.hpp"
-
 #include "ast_adapted.hpp"
 #include "parser.hpp"
+
+#include "../../../../include/dlplan/core/parsers/syntactic/parser.hpp"
+#include "../../../../include/dlplan/policy/parsers/syntactic/error_handler.hpp"
+#include "../../../../include/dlplan/policy/parsers/syntactic/ast.hpp"
+#include "../../../../include/dlplan/policy/parsers/syntactic/parser.hpp"
+
+#include <boost/spirit/home/x3.hpp>
+#include <boost/spirit/home/x3/support/utility/annotate_on_success.hpp>
 
 
 namespace dlplan::policy::parser
@@ -109,7 +109,7 @@ namespace dlplan::policy::parser
     const auto numericals_def = lit('(') >> lit(":numericals") > *numerical > lit(')');
 
     const auto concept_definition_def = name;
-    const auto concept_implementation_def = dlplan::core::concept();
+    const auto concept_implementation_def = dlplan::core::concept_();
     const auto concept_def = lit('(') > concept_definition > lit('"') > concept_implementation > lit('"') > lit(')');
     const auto concept_reference_def = name;
     const auto concepts_def = lit('(') >> lit(":concepts") > *concept > lit(')');
