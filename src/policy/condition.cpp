@@ -1,5 +1,6 @@
 #include "condition.h"
 
+#include "../core/elements/utils.h"
 #include "../../include/dlplan/core.h"
 
 #include <boost/archive/text_oarchive.hpp>
@@ -87,11 +88,15 @@ EqualNumericalCondition::EqualNumericalCondition(std::shared_ptr<const NamedNume
     : NumericalCondition(numerical, index) { }
 
 bool EqualNumericalCondition::evaluate(const core::State& source_state) const {
-    return m_numerical->get_numerical()->evaluate(source_state) == 0;
+    int eval = m_numerical->get_numerical()->evaluate(source_state);
+    if (eval == INF) return false;
+    return eval == 0;
 }
 
 bool EqualNumericalCondition::evaluate(const core::State& source_state, core::DenotationsCaches& caches) const {
-    return m_numerical->get_numerical()->evaluate(source_state, caches) == 0;
+    int eval = m_numerical->get_numerical()->evaluate(source_state, caches);
+    if (eval == INF) return false;
+    return eval == 0;
 }
 
 std::string EqualNumericalCondition::compute_repr() const {
@@ -107,11 +112,15 @@ GreaterNumericalCondition::GreaterNumericalCondition(std::shared_ptr<const Named
     : NumericalCondition(numerical, index) { }
 
 bool GreaterNumericalCondition::evaluate(const core::State& source_state) const {
-    return m_numerical->get_numerical()->evaluate(source_state) > 0;
+    int eval = m_numerical->get_numerical()->evaluate(source_state);
+    if (eval == INF) return false;
+    return eval > 0;
 }
 
 bool GreaterNumericalCondition::evaluate(const core::State& source_state, core::DenotationsCaches& caches) const {
-    return m_numerical->get_numerical()->evaluate(source_state, caches) > 0;
+    int eval = m_numerical->get_numerical()->evaluate(source_state, caches);
+    if (eval == INF) return false;
+    return eval > 0;
 }
 
 std::string GreaterNumericalCondition::compute_repr() const {

@@ -108,7 +108,11 @@ IncrementNumericalEffect::IncrementNumericalEffect(std::shared_ptr<const NamedNu
     : NumericalEffect(numerical, index) {}
 
 bool IncrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
-    return m_numerical->get_numerical()->evaluate(source_state) < m_numerical->get_numerical()->evaluate(target_state);
+    int source_eval = m_numerical->get_numerical()->evaluate(source_state);
+    int target_eval = m_numerical->get_numerical()->evaluate(target_state);
+    if (source_eval == INF) return false;
+    if (target_eval == INF) return false;
+    return source_eval < target_eval;
 }
 
 bool IncrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
@@ -132,7 +136,11 @@ DecrementNumericalEffect::DecrementNumericalEffect(std::shared_ptr<const NamedNu
     : NumericalEffect(numerical, index) {}
 
 bool DecrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
-    return m_numerical->get_numerical()->evaluate(source_state) > m_numerical->get_numerical()->evaluate(target_state);
+    int source_eval = m_numerical->get_numerical()->evaluate(source_state);
+    int target_eval = m_numerical->get_numerical()->evaluate(target_state);
+    if (source_eval == INF) return false;
+    if (target_eval == INF) return false;
+    return source_eval > target_eval;
 }
 
 bool DecrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
