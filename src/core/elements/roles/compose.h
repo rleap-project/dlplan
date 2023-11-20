@@ -34,6 +34,13 @@ namespace boost::serialization {
     void save_construct_data(Archive& ar, const dlplan::core::ComposeRole* t, const unsigned int version);
     template<class Archive>
     void load_construct_data(Archive& ar, dlplan::core::ComposeRole* t, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
 }
 
 
@@ -104,6 +111,10 @@ public:
         return false;
     }
 
+    size_t hash() const {
+        return dlplan::utils::hash_combine(m_is_static, m_role_left, m_role_right);
+    }
+
     RoleDenotation evaluate(const State& state) const override {
         RoleDenotation denotation(state.get_instance_info()->get_objects().size());
         compute_result(
@@ -163,8 +174,51 @@ void load_construct_data(Archive & ar, dlplan::core::ComposeRole* t, const unsig
     ::new(t)dlplan::core::ComposeRole(index, vocabulary, role_left, role_right);
 }
 
+
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::core::ComposeRole, std::weak_ptr<dlplan::core::ComposeRole>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::core::ComposeRole, std::weak_ptr<dlplan::core::ComposeRole>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::core::ComposeRole, std::weak_ptr<dlplan::core::ComposeRole>>* t, const unsigned int /*version*/) {
+    dlplan::core::ComposeRole* first;
+    std::weak_ptr<dlplan::core::ComposeRole>* second;
+    ar >> const_cast<dlplan::core::ComposeRole&>(t->first);
+    ar >> t->second;
+    ::new(t)std::pair<const dlplan::core::ComposeRole, std::weak_ptr<dlplan::core::ComposeRole>>(*first, *second);
+    delete first;
+    delete second;
+}
+
 }
 
 BOOST_CLASS_EXPORT_GUID(dlplan::core::ComposeRole, "dlplan::core::ComposeRole")
+
+
+namespace std {
+    template<>
+    struct less<std::shared_ptr<const dlplan::core::ComposeRole>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::core::ComposeRole>& left_role,
+            const std::shared_ptr<const dlplan::core::ComposeRole>& right_role) const {
+            return *left_role < *right_role;
+        }
+    };
+
+    template<>
+    struct hash<dlplan::core::ComposeRole>
+    {
+        std::size_t operator()(const dlplan::core::ComposeRole& role) const {
+            return role.hash();
+        }
+    };
+}
 
 #endif

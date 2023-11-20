@@ -8,6 +8,7 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/weak_ptr.hpp>
 
 using namespace std::string_literals;
 
@@ -73,6 +74,10 @@ bool PrimitiveRole::operator==(const Role& other) const {
     return false;
 }
 
+size_t PrimitiveRole::hash() const {
+    return dlplan::utils::hash_combine(m_is_static, m_predicate, m_pos_1, m_pos_2);
+}
+
 RoleDenotation PrimitiveRole::evaluate(const State& state) const {
     RoleDenotation denotation(state.get_instance_info()->get_objects().size());
     compute_result(state, denotation);
@@ -132,6 +137,27 @@ void load_construct_data(Archive & ar, dlplan::core::PrimitiveRole* t, const uns
     delete predicate;
 }
 
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::core::PrimitiveRole, std::weak_ptr<dlplan::core::PrimitiveRole>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::core::PrimitiveRole, std::weak_ptr<dlplan::core::PrimitiveRole>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::core::PrimitiveRole, std::weak_ptr<dlplan::core::PrimitiveRole>>* t, const unsigned int /*version*/) {
+    dlplan::core::PrimitiveRole* first;
+    std::weak_ptr<dlplan::core::PrimitiveRole>* second;
+    ar >> const_cast<dlplan::core::PrimitiveRole&>(t->first);
+    ar >> t->second;
+    ::new(t)std::pair<const dlplan::core::PrimitiveRole, std::weak_ptr<dlplan::core::PrimitiveRole>>(*first, *second);
+    delete first;
+    delete second;
+}
+
 template void serialize(boost::archive::text_iarchive& ar,
     dlplan::core::PrimitiveRole& t, const unsigned int version);
 template void serialize(boost::archive::text_oarchive& ar,
@@ -140,6 +166,31 @@ template void save_construct_data(boost::archive::text_oarchive& ar,
     const dlplan::core::PrimitiveRole* t, const unsigned int version);
 template void load_construct_data(boost::archive::text_iarchive& ar,
     dlplan::core::PrimitiveRole* t, const unsigned int version);
+
+template void serialize(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::core::PrimitiveRole, std::weak_ptr<dlplan::core::PrimitiveRole>>& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    std::pair<const dlplan::core::PrimitiveRole, std::weak_ptr<dlplan::core::PrimitiveRole>>& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const std::pair<const dlplan::core::PrimitiveRole, std::weak_ptr<dlplan::core::PrimitiveRole>>* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::core::PrimitiveRole, std::weak_ptr<dlplan::core::PrimitiveRole>>* t, const unsigned int version);
 }
 
 BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::core::PrimitiveRole)
+
+
+namespace std {
+
+    bool less<std::shared_ptr<const dlplan::core::PrimitiveRole>>::operator()(
+        const std::shared_ptr<const dlplan::core::PrimitiveRole>& left_role,
+        const std::shared_ptr<const dlplan::core::PrimitiveRole>& right_role) const {
+        return *left_role < *right_role;
+    }
+
+
+    std::size_t hash<dlplan::core::PrimitiveRole>::operator()(const dlplan::core::PrimitiveRole& role) const {
+        return role.hash();
+    }
+}
+

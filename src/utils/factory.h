@@ -8,26 +8,45 @@
 #include <memory>
 #include <mutex>
 #include <iostream>
+#include <utility>
 
 
 namespace dlplan::utils {
 template<typename... Ts>
 class ReferenceCountedObjectFactory;
+
+template<typename T>
+struct PerTypeCache;
 }
+
+
+template <typename Archive, typename... Types>
+void boost::serialization::serialize(Archive &ar, std::tuple<Types...> &t, const unsigned int)
+{
+    std::apply([&](auto &...element)
+        { ((ar & element), ...); },
+        t);
+}
+
 
 namespace boost::serialization {
+    template<typename Archive, typename T>
+    void serialize(Archive& ar, dlplan::utils::PerTypeCache<T>& t, const unsigned int version);
+
     template<typename Archive, typename... Ts>
-    void serialize(Archive& ar, dlplan::utils::ReferenceCountedObjectFactory<Ts...>& cache, const unsigned int version);
+    void serialize(Archive& ar, dlplan::utils::ReferenceCountedObjectFactory<Ts...>& t, const unsigned int version);
 }
 
+
+namespace dlplan::utils {
 template<typename T>
 struct PerTypeCache {
     std::unordered_map<T, std::weak_ptr<T>> data;
-    std::mutex mutex;
+    //std::mutex mutex;
     int count = -1;
 };
 
-namespace dlplan::utils {
+
 /// @brief A thread-safe reference-counted object cache.
 /// Original idea by Herb Sutter.
 /// Custom deleter idea: https://stackoverflow.com/questions/49782011/herb-sutters-10-liner-with-cleanup
@@ -35,6 +54,9 @@ template<typename... Ts>
 class ReferenceCountedObjectFactory {
 private:
     std::tuple<std::shared_ptr<PerTypeCache<Ts>>...> m_cache;
+
+    template<typename Archive, typename... Ts_>
+    friend void boost::serialization::serialize(Archive& ar, ReferenceCountedObjectFactory<Ts_...>& t, const unsigned int version);
 
 public:
     ReferenceCountedObjectFactory()
@@ -63,7 +85,7 @@ public:
         std::shared_ptr<T> sp;
         auto& cached = t_cache->data[*element];
         sp = cached.lock();
-        std::lock_guard<std::mutex> hold(t_cache->mutex);
+        //std::lock_guard<std::mutex> hold(t_cache->mutex);
         bool new_insertion = false;
 
         if (!sp) {
@@ -73,7 +95,7 @@ public:
                 [parent=t_cache, original_deleter=element.get_deleter()](T* x)
                 {
                     {
-                        std::lock_guard<std::mutex> hold(parent->mutex);
+                        //std::lock_guard<std::mutex> hold(parent->mutex);
                         parent->data.erase(*x);
                     }
                     /* After cache removal, we can call the objects destructor
@@ -88,10 +110,16 @@ public:
     }
 };
 
-
 }
 
+
 namespace boost::serialization {
+template<typename Archive, typename T>
+void serialize(Archive& ar, dlplan::utils::PerTypeCache<T>& t, const unsigned int /*version*/) {
+    ar & t.data;
+    ar & t.count;
+}
+
 template<typename Archive, typename... Ts>
 void serialize(Archive& ar, dlplan::utils::ReferenceCountedObjectFactory<Ts...>& t, const unsigned int /* version */ )
 {

@@ -35,6 +35,13 @@ namespace boost::serialization {
     void save_construct_data(Archive& ar, const dlplan::core::CountNumerical<T>* t, const unsigned int version);
     template<class Archive, typename T>
     void load_construct_data(Archive& ar, dlplan::core::CountNumerical<T>* t, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
 }
 
 namespace dlplan::core {
@@ -91,6 +98,10 @@ public:
                 && m_element == other_derived.m_element;
         }
         return false;
+    }
+
+    size_t hash() const {
+        return dlplan::utils::hash_combine(m_is_static, m_element);
     }
 
     int evaluate(const State& state) const override {
@@ -154,10 +165,54 @@ void load_construct_data(Archive & ar, dlplan::core::CountNumerical<T>* t, const
     ::new(t)dlplan::core::CountNumerical<T>(index, vocabulary, element);
 }
 
+
+template<typename Archive, typename T>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::core::CountNumerical<T>, std::weak_ptr<dlplan::core::CountNumerical<T>>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive, typename T>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::core::CountNumerical<T>, std::weak_ptr<dlplan::core::CountNumerical<T>>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive, typename T>
+void load_construct_data(Archive& ar, std::pair<const dlplan::core::CountNumerical<T>, std::weak_ptr<dlplan::core::CountNumerical<T>>>* t, const unsigned int /*version*/) {
+    dlplan::core::CountNumerical<T>* first;
+    std::weak_ptr<dlplan::core::CountNumerical<T>>* second;
+    ar >> const_cast<dlplan::core::CountNumerical<T>&>(t->first);
+    ar >> t->second;
+    ::new(t)std::pair<const dlplan::core::CountNumerical<T>, std::weak_ptr<dlplan::core::CountNumerical<T>>>(*first, *second);
+    delete first;
+    delete second;
 }
 
 
+
+}
+
 BOOST_CLASS_EXPORT_GUID(dlplan::core::CountNumerical<dlplan::core::Concept>, "dlplan::core::CountNumerical<dlplan::core::Concept>")
 BOOST_CLASS_EXPORT_GUID(dlplan::core::CountNumerical<dlplan::core::Role>, "dlplan::core::CountNumerical<dlplan::core::Role>")
+
+
+namespace std {
+    template<typename T>
+    struct less<std::shared_ptr<const dlplan::core::CountNumerical<T>>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::core::CountNumerical<T>>& left_numerical,
+            const std::shared_ptr<const dlplan::core::CountNumerical<T>>& right_numerical) const {
+            return *left_numerical < *right_numerical;
+        }
+    };
+
+    template<typename T>
+    struct hash<dlplan::core::CountNumerical<T>>
+    {
+        std::size_t operator()(const dlplan::core::CountNumerical<T>& numerical) const {
+            return numerical.hash();
+        }
+    };
+}
 
 #endif

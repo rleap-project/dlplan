@@ -462,6 +462,7 @@ private:
     Constant(const std::string& name, ConstantIndex index);
 
     friend class VocabularyInfo;
+    friend class OneOfConcept;
     friend class boost::serialization::access;
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, Constant& t, const unsigned int version);
@@ -472,6 +473,8 @@ public:
     Constant(Constant&& other);
     Constant& operator=(Constant&& other);
     ~Constant();
+
+    size_t hash() const;
 
     /// @brief Compute the canonical string representation of this constant.
     /// @return The canonical string representation of this constant.
@@ -528,6 +531,9 @@ private:
     Predicate(const std::string& name, PredicateIndex index, int arity, bool is_static=false);
 
     friend class VocabularyInfo;
+    friend class NullaryBoolean;
+    friend class PrimitiveConcept;
+    friend class PrimitiveRole;
     friend class boost::serialization::access;
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, Predicate& t, const unsigned int version);
@@ -541,6 +547,8 @@ public:
 
     bool operator==(const Predicate& other) const;
     bool operator!=(const Predicate& other) const;
+
+    size_t hash() const;
 
     /// @brief Compute the canonical string representation of this predicate.
     /// @return The canonical string representation of this predicate.
@@ -881,15 +889,17 @@ protected:
      */
     bool m_is_static;
 
+    BaseElement(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
+
+    /// @brief Constructor for serialization.
+    BaseElement();
+
     template <typename Archive>
     friend void boost::serialization::serialize(Archive& ar, BaseElement& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive & ar, const BaseElement* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive & ar, BaseElement* t, const unsigned int version);
-
-protected:
-    BaseElement(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
 
 public:
     virtual ~BaseElement();
@@ -933,6 +943,9 @@ class Concept : public BaseElement {
 protected:
     Concept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
 
+    /// @brief Constructor for serialization.
+    Concept();
+
     virtual ConceptDenotation evaluate_impl(const State& , DenotationsCaches& ) const = 0;
     virtual ConceptDenotations evaluate_impl(const States& , DenotationsCaches& ) const = 0;
 
@@ -964,6 +977,9 @@ public:
 class Role : public BaseElement {
 protected:
     Role(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
+
+    /// @brief Constructor for serialization.
+    Role();
 
     virtual RoleDenotation evaluate_impl(const State& , DenotationsCaches& ) const = 0;
     virtual RoleDenotations evaluate_impl(const States& , DenotationsCaches& ) const = 0;
@@ -997,6 +1013,9 @@ class Numerical : public BaseElement {
 protected:
     Numerical(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
 
+    /// @brief Constructor for serialization.
+    Numerical();
+
     virtual int evaluate_impl(const State& , DenotationsCaches& ) const = 0;
     virtual NumericalDenotations evaluate_impl(const States& , DenotationsCaches& ) const = 0;
 
@@ -1028,6 +1047,9 @@ public:
 class Boolean : public BaseElement {
 protected:
     Boolean(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
+
+    /// @brief Constructor for serialization.
+    Boolean();
 
     virtual bool evaluate_impl(const State& , DenotationsCaches& ) const = 0;
     virtual BooleanDenotations evaluate_impl(const States& , DenotationsCaches& ) const = 0;
@@ -1158,6 +1180,24 @@ public:
     std::shared_ptr<const Role> make_transitive_reflexive_closure(const std::shared_ptr<const Role>& role);
 };
 
+}
+
+namespace std {
+    template<>
+    struct hash<dlplan::core::Constant>
+    {
+        std::size_t operator()(const dlplan::core::Constant& constant) const {
+            return constant.hash();
+        }
+    };
+
+    template<>
+    struct hash<dlplan::core::Predicate>
+    {
+        std::size_t operator()(const dlplan::core::Predicate& predicate) const {
+            return predicate.hash();
+        }
+    };
 }
 
 #endif

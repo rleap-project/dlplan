@@ -35,6 +35,13 @@ namespace boost::serialization {
     void save_construct_data(Archive& ar, const dlplan::core::InclusionBoolean<T>* t, const unsigned int version);
     template<class Archive, typename T>
     void load_construct_data(Archive& ar, dlplan::core::InclusionBoolean<T>* t, const unsigned int version);
+
+    template<typename Archive, typename T>
+    void serialize(Archive& ar, std::pair<const dlplan::core::InclusionBoolean<T>, std::weak_ptr<dlplan::core::InclusionBoolean<T>>>& t, const unsigned int version);
+    template<class Archive, typename T>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::InclusionBoolean<T>, std::weak_ptr<dlplan::core::InclusionBoolean<T>>>* t, const unsigned int version);
+    template<class Archive, typename T>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::core::InclusionBoolean<T>, std::weak_ptr<dlplan::core::InclusionBoolean<T>>>* t, const unsigned int version);
 }
 
 
@@ -100,6 +107,10 @@ public:
                 && m_element_right == other_derived.m_element_right;
         }
         return false;
+    }
+
+    size_t hash() const {
+        return dlplan::utils::hash_combine(m_is_static, m_element_left, m_element_right);
     }
 
     bool evaluate(const State& state) const override {
@@ -169,9 +180,53 @@ void load_construct_data(Archive& ar, dlplan::core::InclusionBoolean<T>* t, cons
     ::new(t)dlplan::core::InclusionBoolean<T>(index, vocabulary, element_left, element_right);
 }
 
+
+template<typename Archive, typename T>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::core::InclusionBoolean<T>, std::weak_ptr<dlplan::core::InclusionBoolean<T>>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive, typename T>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::core::InclusionBoolean<T>, std::weak_ptr<dlplan::core::InclusionBoolean<T>>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive, typename T>
+void load_construct_data(Archive& ar, std::pair<const dlplan::core::InclusionBoolean<T>, std::weak_ptr<dlplan::core::InclusionBoolean<T>>>* t, const unsigned int /*version*/) {
+    dlplan::core::InclusionBoolean<T>* first;
+    std::weak_ptr<dlplan::core::InclusionBoolean<T>>* second;
+    ar >> const_cast<dlplan::core::InclusionBoolean<T>&>(t->first);
+    ar >> t->second;
+    ::new(t)std::pair<const dlplan::core::InclusionBoolean<T>, std::weak_ptr<dlplan::core::InclusionBoolean<T>>>(*first, *second);
+    delete first;
+    delete second;
+}
+
 }
 
 BOOST_CLASS_EXPORT_GUID(dlplan::core::InclusionBoolean<dlplan::core::Concept>, "dlplan::core::InclusionBoolean<dlplan::core::Concept>")
 BOOST_CLASS_EXPORT_GUID(dlplan::core::InclusionBoolean<dlplan::core::Role>, "dlplan::core::InclusionBoolean<dlplan::core::Role>")
+
+
+namespace std {
+    template<typename T>
+    struct less<std::shared_ptr<const dlplan::core::InclusionBoolean<T>>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::core::InclusionBoolean<T>>& left_boolean,
+            const std::shared_ptr<const dlplan::core::InclusionBoolean<T>>& right_boolean) const {
+            return *left_boolean < *right_boolean;
+        }
+    };
+
+    template<typename T>
+    struct hash<dlplan::core::InclusionBoolean<T>>
+    {
+        std::size_t operator()(const dlplan::core::InclusionBoolean<T>& boolean) const {
+            return boolean.hash();
+        }
+    };
+}
+
 
 #endif

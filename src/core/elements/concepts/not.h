@@ -34,6 +34,13 @@ namespace boost::serialization {
     void save_construct_data(Archive& ar, const dlplan::core::NotConcept* t, const unsigned int version);
     template<class Archive>
     void load_construct_data(Archive& ar, dlplan::core::NotConcept* t, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
 }
 
 
@@ -92,6 +99,10 @@ public:
         return false;
     }
 
+    size_t hash() const {
+        return dlplan::utils::hash_combine(m_is_static, m_concept);
+    }
+
     ConceptDenotation evaluate(const State& state) const override {
         ConceptDenotation denotation(state.get_instance_info()->get_objects().size());
         compute_result(
@@ -145,8 +156,52 @@ void load_construct_data(Archive& ar, dlplan::core::NotConcept* t, const unsigne
     ::new(t)dlplan::core::NotConcept(index, vocabulary, concept_);
 }
 
+
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::core::NotConcept, std::weak_ptr<dlplan::core::NotConcept>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::core::NotConcept, std::weak_ptr<dlplan::core::NotConcept>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::core::NotConcept, std::weak_ptr<dlplan::core::NotConcept>>* t, const unsigned int /*version*/) {
+    dlplan::core::NotConcept* first;
+    std::weak_ptr<dlplan::core::NotConcept>* second;
+    ar >> const_cast<dlplan::core::NotConcept&>(t->first);
+    ar >> t->second;
+    ::new(t)std::pair<const dlplan::core::NotConcept, std::weak_ptr<dlplan::core::NotConcept>>(*first, *second);
+    delete first;
+    delete second;
+}
+
 }
 
 BOOST_CLASS_EXPORT_GUID(dlplan::core::NotConcept, "dlplan::core::NotConcept")
+
+
+namespace std {
+    template<>
+    struct less<std::shared_ptr<const dlplan::core::NotConcept>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::core::NotConcept>& left_concept,
+            const std::shared_ptr<const dlplan::core::NotConcept>& right_concept) const {
+            return *left_concept < *right_concept;
+        }
+    };
+
+    template<>
+    struct hash<dlplan::core::NotConcept>
+    {
+        std::size_t operator()(const dlplan::core::NotConcept& concept_) const {
+            return concept_.hash();
+        }
+    };
+}
+
 
 #endif

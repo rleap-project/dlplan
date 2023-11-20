@@ -4,6 +4,8 @@
 
 
 namespace dlplan::core {
+Role::Role() { }
+
 Role::Role(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
     : BaseElement(vocabulary_info, index, is_static) {
 }

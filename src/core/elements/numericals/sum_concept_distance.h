@@ -34,6 +34,13 @@ namespace boost::serialization {
     void save_construct_data(Archive& ar, const dlplan::core::SumConceptDistanceNumerical* t, const unsigned int version);
     template<class Archive>
     void load_construct_data(Archive& ar, dlplan::core::SumConceptDistanceNumerical* t, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
 }
 
 
@@ -124,6 +131,10 @@ public:
         return false;
     }
 
+    size_t hash() const {
+        return dlplan::utils::hash_combine(m_is_static, m_concept_from, m_role, m_concept_to);
+    }
+
     int evaluate(const State& state) const override {
         auto concept_from_denot = m_concept_from->evaluate(state);
         if (concept_from_denot.empty()) {
@@ -194,8 +205,51 @@ void load_construct_data(Archive & ar, dlplan::core::SumConceptDistanceNumerical
     ::new(t)dlplan::core::SumConceptDistanceNumerical(index, vocabulary, concept_from, role, concept_to);
 }
 
+
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::core::SumConceptDistanceNumerical, std::weak_ptr<dlplan::core::SumConceptDistanceNumerical>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::core::SumConceptDistanceNumerical, std::weak_ptr<dlplan::core::SumConceptDistanceNumerical>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::core::SumConceptDistanceNumerical, std::weak_ptr<dlplan::core::SumConceptDistanceNumerical>>* t, const unsigned int /*version*/) {
+    dlplan::core::SumConceptDistanceNumerical* first;
+    std::weak_ptr<dlplan::core::SumConceptDistanceNumerical>* second;
+    ar >> const_cast<dlplan::core::SumConceptDistanceNumerical&>(t->first);
+    ar >> t->second;
+    ::new(t)std::pair<const dlplan::core::SumConceptDistanceNumerical, std::weak_ptr<dlplan::core::SumConceptDistanceNumerical>>(*first, *second);
+    delete first;
+    delete second;
+}
+
 }
 
 BOOST_CLASS_EXPORT_GUID(dlplan::core::SumConceptDistanceNumerical, "dlplan::core::SumConceptDistanceNumerical")
+
+
+namespace std {
+    template<>
+    struct less<std::shared_ptr<const dlplan::core::SumConceptDistanceNumerical>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::core::SumConceptDistanceNumerical>& left_numerical,
+            const std::shared_ptr<const dlplan::core::SumConceptDistanceNumerical>& right_numerical) const {
+            return *left_numerical < *right_numerical;
+        }
+    };
+
+    template<>
+    struct hash<dlplan::core::SumConceptDistanceNumerical>
+    {
+        std::size_t operator()(const dlplan::core::SumConceptDistanceNumerical& numerical) const {
+            return numerical.hash();
+        }
+    };
+}
 
 #endif

@@ -34,6 +34,13 @@ namespace boost::serialization {
     void save_construct_data(Archive& ar, const dlplan::core::NullaryBoolean* t, const unsigned int version);
     template<class Archive>
     void load_construct_data(Archive& ar, dlplan::core::NullaryBoolean* t, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::core::NullaryBoolean, std::weak_ptr<dlplan::core::NullaryBoolean>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::NullaryBoolean, std::weak_ptr<dlplan::core::NullaryBoolean>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::core::NullaryBoolean, std::weak_ptr<dlplan::core::NullaryBoolean>>* t, const unsigned int version);
 }
 
 
@@ -99,6 +106,10 @@ public:
         return false;
     }
 
+    size_t hash() const {
+        return dlplan::utils::hash_combine(m_is_static, m_predicate);
+    }
+
     bool evaluate(const State& state) const override {
         bool denotation;
         compute_result(state, denotation);
@@ -149,8 +160,52 @@ void load_construct_data(Archive& ar, dlplan::core::NullaryBoolean* t, const uns
     delete predicate;
 }
 
+
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::core::NullaryBoolean, std::weak_ptr<dlplan::core::NullaryBoolean>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::core::NullaryBoolean, std::weak_ptr<dlplan::core::NullaryBoolean>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::core::NullaryBoolean, std::weak_ptr<dlplan::core::NullaryBoolean>>* t, const unsigned int /*version*/) {
+    dlplan::core::NullaryBoolean* first;
+    std::weak_ptr<dlplan::core::NullaryBoolean>* second;
+    ar >> const_cast<dlplan::core::NullaryBoolean&>(t->first);
+    ar >> t->second;
+    ::new(t)std::pair<const dlplan::core::NullaryBoolean, std::weak_ptr<dlplan::core::NullaryBoolean>>(*first, *second);
+    delete first;
+    delete second;
+}
+
 }
 
 BOOST_CLASS_EXPORT_GUID(dlplan::core::NullaryBoolean, "dlplan::core::NullaryBoolean")
+
+
+namespace std {
+    template<>
+    struct less<std::shared_ptr<const dlplan::core::NullaryBoolean>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::core::NullaryBoolean>& left_boolean,
+            const std::shared_ptr<const dlplan::core::NullaryBoolean>& right_boolean) const {
+            return *left_boolean < *right_boolean;
+        }
+    };
+
+    template<>
+    struct hash<dlplan::core::NullaryBoolean>
+    {
+        std::size_t operator()(const dlplan::core::NullaryBoolean& boolean) const {
+            return boolean.hash();
+        }
+    };
+}
+
 
 #endif

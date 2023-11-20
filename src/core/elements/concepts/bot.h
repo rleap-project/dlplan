@@ -34,6 +34,13 @@ namespace boost::serialization {
     void save_construct_data(Archive& ar, const dlplan::core::BotConcept* t, const unsigned int version);
     template<class Archive>
     void load_construct_data(Archive& ar, dlplan::core::BotConcept* t, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::core::BotConcept, std::weak_ptr<dlplan::core::BotConcept>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::BotConcept, std::weak_ptr<dlplan::core::BotConcept>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::core::BotConcept, std::weak_ptr<dlplan::core::BotConcept>>* t, const unsigned int version);
 }
 
 
@@ -57,6 +64,9 @@ private:
     BotConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info)
     : Concept(vocabulary_info, index, true) { }
 
+    /// @brief Constructor for serialization.
+    BotConcept() {}
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, BotConcept& t, const unsigned int version);
     template<class Archive>
@@ -73,6 +83,10 @@ public:
             return m_is_static == other_derived.m_is_static;
         }
         return false;
+    }
+
+    size_t hash() const {
+        return dlplan::utils::hash_combine(m_is_static);
     }
 
     ConceptDenotation evaluate(const State& state) const override {
@@ -119,8 +133,50 @@ void load_construct_data(Archive& ar, dlplan::core::BotConcept* t, const unsigne
     ::new(t)dlplan::core::BotConcept(index, vocabulary);
 }
 
+
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::core::BotConcept, std::weak_ptr<dlplan::core::BotConcept>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::core::BotConcept, std::weak_ptr<dlplan::core::BotConcept>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::core::BotConcept, std::weak_ptr<dlplan::core::BotConcept>>* t, const unsigned int /*version*/) {
+    dlplan::core::BotConcept* first;
+    std::weak_ptr<dlplan::core::BotConcept>* second;
+    ar >> const_cast<dlplan::core::BotConcept&>(t->first);
+    ar >> t->second;
+    ::new(t)std::pair<const dlplan::core::BotConcept, std::weak_ptr<dlplan::core::BotConcept>>(*first, *second);
+    delete first;
+    delete second;
+}
 }
 
 BOOST_CLASS_EXPORT_GUID(dlplan::core::BotConcept, "dlplan::core::BotConcept")
+
+
+namespace std {
+    template<>
+    struct less<std::shared_ptr<const dlplan::core::BotConcept>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::core::BotConcept>& left_concept,
+            const std::shared_ptr<const dlplan::core::BotConcept>& right_concept) const {
+            return *left_concept < *right_concept;
+        }
+    };
+
+    template<>
+    struct hash<dlplan::core::BotConcept>
+    {
+        std::size_t operator()(const dlplan::core::BotConcept& concept_) const {
+            return concept_.hash();
+        }
+    };
+}
 
 #endif

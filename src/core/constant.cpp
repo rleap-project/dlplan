@@ -22,6 +22,10 @@ Constant& Constant::operator=(Constant&& other) = default;
 
 Constant::~Constant() = default;
 
+size_t Constant::hash() const {
+    return dlplan::utils::hash_combine(m_name, m_index);
+}
+
 std::string Constant::compute_repr() const {
     std::stringstream ss;
     ss << "Constant("

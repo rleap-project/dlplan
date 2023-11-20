@@ -36,6 +36,13 @@ namespace boost::serialization {
     void save_construct_data(Archive& ar, const dlplan::core::PrimitiveConcept* t, const unsigned int version);
     template<class Archive>
     void load_construct_data(Archive& ar, dlplan::core::PrimitiveConcept* t, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::core::PrimitiveConcept, std::weak_ptr<dlplan::core::PrimitiveConcept>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::PrimitiveConcept, std::weak_ptr<dlplan::core::PrimitiveConcept>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::core::PrimitiveConcept, std::weak_ptr<dlplan::core::PrimitiveConcept>>* t, const unsigned int version);
 }
 
 
@@ -91,6 +98,9 @@ private:
         }
     }
 
+    /// @brief Constructor for serialization.
+    PrimitiveConcept() : m_pos(-1) {}
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, PrimitiveConcept& t, const unsigned int version);
     template<class Archive>
@@ -109,6 +119,10 @@ public:
                 && m_pos == other_derived.m_pos;
         }
         return false;
+    }
+
+    size_t hash() const {
+        return dlplan::utils::hash_combine(m_is_static, m_predicate, m_pos);
     }
 
     ConceptDenotation evaluate(const State& state) const override {
@@ -165,8 +179,51 @@ void load_construct_data(Archive& ar, dlplan::core::PrimitiveConcept* t, const u
     delete predicate;
 }
 
+
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::core::PrimitiveConcept, std::weak_ptr<dlplan::core::PrimitiveConcept>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::core::PrimitiveConcept, std::weak_ptr<dlplan::core::PrimitiveConcept>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::core::PrimitiveConcept, std::weak_ptr<dlplan::core::PrimitiveConcept>>* t, const unsigned int /*version*/) {
+    dlplan::core::PrimitiveConcept* first;
+    std::weak_ptr<dlplan::core::PrimitiveConcept>* second;
+    ar >> const_cast<dlplan::core::PrimitiveConcept&>(t->first);
+    ar >> t->second;
+    ::new(t)std::pair<const dlplan::core::PrimitiveConcept, std::weak_ptr<dlplan::core::PrimitiveConcept>>(*first, *second);
+    delete first;
+    delete second;
+}
+
 }
 
 BOOST_CLASS_EXPORT_GUID(dlplan::core::PrimitiveConcept, "dlplan::core::PrimitiveConcept")
+
+
+namespace std {
+    template<>
+    struct less<std::shared_ptr<const dlplan::core::PrimitiveConcept>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::core::PrimitiveConcept>& left_concept,
+            const std::shared_ptr<const dlplan::core::PrimitiveConcept>& right_concept) const {
+            return *left_concept < *right_concept;
+        }
+    };
+
+    template<>
+    struct hash<dlplan::core::PrimitiveConcept>
+    {
+        std::size_t operator()(const dlplan::core::PrimitiveConcept& concept_) const {
+            return concept_.hash();
+        }
+    };
+}
 
 #endif

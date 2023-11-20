@@ -3,6 +3,7 @@
 
 #include "../utils.h"
 #include "../../../../include/dlplan/core.h"
+#include "../../../../include/dlplan/utils/hash.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -34,6 +35,13 @@ namespace boost::serialization {
     void save_construct_data(Archive& ar, const dlplan::core::EmptyBoolean<T>* t, const unsigned int version);
     template<class Archive, typename T>
     void load_construct_data(Archive& ar, dlplan::core::EmptyBoolean<T>* t, const unsigned int version);
+
+    template<typename Archive, typename T>
+    void serialize(Archive& ar, std::pair<const dlplan::core::EmptyBoolean<T>, std::weak_ptr<dlplan::core::EmptyBoolean<T>>>& t, const unsigned int version);
+    template<class Archive, typename T>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::EmptyBoolean<T>, std::weak_ptr<dlplan::core::EmptyBoolean<T>>>* t, const unsigned int version);
+    template<class Archive, typename T>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::core::EmptyBoolean<T>, std::weak_ptr<dlplan::core::EmptyBoolean<T>>>* t, const unsigned int version);
 }
 
 
@@ -95,7 +103,7 @@ public:
     }
 
     size_t hash() const {
-        return std::hash<std::shared_ptr<const T>>()(m_element);
+        return dlplan::utils::hash_combine(m_is_static, m_element);
     }
 
     bool evaluate(const State& state) const override {
@@ -157,7 +165,33 @@ void load_construct_data(Archive& ar, dlplan::core::EmptyBoolean<T>* t, const un
     ::new(t)dlplan::core::EmptyBoolean<T>(index, vocabulary, element);
 }
 
+
+template<typename Archive, typename T>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::core::EmptyBoolean<T>, std::weak_ptr<dlplan::core::EmptyBoolean<T>>>& /*t*/, const unsigned int /*version*/) {
 }
+
+template<class Archive, typename T>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::core::EmptyBoolean<T>, std::weak_ptr<dlplan::core::EmptyBoolean<T>>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive, typename T>
+void load_construct_data(Archive& ar, std::pair<const dlplan::core::EmptyBoolean<T>, std::weak_ptr<dlplan::core::EmptyBoolean<T>>>* t, const unsigned int /*version*/) {
+    dlplan::core::EmptyBoolean<T>* first;
+    std::weak_ptr<dlplan::core::EmptyBoolean<T>>* second;
+    ar >> const_cast<dlplan::core::EmptyBoolean<T>&>(t->first);
+    ar >> t->second;
+    ::new(t)std::pair<const dlplan::core::EmptyBoolean<T>, std::weak_ptr<dlplan::core::EmptyBoolean<T>>>(*first, *second);
+    delete first;
+    delete second;
+}
+
+}
+
+BOOST_CLASS_EXPORT_GUID(dlplan::core::EmptyBoolean<dlplan::core::Concept>, "dlplan::core::EmptyBoolean<dlplan::core::Concept>")
+BOOST_CLASS_EXPORT_GUID(dlplan::core::EmptyBoolean<dlplan::core::Role>, "dlplan::core::EmptyBoolean<dlplan::core::Role>")
+
 
 namespace std {
     template<typename T>
@@ -179,7 +213,5 @@ namespace std {
     };
 }
 
-BOOST_CLASS_EXPORT_GUID(dlplan::core::EmptyBoolean<dlplan::core::Concept>, "dlplan::core::EmptyBoolean<dlplan::core::Concept>")
-BOOST_CLASS_EXPORT_GUID(dlplan::core::EmptyBoolean<dlplan::core::Role>, "dlplan::core::EmptyBoolean<dlplan::core::Role>")
 
 #endif

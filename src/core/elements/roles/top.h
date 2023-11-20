@@ -34,6 +34,13 @@ namespace boost::serialization {
     void save_construct_data(Archive& ar, const dlplan::core::TopRole* t, const unsigned int version);
     template<class Archive>
     void load_construct_data(Archive& ar, dlplan::core::TopRole* t, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
 }
 
 
@@ -76,6 +83,10 @@ public:
             return m_is_static == other_derived.m_is_static;
         }
         return false;
+    }
+
+    size_t hash() const {
+        return dlplan::utils::hash_combine(m_is_static);
     }
 
     RoleDenotation evaluate(const State& state) const override {
@@ -125,8 +136,51 @@ void load_construct_data(Archive & ar, dlplan::core::TopRole* t, const unsigned 
     ::new(t)dlplan::core::TopRole(index, vocabulary);
 }
 
+
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::core::TopRole, std::weak_ptr<dlplan::core::TopRole>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::core::TopRole, std::weak_ptr<dlplan::core::TopRole>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::core::TopRole, std::weak_ptr<dlplan::core::TopRole>>* t, const unsigned int /*version*/) {
+    dlplan::core::TopRole* first;
+    std::weak_ptr<dlplan::core::TopRole>* second;
+    ar >> const_cast<dlplan::core::TopRole&>(t->first);
+    ar >> t->second;
+    ::new(t)std::pair<const dlplan::core::TopRole, std::weak_ptr<dlplan::core::TopRole>>(*first, *second);
+    delete first;
+    delete second;
+}
+
 }
 
 BOOST_CLASS_EXPORT_GUID(dlplan::core::TopRole, "dlplan::core::TopRole")
+
+
+namespace std {
+    template<>
+    struct less<std::shared_ptr<const dlplan::core::TopRole>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::core::TopRole>& left_role,
+            const std::shared_ptr<const dlplan::core::TopRole>& right_role) const {
+            return *left_role < *right_role;
+        }
+    };
+
+    template<>
+    struct hash<dlplan::core::TopRole>
+    {
+        std::size_t operator()(const dlplan::core::TopRole& role) const {
+            return role.hash();
+        }
+    };
+}
 
 #endif

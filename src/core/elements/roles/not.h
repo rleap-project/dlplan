@@ -34,6 +34,13 @@ namespace boost::serialization {
     void save_construct_data(Archive& ar, const dlplan::core::NotRole* t, const unsigned int version);
     template<class Archive>
     void load_construct_data(Archive& ar, dlplan::core::NotRole* t, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
 }
 
 
@@ -91,6 +98,10 @@ public:
         return false;
     }
 
+    size_t hash() const {
+        return dlplan::utils::hash_combine(m_is_static, m_role);
+    }
+
     RoleDenotation evaluate(const State& state) const override {
         RoleDenotation denotation(state.get_instance_info()->get_objects().size());
         compute_result(
@@ -144,8 +155,51 @@ void load_construct_data(Archive & ar, dlplan::core::NotRole* t, const unsigned 
     ::new(t)dlplan::core::NotRole(index, vocabulary, role);
 }
 
+
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::core::NotRole, std::weak_ptr<dlplan::core::NotRole>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::core::NotRole, std::weak_ptr<dlplan::core::NotRole>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::core::NotRole, std::weak_ptr<dlplan::core::NotRole>>* t, const unsigned int /*version*/) {
+    dlplan::core::NotRole* first;
+    std::weak_ptr<dlplan::core::NotRole>* second;
+    ar >> const_cast<dlplan::core::NotRole&>(t->first);
+    ar >> t->second;
+    ::new(t)std::pair<const dlplan::core::NotRole, std::weak_ptr<dlplan::core::NotRole>>(*first, *second);
+    delete first;
+    delete second;
+}
+
 }
 
 BOOST_CLASS_EXPORT_GUID(dlplan::core::NotRole, "dlplan::core::NotRole")
+
+
+namespace std {
+    template<>
+    struct less<std::shared_ptr<const dlplan::core::NotRole>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::core::NotRole>& left_role,
+            const std::shared_ptr<const dlplan::core::NotRole>& right_role) const {
+            return *left_role < *right_role;
+        }
+    };
+
+    template<>
+    struct hash<dlplan::core::NotRole>
+    {
+        std::size_t operator()(const dlplan::core::NotRole& role) const {
+            return role.hash();
+        }
+    };
+}
 
 #endif

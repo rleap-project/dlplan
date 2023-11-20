@@ -34,6 +34,13 @@ namespace boost::serialization {
     void save_construct_data(Archive& ar, const dlplan::core::AllConcept* t, const unsigned int version);
     template<class Archive>
     void load_construct_data(Archive& ar, dlplan::core::AllConcept* t, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::core::AllConcept, std::weak_ptr<dlplan::core::AllConcept>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::AllConcept, std::weak_ptr<dlplan::core::AllConcept>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::core::AllConcept, std::weak_ptr<dlplan::core::AllConcept>>* t, const unsigned int version);
 }
 
 
@@ -101,6 +108,10 @@ public:
         return false;
     }
 
+    size_t hash() const {
+        return dlplan::utils::hash_combine(m_is_static, m_role, m_concept);
+    }
+
     ConceptDenotation evaluate(const State& state) const override {
         auto denotation = ConceptDenotation(state.get_instance_info()->get_objects().size());
         compute_result(
@@ -160,8 +171,51 @@ void load_construct_data(Archive& ar, dlplan::core::AllConcept* t, const unsigne
     ::new(t)dlplan::core::AllConcept(index, vocabulary, role, concept_);
 }
 
+
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::core::AllConcept, std::weak_ptr<dlplan::core::AllConcept>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::core::AllConcept, std::weak_ptr<dlplan::core::AllConcept>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::core::AllConcept, std::weak_ptr<dlplan::core::AllConcept>>* t, const unsigned int /*version*/) {
+    dlplan::core::AllConcept* first;
+    std::weak_ptr<dlplan::core::AllConcept>* second;
+    ar >> const_cast<dlplan::core::AllConcept&>(t->first);
+    ar >> t->second;
+    ::new(t)std::pair<const dlplan::core::AllConcept, std::weak_ptr<dlplan::core::AllConcept>>(*first, *second);
+    delete first;
+    delete second;
+}
+
 }
 
 BOOST_CLASS_EXPORT_GUID(dlplan::core::AllConcept, "dlplan::core::AllConcept")
+
+
+namespace std {
+    template<>
+    struct less<std::shared_ptr<const dlplan::core::AllConcept>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::core::AllConcept>& left_concept,
+            const std::shared_ptr<const dlplan::core::AllConcept>& right_concept) const {
+            return *left_concept < *right_concept;
+        }
+    };
+
+    template<>
+    struct hash<dlplan::core::AllConcept>
+    {
+        std::size_t operator()(const dlplan::core::AllConcept& concept_) const {
+            return concept_.hash();
+        }
+    };
+}
 
 #endif

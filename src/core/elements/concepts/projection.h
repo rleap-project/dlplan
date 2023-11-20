@@ -34,14 +34,21 @@ namespace boost::serialization {
     void save_construct_data(Archive& ar, const dlplan::core::ProjectionConcept* t, const unsigned int version);
     template<class Archive>
     void load_construct_data(Archive& ar, dlplan::core::ProjectionConcept* t, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::core::ProjectionConcept, std::weak_ptr<dlplan::core::ProjectionConcept>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::ProjectionConcept, std::weak_ptr<dlplan::core::ProjectionConcept>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::core::ProjectionConcept, std::weak_ptr<dlplan::core::ProjectionConcept>>* t, const unsigned int version);
 }
 
 
 namespace dlplan::core {
 class ProjectionConcept : public Concept {
 private:
-    const std::shared_ptr<const Role> m_role;
-    const int m_pos;
+    std::shared_ptr<const Role> m_role;
+    int m_pos;
 
     void compute_result(const RoleDenotation& denot, ConceptDenotation& result) const {
         for (const auto& pair : denot.to_vector()) {
@@ -97,6 +104,10 @@ public:
                 && m_pos == other_derived.m_pos;
         }
         return false;
+    }
+
+    size_t hash() const {
+        return dlplan::utils::hash_combine(m_is_static, m_role, m_pos);
     }
 
     ConceptDenotation evaluate(const State& state) const override {
@@ -155,8 +166,50 @@ void load_construct_data(Archive& ar, dlplan::core::ProjectionConcept* t, const 
     ::new(t)dlplan::core::ProjectionConcept(index, vocabulary, role, pos);
 }
 
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::core::ProjectionConcept, std::weak_ptr<dlplan::core::ProjectionConcept>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::core::ProjectionConcept, std::weak_ptr<dlplan::core::ProjectionConcept>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::core::ProjectionConcept, std::weak_ptr<dlplan::core::ProjectionConcept>>* t, const unsigned int /*version*/) {
+    dlplan::core::ProjectionConcept* first;
+    std::weak_ptr<dlplan::core::ProjectionConcept>* second;
+    ar >> const_cast<dlplan::core::ProjectionConcept&>(t->first);
+    ar >> t->second;
+    ::new(t)std::pair<const dlplan::core::ProjectionConcept, std::weak_ptr<dlplan::core::ProjectionConcept>>(*first, *second);
+    delete first;
+    delete second;
+}
+
 }
 
 BOOST_CLASS_EXPORT_GUID(dlplan::core::ProjectionConcept, "dlplan::core::ProjectionConcept")
+
+
+namespace std {
+    template<>
+    struct less<std::shared_ptr<const dlplan::core::ProjectionConcept>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::core::ProjectionConcept>& left_concept,
+            const std::shared_ptr<const dlplan::core::ProjectionConcept>& right_concept) const {
+            return *left_concept < *right_concept;
+        }
+    };
+
+    template<>
+    struct hash<dlplan::core::ProjectionConcept>
+    {
+        std::size_t operator()(const dlplan::core::ProjectionConcept& concept_) const {
+            return concept_.hash();
+        }
+    };
+}
 
 #endif

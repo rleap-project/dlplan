@@ -34,6 +34,13 @@ namespace boost::serialization {
     void save_construct_data(Archive& ar, const dlplan::core::OrConcept* t, const unsigned int version);
     template<class Archive>
     void load_construct_data(Archive& ar, dlplan::core::OrConcept* t, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::core::OrConcept, std::weak_ptr<dlplan::core::OrConcept>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::OrConcept, std::weak_ptr<dlplan::core::OrConcept>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::core::OrConcept, std::weak_ptr<dlplan::core::OrConcept>>* t, const unsigned int version);
 }
 
 
@@ -79,6 +86,7 @@ private:
         m_concept_left(concept_1->get_index() < concept_2->get_index() ? concept_1 : concept_2),
         m_concept_right(concept_1->get_index() < concept_2->get_index() ? concept_2 : concept_1) { }
 
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, OrConcept& t, const unsigned int version);
     template<class Archive>
@@ -97,6 +105,10 @@ public:
                 && m_concept_right == other_derived.m_concept_right;
         }
         return false;
+    }
+
+    size_t hash() const {
+        return dlplan::utils::hash_combine(m_is_static, m_concept_left, m_concept_right);
     }
 
     ConceptDenotation evaluate(const State& state) const override {
@@ -158,8 +170,52 @@ void load_construct_data(Archive& ar, dlplan::core::OrConcept* t, const unsigned
     ::new(t)dlplan::core::OrConcept(index, vocabulary, concept_left, concept_right);
 }
 
+
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::core::OrConcept, std::weak_ptr<dlplan::core::OrConcept>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::core::OrConcept, std::weak_ptr<dlplan::core::OrConcept>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::core::OrConcept, std::weak_ptr<dlplan::core::OrConcept>>* t, const unsigned int /*version*/) {
+    dlplan::core::OrConcept* first;
+    std::weak_ptr<dlplan::core::OrConcept>* second;
+    ar >> const_cast<dlplan::core::OrConcept&>(t->first);
+    ar >> t->second;
+    ::new(t)std::pair<const dlplan::core::OrConcept, std::weak_ptr<dlplan::core::OrConcept>>(*first, *second);
+    delete first;
+    delete second;
+}
+
+
 }
 
 BOOST_CLASS_EXPORT_GUID(dlplan::core::OrConcept, "dlplan::core::OrConcept")
+
+
+namespace std {
+    template<>
+    struct less<std::shared_ptr<const dlplan::core::OrConcept>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::core::OrConcept>& left_concept,
+            const std::shared_ptr<const dlplan::core::OrConcept>& right_concept) const {
+            return *left_concept < *right_concept;
+        }
+    };
+
+    template<>
+    struct hash<dlplan::core::OrConcept>
+    {
+        std::size_t operator()(const dlplan::core::OrConcept& concept_) const {
+            return concept_.hash();
+        }
+    };
+}
 
 #endif

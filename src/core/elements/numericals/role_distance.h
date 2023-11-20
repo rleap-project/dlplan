@@ -34,6 +34,13 @@ namespace boost::serialization {
     void save_construct_data(Archive& ar, const dlplan::core::RoleDistanceNumerical* t, const unsigned int version);
     template<class Archive>
     void load_construct_data(Archive& ar, dlplan::core::RoleDistanceNumerical* t, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
 }
 
 
@@ -127,6 +134,10 @@ public:
         return false;
     }
 
+    size_t hash() const {
+        return dlplan::utils::hash_combine(m_is_static, m_role_from, m_role, m_role_to);
+    }
+
     int evaluate(const State& state) const override {
         auto role_from_denot = m_role_from->evaluate(state);
         if (role_from_denot.empty()) {
@@ -197,8 +208,52 @@ void load_construct_data(Archive & ar, dlplan::core::RoleDistanceNumerical* t, c
     ::new(t)dlplan::core::RoleDistanceNumerical(index, vocabulary, role_from, role, role_to);
 }
 
+
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::core::RoleDistanceNumerical, std::weak_ptr<dlplan::core::RoleDistanceNumerical>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::core::RoleDistanceNumerical, std::weak_ptr<dlplan::core::RoleDistanceNumerical>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::core::RoleDistanceNumerical, std::weak_ptr<dlplan::core::RoleDistanceNumerical>>* t, const unsigned int /*version*/) {
+    dlplan::core::RoleDistanceNumerical* first;
+    std::weak_ptr<dlplan::core::RoleDistanceNumerical>* second;
+    ar >> const_cast<dlplan::core::RoleDistanceNumerical&>(t->first);
+    ar >> t->second;
+    ::new(t)std::pair<const dlplan::core::RoleDistanceNumerical, std::weak_ptr<dlplan::core::RoleDistanceNumerical>>(*first, *second);
+    delete first;
+    delete second;
+}
+
 }
 
 BOOST_CLASS_EXPORT_GUID(dlplan::core::RoleDistanceNumerical, "dlplan::core::RoleDistanceNumerical")
+
+
+namespace std {
+    template<>
+    struct less<std::shared_ptr<const dlplan::core::RoleDistanceNumerical>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::core::RoleDistanceNumerical>& left_numerical,
+            const std::shared_ptr<const dlplan::core::RoleDistanceNumerical>& right_numerical) const {
+            return *left_numerical < *right_numerical;
+        }
+    };
+
+    template<>
+    struct hash<dlplan::core::RoleDistanceNumerical>
+    {
+        std::size_t operator()(const dlplan::core::RoleDistanceNumerical& numerical) const {
+            return numerical.hash();
+        }
+    };
+}
+
 
 #endif

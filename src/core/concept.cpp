@@ -7,6 +7,8 @@
 
 
 namespace dlplan::core {
+Concept::Concept() { }
+
 Concept::Concept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
     : BaseElement(vocabulary_info, index, is_static) {
 }

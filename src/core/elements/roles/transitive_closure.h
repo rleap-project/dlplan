@@ -34,6 +34,13 @@ namespace boost::serialization {
     void save_construct_data(Archive& ar, const dlplan::core::TransitiveClosureRole* t, const unsigned int version);
     template<class Archive>
     void load_construct_data(Archive& ar, dlplan::core::TransitiveClosureRole* t, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
 }
 
 
@@ -104,6 +111,10 @@ public:
         return false;
     }
 
+    size_t hash() const {
+        return dlplan::utils::hash_combine(m_is_static, m_role);
+    }
+
     RoleDenotation evaluate(const State& state) const override {
         RoleDenotation result(state.get_instance_info()->get_objects().size());
         compute_result(
@@ -157,8 +168,51 @@ void load_construct_data(Archive & ar, dlplan::core::TransitiveClosureRole* t, c
     ::new(t)dlplan::core::TransitiveClosureRole(index, vocabulary, role);
 }
 
+
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::core::TransitiveClosureRole, std::weak_ptr<dlplan::core::TransitiveClosureRole>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::core::TransitiveClosureRole, std::weak_ptr<dlplan::core::TransitiveClosureRole>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::core::TransitiveClosureRole, std::weak_ptr<dlplan::core::TransitiveClosureRole>>* t, const unsigned int /*version*/) {
+    dlplan::core::TransitiveClosureRole* first;
+    std::weak_ptr<dlplan::core::TransitiveClosureRole>* second;
+    ar >> const_cast<dlplan::core::TransitiveClosureRole&>(t->first);
+    ar >> t->second;
+    ::new(t)std::pair<const dlplan::core::TransitiveClosureRole, std::weak_ptr<dlplan::core::TransitiveClosureRole>>(*first, *second);
+    delete first;
+    delete second;
+}
+
 }
 
 BOOST_CLASS_EXPORT_GUID(dlplan::core::TransitiveClosureRole, "dlplan::core::TransitiveClosureRole")
+
+
+namespace std {
+    template<>
+    struct less<std::shared_ptr<const dlplan::core::TransitiveClosureRole>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::core::TransitiveClosureRole>& left_role,
+            const std::shared_ptr<const dlplan::core::TransitiveClosureRole>& right_role) const {
+            return *left_role < *right_role;
+        }
+    };
+
+    template<>
+    struct hash<dlplan::core::TransitiveClosureRole>
+    {
+        std::size_t operator()(const dlplan::core::TransitiveClosureRole& role) const {
+            return role.hash();
+        }
+    };
+}
 
 #endif

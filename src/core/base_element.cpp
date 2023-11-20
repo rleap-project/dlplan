@@ -6,6 +6,7 @@
 
 
 namespace dlplan::core {
+BaseElement::BaseElement() { }
 
 BaseElement::BaseElement(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
     : m_vocabulary_info(vocabulary_info), m_index(index), m_is_static(is_static) { }

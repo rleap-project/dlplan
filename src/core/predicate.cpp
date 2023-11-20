@@ -30,6 +30,10 @@ bool Predicate::operator!=(const Predicate& other) const {
     return !(*this == other);
 }
 
+size_t Predicate::hash() const {
+    return dlplan::utils::hash_combine(m_name, m_index, m_arity, m_is_static);
+}
+
 std::string Predicate::compute_repr() const {
     std::stringstream ss;
     ss << "Predicate("
