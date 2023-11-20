@@ -1,6 +1,9 @@
 #include "../../include/dlplan/core.h"
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/base_object.hpp>
+#include <boost/serialization/shared_ptr.hpp>
 
 
 namespace dlplan::core {
@@ -62,4 +65,6 @@ void load_construct_data(Archive& /* ar */ , dlplan::core::Concept* /* t */ , co
 }
 
 }
+
+
 

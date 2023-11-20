@@ -1,8 +1,43 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENT_FACTORY_H_
 #define DLPLAN_SRC_CORE_ELEMENT_FACTORY_H_
 
-#include "cache.h"
+#include "elements/booleans/empty.h"
+#include "elements/booleans/inclusion.h"
+#include "elements/booleans/nullary.h"
+#include "elements/concepts/all.h"
+#include "elements/concepts/bot.h"
+#include "elements/concepts/and.h"
+#include "elements/concepts/diff.h"
+#include "elements/concepts/equal.h"
+#include "elements/concepts/not.h"
+#include "elements/concepts/one_of.h"
+#include "elements/concepts/or.h"
+#include "elements/concepts/projection.h"
+#include "elements/concepts/primitive.h"
+#include "elements/concepts/some.h"
+#include "elements/concepts/subset.h"
+#include "elements/concepts/top.h"
+#include "elements/numericals/concept_distance.h"
+#include "elements/numericals/count.h"
+#include "elements/numericals/role_distance.h"
+#include "elements/numericals/sum_concept_distance.h"
+#include "elements/numericals/sum_role_distance.h"
+#include "elements/roles/and.h"
+#include "elements/roles/compose.h"
+#include "elements/roles/diff.h"
+#include "elements/roles/identity.h"
+#include "elements/roles/inverse.h"
+#include "elements/roles/not.h"
+#include "elements/roles/or.h"
+#include "elements/roles/primitive.h"
+#include "elements/roles/restrict.h"
+#include "elements/roles/top.h"
+#include "elements/roles/transitive_closure.h"
+#include "elements/roles/transitive_reflexive_closure.h"
+
 #include "../../include/dlplan/core.h"
+
+#include "../utils/factory.h"
 
 #include <memory>
 #include <string>
@@ -25,7 +60,42 @@ class SyntacticElementFactoryImpl {
 private:
     std::shared_ptr<VocabularyInfo> m_vocabulary_info;
 
-    Caches m_caches;
+    dlplan::utils::ReferenceCountedObjectFactory<EmptyBoolean<Concept>
+        , EmptyBoolean<Role>
+        , InclusionBoolean<Concept>
+        , InclusionBoolean<Role>
+        , NullaryBoolean
+        , AllConcept
+        , AndConcept
+        , BotConcept
+        , DiffConcept
+        , EqualConcept
+        , NotConcept
+        , OneOfConcept
+        , OrConcept
+        , PrimitiveConcept
+        , ProjectionConcept
+        , SomeConcept
+        , SubsetConcept
+        , TopConcept
+        , ConceptDistanceNumerical
+        , CountNumerical<Concept>
+        , CountNumerical<Role>
+        , RoleDistanceNumerical
+        , SumConceptDistanceNumerical
+        , SumRoleDistanceNumerical
+        , AndRole
+        , ComposeRole
+        , DiffRole
+        , IdentityRole
+        , InverseRole
+        , NotRole
+        , OrRole
+        , PrimitiveRole
+        , RestrictRole
+        , TopRole
+        , TransitiveClosureRole
+        , TransitiveReflexiveClosureRole> m_cache;
 
     /// @brief Constructor for serialization.
     SyntacticElementFactoryImpl();

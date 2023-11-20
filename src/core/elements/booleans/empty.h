@@ -16,7 +16,13 @@
 using namespace std::string_literals;
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
 namespace dlplan::core {
+
 template<typename T>
 class EmptyBoolean;
 }
@@ -36,6 +42,8 @@ namespace dlplan::core {
 template<typename T>
 class EmptyBoolean : public Boolean {
 private:
+    const std::shared_ptr<const T> m_element;
+
     template<typename DENOTATION_TYPE>
     void compute_result(const DENOTATION_TYPE& denotation, bool& result) const {
         result = denotation.empty();
@@ -71,12 +79,32 @@ private:
     template<class Archive, typename T_>
     friend void boost::serialization::load_construct_data(Archive & ar, EmptyBoolean<T_>* t, const unsigned int version);
 
-protected:
-    const std::shared_ptr<const T> m_element;
+    EmptyBoolean(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const T> element)
+        : Boolean(vocabulary_info, index, element->is_static()), m_element(element) {
+    }
+
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    EmptyBoolean(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const T> element)
-        : Boolean(vocabulary_info, index, element->is_static()), m_element(element) {
+    bool operator==(const Boolean& other) const {
+        if (typeid(*this) == typeid(other)) {
+            const auto& other_derived = static_cast<const EmptyBoolean<T>&>(other);
+            return m_element == other_derived.m_element;
+        }
+        return false;
+    }
+
+    bool operator!=(const Boolean& other) const {
+        return !(*this == other);
+    }
+
+    bool operator<(const EmptyBoolean<T>& other) const {
+        return m_index < other.m_index;
+    }
+
+    size_t hash() const {
+        return std::hash<std::shared_ptr<const T>>()(m_element);
     }
 
     bool evaluate(const State& state) const override {
@@ -113,7 +141,7 @@ public:
 
 namespace boost::serialization {
 template<typename Archive, typename T>
-void serialize(Archive& /* ar */ , dlplan::core::EmptyBoolean<T>& t, const unsigned int /* version */ )
+void serialize(Archive& ar, dlplan::core::EmptyBoolean<T>& t, const unsigned int /* version */ )
 {
     boost::serialization::base_object<dlplan::core::Boolean>(t);
 }
@@ -121,23 +149,43 @@ void serialize(Archive& /* ar */ , dlplan::core::EmptyBoolean<T>& t, const unsig
 template<class Archive, typename T>
 void save_construct_data(Archive& ar, const dlplan::core::EmptyBoolean<T>* t, const unsigned int /* version */ )
 {
-    ar << t->m_vocabulary_info;
     ar << t->m_index;
+    ar << t->m_vocabulary_info;
     ar << t->m_element;
 }
 
 template<class Archive, typename T>
 void load_construct_data(Archive& ar, dlplan::core::EmptyBoolean<T>* t, const unsigned int /* version */ )
 {
-    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
     int index;
+    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
     std::shared_ptr<const T> element;
-    ar >> vocabulary;
     ar >> index;
+    ar >> vocabulary;
     ar >> element;
-    ::new(t)dlplan::core::EmptyBoolean<T>(vocabulary, index, element);
+    ::new(t)dlplan::core::EmptyBoolean<T>(index, vocabulary, element);
 }
 
+}
+
+namespace std {
+    template<typename T>
+    struct less<std::shared_ptr<const dlplan::core::EmptyBoolean<T>>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::core::EmptyBoolean<T>>& left_boolean,
+            const std::shared_ptr<const dlplan::core::EmptyBoolean<T>>& right_boolean) const {
+            return *left_boolean < *right_boolean;
+        }
+    };
+
+    template<typename T>
+    struct hash<dlplan::core::EmptyBoolean<T>>
+    {
+        std::size_t operator()(const dlplan::core::EmptyBoolean<T>& boolean) const {
+            return boolean.hash();
+        }
+    };
 }
 
 BOOST_CLASS_EXPORT_GUID(dlplan::core::EmptyBoolean<dlplan::core::Concept>, "dlplan::core::EmptyBoolean<dlplan::core::Concept>")
