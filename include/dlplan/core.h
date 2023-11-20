@@ -462,7 +462,6 @@ private:
     Constant(const std::string& name, ConstantIndex index);
 
     friend class VocabularyInfo;
-    friend class OneOfConcept;
     friend class boost::serialization::access;
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, Constant& t, const unsigned int version);
@@ -531,9 +530,6 @@ private:
     Predicate(const std::string& name, PredicateIndex index, int arity, bool is_static=false);
 
     friend class VocabularyInfo;
-    friend class NullaryBoolean;
-    friend class PrimitiveConcept;
-    friend class PrimitiveRole;
     friend class boost::serialization::access;
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, Predicate& t, const unsigned int version);

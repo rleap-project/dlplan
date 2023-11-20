@@ -221,8 +221,8 @@ void save_construct_data(Archive& ar, const std::pair<const dlplan::core::RoleDi
 
 template<class Archive>
 void load_construct_data(Archive& ar, std::pair<const dlplan::core::RoleDistanceNumerical, std::weak_ptr<dlplan::core::RoleDistanceNumerical>>* t, const unsigned int /*version*/) {
-    dlplan::core::RoleDistanceNumerical* first;
-    std::weak_ptr<dlplan::core::RoleDistanceNumerical>* second;
+    dlplan::core::RoleDistanceNumerical* first = nullptr;
+    std::weak_ptr<dlplan::core::RoleDistanceNumerical>* second = nullptr;
     ar >> const_cast<dlplan::core::RoleDistanceNumerical&>(t->first);
     ar >> t->second;
     ::new(t)std::pair<const dlplan::core::RoleDistanceNumerical, std::weak_ptr<dlplan::core::RoleDistanceNumerical>>(*first, *second);

@@ -211,8 +211,8 @@ void save_construct_data(Archive& ar, const std::pair<const dlplan::core::SumCon
 
 template<class Archive>
 void load_construct_data(Archive& ar, std::pair<const dlplan::core::SumConceptDistanceNumerical, std::weak_ptr<dlplan::core::SumConceptDistanceNumerical>>* t, const unsigned int /*version*/) {
-    dlplan::core::SumConceptDistanceNumerical* first;
-    std::weak_ptr<dlplan::core::SumConceptDistanceNumerical>* second;
+    dlplan::core::SumConceptDistanceNumerical* first = nullptr;
+    std::weak_ptr<dlplan::core::SumConceptDistanceNumerical>* second = nullptr;
     ar >> const_cast<dlplan::core::SumConceptDistanceNumerical&>(t->first);
     ar >> t->second;
     ::new(t)std::pair<const dlplan::core::SumConceptDistanceNumerical, std::weak_ptr<dlplan::core::SumConceptDistanceNumerical>>(*first, *second);

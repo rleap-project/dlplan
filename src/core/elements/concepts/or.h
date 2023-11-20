@@ -183,8 +183,8 @@ void save_construct_data(Archive& ar, const std::pair<const dlplan::core::OrConc
 
 template<class Archive>
 void load_construct_data(Archive& ar, std::pair<const dlplan::core::OrConcept, std::weak_ptr<dlplan::core::OrConcept>>* t, const unsigned int /*version*/) {
-    dlplan::core::OrConcept* first;
-    std::weak_ptr<dlplan::core::OrConcept>* second;
+    dlplan::core::OrConcept* first = nullptr;
+    std::weak_ptr<dlplan::core::OrConcept>* second = nullptr;
     ar >> const_cast<dlplan::core::OrConcept&>(t->first);
     ar >> t->second;
     ::new(t)std::pair<const dlplan::core::OrConcept, std::weak_ptr<dlplan::core::OrConcept>>(*first, *second);

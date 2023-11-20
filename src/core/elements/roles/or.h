@@ -174,8 +174,8 @@ void save_construct_data(Archive& ar, const std::pair<const dlplan::core::OrRole
 
 template<class Archive>
 void load_construct_data(Archive& ar, std::pair<const dlplan::core::OrRole, std::weak_ptr<dlplan::core::OrRole>>* t, const unsigned int /*version*/) {
-    dlplan::core::OrRole* first;
-    std::weak_ptr<dlplan::core::OrRole>* second;
+    dlplan::core::OrRole* first = nullptr;
+    std::weak_ptr<dlplan::core::OrRole>* second = nullptr;
     ar >> const_cast<dlplan::core::OrRole&>(t->first);
     ar >> t->second;
     ::new(t)std::pair<const dlplan::core::OrRole, std::weak_ptr<dlplan::core::OrRole>>(*first, *second);

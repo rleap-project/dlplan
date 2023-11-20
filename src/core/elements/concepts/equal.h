@@ -181,8 +181,8 @@ void save_construct_data(Archive& ar, const std::pair<const dlplan::core::EqualC
 
 template<class Archive>
 void load_construct_data(Archive& ar, std::pair<const dlplan::core::EqualConcept, std::weak_ptr<dlplan::core::EqualConcept>>* t, const unsigned int /*version*/) {
-    dlplan::core::EqualConcept* first;
-    std::weak_ptr<dlplan::core::EqualConcept>* second;
+    dlplan::core::EqualConcept* first = nullptr;
+    std::weak_ptr<dlplan::core::EqualConcept>* second = nullptr;
     ar >> const_cast<dlplan::core::EqualConcept&>(t->first);
     ar >> t->second;
     ::new(t)std::pair<const dlplan::core::EqualConcept, std::weak_ptr<dlplan::core::EqualConcept>>(*first, *second);

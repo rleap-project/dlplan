@@ -163,8 +163,8 @@ void save_construct_data(Archive& ar, const std::pair<const dlplan::core::Identi
 
 template<class Archive>
 void load_construct_data(Archive& ar, std::pair<const dlplan::core::IdentityRole, std::weak_ptr<dlplan::core::IdentityRole>>* t, const unsigned int /*version*/) {
-    dlplan::core::IdentityRole* first;
-    std::weak_ptr<dlplan::core::IdentityRole>* second;
+    dlplan::core::IdentityRole* first = nullptr;
+    std::weak_ptr<dlplan::core::IdentityRole>* second = nullptr;
     ar >> const_cast<dlplan::core::IdentityRole&>(t->first);
     ar >> t->second;
     ::new(t)std::pair<const dlplan::core::IdentityRole, std::weak_ptr<dlplan::core::IdentityRole>>(*first, *second);
