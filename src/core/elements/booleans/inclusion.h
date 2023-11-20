@@ -204,8 +204,8 @@ void load_construct_data(Archive& ar, std::pair<const dlplan::core::InclusionBoo
 
 }
 
-BOOST_CLASS_EXPORT_GUID(dlplan::core::InclusionBoolean<dlplan::core::Concept>, "dlplan::core::InclusionBoolean<dlplan::core::Concept>")
-BOOST_CLASS_EXPORT_GUID(dlplan::core::InclusionBoolean<dlplan::core::Role>, "dlplan::core::InclusionBoolean<dlplan::core::Role>")
+BOOST_CLASS_EXPORT_KEY2(dlplan::core::InclusionBoolean<dlplan::core::Concept>, "dlplan::core::InclusionBoolean<dlplan::core::Concept>")
+BOOST_CLASS_EXPORT_KEY2(dlplan::core::InclusionBoolean<dlplan::core::Role>, "dlplan::core::InclusionBoolean<dlplan::core::Role>")
 
 
 namespace std {

@@ -189,8 +189,8 @@ void load_construct_data(Archive& ar, std::pair<const dlplan::core::EmptyBoolean
 
 }
 
-BOOST_CLASS_EXPORT_GUID(dlplan::core::EmptyBoolean<dlplan::core::Concept>, "dlplan::core::EmptyBoolean<dlplan::core::Concept>")
-BOOST_CLASS_EXPORT_GUID(dlplan::core::EmptyBoolean<dlplan::core::Role>, "dlplan::core::EmptyBoolean<dlplan::core::Role>")
+BOOST_CLASS_EXPORT_KEY2(dlplan::core::EmptyBoolean<dlplan::core::Concept>, "dlplan::core::EmptyBoolean<dlplan::core::Concept>")
+BOOST_CLASS_EXPORT_KEY2(dlplan::core::EmptyBoolean<dlplan::core::Role>, "dlplan::core::EmptyBoolean<dlplan::core::Role>")
 
 
 namespace std {

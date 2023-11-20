@@ -203,7 +203,7 @@ void load_construct_data(Archive& ar, std::pair<const dlplan::core::PrimitiveCon
 
 }
 
-BOOST_CLASS_EXPORT_GUID(dlplan::core::PrimitiveConcept, "dlplan::core::PrimitiveConcept")
+BOOST_CLASS_EXPORT_KEY2(dlplan::core::PrimitiveConcept, "dlplan::core::PrimitiveConcept")
 
 
 namespace std {

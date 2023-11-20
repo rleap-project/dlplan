@@ -64,7 +64,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 ##############################################################
 
 add_subdirectory(src)
-#add_subdirectory(examples)
+add_subdirectory(examples)
 #add_subdirectory(experiments)
 
 if (ENABLE_TESTING)

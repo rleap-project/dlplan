@@ -195,7 +195,7 @@ void load_construct_data(Archive& ar, std::pair<const dlplan::core::OrConcept, s
 
 }
 
-BOOST_CLASS_EXPORT_GUID(dlplan::core::OrConcept, "dlplan::core::OrConcept")
+BOOST_CLASS_EXPORT_KEY2(dlplan::core::OrConcept, "dlplan::core::OrConcept")
 
 
 namespace std {

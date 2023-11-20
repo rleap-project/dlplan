@@ -189,7 +189,7 @@ void load_construct_data(Archive& ar, std::pair<const dlplan::core::ProjectionCo
 
 }
 
-BOOST_CLASS_EXPORT_GUID(dlplan::core::ProjectionConcept, "dlplan::core::ProjectionConcept")
+BOOST_CLASS_EXPORT_KEY2(dlplan::core::ProjectionConcept, "dlplan::core::ProjectionConcept")
 
 
 namespace std {

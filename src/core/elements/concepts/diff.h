@@ -35,12 +35,6 @@ namespace boost::serialization {
     template<class Archive>
     void load_construct_data(Archive& ar, dlplan::core::DiffConcept* t, const unsigned int version);
 
-    template<typename Archive>
-    void serialize(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
 }
 
 
@@ -190,7 +184,7 @@ void load_construct_data(Archive& ar, std::pair<const dlplan::core::DiffConcept,
 
 }
 
-BOOST_CLASS_EXPORT_GUID(dlplan::core::DiffConcept, "dlplan::core::DiffConcept")
+BOOST_CLASS_EXPORT_KEY2(dlplan::core::DiffConcept, "dlplan::core::DiffConcept")
 
 
 namespace std {

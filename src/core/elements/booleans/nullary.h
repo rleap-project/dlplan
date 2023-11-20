@@ -184,7 +184,7 @@ void load_construct_data(Archive& ar, std::pair<const dlplan::core::NullaryBoole
 
 }
 
-BOOST_CLASS_EXPORT_GUID(dlplan::core::NullaryBoolean, "dlplan::core::NullaryBoolean")
+BOOST_CLASS_EXPORT_KEY2(dlplan::core::NullaryBoolean, "dlplan::core::NullaryBoolean")
 
 
 namespace std {

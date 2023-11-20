@@ -36,12 +36,12 @@ namespace boost::serialization {
     template<class Archive, typename T>
     void load_construct_data(Archive& ar, dlplan::core::CountNumerical<T>* t, const unsigned int version);
 
-    template<typename Archive>
-    void serialize(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
+    template<typename Archive, typename T>
+    void serialize(Archive& ar, std::pair<const dlplan::core::CountNumerical<T>, std::weak_ptr<dlplan::core::CountNumerical<T>>>& t, const unsigned int version);
+    template<class Archive, typename T>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::CountNumerical<T>, std::weak_ptr<dlplan::core::CountNumerical<T>>>* t, const unsigned int version);
+    template<class Archive, typename T>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::core::CountNumerical<T>, std::weak_ptr<dlplan::core::CountNumerical<T>>>* t, const unsigned int version);
 }
 
 namespace dlplan::core {
@@ -191,8 +191,8 @@ void load_construct_data(Archive& ar, std::pair<const dlplan::core::CountNumeric
 
 }
 
-BOOST_CLASS_EXPORT_GUID(dlplan::core::CountNumerical<dlplan::core::Concept>, "dlplan::core::CountNumerical<dlplan::core::Concept>")
-BOOST_CLASS_EXPORT_GUID(dlplan::core::CountNumerical<dlplan::core::Role>, "dlplan::core::CountNumerical<dlplan::core::Role>")
+BOOST_CLASS_EXPORT_KEY2(dlplan::core::CountNumerical<dlplan::core::Concept>, "dlplan::core::CountNumerical<dlplan::core::Concept>")
+BOOST_CLASS_EXPORT_KEY2(dlplan::core::CountNumerical<dlplan::core::Role>, "dlplan::core::CountNumerical<dlplan::core::Role>")
 
 
 namespace std {

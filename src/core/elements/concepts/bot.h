@@ -156,7 +156,7 @@ void load_construct_data(Archive& ar, std::pair<const dlplan::core::BotConcept, 
 }
 }
 
-BOOST_CLASS_EXPORT_GUID(dlplan::core::BotConcept, "dlplan::core::BotConcept")
+BOOST_CLASS_EXPORT_KEY2(dlplan::core::BotConcept, "dlplan::core::BotConcept")
 
 
 namespace std {

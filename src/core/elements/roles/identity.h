@@ -34,13 +34,6 @@ namespace boost::serialization {
     void save_construct_data(Archive& ar, const dlplan::core::IdentityRole* t, const unsigned int version);
     template<class Archive>
     void load_construct_data(Archive& ar, dlplan::core::IdentityRole* t, const unsigned int version);
-
-    template<typename Archive>
-    void serialize(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
 }
 
 
@@ -181,7 +174,7 @@ void load_construct_data(Archive& ar, std::pair<const dlplan::core::IdentityRole
 
 }
 
-BOOST_CLASS_EXPORT_GUID(dlplan::core::IdentityRole, "dlplan::core::IdentityRole")
+BOOST_CLASS_EXPORT_KEY2(dlplan::core::IdentityRole, "dlplan::core::IdentityRole")
 
 
 namespace std {

@@ -13,7 +13,38 @@ target_sources(dlplancore
         core.cpp
         denotations_caches.cpp
         element_factory.cpp
+        elements/booleans/empty.cpp
+        elements/booleans/inclusion.cpp
+        elements/booleans/nullary.cpp
+        elements/concepts/all.cpp
+        elements/concepts/and.cpp
+        elements/concepts/bot.cpp
+        elements/concepts/diff.cpp
+        elements/concepts/equal.cpp
+        elements/concepts/not.cpp
+        elements/concepts/or.cpp
+        elements/concepts/primitive.cpp
+        elements/concepts/projection.cpp
+        elements/concepts/some.cpp
+        elements/concepts/subset.cpp
+        elements/concepts/top.cpp
+        elements/numericals/concept_distance.cpp
+        elements/numericals/count.cpp
+        elements/numericals/role_distance.cpp
+        elements/numericals/sum_concept_distance.cpp
+        elements/numericals/sum_role_distance.cpp
+        elements/roles/and.cpp
+        elements/roles/compose.cpp
+        elements/roles/diff.cpp
+        elements/roles/identity.cpp
+        elements/roles/inverse.cpp
+        elements/roles/not.cpp
+        elements/roles/or.cpp
         elements/roles/primitive.cpp
+        elements/roles/restrict.cpp
+        elements/roles/top.cpp
+        elements/roles/transitive_closure.cpp
+        elements/roles/transitive_reflexive_closure.cpp
         instance_info.cpp
         numerical.cpp
         vocabulary_info.cpp

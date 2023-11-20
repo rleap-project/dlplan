@@ -195,7 +195,7 @@ void load_construct_data(Archive& ar, std::pair<const dlplan::core::AllConcept, 
 
 }
 
-BOOST_CLASS_EXPORT_GUID(dlplan::core::AllConcept, "dlplan::core::AllConcept")
+BOOST_CLASS_EXPORT_KEY2(dlplan::core::AllConcept, "dlplan::core::AllConcept")
 
 
 namespace std {
