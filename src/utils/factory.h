@@ -42,7 +42,7 @@ namespace dlplan::utils {
 template<typename T>
 struct PerTypeCache {
     std::unordered_map<T, std::weak_ptr<T>> data;
-    //std::mutex mutex;
+    std::mutex mutex;
     int count = -1;
 };
 
@@ -85,7 +85,7 @@ public:
         std::shared_ptr<T> sp;
         auto& cached = t_cache->data[*element];
         sp = cached.lock();
-        //std::lock_guard<std::mutex> hold(t_cache->mutex);
+        std::lock_guard<std::mutex> hold(t_cache->mutex);
         bool new_insertion = false;
 
         if (!sp) {
@@ -95,7 +95,7 @@ public:
                 [parent=t_cache, original_deleter=element.get_deleter()](T* x)
                 {
                     {
-                        //std::lock_guard<std::mutex> hold(parent->mutex);
+                        std::lock_guard<std::mutex> hold(parent->mutex);
                         parent->data.erase(*x);
                     }
                     /* After cache removal, we can call the objects destructor
