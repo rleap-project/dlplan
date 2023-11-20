@@ -18,6 +18,10 @@ Numerical& Numerical::operator=(Numerical&& other) = default;
 
 Numerical::~Numerical() = default;
 
+bool Numerical::operator<(const Numerical& other) const {
+    return m_index < other.m_index;
+}
+
 int Numerical::evaluate(const State& state, DenotationsCaches& caches) const {
     const int* cached = caches.numerical_denotation_cache.get_denotation(
         get_index(),

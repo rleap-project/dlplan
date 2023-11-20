@@ -18,6 +18,10 @@ Role& Role::operator=(Role&& other) = default;
 
 Role::~Role() = default;
 
+bool Role::operator<(const Role& other) const {
+    return m_index < other.m_index;
+}
+
 const RoleDenotation* Role::evaluate(const State& state, DenotationsCaches& caches) const {
     auto cached = caches.role_denotation_cache.get_denotation(
         get_index(),

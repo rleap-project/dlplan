@@ -22,7 +22,6 @@ class ReferenceCountedObjectFactory;
 }
 
 namespace dlplan::core {
-
 template<typename T>
 class EmptyBoolean;
 }
@@ -72,35 +71,27 @@ private:
         return denotations;
     }
 
+    EmptyBoolean(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const T> element)
+        : Boolean(vocabulary_info, index, element->is_static()), m_element(element) {
+    }
+
     template<typename Archive, typename T_>
     friend void boost::serialization::serialize(Archive& ar, EmptyBoolean<T_>& t, const unsigned int version);
     template<class Archive, typename T_>
     friend void boost::serialization::save_construct_data(Archive & ar, const EmptyBoolean<T_>* t, const unsigned int version);
     template<class Archive, typename T_>
     friend void boost::serialization::load_construct_data(Archive & ar, EmptyBoolean<T_>* t, const unsigned int version);
-
-    EmptyBoolean(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const T> element)
-        : Boolean(vocabulary_info, index, element->is_static()), m_element(element) {
-    }
-
     template<typename... Ts>
     friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    bool operator==(const Boolean& other) const {
+    bool operator==(const Boolean& other) const override {
         if (typeid(*this) == typeid(other)) {
             const auto& other_derived = static_cast<const EmptyBoolean<T>&>(other);
-            return m_element == other_derived.m_element;
+            return m_is_static == other_derived.m_is_static
+                && m_element == other_derived.m_element;
         }
         return false;
-    }
-
-    bool operator!=(const Boolean& other) const {
-        return !(*this == other);
-    }
-
-    bool operator<(const EmptyBoolean<T>& other) const {
-        return m_index < other.m_index;
     }
 
     size_t hash() const {
@@ -141,7 +132,7 @@ public:
 
 namespace boost::serialization {
 template<typename Archive, typename T>
-void serialize(Archive& ar, dlplan::core::EmptyBoolean<T>& t, const unsigned int /* version */ )
+void serialize(Archive& /*ar*/, dlplan::core::EmptyBoolean<T>& t, const unsigned int /* version */ )
 {
     boost::serialization::base_object<dlplan::core::Boolean>(t);
 }

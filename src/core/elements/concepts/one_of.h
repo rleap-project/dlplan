@@ -16,6 +16,12 @@
 using namespace std::string_literals;
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
 namespace dlplan::core {
 class OneOfConcept;
 }
@@ -34,6 +40,8 @@ namespace boost::serialization {
 namespace dlplan::core {
 class OneOfConcept : public Concept {
 private:
+    const Constant m_constant;
+
     void compute_result(const State& state, ConceptDenotation& result) const {
         bool found = false;
         for (const auto& object : state.get_instance_info()->get_objects()) {
@@ -69,19 +77,26 @@ private:
         return denotations;
     }
 
+    OneOfConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, const Constant& constant)
+        : Concept(vocabulary_info, index, true), m_constant(constant) { }
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, OneOfConcept& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const OneOfConcept* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, OneOfConcept* t, const unsigned int version);
-
-protected:
-    const Constant m_constant;
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    OneOfConcept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, const Constant& constant)
-    : Concept(vocabulary_info, index, true), m_constant(constant) {
+    bool operator==(const Concept& other) const override {
+        if (typeid(*this) == typeid(other)) {
+            const auto& other_derived = static_cast<const OneOfConcept&>(other);
+            return m_is_static == other_derived.m_is_static
+                && m_constant == other_derived.m_constant;
+        }
+        return false;
     }
 
     ConceptDenotation evaluate(const State& state) const override {
@@ -130,7 +145,7 @@ void load_construct_data(Archive& ar, dlplan::core::OneOfConcept* t, const unsig
     ar >> vocabulary;
     ar >> index;
     ar >> constant;
-    ::new(t)dlplan::core::OneOfConcept(vocabulary, index, *constant);
+    ::new(t)dlplan::core::OneOfConcept(index, vocabulary, *constant);
     delete constant;
 }
 

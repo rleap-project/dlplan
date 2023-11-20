@@ -16,6 +16,12 @@
 using namespace std::string_literals;
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
 namespace dlplan::core {
 class RestrictRole;
 }
@@ -34,6 +40,9 @@ namespace boost::serialization {
 namespace dlplan::core {
 class RestrictRole : public Role {
 private:
+    const std::shared_ptr<const Role> m_role;
+    const std::shared_ptr<const Concept> m_concept;
+
     void compute_result(const RoleDenotation& role_denot, const ConceptDenotation& concept_denot, RoleDenotation& result) const {
         result = role_denot;
         for (const auto& pair : role_denot.to_vector()) {
@@ -68,23 +77,27 @@ private:
         return denotations;
     }
 
+    RestrictRole(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept)
+    : Role(vocabulary_info, index, role->is_static() && concept->is_static()), m_role(role), m_concept(concept) { }
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, RestrictRole& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const RestrictRole* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, RestrictRole* t, const unsigned int version);
-
-protected:
-    const std::shared_ptr<const Role> m_role;
-    const std::shared_ptr<const Concept> m_concept;
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    RestrictRole(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept)
-    : Role(vocabulary_info, index, role->is_static() && concept->is_static()), m_role(role), m_concept(concept) {
-        if (!(role && concept)) {
-            throw std::runtime_error("RestrictRole::RestrictRole - at least one child is a nullptr.");
+    bool operator==(const Role& other) const override {
+        if (typeid(*this) == typeid(other)) {
+            const auto& other_derived = static_cast<const RestrictRole&>(other);
+            return m_is_static == other_derived.m_is_static
+                && m_role == other_derived.m_role
+                && m_concept == other_derived.m_concept;
         }
+        return false;
     }
 
     RoleDenotation evaluate(const State& state) const override {
@@ -145,7 +158,7 @@ void load_construct_data(Archive & ar, dlplan::core::RestrictRole* t, const unsi
     ar >> index;
     ar >> role;
     ar >> concept_;
-    ::new(t)dlplan::core::RestrictRole(vocabulary, index, role, concept_);
+    ::new(t)dlplan::core::RestrictRole(index, vocabulary, role, concept_);
 }
 
 }

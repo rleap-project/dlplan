@@ -16,6 +16,12 @@
 using namespace std::string_literals;
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
 namespace dlplan::core {
 class TopRole;
 }
@@ -51,16 +57,25 @@ private:
         return denotations;
     }
 
+    TopRole(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info)
+        : Role(vocabulary_info, index, true) { }
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, TopRole& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const TopRole* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, TopRole* t, const unsigned int version);
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    TopRole(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index)
-    : Role(vocabulary_info, index, true) {
+    bool operator==(const Role& other) const override {
+        if (typeid(*this) == typeid(other)) {
+            const auto& other_derived = static_cast<const TopRole&>(other);
+            return m_is_static == other_derived.m_is_static;
+        }
+        return false;
     }
 
     RoleDenotation evaluate(const State& state) const override {
@@ -107,7 +122,7 @@ void load_construct_data(Archive & ar, dlplan::core::TopRole* t, const unsigned 
     int index;
     ar >> vocabulary;
     ar >> index;
-    ::new(t)dlplan::core::TopRole(vocabulary, index);
+    ::new(t)dlplan::core::TopRole(index, vocabulary);
 }
 
 }

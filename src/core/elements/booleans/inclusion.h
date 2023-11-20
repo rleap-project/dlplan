@@ -16,6 +16,12 @@
 using namespace std::string_literals;
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
 namespace dlplan::core {
 template<typename T>
 class InclusionBoolean;
@@ -36,6 +42,9 @@ namespace dlplan::core {
 template<typename T>
 class InclusionBoolean : public Boolean {
 private:
+    const std::shared_ptr<const T> m_element_left;
+    const std::shared_ptr<const T> m_element_right;
+
     template<typename DENOTATION_TYPE>
     void compute_result(const DENOTATION_TYPE& denot_left, const DENOTATION_TYPE& denot_right, bool& result) const {
         result = denot_left.is_subset_of(denot_right);
@@ -67,22 +76,30 @@ private:
         return denotations;
     }
 
+    InclusionBoolean(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const T> element_left, std::shared_ptr<const T> element_right)
+    : Boolean(vocabulary_info, index, element_left->is_static() && element_right->is_static()),
+      m_element_left(element_left),
+      m_element_right(element_right) {
+    }
+
     template<typename Archive, typename T_>
     friend void boost::serialization::serialize(Archive& ar, InclusionBoolean<T_>& t, const unsigned int version);
     template<class Archive, typename T_>
     friend void boost::serialization::save_construct_data(Archive& ar, const InclusionBoolean<T_>* t, const unsigned int version);
     template<class Archive, typename T_>
     friend void boost::serialization::load_construct_data(Archive& ar, InclusionBoolean<T_>* t, const unsigned int version);
-
-protected:
-    const std::shared_ptr<const T> m_element_left;
-    const std::shared_ptr<const T> m_element_right;
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    InclusionBoolean(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const T> element_left, std::shared_ptr<const T> element_right)
-    : Boolean(vocabulary_info, index, element_left->is_static() && element_right->is_static()),
-      m_element_left(element_left),
-      m_element_right(element_right) {
+    bool operator==(const Boolean& other) const override {
+        if (typeid(*this) == typeid(other)) {
+            const auto& other_derived = static_cast<const InclusionBoolean<T>&>(other);
+            return m_is_static == other_derived.m_is_static
+                && m_element_left == other_derived.m_element_left
+                && m_element_right == other_derived.m_element_right;
+        }
+        return false;
     }
 
     bool evaluate(const State& state) const override {
@@ -149,7 +166,7 @@ void load_construct_data(Archive& ar, dlplan::core::InclusionBoolean<T>* t, cons
     ar >> index;
     ar >> element_left;
     ar >> element_right;
-    ::new(t)dlplan::core::InclusionBoolean<T>(vocabulary, index, element_left, element_right);
+    ::new(t)dlplan::core::InclusionBoolean<T>(index, vocabulary, element_left, element_right);
 }
 
 }

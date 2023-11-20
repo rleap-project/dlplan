@@ -16,6 +16,12 @@
 using namespace std::string_literals;
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
 namespace dlplan::core {
 class OrRole;
 }
@@ -34,6 +40,9 @@ namespace boost::serialization {
 namespace dlplan::core {
 class OrRole : public Role {
 private:
+    const std::shared_ptr<const Role> m_role_left;
+    const std::shared_ptr<const Role> m_role_right;
+
     void compute_result(const RoleDenotation& left_denot, const RoleDenotation& right_denot, RoleDenotation& result) const {
         result = left_denot;
         result |= right_denot;
@@ -64,30 +73,29 @@ private:
         return denotations;
     }
 
+    OrRole(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role_1, std::shared_ptr<const Role> role_2)
+        : Role(vocabulary_info, index, role_1->is_static() && role_2->is_static()),
+        m_role_left(role_1->get_index() < role_2->get_index() ? role_1 : role_2),
+        m_role_right(role_1->get_index() < role_2->get_index() ? role_2 : role_1) { }
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, OrRole& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const OrRole* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, OrRole* t, const unsigned int version);
-
-protected:
-    std::shared_ptr<const Role> m_role_left;
-    std::shared_ptr<const Role> m_role_right;
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    OrRole(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role_1, std::shared_ptr<const Role> role_2)
-    : Role(vocabulary_info, index, role_1->is_static() && role_2->is_static()),
-      m_role_left(role_1),
-      m_role_right(role_2) {
-        if (!(role_1 && role_2)) {
-            throw std::runtime_error("OrRole::OrRole - at least one child is a nullptr.");
+    bool operator==(const Role& other) const override {
+        if (typeid(*this) == typeid(other)) {
+            const auto& other_derived = static_cast<const OrRole&>(other);
+            return m_is_static == other_derived.m_is_static
+                && m_role_left == other_derived.m_role_left
+                && m_role_right == other_derived.m_role_right;
         }
-        std::stringstream ss1;
-        m_role_left->compute_repr(ss1);
-        std::stringstream ss2;
-        m_role_right->compute_repr(ss2);
-        if (ss1.str() > ss2.str()) swap(m_role_left, m_role_right);
+        return false;
     }
 
     RoleDenotation evaluate(const State& state) const override {
@@ -146,7 +154,7 @@ void load_construct_data(Archive & ar, dlplan::core::OrRole* t, const unsigned i
     ar >> index;
     ar >> role_left;
     ar >> role_right;
-    ::new(t)dlplan::core::OrRole(vocabulary, index, role_left, role_right);
+    ::new(t)dlplan::core::OrRole(index, vocabulary, role_left, role_right);
 }
 
 }

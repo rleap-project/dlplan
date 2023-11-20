@@ -16,6 +16,12 @@
 using namespace std::string_literals;
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
 namespace dlplan::core {
 class AllConcept;
 }
@@ -34,6 +40,9 @@ namespace boost::serialization {
 namespace dlplan::core {
 class AllConcept : public Concept {
 private:
+    const std::shared_ptr<const Role> m_role;
+    const std::shared_ptr<const Concept> m_concept;
+
     void compute_result(const RoleDenotation& role_denot, const ConceptDenotation& concept_denot, ConceptDenotation& result) const {
         // find counterexamples b : exists b . (a,b) in R and b notin C
         result.set();
@@ -69,23 +78,27 @@ private:
         return denotations;
     }
 
+    AllConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept)
+        : Concept(vocabulary_info, index, role->is_static() && concept->is_static()), m_role(role), m_concept(concept) { }
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, AllConcept& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const AllConcept* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, AllConcept* t, const unsigned int version);
-
-protected:
-    const std::shared_ptr<const Role> m_role;
-    const std::shared_ptr<const Concept> m_concept;
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    AllConcept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept)
-    : Concept(vocabulary_info, index, role->is_static() && concept->is_static()), m_role(role), m_concept(concept) {
-        if (!(role && concept)) {
-            throw std::runtime_error("AllConcept::AllConcept - at least one child is a nullptr");
+    bool operator==(const Concept& other) const override {
+        if (typeid(*this) == typeid(other)) {
+            const auto& other_derived = static_cast<const AllConcept&>(other);
+            return m_is_static == other_derived.m_is_static
+                && m_role == other_derived.m_role
+                && m_concept == other_derived.m_concept;
         }
+        return false;
     }
 
     ConceptDenotation evaluate(const State& state) const override {
@@ -144,7 +157,7 @@ void load_construct_data(Archive& ar, dlplan::core::AllConcept* t, const unsigne
     ar >> index;
     ar >> role;
     ar >> concept_;
-    ::new(t)dlplan::core::AllConcept(vocabulary, index, role, concept_);
+    ::new(t)dlplan::core::AllConcept(index, vocabulary, role, concept_);
 }
 
 }

@@ -9,6 +9,12 @@
 #include <memory>
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
 namespace dlplan::core {
 class PrimitiveRole;
 }
@@ -27,11 +33,17 @@ namespace boost::serialization {
 namespace dlplan::core {
 class PrimitiveRole : public Role {
 private:
+    const Predicate m_predicate;
+    const int m_pos_1;
+    const int m_pos_2;
+
     void compute_result(const State& state, RoleDenotation& result) const;
 
     RoleDenotation evaluate_impl(const State& state, DenotationsCaches&) const override;
 
     RoleDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const override;
+
+    PrimitiveRole(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, const Predicate& predicate, int pos_1, int pos_2);
 
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, PrimitiveRole& t, const unsigned int version);
@@ -39,14 +51,11 @@ private:
     friend void boost::serialization::save_construct_data(Archive& ar, const PrimitiveRole* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, PrimitiveRole* t, const unsigned int version);
-
-protected:
-    const Predicate m_predicate;
-    const int m_pos_1;
-    const int m_pos_2;
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    PrimitiveRole(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, const Predicate& predicate, int pos_1, int pos_2);
+    bool operator==(const Role& other) const override;
 
     RoleDenotation evaluate(const State& state) const override;
 

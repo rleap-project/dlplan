@@ -16,6 +16,12 @@
 using namespace std::string_literals;
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
 namespace dlplan::core {
 class DiffConcept;
 }
@@ -34,6 +40,9 @@ namespace boost::serialization {
 namespace dlplan::core {
 class DiffConcept : public Concept {
 private:
+    const std::shared_ptr<const Concept> m_concept_left;
+    const std::shared_ptr<const Concept> m_concept_right;
+
     void compute_result(const ConceptDenotation& left_denot, const ConceptDenotation& right_denot, ConceptDenotation& result) const {
         result = left_denot;
         result -= right_denot;
@@ -64,23 +73,27 @@ private:
         return denotations;
     }
 
+    DiffConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept_1, std::shared_ptr<const Concept> concept_2)
+        : Concept(vocabulary_info, index, concept_1->is_static() && concept_2->is_static()), m_concept_left(concept_1), m_concept_right(concept_2) { }
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, DiffConcept& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const DiffConcept* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, DiffConcept* t, const unsigned int version);
-
-protected:
-    const std::shared_ptr<const Concept> m_concept_left;
-    const std::shared_ptr<const Concept> m_concept_right;
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    DiffConcept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Concept> concept_1, std::shared_ptr<const Concept> concept_2)
-    : Concept(vocabulary_info, index, concept_1->is_static() && concept_2->is_static()), m_concept_left(concept_1), m_concept_right(concept_2) {
-        if (!(concept_1 && concept_2)) {
-            throw std::runtime_error("DiffConcept::DiffConcept - at least one child is a nullptr.");
+    bool operator==(const Concept& other) const override {
+        if (typeid(*this) == typeid(other)) {
+            const auto& other_derived = static_cast<const DiffConcept&>(other);
+            return m_is_static == other_derived.m_is_static
+                && m_concept_left == other_derived.m_concept_left
+                && m_concept_right == other_derived.m_concept_right;
         }
+        return false;
     }
 
     ConceptDenotation evaluate(const State& state) const override {
@@ -139,7 +152,7 @@ void load_construct_data(Archive& ar, dlplan::core::DiffConcept* t, const unsign
     ar >> index;
     ar >> concept_left;
     ar >> concept_right;
-    ::new(t)dlplan::core::DiffConcept(vocabulary, index, concept_left, concept_right);
+    ::new(t)dlplan::core::DiffConcept(index, vocabulary, concept_left, concept_right);
 }
 
 }

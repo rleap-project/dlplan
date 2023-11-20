@@ -18,6 +18,12 @@
 using namespace std::string_literals;
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
 namespace dlplan::core {
 class PrimitiveConcept;
 }
@@ -36,6 +42,9 @@ namespace boost::serialization {
 namespace dlplan::core {
 class PrimitiveConcept : public Concept {
 private:
+    const Predicate m_predicate;
+    const int m_pos;
+
     void compute_result(const State& state, ConceptDenotation& result) const {
         const auto& instance_info = *state.get_instance_info();
         const auto& atoms = instance_info.get_atoms();
@@ -75,23 +84,31 @@ private:
         return denotations;
     }
 
+    PrimitiveConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, const Predicate& predicate, int pos)
+        : Concept(vocabulary_info, index, predicate.is_static()), m_predicate(predicate), m_pos(pos) {
+        if (m_pos >= m_predicate.get_arity()) {
+            throw std::runtime_error("PrimitiveConcept::PrimitiveConcept - object index does not match predicate arity ("s + std::to_string(m_pos) + " > " + std::to_string(predicate.get_arity()) + ").");
+        }
+    }
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, PrimitiveConcept& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const PrimitiveConcept* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, PrimitiveConcept* t, const unsigned int version);
-
-protected:
-    const Predicate m_predicate;
-    const int m_pos;
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    PrimitiveConcept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, const Predicate& predicate, int pos)
-    : Concept(vocabulary_info, index, predicate.is_static()), m_predicate(predicate), m_pos(pos) {
-        if (m_pos >= m_predicate.get_arity()) {
-            throw std::runtime_error("PrimitiveConcept::PrimitiveConcept - object index does not match predicate arity ("s + std::to_string(m_pos) + " > " + std::to_string(predicate.get_arity()) + ").");
+    bool operator==(const Concept& other) const override {
+        if (typeid(*this) == typeid(other)) {
+            const auto& other_derived = static_cast<const PrimitiveConcept&>(other);
+            return m_is_static == other_derived.m_is_static
+                && m_predicate == other_derived.m_predicate
+                && m_pos == other_derived.m_pos;
         }
+        return false;
     }
 
     ConceptDenotation evaluate(const State& state) const override {
@@ -144,7 +161,7 @@ void load_construct_data(Archive& ar, dlplan::core::PrimitiveConcept* t, const u
     ar >> index;
     ar >> predicate;
     ar >> pos;
-    ::new(t)dlplan::core::PrimitiveConcept(vocabulary, index, *predicate, pos);
+    ::new(t)dlplan::core::PrimitiveConcept(index, vocabulary, *predicate, pos);
     delete predicate;
 }
 

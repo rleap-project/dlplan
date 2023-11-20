@@ -16,6 +16,12 @@
 using namespace std::string_literals;
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
 namespace dlplan::core {
 class SubsetConcept;
 }
@@ -34,6 +40,9 @@ namespace boost::serialization {
 namespace dlplan::core {
 class SubsetConcept : public Concept {
 private:
+    const std::shared_ptr<const Role> m_role_left;
+    const std::shared_ptr<const Role> m_role_right;
+
     void compute_result(const RoleDenotation& left_denot, const RoleDenotation& right_denot, ConceptDenotation& result) const {
         // find counterexamples a : exists b . (a,b) in R and (a,b) notin S
         result.set();
@@ -68,24 +77,27 @@ private:
         return denotations;
     }
 
+    SubsetConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role_left, std::shared_ptr<const Role> role_right)
+        : Concept(vocabulary_info, index, role_left->is_static() && role_right->is_static()), m_role_left(role_left), m_role_right(role_right) { }
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, SubsetConcept& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const SubsetConcept* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, SubsetConcept* t, const unsigned int version);
-
-protected:
-    const std::shared_ptr<const Role> m_role_left;
-    const std::shared_ptr<const Role> m_role_right;
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    SubsetConcept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role_left, std::shared_ptr<const Role> role_right)
-    : Concept(vocabulary_info, index, role_left->is_static() && role_right->is_static()),
-      m_role_left(role_left), m_role_right(role_right) {
-        if (!(role_left && role_right)) {
-            throw std::runtime_error("SubsetConcept::SubsetConcept - at least one child is a nullptr");
+    bool operator==(const Concept& other) const override {
+        if (typeid(*this) == typeid(other)) {
+            const auto& other_derived = static_cast<const SubsetConcept&>(other);
+            return m_is_static == other_derived.m_is_static
+                && m_role_left == other_derived.m_role_left
+                && m_role_right == other_derived.m_role_right;
         }
+        return false;
     }
 
     ConceptDenotation evaluate(const State& state) const override {
@@ -144,7 +156,7 @@ void load_construct_data(Archive& ar, dlplan::core::SubsetConcept* t, const unsi
     ar >> index;
     ar >> role_left;
     ar >> role_right;
-    ::new(t)dlplan::core::SubsetConcept(vocabulary, index, role_left, role_right);
+    ::new(t)dlplan::core::SubsetConcept(index, vocabulary, role_left, role_right);
 }
 
 }

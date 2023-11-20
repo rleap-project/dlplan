@@ -16,6 +16,12 @@
 using namespace std::string_literals;
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
 namespace dlplan::core {
 class ProjectionConcept;
 }
@@ -34,6 +40,9 @@ namespace boost::serialization {
 namespace dlplan::core {
 class ProjectionConcept : public Concept {
 private:
+    const std::shared_ptr<const Role> m_role;
+    const int m_pos;
+
     void compute_result(const RoleDenotation& denot, ConceptDenotation& result) const {
         for (const auto& pair : denot.to_vector()) {
             if (m_pos == 0) result.insert(pair.first);
@@ -63,26 +72,31 @@ private:
        return denotations;
     }
 
+    ProjectionConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, const std::shared_ptr<const Role>& role, int pos)
+    : Concept(vocabulary_info, index, role->is_static()), m_role(role), m_pos(pos) {
+        if (pos < 0 || pos > 1) {
+            throw std::runtime_error("ProjectionConcept::ProjectionConcept - projection index out of range, should be 0 or 1 ("s + std::to_string(pos) + ")");
+        }
+    }
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, ProjectionConcept& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const ProjectionConcept* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, ProjectionConcept* t, const unsigned int version);
-
-protected:
-    const std::shared_ptr<const Role> m_role;
-    const int m_pos;
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    ProjectionConcept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, const std::shared_ptr<const Role>& role, int pos)
-    : Concept(vocabulary_info, index, role->is_static()), m_role(role), m_pos(pos) {
-        if (pos < 0 || pos > 1) {
-            throw std::runtime_error("ProjectionConcept::ProjectionConcept - projection index out of range, should be 0 or 1 ("s + std::to_string(pos) + ")");
+    bool operator==(const Concept& other) const override {
+        if (typeid(*this) == typeid(other)) {
+            const auto& other_derived = static_cast<const ProjectionConcept&>(other);
+            return m_is_static == other_derived.m_is_static
+                && m_role == other_derived.m_role
+                && m_pos == other_derived.m_pos;
         }
-        if (!role) {
-            throw std::runtime_error("ProjectionConcept::ProjectionConcept - child is a nullptr.");
-        }
+        return false;
     }
 
     ConceptDenotation evaluate(const State& state) const override {
@@ -138,7 +152,7 @@ void load_construct_data(Archive& ar, dlplan::core::ProjectionConcept* t, const 
     ar >> index;
     ar >> role;
     ar >> pos;
-    ::new(t)dlplan::core::ProjectionConcept(vocabulary, index, role, pos);
+    ::new(t)dlplan::core::ProjectionConcept(index, vocabulary, role, pos);
 }
 
 }

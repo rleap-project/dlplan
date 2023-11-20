@@ -16,6 +16,12 @@
 using namespace std::string_literals;
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
 namespace dlplan::core {
 class TransitiveReflexiveClosureRole;
 }
@@ -34,6 +40,8 @@ namespace boost::serialization {
 namespace dlplan::core {
 class TransitiveReflexiveClosureRole : public Role {
 private:
+    const std::shared_ptr<const Role> m_role;
+
     void compute_result(const RoleDenotation& denot, int num_objects, RoleDenotation& result) const {
         result = denot;
         bool changed = false;
@@ -79,22 +87,26 @@ private:
        return denotations;
     }
 
+    TransitiveReflexiveClosureRole(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role)
+        : Role(vocabulary_info, index, role->is_static()), m_role(role) { }
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, TransitiveReflexiveClosureRole& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const TransitiveReflexiveClosureRole* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, TransitiveReflexiveClosureRole* t, const unsigned int version);
-
-protected:
-    const std::shared_ptr<const Role> m_role;
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    TransitiveReflexiveClosureRole(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role)
-    : Role(vocabulary_info, index, role->is_static()), m_role(role) {
-        if (!role) {
-            throw std::runtime_error("TransitiveReflexiveClosureRole::TransitiveReflexiveClosureRole - child is a nullptr.");
+    bool operator==(const Role& other) const override {
+        if (typeid(*this) == typeid(other)) {
+            const auto& other_derived = static_cast<const TransitiveReflexiveClosureRole&>(other);
+            return m_is_static == other_derived.m_is_static
+                && m_role == other_derived.m_role;
         }
+        return false;
     }
 
     RoleDenotation evaluate(const State& state) const override {
@@ -149,7 +161,7 @@ void load_construct_data(Archive & ar, dlplan::core::TransitiveReflexiveClosureR
     ar >> vocabulary;
     ar >> index;
     ar >> role;
-    ::new(t)dlplan::core::TransitiveReflexiveClosureRole(vocabulary, index, role);
+    ::new(t)dlplan::core::TransitiveReflexiveClosureRole(index, vocabulary, role);
 }
 
 }

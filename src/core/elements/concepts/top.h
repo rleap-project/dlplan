@@ -16,6 +16,12 @@
 using namespace std::string_literals;
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
 namespace dlplan::core {
 class TopConcept;
 }
@@ -51,16 +57,25 @@ private:
         return denotations;
     }
 
+    TopConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info)
+        : Concept(vocabulary_info, index, true) { }
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, TopConcept& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const TopConcept* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, TopConcept* t, const unsigned int version);
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    TopConcept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index)
-    : Concept(vocabulary_info, index, true) {
+    bool operator==(const Concept& other) const override {
+        if (typeid(*this) == typeid(other)) {
+            const auto& other_derived = static_cast<const TopConcept&>(other);
+            return m_is_static == other_derived.m_is_static;
+        }
+        return false;
     }
 
     ConceptDenotation evaluate(const State& state) const override {
@@ -106,7 +121,7 @@ void load_construct_data(Archive& ar, dlplan::core::TopConcept* t, const unsigne
     int index;
     ar >> vocabulary;
     ar >> index;
-    ::new(t)dlplan::core::TopConcept(vocabulary, index);
+    ::new(t)dlplan::core::TopConcept(index, vocabulary);
 }
 
 }

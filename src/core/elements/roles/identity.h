@@ -16,6 +16,12 @@
 using namespace std::string_literals;
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
 namespace dlplan::core {
 class IdentityRole;
 }
@@ -35,6 +41,8 @@ namespace dlplan::core {
 
 class IdentityRole : public Role {
 private:
+    const std::shared_ptr<const Concept> m_concept;
+
     void compute_result(const ConceptDenotation& denot, RoleDenotation& result) const {
         for (const auto& single : denot.to_vector()) {
             result.insert(std::make_pair(single, single));
@@ -63,22 +71,26 @@ private:
        return denotations;
     }
 
+    IdentityRole(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept)
+        : Role(vocabulary_info, index, concept->is_static()), m_concept(concept) { }
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, IdentityRole& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const IdentityRole* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, IdentityRole* t, const unsigned int version);
-
-protected:
-    const std::shared_ptr<const Concept> m_concept;
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    IdentityRole(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Concept> concept)
-    : Role(vocabulary_info, index, concept->is_static()), m_concept(concept) {
-        if (!concept) {
-            throw std::runtime_error("IdentityRole::IdentityRole - child is a nullptr.");
+    bool operator==(const Role& other) const override {
+        if (typeid(*this) == typeid(other)) {
+            const auto& other_derived = static_cast<const IdentityRole&>(other);
+            return m_is_static == other_derived.m_is_static
+                && m_concept == other_derived.m_concept;
         }
+        return false;
     }
 
     RoleDenotation evaluate(const State& state) const override {
@@ -131,7 +143,7 @@ void load_construct_data(Archive & ar, dlplan::core::IdentityRole* t, const unsi
     ar >> vocabulary;
     ar >> index;
     ar >> concept_;
-    ::new(t)dlplan::core::IdentityRole(vocabulary, index, concept_);
+    ::new(t)dlplan::core::IdentityRole(index, vocabulary, concept_);
 }
 
 }

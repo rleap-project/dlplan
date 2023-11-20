@@ -16,6 +16,12 @@
 using namespace std::string_literals;
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
 namespace dlplan::core {
 class DiffRole;
 }
@@ -34,6 +40,9 @@ namespace boost::serialization {
 namespace dlplan::core {
 class DiffRole : public Role {
 private:
+    const std::shared_ptr<const Role> m_role_left;
+    const std::shared_ptr<const Role> m_role_right;
+
     void compute_result(const RoleDenotation& left_denot, const RoleDenotation& right_denot, RoleDenotation& result) const {
         result = left_denot;
         result -= right_denot;
@@ -64,23 +73,27 @@ private:
         return denotations;
     }
 
+    DiffRole(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role_left, std::shared_ptr<const Role> role_right)
+        : Role(vocabulary_info, index, (role_left->is_static() && role_right->is_static())), m_role_left(role_left), m_role_right(role_right)  { }
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, DiffRole& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const DiffRole* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, DiffRole* t, const unsigned int version);
-
-protected:
-    const std::shared_ptr<const Role> m_role_left;
-    const std::shared_ptr<const Role> m_role_right;
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    DiffRole(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role_left, std::shared_ptr<const Role> role_right)
-    : Role(vocabulary_info, index, (role_left->is_static() && role_right->is_static())), m_role_left(role_left), m_role_right(role_right)  {
-        if (!(role_left && role_right)) {
-            throw std::runtime_error("DiffRole::DiffRole - at least one child is a nullptr.");
+    bool operator==(const Role& other) const override {
+        if (typeid(*this) == typeid(other)) {
+            const auto& other_derived = static_cast<const DiffRole&>(other);
+            return m_is_static == other_derived.m_is_static
+                && m_role_left == other_derived.m_role_left
+                && m_role_right == other_derived.m_role_right;
         }
+        return false;
     }
 
     RoleDenotation evaluate(const State& state) const override {
@@ -139,7 +152,7 @@ void load_construct_data(Archive & ar, dlplan::core::DiffRole* t, const unsigned
     ar >> index;
     ar >> role_left;
     ar >> role_right;
-    ::new(t)dlplan::core::DiffRole(vocabulary, index, role_left, role_right);
+    ::new(t)dlplan::core::DiffRole(index, vocabulary, role_left, role_right);
 }
 
 }

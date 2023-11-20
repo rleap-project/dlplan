@@ -16,6 +16,12 @@
 using namespace std::string_literals;
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
 namespace dlplan::core {
 template<typename T>
 class CountNumerical;
@@ -36,6 +42,8 @@ namespace dlplan::core {
 template<typename T>
 class CountNumerical : public Numerical {
 private:
+    const std::shared_ptr<const T> m_element;
+
     template<typename DENOTATION_TYPE>
     void compute_result(const DENOTATION_TYPE& denot, int& result) const {
         result = denot.size();
@@ -63,19 +71,27 @@ private:
         return denotations;
     }
 
+    CountNumerical(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const T> element)
+        : Numerical(vocabulary_info, index, element->is_static()), m_element(element) { }
+
     template<typename Archive, typename T_>
     friend void boost::serialization::serialize(Archive& ar, CountNumerical<T_>& t, const unsigned int version);
     template<class Archive, typename T_>
     friend void boost::serialization::save_construct_data(Archive& ar, const CountNumerical<T_>* t, const unsigned int version);
     template<class Archive, typename T_>
     friend void boost::serialization::load_construct_data(Archive& ar, CountNumerical<T_>* t, const unsigned int version);
-
-protected:
-    const std::shared_ptr<const T> m_element;
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    CountNumerical(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const T> element)
-    : Numerical(vocabulary_info, index, element->is_static()), m_element(element) { }
+    bool operator==(const Numerical& other) const override {
+        if (typeid(*this) == typeid(other)) {
+            const auto& other_derived = static_cast<const CountNumerical&>(other);
+            return m_is_static == other_derived.m_is_static
+                && m_element == other_derived.m_element;
+        }
+        return false;
+    }
 
     int evaluate(const State& state) const override {
         int result;
@@ -135,7 +151,7 @@ void load_construct_data(Archive & ar, dlplan::core::CountNumerical<T>* t, const
     ar >> vocabulary;
     ar >> index;
     ar >> element;
-    ::new(t)dlplan::core::CountNumerical<T>(vocabulary, index, element);
+    ::new(t)dlplan::core::CountNumerical<T>(index, vocabulary, element);
 }
 
 }

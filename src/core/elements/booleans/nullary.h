@@ -16,6 +16,12 @@
 using namespace std::string_literals;
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
 namespace dlplan::core {
 class NullaryBoolean;
 }
@@ -34,6 +40,8 @@ namespace boost::serialization {
 namespace dlplan::core {
 class NullaryBoolean : public Boolean {
 private:
+    const Predicate m_predicate;
+
     void compute_result(const State& state, bool& result) const {
         const auto& atoms = state.get_instance_info()->get_atoms();
         for (int atom_idx : state.get_atom_indices()) {
@@ -65,22 +73,30 @@ private:
         return denotations;
     }
 
+    NullaryBoolean(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, const Predicate& predicate)
+    : Boolean(vocabulary_info, index, predicate.is_static()), m_predicate(predicate) {
+        if (predicate.get_arity() != 0) {
+            throw std::runtime_error("NullaryBoolean::NullaryBoolean - expected predicate with arity 0.");
+        }
+    }
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, NullaryBoolean& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const NullaryBoolean* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, NullaryBoolean* t, const unsigned int version);
-
-protected:
-    const Predicate m_predicate;
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    NullaryBoolean(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, const Predicate& predicate)
-    : Boolean(vocabulary_info, index, predicate.is_static()), m_predicate(predicate) {
-        if (predicate.get_arity() != 0) {
-            throw std::runtime_error("NullaryBoolean::NullaryBoolean - expected predicate with arity 0.");
+    bool operator==(const Boolean& other) const override {
+        if (typeid(*this) == typeid(other)) {
+            const auto& other_derived = static_cast<const NullaryBoolean&>(other);
+            return m_is_static == other_derived.m_is_static
+                && m_predicate == other_derived.m_predicate;
         }
+        return false;
     }
 
     bool evaluate(const State& state) const override {
@@ -129,7 +145,7 @@ void load_construct_data(Archive& ar, dlplan::core::NullaryBoolean* t, const uns
     ar >> vocabulary;
     ar >> index;
     ar >> predicate;
-    ::new(t)dlplan::core::NullaryBoolean(vocabulary, index, *predicate);
+    ::new(t)dlplan::core::NullaryBoolean(index, vocabulary, *predicate);
     delete predicate;
 }
 

@@ -16,6 +16,12 @@
 using namespace std::string_literals;
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
 namespace dlplan::core {
 class ConceptDistanceNumerical;
 }
@@ -35,6 +41,10 @@ namespace dlplan::core {
 
 class ConceptDistanceNumerical : public Numerical {
 private:
+    const std::shared_ptr<const Concept> m_concept_from;
+    const std::shared_ptr<const Role> m_role;
+    const std::shared_ptr<const Concept> m_concept_to;
+
     void compute_result(const ConceptDenotation& concept_from_denot, const RoleDenotation& role_denot, const ConceptDenotation& concept_to_denot, int& result) const {
         result = utils::compute_multi_source_multi_target_shortest_distance(concept_from_denot, role_denot, concept_to_denot);
     }
@@ -90,25 +100,29 @@ private:
         return denotations;
     }
 
+    ConceptDistanceNumerical(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept_from, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept_to)
+        : Numerical(vocabulary_info, index, concept_from->is_static() && role->is_static() && concept_to->is_static()),
+          m_concept_from(concept_from), m_role(role), m_concept_to(concept_to) { }
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, ConceptDistanceNumerical& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const ConceptDistanceNumerical* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, ConceptDistanceNumerical* t, const unsigned int version);
-
-protected:
-    const std::shared_ptr<const Concept> m_concept_from;
-    const std::shared_ptr<const Role> m_role;
-    const std::shared_ptr<const Concept> m_concept_to;
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    ConceptDistanceNumerical(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Concept> concept_from, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept_to)
-    : Numerical(vocabulary_info, index, concept_from->is_static() && role->is_static() && concept_to->is_static()),
-      m_concept_from(concept_from), m_role(role), m_concept_to(concept_to) {
-        if (!(concept_from && role && concept_to)) {
-            throw std::runtime_error("ConceptDistanceNumerical::ConceptDistanceNumerical - child is not of type Concept, Role, Concept.");
+    bool operator==(const Numerical& other) const override {
+        if (typeid(*this) == typeid(other)) {
+            const auto& other_derived = static_cast<const ConceptDistanceNumerical&>(other);
+            return m_is_static == other_derived.m_is_static
+                && m_concept_from == other_derived.m_concept_from
+                && m_role == other_derived.m_role
+                && m_concept_to == other_derived.m_concept_to;
         }
+        return false;
     }
 
     int evaluate(const State& state) const override {
@@ -181,7 +195,7 @@ void load_construct_data(Archive& ar, dlplan::core::ConceptDistanceNumerical* t,
     ar >> concept_from;
     ar >> role;
     ar >> concept_to;
-    ::new(t)dlplan::core::ConceptDistanceNumerical(vocabulary, index, concept_from, role, concept_to);
+    ::new(t)dlplan::core::ConceptDistanceNumerical(index, vocabulary, concept_from, role, concept_to);
 }
 
 }

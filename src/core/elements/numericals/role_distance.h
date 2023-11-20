@@ -16,6 +16,12 @@
 using namespace std::string_literals;
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
 namespace dlplan::core {
 class RoleDistanceNumerical;
 }
@@ -34,6 +40,10 @@ namespace boost::serialization {
 namespace dlplan::core {
 class RoleDistanceNumerical : public Numerical {
 private:
+    const std::shared_ptr<const Role> m_role_from;
+    const std::shared_ptr<const Role> m_role;
+    const std::shared_ptr<const Role> m_role_to;
+
     void compute_result(const RoleDenotation& role_from_denot, const RoleDenotation& role_denot, const RoleDenotation& role_to_denot, int& result) const {
         utils::PairwiseDistances pairwise_distances = utils::compute_floyd_warshall(role_denot);
         result = INF;
@@ -92,25 +102,29 @@ private:
         return denotations;
     }
 
+    RoleDistanceNumerical(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role_from, std::shared_ptr<const Role> role, std::shared_ptr<const Role> role_to)
+        : Numerical(vocabulary_info, index, role_from->is_static() && role->is_static() && role_to->is_static()),
+          m_role_from(role_from), m_role(role), m_role_to(role_to) { }
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, RoleDistanceNumerical& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const RoleDistanceNumerical* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, RoleDistanceNumerical* t, const unsigned int version);
-
-protected:
-    const std::shared_ptr<const Role> m_role_from;
-    const std::shared_ptr<const Role> m_role;
-    const std::shared_ptr<const Role> m_role_to;
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    RoleDistanceNumerical(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Role> role_from, std::shared_ptr<const Role> role, std::shared_ptr<const Role> role_to)
-    : Numerical(vocabulary_info, index, role_from->is_static() && role->is_static() && role_to->is_static()),
-      m_role_from(role_from), m_role(role), m_role_to(role_to) {
-        if (!(role_from && role && role_to)) {
-            throw std::runtime_error("RoleDistanceNumerical::RoleDistanceNumerical - child is not of type Role, Role, Role.");
+    bool operator==(const Numerical& other) const override {
+        if (typeid(*this) == typeid(other)) {
+            const auto& other_derived = static_cast<const RoleDistanceNumerical&>(other);
+            return m_is_static == other_derived.m_is_static
+                && m_role_from == other_derived.m_role_from
+                && m_role == other_derived.m_role
+                && m_role_to == other_derived.m_role_to;
         }
+        return false;
     }
 
     int evaluate(const State& state) const override {
@@ -180,7 +194,7 @@ void load_construct_data(Archive & ar, dlplan::core::RoleDistanceNumerical* t, c
     ar >> role_from;
     ar >> role;
     ar >> role_to;
-    ::new(t)dlplan::core::RoleDistanceNumerical(vocabulary, index, role_from, role, role_to);
+    ::new(t)dlplan::core::RoleDistanceNumerical(index, vocabulary, role_from, role, role_to);
 }
 
 }

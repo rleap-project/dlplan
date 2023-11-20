@@ -950,6 +950,9 @@ public:
     Concept& operator=(Concept&& other);
     ~Concept() override;
 
+    virtual bool operator==(const Concept& other) const = 0;
+    bool operator<(const Concept& other) const;
+
     virtual ConceptDenotation evaluate(const State& ) const = 0;
     const ConceptDenotation* evaluate(const State& state, DenotationsCaches& caches) const;
     const ConceptDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
@@ -978,6 +981,9 @@ public:
     Role(Role&& other);
     Role& operator=(Role&& other);
     ~Role() override;
+
+    virtual bool operator==(const Role& other) const = 0;
+    bool operator<(const Role& other) const;
 
     virtual RoleDenotation evaluate(const State& ) const = 0;
     const RoleDenotation* evaluate(const State& state, DenotationsCaches& caches) const;
@@ -1008,6 +1014,9 @@ public:
     Numerical& operator=(Numerical&& other);
     ~Numerical() override;
 
+    virtual bool operator==(const Numerical& other) const = 0;
+    bool operator<(const Numerical& other) const;
+
     virtual int evaluate(const State& ) const = 0;
     int evaluate(const State& state, DenotationsCaches& caches) const;
     const NumericalDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
@@ -1036,6 +1045,9 @@ public:
     Boolean(Boolean&& other);
     Boolean& operator=(Boolean&& other);
     ~Boolean() override;
+
+    virtual bool operator==(const Boolean& other) const = 0;
+    bool operator<(const Boolean& other) const;
 
     virtual bool evaluate(const State& ) const = 0;
     bool evaluate(const State& state, DenotationsCaches& caches) const;

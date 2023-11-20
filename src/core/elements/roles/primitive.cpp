@@ -55,11 +55,22 @@ RoleDenotations PrimitiveRole::evaluate_impl(const States& states, DenotationsCa
 }
 
 
-PrimitiveRole::PrimitiveRole(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, const Predicate& predicate, int pos_1, int pos_2)
+PrimitiveRole::PrimitiveRole(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, const Predicate& predicate, int pos_1, int pos_2)
 : Role(vocabulary_info, index, predicate.is_static()), m_predicate(predicate), m_pos_1(pos_1), m_pos_2(pos_2) {
     if (m_pos_1 >= m_predicate.get_arity() || m_pos_2 >= m_predicate.get_arity()) {
         throw std::runtime_error("PrimitiveRole::evaluate_impl - object index does not match predicate arity ("s + std::to_string(m_pos_1) + " or " + std::to_string(m_pos_2)  + " > " + std::to_string(predicate.get_arity()) + ").");
     }
+}
+
+bool PrimitiveRole::operator==(const Role& other) const {
+    if (typeid(*this) == typeid(other)) {
+        const auto& other_derived = static_cast<const PrimitiveRole&>(other);
+        return m_is_static == other_derived.m_is_static
+            && m_predicate == other_derived.m_predicate
+            && m_pos_1 == other_derived.m_pos_1
+            && m_pos_2 == other_derived.m_pos_2;
+    }
+    return false;
 }
 
 RoleDenotation PrimitiveRole::evaluate(const State& state) const {
@@ -117,7 +128,7 @@ void load_construct_data(Archive & ar, dlplan::core::PrimitiveRole* t, const uns
     ar >> predicate;
     ar >> pos_1;
     ar >> pos_2;
-    ::new(t)dlplan::core::PrimitiveRole(vocabulary, index, *predicate, pos_1, pos_2);
+    ::new(t)dlplan::core::PrimitiveRole(index, vocabulary, *predicate, pos_1, pos_2);
     delete predicate;
 }
 

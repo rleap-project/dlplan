@@ -16,6 +16,12 @@
 using namespace std::string_literals;
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
 namespace dlplan::core {
 class OrConcept;
 }
@@ -34,6 +40,9 @@ namespace boost::serialization {
 namespace dlplan::core {
 class OrConcept : public Concept {
 private:
+    const std::shared_ptr<const Concept> m_concept_left;
+    const std::shared_ptr<const Concept> m_concept_right;
+
     void compute_result(const ConceptDenotation& left_denot, const ConceptDenotation& right_denot, ConceptDenotation& result) const {
         result = left_denot;
         result |= right_denot;
@@ -65,30 +74,29 @@ private:
         return denotations;
     }
 
+    OrConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept_1, std::shared_ptr<const Concept> concept_2)
+        : Concept(vocabulary_info, index, concept_1->is_static() && concept_2->is_static()),
+        m_concept_left(concept_1->get_index() < concept_2->get_index() ? concept_1 : concept_2),
+        m_concept_right(concept_1->get_index() < concept_2->get_index() ? concept_2 : concept_1) { }
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, OrConcept& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const OrConcept* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, OrConcept* t, const unsigned int version);
-
-protected:
-    std::shared_ptr<const Concept> m_concept_left;
-    std::shared_ptr<const Concept> m_concept_right;
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    OrConcept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, std::shared_ptr<const Concept> concept_1, std::shared_ptr<const Concept> concept_2)
-    : Concept(vocabulary_info, index, concept_1->is_static() && concept_2->is_static()),
-      m_concept_left(concept_1),
-      m_concept_right(concept_2) {
-        if (!(concept_1 && concept_2)) {
-            throw std::runtime_error("OrConcept::OrConcept - at least one child is a nullptr.");
+    bool operator==(const Concept& other) const override {
+        if (typeid(*this) == typeid(other)) {
+            const auto& other_derived = static_cast<const OrConcept&>(other);
+            return m_is_static == other_derived.m_is_static
+                && m_concept_left == other_derived.m_concept_left
+                && m_concept_right == other_derived.m_concept_right;
         }
-        std::stringstream ss1;
-        m_concept_left->compute_repr(ss1);
-        std::stringstream ss2;
-        m_concept_right->compute_repr(ss2);
-        if (ss1.str() > ss2.str()) swap(m_concept_left, m_concept_right);
+        return false;
     }
 
     ConceptDenotation evaluate(const State& state) const override {
@@ -147,7 +155,7 @@ void load_construct_data(Archive& ar, dlplan::core::OrConcept* t, const unsigned
     ar >> index;
     ar >> concept_left;
     ar >> concept_right;
-    ::new(t)dlplan::core::OrConcept(vocabulary, index, concept_left, concept_right);
+    ::new(t)dlplan::core::OrConcept(index, vocabulary, concept_left, concept_right);
 }
 
 }
