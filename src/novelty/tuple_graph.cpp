@@ -4,11 +4,6 @@
 #include "tuple_index_generator.h"
 #include "../utils/logging.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/vector.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-
 #include <cassert>
 #include <sstream>
 
@@ -230,21 +225,3 @@ const std::vector<state_space::StateIndices>& TupleGraph::get_state_indices_by_d
 
 }
 
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize(Archive& ar, dlplan::novelty::TupleGraph& t, const unsigned int /* version */ )
-{
-    ar & t.m_novelty_base;
-    ar & t.m_state_space;
-    ar & t.m_root_state_index;
-    ar & t.m_nodes;
-    ar & t.m_node_indices_by_distance;
-    ar & t.m_state_indices_by_distance;
-}
-
-template void serialize(boost::archive::text_iarchive& ar,
-    dlplan::novelty::TupleGraph& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    dlplan::novelty::TupleGraph& t, const unsigned int version);
-}

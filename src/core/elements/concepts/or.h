@@ -4,12 +4,6 @@
 #include "../utils.h"
 #include "../../../../include/dlplan/core.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/export.hpp>
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-
 #include <sstream>
 #include <memory>
 
@@ -19,28 +13,6 @@ using namespace std::string_literals;
 namespace dlplan::utils {
 template<typename... Ts>
 class ReferenceCountedObjectFactory;
-}
-
-
-namespace dlplan::core {
-class OrConcept;
-}
-
-
-namespace boost::serialization {
-    template<typename Archive>
-    void serialize(Archive& ar, dlplan::core::OrConcept& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::OrConcept* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::OrConcept* t, const unsigned int version);
-
-    template<typename Archive>
-    void serialize(Archive& ar, std::pair<const dlplan::core::OrConcept, std::weak_ptr<dlplan::core::OrConcept>>& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::OrConcept, std::weak_ptr<dlplan::core::OrConcept>>* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, std::pair<const dlplan::core::OrConcept, std::weak_ptr<dlplan::core::OrConcept>>* t, const unsigned int version);
 }
 
 
@@ -87,12 +59,6 @@ private:
         m_concept_right(concept_1->get_index() < concept_2->get_index() ? concept_2 : concept_1) { }
 
 
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, OrConcept& t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const OrConcept* t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, OrConcept* t, const unsigned int version);
     template<typename... Ts>
     friend class dlplan::utils::ReferenceCountedObjectFactory;
 
@@ -138,64 +104,6 @@ public:
 };
 
 }
-
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize(Archive& /* ar */ , dlplan::core::OrConcept& t, const unsigned int /* version */ )
-{
-    boost::serialization::base_object<dlplan::core::Concept>(t);
-}
-
-template<class Archive>
-void save_construct_data(Archive& ar, const dlplan::core::OrConcept* t, const unsigned int /* version */ )
-{
-    ar << t->m_vocabulary_info;
-    ar << t->m_index;
-    ar << t->m_concept_left;
-    ar << t->m_concept_right;
-}
-
-template<class Archive>
-void load_construct_data(Archive& ar, dlplan::core::OrConcept* t, const unsigned int /* version */ )
-{
-    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
-    int index;
-    std::shared_ptr<const dlplan::core::Concept> concept_left;
-    std::shared_ptr<const dlplan::core::Concept> concept_right;
-    ar >> vocabulary;
-    ar >> index;
-    ar >> concept_left;
-    ar >> concept_right;
-    ::new(t)dlplan::core::OrConcept(index, vocabulary, concept_left, concept_right);
-}
-
-
-template<typename Archive>
-void serialize(Archive& /*ar*/, std::pair<const dlplan::core::OrConcept, std::weak_ptr<dlplan::core::OrConcept>>& /*t*/, const unsigned int /*version*/) {
-}
-
-template<class Archive>
-void save_construct_data(Archive& ar, const std::pair<const dlplan::core::OrConcept, std::weak_ptr<dlplan::core::OrConcept>>* t, const unsigned int /*version*/) {
-    ar << t->first;
-    ar << t->second;
-}
-
-template<class Archive>
-void load_construct_data(Archive& ar, std::pair<const dlplan::core::OrConcept, std::weak_ptr<dlplan::core::OrConcept>>* t, const unsigned int /*version*/) {
-    dlplan::core::OrConcept* first = nullptr;
-    std::weak_ptr<dlplan::core::OrConcept>* second = nullptr;
-    ar >> const_cast<dlplan::core::OrConcept&>(*first);
-    ar >> second;
-    ::new(t)std::pair<const dlplan::core::OrConcept, std::weak_ptr<dlplan::core::OrConcept>>(*first, *second);
-    delete first;
-    delete second;
-}
-
-
-}
-
-BOOST_CLASS_EXPORT_KEY2(dlplan::core::OrConcept, "dlplan::core::OrConcept")
 
 
 namespace std {

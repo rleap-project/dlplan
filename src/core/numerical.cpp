@@ -1,7 +1,5 @@
 #include "../../include/dlplan/core.h"
 
-#include <boost/serialization/base_object.hpp>
-
 
 namespace dlplan::core {
 Numerical::Numerical() { }
@@ -47,23 +45,4 @@ const NumericalDenotations* Numerical::evaluate(const States& states, Denotation
     return result_denotations;
 }
 
-}
-
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize(Archive& /* ar */ , dlplan::core::Numerical& t, const unsigned int /* version */ )
-{
-    boost::serialization::base_object<dlplan::core::BaseElement>(t);
-}
-
-template<class Archive>
-void save_construct_data(Archive& /* ar */ , const dlplan::core::Numerical* /* t */ , const unsigned int /* version */ )
-{
-}
-
-template<class Archive>
-void load_construct_data(Archive& /* ar */ , dlplan::core::Numerical* /* t */ , const unsigned int /* version */ )
-{
-}
 }

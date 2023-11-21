@@ -56,7 +56,7 @@ configure_ccache()
 
 # Boost
 configure_boost()
-find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS serialization)
+find_package(Boost ${BOOST_MIN_VERSION} REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
 ##############################################################

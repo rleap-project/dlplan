@@ -87,20 +87,3 @@ bool Atom::is_static() const {
 }
 
 }
-
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize(Archive& ar, dlplan::core::Atom& t, const unsigned int /* version */) {
-    ar & t.m_name;
-    ar & t.m_index;
-    ar & t.m_predicate_index;
-    ar & t.m_object_indices;
-    ar & t.m_is_static;
-}
-
-template void serialize(boost::archive::text_iarchive& ar,
-    dlplan::core::Atom& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    dlplan::core::Atom& t, const unsigned int version);
-}

@@ -3,10 +3,6 @@
 #include "../utils/collections.h"
 #include "../utils/logging.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/unordered_map.hpp>
-
 #include <sstream>
 
 using namespace std::string_literals;
@@ -96,21 +92,4 @@ std::string VocabularyInfo::str() const {
     return compute_repr();
 }
 
-}
-
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize( Archive& ar, dlplan::core::VocabularyInfo& t, const unsigned int /* version */ )
-{
-    ar & t.m_constants;
-    ar & t.m_constant_name_to_index;
-    ar & t.m_predicates;
-    ar & t.m_predicate_name_to_index;
-}
-
-template void serialize(boost::archive::text_iarchive& ar,
-    dlplan::core::VocabularyInfo& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    dlplan::core::VocabularyInfo& t, const unsigned int version);
 }

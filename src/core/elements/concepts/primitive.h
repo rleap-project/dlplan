@@ -5,8 +5,6 @@
 #include "../../../utils/collections.h"
 #include "../../../../include/dlplan/core.h"
 
-#include <boost/serialization/export.hpp>
-
 #include <sstream>
 #include <memory>
 
@@ -19,27 +17,6 @@ template<typename... Ts>
 class ReferenceCountedObjectFactory;
 }
 
-
-namespace dlplan::core {
-class PrimitiveConcept;
-}
-
-
-namespace boost::serialization {
-    template<typename Archive>
-    void serialize(Archive& ar, dlplan::core::PrimitiveConcept& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::PrimitiveConcept* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::PrimitiveConcept* t, const unsigned int version);
-
-    template<typename Archive>
-    void serialize(Archive& ar, std::pair<const dlplan::core::PrimitiveConcept, std::weak_ptr<dlplan::core::PrimitiveConcept>>& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::PrimitiveConcept, std::weak_ptr<dlplan::core::PrimitiveConcept>>* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, std::pair<const dlplan::core::PrimitiveConcept, std::weak_ptr<dlplan::core::PrimitiveConcept>>* t, const unsigned int version);
-}
 
 namespace dlplan::core {
 class PrimitiveConcept : public Concept {
@@ -55,12 +32,6 @@ private:
 
     PrimitiveConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, const Predicate& predicate, int pos);
 
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, PrimitiveConcept& t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const PrimitiveConcept* t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, PrimitiveConcept* t, const unsigned int version);
     template<typename... Ts>
     friend class dlplan::utils::ReferenceCountedObjectFactory;
 
@@ -79,8 +50,6 @@ public:
 };
 
 }
-
-BOOST_CLASS_EXPORT_KEY2(dlplan::core::PrimitiveConcept, "dlplan::core::PrimitiveConcept")
 
 
 namespace std {

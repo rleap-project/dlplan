@@ -4,12 +4,6 @@
 #include "../utils.h"
 #include "../../../../include/dlplan/core.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/export.hpp>
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-
 #include <sstream>
 #include <memory>
 
@@ -19,21 +13,6 @@ using namespace std::string_literals;
 namespace dlplan::utils {
 template<typename... Ts>
 class ReferenceCountedObjectFactory;
-}
-
-
-namespace dlplan::core {
-class NotRole;
-}
-
-
-namespace boost::serialization {
-    template<typename Archive>
-    void serialize(Archive& ar, dlplan::core::NotRole& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::NotRole* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::NotRole* t, const unsigned int version);
 }
 
 
@@ -72,12 +51,6 @@ private:
     NotRole(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role)
         : Role(vocabulary_info, index, role->is_static()), m_role(role) { }
 
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, NotRole& t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const NotRole* t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, NotRole* t, const unsigned int version);
     template<typename... Ts>
     friend class dlplan::utils::ReferenceCountedObjectFactory;
 
@@ -119,60 +92,6 @@ public:
 };
 
 }
-
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize(Archive& /* ar */ , dlplan::core::NotRole& t, const unsigned int /* version */ )
-{
-    boost::serialization::base_object<dlplan::core::Role>(t);
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::NotRole* t, const unsigned int /* version */ )
-{
-    ar << t->m_vocabulary_info;
-    ar << t->m_index;
-    ar << t->m_role;
-}
-
-template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::NotRole* t, const unsigned int /* version */ )
-{
-    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
-    int index;
-    std::shared_ptr<const dlplan::core::Role> role;
-    ar >> vocabulary;
-    ar >> index;
-    ar >> role;
-    ::new(t)dlplan::core::NotRole(index, vocabulary, role);
-}
-
-
-template<typename Archive>
-void serialize(Archive& /*ar*/, std::pair<const dlplan::core::NotRole, std::weak_ptr<dlplan::core::NotRole>>& /*t*/, const unsigned int /*version*/) {
-}
-
-template<class Archive>
-void save_construct_data(Archive& ar, const std::pair<const dlplan::core::NotRole, std::weak_ptr<dlplan::core::NotRole>>* t, const unsigned int /*version*/) {
-    ar << t->first;
-    ar << t->second;
-}
-
-template<class Archive>
-void load_construct_data(Archive& ar, std::pair<const dlplan::core::NotRole, std::weak_ptr<dlplan::core::NotRole>>* t, const unsigned int /*version*/) {
-    dlplan::core::NotRole* first = nullptr;
-    std::weak_ptr<dlplan::core::NotRole>* second = nullptr;
-    ar >> const_cast<dlplan::core::NotRole&>(*first);
-    ar >> second;
-    ::new(t)std::pair<const dlplan::core::NotRole, std::weak_ptr<dlplan::core::NotRole>>(*first, *second);
-    delete first;
-    delete second;
-}
-
-}
-
-BOOST_CLASS_EXPORT_KEY2(dlplan::core::NotRole, "dlplan::core::NotRole")
 
 
 namespace std {

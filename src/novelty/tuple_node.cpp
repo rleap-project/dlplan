@@ -2,10 +2,6 @@
 
 #include "../utils/logging.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/vector.hpp>
-
 #include <sstream>
 
 using namespace dlplan::state_space;
@@ -94,22 +90,4 @@ const TupleIndices& TupleNode::get_successors() const {
     return m_successors;
 }
 
-}
-
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize(Archive& ar, dlplan::novelty::TupleNode& t, const unsigned int /* version */ )
-{
-    ar & t.m_index;
-    ar & t.m_tuple_index;
-    ar & t.m_state_indices;
-    ar & t.m_predecessors;
-    ar & t.m_successors;
-}
-
-template void serialize(boost::archive::text_iarchive& ar,
-    dlplan::novelty::TupleNode& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    dlplan::novelty::TupleNode& t, const unsigned int version);
 }

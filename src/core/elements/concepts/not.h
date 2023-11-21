@@ -4,12 +4,6 @@
 #include "../utils.h"
 #include "../../../../include/dlplan/core.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/export.hpp>
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-
 #include <sstream>
 #include <memory>
 
@@ -19,22 +13,6 @@ using namespace std::string_literals;
 namespace dlplan::utils {
 template<typename... Ts>
 class ReferenceCountedObjectFactory;
-}
-
-
-namespace dlplan::core {
-class NotConcept;
-}
-
-
-namespace boost::serialization {
-    template<typename Archive>
-    void serialize(Archive& ar, dlplan::core::NotConcept& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::NotConcept* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::NotConcept* t, const unsigned int version);
-
 }
 
 
@@ -74,12 +52,6 @@ private:
     NotConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept)
         : Concept(vocabulary_info, index, concept->is_static()), m_concept(concept){ }
 
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, NotConcept& t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const NotConcept* t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, NotConcept* t, const unsigned int version);
     template<typename... Ts>
     friend class dlplan::utils::ReferenceCountedObjectFactory;
 
@@ -121,60 +93,6 @@ public:
 };
 
 }
-
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize(Archive& /* ar */ , dlplan::core::NotConcept& t, const unsigned int /* version */ )
-{
-    boost::serialization::base_object<dlplan::core::Concept>(t);
-}
-
-template<class Archive>
-void save_construct_data(Archive& ar, const dlplan::core::NotConcept* t, const unsigned int /* version */ )
-{
-    ar << t->m_vocabulary_info;
-    ar << t->m_index;
-    ar << t->m_concept;
-}
-
-template<class Archive>
-void load_construct_data(Archive& ar, dlplan::core::NotConcept* t, const unsigned int /* version */ )
-{
-    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
-    int index;
-    std::shared_ptr<const dlplan::core::Concept> concept_;
-    ar >> vocabulary;
-    ar >> index;
-    ar >> concept_;
-    ::new(t)dlplan::core::NotConcept(index, vocabulary, concept_);
-}
-
-
-template<typename Archive>
-void serialize(Archive& /*ar*/, std::pair<const dlplan::core::NotConcept, std::weak_ptr<dlplan::core::NotConcept>>& /*t*/, const unsigned int /*version*/) {
-}
-
-template<class Archive>
-void save_construct_data(Archive& ar, const std::pair<const dlplan::core::NotConcept, std::weak_ptr<dlplan::core::NotConcept>>* t, const unsigned int /*version*/) {
-    ar << t->first;
-    ar << t->second;
-}
-
-template<class Archive>
-void load_construct_data(Archive& ar, std::pair<const dlplan::core::NotConcept, std::weak_ptr<dlplan::core::NotConcept>>* t, const unsigned int /*version*/) {
-    dlplan::core::NotConcept* first = nullptr;
-    std::weak_ptr<dlplan::core::NotConcept>* second = nullptr;
-    ar >> const_cast<dlplan::core::NotConcept&>(*first);
-    ar >> second;
-    ::new(t)std::pair<const dlplan::core::NotConcept, std::weak_ptr<dlplan::core::NotConcept>>(*first, *second);
-    delete first;
-    delete second;
-}
-
-}
-
-BOOST_CLASS_EXPORT_KEY2(dlplan::core::NotConcept, "dlplan::core::NotConcept")
 
 
 namespace std {

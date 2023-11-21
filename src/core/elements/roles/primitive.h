@@ -3,10 +3,6 @@
 
 #include "../../../../include/dlplan/core.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/export.hpp>
-
 #include <sstream>
 #include <memory>
 
@@ -14,29 +10,6 @@
 namespace dlplan::utils {
 template<typename... Ts>
 class ReferenceCountedObjectFactory;
-}
-
-
-namespace dlplan::core {
-class PrimitiveRole;
-}
-
-
-namespace boost::serialization {
-    class access;
-    template<typename Archive>
-    void serialize(Archive& ar, dlplan::core::PrimitiveRole& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::PrimitiveRole* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::PrimitiveRole* t, const unsigned int version);
-
-    template<typename Archive>
-    void serialize(Archive& ar, std::pair<const dlplan::core::PrimitiveRole, std::weak_ptr<dlplan::core::PrimitiveRole>>& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::PrimitiveRole, std::weak_ptr<dlplan::core::PrimitiveRole>>* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, std::pair<const dlplan::core::PrimitiveRole, std::weak_ptr<dlplan::core::PrimitiveRole>>* t, const unsigned int version);
 }
 
 
@@ -55,13 +28,6 @@ private:
 
     PrimitiveRole(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, const Predicate& predicate, int pos_1, int pos_2);
 
-    friend class boost::serialization::access;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, PrimitiveRole& t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const PrimitiveRole* t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, PrimitiveRole* t, const unsigned int version);
     template<typename... Ts>
     friend class dlplan::utils::ReferenceCountedObjectFactory;
 
@@ -82,7 +48,6 @@ public:
 
 }
 
-BOOST_CLASS_EXPORT_KEY2(dlplan::core::PrimitiveRole, "dlplan::core::PrimitiveRole")
 
 namespace std {
     template<>

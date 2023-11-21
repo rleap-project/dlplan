@@ -4,12 +4,6 @@
 #include "../utils.h"
 #include "../../../../include/dlplan/core.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/export.hpp>
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-
 #include <sstream>
 #include <memory>
 
@@ -24,23 +18,6 @@ class ReferenceCountedObjectFactory;
 
 namespace dlplan::core {
 class RoleDistanceNumerical;
-}
-
-
-namespace boost::serialization {
-    template<typename Archive>
-    void serialize(Archive& ar, dlplan::core::RoleDistanceNumerical& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::RoleDistanceNumerical* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::RoleDistanceNumerical* t, const unsigned int version);
-
-    template<typename Archive>
-    void serialize(Archive& ar, std::pair<const dlplan::core::RoleDistanceNumerical, std::weak_ptr<dlplan::core::RoleDistanceNumerical>>& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::RoleDistanceNumerical, std::weak_ptr<dlplan::core::RoleDistanceNumerical>>* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, std::pair<const dlplan::core::RoleDistanceNumerical, std::weak_ptr<dlplan::core::RoleDistanceNumerical>>* t, const unsigned int version);
 }
 
 
@@ -113,12 +90,6 @@ private:
         : Numerical(vocabulary_info, index, role_from->is_static() && role->is_static() && role_to->is_static()),
           m_role_from(role_from), m_role(role), m_role_to(role_to) { }
 
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, RoleDistanceNumerical& t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const RoleDistanceNumerical* t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, RoleDistanceNumerical* t, const unsigned int version);
     template<typename... Ts>
     friend class dlplan::utils::ReferenceCountedObjectFactory;
 
@@ -173,66 +144,6 @@ public:
 };
 
 }
-
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize(Archive& /* ar */ , dlplan::core::RoleDistanceNumerical& t, const unsigned int /* version */ )
-{
-    boost::serialization::base_object<dlplan::core::Numerical>(t);
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::RoleDistanceNumerical* t, const unsigned int /* version */ )
-{
-    ar << t->m_vocabulary_info;
-    ar << t->m_index;
-    ar << t->m_role_from;
-    ar << t->m_role;
-    ar << t->m_role_to;
-}
-
-template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::RoleDistanceNumerical* t, const unsigned int /* version */ )
-{
-    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
-    int index;
-    std::shared_ptr<const dlplan::core::Role> role_from;
-    std::shared_ptr<const dlplan::core::Role> role;
-    std::shared_ptr<const dlplan::core::Role> role_to;
-    ar >> vocabulary;
-    ar >> index;
-    ar >> role_from;
-    ar >> role;
-    ar >> role_to;
-    ::new(t)dlplan::core::RoleDistanceNumerical(index, vocabulary, role_from, role, role_to);
-}
-
-
-template<typename Archive>
-void serialize(Archive& /*ar*/, std::pair<const dlplan::core::RoleDistanceNumerical, std::weak_ptr<dlplan::core::RoleDistanceNumerical>>& /*t*/, const unsigned int /*version*/) {
-}
-
-template<class Archive>
-void save_construct_data(Archive& ar, const std::pair<const dlplan::core::RoleDistanceNumerical, std::weak_ptr<dlplan::core::RoleDistanceNumerical>>* t, const unsigned int /*version*/) {
-    ar << t->first;
-    ar << t->second;
-}
-
-template<class Archive>
-void load_construct_data(Archive& ar, std::pair<const dlplan::core::RoleDistanceNumerical, std::weak_ptr<dlplan::core::RoleDistanceNumerical>>* t, const unsigned int /*version*/) {
-    dlplan::core::RoleDistanceNumerical* first = nullptr;
-    std::weak_ptr<dlplan::core::RoleDistanceNumerical>* second = nullptr;
-    ar >> const_cast<dlplan::core::RoleDistanceNumerical&>(*first);
-    ar >> second;
-    ::new(t)std::pair<const dlplan::core::RoleDistanceNumerical, std::weak_ptr<dlplan::core::RoleDistanceNumerical>>(*first, *second);
-    delete first;
-    delete second;
-}
-
-}
-
-BOOST_CLASS_EXPORT_KEY2(dlplan::core::RoleDistanceNumerical, "dlplan::core::RoleDistanceNumerical")
 
 
 namespace std {

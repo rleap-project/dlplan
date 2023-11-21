@@ -4,12 +4,6 @@
 #include "../../../../../src/core/elements/utils.h"
 #include "../../../core.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/export.hpp>
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-
 #include <sstream>
 #include <memory>
 
@@ -19,28 +13,6 @@ using namespace std::string_literals;
 namespace dlplan::utils {
 template<typename... Ts>
 class ReferenceCountedObjectFactory;
-}
-
-namespace dlplan::core {
-template<typename T>
-class EmptyBoolean;
-}
-
-
-namespace boost::serialization {
-    template<typename Archive, typename T>
-    void serialize(Archive& ar, dlplan::core::EmptyBoolean<T>& t, const unsigned int version);
-    template<class Archive, typename T>
-    void save_construct_data(Archive& ar, const dlplan::core::EmptyBoolean<T>* t, const unsigned int version);
-    template<class Archive, typename T>
-    void load_construct_data(Archive& ar, dlplan::core::EmptyBoolean<T>* t, const unsigned int version);
-
-    template<typename Archive, typename T>
-    void serialize(Archive& ar, std::pair<const dlplan::core::EmptyBoolean<T>, std::weak_ptr<dlplan::core::EmptyBoolean<T>>>& t, const unsigned int version);
-    template<class Archive, typename T>
-    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::EmptyBoolean<T>, std::weak_ptr<dlplan::core::EmptyBoolean<T>>>* t, const unsigned int version);
-    template<class Archive, typename T>
-    void load_construct_data(Archive& ar, std::pair<const dlplan::core::EmptyBoolean<T>, std::weak_ptr<dlplan::core::EmptyBoolean<T>>>* t, const unsigned int version);
 }
 
 
@@ -82,12 +54,6 @@ private:
         : Boolean(vocabulary_info, index, element->is_static()), m_element(element) {
     }
 
-    template<typename Archive, typename T_>
-    friend void boost::serialization::serialize(Archive& ar, EmptyBoolean<T_>& t, const unsigned int version);
-    template<class Archive, typename T_>
-    friend void boost::serialization::save_construct_data(Archive & ar, const EmptyBoolean<T_>* t, const unsigned int version);
-    template<class Archive, typename T_>
-    friend void boost::serialization::load_construct_data(Archive & ar, EmptyBoolean<T_>* t, const unsigned int version);
     template<typename... Ts>
     friend class dlplan::utils::ReferenceCountedObjectFactory;
 
@@ -135,61 +101,6 @@ public:
 };
 
 }
-
-
-namespace boost::serialization {
-template<typename Archive, typename T>
-void serialize(Archive& /*ar*/, dlplan::core::EmptyBoolean<T>& t, const unsigned int /* version */ )
-{
-    boost::serialization::base_object<dlplan::core::Boolean>(t);
-}
-
-template<class Archive, typename T>
-void save_construct_data(Archive& ar, const dlplan::core::EmptyBoolean<T>* t, const unsigned int /* version */ )
-{
-    ar << t->m_index;
-    ar << t->m_vocabulary_info;
-    ar << t->m_element;
-}
-
-template<class Archive, typename T>
-void load_construct_data(Archive& ar, dlplan::core::EmptyBoolean<T>* t, const unsigned int /* version */ )
-{
-    int index;
-    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
-    std::shared_ptr<const T> element;
-    ar >> index;
-    ar >> vocabulary;
-    ar >> element;
-    ::new(t)dlplan::core::EmptyBoolean<T>(index, vocabulary, element);
-}
-
-
-template<typename Archive, typename T>
-void serialize(Archive& /*ar*/, std::pair<const dlplan::core::EmptyBoolean<T>, std::weak_ptr<dlplan::core::EmptyBoolean<T>>>& /*t*/, const unsigned int /*version*/) {
-}
-
-template<class Archive, typename T>
-void save_construct_data(Archive& ar, const std::pair<const dlplan::core::EmptyBoolean<T>, std::weak_ptr<dlplan::core::EmptyBoolean<T>>>* t, const unsigned int /*version*/) {
-    ar << t->first;
-    ar << t->second;
-}
-
-template<class Archive, typename T>
-void load_construct_data(Archive& ar, std::pair<const dlplan::core::EmptyBoolean<T>, std::weak_ptr<dlplan::core::EmptyBoolean<T>>>* t, const unsigned int /*version*/) {
-    dlplan::core::EmptyBoolean<T>* first = nullptr;
-    std::weak_ptr<dlplan::core::EmptyBoolean<T>>* second = nullptr;
-    ar >> const_cast<dlplan::core::EmptyBoolean<T>&>(*first);
-    ar >> second;
-    ::new(t)std::pair<const dlplan::core::EmptyBoolean<T>, std::weak_ptr<dlplan::core::EmptyBoolean<T>>>(*first, *second);
-    delete first;
-    delete second;
-}
-
-}
-
-BOOST_CLASS_EXPORT_KEY2(dlplan::core::EmptyBoolean<dlplan::core::Concept>, "dlplan::core::EmptyBoolean<dlplan::core::Concept>")
-BOOST_CLASS_EXPORT_KEY2(dlplan::core::EmptyBoolean<dlplan::core::Role>, "dlplan::core::EmptyBoolean<dlplan::core::Role>")
 
 
 namespace std {

@@ -19,8 +19,6 @@ target_sources(dlplanpolicy
         ../common/parsers/filesystem.cpp)
 
 target_link_libraries(dlplanpolicy
-    PRIVATE
-        Boost::serialization
     PUBLIC
         dlplan::core)
 

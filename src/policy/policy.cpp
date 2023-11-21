@@ -44,8 +44,6 @@ int BaseEffect::get_index() const {
 }
 
 
-PolicyFactory::PolicyFactory() : m_pImpl(nullptr) { }
-
 PolicyFactory::PolicyFactory(std::shared_ptr<core::SyntacticElementFactory> element_factory)
     : m_pImpl(PolicyFactoryImpl(element_factory)) { }
 
@@ -154,68 +152,6 @@ std::shared_ptr<core::SyntacticElementFactory> PolicyFactory::get_element_factor
     return m_pImpl->get_element_factory();
 }
 
-}
-
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize( Archive& /* ar */ , dlplan::policy::BaseCondition& /* t */ , const unsigned int /* version */ )
-{
-}
-
-template<class Archive>
-void save_construct_data(Archive& /* ar */ , const dlplan::policy::BaseCondition* /* t */ , const unsigned int /* version */ )
-{
-}
-
-template<class Archive>
-void load_construct_data(Archive& /* ar */ , dlplan::policy::BaseCondition* /* t */ , const unsigned int /* version */ )
-{
-}
-
-template<typename Archive>
-void serialize( Archive& /* ar */ , dlplan::policy::BaseEffect& /* t */ , const unsigned int /* version */ )
-{
-}
-
-template<class Archive>
-void save_construct_data(Archive& /* ar */ , const dlplan::policy::BaseEffect* /* t */ , const unsigned int /* version */ )
-{
-}
-
-template<class Archive>
-void load_construct_data(Archive& /* ar */ , dlplan::policy::BaseEffect* /* t */ , const unsigned int /* version */ )
-{
-}
-
-template<typename Archive>
-void serialize( Archive& ar, dlplan::policy::PolicyFactory& t, const unsigned int /* version */ )
-{
-    ar & t.m_pImpl;
-}
-
-template void serialize(boost::archive::text_iarchive& ar,
-    dlplan::policy::BaseCondition& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    dlplan::policy::BaseCondition& t, const unsigned int version);
-template void save_construct_data(boost::archive::text_oarchive& ar,
-    const dlplan::policy::BaseCondition* t, const unsigned int version);
-template void load_construct_data(boost::archive::text_iarchive& ar,
-    dlplan::policy::BaseCondition* t, const unsigned int version);
-
-template void serialize(boost::archive::text_iarchive& ar,
-    dlplan::policy::BaseEffect& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    dlplan::policy::BaseEffect& t, const unsigned int version);
-template void save_construct_data(boost::archive::text_oarchive& ar,
-    const dlplan::policy::BaseEffect* t, const unsigned int version);
-template void load_construct_data(boost::archive::text_iarchive& ar,
-    dlplan::policy::BaseEffect* t, const unsigned int version);
-
-template void serialize(boost::archive::text_iarchive& ar,
-    dlplan::policy::PolicyFactory& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    dlplan::policy::PolicyFactory& t, const unsigned int version);
 }
 
 

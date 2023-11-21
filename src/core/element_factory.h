@@ -44,18 +44,6 @@
 
 
 namespace dlplan::core {
-class SyntacticElementFactoryImpl;
-}
-
-namespace boost::serialization {
-    class access;
-
-    template<typename Archive>
-    void serialize(Archive& ar, dlplan::core::SyntacticElementFactoryImpl& factory, const unsigned int version);
-}
-
-
-namespace dlplan::core {
 class SyntacticElementFactoryImpl {
 private:
     std::shared_ptr<VocabularyInfo> m_vocabulary_info;
@@ -96,13 +84,6 @@ private:
         , TopRole
         , TransitiveClosureRole
         , TransitiveReflexiveClosureRole> m_cache;
-
-    /// @brief Constructor for serialization.
-    SyntacticElementFactoryImpl();
-
-    friend class boost::serialization::access;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, SyntacticElementFactoryImpl& factory, const unsigned int version);
 
 public:
     SyntacticElementFactoryImpl(std::shared_ptr<VocabularyInfo> vocabulary_info);

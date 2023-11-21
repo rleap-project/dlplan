@@ -3,12 +3,6 @@
 #include "../utils/collections.h"
 #include "../utils/logging.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/unordered_map.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-#include <boost/serialization/vector.hpp>
-
 #include <string>
 #include <algorithm>
 #include <iostream>
@@ -202,24 +196,4 @@ void InstanceInfo::clear_static_atoms() {
     m_static_atom_name_to_index.clear();
 }
 
-}
-
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize(Archive& ar, dlplan::core::InstanceInfo& t, const unsigned int /* version */) {
-    ar & t.m_vocabulary_info;
-    ar & t.m_index;
-    ar & t.m_objects;
-    ar & t.m_object_name_to_index;
-    ar & t.m_atoms;
-    ar & t.m_atom_name_to_index;
-    ar & t.m_static_atoms;
-    ar & t.m_static_atom_name_to_index;
-}
-
-template void serialize(boost::archive::text_iarchive& ar,
-    dlplan::core::InstanceInfo& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    dlplan::core::InstanceInfo& t, const unsigned int version);
 }

@@ -10,21 +10,6 @@
 #include "core.h"
 
 
-// Forward declarations of this header
-namespace dlplan::state_space {
-class StateSpace;
-}
-
-
-// Forward declarations of template spezializations for serialization
-namespace boost::serialization {
-    class access;
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::state_space::StateSpace& state_space, const unsigned int version);
-}
-
-
 namespace dlplan::state_space {
 using StateIndex = int;
 using StateIndices = std::vector<StateIndex>;
@@ -49,13 +34,6 @@ private:
     /* Derived information */
     // for backward search
     AdjacencyList m_backward_successor_state_indices;
-
-    /// @brief Constructor for serialization
-    StateSpace();
-
-    friend class boost::serialization::access;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, StateSpace& state_space, const unsigned int version);
 
 public:
     StateSpace(

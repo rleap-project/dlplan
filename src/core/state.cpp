@@ -4,11 +4,6 @@
 #include "../utils/logging.h"
 #include "../../include/dlplan/utils/hash.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-#include <boost/serialization/vector.hpp>
-
 #include <algorithm>
 #include <stdexcept>
 #include <sstream>
@@ -131,51 +126,4 @@ size_t State::hash() const {
     return seed;
 }
 
-}
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize(Archive& ar , dlplan::core::State& t, const unsigned int /* version */ )
-{
-    ar & t.m_index;
-    ar & t.m_instance_info;
-    ar & t.m_atom_indices;
-}
-
-template<typename Archive>
-void serialize(Archive& /* ar */ , std::pair<const int, dlplan::core::State>& /* t */, const unsigned int /* version */ )
-{
-}
-
-template<class Archive>
-void save_construct_data(
-    Archive & ar, const std::pair<const int, dlplan::core::State>* t, const unsigned int /* version */ ){
-    ar << t->first;
-    ar << &t->second;
-}
-
-template<class Archive>
-void load_construct_data(
-    Archive & ar, std::pair<const int, dlplan::core::State>* t, const unsigned int /* version */ ){
-    int first;
-    dlplan::core::State* second;
-    ar >> first;
-    ar >> second;
-    ::new(t)std::pair<int, dlplan::core::State>(first, std::move(*second));
-    delete second;
-}
-
-template void serialize(boost::archive::text_iarchive& ar,
-    dlplan::core::State& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    dlplan::core::State& t, const unsigned int version);
-
-template void serialize(boost::archive::text_iarchive& ar,
-    std::pair<const int, dlplan::core::State>& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    std::pair<const int, dlplan::core::State>& t, const unsigned int version);
-template void save_construct_data(boost::archive::text_oarchive& ar,
-    const std::pair<const int, dlplan::core::State>* t, const unsigned int version);
-template void load_construct_data(boost::archive::text_iarchive& ar,
-    std::pair<const int, dlplan::core::State>* t, const unsigned int version);
 }

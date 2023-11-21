@@ -5,14 +5,6 @@
 #include "../utils/collections.h"
 #include "../utils/memory.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-#include <boost/serialization/unordered_map.hpp>
-#include <boost/serialization/unordered_set.hpp>
-#include <boost/serialization/vector.hpp>
-#include <boost/serialization/utility.hpp>
-
 #include <algorithm>
 #include <deque>
 #include <iostream>
@@ -34,13 +26,6 @@ static AdjacencyList compute_inverse_successor_state_indices(const AdjacencyList
     }
     return inverse_successor_state_indices;
 }
-
-StateSpace::StateSpace()
-    : m_instance_info(nullptr),
-      m_states(StateMapping()),
-      m_initial_state_index(-1),
-      m_forward_successor_state_indices(AdjacencyList()),
-      m_backward_successor_state_indices(AdjacencyList()) { }
 
 StateSpace::StateSpace(
     std::shared_ptr<InstanceInfo>&& instance_info,
@@ -374,25 +359,5 @@ GeneratorResult generate_state_space(
     generator::generate_state_space_files(domain_file, instance_file, max_time, max_num_states);
     return reader::read(vocabulary_info, index);
 }
-
-}
-
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize( Archive& ar, dlplan::state_space::StateSpace& t, const unsigned int /* version */ )
-{
-    ar & t.m_instance_info;
-    ar & t.m_states;
-    ar & t.m_initial_state_index;
-    ar & t.m_goal_state_indices;
-    ar & t.m_forward_successor_state_indices;
-    ar & t.m_backward_successor_state_indices;
-}
-
-template void serialize(boost::archive::text_iarchive& ar,
-    dlplan::state_space::StateSpace& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    dlplan::state_space::StateSpace& t, const unsigned int version);
 
 }

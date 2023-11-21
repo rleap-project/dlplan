@@ -4,12 +4,6 @@
 #include "../utils.h"
 #include "../../../../include/dlplan/core.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/export.hpp>
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-
 #include <sstream>
 #include <memory>
 
@@ -19,21 +13,6 @@ using namespace std::string_literals;
 namespace dlplan::utils {
 template<typename... Ts>
 class ReferenceCountedObjectFactory;
-}
-
-
-namespace dlplan::core {
-class SumConceptDistanceNumerical;
-}
-
-
-namespace boost::serialization {
-    template<typename Archive>
-    void serialize(Archive& ar, dlplan::core::SumConceptDistanceNumerical& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::SumConceptDistanceNumerical* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::SumConceptDistanceNumerical* t, const unsigned int version);
 }
 
 
@@ -103,12 +82,6 @@ private:
         : Numerical(vocabulary_info, index, concept_from->is_static() && role->is_static() && concept_to->is_static()),
           m_concept_from(concept_from), m_role(role), m_concept_to(concept_to) { }
 
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, SumConceptDistanceNumerical& t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const SumConceptDistanceNumerical* t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, SumConceptDistanceNumerical* t, const unsigned int version);
     template<typename... Ts>
     friend class dlplan::utils::ReferenceCountedObjectFactory;
 
@@ -163,66 +136,6 @@ public:
 };
 
 }
-
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize(Archive& /* ar */ , dlplan::core::SumConceptDistanceNumerical& t, const unsigned int /* version */ )
-{
-    boost::serialization::base_object<dlplan::core::Numerical>(t);
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::SumConceptDistanceNumerical* t, const unsigned int /* version */ )
-{
-    ar << t->m_vocabulary_info;
-    ar << t->m_index;
-    ar << t->m_concept_from;
-    ar << t->m_role;
-    ar << t->m_concept_to;
-}
-
-template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::SumConceptDistanceNumerical* t, const unsigned int /* version */ )
-{
-    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
-    int index;
-    std::shared_ptr<const dlplan::core::Concept> concept_from;
-    std::shared_ptr<const dlplan::core::Role> role;
-    std::shared_ptr<const dlplan::core::Concept> concept_to;
-    ar >> vocabulary;
-    ar >> index;
-    ar >> concept_from;
-    ar >> role;
-    ar >> concept_to;
-    ::new(t)dlplan::core::SumConceptDistanceNumerical(index, vocabulary, concept_from, role, concept_to);
-}
-
-
-template<typename Archive>
-void serialize(Archive& /*ar*/, std::pair<const dlplan::core::SumConceptDistanceNumerical, std::weak_ptr<dlplan::core::SumConceptDistanceNumerical>>& /*t*/, const unsigned int /*version*/) {
-}
-
-template<class Archive>
-void save_construct_data(Archive& ar, const std::pair<const dlplan::core::SumConceptDistanceNumerical, std::weak_ptr<dlplan::core::SumConceptDistanceNumerical>>* t, const unsigned int /*version*/) {
-    ar << t->first;
-    ar << t->second;
-}
-
-template<class Archive>
-void load_construct_data(Archive& ar, std::pair<const dlplan::core::SumConceptDistanceNumerical, std::weak_ptr<dlplan::core::SumConceptDistanceNumerical>>* t, const unsigned int /*version*/) {
-    dlplan::core::SumConceptDistanceNumerical* first = nullptr;
-    std::weak_ptr<dlplan::core::SumConceptDistanceNumerical>* second = nullptr;
-    ar >> const_cast<dlplan::core::SumConceptDistanceNumerical&>(*first);
-    ar >> second;
-    ::new(t)std::pair<const dlplan::core::SumConceptDistanceNumerical, std::weak_ptr<dlplan::core::SumConceptDistanceNumerical>>(*first, *second);
-    delete first;
-    delete second;
-}
-
-}
-
-BOOST_CLASS_EXPORT_KEY2(dlplan::core::SumConceptDistanceNumerical, "dlplan::core::SumConceptDistanceNumerical")
 
 
 namespace std {

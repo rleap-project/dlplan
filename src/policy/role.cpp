@@ -13,8 +13,6 @@
 
 
 namespace dlplan::policy {
-NamedRole::NamedRole() : m_identifier(-1), m_key(""), m_role(nullptr) { }
-
 NamedRole::NamedRole(int identifier, const std::string& key, std::shared_ptr<const core::Role> role)
     : m_identifier(identifier), m_key(key), m_role(role) { }
 
@@ -35,7 +33,9 @@ bool NamedRole::operator==(const NamedRole& other) const {
     }
     return true;
 }
+
 bool NamedRole::operator<(const NamedRole& other) const {
+    return m_identifier < other.m_identifier;
 }
 
 size_t NamedRole::hash() const {
@@ -63,50 +63,3 @@ std::shared_ptr<const core::Role> NamedRole::get_role() const {
 }
 
 }
-
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize(Archive& ar, dlplan::policy::NamedRole& t, const unsigned int /* version */ )
-{
-    ar & t.m_identifier;
-    ar & t.m_key;
-    ar & t.m_role;
-}
-
-template<typename Archive>
-void serialize(Archive& /*ar*/, std::pair<const dlplan::policy::NamedRole, std::weak_ptr<dlplan::policy::NamedRole>>& /*t*/, const unsigned int /*version*/) {
-}
-
-template<class Archive>
-void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::NamedRole, std::weak_ptr<dlplan::policy::NamedRole>>* t, const unsigned int /*version*/) {
-    ar << t->first;
-    ar << t->second;
-}
-
-template<class Archive>
-void load_construct_data(Archive& ar, std::pair<const dlplan::policy::NamedRole, std::weak_ptr<dlplan::policy::NamedRole>>* t, const unsigned int /*version*/) {
-    dlplan::policy::NamedRole* first = nullptr;
-    std::weak_ptr<dlplan::policy::NamedRole>* second = nullptr;
-    ar >> const_cast<dlplan::policy::NamedRole&>(*first);
-    ar >> second;
-    ::new(t)std::pair<const dlplan::policy::NamedRole, std::weak_ptr<dlplan::policy::NamedRole>>(*first, *second);
-    delete first;
-    delete second;
-}
-
-template void serialize(boost::archive::text_iarchive& ar,
-    dlplan::policy::NamedRole& t, const unsigned int version);
-
-template void serialize(boost::archive::text_iarchive& ar,
-    std::pair<const dlplan::policy::NamedRole, std::weak_ptr<dlplan::policy::NamedRole>>& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    std::pair<const dlplan::policy::NamedRole, std::weak_ptr<dlplan::policy::NamedRole>>& t, const unsigned int version);
-template void save_construct_data(boost::archive::text_oarchive& ar,
-    const std::pair<const dlplan::policy::NamedRole, std::weak_ptr<dlplan::policy::NamedRole>>* t, const unsigned int version);
-template void load_construct_data(boost::archive::text_iarchive& ar,
-    std::pair<const dlplan::policy::NamedRole, std::weak_ptr<dlplan::policy::NamedRole>>* t, const unsigned int version);
-
-}
-
-

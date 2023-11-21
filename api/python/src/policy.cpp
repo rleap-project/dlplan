@@ -15,25 +15,31 @@ using namespace dlplan;
 
 
 void init_policy(py::module_ &m_policy) {
-    py::class_<policy::NamedBaseElement, std::shared_ptr<policy::NamedBaseElement>>(m_policy, "NamedBaseElement")
-        .def("__repr__", &policy::NamedBaseElement::compute_repr)
-        .def("__str__", &policy::NamedBaseElement::str)
-        .def("get_key", &policy::NamedBaseElement::get_key)
-    ;
-
-    py::class_<policy::NamedBoolean, policy::NamedBaseElement, std::shared_ptr<policy::NamedBoolean>>(m_policy, "NamedBoolean")
+    py::class_<policy::NamedBoolean, std::shared_ptr<policy::NamedBoolean>>(m_policy, "NamedBoolean")
+        .def("__repr__", &policy::NamedBoolean::compute_repr)
+        .def("__str__", &policy::NamedBoolean::str)
+        .def("get_key", &policy::NamedBoolean::get_key)
         .def("get_boolean", &policy::NamedBoolean::get_boolean)
     ;
 
-    py::class_<policy::NamedNumerical, policy::NamedBaseElement, std::shared_ptr<policy::NamedNumerical>>(m_policy, "NamedNumerical")
+    py::class_<policy::NamedNumerical, std::shared_ptr<policy::NamedNumerical>>(m_policy, "NamedNumerical")
+        .def("__repr__", &policy::NamedNumerical::compute_repr)
+        .def("__str__", &policy::NamedNumerical::str)
+        .def("get_key", &policy::NamedNumerical::get_key)
         .def("get_numerical", &policy::NamedNumerical::get_numerical)
     ;
 
-    py::class_<policy::NamedConcept, policy::NamedBaseElement, std::shared_ptr<policy::NamedConcept>>(m_policy, "NamedConcept")
+    py::class_<policy::NamedConcept, std::shared_ptr<policy::NamedConcept>>(m_policy, "NamedConcept")
+        .def("__repr__", &policy::NamedConcept::compute_repr)
+        .def("__str__", &policy::NamedConcept::str)
+        .def("get_key", &policy::NamedConcept::get_key)
         .def("get_concept", &policy::NamedConcept::get_concept)
     ;
 
-    py::class_<policy::NamedRole, policy::NamedBaseElement, std::shared_ptr<policy::NamedRole>>(m_policy, "NamedRole")
+    py::class_<policy::NamedRole, std::shared_ptr<policy::NamedRole>>(m_policy, "NamedRole")
+        .def("__repr__", &policy::NamedRole::compute_repr)
+        .def("__str__", &policy::NamedRole::str)
+        .def("get_key", &policy::NamedRole::get_key)
         .def("get_role", &policy::NamedRole::get_role)
     ;
 

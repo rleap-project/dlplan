@@ -7,8 +7,6 @@
 #include "../../include/dlplan/policy/parsers/semantic/context.hpp"
 #include "../../include/dlplan/policy/parsers/semantic/parser.hpp"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
 
 #include <stdexcept>
 
@@ -17,9 +15,6 @@ using namespace dlplan;
 
 
 namespace dlplan::policy {
-
-PolicyFactoryImpl::PolicyFactoryImpl() : m_element_factory(nullptr) { }
-
 PolicyFactoryImpl::PolicyFactoryImpl(std::shared_ptr<core::SyntacticElementFactory> element_factory)
     : m_element_factory(element_factory) { }
 
@@ -149,20 +144,5 @@ std::shared_ptr<const Policy> PolicyFactoryImpl::make_policy(const Rules& rules)
 std::shared_ptr<core::SyntacticElementFactory> PolicyFactoryImpl::get_element_factory() const {
     return m_element_factory;
 }
-
-}
-
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize( Archive& ar, dlplan::policy::PolicyFactoryImpl& t, const unsigned int /* version */ )
-{
-    ar & t.m_cache;
-}
-
-template void serialize(boost::archive::text_iarchive& ar,
-    dlplan::policy::PolicyFactoryImpl& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    dlplan::policy::PolicyFactoryImpl& t, const unsigned int version);
 
 }

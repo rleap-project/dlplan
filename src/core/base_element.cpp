@@ -41,21 +41,3 @@ bool BaseElement::is_static() const {
 }
 
 }
-
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize(Archive& /* ar */ , dlplan::core::BaseElement& /* t */, const unsigned int /* version */ )
-{
-}
-
-template<class Archive>
-void save_construct_data(Archive& /* ar */ , const dlplan::core::BaseElement* /* t */ , const unsigned int /* version */ )
-{
-}
-
-template<class Archive>
-void load_construct_data(Archive& /* ar */ , dlplan::core::BaseElement* /* t */ , const unsigned int /* version */ )
-{
-}
-}

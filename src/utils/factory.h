@@ -1,41 +1,12 @@
 #ifndef DLPLAN_SRC_UTILS_FACTORY_H_
 #define DLPLAN_SRC_UTILS_FACTORY_H_
 
-#include <boost/serialization/unordered_map.hpp>
-#include <boost/serialization/weak_ptr.hpp>
 
 #include <unordered_map>
 #include <memory>
 #include <mutex>
 #include <iostream>
 #include <utility>
-
-
-namespace dlplan::utils {
-template<typename... Ts>
-class ReferenceCountedObjectFactory;
-
-template<typename T>
-struct PerTypeCache;
-}
-
-
-template <typename Archive, typename... Types>
-void boost::serialization::serialize(Archive &ar, std::tuple<Types...> &t, const unsigned int)
-{
-    std::apply([&](auto &...element)
-        { ((ar & element), ...); },
-        t);
-}
-
-
-namespace boost::serialization {
-    template<typename Archive, typename T>
-    void serialize(Archive& ar, dlplan::utils::PerTypeCache<T>& t, const unsigned int version);
-
-    template<typename Archive, typename... Ts>
-    void serialize(Archive& ar, dlplan::utils::ReferenceCountedObjectFactory<Ts...>& t, const unsigned int version);
-}
 
 
 namespace dlplan::utils {
@@ -62,9 +33,6 @@ private:
 
     // Identifiers are shared since types can be polymorphic
     int m_count = -1;
-
-    template<typename Archive, typename... Ts_>
-    friend void boost::serialization::serialize(Archive& ar, ReferenceCountedObjectFactory<Ts_...>& t, const unsigned int version);
 
 public:
     ReferenceCountedObjectFactory()
@@ -109,22 +77,6 @@ public:
         return GetOrCreateResult<T>{sp, new_insertion};
     }
 };
-
-}
-
-
-namespace boost::serialization {
-template<typename Archive, typename T>
-void serialize(Archive& ar, dlplan::utils::PerTypeCache<T>& t, const unsigned int /*version*/) {
-    ar & t.data;
-}
-
-template<typename Archive, typename... Ts>
-void serialize(Archive& ar, dlplan::utils::ReferenceCountedObjectFactory<Ts...>& t, const unsigned int /* version */ )
-{
-    ar & t.m_cache;
-    ar & t.m_count;
-}
 
 }
 

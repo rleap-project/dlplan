@@ -1,11 +1,5 @@
 #include "../../../../include/dlplan/core/elements/concepts/all.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-#include <boost/serialization/weak_ptr.hpp>
-
 
 namespace dlplan::core {
 void AllConcept::compute_result(const RoleDenotation& role_denot, const ConceptDenotation& concept_denot, ConceptDenotation& result) const {
@@ -86,80 +80,6 @@ int AllConcept::compute_evaluate_time_score() const {
 }
 
 }
-
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize(Archive& /* ar */ , dlplan::core::AllConcept& t, const unsigned int /* version */ )
-{
-    boost::serialization::base_object<dlplan::core::Concept>(t);
-}
-
-template<class Archive>
-void save_construct_data(Archive& ar, const dlplan::core::AllConcept* t, const unsigned int /* version */ )
-{
-    ar << t->m_vocabulary_info;
-    ar << t->m_index;
-    ar << t->m_role;
-    ar << t->m_concept;
-}
-
-template<class Archive>
-void load_construct_data(Archive& ar, dlplan::core::AllConcept* t, const unsigned int /* version */ )
-{
-    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
-    int index;
-    std::shared_ptr<const dlplan::core::Concept> concept_;
-    std::shared_ptr<const dlplan::core::Role> role;
-    ar >> vocabulary;
-    ar >> index;
-    ar >> role;
-    ar >> concept_;
-    ::new(t)dlplan::core::AllConcept(index, vocabulary, role, concept_);
-}
-
-
-template<typename Archive>
-void serialize(Archive& /*ar*/, std::pair<const dlplan::core::AllConcept, std::weak_ptr<dlplan::core::AllConcept>>& /*t*/, const unsigned int /*version*/) {
-}
-
-template<class Archive>
-void save_construct_data(Archive& ar, const std::pair<const dlplan::core::AllConcept, std::weak_ptr<dlplan::core::AllConcept>>* t, const unsigned int /*version*/) {
-    ar << t->first;
-    ar << t->second;
-}
-
-template<class Archive>
-void load_construct_data(Archive& ar, std::pair<const dlplan::core::AllConcept, std::weak_ptr<dlplan::core::AllConcept>>* t, const unsigned int /*version*/) {
-    dlplan::core::AllConcept* first = nullptr;
-    std::weak_ptr<dlplan::core::AllConcept>* second = nullptr;
-    ar >> const_cast<dlplan::core::AllConcept&>(*first);
-    ar >> second;
-    ::new(t)std::pair<const dlplan::core::AllConcept, std::weak_ptr<dlplan::core::AllConcept>>(*first, *second);
-    delete first;
-    delete second;
-}
-
-template void serialize(boost::archive::text_iarchive& ar,
-    dlplan::core::AllConcept& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    dlplan::core::AllConcept& t, const unsigned int version);
-template void save_construct_data(boost::archive::text_oarchive& ar,
-    const dlplan::core::AllConcept* t, const unsigned int version);
-template void load_construct_data(boost::archive::text_iarchive& ar,
-    dlplan::core::AllConcept* t, const unsigned int version);
-
-template void serialize(boost::archive::text_iarchive& ar,
-    std::pair<const dlplan::core::AllConcept, std::weak_ptr<dlplan::core::AllConcept>>& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    std::pair<const dlplan::core::AllConcept, std::weak_ptr<dlplan::core::AllConcept>>& t, const unsigned int version);
-template void save_construct_data(boost::archive::text_oarchive& ar,
-    const std::pair<const dlplan::core::AllConcept, std::weak_ptr<dlplan::core::AllConcept>>* t, const unsigned int version);
-template void load_construct_data(boost::archive::text_iarchive& ar,
-    std::pair<const dlplan::core::AllConcept, std::weak_ptr<dlplan::core::AllConcept>>* t, const unsigned int version);
-}
-
-BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::core::AllConcept)
 
 
 namespace std {

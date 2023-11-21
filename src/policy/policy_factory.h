@@ -16,19 +16,6 @@
 
 
 namespace dlplan::policy {
-class PolicyFactoryImpl;
-}
-
-
-namespace boost::serialization {
-    class access;
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::policy::PolicyFactoryImpl& t, const unsigned int version);
-}
-
-
-namespace dlplan::policy {
 class PolicyFactoryImpl {
 private:
     std::shared_ptr<core::SyntacticElementFactory> m_element_factory;
@@ -49,13 +36,6 @@ private:
         , UnchangedNumericalEffect
         , Rule
         , Policy> m_cache;
-
-    /// @brief Constructor for serialization.
-    PolicyFactoryImpl();
-
-    friend class boost::serialization::access;
-    template <typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, PolicyFactoryImpl& t, const unsigned int version);
 
 public:
     explicit PolicyFactoryImpl(std::shared_ptr<core::SyntacticElementFactory> element_factory);

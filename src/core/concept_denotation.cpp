@@ -136,18 +136,3 @@ int ConceptDenotation::get_num_objects() const {
 }
 
 }
-
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize(Archive& ar, dlplan::core::ConceptDenotation& t, const unsigned int /* version */) {
-    ar & t.m_num_objects;
-    ar & t.m_data;
-}
-
-template void serialize(boost::archive::text_iarchive& ar,
-    dlplan::core::ConceptDenotation& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    dlplan::core::ConceptDenotation& t, const unsigned int version);
-}
-

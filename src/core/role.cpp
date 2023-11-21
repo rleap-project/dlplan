@@ -1,7 +1,5 @@
 #include "../../include/dlplan/core.h"
 
-#include <boost/serialization/base_object.hpp>
-
 
 namespace dlplan::core {
 Role::Role() { }
@@ -48,24 +46,3 @@ const RoleDenotations* Role::evaluate(const States& states, DenotationsCaches& c
 }
 
 }
-
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize(Archive& /* ar */ , dlplan::core::Role& t, const unsigned int /* version */ )
-{
-    boost::serialization::base_object<dlplan::core::BaseElement>(t);
-}
-
-template<class Archive>
-void save_construct_data(Archive& /* ar */ , const dlplan::core::Role* /* t */ , const unsigned int /* version */ )
-{
-}
-
-template<class Archive>
-void load_construct_data(Archive& /* ar */ , dlplan::core::Role* /* t */ , const unsigned int /* version */ )
-{
-}
-
-}
-

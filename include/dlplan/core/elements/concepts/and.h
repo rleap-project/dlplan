@@ -4,8 +4,6 @@
 #include "../../../../../src/core/elements/utils.h"
 #include "../../../core.h"
 
-#include <boost/serialization/export.hpp>
-
 #include <sstream>
 #include <memory>
 
@@ -18,27 +16,6 @@ class ReferenceCountedObjectFactory;
 }
 
 
-namespace dlplan::core {
-class AndConcept;
-}
-
-
-namespace boost::serialization {
-    class access;
-    template<typename Archive>
-    void serialize(Archive& ar, dlplan::core::AndConcept& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::AndConcept* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::AndConcept* t, const unsigned int version);
-
-    template<typename Archive>
-    void serialize(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, std::pair<const dlplan::core::AndConcept, std::weak_ptr<dlplan::core::AndConcept>>* t, const unsigned int version);
-}
 
 
 namespace dlplan::core {
@@ -54,12 +31,7 @@ private:
     ConceptDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const override;
 
     AndConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept_1, std::shared_ptr<const Concept> concept_2);
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, AndConcept& t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const AndConcept* t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, AndConcept* t, const unsigned int version);
+
     template<typename... Ts>
     friend class dlplan::utils::ReferenceCountedObjectFactory;
 
@@ -78,8 +50,6 @@ public:
 };
 
 }
-
-BOOST_CLASS_EXPORT_KEY2(dlplan::core::AndConcept, "dlplan::core::AndConcept")
 
 
 namespace std {

@@ -5,10 +5,6 @@
 #include "../../include/dlplan/core/parsers/semantic/parser.hpp"
 #include "../../include/dlplan/common/parsers/utility.hpp"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-
 #include <cassert>
 #include <string>
 
@@ -16,10 +12,6 @@ using namespace dlplan;
 
 
 namespace dlplan::core {
-
-SyntacticElementFactoryImpl::SyntacticElementFactoryImpl()
-    : m_vocabulary_info(nullptr) {
-}
 
 SyntacticElementFactoryImpl::SyntacticElementFactoryImpl(std::shared_ptr<VocabularyInfo> vocabulary_info)
     : m_vocabulary_info(vocabulary_info) {
@@ -325,19 +317,4 @@ std::shared_ptr<VocabularyInfo> SyntacticElementFactoryImpl::get_vocabulary_info
     return m_vocabulary_info;
 }
 
-}
-
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize(Archive& ar, dlplan::core::SyntacticElementFactoryImpl& t, const unsigned int /* version */ )
-{
-    ar & t.m_vocabulary_info;
-    ar & t.m_cache;
-}
-
-template void serialize(boost::archive::text_iarchive& ar,
-    dlplan::core::SyntacticElementFactoryImpl& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    dlplan::core::SyntacticElementFactoryImpl& t, const unsigned int version);
 }

@@ -52,25 +52,3 @@ const ConceptDenotations* Concept::evaluate(const States& states, DenotationsCac
 
 }
 
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize(Archive& /* ar */ , dlplan::core::Concept& t, const unsigned int /* version */ )
-{
-    boost::serialization::base_object<dlplan::core::BaseElement>(t);
-}
-
-template<class Archive>
-void save_construct_data(Archive& /* ar */ , const dlplan::core::Concept* /* t */ , const unsigned int /* version */ )
-{
-}
-
-template<class Archive>
-void load_construct_data(Archive& /* ar */ , dlplan::core::Concept* /* t */ , const unsigned int /* version */ )
-{
-}
-
-}
-
-
-

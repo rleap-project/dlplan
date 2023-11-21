@@ -4,12 +4,6 @@
 #include "../../../../../src/core/elements/utils.h"
 #include "../../../core.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/export.hpp>
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-
 #include <sstream>
 #include <memory>
 
@@ -19,29 +13,6 @@ using namespace std::string_literals;
 namespace dlplan::utils {
 template<typename... Ts>
 class ReferenceCountedObjectFactory;
-}
-
-
-namespace dlplan::core {
-template<typename T>
-class InclusionBoolean;
-}
-
-
-namespace boost::serialization {
-    template<typename Archive, typename T>
-    void serialize(Archive& ar, dlplan::core::InclusionBoolean<T>& t, const unsigned int version);
-    template<class Archive, typename T>
-    void save_construct_data(Archive& ar, const dlplan::core::InclusionBoolean<T>* t, const unsigned int version);
-    template<class Archive, typename T>
-    void load_construct_data(Archive& ar, dlplan::core::InclusionBoolean<T>* t, const unsigned int version);
-
-    template<typename Archive, typename T>
-    void serialize(Archive& ar, std::pair<const dlplan::core::InclusionBoolean<T>, std::weak_ptr<dlplan::core::InclusionBoolean<T>>>& t, const unsigned int version);
-    template<class Archive, typename T>
-    void save_construct_data(Archive& ar, const std::pair<const dlplan::core::InclusionBoolean<T>, std::weak_ptr<dlplan::core::InclusionBoolean<T>>>* t, const unsigned int version);
-    template<class Archive, typename T>
-    void load_construct_data(Archive& ar, std::pair<const dlplan::core::InclusionBoolean<T>, std::weak_ptr<dlplan::core::InclusionBoolean<T>>>* t, const unsigned int version);
 }
 
 
@@ -89,12 +60,6 @@ private:
       m_element_right(element_right) {
     }
 
-    template<typename Archive, typename T_>
-    friend void boost::serialization::serialize(Archive& ar, InclusionBoolean<T_>& t, const unsigned int version);
-    template<class Archive, typename T_>
-    friend void boost::serialization::save_construct_data(Archive& ar, const InclusionBoolean<T_>* t, const unsigned int version);
-    template<class Archive, typename T_>
-    friend void boost::serialization::load_construct_data(Archive& ar, InclusionBoolean<T_>* t, const unsigned int version);
     template<typename... Ts>
     friend class dlplan::utils::ReferenceCountedObjectFactory;
 
@@ -148,65 +113,6 @@ public:
 };
 
 }
-
-
-namespace boost::serialization {
-template<typename Archive, typename T>
-void serialize(Archive& /* ar */ , dlplan::core::InclusionBoolean<T>& t, const unsigned int /* version */ )
-{
-    boost::serialization::base_object<dlplan::core::Boolean>(t);
-}
-
-template<class Archive, typename T>
-void save_construct_data(Archive& ar, const dlplan::core::InclusionBoolean<T>* t, const unsigned int /* version */ )
-{
-    ar << t->m_vocabulary_info;
-    ar << t->m_index;
-    ar << t->m_element_left;
-    ar << t->m_element_right;
-}
-
-template<class Archive, typename T>
-void load_construct_data(Archive& ar, dlplan::core::InclusionBoolean<T>* t, const unsigned int /* version */ )
-{
-    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
-    int index;
-    std::shared_ptr<const T> element_left;
-    std::shared_ptr<const T> element_right;
-    ar >> vocabulary;
-    ar >> index;
-    ar >> element_left;
-    ar >> element_right;
-    ::new(t)dlplan::core::InclusionBoolean<T>(index, vocabulary, element_left, element_right);
-}
-
-
-template<typename Archive, typename T>
-void serialize(Archive& /*ar*/, std::pair<const dlplan::core::InclusionBoolean<T>, std::weak_ptr<dlplan::core::InclusionBoolean<T>>>& /*t*/, const unsigned int /*version*/) {
-}
-
-template<class Archive, typename T>
-void save_construct_data(Archive& ar, const std::pair<const dlplan::core::InclusionBoolean<T>, std::weak_ptr<dlplan::core::InclusionBoolean<T>>>* t, const unsigned int /*version*/) {
-    ar << t->first;
-    ar << t->second;
-}
-
-template<class Archive, typename T>
-void load_construct_data(Archive& ar, std::pair<const dlplan::core::InclusionBoolean<T>, std::weak_ptr<dlplan::core::InclusionBoolean<T>>>* t, const unsigned int /*version*/) {
-    dlplan::core::InclusionBoolean<T>* first = nullptr;
-    std::weak_ptr<dlplan::core::InclusionBoolean<T>>* second = nullptr;
-    ar >> const_cast<dlplan::core::InclusionBoolean<T>&>(*first);
-    ar >> second;
-    ::new(t)std::pair<const dlplan::core::InclusionBoolean<T>, std::weak_ptr<dlplan::core::InclusionBoolean<T>>>(*first, *second);
-    delete first;
-    delete second;
-}
-
-}
-
-BOOST_CLASS_EXPORT_KEY2(dlplan::core::InclusionBoolean<dlplan::core::Concept>, "dlplan::core::InclusionBoolean<dlplan::core::Concept>")
-BOOST_CLASS_EXPORT_KEY2(dlplan::core::InclusionBoolean<dlplan::core::Role>, "dlplan::core::InclusionBoolean<dlplan::core::Role>")
-
 
 namespace std {
     template<typename T>

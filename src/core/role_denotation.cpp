@@ -4,9 +4,6 @@
 #include "../../include/dlplan/utils/hash.h"
 #include "../../include/dlplan/utils/dynamic_bitset.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-
 #include <sstream>
 
 
@@ -134,20 +131,5 @@ std::size_t RoleDenotation::hash() const {
 int RoleDenotation::get_num_objects() const {
     return m_num_objects;
 }
-
-}
-
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize(Archive& ar, dlplan::core::RoleDenotation& t, const unsigned int /* version */) {
-    ar & t.m_num_objects;
-    ar & t.m_data;
-}
-
-template void serialize(boost::archive::text_iarchive& ar,
-    dlplan::core::RoleDenotation& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    dlplan::core::RoleDenotation& t, const unsigned int version);
 
 }

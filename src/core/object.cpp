@@ -1,8 +1,5 @@
 #include "../../include/dlplan/core.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-
 #include <sstream>
 
 
@@ -56,18 +53,4 @@ ObjectIndex Object::get_index() const {
     return m_index;
 }
 
-}
-
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize(Archive& ar, dlplan::core::Object& t, const unsigned int /* version */) {
-    ar & t.m_name;
-    ar & t.m_index;
-}
-
-template void serialize(boost::archive::text_iarchive& ar,
-    dlplan::core::Object& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    dlplan::core::Object& t, const unsigned int version);
 }

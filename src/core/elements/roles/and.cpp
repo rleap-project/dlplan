@@ -1,11 +1,5 @@
 #include "and.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-#include <boost/serialization/weak_ptr.hpp>
-
 
 namespace dlplan::core {
 
@@ -84,79 +78,3 @@ int AndRole::compute_evaluate_time_score() const {
 }
 
 }
-
-
-
-namespace boost::serialization {
-template<typename Archive>
-void serialize(Archive& /* ar */ , dlplan::core::AndRole& t, const unsigned int /* version */ )
-{
-    boost::serialization::base_object<dlplan::core::Role>(t);
-}
-
-template<class Archive>
-void save_construct_data(Archive & ar, const dlplan::core::AndRole* t, const unsigned int /* version */ )
-{
-    ar << t->m_vocabulary_info;
-    ar << t->m_index;
-    ar << t->m_role_left;
-    ar << t->m_role_right;
-}
-
-template<class Archive>
-void load_construct_data(Archive & ar, dlplan::core::AndRole* t, const unsigned int /* version */ )
-{
-    std::shared_ptr<dlplan::core::VocabularyInfo> vocabulary;
-    int index;
-    std::shared_ptr<const dlplan::core::Role> role_left;
-    std::shared_ptr<const dlplan::core::Role> role_right;
-    ar >> vocabulary;
-    ar >> index;
-    ar >> role_left;
-    ar >> role_right;
-    ::new(t)dlplan::core::AndRole(index, vocabulary, role_left, role_right);
-}
-
-
-template<typename Archive>
-void serialize(Archive& /*ar*/, std::pair<const dlplan::core::AndRole, std::weak_ptr<dlplan::core::AndRole>>& /*t*/, const unsigned int /*version*/) {
-}
-
-template<class Archive>
-void save_construct_data(Archive& ar, const std::pair<const dlplan::core::AndRole, std::weak_ptr<dlplan::core::AndRole>>* t, const unsigned int /*version*/) {
-    ar << t->first;
-    ar << t->second;
-}
-
-template<class Archive>
-void load_construct_data(Archive& ar, std::pair<const dlplan::core::AndRole, std::weak_ptr<dlplan::core::AndRole>>* t, const unsigned int /*version*/) {
-    dlplan::core::AndRole* first = nullptr;
-    std::weak_ptr<dlplan::core::AndRole>* second = nullptr;
-    ar >> const_cast<dlplan::core::AndRole&>(*first);
-    ar >> second;
-    ::new(t)std::pair<const dlplan::core::AndRole, std::weak_ptr<dlplan::core::AndRole>>(*first, *second);
-    delete first;
-    delete second;
-}
-
-template void serialize(boost::archive::text_iarchive& ar,
-    dlplan::core::AndRole& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    dlplan::core::AndRole& t, const unsigned int version);
-template void save_construct_data(boost::archive::text_oarchive& ar,
-    const dlplan::core::AndRole* t, const unsigned int version);
-template void load_construct_data(boost::archive::text_iarchive& ar,
-    dlplan::core::AndRole* t, const unsigned int version);
-
-template void serialize(boost::archive::text_iarchive& ar,
-    std::pair<const dlplan::core::AndRole, std::weak_ptr<dlplan::core::AndRole>>& t, const unsigned int version);
-template void serialize(boost::archive::text_oarchive& ar,
-    std::pair<const dlplan::core::AndRole, std::weak_ptr<dlplan::core::AndRole>>& t, const unsigned int version);
-template void save_construct_data(boost::archive::text_oarchive& ar,
-    const std::pair<const dlplan::core::AndRole, std::weak_ptr<dlplan::core::AndRole>>* t, const unsigned int version);
-template void load_construct_data(boost::archive::text_iarchive& ar,
-    std::pair<const dlplan::core::AndRole, std::weak_ptr<dlplan::core::AndRole>>* t, const unsigned int version);
-}
-
-BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::core::AndRole)
-

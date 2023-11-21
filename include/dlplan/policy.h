@@ -35,83 +35,6 @@ class ReferenceCountedObjectFactory;
 }
 
 
-// Forward declarations of template spezializations for serialization
-namespace boost::serialization {
-    class access;
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::policy::NamedBoolean& t, const unsigned int version);
-    template<typename Archive>
-    void serialize(Archive& ar, std::pair<const dlplan::policy::NamedBoolean, std::weak_ptr<dlplan::policy::NamedBoolean>>& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::NamedBoolean, std::weak_ptr<dlplan::policy::NamedBoolean>>* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, std::pair<const dlplan::policy::NamedBoolean, std::weak_ptr<dlplan::policy::NamedBoolean>>* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::policy::NamedNumerical& t, const unsigned int version);
-    template<typename Archive>
-    void serialize(Archive& ar, std::pair<const dlplan::policy::NamedNumerical, std::weak_ptr<dlplan::policy::NamedNumerical>>& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::NamedNumerical, std::weak_ptr<dlplan::policy::NamedNumerical>>* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, std::pair<const dlplan::policy::NamedNumerical, std::weak_ptr<dlplan::policy::NamedNumerical>>* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::policy::NamedConcept& t, const unsigned int version);
-    template<typename Archive>
-    void serialize(Archive& ar, std::pair<const dlplan::policy::NamedConcept, std::weak_ptr<dlplan::policy::NamedConcept>>& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::NamedConcept, std::weak_ptr<dlplan::policy::NamedConcept>>* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, std::pair<const dlplan::policy::NamedConcept, std::weak_ptr<dlplan::policy::NamedConcept>>* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::policy::NamedRole& t, const unsigned int version);
-    template<typename Archive>
-    void serialize(Archive& ar, std::pair<const dlplan::policy::NamedRole, std::weak_ptr<dlplan::policy::NamedRole>>& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::NamedRole, std::weak_ptr<dlplan::policy::NamedRole>>* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, std::pair<const dlplan::policy::NamedRole, std::weak_ptr<dlplan::policy::NamedRole>>* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::policy::BaseCondition& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::policy::BaseCondition* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::policy::BaseCondition* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::policy::BaseEffect& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::policy::BaseEffect* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::policy::BaseEffect* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::policy::Rule& t, const unsigned int version);
-    template<typename Archive>
-    void serialize(Archive& ar, std::pair<const dlplan::policy::Rule, std::weak_ptr<dlplan::policy::Rule>>& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::Rule, std::weak_ptr<dlplan::policy::Rule>>* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, std::pair<const dlplan::policy::Rule, std::weak_ptr<dlplan::policy::Rule>>* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::policy::Policy& t, const unsigned int version);
-    template<typename Archive>
-    void serialize(Archive& ar, std::pair<const dlplan::policy::Policy, std::weak_ptr<dlplan::policy::Policy>>& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::Policy, std::weak_ptr<dlplan::policy::Policy>>* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, std::pair<const dlplan::policy::Policy, std::weak_ptr<dlplan::policy::Policy>>* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::policy::PolicyFactory& t, const unsigned int version);
-}
-
-
 namespace dlplan::policy {
 /// @brief Sort elements in policy by their evaluate time score.
 /// @tparam T
@@ -148,14 +71,8 @@ private:
     std::string m_key;
     std::shared_ptr<const core::Boolean> m_boolean;
 
-    /// @brief Constructor for serialization.
-    NamedBoolean();
-
     NamedBoolean(int identifier, const std::string& key, std::shared_ptr<const core::Boolean> boolean);
 
-    friend class boost::serialization::access;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, NamedBoolean& t, const unsigned int version);
     template<typename... Ts>
     friend class dlplan::utils::ReferenceCountedObjectFactory;
 
@@ -186,14 +103,8 @@ private:
     std::string m_key;
     std::shared_ptr<const core::Numerical> m_numerical;
 
-    /// @brief Constructor for serialization.
-    NamedNumerical();
-
     NamedNumerical(int identifier, const std::string& key, std::shared_ptr<const core::Numerical> numerical);
 
-    friend class boost::serialization::access;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, NamedNumerical& t, const unsigned int version);
     template<typename... Ts>
     friend class dlplan::utils::ReferenceCountedObjectFactory;
 
@@ -224,14 +135,8 @@ private:
     std::string m_key;
     std::shared_ptr<const core::Concept> m_concept;
 
-    /// @brief Constructor for serialization.
-    NamedConcept();
-
     NamedConcept(int identifier, const std::string& key, std::shared_ptr<const core::Concept> concept);
 
-    friend class boost::serialization::access;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, NamedConcept& t, const unsigned int version);
     template<typename... Ts>
     friend class dlplan::utils::ReferenceCountedObjectFactory;
 
@@ -262,14 +167,8 @@ private:
     std::string m_key;
     std::shared_ptr<const core::Role> m_role;
 
-    /// @brief Constructor for serialization.
-    NamedRole();
-
     NamedRole(int identifier, const std::string& key, std::shared_ptr<const core::Role> role);
 
-    friend class boost::serialization::access;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, NamedRole& t, const unsigned int version);
     template<typename... Ts>
     friend class dlplan::utils::ReferenceCountedObjectFactory;
 
@@ -303,12 +202,6 @@ protected:
 
     explicit BaseCondition(int identifier);
 
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, BaseCondition& t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const BaseCondition* t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, BaseCondition* t, const unsigned int version);
     template<typename... Ts>
     friend class dlplan::utils::ReferenceCountedObjectFactory;
 
@@ -346,12 +239,6 @@ protected:
 
     explicit BaseEffect(int identifier);
 
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, BaseEffect& t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const BaseEffect* t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, BaseEffect* t, const unsigned int version);
     template<typename... Ts>
     friend class dlplan::utils::ReferenceCountedObjectFactory;
 
@@ -390,15 +277,8 @@ private:
     Conditions m_conditions;
     Effects m_effects;
 
-    /// @brief Constructor for serialization.
-    Rule();
-
     Rule(int identifier, const Conditions& conditions, const Effects& effects);
 
-    friend class PolicyFactoryImpl;
-    friend class boost::serialization::access;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, Rule& t, const unsigned int version);
     template<typename... Ts>
     friend class dlplan::utils::ReferenceCountedObjectFactory;
 
@@ -444,15 +324,8 @@ private:
     Numericals m_numericals;
     Rules m_rules;
 
-    /// @brief Constructor for serialization.
-    Policy();
-
     Policy(int identifier, const Rules& rules);
 
-    friend class PolicyFactoryImpl;
-    friend class boost::serialization::access;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, Policy& t, const unsigned int version);
     template<typename... Ts>
     friend class dlplan::utils::ReferenceCountedObjectFactory;
 
@@ -502,13 +375,6 @@ public:
 class PolicyFactory {
 private:
     dlplan::utils::pimpl<PolicyFactoryImpl> m_pImpl;
-
-    /// @brief Constructor for serialization.
-    PolicyFactory();
-
-    friend class boost::serialization::access;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, PolicyFactory& t, const unsigned int version);
 
 public:
     PolicyFactory(std::shared_ptr<core::SyntacticElementFactory> element_factory);
