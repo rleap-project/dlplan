@@ -13,7 +13,6 @@ namespace dlplan {
 template<typename T>
 struct PerTypeCache {
     std::unordered_map<T, std::weak_ptr<T>> data;
-    std::mutex mutex;
 };
 
 template<typename T>
@@ -23,7 +22,7 @@ struct GetOrCreateResult {
 };
 
 
-/// @brief A thread-safe reference-counted object cache.
+/// @brief A reference-counted object cache.
 /// Original idea by Herb Sutter.
 /// Custom deleter idea: https://stackoverflow.com/questions/49782011/herb-sutters-10-liner-with-cleanup
 template<typename... Ts>
@@ -54,7 +53,7 @@ public:
         std::shared_ptr<T> sp;
         auto& cached = t_cache->data[*element];
         sp = cached.lock();
-        std::lock_guard<std::mutex> hold(t_cache->mutex);
+        // std::lock_guard<std::mutex> hold(t_cache->mutex);
         bool new_insertion = false;
 
         if (!sp) {
@@ -64,7 +63,7 @@ public:
                 [parent=t_cache, original_deleter=element.get_deleter()](T* x)
                 {
                     {
-                        std::lock_guard<std::mutex> hold(parent->mutex);
+                        // std::lock_guard<std::mutex> hold(parent->mutex);
                         parent->data.erase(*x);
                     }
                     /* After cache removal, we can call the objects destructor
