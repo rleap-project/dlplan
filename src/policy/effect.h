@@ -9,6 +9,12 @@
 #include <memory>
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
 namespace dlplan::policy {
 class BooleanEffect;
 class NumericalEffect;
@@ -93,8 +99,7 @@ private:
 protected:
     std::shared_ptr<const NamedBoolean> m_boolean;
 
-protected:
-    BooleanEffect(std::shared_ptr<const NamedBoolean> boolean, EffectIndex index);
+    BooleanEffect(int identifier, std::shared_ptr<const NamedBoolean> boolean);
 
     int compute_evaluate_time_score() const override;
 
@@ -115,8 +120,7 @@ private:
 protected:
     std::shared_ptr<const NamedNumerical> m_numerical;
 
-protected:
-    NumericalEffect(std::shared_ptr<const NamedNumerical> numerical, EffectIndex index);
+    NumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical);
 
     int compute_evaluate_time_score() const override;
 
@@ -127,15 +131,21 @@ protected:
 
 class PositiveBooleanEffect : public BooleanEffect {
 private:
+    PositiveBooleanEffect(int identifier, std::shared_ptr<const NamedBoolean> boolean);
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, PositiveBooleanEffect& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const PositiveBooleanEffect* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, PositiveBooleanEffect* t, const unsigned int version);
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    PositiveBooleanEffect(std::shared_ptr<const NamedBoolean> boolean, EffectIndex index);
+    bool operator==(const BaseEffect& other) const override;
+
+    size_t hash() const override;
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
@@ -146,15 +156,21 @@ public:
 
 class NegativeBooleanEffect : public BooleanEffect {
 private:
+    NegativeBooleanEffect(int identifier, std::shared_ptr<const NamedBoolean> boolean);
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, NegativeBooleanEffect& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const NegativeBooleanEffect* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, NegativeBooleanEffect* t, const unsigned int version);
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    NegativeBooleanEffect(std::shared_ptr<const NamedBoolean> boolean, EffectIndex index);
+    bool operator==(const BaseEffect& other) const override;
+
+    size_t hash() const override;
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
@@ -165,15 +181,21 @@ public:
 
 class UnchangedBooleanEffect : public BooleanEffect {
 private:
+    UnchangedBooleanEffect(int identifier, std::shared_ptr<const NamedBoolean> boolean);
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, UnchangedBooleanEffect& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const UnchangedBooleanEffect* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, UnchangedBooleanEffect* t, const unsigned int version);
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    UnchangedBooleanEffect(std::shared_ptr<const NamedBoolean> boolean, EffectIndex index);
+    bool operator==(const BaseEffect& other) const override;
+
+    size_t hash() const override;
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
@@ -184,15 +206,21 @@ public:
 
 class IncrementNumericalEffect : public NumericalEffect {
 private:
+    IncrementNumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical);
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, IncrementNumericalEffect& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const IncrementNumericalEffect* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, IncrementNumericalEffect* t, const unsigned int version);
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    IncrementNumericalEffect(std::shared_ptr<const NamedNumerical> numerical, EffectIndex index);
+    bool operator==(const BaseEffect& other) const override;
+
+    size_t hash() const override;
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
@@ -203,15 +231,21 @@ public:
 
 class DecrementNumericalEffect : public NumericalEffect {
 private:
+    DecrementNumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical);
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, DecrementNumericalEffect& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const DecrementNumericalEffect* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, DecrementNumericalEffect* t, const unsigned int version);
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    DecrementNumericalEffect(std::shared_ptr<const NamedNumerical> numerical, EffectIndex index);
+    bool operator==(const BaseEffect& other) const override;
+
+    size_t hash() const override;
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
@@ -222,15 +256,21 @@ public:
 
 class UnchangedNumericalEffect : public NumericalEffect {
 private:
+    UnchangedNumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical);
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, UnchangedNumericalEffect& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const UnchangedNumericalEffect* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, UnchangedNumericalEffect* t, const unsigned int version);
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    UnchangedNumericalEffect(std::shared_ptr<const NamedNumerical> numerical, EffectIndex index);
+    bool operator==(const BaseEffect& other) const override;
+
+    size_t hash() const override;
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
@@ -247,5 +287,93 @@ BOOST_CLASS_EXPORT_KEY2(dlplan::policy::UnchangedBooleanEffect, "dlplan::policy:
 BOOST_CLASS_EXPORT_KEY2(dlplan::policy::IncrementNumericalEffect, "dlplan::policy::IncrementNumericalEffect")
 BOOST_CLASS_EXPORT_KEY2(dlplan::policy::DecrementNumericalEffect, "dlplan::policy::DecrementNumericalEffect")
 BOOST_CLASS_EXPORT_KEY2(dlplan::policy::UnchangedNumericalEffect, "dlplan::policy::UnchangedNumericalEffect")
+
+
+namespace std {
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::PositiveBooleanEffect>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::PositiveBooleanEffect>& left_effect,
+            const std::shared_ptr<const dlplan::policy::PositiveBooleanEffect>& right_effect) const;
+    };
+
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::NegativeBooleanEffect>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::NegativeBooleanEffect>& left_effect,
+            const std::shared_ptr<const dlplan::policy::NegativeBooleanEffect>& right_effect) const;
+    };
+
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::UnchangedBooleanEffect>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::UnchangedBooleanEffect>& left_effect,
+            const std::shared_ptr<const dlplan::policy::UnchangedBooleanEffect>& right_effect) const;
+    };
+
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::IncrementNumericalEffect>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::IncrementNumericalEffect>& left_effect,
+            const std::shared_ptr<const dlplan::policy::IncrementNumericalEffect>& right_effect) const;
+    };
+
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::DecrementNumericalEffect>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::DecrementNumericalEffect>& left_effect,
+            const std::shared_ptr<const dlplan::policy::DecrementNumericalEffect>& right_effect) const;
+    };
+
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::UnchangedNumericalEffect>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::UnchangedNumericalEffect>& left_effect,
+            const std::shared_ptr<const dlplan::policy::UnchangedNumericalEffect>& right_effect) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::PositiveBooleanEffect>
+    {
+        std::size_t operator()(const dlplan::policy::PositiveBooleanEffect& effect) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::NegativeBooleanEffect>
+    {
+        std::size_t operator()(const dlplan::policy::NegativeBooleanEffect& effect) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::UnchangedBooleanEffect>
+    {
+        std::size_t operator()(const dlplan::policy::UnchangedBooleanEffect& effect) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::IncrementNumericalEffect>
+    {
+        std::size_t operator()(const dlplan::policy::IncrementNumericalEffect& effect) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::DecrementNumericalEffect>
+    {
+        std::size_t operator()(const dlplan::policy::DecrementNumericalEffect& effect) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::UnchangedNumericalEffect>
+    {
+        std::size_t operator()(const dlplan::policy::UnchangedNumericalEffect& effect) const;
+    };
+}
+
 
 #endif

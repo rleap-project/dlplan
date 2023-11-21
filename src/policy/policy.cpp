@@ -16,21 +16,31 @@ using namespace dlplan;
 namespace dlplan::policy {
 
 
-BaseCondition::BaseCondition(ConditionIndex index) : m_index(index) { }
+BaseCondition::BaseCondition(int identifier) : m_identifier(identifier) { }
 
 BaseCondition::~BaseCondition() = default;
 
-ConditionIndex BaseCondition::get_index() const {
-    return m_index;
+bool Rule::operator<(const Rule& other) const {
+    return m_identifier < other.m_identifier;
 }
 
 
-BaseEffect::BaseEffect(EffectIndex index) : m_index(index) { }
+int BaseCondition::get_index() const {
+    return m_identifier;
+}
+
+
+BaseEffect::BaseEffect(int identifier) : m_identifier(identifier) { }
 
 BaseEffect::~BaseEffect() = default;
 
-EffectIndex BaseEffect::get_index() const {
-    return m_index;
+bool BaseEffect::operator<(const BaseEffect& other) const {
+    return m_identifier < other.m_identifier;
+}
+
+
+int BaseEffect::get_index() const {
+    return m_identifier;
 }
 
 
@@ -206,4 +216,68 @@ template void serialize(boost::archive::text_iarchive& ar,
     dlplan::policy::PolicyFactory& t, const unsigned int version);
 template void serialize(boost::archive::text_oarchive& ar,
     dlplan::policy::PolicyFactory& t, const unsigned int version);
+}
+
+
+namespace std {
+    bool less<std::shared_ptr<const dlplan::policy::NamedBoolean>>::operator()(
+        const std::shared_ptr<const dlplan::policy::NamedBoolean>& left_boolean,
+        const std::shared_ptr<const dlplan::policy::NamedBoolean>& right_boolean) const {
+        return *left_boolean < *right_boolean;
+    }
+
+    bool less<std::shared_ptr<const dlplan::policy::NamedNumerical>>::operator()(
+        const std::shared_ptr<const dlplan::policy::NamedNumerical>& left_numerical,
+        const std::shared_ptr<const dlplan::policy::NamedNumerical>& right_numerical) const {
+        return *left_numerical < *right_numerical;
+    }
+
+    bool less<std::shared_ptr<const dlplan::policy::NamedConcept>>::operator()(
+        const std::shared_ptr<const dlplan::policy::NamedConcept>& left_concept,
+        const std::shared_ptr<const dlplan::policy::NamedConcept>& right_concept) const {
+        return *left_concept < *right_concept;
+    }
+
+    bool less<std::shared_ptr<const dlplan::policy::NamedRole>>::operator()(
+        const std::shared_ptr<const dlplan::policy::NamedRole>& left_role,
+        const std::shared_ptr<const dlplan::policy::NamedRole>& right_role) const {
+        return *left_role < *right_role;
+    }
+
+    bool less<std::shared_ptr<const dlplan::policy::Rule>>::operator()(
+        const std::shared_ptr<const dlplan::policy::Rule>& left_rule,
+        const std::shared_ptr<const dlplan::policy::Rule>& right_rule) const {
+        return *left_rule < *right_rule;
+    }
+
+    bool less<std::shared_ptr<const dlplan::policy::Policy>>::operator()(
+        const std::shared_ptr<const dlplan::policy::Policy>& left_policy,
+        const std::shared_ptr<const dlplan::policy::Policy>& right_policy) const {
+        return *left_policy < *right_policy;
+    }
+
+
+    std::size_t hash<dlplan::policy::NamedBoolean>::operator()(const dlplan::policy::NamedBoolean& boolean) const {
+        return boolean.hash();
+    }
+
+    std::size_t hash<dlplan::policy::NamedNumerical>::operator()(const dlplan::policy::NamedNumerical& numerical) const {
+        return numerical.hash();
+    }
+
+    std::size_t hash<dlplan::policy::NamedConcept>::operator()(const dlplan::policy::NamedConcept& concept_) const {
+        return concept_.hash();
+    }
+
+    std::size_t hash<dlplan::policy::NamedRole>::operator()(const dlplan::policy::NamedRole& role) const {
+        return role.hash();
+    }
+
+    std::size_t hash<dlplan::policy::Rule>::operator()(const dlplan::policy::Rule& rule) const {
+        return rule.hash();
+    }
+
+    std::size_t hash<dlplan::policy::Policy>::operator()(const dlplan::policy::Policy& policy) const {
+        return policy.hash();
+    }
 }

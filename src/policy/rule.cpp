@@ -3,6 +3,8 @@
 #include "condition.h"
 #include "effect.h"
 
+#include "../../include/dlplan/utils/hash.h"
+
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/set.hpp>
@@ -13,13 +15,38 @@
 
 
 namespace dlplan::policy {
-Rule::Rule() : m_conditions(Conditions()), m_effects(Effects()), m_index(-1) { }
+Rule::Rule() : m_identifier(-1), m_conditions(Conditions()), m_effects(Effects()) { }
 
-Rule::Rule(const Conditions& conditions, const Effects& effects, RuleIndex index)
-    : m_conditions(conditions), m_effects(effects), m_index(index) {
+Rule::Rule(int identifier, const Conditions& conditions, const Effects& effects)
+    : m_identifier(identifier), m_conditions(conditions), m_effects(effects) {
 }
 
+Rule::Rule(const Rule& other) = default;
+
+Rule& Rule::operator=(const Rule& other) = default;
+
+Rule::Rule(Rule&& other) = default;
+
+Rule& Rule::operator=(Rule&& other) = default;
+
 Rule::~Rule() = default;
+
+bool Rule::operator==(const Rule& other) const {
+    if (this != &other) {
+        return m_conditions == other.m_conditions
+            && m_effects == other.m_effects;
+    }
+    return true;
+}
+bool Rule::operator<(const Rule& other) const {
+    return m_identifier < other.m_identifier;
+}
+
+size_t Rule::hash() const {
+    return dlplan::utils::hash_combine(
+        m_conditions,
+        m_effects);
+}
 
 bool Rule::evaluate_conditions(const core::State& source_state) const {
     for (const auto& condition : m_conditions) {
@@ -110,8 +137,8 @@ int Rule::compute_evaluate_time_score() const {
     return score;
 }
 
-RuleIndex Rule::get_index() const {
-    return m_index;
+int Rule::get_index() const {
+    return m_identifier;
 }
 
 const Conditions& Rule::get_conditions() const {
@@ -129,7 +156,7 @@ namespace boost::serialization {
 template<typename Archive>
 void serialize(Archive& ar, dlplan::policy::Rule& t, const unsigned int /* version */ )
 {
-    ar & t.m_index;
+    ar & t.m_identifier;
     ar & t.m_conditions;
     ar & t.m_effects;
 }

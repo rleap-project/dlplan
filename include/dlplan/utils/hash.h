@@ -72,11 +72,11 @@ inline std::size_t hash_vector(const std::vector<T>& vector)
 }
 
 template<class T>
-inline std::size_t hash_set(const std::set<T>& vector)
+inline std::size_t hash_set(const std::set<T>& set)
 {
     const auto hash_function = std::hash<T>();
     std::size_t aggregated_hash = 0;
-    for (const auto& item : vector)
+    for (const auto& item : set)
     {
         const auto item_hash = hash_function(item);
         hash_combine(aggregated_hash, item_hash);

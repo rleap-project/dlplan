@@ -2,7 +2,9 @@
 
 #include "condition.h"
 #include "effect.h"
+
 #include "../../include/dlplan/core.h"
+#include "../../include/dlplan/utils/hash.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -16,13 +18,13 @@
 namespace dlplan::policy {
 
 Policy::Policy()
-    : m_booleans(Booleans()),
+    : m_identifier(-1),
+      m_booleans(Booleans()),
       m_numericals(Numericals()),
-      m_rules(Rules()),
-      m_index(-1) { }
+      m_rules(Rules()) { }
 
-Policy::Policy(const Rules& rules, PolicyIndex index)
-    : m_rules(rules), m_index(index) {
+Policy::Policy(int identifier, const Rules& rules)
+    : m_identifier(identifier), m_rules(rules) {
     // Retrieve boolean and numericals from the rules.
     for (const auto& rule : m_rules) {
         for (const auto& condition : rule->get_conditions()) {
@@ -57,6 +59,25 @@ Policy::Policy(Policy&& other) = default;
 Policy& Policy::operator=(Policy&& other) = default;
 
 Policy::~Policy() = default;
+
+bool Policy::operator==(const Policy& other) const {
+    if (this != &other) {
+        return m_booleans == other.m_booleans
+            && m_numericals == other.m_numericals
+            && m_rules == other.m_rules;
+    }
+    return true;
+}
+bool Policy::operator<(const Policy& other) const {
+    return m_identifier < other.m_identifier;
+}
+
+size_t Policy::hash() const {
+    return dlplan::utils::hash_combine(
+        m_booleans,
+        m_numericals,
+        m_rules);
+}
 
 std::shared_ptr<const Rule> Policy::evaluate(const core::State& source_state, const core::State& target_state) const {
     for (const auto& r : m_rules) {
@@ -158,8 +179,8 @@ int Policy::compute_evaluate_time_score() const {
     return score;
 }
 
-PolicyIndex Policy::get_index() const {
-    return m_index;
+int Policy::get_index() const {
+    return m_identifier;
 }
 
 const Booleans& Policy::get_booleans() const {
@@ -181,7 +202,7 @@ namespace boost::serialization {
 template<typename Archive>
 void serialize(Archive& ar, dlplan::policy::Policy& t, const unsigned int /* version */ )
 {
-    ar & t.m_index;
+    ar & t.m_identifier;
     ar & t.m_booleans;
     ar & t.m_numericals;
     ar & t.m_rules;

@@ -2,6 +2,7 @@
 
 #include "../core/elements/utils.h"
 #include "../../include/dlplan/core.h"
+#include "../../include/dlplan/utils/hash.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -12,8 +13,8 @@ using namespace dlplan;
 
 namespace dlplan::policy {
 
-BooleanEffect::BooleanEffect(std::shared_ptr<const NamedBoolean> boolean, EffectIndex index)
-    : BaseEffect(index), m_boolean(boolean) { }
+BooleanEffect::BooleanEffect(int identifier, std::shared_ptr<const NamedBoolean> boolean)
+    : BaseEffect(identifier), m_boolean(boolean) { }
 
 int BooleanEffect::compute_evaluate_time_score() const {
     return m_boolean->compute_evaluate_time_score();
@@ -28,8 +29,8 @@ std::shared_ptr<const NamedNumerical> BooleanEffect::get_numerical() const {
 }
 
 
-NumericalEffect::NumericalEffect(std::shared_ptr<const NamedNumerical> numerical, EffectIndex index)
-    : BaseEffect(index), m_numerical(numerical) { }
+NumericalEffect::NumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical)
+    : BaseEffect(identifier), m_numerical(numerical) { }
 
 int NumericalEffect::compute_evaluate_time_score() const {
     return m_numerical->compute_evaluate_time_score();
@@ -44,8 +45,21 @@ std::shared_ptr<const NamedNumerical> NumericalEffect::get_numerical() const {
 }
 
 
-PositiveBooleanEffect::PositiveBooleanEffect(std::shared_ptr<const NamedBoolean> boolean, EffectIndex index)
-    : BooleanEffect(boolean, index) {}
+PositiveBooleanEffect::PositiveBooleanEffect(int identifier, std::shared_ptr<const NamedBoolean> boolean)
+    : BooleanEffect(identifier, boolean) {}
+
+bool PositiveBooleanEffect::operator==(const BaseEffect& other) const {
+    if (typeid(*this) == typeid(other)) {
+        if (this == &other) return true;
+        const auto& other_derived = static_cast<const PositiveBooleanEffect&>(other);
+        return m_boolean == other_derived.m_boolean;
+    }
+    return false;
+}
+
+size_t PositiveBooleanEffect::hash() const {
+    return dlplan::utils::hash_combine(m_boolean);
+}
 
 bool PositiveBooleanEffect::evaluate(const core::State&, const core::State& target_state) const {
     return m_boolean->get_boolean()->evaluate(target_state);
@@ -64,8 +78,21 @@ std::string PositiveBooleanEffect::str() const {
 }
 
 
-NegativeBooleanEffect::NegativeBooleanEffect(std::shared_ptr<const NamedBoolean> boolean, EffectIndex index)
-    : BooleanEffect(boolean, index) {}
+NegativeBooleanEffect::NegativeBooleanEffect(int identifier, std::shared_ptr<const NamedBoolean> boolean)
+    : BooleanEffect(identifier, boolean) {}
+
+bool NegativeBooleanEffect::operator==(const BaseEffect& other) const {
+    if (typeid(*this) == typeid(other)) {
+        if (this == &other) return true;
+        const auto& other_derived = static_cast<const NegativeBooleanEffect&>(other);
+        return m_boolean == other_derived.m_boolean;
+    }
+    return false;
+}
+
+size_t NegativeBooleanEffect::hash() const {
+    return dlplan::utils::hash_combine(m_boolean);
+}
 
 bool NegativeBooleanEffect::evaluate(const core::State&, const core::State& target_state) const {
     return !m_boolean->get_boolean()->evaluate(target_state);
@@ -84,8 +111,21 @@ std::string NegativeBooleanEffect::str() const {
 }
 
 
-UnchangedBooleanEffect::UnchangedBooleanEffect(std::shared_ptr<const NamedBoolean> boolean, EffectIndex index)
-    : BooleanEffect(boolean, index) {}
+UnchangedBooleanEffect::UnchangedBooleanEffect(int identifier, std::shared_ptr<const NamedBoolean> boolean)
+    : BooleanEffect(identifier, boolean) {}
+
+bool UnchangedBooleanEffect::operator==(const BaseEffect& other) const {
+    if (typeid(*this) == typeid(other)) {
+        if (this == &other) return true;
+        const auto& other_derived = static_cast<const UnchangedBooleanEffect&>(other);
+        return m_boolean == other_derived.m_boolean;
+    }
+    return false;
+}
+
+size_t UnchangedBooleanEffect::hash() const {
+    return dlplan::utils::hash_combine(m_boolean);
+}
 
 bool UnchangedBooleanEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
     return m_boolean->get_boolean()->evaluate(source_state) == m_boolean->get_boolean()->evaluate(target_state);
@@ -104,8 +144,21 @@ std::string UnchangedBooleanEffect::str() const {
 }
 
 
-IncrementNumericalEffect::IncrementNumericalEffect(std::shared_ptr<const NamedNumerical> numerical, EffectIndex index)
-    : NumericalEffect(numerical, index) {}
+IncrementNumericalEffect::IncrementNumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical)
+    : NumericalEffect(identifier, numerical) {}
+
+bool IncrementNumericalEffect::operator==(const BaseEffect& other) const {
+    if (typeid(*this) == typeid(other)) {
+        if (this == &other) return true;
+        const auto& other_derived = static_cast<const IncrementNumericalEffect&>(other);
+        return m_numerical == other_derived.m_numerical;
+    }
+    return false;
+}
+
+size_t IncrementNumericalEffect::hash() const {
+    return dlplan::utils::hash_combine(m_numerical);
+}
 
 bool IncrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
     int source_eval = m_numerical->get_numerical()->evaluate(source_state);
@@ -132,8 +185,21 @@ std::string IncrementNumericalEffect::str() const {
 }
 
 
-DecrementNumericalEffect::DecrementNumericalEffect(std::shared_ptr<const NamedNumerical> numerical, EffectIndex index)
-    : NumericalEffect(numerical, index) {}
+DecrementNumericalEffect::DecrementNumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical)
+    : NumericalEffect(identifier, numerical) {}
+
+bool DecrementNumericalEffect::operator==(const BaseEffect& other) const {
+    if (typeid(*this) == typeid(other)) {
+        if (this == &other) return true;
+        const auto& other_derived = static_cast<const DecrementNumericalEffect&>(other);
+        return m_numerical == other_derived.m_numerical;
+    }
+    return false;
+}
+
+size_t DecrementNumericalEffect::hash() const {
+    return dlplan::utils::hash_combine(m_numerical);
+}
 
 bool DecrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
     int source_eval = m_numerical->get_numerical()->evaluate(source_state);
@@ -160,8 +226,21 @@ std::string DecrementNumericalEffect::str() const {
 }
 
 
-UnchangedNumericalEffect::UnchangedNumericalEffect(std::shared_ptr<const NamedNumerical> numerical, EffectIndex index)
-    : NumericalEffect(numerical, index) {}
+UnchangedNumericalEffect::UnchangedNumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical)
+    : NumericalEffect(identifier, numerical) {}
+
+bool UnchangedNumericalEffect::operator==(const BaseEffect& other) const {
+    if (typeid(*this) == typeid(other)) {
+        if (this == &other) return true;
+        const auto& other_derived = static_cast<const UnchangedNumericalEffect&>(other);
+        return m_numerical == other_derived.m_numerical;
+    }
+    return false;
+}
+
+size_t UnchangedNumericalEffect::hash() const {
+    return dlplan::utils::hash_combine(m_numerical);
+}
 
 bool UnchangedNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
     return m_numerical->get_numerical()->evaluate(source_state) == m_numerical->get_numerical()->evaluate(target_state);
@@ -225,18 +304,18 @@ void serialize(Archive& /* ar */ , dlplan::policy::PositiveBooleanEffect& t, con
 template<class Archive>
 void save_construct_data(Archive& ar, const dlplan::policy::PositiveBooleanEffect* t, const unsigned int /* version */ )
 {
+    ar << t->m_identifier;
     ar << t->m_boolean;
-    ar << t->m_index;
 }
 
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::policy::PositiveBooleanEffect* t, const unsigned int /* version */ )
 {
+    int identifier;
     std::shared_ptr<const dlplan::policy::NamedBoolean> boolean;
-    dlplan::policy::EffectIndex index;
+    ar >> identifier;
     ar >> boolean;
-    ar >> index;
-    ::new(t)dlplan::policy::PositiveBooleanEffect(boolean, index);
+    ::new(t)dlplan::policy::PositiveBooleanEffect(identifier, boolean);
 }
 
 template<typename Archive>
@@ -248,18 +327,18 @@ void serialize(Archive& /* ar */ , dlplan::policy::NegativeBooleanEffect& t, con
 template<class Archive>
 void save_construct_data(Archive& ar, const dlplan::policy::NegativeBooleanEffect* t, const unsigned int /* version */ )
 {
+    ar << t->m_identifier;
     ar << t->m_boolean;
-    ar << t->m_index;
 }
 
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::policy::NegativeBooleanEffect* t, const unsigned int /* version */ )
 {
+    int identifier;
     std::shared_ptr<const dlplan::policy::NamedBoolean> boolean;
-    dlplan::policy::EffectIndex index;
+    ar >> identifier;
     ar >> boolean;
-    ar >> index;
-    ::new(t)dlplan::policy::NegativeBooleanEffect(boolean, index);
+    ::new(t)dlplan::policy::NegativeBooleanEffect(identifier, boolean);
 }
 
 template<typename Archive>
@@ -271,18 +350,18 @@ void serialize( Archive& /* ar */ , dlplan::policy::UnchangedBooleanEffect& t, c
 template<class Archive>
 void save_construct_data(Archive& ar, const dlplan::policy::UnchangedBooleanEffect* t, const unsigned int /* version */ )
 {
+    ar << t->m_identifier;
     ar << t->m_boolean;
-    ar << t->m_index;
 }
 
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::policy::UnchangedBooleanEffect* t, const unsigned int /* version */ )
 {
+    int identifier;
     std::shared_ptr<const dlplan::policy::NamedBoolean> boolean;
-    dlplan::policy::EffectIndex index;
+    ar >> identifier;
     ar >> boolean;
-    ar >> index;
-    ::new(t)dlplan::policy::UnchangedBooleanEffect(boolean, index);
+    ::new(t)dlplan::policy::UnchangedBooleanEffect(identifier, boolean);
 }
 
 template<typename Archive>
@@ -294,18 +373,18 @@ void serialize(Archive& /* ar */ , dlplan::policy::IncrementNumericalEffect& t, 
 template<class Archive>
 void save_construct_data(Archive& ar, const dlplan::policy::IncrementNumericalEffect* t, const unsigned int /* version */ )
 {
+    ar << t->m_identifier;
     ar << t->m_numerical;
-    ar << t->m_index;
 }
 
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::policy::IncrementNumericalEffect* t, const unsigned int /* version */ )
 {
+    int identifier;
     std::shared_ptr<const dlplan::policy::NamedNumerical> numerical;
-    dlplan::policy::EffectIndex index;
+    ar >> identifier;
     ar >> numerical;
-    ar >> index;
-    ::new(t)dlplan::policy::IncrementNumericalEffect(numerical, index);
+    ::new(t)dlplan::policy::IncrementNumericalEffect(identifier, numerical);
 }
 
 template<typename Archive>
@@ -317,18 +396,18 @@ void serialize(Archive& /* ar */ , dlplan::policy::DecrementNumericalEffect& t, 
 template<class Archive>
 void save_construct_data(Archive& ar, const dlplan::policy::DecrementNumericalEffect* t, const unsigned int /* version */ )
 {
+    ar << t->m_identifier;
     ar << t->m_numerical;
-    ar << t->m_index;
 }
 
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::policy::DecrementNumericalEffect* t, const unsigned int /* version */ )
 {
+    int identifier;
     std::shared_ptr<const dlplan::policy::NamedNumerical> numerical;
-    dlplan::policy::EffectIndex index;
+    ar >> identifier;
     ar >> numerical;
-    ar >> index;
-    ::new(t)dlplan::policy::DecrementNumericalEffect(numerical, index);
+    ::new(t)dlplan::policy::DecrementNumericalEffect(identifier, numerical);
 }
 
 template<typename Archive>
@@ -340,18 +419,18 @@ void serialize(Archive& /* ar */ , dlplan::policy::UnchangedNumericalEffect& t, 
 template<class Archive>
 void save_construct_data(Archive& ar, const dlplan::policy::UnchangedNumericalEffect* t, const unsigned int /* version */ )
 {
+    ar << t->m_identifier;
     ar << t->m_numerical;
-    ar << t->m_index;
 }
 
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::policy::UnchangedNumericalEffect* t, const unsigned int /* version */ )
 {
+    int identifier;
     std::shared_ptr<const dlplan::policy::NamedNumerical> numerical;
-    dlplan::policy::EffectIndex index;
+    ar >> identifier;
     ar >> numerical;
-    ar >> index;
-    ::new(t)dlplan::policy::UnchangedNumericalEffect(numerical, index);
+    ::new(t)dlplan::policy::UnchangedNumericalEffect(identifier, numerical);
 }
 
 template void serialize(boost::archive::text_iarchive& ar,

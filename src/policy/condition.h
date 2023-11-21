@@ -11,6 +11,12 @@
 using namespace dlplan;
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
 namespace dlplan::policy {
 class BooleanCondition;
 class NumericalCondition;
@@ -80,8 +86,7 @@ private:
 protected:
     const std::shared_ptr<const NamedBoolean> m_boolean;
 
-protected:
-    BooleanCondition(std::shared_ptr<const NamedBoolean> boolean, ConditionIndex index);
+    BooleanCondition(int identifier, std::shared_ptr<const NamedBoolean> boolean);
 
     int compute_evaluate_time_score() const override;
 
@@ -103,8 +108,7 @@ private:
 protected:
     const std::shared_ptr<const NamedNumerical> m_numerical;
 
-protected:
-    NumericalCondition(std::shared_ptr<const NamedNumerical> numerical, ConditionIndex index);
+    NumericalCondition(int identifier, std::shared_ptr<const NamedNumerical> numerical);
 
     int compute_evaluate_time_score() const override;
 
@@ -115,15 +119,21 @@ protected:
 
 class PositiveBooleanCondition : public BooleanCondition {
 private:
+    PositiveBooleanCondition(int identifier, std::shared_ptr<const NamedBoolean> boolean);
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, PositiveBooleanCondition& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const PositiveBooleanCondition* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, PositiveBooleanCondition* t, const unsigned int version);
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    PositiveBooleanCondition(std::shared_ptr<const NamedBoolean> boolean, ConditionIndex index);
+    bool operator==(const BaseCondition& other) const override;
+
+    size_t hash() const override;
 
     bool evaluate(const core::State& source_state) const override;
     bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const override;
@@ -134,15 +144,21 @@ public:
 
 class NegativeBooleanCondition : public BooleanCondition {
 private:
+    NegativeBooleanCondition(int identifier, std::shared_ptr<const NamedBoolean> boolean);
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, NegativeBooleanCondition& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const NegativeBooleanCondition* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, NegativeBooleanCondition* t, const unsigned int version);
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    NegativeBooleanCondition(std::shared_ptr<const NamedBoolean> boolean, ConditionIndex index);
+    bool operator==(const BaseCondition& other) const override;
+
+    size_t hash() const override;
 
     bool evaluate(const core::State& source_state) const override;
     bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const override;
@@ -153,15 +169,21 @@ public:
 
 class EqualNumericalCondition : public NumericalCondition {
 private:
+    EqualNumericalCondition(int identifier, std::shared_ptr<const NamedNumerical> numerical);
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, EqualNumericalCondition& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const EqualNumericalCondition* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, EqualNumericalCondition* t, const unsigned int version);
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    EqualNumericalCondition(std::shared_ptr<const NamedNumerical> numerical, ConditionIndex index);
+    bool operator==(const BaseCondition& other) const override;
+
+    size_t hash() const override;
 
     bool evaluate(const core::State& source_state) const override;
     bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const override;
@@ -172,15 +194,21 @@ public:
 
 class GreaterNumericalCondition : public NumericalCondition {
 private:
+    GreaterNumericalCondition(int identifier, std::shared_ptr<const NamedNumerical> numerical);
+
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, GreaterNumericalCondition& t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::save_construct_data(Archive& ar, const GreaterNumericalCondition* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, GreaterNumericalCondition* t, const unsigned int version);
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    GreaterNumericalCondition(std::shared_ptr<const NamedNumerical> numerical, ConditionIndex index);
+    bool operator==(const BaseCondition& other) const override;
+
+    size_t hash() const override;
 
     bool evaluate(const core::State& source_state) const override;
     bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const override;
@@ -195,5 +223,64 @@ BOOST_CLASS_EXPORT_KEY2(dlplan::policy::PositiveBooleanCondition, "dlplan::polic
 BOOST_CLASS_EXPORT_KEY2(dlplan::policy::NegativeBooleanCondition, "dlplan::policy::NegativeBooleanCondition")
 BOOST_CLASS_EXPORT_KEY2(dlplan::policy::GreaterNumericalCondition, "dlplan::policy::GreaterNumericalCondition")
 BOOST_CLASS_EXPORT_KEY2(dlplan::policy::EqualNumericalCondition, "dlplan::policy::EqualNumericalCondition")
+
+
+namespace std {
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::PositiveBooleanCondition>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::PositiveBooleanCondition>& left_condition,
+            const std::shared_ptr<const dlplan::policy::PositiveBooleanCondition>& right_condition) const;
+    };
+
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::NegativeBooleanCondition>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::NegativeBooleanCondition>& left_condition,
+            const std::shared_ptr<const dlplan::policy::NegativeBooleanCondition>& right_condition) const;
+    };
+
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::GreaterNumericalCondition>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::GreaterNumericalCondition>& left_condition,
+            const std::shared_ptr<const dlplan::policy::GreaterNumericalCondition>& right_condition) const;
+    };
+
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::EqualNumericalCondition>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::EqualNumericalCondition>& left_condition,
+            const std::shared_ptr<const dlplan::policy::EqualNumericalCondition>& right_condition) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::PositiveBooleanCondition>
+    {
+        std::size_t operator()(const dlplan::policy::PositiveBooleanCondition& condition) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::NegativeBooleanCondition>
+    {
+        std::size_t operator()(const dlplan::policy::NegativeBooleanCondition& condition) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::GreaterNumericalCondition>
+    {
+        std::size_t operator()(const dlplan::policy::GreaterNumericalCondition& condition) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::EqualNumericalCondition>
+    {
+        std::size_t operator()(const dlplan::policy::EqualNumericalCondition& condition) const;
+    };
+}
 
 #endif

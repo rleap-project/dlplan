@@ -16,7 +16,6 @@
 
 // Forward declarations of this header
 namespace dlplan::policy {
-class NamedBaseElement;
 class NamedBoolean;
 class NamedNumerical;
 class NamedConcept;
@@ -30,44 +29,27 @@ class PolicyFactory;
 }
 
 
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
 // Forward declarations of template spezializations for serialization
 namespace boost::serialization {
     class access;
 
     template <typename Archive>
-    void serialize(Archive& ar, dlplan::policy::NamedBaseElement& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::policy::NamedBaseElement* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::policy::NamedBaseElement* t, const unsigned int version);
-
-    template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::NamedBoolean& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::policy::NamedBoolean* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::policy::NamedBoolean* t, const unsigned int version);
 
     template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::NamedNumerical& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::policy::NamedNumerical* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::policy::NamedNumerical* t, const unsigned int version);
 
     template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::NamedConcept& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::policy::NamedConcept* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::policy::NamedConcept* t, const unsigned int version);
 
     template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::NamedRole& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::policy::NamedRole* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::policy::NamedRole* t, const unsigned int version);
 
     template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::BaseCondition& t, const unsigned int version);
@@ -121,148 +103,157 @@ using Policies = std::set<std::shared_ptr<const Policy>, ScoreCompare<const Poli
 using StatePair = std::pair<dlplan::core::State, dlplan::core::State>;
 using StatePairs = std::vector<StatePair>;
 
-using ConditionIndex = int;
-using EffectIndex = int;
-using RuleIndex = int;
-using PolicyIndex = int;
-
 
 /// @brief Wrappers around core elements to add an additional key
 ///        that can potentially add some more human readable meaning.
-class NamedBaseElement {
-protected:
-    std::string m_key;
-
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, NamedBaseElement& t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const NamedBaseElement* t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, NamedBaseElement* t, const unsigned int version);
-
-public:
-    explicit NamedBaseElement(const std::string& key);
-    NamedBaseElement(const NamedBaseElement& other);
-    NamedBaseElement& operator=(const NamedBaseElement& other);
-    NamedBaseElement(NamedBaseElement&& other);
-    NamedBaseElement& operator=(NamedBaseElement&& other);
-    virtual ~NamedBaseElement();
-
-    /// @brief Computes a time score for evaluating this condition relative to other conditions.
-    ///        The scoring assumes evaluation that uses caching.
-    /// @return An integer that represents the score.
-    virtual int compute_evaluate_time_score() const = 0;
-    virtual std::string compute_repr() const = 0;
-    virtual std::string str() const = 0;
-
-    const std::string& get_key() const;
-};
-
-
-class NamedBoolean : public NamedBaseElement {
+class NamedBoolean {
 private:
+    int m_identifier;
+    std::string m_key;
     std::shared_ptr<const core::Boolean> m_boolean;
 
+    /// @brief Constructor for serialization.
+    NamedBoolean();
+
+    NamedBoolean(int identifier, const std::string& key, std::shared_ptr<const core::Boolean> boolean);
+
+    friend class boost::serialization::access;
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, NamedBoolean& t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const NamedBoolean* t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, NamedBoolean* t, const unsigned int version);
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    NamedBoolean(const std::string& key, std::shared_ptr<const core::Boolean> boolean);
     NamedBoolean(const NamedBoolean& other);
     NamedBoolean& operator=(const NamedBoolean& other);
     NamedBoolean(NamedBoolean&& other);
     NamedBoolean& operator=(NamedBoolean&& other);
-    ~NamedBoolean() override;
+    ~NamedBoolean();
 
-    int compute_evaluate_time_score() const override;
-    std::string compute_repr() const override;
-    std::string str() const override;
+    bool operator==(const NamedBoolean& other) const;
+    bool operator<(const NamedBoolean& other) const;
 
+    size_t hash() const;
+
+    int compute_evaluate_time_score() const;
+    std::string compute_repr() const;
+    std::string str() const;
+
+    const std::string& get_key() const;
     std::shared_ptr<const core::Boolean> get_boolean() const;
 };
 
 
-class NamedNumerical : public NamedBaseElement {
+class NamedNumerical {
 private:
+    int m_identifier;
+    std::string m_key;
     std::shared_ptr<const core::Numerical> m_numerical;
 
+    /// @brief Constructor for serialization.
+    NamedNumerical();
+
+    NamedNumerical(int identifier, const std::string& key, std::shared_ptr<const core::Numerical> numerical);
+
+    friend class boost::serialization::access;
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, NamedNumerical& t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const NamedNumerical* t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, NamedNumerical* t, const unsigned int version);
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    NamedNumerical(const std::string& key, std::shared_ptr<const core::Numerical> numerical);
     NamedNumerical(const NamedNumerical& other);
     NamedNumerical& operator=(const NamedNumerical& other);
     NamedNumerical(NamedNumerical&& other);
     NamedNumerical& operator=(NamedNumerical&& other);
-    ~NamedNumerical() override;
+    ~NamedNumerical();
 
-    int compute_evaluate_time_score() const override;
-    std::string compute_repr() const override;
-    std::string str() const override;
+    bool operator==(const NamedNumerical& other) const;
+    bool operator<(const NamedNumerical& other) const;
 
+    size_t hash() const;
+
+    int compute_evaluate_time_score() const;
+    std::string compute_repr() const;
+    std::string str() const;
+
+    const std::string& get_key() const;
     std::shared_ptr<const core::Numerical> get_numerical() const;
 };
 
 
-class NamedConcept : public NamedBaseElement {
+class NamedConcept {
 private:
+    int m_identifier;
+    std::string m_key;
     std::shared_ptr<const core::Concept> m_concept;
 
+    /// @brief Constructor for serialization.
+    NamedConcept();
+
+    NamedConcept(int identifier, const std::string& key, std::shared_ptr<const core::Concept> concept);
+
+    friend class boost::serialization::access;
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, NamedConcept& t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const NamedConcept* t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, NamedConcept* t, const unsigned int version);
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    NamedConcept(const std::string& key, std::shared_ptr<const core::Concept> concept);
     NamedConcept(const NamedConcept& other);
     NamedConcept& operator=(const NamedConcept& other);
     NamedConcept(NamedConcept&& other);
     NamedConcept& operator=(NamedConcept&& other);
-    ~NamedConcept() override;
+    ~NamedConcept();
 
-    int compute_evaluate_time_score() const override;
-    std::string compute_repr() const override;
-    std::string str() const override;
+    bool operator==(const NamedConcept& other) const;
+    bool operator<(const NamedConcept& other) const;
 
+    size_t hash() const;
+
+    int compute_evaluate_time_score() const;
+    std::string compute_repr() const;
+    std::string str() const;
+
+    const std::string& get_key() const;
     std::shared_ptr<const core::Concept> get_concept() const;
 };
 
 
-class NamedRole : public NamedBaseElement {
+class NamedRole {
 private:
+    int m_identifier;
+    std::string m_key;
     std::shared_ptr<const core::Role> m_role;
 
+    /// @brief Constructor for serialization.
+    NamedRole();
+
+    NamedRole(int identifier, const std::string& key, std::shared_ptr<const core::Role> role);
+
+    friend class boost::serialization::access;
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, NamedRole& t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive& ar, const NamedRole* t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive& ar, NamedRole* t, const unsigned int version);
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    NamedRole(const std::string& key, std::shared_ptr<const core::Role> role);
     NamedRole(const NamedRole& other);
     NamedRole& operator=(const NamedRole& other);
     NamedRole(NamedRole&& other);
     NamedRole& operator=(NamedRole&& other);
-    ~NamedRole() override;
+    ~NamedRole();
 
-    int compute_evaluate_time_score() const override;
-    std::string compute_repr() const override;
-    std::string str() const override;
+    bool operator==(const NamedRole& other) const;
+    bool operator<(const NamedRole& other) const;
 
+    size_t hash() const;
+
+    int compute_evaluate_time_score() const;
+    std::string compute_repr() const;
+    std::string str() const;
+
+    const std::string& get_key() const;
     std::shared_ptr<const core::Role> get_role() const;
 };
 
@@ -272,7 +263,9 @@ public:
 ///        the evaluation on a state.
 class BaseCondition {
 protected:
-    int m_index;
+    int m_identifier;
+
+    explicit BaseCondition(int identifier);
 
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, BaseCondition& t, const unsigned int version);
@@ -280,14 +273,16 @@ protected:
     friend void boost::serialization::save_construct_data(Archive& ar, const BaseCondition* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, BaseCondition* t, const unsigned int version);
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    explicit BaseCondition(ConditionIndex index);
-    BaseCondition(const BaseCondition& other) = delete;
-    BaseCondition& operator=(const BaseCondition& other) = delete;
-    BaseCondition(BaseCondition&& other) = delete;
-    BaseCondition& operator=(BaseCondition&& other) = delete;
     virtual ~BaseCondition();
+
+    virtual bool operator==(const BaseCondition& other) const = 0;
+    bool operator<(const BaseCondition& other) const;
+
+    virtual size_t hash() const = 0;
 
     virtual bool evaluate(const core::State& source_state) const = 0;
     virtual bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const = 0;
@@ -300,9 +295,9 @@ public:
     /// @return An integer that represents the score.
     virtual int compute_evaluate_time_score() const = 0;
 
+    int get_index() const;
     virtual std::shared_ptr<const NamedBoolean> get_boolean() const = 0;
     virtual std::shared_ptr<const NamedNumerical> get_numerical() const = 0;
-    ConditionIndex get_index() const;
 };
 
 
@@ -311,7 +306,9 @@ public:
 ///        the evaluation on a pair of states.
 class BaseEffect {
 protected:
-    int m_index;
+    int m_identifier;
+
+    explicit BaseEffect(int identifier);
 
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, BaseEffect& t, const unsigned int version);
@@ -319,14 +316,16 @@ protected:
     friend void boost::serialization::save_construct_data(Archive& ar, const BaseEffect* t, const unsigned int version);
     template<class Archive>
     friend void boost::serialization::load_construct_data(Archive& ar, BaseEffect* t, const unsigned int version);
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    explicit BaseEffect(EffectIndex index);
-    BaseEffect(const BaseEffect& other) = delete;
-    BaseEffect& operator=(const BaseEffect& other) = delete;
-    BaseEffect(BaseEffect&& other) = delete;
-    BaseEffect& operator=(BaseEffect&& other) = delete;
     virtual ~BaseEffect();
+
+    virtual bool operator==(const BaseEffect& other) const = 0;
+    bool operator<(const BaseEffect& other) const;
+
+    virtual size_t hash() const = 0;
 
     virtual bool evaluate(const core::State& source_state, const core::State& target_state) const = 0;
     virtual bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const = 0;
@@ -339,7 +338,7 @@ public:
     /// @return An integer that represents the score.
     virtual int compute_evaluate_time_score() const = 0;
 
-    EffectIndex get_index() const;
+    int get_index() const;
     virtual std::shared_ptr<const NamedBoolean> get_boolean() const = 0;
     virtual std::shared_ptr<const NamedNumerical> get_numerical() const = 0;
 };
@@ -351,26 +350,31 @@ public:
 ///        on a pair of states.
 class Rule {
 private:
+    int m_identifier;
     Conditions m_conditions;
     Effects m_effects;
-    RuleIndex m_index;
 
     /// @brief Constructor for serialization.
     Rule();
 
-    Rule(const Conditions& conditions, const Effects& effects, RuleIndex index);
+    Rule(int identifier, const Conditions& conditions, const Effects& effects);
 
     friend class PolicyFactoryImpl;
     friend class boost::serialization::access;
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, Rule& t, const unsigned int version);
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
-    Rule(const Rule& other) = delete;
-    Rule& operator=(const Rule& other) = delete;
-    Rule(Rule&& other) = delete;
-    Rule& operator=(Rule&& other) = delete;
+    Rule(const Rule& other);
+    Rule& operator=(const Rule& other);
+    Rule(Rule&& other);
+    Rule& operator=(Rule&& other);
     ~Rule();
+
+    bool operator==(const Rule& other) const;
+    bool operator<(const Rule& other) const;
 
     bool evaluate_conditions(const core::State& source_state) const;
     bool evaluate_conditions(const core::State& source_state, core::DenotationsCaches& caches) const;
@@ -380,12 +384,14 @@ public:
     std::string compute_repr() const;
     std::string str() const;
 
+    size_t hash() const;
+
     /// @brief Computes a time score for evaluating this rule relative to other rules.
     ///        The scoring assumes evaluation that uses caching.
     /// @return An integer that represents the score.
     int compute_evaluate_time_score() const;
 
-    RuleIndex get_index() const;
+    int get_index() const;
     const Conditions& get_conditions() const;
     const Effects& get_effects() const;
 };
@@ -397,20 +403,22 @@ public:
 ///        states.
 class Policy {
 private:
+    int m_identifier;
     Booleans m_booleans;
     Numericals m_numericals;
     Rules m_rules;
-    int m_index;
 
     /// @brief Constructor for serialization.
     Policy();
 
-    Policy(const Rules& rules, PolicyIndex index);
+    Policy(int identifier, const Rules& rules);
 
     friend class PolicyFactoryImpl;
     friend class boost::serialization::access;
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, Policy& t, const unsigned int version);
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
 
 public:
     Policy(const Policy& other);
@@ -418,6 +426,11 @@ public:
     Policy(Policy&& other);
     Policy& operator=(Policy&& other);
     ~Policy();
+
+    bool operator==(const Policy& other) const;
+    bool operator<(const Policy& other) const;
+
+    size_t hash() const;
 
     /**
      * Approach 1: naive approach to evaluate (s,s')
@@ -441,7 +454,7 @@ public:
     /// @return An integer that represents the score.
     int compute_evaluate_time_score() const;
 
-    PolicyIndex get_index() const;
+    int get_index() const;
     const Booleans& get_booleans() const;
     const Numericals& get_numericals() const;
     const Rules& get_rules() const;
@@ -540,7 +553,94 @@ public:
         PolicyFactory& policy_factory) const;
 };
 
-
 }
+
+
+namespace std {
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::NamedBoolean>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::NamedBoolean>& left_boolean,
+            const std::shared_ptr<const dlplan::policy::NamedBoolean>& right_boolean) const;
+    };
+
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::NamedNumerical>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::NamedNumerical>& left_numerical,
+            const std::shared_ptr<const dlplan::policy::NamedNumerical>& right_numerical) const;
+    };
+
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::NamedConcept>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::NamedConcept>& left_concept,
+            const std::shared_ptr<const dlplan::policy::NamedConcept>& right_concept) const;
+    };
+
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::NamedRole>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::NamedRole>& left_role,
+            const std::shared_ptr<const dlplan::policy::NamedRole>& right_role) const;
+    };
+
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::Rule>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::Rule>& left_rule,
+            const std::shared_ptr<const dlplan::policy::Rule>& right_rule) const;
+    };
+
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::Policy>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::Policy>& left_policy,
+            const std::shared_ptr<const dlplan::policy::Policy>& right_policy) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::NamedBoolean>
+    {
+        std::size_t operator()(const dlplan::policy::NamedBoolean& boolean) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::NamedNumerical>
+    {
+        std::size_t operator()(const dlplan::policy::NamedNumerical& numerical) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::NamedConcept>
+    {
+        std::size_t operator()(const dlplan::policy::NamedConcept& concept_) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::NamedRole>
+    {
+        std::size_t operator()(const dlplan::policy::NamedRole& role) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::Rule>
+    {
+        std::size_t operator()(const dlplan::policy::Rule& rule) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::Policy>
+    {
+        std::size_t operator()(const dlplan::policy::Policy& policy) const;
+    };
+}
+
 
 #endif

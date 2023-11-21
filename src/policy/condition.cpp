@@ -2,6 +2,7 @@
 
 #include "../core/elements/utils.h"
 #include "../../include/dlplan/core.h"
+#include "../../include/dlplan/utils/hash.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -12,8 +13,8 @@ using namespace dlplan;
 
 namespace dlplan::policy {
 
-BooleanCondition::BooleanCondition(std::shared_ptr<const NamedBoolean> boolean, ConditionIndex index)
-    : BaseCondition(index), m_boolean(boolean) { }
+BooleanCondition::BooleanCondition(int identifier, std::shared_ptr<const NamedBoolean> boolean)
+    : BaseCondition(identifier), m_boolean(boolean) { }
 
 int BooleanCondition::compute_evaluate_time_score() const {
     return m_boolean->compute_evaluate_time_score();
@@ -28,8 +29,8 @@ std::shared_ptr<const NamedNumerical> BooleanCondition::get_numerical() const {
 }
 
 
-NumericalCondition::NumericalCondition(std::shared_ptr<const NamedNumerical> numerical, ConditionIndex index)
-    : BaseCondition(index), m_numerical(numerical) { }
+NumericalCondition::NumericalCondition(int identifier, std::shared_ptr<const NamedNumerical> numerical)
+    : BaseCondition(identifier), m_numerical(numerical) { }
 
 int NumericalCondition::compute_evaluate_time_score() const {
     return m_numerical->compute_evaluate_time_score();
@@ -44,8 +45,21 @@ std::shared_ptr<const NamedNumerical> NumericalCondition::get_numerical() const 
 }
 
 
-PositiveBooleanCondition::PositiveBooleanCondition(std::shared_ptr<const NamedBoolean> boolean, ConditionIndex index)
-    : BooleanCondition(boolean, index) { }
+PositiveBooleanCondition::PositiveBooleanCondition(int identifier, std::shared_ptr<const NamedBoolean> boolean)
+    : BooleanCondition(identifier, boolean) { }
+
+bool PositiveBooleanCondition::operator==(const BaseCondition& other) const {
+    if (typeid(*this) == typeid(other)) {
+        if (this == &other) return true;
+        const auto& other_derived = static_cast<const PositiveBooleanCondition&>(other);
+        return m_boolean == other_derived.m_boolean;
+    }
+    return false;
+}
+
+size_t PositiveBooleanCondition::hash() const {
+    return dlplan::utils::hash_combine(m_boolean);
+}
 
 bool PositiveBooleanCondition::evaluate(const core::State& source_state) const {
     return m_boolean->get_boolean()->evaluate(source_state);
@@ -64,8 +78,21 @@ std::string PositiveBooleanCondition::str() const {
 }
 
 
-NegativeBooleanCondition::NegativeBooleanCondition(std::shared_ptr<const NamedBoolean> boolean, ConditionIndex index)
-    : BooleanCondition(boolean, index) { }
+NegativeBooleanCondition::NegativeBooleanCondition(int identifier, std::shared_ptr<const NamedBoolean> boolean)
+    : BooleanCondition(identifier, boolean) { }
+
+bool NegativeBooleanCondition::operator==(const BaseCondition& other) const {
+    if (typeid(*this) == typeid(other)) {
+        if (this == &other) return true;
+        const auto& other_derived = static_cast<const NegativeBooleanCondition&>(other);
+        return m_boolean == other_derived.m_boolean;
+    }
+    return false;
+}
+
+size_t NegativeBooleanCondition::hash() const {
+    return dlplan::utils::hash_combine(m_boolean);
+}
 
 bool NegativeBooleanCondition::evaluate(const core::State& source_state) const {
     return !m_boolean->get_boolean()->evaluate(source_state);
@@ -84,8 +111,21 @@ std::string NegativeBooleanCondition::str() const {
 }
 
 
-EqualNumericalCondition::EqualNumericalCondition(std::shared_ptr<const NamedNumerical> numerical, ConditionIndex index)
-    : NumericalCondition(numerical, index) { }
+EqualNumericalCondition::EqualNumericalCondition(int identifier, std::shared_ptr<const NamedNumerical> numerical)
+    : NumericalCondition(identifier, numerical) { }
+
+bool EqualNumericalCondition::operator==(const BaseCondition& other) const {
+    if (typeid(*this) == typeid(other)) {
+        if (this == &other) return true;
+        const auto& other_derived = static_cast<const EqualNumericalCondition&>(other);
+        return m_numerical == other_derived.m_numerical;
+    }
+    return false;
+}
+
+size_t EqualNumericalCondition::hash() const {
+    return dlplan::utils::hash_combine(m_numerical);
+}
 
 bool EqualNumericalCondition::evaluate(const core::State& source_state) const {
     int eval = m_numerical->get_numerical()->evaluate(source_state);
@@ -108,8 +148,21 @@ std::string EqualNumericalCondition::str() const {
 }
 
 
-GreaterNumericalCondition::GreaterNumericalCondition(std::shared_ptr<const NamedNumerical> numerical, ConditionIndex index)
-    : NumericalCondition(numerical, index) { }
+GreaterNumericalCondition::GreaterNumericalCondition(int identifier, std::shared_ptr<const NamedNumerical> numerical)
+    : NumericalCondition(identifier, numerical) { }
+
+bool GreaterNumericalCondition::operator==(const BaseCondition& other) const {
+    if (typeid(*this) == typeid(other)) {
+        if (this == &other) return true;
+        const auto& other_derived = static_cast<const GreaterNumericalCondition&>(other);
+        return m_numerical == other_derived.m_numerical;
+    }
+    return false;
+}
+
+size_t GreaterNumericalCondition::hash() const {
+    return dlplan::utils::hash_combine(m_numerical);
+}
 
 bool GreaterNumericalCondition::evaluate(const core::State& source_state) const {
     int eval = m_numerical->get_numerical()->evaluate(source_state);
@@ -177,18 +230,18 @@ void serialize(Archive& /* ar */ , dlplan::policy::PositiveBooleanCondition& t, 
 template<class Archive>
 void save_construct_data(Archive& ar, const dlplan::policy::PositiveBooleanCondition* t, const unsigned int /* version */ )
 {
+    ar << t->m_identifier;
     ar << t->m_boolean;
-    ar << t->m_index;
 }
 
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::policy::PositiveBooleanCondition* t, const unsigned int /* version */ )
 {
+    int identifier;
     std::shared_ptr<const dlplan::policy::NamedBoolean> boolean;
-    dlplan::policy::ConditionIndex index;
+    ar >> identifier;
     ar >> boolean;
-    ar >> index;
-    ::new(t)dlplan::policy::PositiveBooleanCondition(boolean, index);
+    ::new(t)dlplan::policy::PositiveBooleanCondition(identifier, boolean);
 }
 
 template<typename Archive>
@@ -200,18 +253,18 @@ void serialize(Archive& /* ar */ , dlplan::policy::NegativeBooleanCondition& t, 
 template<class Archive>
 void save_construct_data(Archive & ar, const dlplan::policy::NegativeBooleanCondition* t, const unsigned int /* version */ )
 {
+    ar << t->m_identifier;
     ar << t->m_boolean;
-    ar << t->m_index;
 }
 
 template<class Archive>
 void load_construct_data(Archive & ar, dlplan::policy::NegativeBooleanCondition* t, const unsigned int /* version */ )
 {
+    int identifier;
     std::shared_ptr<const dlplan::policy::NamedBoolean> boolean;
-    dlplan::policy::ConditionIndex index;
+    ar >> identifier;
     ar >> boolean;
-    ar >> index;
-    ::new(t)dlplan::policy::NegativeBooleanCondition(boolean, index);
+    ::new(t)dlplan::policy::NegativeBooleanCondition(identifier, boolean);
 }
 
 template<typename Archive>
@@ -223,18 +276,18 @@ void serialize(Archive& /* ar */ , dlplan::policy::GreaterNumericalCondition& t,
 template<class Archive>
 void save_construct_data(Archive& ar, const dlplan::policy::GreaterNumericalCondition* t, const unsigned int /* version */ )
 {
+    ar << t->m_identifier;
     ar << t->m_numerical;
-    ar << t->m_index;
 }
 
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::policy::GreaterNumericalCondition* t, const unsigned int /* version */ )
 {
+    int identifier;
     std::shared_ptr<const dlplan::policy::NamedNumerical> numerical;
-    dlplan::policy::ConditionIndex index;
+    ar >> identifier;
     ar >> numerical;
-    ar >> index;
-    ::new(t)dlplan::policy::GreaterNumericalCondition(numerical, index);
+    ::new(t)dlplan::policy::GreaterNumericalCondition(identifier, numerical);
 }
 
 template<typename Archive>
@@ -246,18 +299,18 @@ void serialize(Archive& /* ar */ , dlplan::policy::EqualNumericalCondition& t, c
 template<class Archive>
 void save_construct_data(Archive& ar, const dlplan::policy::EqualNumericalCondition* t, const unsigned int /* version */ )
 {
+    ar << t->m_identifier;
     ar << t->m_numerical;
-    ar << t->m_index;
 }
 
 template<class Archive>
 void load_construct_data(Archive& ar, dlplan::policy::EqualNumericalCondition* t, const unsigned int /* version */ )
 {
+    int identifier;
     std::shared_ptr<const dlplan::policy::NamedNumerical> numerical;
-    dlplan::policy::ConditionIndex index;
+    ar >> identifier;
     ar >> numerical;
-    ar >> index;
-    ::new(t)dlplan::policy::EqualNumericalCondition(numerical, index);
+    ::new(t)dlplan::policy::EqualNumericalCondition(identifier, numerical);
 }
 
 template void serialize(boost::archive::text_iarchive& ar,

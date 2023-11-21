@@ -1,9 +1,14 @@
 #ifndef DLPLAN_SRC_POLICY_POLICY_BUILDER_H_
 #define DLPLAN_SRC_POLICY_POLICY_BUILDER_H_
 
-#include "cache.h"
+#include "condition.h"
+#include "effect.h"
+
+#include "../utils/factory.h"
+
 #include "../../include/dlplan/core.h"
 #include "../../include/dlplan/policy.h"
+
 
 #include <memory>
 #include <vector>
@@ -27,7 +32,23 @@ namespace dlplan::policy {
 class PolicyFactoryImpl {
 private:
     std::shared_ptr<core::SyntacticElementFactory> m_element_factory;
-    Caches m_caches;
+
+    dlplan::utils::ReferenceCountedObjectFactory<NamedBoolean
+        , NamedNumerical
+        , NamedConcept
+        , NamedRole
+        , PositiveBooleanCondition
+        , NegativeBooleanCondition
+        , GreaterNumericalCondition
+        , EqualNumericalCondition
+        , PositiveBooleanEffect
+        , NegativeBooleanEffect
+        , UnchangedBooleanEffect
+        , IncrementNumericalEffect
+        , DecrementNumericalEffect
+        , UnchangedNumericalEffect
+        , Rule
+        , Policy> m_cache;
 
     /// @brief Constructor for serialization.
     PolicyFactoryImpl();

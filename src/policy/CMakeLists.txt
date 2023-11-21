@@ -1,7 +1,6 @@
 add_library(dlplanpolicy STATIC)
 target_sources(dlplanpolicy
     PRIVATE
-        base_element.cpp
         boolean.cpp
         concept.cpp
         condition.cpp

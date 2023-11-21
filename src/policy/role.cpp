@@ -1,6 +1,7 @@
 #include "../../include/dlplan/policy.h"
 
 #include "../../include/dlplan/core.h"
+#include "../../include/dlplan/utils/hash.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -11,9 +12,10 @@
 
 
 namespace dlplan::policy {
+NamedRole::NamedRole() : m_identifier(-1), m_key(""), m_role(nullptr) { }
 
-NamedRole::NamedRole(const std::string& key, std::shared_ptr<const core::Role> role)
-    : NamedBaseElement(key), m_role(role) { }
+NamedRole::NamedRole(int identifier, const std::string& key, std::shared_ptr<const core::Role> role)
+    : m_identifier(identifier), m_key(key), m_role(role) { }
 
 NamedRole::NamedRole(const NamedRole& other) = default;
 
@@ -24,6 +26,20 @@ NamedRole::NamedRole(NamedRole&& other) = default;
 NamedRole& NamedRole::operator=(NamedRole&& other) = default;
 
 NamedRole::~NamedRole() = default;
+
+bool NamedRole::operator==(const NamedRole& other) const {
+    if (this != &other) {
+        return m_key == other.m_key
+            && m_role == other.m_role;
+    }
+    return true;
+}
+bool NamedRole::operator<(const NamedRole& other) const {
+}
+
+size_t NamedRole::hash() const {
+    return dlplan::utils::hash_combine(m_key, m_role);
+}
 
 int NamedRole::compute_evaluate_time_score() const {
     return m_role->compute_evaluate_time_score();
@@ -37,6 +53,10 @@ std::string NamedRole::str() const {
     return get_key();
 }
 
+const std::string& NamedRole::get_key() const {
+    return m_key;
+}
+
 std::shared_ptr<const core::Role> NamedRole::get_role() const {
     return m_role;
 }
@@ -46,26 +66,11 @@ std::shared_ptr<const core::Role> NamedRole::get_role() const {
 
 namespace boost::serialization {
 template<typename Archive>
-void serialize(Archive& /* ar */, dlplan::policy::NamedRole& t, const unsigned int /* version */ )
+void serialize(Archive& ar, dlplan::policy::NamedRole& t, const unsigned int /* version */ )
 {
-    boost::serialization::base_object<dlplan::policy::NamedBaseElement>(t);
-}
-
-template<class Archive>
-void save_construct_data(Archive& ar, const dlplan::policy::NamedRole* t, const unsigned int /* version */ )
-{
-    ar << t->m_key;
-    ar << t->m_role;
-}
-
-template<class Archive>
-void load_construct_data(Archive& ar, dlplan::policy::NamedRole* t, const unsigned int /* version */ )
-{
-    std::string key;
-    std::shared_ptr<const dlplan::core::Role> role;
-    ar >> key;
-    ar >> role;
-    ::new(t)dlplan::policy::NamedRole(key, role);
+    ar & t.m_identifier;
+    ar & t.m_key;
+    ar & t.m_role;
 }
 
 template void serialize(boost::archive::text_iarchive& ar,
