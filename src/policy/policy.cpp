@@ -1,7 +1,5 @@
 #include "../../include/dlplan/policy.h"
 
-#include "condition.h"
-#include "effect.h"
 #include "policy_factory.h"
 
 #include <boost/archive/text_oarchive.hpp>

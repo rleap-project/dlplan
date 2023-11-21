@@ -1,6 +1,6 @@
-#include "effect.h"
+#include "../../include/dlplan/policy/effect.h"
 
-#include "../core/elements/utils.h"
+#include "../../include/dlplan/core/elements/utils.h"
 #include "../../include/dlplan/core.h"
 #include "../../include/dlplan/utils/hash.h"
 

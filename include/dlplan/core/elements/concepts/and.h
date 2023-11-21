@@ -1,7 +1,7 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_AND_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_CONCEPTS_AND_H_
 
-#include "../../../../../src/core/elements/utils.h"
+#include "../utils.h"
 #include "../../../core.h"
 
 #include <sstream>

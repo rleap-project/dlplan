@@ -1,13 +1,12 @@
 #ifndef DLPLAN_SRC_POLICY_POLICY_BUILDER_H_
 #define DLPLAN_SRC_POLICY_POLICY_BUILDER_H_
 
-#include "condition.h"
-#include "effect.h"
-
 #include "../utils/factory.h"
 
 #include "../../include/dlplan/core.h"
 #include "../../include/dlplan/policy.h"
+#include "../../include/dlplan/policy/condition.h"
+#include "../../include/dlplan/policy/effect.h"
 
 
 #include <memory>

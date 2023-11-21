@@ -13,8 +13,6 @@ target_sources(dlplancore
         core.cpp
         denotations_caches.cpp
         element_factory.cpp
-        elements/booleans/empty.cpp
-        elements/booleans/inclusion.cpp
         elements/booleans/nullary.cpp
         elements/concepts/all.cpp
         elements/concepts/and.cpp
@@ -22,6 +20,7 @@ target_sources(dlplancore
         elements/concepts/diff.cpp
         elements/concepts/equal.cpp
         elements/concepts/not.cpp
+        elements/concepts/one_of.cpp
         elements/concepts/or.cpp
         elements/concepts/primitive.cpp
         elements/concepts/projection.cpp
@@ -29,7 +28,6 @@ target_sources(dlplancore
         elements/concepts/subset.cpp
         elements/concepts/top.cpp
         elements/numericals/concept_distance.cpp
-        elements/numericals/count.cpp
         elements/numericals/role_distance.cpp
         elements/numericals/sum_concept_distance.cpp
         elements/numericals/sum_role_distance.cpp

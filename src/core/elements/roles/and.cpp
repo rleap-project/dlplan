@@ -1,4 +1,4 @@
-#include "and.h"
+#include "../../../../include/dlplan/core/elements/roles/and.h"
 
 
 namespace dlplan::core {
@@ -77,4 +77,17 @@ int AndRole::compute_evaluate_time_score() const {
     return m_role_left->compute_evaluate_time_score() + m_role_right->compute_evaluate_time_score() + SCORE_QUADRATIC;
 }
 
+}
+
+
+namespace std {
+    bool less<std::shared_ptr<const dlplan::core::AndRole>>::operator()(
+        const std::shared_ptr<const dlplan::core::AndRole>& left_role,
+        const std::shared_ptr<const dlplan::core::AndRole>& right_role) const {
+        return *left_role < *right_role;
+    }
+
+    std::size_t hash<dlplan::core::AndRole>::operator()(const dlplan::core::AndRole& role) const {
+        return role.hash();
+    }
 }

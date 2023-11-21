@@ -1,0 +1,68 @@
+#ifndef DLPLAN_SRC_CORE_ELEMENTS_ROLES_OR_H_
+#define DLPLAN_SRC_CORE_ELEMENTS_ROLES_OR_H_
+
+#include "../utils.h"
+#include "../../../core.h"
+
+#include <sstream>
+#include <memory>
+
+using namespace std::string_literals;
+
+
+namespace dlplan::utils {
+template<typename... Ts>
+class ReferenceCountedObjectFactory;
+}
+
+
+namespace dlplan::core {
+class OrRole : public Role {
+private:
+    const std::shared_ptr<const Role> m_role_left;
+    const std::shared_ptr<const Role> m_role_right;
+
+    void compute_result(const RoleDenotation& left_denot, const RoleDenotation& right_denot, RoleDenotation& result) const;
+
+    RoleDenotation evaluate_impl(const State& state, DenotationsCaches& caches) const override;
+
+    RoleDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const override;
+
+    OrRole(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role_1, std::shared_ptr<const Role> role_2);
+    template<typename... Ts>
+    friend class dlplan::utils::ReferenceCountedObjectFactory;
+
+public:
+    bool operator==(const Role& other) const override;
+
+    size_t hash() const;
+
+    RoleDenotation evaluate(const State& state) const override;
+
+    int compute_complexity() const override;
+
+    void compute_repr(std::stringstream& out) const override;
+
+    int compute_evaluate_time_score() const override;
+};
+
+}
+
+
+namespace std {
+    template<>
+    struct less<std::shared_ptr<const dlplan::core::OrRole>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::core::OrRole>& left_role,
+            const std::shared_ptr<const dlplan::core::OrRole>& right_role) const;
+    };
+
+    template<>
+    struct hash<dlplan::core::OrRole>
+    {
+        std::size_t operator()(const dlplan::core::OrRole& role) const;
+    };
+}
+
+#endif

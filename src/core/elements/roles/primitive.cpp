@@ -1,8 +1,7 @@
-#include "primitive.h"
+#include "../../../../include/dlplan/core/elements/roles/primitive.h"
 
-#include "../utils.h"
 #include "../../../utils/collections.h"
-#include "../../../../include/dlplan/core.h"
+
 
 using namespace std::string_literals;
 

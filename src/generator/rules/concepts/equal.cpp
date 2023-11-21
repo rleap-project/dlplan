@@ -2,7 +2,7 @@
 
 #include "../../generator_data.h"
 
-#include "../../../core/elements/roles/primitive.h"
+#include "../../../../include/dlplan/core/elements/roles/primitive.h"
 
 
 namespace dlplan::generator::rules {

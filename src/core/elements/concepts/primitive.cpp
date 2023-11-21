@@ -1,4 +1,6 @@
-#include "primitive.h"
+#include "../../../../include/dlplan/core/elements/concepts/primitive.h"
+
+#include "../../../utils/collections.h"
 
 
 namespace dlplan::core {
@@ -80,4 +82,17 @@ int PrimitiveConcept::compute_evaluate_time_score() const {
     return SCORE_LINEAR;
 }
 
+}
+
+
+namespace std {
+    bool less<std::shared_ptr<const dlplan::core::PrimitiveConcept>>::operator()(
+        const std::shared_ptr<const dlplan::core::PrimitiveConcept>& left_concept,
+        const std::shared_ptr<const dlplan::core::PrimitiveConcept>& right_concept) const {
+        return *left_concept < *right_concept;
+    }
+
+    std::size_t hash<dlplan::core::PrimitiveConcept>::operator()(const dlplan::core::PrimitiveConcept& concept_) const {
+        return concept_.hash();
+    }
 }

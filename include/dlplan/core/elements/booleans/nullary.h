@@ -1,7 +1,7 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_CORE_ELEMENTS_BOOLEANS_NULLARY_H_
 #define DLPLAN_INCLUDE_DLPLAN_CORE_ELEMENTS_BOOLEANS_NULLARY_H_
 
-#include "../../../../../src/core/elements/utils.h"
+#include "../utils.h"
 #include "../../../core.h"
 
 #include <sstream>

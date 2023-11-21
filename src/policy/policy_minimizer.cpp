@@ -1,7 +1,7 @@
 #include "../../include/dlplan/policy.h"
 
-#include "condition.h"
-#include "effect.h"
+#include "../../include/dlplan/policy/condition.h"
+#include "../../include/dlplan/policy/effect.h"
 #include "../../include/dlplan/utils/hash.h"
 
 #include <algorithm>
