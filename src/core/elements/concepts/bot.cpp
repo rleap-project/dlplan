@@ -28,7 +28,7 @@ bool BotConcept::operator==(const Concept& other) const {
 }
 
 size_t BotConcept::hash() const {
-    return dlplan::utils::hash_combine(m_is_static);
+    return hash_combine(m_is_static);
 }
 
 ConceptDenotation BotConcept::evaluate(const State& state) const {

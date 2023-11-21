@@ -25,10 +25,10 @@ namespace std {
         return denotation.hash();
     }
     size_t hash<dlplan::core::ConceptDenotations>::operator()(const dlplan::core::ConceptDenotations& denotations) const {
-        return dlplan::utils::hash_vector(denotations);
+        return dlplan::hash_vector(denotations);
     }
     size_t hash<dlplan::core::RoleDenotations>::operator()(const dlplan::core::RoleDenotations& denotations) const {
-        return dlplan::utils::hash_vector(denotations);
+        return dlplan::hash_vector(denotations);
     }
 }
 

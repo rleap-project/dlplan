@@ -20,7 +20,7 @@ using FeatureRepresentations = std::vector<std::string>;
 ///        that are distinguishable on a finite set of states.
 class FeatureGenerator {
 private:
-    dlplan::utils::pimpl<FeatureGeneratorImpl> m_pImpl;
+    pimpl<FeatureGeneratorImpl> m_pImpl;
 
 public:
     FeatureGenerator();

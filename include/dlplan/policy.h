@@ -374,7 +374,7 @@ public:
 ///        conditions, effects, rules, and policies.
 class PolicyFactory {
 private:
-    dlplan::utils::pimpl<PolicyFactoryImpl> m_pImpl;
+    pimpl<PolicyFactoryImpl> m_pImpl;
 
 public:
     PolicyFactory(std::shared_ptr<core::SyntacticElementFactory> element_factory);

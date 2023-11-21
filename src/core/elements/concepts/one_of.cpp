@@ -50,7 +50,7 @@ bool OneOfConcept::operator==(const Concept& other) const {
 }
 
 size_t OneOfConcept::hash() const {
-    return dlplan::utils::hash_combine(m_is_static, m_constant);
+    return hash_combine(m_is_static, m_constant);
 }
 
 ConceptDenotation OneOfConcept::evaluate(const State& state) const {

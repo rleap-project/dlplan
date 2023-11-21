@@ -31,7 +31,7 @@ bool TopRole::operator==(const Role& other) const {
 }
 
 size_t TopRole::hash() const {
-    return dlplan::utils::hash_combine(m_is_static);
+    return hash_combine(m_is_static);
 }
 
 RoleDenotation TopRole::evaluate(const State& state) const {

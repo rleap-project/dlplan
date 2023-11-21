@@ -26,8 +26,8 @@ bool DenotationsCaches::Key::operator!=(const Key& other) const {
 
 std::size_t DenotationsCaches::KeyHash::operator()(const Key& key) const {
     std::size_t seed = key.element;
-    dlplan::utils::hash_combine(seed, key.instance);
-    dlplan::utils::hash_combine(seed, key.state);
+    hash_combine(seed, key.instance);
+    hash_combine(seed, key.state);
     return seed;
 }
 

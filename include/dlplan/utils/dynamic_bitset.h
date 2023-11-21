@@ -183,7 +183,7 @@ public:
     }
 
     std::size_t hash() const {
-        return dlplan::utils::hash_vector(blocks);
+        return hash_vector(blocks);
     }
 };
 

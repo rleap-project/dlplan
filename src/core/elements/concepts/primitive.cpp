@@ -61,7 +61,7 @@ bool PrimitiveConcept::operator==(const Concept& other) const {
 }
 
 size_t PrimitiveConcept::hash() const {
-    return dlplan::utils::hash_combine(m_is_static, m_predicate, m_pos);
+    return hash_combine(m_is_static, m_predicate, m_pos);
 }
 
 ConceptDenotation PrimitiveConcept::evaluate(const State& state) const {

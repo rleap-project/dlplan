@@ -60,7 +60,7 @@ bool TransitiveReflexiveClosureRole::operator==(const Role& other) const {
 }
 
 size_t TransitiveReflexiveClosureRole::hash() const {
-    return dlplan::utils::hash_combine(m_is_static, m_role);
+    return hash_combine(m_is_static, m_role);
 }
 
 RoleDenotation TransitiveReflexiveClosureRole::evaluate(const State& state) const {

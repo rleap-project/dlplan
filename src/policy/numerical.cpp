@@ -33,7 +33,7 @@ bool NamedNumerical::operator<(const NamedNumerical& other) const {
 }
 
 size_t NamedNumerical::hash() const {
-    return dlplan::utils::hash_combine(m_key, m_numerical);
+    return hash_combine(m_key, m_numerical);
 }
 
 int NamedNumerical::compute_evaluate_time_score() const {

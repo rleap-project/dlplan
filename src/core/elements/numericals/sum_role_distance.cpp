@@ -78,7 +78,7 @@ bool SumRoleDistanceNumerical::operator==(const Numerical& other) const {
 }
 
 size_t SumRoleDistanceNumerical::hash() const {
-    return dlplan::utils::hash_combine(m_is_static, m_role_from, m_role, m_role_to);
+    return hash_combine(m_is_static, m_role_from, m_role, m_role_to);
 }
 
 int SumRoleDistanceNumerical::evaluate(const State& state) const {

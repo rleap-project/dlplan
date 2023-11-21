@@ -59,10 +59,10 @@ bool Policy::operator<(const Policy& other) const {
 }
 
 size_t Policy::hash() const {
-    return dlplan::utils::hash_combine(
-        dlplan::utils::hash_set(m_booleans),
-        dlplan::utils::hash_set(m_numericals),
-        dlplan::utils::hash_set(m_rules));
+    return hash_combine(
+        hash_set(m_booleans),
+        hash_set(m_numericals),
+        hash_set(m_rules));
 }
 
 std::shared_ptr<const Rule> Policy::evaluate(const core::State& source_state, const core::State& target_state) const {

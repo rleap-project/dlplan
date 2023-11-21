@@ -33,7 +33,7 @@ bool NamedBoolean::operator<(const NamedBoolean& other) const {
 }
 
 size_t NamedBoolean::hash() const {
-    return dlplan::utils::hash_combine(m_key, m_boolean);
+    return hash_combine(m_key, m_boolean);
 }
 
 int NamedBoolean::compute_evaluate_time_score() const {

@@ -8,7 +8,7 @@
 #include <memory>
 
 
-namespace dlplan::utils {
+namespace dlplan {
 template<typename T>
 class pimpl {
 private:

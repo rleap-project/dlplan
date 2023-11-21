@@ -9,7 +9,7 @@
 #include <set>
 
 
-namespace dlplan::utils {
+namespace dlplan {
 
 /**
  * For combining hash value we use the boost::hash_combine one-liner.
@@ -68,19 +68,19 @@ namespace std {
     template<>
         struct hash<std::vector<bool>> {
         size_t operator()(const std::vector<bool>& data) const {
-            return dlplan::utils::hash_vector(data);
+            return dlplan::hash_vector(data);
         }
     };
     template<>
         struct hash<std::vector<unsigned>> {
         size_t operator()(const std::vector<unsigned>& data) const {
-            return dlplan::utils::hash_vector(data);
+            return dlplan::hash_vector(data);
         }
     };
     template<>
         struct hash<std::vector<int>> {
         size_t operator()(const std::vector<int>& data) const {
-            return dlplan::utils::hash_vector(data);
+            return dlplan::hash_vector(data);
         }
     };
 }

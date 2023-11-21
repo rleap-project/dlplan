@@ -49,7 +49,7 @@ bool AndRole::operator==(const Role& other) const {
 }
 
 size_t AndRole::hash() const {
-    return dlplan::utils::hash_combine(m_is_static, m_role_left, m_role_right);
+    return hash_combine(m_is_static, m_role_left, m_role_right);
 }
 
 RoleDenotation AndRole::evaluate(const State& state) const {

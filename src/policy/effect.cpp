@@ -55,7 +55,7 @@ bool PositiveBooleanEffect::operator==(const BaseEffect& other) const {
 }
 
 size_t PositiveBooleanEffect::hash() const {
-    return dlplan::utils::hash_combine(m_boolean);
+    return hash_combine(m_boolean);
 }
 
 bool PositiveBooleanEffect::evaluate(const core::State&, const core::State& target_state) const {
@@ -88,7 +88,7 @@ bool NegativeBooleanEffect::operator==(const BaseEffect& other) const {
 }
 
 size_t NegativeBooleanEffect::hash() const {
-    return dlplan::utils::hash_combine(m_boolean);
+    return hash_combine(m_boolean);
 }
 
 bool NegativeBooleanEffect::evaluate(const core::State&, const core::State& target_state) const {
@@ -121,7 +121,7 @@ bool UnchangedBooleanEffect::operator==(const BaseEffect& other) const {
 }
 
 size_t UnchangedBooleanEffect::hash() const {
-    return dlplan::utils::hash_combine(m_boolean);
+    return hash_combine(m_boolean);
 }
 
 bool UnchangedBooleanEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
@@ -154,7 +154,7 @@ bool IncrementNumericalEffect::operator==(const BaseEffect& other) const {
 }
 
 size_t IncrementNumericalEffect::hash() const {
-    return dlplan::utils::hash_combine(m_numerical);
+    return hash_combine(m_numerical);
 }
 
 bool IncrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
@@ -195,7 +195,7 @@ bool DecrementNumericalEffect::operator==(const BaseEffect& other) const {
 }
 
 size_t DecrementNumericalEffect::hash() const {
-    return dlplan::utils::hash_combine(m_numerical);
+    return hash_combine(m_numerical);
 }
 
 bool DecrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
@@ -236,7 +236,7 @@ bool UnchangedNumericalEffect::operator==(const BaseEffect& other) const {
 }
 
 size_t UnchangedNumericalEffect::hash() const {
-    return dlplan::utils::hash_combine(m_numerical);
+    return hash_combine(m_numerical);
 }
 
 bool UnchangedNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state) const {

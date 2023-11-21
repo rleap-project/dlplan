@@ -42,7 +42,7 @@ bool NotRole::operator==(const Role& other) const {
 }
 
 size_t NotRole::hash() const {
-    return dlplan::utils::hash_combine(m_is_static, m_role);
+    return hash_combine(m_is_static, m_role);
 }
 
 RoleDenotation NotRole::evaluate(const State& state) const {

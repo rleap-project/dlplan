@@ -250,7 +250,7 @@ public:
     struct Cache {
         struct UniquePtrHash {
             std::size_t operator()(const std::unique_ptr<const T>& ptr) const {
-                return dlplan::utils::hash_combine(*ptr);
+                return hash_combine(*ptr);
             }
         };
 
@@ -862,7 +862,7 @@ public:
 /// @brief Provides functionality for the syntactically unique creation of elements.
 class SyntacticElementFactory {
 private:
-    dlplan::utils::pimpl<SyntacticElementFactoryImpl> m_pImpl;
+    pimpl<SyntacticElementFactoryImpl> m_pImpl;
 
 public:
     SyntacticElementFactory(std::shared_ptr<VocabularyInfo> vocabulary_info);

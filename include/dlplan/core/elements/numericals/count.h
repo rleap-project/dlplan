@@ -73,7 +73,7 @@ public:
     }
 
     size_t hash() const {
-        return dlplan::utils::hash_combine(m_is_static, m_element);
+        return hash_combine(m_is_static, m_element);
     }
 
     int evaluate(const State& state) const override {

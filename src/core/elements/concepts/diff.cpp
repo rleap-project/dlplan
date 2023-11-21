@@ -46,7 +46,7 @@ bool DiffConcept::operator==(const Concept& other) const {
 }
 
 size_t DiffConcept::hash() const {
-    return dlplan::utils::hash_combine(m_is_static, m_concept_left, m_concept_right);
+    return hash_combine(m_is_static, m_concept_left, m_concept_right);
 }
 
 ConceptDenotation DiffConcept::evaluate(const State& state) const {

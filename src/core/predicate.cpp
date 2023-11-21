@@ -27,7 +27,7 @@ bool Predicate::operator!=(const Predicate& other) const {
 }
 
 size_t Predicate::hash() const {
-    return dlplan::utils::hash_combine(m_name, m_index, m_arity, m_is_static);
+    return hash_combine(m_name, m_index, m_arity, m_is_static);
 }
 
 std::string Predicate::compute_repr() const {

@@ -54,7 +54,7 @@ bool EqualConcept::operator==(const Concept& other) const {
 }
 
 size_t EqualConcept::hash() const {
-    return dlplan::utils::hash_combine(m_is_static, m_role_left, m_role_right);
+    return hash_combine(m_is_static, m_role_left, m_role_right);
 }
 
 ConceptDenotation EqualConcept::evaluate(const State& state) const {

@@ -51,9 +51,9 @@ namespace std {
     struct hash<dlplan::policy::CacheEntry<size>> {
         size_t operator()(const dlplan::policy::CacheEntry<size>& entry) const noexcept {
             size_t seed = entry.rules.size();
-            dlplan::utils::hash_combine(seed, entry.feature);
+            hash_combine(seed, entry.feature);
             for (const auto& rule_ptr : entry.rules) {
-                dlplan::utils::hash_combine(seed, rule_ptr);
+                hash_combine(seed, rule_ptr);
             }
             return seed;
         }

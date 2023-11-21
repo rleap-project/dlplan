@@ -116,12 +116,7 @@ std::string State::str() const {
 
 size_t State::hash() const {
     assert(std::is_sorted(m_atom_indices.begin(), m_atom_indices.end()));
-    size_t seed = m_atom_indices.size();
-    for (int atom_idx : m_atom_indices) {
-        utils::hash_combine(seed, atom_idx);
-    }
-    utils::hash_combine(seed, m_instance_info.get());
-    return seed;
+    return hash_combine(hash_vector(m_atom_indices), m_instance_info);
 }
 
 }

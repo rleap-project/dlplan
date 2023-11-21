@@ -49,7 +49,7 @@ bool ProjectionConcept::operator==(const Concept& other) const {
 }
 
 size_t ProjectionConcept::hash() const {
-    return dlplan::utils::hash_combine(m_is_static, m_role, m_pos);
+    return hash_combine(m_is_static, m_role, m_pos);
 }
 
 ConceptDenotation ProjectionConcept::evaluate(const State& state) const {

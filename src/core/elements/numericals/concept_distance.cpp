@@ -73,7 +73,7 @@ bool ConceptDistanceNumerical::operator==(const Numerical& other) const {
 }
 
 size_t ConceptDistanceNumerical::hash() const {
-    return dlplan::utils::hash_combine(m_is_static, m_concept_from, m_role, m_concept_to);
+    return hash_combine(m_is_static, m_concept_from, m_role, m_concept_to);
 }
 
 int ConceptDistanceNumerical::evaluate(const State& state) const {

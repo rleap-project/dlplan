@@ -39,7 +39,7 @@ bool NamedRole::operator<(const NamedRole& other) const {
 }
 
 size_t NamedRole::hash() const {
-    return dlplan::utils::hash_combine(m_key, m_role);
+    return hash_combine(m_key, m_role);
 }
 
 int NamedRole::compute_evaluate_time_score() const {

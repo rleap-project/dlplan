@@ -33,7 +33,7 @@ bool NamedConcept::operator<(const NamedConcept& other) const {
 }
 
 size_t NamedConcept::hash() const {
-    return dlplan::utils::hash_combine(m_key, m_concept);
+    return hash_combine(m_key, m_concept);
 }
 
 int NamedConcept::compute_evaluate_time_score() const {

@@ -54,7 +54,7 @@ bool PositiveBooleanCondition::operator==(const BaseCondition& other) const {
 }
 
 size_t PositiveBooleanCondition::hash() const {
-    return dlplan::utils::hash_combine(m_boolean);
+    return hash_combine(m_boolean);
 }
 
 bool PositiveBooleanCondition::evaluate(const core::State& source_state) const {
@@ -87,7 +87,7 @@ bool NegativeBooleanCondition::operator==(const BaseCondition& other) const {
 }
 
 size_t NegativeBooleanCondition::hash() const {
-    return dlplan::utils::hash_combine(m_boolean);
+    return hash_combine(m_boolean);
 }
 
 bool NegativeBooleanCondition::evaluate(const core::State& source_state) const {
@@ -120,7 +120,7 @@ bool EqualNumericalCondition::operator==(const BaseCondition& other) const {
 }
 
 size_t EqualNumericalCondition::hash() const {
-    return dlplan::utils::hash_combine(m_numerical);
+    return hash_combine(m_numerical);
 }
 
 bool EqualNumericalCondition::evaluate(const core::State& source_state) const {
@@ -157,7 +157,7 @@ bool GreaterNumericalCondition::operator==(const BaseCondition& other) const {
 }
 
 size_t GreaterNumericalCondition::hash() const {
-    return dlplan::utils::hash_combine(m_numerical);
+    return hash_combine(m_numerical);
 }
 
 bool GreaterNumericalCondition::evaluate(const core::State& source_state) const {

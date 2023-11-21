@@ -33,9 +33,9 @@ bool Rule::operator<(const Rule& other) const {
 }
 
 size_t Rule::hash() const {
-    return dlplan::utils::hash_combine(
-        dlplan::utils::hash_set(m_conditions),
-        dlplan::utils::hash_set(m_effects));
+    return hash_combine(
+        hash_set(m_conditions),
+        hash_set(m_effects));
 }
 
 bool Rule::evaluate_conditions(const core::State& source_state) const {

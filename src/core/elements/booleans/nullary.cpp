@@ -51,7 +51,7 @@ bool NullaryBoolean::operator==(const Boolean& other) const {
 }
 
 size_t NullaryBoolean::hash() const {
-    return dlplan::utils::hash_combine(m_is_static, m_predicate);
+    return hash_combine(m_is_static, m_predicate);
 }
 
 bool NullaryBoolean::evaluate(const State& state) const {

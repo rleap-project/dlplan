@@ -49,7 +49,7 @@ bool AndConcept::operator==(const Concept& other) const {
 }
 
 size_t AndConcept::hash() const {
-    return dlplan::utils::hash_combine(m_is_static, m_concept_left, m_concept_right);
+    return hash_combine(m_is_static, m_concept_left, m_concept_right);
 }
 
 ConceptDenotation AndConcept::evaluate(const State& state) const {

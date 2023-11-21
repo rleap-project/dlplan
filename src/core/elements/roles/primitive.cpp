@@ -68,7 +68,7 @@ bool PrimitiveRole::operator==(const Role& other) const {
 }
 
 size_t PrimitiveRole::hash() const {
-    return dlplan::utils::hash_combine(m_is_static, m_predicate, m_pos_1, m_pos_2);
+    return hash_combine(m_is_static, m_predicate, m_pos_1, m_pos_2);
 }
 
 RoleDenotation PrimitiveRole::evaluate(const State& state) const {
