@@ -55,7 +55,6 @@ target_sources(dlplancore
         ../utils/MurmurHash3.cpp
         ../utils/system.cpp
         ../utils/timer.cpp
-        ../utils/hash.cpp
         ../common/parsers/utility.cpp
         ../common/parsers/filesystem.cpp)
 

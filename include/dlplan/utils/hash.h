@@ -28,28 +28,6 @@ inline void hash_combine(size_t& seed, const std::size_t& val)
     seed ^= val + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 }
 
-template<typename T>
-struct hash_impl {
-    std::size_t operator()(const T&) const {
-        throw std::runtime_error("hash::operator() - not implemented.");
-    }
-};
-template<typename T>
-struct hash {
-    std::size_t operator()(const T& value) const {
-        return hash_impl<typename std::remove_const<T>::type>()(value);
-    }
-};
-template<>
-struct hash_impl<std::vector<unsigned>> {
-    size_t operator()(const std::vector<unsigned>& data) const;
-};
-template<>
-struct hash_impl<std::vector<int>> {
-    size_t operator()(const std::vector<int>& data) const;
-};
-
-
 template<typename... Types>
 inline size_t hash_combine(const Types&... args)
 {

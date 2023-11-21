@@ -42,10 +42,10 @@ size_t hash_impl<std::vector<bool>>::operator()(const std::vector<bool>& data) c
     return std::hash<std::vector<bool>>()(data);
 }
 size_t hash_impl<std::vector<unsigned>>::operator()(const std::vector<unsigned>& data) const {
-    return dlplan::utils::hash<std::vector<unsigned>>()(data);
+    return dlplan::utils::hash_vector(data);
 }
 size_t hash_impl<std::vector<int>>::operator()(const std::vector<int>& data) const {
-    return dlplan::utils::hash<std::vector<int>>()(data);
+    return dlplan::utils::hash_vector(data);
 }
 
 SyntacticElementFactory::SyntacticElementFactory(std::shared_ptr<VocabularyInfo> vocabulary_info)
