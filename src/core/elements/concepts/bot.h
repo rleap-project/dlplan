@@ -62,7 +62,8 @@ private:
     }
 
     BotConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info)
-    : Concept(vocabulary_info, index, true) { }
+    : Concept(vocabulary_info, index, true) {
+     }
 
     /// @brief Constructor for serialization.
     BotConcept() {}

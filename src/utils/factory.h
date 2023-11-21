@@ -43,7 +43,12 @@ template<typename T>
 struct PerTypeCache {
     std::unordered_map<T, std::weak_ptr<T>> data;
     std::mutex mutex;
-    int count = -1;
+};
+
+template<typename T>
+struct GetOrCreateResult {
+    std::shared_ptr<const T> object;
+    bool created;
 };
 
 
@@ -55,18 +60,15 @@ class ReferenceCountedObjectFactory {
 private:
     std::tuple<std::shared_ptr<PerTypeCache<Ts>>...> m_cache;
 
+    // Identifiers are shared since types can be polymorphic
+    int m_count = -1;
+
     template<typename Archive, typename... Ts_>
     friend void boost::serialization::serialize(Archive& ar, ReferenceCountedObjectFactory<Ts_...>& t, const unsigned int version);
 
 public:
     ReferenceCountedObjectFactory()
         : m_cache((std::make_shared<PerTypeCache<Ts>>())...) { }
-
-    template<typename T>
-    struct GetOrCreateResult {
-        std::shared_ptr<const T> object;
-        bool created;
-    };
 
     /// @brief Gets a shared reference to the object of type T with the given arguments.
     ///        If such an object does not exists then it creates one.
@@ -76,8 +78,7 @@ public:
     template<typename T, typename... Args>
     GetOrCreateResult<T> get_or_create(Args&&... args) {
         auto& t_cache = std::get<std::shared_ptr<PerTypeCache<T>>>(m_cache);
-        // There is a separate index for each T.
-        int index = ++t_cache->count;
+        int index = ++m_count;
         /* Must explicitly call the constructor of T to give exclusive access to the factory. */
         auto element = std::make_unique<T>(T(index, args...));
         /* we must declare sp before locking the mutex
@@ -105,7 +106,6 @@ public:
             );
             element.release();
         }
-
         return GetOrCreateResult<T>{sp, new_insertion};
     }
 };
@@ -117,13 +117,13 @@ namespace boost::serialization {
 template<typename Archive, typename T>
 void serialize(Archive& ar, dlplan::utils::PerTypeCache<T>& t, const unsigned int /*version*/) {
     ar & t.data;
-    ar & t.count;
 }
 
 template<typename Archive, typename... Ts>
 void serialize(Archive& ar, dlplan::utils::ReferenceCountedObjectFactory<Ts...>& t, const unsigned int /* version */ )
 {
     ar & t.m_cache;
+    ar & t.m_count;
 }
 
 }

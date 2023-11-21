@@ -75,6 +75,7 @@ int main() {
     States states({state_0, state_1, state_2, state_3, state_4});
 
     FeatureRepresentations features = generate_features(factory, states, 5, 5, 10, 10, 10, 180, 100000);
+    //FeatureRepresentations features = generate_features(factory, states, 2, 2, 2, 2, 2, 180, 100000);
 
     for (const auto& feature : features) {
         std::cout << feature << std::endl;

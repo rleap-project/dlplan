@@ -1,9 +1,8 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENTS_BOOLEAN_EMPTY_H_
 #define DLPLAN_SRC_CORE_ELEMENTS_BOOLEAN_EMPTY_H_
 
-#include "../utils.h"
-#include "../../../../include/dlplan/core.h"
-#include "../../../../include/dlplan/utils/hash.h"
+#include "../../../../../src/core/elements/utils.h"
+#include "../../../core.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>

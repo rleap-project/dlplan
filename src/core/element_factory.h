@@ -1,12 +1,12 @@
 #ifndef DLPLAN_SRC_CORE_ELEMENT_FACTORY_H_
 #define DLPLAN_SRC_CORE_ELEMENT_FACTORY_H_
 
-#include "elements/booleans/empty.h"
-#include "elements/booleans/inclusion.h"
-#include "elements/booleans/nullary.h"
-#include "elements/concepts/all.h"
+#include "../../include/dlplan/core/elements/booleans/empty.h"
+#include "../../include/dlplan/core/elements/booleans/inclusion.h"
+#include "../../include/dlplan/core/elements/booleans/nullary.h"
+#include "../../include/dlplan/core/elements/concepts/all.h"
+#include "../../include/dlplan/core/elements/concepts/and.h"
 #include "elements/concepts/bot.h"
-#include "elements/concepts/and.h"
 #include "elements/concepts/diff.h"
 #include "elements/concepts/equal.h"
 #include "elements/concepts/not.h"

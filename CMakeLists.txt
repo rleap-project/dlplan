@@ -68,7 +68,7 @@ add_subdirectory(examples)
 #add_subdirectory(experiments)
 
 if (ENABLE_TESTING)
-    # add_subdirectory(tests)
+    add_subdirectory(tests)
 endif()
 
 if(DLPLAN_PYTHON)

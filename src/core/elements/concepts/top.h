@@ -59,7 +59,8 @@ private:
     }
 
     TopConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info)
-        : Concept(vocabulary_info, index, true) { }
+        : Concept(vocabulary_info, index, true) {
+    }
 
     template<typename Archive>
     friend void boost::serialization::serialize(Archive& ar, TopConcept& t, const unsigned int version);
