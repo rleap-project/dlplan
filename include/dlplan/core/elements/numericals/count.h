@@ -16,7 +16,7 @@
 using namespace std::string_literals;
 
 
-namespace dlplan::utils {
+namespace dlplan {
 template<typename... Ts>
 class ReferenceCountedObjectFactory;
 }
@@ -60,7 +60,7 @@ private:
         : Numerical(vocabulary_info, index, element->is_static()), m_element(element) { }
 
     template<typename... Ts>
-    friend class dlplan::utils::ReferenceCountedObjectFactory;
+    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     bool operator==(const Numerical& other) const override {

@@ -8,7 +8,7 @@
 #include <memory>
 
 
-namespace dlplan::utils {
+namespace dlplan {
 template<typename... Ts>
 class ReferenceCountedObjectFactory;
 }
@@ -46,7 +46,7 @@ private:
     PositiveBooleanEffect(int identifier, std::shared_ptr<const NamedBoolean> boolean);
 
     template<typename... Ts>
-    friend class dlplan::utils::ReferenceCountedObjectFactory;
+    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     bool operator==(const BaseEffect& other) const override;
@@ -65,7 +65,7 @@ private:
     NegativeBooleanEffect(int identifier, std::shared_ptr<const NamedBoolean> boolean);
 
     template<typename... Ts>
-    friend class dlplan::utils::ReferenceCountedObjectFactory;
+    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     bool operator==(const BaseEffect& other) const override;
@@ -84,7 +84,7 @@ private:
     UnchangedBooleanEffect(int identifier, std::shared_ptr<const NamedBoolean> boolean);
 
     template<typename... Ts>
-    friend class dlplan::utils::ReferenceCountedObjectFactory;
+    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     bool operator==(const BaseEffect& other) const override;
@@ -103,7 +103,7 @@ private:
     IncrementNumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical);
 
     template<typename... Ts>
-    friend class dlplan::utils::ReferenceCountedObjectFactory;
+    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     bool operator==(const BaseEffect& other) const override;
@@ -122,7 +122,7 @@ private:
     DecrementNumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical);
 
     template<typename... Ts>
-    friend class dlplan::utils::ReferenceCountedObjectFactory;
+    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     bool operator==(const BaseEffect& other) const override;
@@ -141,7 +141,7 @@ private:
     UnchangedNumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical);
 
     template<typename... Ts>
-    friend class dlplan::utils::ReferenceCountedObjectFactory;
+    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     bool operator==(const BaseEffect& other) const override;

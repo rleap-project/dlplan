@@ -10,7 +10,7 @@
 using namespace std::string_literals;
 
 
-namespace dlplan::utils {
+namespace dlplan {
 template<typename... Ts>
 class ReferenceCountedObjectFactory;
 }
@@ -32,7 +32,7 @@ private:
     SumRoleDistanceNumerical(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role_from, std::shared_ptr<const Role> role, std::shared_ptr<const Role> role_to);
 
     template<typename... Ts>
-    friend class dlplan::utils::ReferenceCountedObjectFactory;
+    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     bool operator==(const Numerical& other) const override;

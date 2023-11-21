@@ -1,8 +1,7 @@
 #ifndef DLPLAN_SRC_POLICY_POLICY_BUILDER_H_
 #define DLPLAN_SRC_POLICY_POLICY_BUILDER_H_
 
-#include "../utils/factory.h"
-
+#include "../../include/dlplan/utils/factory.h"
 #include "../../include/dlplan/core.h"
 #include "../../include/dlplan/policy.h"
 #include "../../include/dlplan/policy/condition.h"
@@ -19,7 +18,7 @@ class PolicyFactoryImpl {
 private:
     std::shared_ptr<core::SyntacticElementFactory> m_element_factory;
 
-    dlplan::utils::ReferenceCountedObjectFactory<NamedBoolean
+    ReferenceCountedObjectFactory<NamedBoolean
         , NamedNumerical
         , NamedConcept
         , NamedRole

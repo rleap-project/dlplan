@@ -10,7 +10,7 @@
 using namespace std::string_literals;
 
 
-namespace dlplan::utils {
+namespace dlplan {
 template<typename... Ts>
 class ReferenceCountedObjectFactory;
 }
@@ -26,7 +26,7 @@ private:
     TopRole(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info);
 
     template<typename... Ts>
-    friend class dlplan::utils::ReferenceCountedObjectFactory;
+    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     bool operator==(const Role& other) const override;

@@ -10,7 +10,7 @@
 using namespace std::string_literals;
 
 
-namespace dlplan::utils {
+namespace dlplan {
 template<typename... Ts>
 class ReferenceCountedObjectFactory;
 }
@@ -61,7 +61,7 @@ private:
     }
 
     template<typename... Ts>
-    friend class dlplan::utils::ReferenceCountedObjectFactory;
+    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     bool operator==(const Boolean& other) const override {

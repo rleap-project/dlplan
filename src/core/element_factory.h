@@ -36,8 +36,7 @@
 #include "../../include/dlplan/core/elements/roles/transitive_reflexive_closure.h"
 
 #include "../../include/dlplan/core.h"
-
-#include "../utils/factory.h"
+#include "../../include/dlplan/utils/factory.h"
 
 #include <memory>
 #include <string>
@@ -48,7 +47,7 @@ class SyntacticElementFactoryImpl {
 private:
     std::shared_ptr<VocabularyInfo> m_vocabulary_info;
 
-    dlplan::utils::ReferenceCountedObjectFactory<EmptyBoolean<Concept>
+    ReferenceCountedObjectFactory<EmptyBoolean<Concept>
         , EmptyBoolean<Role>
         , InclusionBoolean<Concept>
         , InclusionBoolean<Role>

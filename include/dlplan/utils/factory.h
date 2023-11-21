@@ -9,7 +9,7 @@
 #include <utility>
 
 
-namespace dlplan::utils {
+namespace dlplan {
 template<typename T>
 struct PerTypeCache {
     std::unordered_map<T, std::weak_ptr<T>> data;

@@ -9,7 +9,7 @@
 using namespace dlplan;
 
 
-namespace dlplan::utils {
+namespace dlplan {
 template<typename... Ts>
 class ReferenceCountedObjectFactory;
 }
@@ -49,7 +49,7 @@ private:
     PositiveBooleanCondition(int identifier, std::shared_ptr<const NamedBoolean> boolean);
 
     template<typename... Ts>
-    friend class dlplan::utils::ReferenceCountedObjectFactory;
+    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     bool operator==(const BaseCondition& other) const override;
@@ -68,7 +68,7 @@ private:
     NegativeBooleanCondition(int identifier, std::shared_ptr<const NamedBoolean> boolean);
 
     template<typename... Ts>
-    friend class dlplan::utils::ReferenceCountedObjectFactory;
+    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     bool operator==(const BaseCondition& other) const override;
@@ -87,7 +87,7 @@ private:
     EqualNumericalCondition(int identifier, std::shared_ptr<const NamedNumerical> numerical);
 
     template<typename... Ts>
-    friend class dlplan::utils::ReferenceCountedObjectFactory;
+    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     bool operator==(const BaseCondition& other) const override;
@@ -106,7 +106,7 @@ private:
     GreaterNumericalCondition(int identifier, std::shared_ptr<const NamedNumerical> numerical);
 
     template<typename... Ts>
-    friend class dlplan::utils::ReferenceCountedObjectFactory;
+    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     bool operator==(const BaseCondition& other) const override;

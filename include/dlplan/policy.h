@@ -29,7 +29,7 @@ class PolicyFactory;
 }
 
 
-namespace dlplan::utils {
+namespace dlplan {
 template<typename... Ts>
 class ReferenceCountedObjectFactory;
 }
@@ -74,7 +74,7 @@ private:
     NamedBoolean(int identifier, const std::string& key, std::shared_ptr<const core::Boolean> boolean);
 
     template<typename... Ts>
-    friend class dlplan::utils::ReferenceCountedObjectFactory;
+    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     NamedBoolean(const NamedBoolean& other);
@@ -106,7 +106,7 @@ private:
     NamedNumerical(int identifier, const std::string& key, std::shared_ptr<const core::Numerical> numerical);
 
     template<typename... Ts>
-    friend class dlplan::utils::ReferenceCountedObjectFactory;
+    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     NamedNumerical(const NamedNumerical& other);
@@ -138,7 +138,7 @@ private:
     NamedConcept(int identifier, const std::string& key, std::shared_ptr<const core::Concept> concept);
 
     template<typename... Ts>
-    friend class dlplan::utils::ReferenceCountedObjectFactory;
+    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     NamedConcept(const NamedConcept& other);
@@ -170,7 +170,7 @@ private:
     NamedRole(int identifier, const std::string& key, std::shared_ptr<const core::Role> role);
 
     template<typename... Ts>
-    friend class dlplan::utils::ReferenceCountedObjectFactory;
+    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     NamedRole(const NamedRole& other);
@@ -203,7 +203,7 @@ protected:
     explicit BaseCondition(int identifier);
 
     template<typename... Ts>
-    friend class dlplan::utils::ReferenceCountedObjectFactory;
+    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     virtual ~BaseCondition();
@@ -240,7 +240,7 @@ protected:
     explicit BaseEffect(int identifier);
 
     template<typename... Ts>
-    friend class dlplan::utils::ReferenceCountedObjectFactory;
+    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     virtual ~BaseEffect();
@@ -280,7 +280,7 @@ private:
     Rule(int identifier, const Conditions& conditions, const Effects& effects);
 
     template<typename... Ts>
-    friend class dlplan::utils::ReferenceCountedObjectFactory;
+    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     Rule(const Rule& other);
@@ -327,7 +327,7 @@ private:
     Policy(int identifier, const Rules& rules);
 
     template<typename... Ts>
-    friend class dlplan::utils::ReferenceCountedObjectFactory;
+    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     Policy(const Policy& other);
