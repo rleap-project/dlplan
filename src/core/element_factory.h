@@ -6,7 +6,7 @@
 #include "../../include/dlplan/core/elements/booleans/nullary.h"
 #include "../../include/dlplan/core/elements/concepts/all.h"
 #include "../../include/dlplan/core/elements/concepts/and.h"
-#include "elements/concepts/bot.h"
+#include "../../include/dlplan/core/elements/concepts/bot.h"
 #include "elements/concepts/diff.h"
 #include "elements/concepts/equal.h"
 #include "elements/concepts/not.h"
