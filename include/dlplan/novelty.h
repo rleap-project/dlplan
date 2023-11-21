@@ -20,21 +20,6 @@ class TupleGraph;
 }
 
 
-// Forward declarations of template spezializations for serialization
-namespace boost::serialization {
-    class access;
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::novelty::NoveltyBase& t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::novelty::TupleNode& t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::novelty::TupleGraph& t, const unsigned int version);
-}
-
-
 namespace dlplan::novelty
 {
 using AtomIndex = int;
@@ -54,13 +39,6 @@ private:
     std::vector<int> m_factors;
     int m_num_atoms;
     int m_arity;
-
-    /// @brief Constructor for serialization.
-    NoveltyBase();
-
-    friend class boost::serialization::access;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, NoveltyBase& t, const unsigned int version);
 
 public:
     NoveltyBase(int num_atoms, int arity);
@@ -180,9 +158,6 @@ private:
     TupleNodeIndices m_predecessors;
     TupleNodeIndices m_successors;
 
-    /// @brief Constructor for serialization.
-    TupleNode();
-
     TupleNode(TupleNodeIndex index, TupleIndex tuple_index, const state_space::StateIndices &state_indices);
     TupleNode(TupleNodeIndex index, TupleIndex tuple_index, state_space::StateIndices &&state_indices);
 
@@ -191,9 +166,6 @@ private:
 
     friend class TupleGraphBuilder;
     friend class TupleGraph;
-    friend class boost::serialization::access;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, TupleNode& t, const unsigned int version);
 
 public:
     TupleNode(const TupleNode &other);
@@ -237,13 +209,6 @@ private:
     TupleNodes m_nodes;
     std::vector<TupleNodeIndices> m_node_indices_by_distance;
     std::vector<state_space::StateIndices> m_state_indices_by_distance;
-
-    /// @brief Constructor for serialization.
-    TupleGraph();
-
-    friend class boost::serialization::access;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, TupleGraph& t, const unsigned int version);
 
 public:
     TupleGraph(

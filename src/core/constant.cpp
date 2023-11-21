@@ -1,13 +1,9 @@
 #include "../../include/dlplan/core.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-
 #include <sstream>
 
 
 namespace dlplan::core {
-Constant::Constant() : m_name(""), m_index(-1) { }
 
 Constant::Constant(const std::string& name, ConstantIndex index)
     : m_name(name), m_index(index) { }

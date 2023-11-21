@@ -1,13 +1,7 @@
 #include "../../include/dlplan/core.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-
 
 namespace dlplan::core {
-Concept::Concept() { }
 
 Concept::Concept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
     : BaseElement(vocabulary_info, index, is_static) {

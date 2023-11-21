@@ -38,88 +38,6 @@ class SyntacticElementFactoryImpl;
 }
 
 
-
-// Forward declarations of template spezializations for serialization
-namespace boost::serialization {
-    class access;
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::ConceptDenotation& t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::RoleDenotation& t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::DenotationsCaches& t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::Constant& t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::Predicate& t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::Object& t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::Atom& t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::State& t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, std::pair<const int, dlplan::core::State>& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const std::pair<const int, dlplan::core::State>* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, std::pair<const int, dlplan::core::State>* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::VocabularyInfo& t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::InstanceInfo& t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::BaseElement& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::BaseElement* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::BaseElement* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::Concept& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::Concept* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::Concept* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::Role& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::Role* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::Role* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::Boolean& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::Boolean* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::Boolean* t, const unsigned int version);
-
-    template <typename Archive>
-    void serialize(Archive& ar, dlplan::core::Numerical& t, const unsigned int version);
-    template<class Archive>
-    void save_construct_data(Archive& ar, const dlplan::core::Numerical* t, const unsigned int version);
-    template<class Archive>
-    void load_construct_data(Archive& ar, dlplan::core::Numerical* t, const unsigned int version);
-
-    template<typename Archive>
-    void serialize(Archive& ar, dlplan::core::SyntacticElementFactory& t, const unsigned int version);
-}
-
-
 namespace dlplan::core {
 using ConceptDenotations = std::vector<const ConceptDenotation*>;
 using RoleDenotations = std::vector<const RoleDenotation*>;
@@ -213,13 +131,6 @@ private:
     int m_num_objects;
     dlplan::utils::DynamicBitset<unsigned> m_data;
 
-    /// @brief Constructor for serialization.
-    ConceptDenotation();
-
-    friend class boost::serialization::access;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, ConceptDenotation& t, const unsigned int version);
-
 public:
     explicit ConceptDenotation(int num_objects);
     ConceptDenotation(const ConceptDenotation& other);
@@ -285,13 +196,6 @@ class RoleDenotation {
 private:
     int m_num_objects;
     dlplan::utils::DynamicBitset<unsigned> m_data;
-
-    /// @brief Constructor for serialization.
-    RoleDenotation();
-
-    friend class boost::serialization::access;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, RoleDenotation& t, const unsigned int version);
 
 public:
     explicit RoleDenotation(int num_objects);
@@ -456,16 +360,9 @@ private:
     ///< The index of the constant.
     ConstantIndex m_index;
 
-    /// @brief Constructor for serialization.
-    Constant();
-
     Constant(const std::string& name, ConstantIndex index);
 
     friend class VocabularyInfo;
-    friend class boost::serialization::access;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, Constant& t, const unsigned int version);
-
 public:
     Constant(const Constant& other);
     Constant& operator=(const Constant& other);
@@ -524,16 +421,9 @@ private:
     int m_arity;
     bool m_is_static;
 
-    /// @brief Constructor for serialization.
-    Predicate();
-
     Predicate(const std::string& name, PredicateIndex index, int arity, bool is_static=false);
 
     friend class VocabularyInfo;
-    friend class boost::serialization::access;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, Predicate& t, const unsigned int version);
-
 public:
     Predicate(const Predicate& other);
     Predicate& operator=(const Predicate& other);
@@ -585,9 +475,6 @@ private:
     std::unordered_map<std::string, ConstantIndex> m_constant_name_to_index;
     std::vector<Constant> m_constants;
 
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, VocabularyInfo& t, const unsigned int version);
-
 public:
     VocabularyInfo();
     VocabularyInfo(const VocabularyInfo& other);
@@ -632,16 +519,9 @@ private:
     std::string m_name;
     ObjectIndex m_index;
 
-    /// @brief Constructor for serialization.
-    Object();
-
     Object(const std::string& name, int index);
 
     friend class InstanceInfo;
-    friend class boost::serialization::access;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, Object& t, const unsigned int version);
-
 public:
     Object(const Object& other);
     Object& operator=(const Object& other);
@@ -682,9 +562,6 @@ private:
     ObjectIndices m_object_indices;
     bool m_is_static;
 
-    /// @brief Constructor for serialization.
-    Atom();
-
     Atom(const std::string& name,
         AtomIndex index,
         PredicateIndex predicate_index,
@@ -692,9 +569,6 @@ private:
         bool is_static=false);
 
     friend class InstanceInfo;
-    friend class boost::serialization::access;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, Atom& t, const unsigned int version);
 
 public:
     Atom(const Atom& other);
@@ -745,16 +619,9 @@ private:
     std::unordered_map<std::string, ObjectIndex> m_object_name_to_index;
     std::vector<Object> m_objects;
 
-    /// @brief Constructor for serialization.
-    InstanceInfo();
-
     const Atom& add_atom(PredicateIndex predicate_index, const ObjectIndices& object_indices, bool is_static);
     const Atom& add_atom(const Predicate& predicate, const std::vector<Object>& objects, bool is_static);
     const Atom& add_atom(const std::string& predicate_name, const std::vector<std::string>& object_names, bool is_static);
-
-    friend class boost::serialization::access;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, InstanceInfo& t, const unsigned int version);
 
 public:
     InstanceInfo(std::shared_ptr<VocabularyInfo> vocabulary_info, InstanceIndex index=-1);
@@ -826,13 +693,6 @@ private:
     AtomIndices m_atom_indices;
     int m_index;
 
-    /// @brief Constructor for serialization.
-    State();
-
-    friend class boost::serialization::access;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, State& t, const unsigned int version);
-
 public:
     State(std::shared_ptr<InstanceInfo> instance_info, const std::vector<Atom>& atoms, StateIndex index=-1);
     State(std::shared_ptr<InstanceInfo> instance_info, const AtomIndices& atom_indices, StateIndex index=-1);
@@ -887,16 +747,6 @@ protected:
 
     BaseElement(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
 
-    /// @brief Constructor for serialization.
-    BaseElement();
-
-    template <typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, BaseElement& t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive & ar, const BaseElement* t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive & ar, BaseElement* t, const unsigned int version);
-
 public:
     virtual ~BaseElement();
 
@@ -939,18 +789,8 @@ class Concept : public BaseElement {
 protected:
     Concept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
 
-    /// @brief Constructor for serialization.
-    Concept();
-
     virtual ConceptDenotation evaluate_impl(const State& , DenotationsCaches& ) const = 0;
     virtual ConceptDenotations evaluate_impl(const States& , DenotationsCaches& ) const = 0;
-
-    template <typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, Concept& t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive & ar, const Concept* t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive & ar, Concept* t, const unsigned int version);
 
 public:
     Concept(const Concept& other);
@@ -974,18 +814,8 @@ class Role : public BaseElement {
 protected:
     Role(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
 
-    /// @brief Constructor for serialization.
-    Role();
-
     virtual RoleDenotation evaluate_impl(const State& , DenotationsCaches& ) const = 0;
     virtual RoleDenotations evaluate_impl(const States& , DenotationsCaches& ) const = 0;
-
-    template <typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, Role& t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive & ar, const Role* t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive & ar, Role* t, const unsigned int version);
 
 public:
     Role(const Role& other);
@@ -1009,18 +839,8 @@ class Numerical : public BaseElement {
 protected:
     Numerical(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
 
-    /// @brief Constructor for serialization.
-    Numerical();
-
     virtual int evaluate_impl(const State& , DenotationsCaches& ) const = 0;
     virtual NumericalDenotations evaluate_impl(const States& , DenotationsCaches& ) const = 0;
-
-    template <typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, Numerical& t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive & ar, const Numerical* t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive & ar, Numerical* t, const unsigned int version);
 
 public:
     Numerical(const Numerical& other);
@@ -1044,18 +864,8 @@ class Boolean : public BaseElement {
 protected:
     Boolean(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
 
-    /// @brief Constructor for serialization.
-    Boolean();
-
     virtual bool evaluate_impl(const State& , DenotationsCaches& ) const = 0;
     virtual BooleanDenotations evaluate_impl(const States& , DenotationsCaches& ) const = 0;
-
-    template <typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, Boolean& t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::save_construct_data(Archive & ar, const Boolean* t, const unsigned int version);
-    template<class Archive>
-    friend void boost::serialization::load_construct_data(Archive & ar, Boolean* t, const unsigned int version);
 
 public:
     Boolean(const Boolean& other);
@@ -1077,13 +887,6 @@ public:
 class SyntacticElementFactory {
 private:
     dlplan::utils::pimpl<SyntacticElementFactoryImpl> m_pImpl;
-
-    /// @brief Constructor for serialization
-    SyntacticElementFactory();
-
-    friend class boost::serialization::access;
-    template<typename Archive>
-    friend void boost::serialization::serialize(Archive& ar, SyntacticElementFactory& t, const unsigned int version);
 
 public:
     SyntacticElementFactory(std::shared_ptr<VocabularyInfo> vocabulary_info);

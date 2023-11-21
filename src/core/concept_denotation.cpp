@@ -11,8 +11,6 @@
 
 
 namespace dlplan::core {
-ConceptDenotation::ConceptDenotation() : m_num_objects(0), m_data(utils::DynamicBitset(0)) { }
-
 ConceptDenotation::ConceptDenotation(int num_objects)
     : m_num_objects(num_objects), m_data(utils::DynamicBitset<unsigned>(num_objects)) { }
 

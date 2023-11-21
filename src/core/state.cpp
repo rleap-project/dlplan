@@ -16,8 +16,6 @@ static AtomIndices sort_atom_idxs(AtomIndices&& atom_idxs) {
     return atom_idxs;
 }
 
-State::State() : m_instance_info(nullptr), m_atom_indices(AtomIndices()), m_index(-1) { }
-
 State::State(std::shared_ptr<InstanceInfo> instance_info, const std::vector<Atom>& atoms, StateIndex index)
     : m_instance_info(instance_info), m_index(index) {
     if (!std::all_of(atoms.begin(), atoms.end(), [&](const auto& atom){ return !atom.is_static(); })) {

@@ -11,7 +11,6 @@
 
 
 namespace dlplan::novelty {
-NoveltyBase::NoveltyBase() : m_factors(std::vector<int>()), m_num_atoms(0), m_arity(0) { }
 
 NoveltyBase::NoveltyBase(int num_atoms, int arity)
     : m_num_atoms(num_atoms), m_arity(arity) {

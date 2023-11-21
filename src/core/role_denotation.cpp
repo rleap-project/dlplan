@@ -8,7 +8,6 @@
 
 
 namespace dlplan::core {
-RoleDenotation::RoleDenotation() : m_num_objects(0), m_data(utils::DynamicBitset(0)) { }
 
 RoleDenotation::RoleDenotation(int num_objects)
     : m_num_objects(num_objects), m_data(utils::DynamicBitset<unsigned>(num_objects * num_objects)) { }

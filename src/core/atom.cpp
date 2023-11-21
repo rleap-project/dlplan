@@ -3,9 +3,6 @@
 #include "../utils/collections.h"
 #include "../utils/logging.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-
 #include <sstream>
 #include <cassert>
 
@@ -13,8 +10,6 @@ using namespace std::string_literals;
 
 
 namespace dlplan::core {
-
-Atom::Atom() : m_name(""), m_index(-1), m_predicate_index(-1), m_object_indices(ObjectIndices()), m_is_static(false) { }
 
 Atom::Atom(
     const std::string& name,

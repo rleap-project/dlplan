@@ -1,11 +1,7 @@
 #include "../../include/dlplan/core.h"
 
-#include <boost/serialization/base_object.hpp>
-
 
 namespace dlplan::core {
-Boolean::Boolean() { }
-
 Boolean::Boolean(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
     : BaseElement(vocabulary_info, index, is_static) {
 }
