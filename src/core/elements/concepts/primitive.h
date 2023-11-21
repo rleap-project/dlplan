@@ -41,7 +41,6 @@ namespace boost::serialization {
     void load_construct_data(Archive& ar, std::pair<const dlplan::core::PrimitiveConcept, std::weak_ptr<dlplan::core::PrimitiveConcept>>* t, const unsigned int version);
 }
 
-
 namespace dlplan::core {
 class PrimitiveConcept : public Concept {
 private:
