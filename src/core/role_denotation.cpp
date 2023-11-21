@@ -10,7 +10,7 @@
 namespace dlplan::core {
 
 RoleDenotation::RoleDenotation(int num_objects)
-    : m_num_objects(num_objects), m_data(utils::DynamicBitset<unsigned>(num_objects * num_objects)) { }
+    : m_num_objects(num_objects), m_data(DynamicBitset<unsigned>(num_objects * num_objects)) { }
 
 RoleDenotation::RoleDenotation(const RoleDenotation& other) = default;
 

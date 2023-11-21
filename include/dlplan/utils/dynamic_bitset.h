@@ -10,24 +10,10 @@
 #include <vector>
 
 
-namespace dlplan::utils {
-template<typename Block>
-class DynamicBitset;
-}
-
-
-namespace boost::serialization {
-    class access;
-
-    template <typename Archive, typename Block>
-    void serialize(Archive& ar, dlplan::utils::DynamicBitset<Block>& t, const unsigned int version);
-}
-
-
 /*
   Poor man's version of boost::dynamic_bitset, mostly copied from there.
 */
-namespace dlplan::utils {
+namespace dlplan {
 
 template<typename Block = unsigned int>
 class DynamicBitset {
@@ -74,11 +60,7 @@ class DynamicBitset {
     }
 
     /// @brief Constructor for serialization.
-    DynamicBitset() : blocks(std::vector<Block>()), num_bits(0) { }
-
-    friend class boost::serialization::access;
-    template<typename Archive, typename Block_>
-    friend void boost::serialization::serialize(Archive& ar, DynamicBitset<Block_>& t, const unsigned int version);
+    //DynamicBitset() : blocks(std::vector<Block>()), num_bits(0) { }
 
 public:
     explicit DynamicBitset(std::size_t num_bits)
@@ -212,15 +194,6 @@ template<typename Block>
 const Block DynamicBitset<Block>::ones = ~DynamicBitset<Block>::zeros;
 }
 
-namespace boost::serialization {
-
-template<typename Archive, typename Block>
-void serialize(Archive& ar, dlplan::utils::DynamicBitset<Block>& t, const unsigned int /* version */) {
-    ar & t.blocks;
-    ar & t.num_bits;
-}
-
-}
 
 /*
 This source file was derived from the boost::dynamic_bitset library

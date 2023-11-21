@@ -129,7 +129,7 @@ struct hash_impl<std::vector<int>> {
 class ConceptDenotation {
 private:
     int m_num_objects;
-    dlplan::utils::DynamicBitset<unsigned> m_data;
+    DynamicBitset<unsigned> m_data;
 
 public:
     explicit ConceptDenotation(int num_objects);
@@ -195,7 +195,7 @@ public:
 class RoleDenotation {
 private:
     int m_num_objects;
-    dlplan::utils::DynamicBitset<unsigned> m_data;
+    DynamicBitset<unsigned> m_data;
 
 public:
     explicit RoleDenotation(int num_objects);

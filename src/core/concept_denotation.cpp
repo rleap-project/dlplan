@@ -12,7 +12,7 @@
 
 namespace dlplan::core {
 ConceptDenotation::ConceptDenotation(int num_objects)
-    : m_num_objects(num_objects), m_data(utils::DynamicBitset<unsigned>(num_objects)) { }
+    : m_num_objects(num_objects), m_data(DynamicBitset<unsigned>(num_objects)) { }
 
 ConceptDenotation::ConceptDenotation(const ConceptDenotation& other) = default;
 
