@@ -8,46 +8,31 @@
 #include <boost/serialization/unique_ptr.hpp>
 
 
-namespace dlplan::core {
-size_t hash_impl<State>::operator()(const State& state) const {
-    return state.hash();
-}
-size_t hash_impl<ConceptDenotation>::operator()(const ConceptDenotation& denotation) const {
-    return denotation.hash();
-}
-size_t hash_impl<RoleDenotation>::operator()(const RoleDenotation& denotation) const {
-    return denotation.hash();
-}
-size_t hash_impl<ConceptDenotations>::operator()(const ConceptDenotations& denotations) const {
-    size_t seed = 0;
-    for (const auto denot_ptr : denotations) {
-        dlplan::utils::hash_combine(seed, denot_ptr);
+namespace std {
+    std::size_t hash<dlplan::core::Constant>::operator()(const dlplan::core::Constant& constant) const {
+        return constant.hash();
     }
-    return seed;
-}
-size_t hash_impl<RoleDenotations>::operator()(const RoleDenotations& denotations) const {
-    size_t seed = 0;
-    for (const auto denot_ptr : denotations) {
-        dlplan::utils::hash_combine(seed, denot_ptr);
+    std::size_t hash<dlplan::core::Predicate>::operator()(const dlplan::core::Predicate& predicate) const {
+        return predicate.hash();
     }
-    return seed;
-}
-size_t hash_impl<bool>::operator()(const bool& value) const {
-    return std::hash<bool>()(value);
-}
-size_t hash_impl<int>::operator()(const int& value) const {
-    return std::hash<int>()(value);
-}
-size_t hash_impl<std::vector<bool>>::operator()(const std::vector<bool>& data) const {
-    return std::hash<std::vector<bool>>()(data);
-}
-size_t hash_impl<std::vector<unsigned>>::operator()(const std::vector<unsigned>& data) const {
-    return dlplan::utils::hash_vector(data);
-}
-size_t hash_impl<std::vector<int>>::operator()(const std::vector<int>& data) const {
-    return dlplan::utils::hash_vector(data);
+    size_t hash<dlplan::core::State>::operator()(const dlplan::core::State& state) const {
+        return state.hash();
+    }
+    size_t hash<dlplan::core::ConceptDenotation>::operator()(const dlplan::core::ConceptDenotation& denotation) const {
+        return denotation.hash();
+    }
+    size_t hash<dlplan::core::RoleDenotation>::operator()(const dlplan::core::RoleDenotation& denotation) const {
+        return denotation.hash();
+    }
+    size_t hash<dlplan::core::ConceptDenotations>::operator()(const dlplan::core::ConceptDenotations& denotations) const {
+        return dlplan::utils::hash_vector(denotations);
+    }
+    size_t hash<dlplan::core::RoleDenotations>::operator()(const dlplan::core::RoleDenotations& denotations) const {
+        return dlplan::utils::hash_vector(denotations);
+    }
 }
 
+namespace dlplan::core {
 SyntacticElementFactory::SyntacticElementFactory(std::shared_ptr<VocabularyInfo> vocabulary_info)
     : m_pImpl(SyntacticElementFactoryImpl(vocabulary_info)) { }
 

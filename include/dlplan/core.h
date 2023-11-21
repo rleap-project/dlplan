@@ -35,10 +35,7 @@ class Boolean;
 class Numerical;
 class SyntacticElementFactory;
 class SyntacticElementFactoryImpl;
-}
 
-
-namespace dlplan::core {
 using ConceptDenotations = std::vector<const ConceptDenotation*>;
 using RoleDenotations = std::vector<const RoleDenotation*>;
 using BooleanDenotations = std::vector<bool>;
@@ -63,62 +60,41 @@ using ElementIndex = int;
 using InstanceIndex = int;
 
 using StateIndex = int;
+}
 
 
-template<typename T>
-struct hash_impl {
-    std::size_t operator()(const T&) const {
-        throw std::runtime_error("hash::operator() - not implemented.");
-    }
-};
-template<typename T>
-struct hash {
-    std::size_t operator()(const T& value) const {
-        return hash_impl<typename std::remove_const<T>::type>()(value);
-    }
-};
-template<>
-struct hash_impl<State> {
-    size_t operator()(const State& state) const;
-};
-template<>
-struct hash_impl<ConceptDenotation> {
-    size_t operator()(const ConceptDenotation& denotation) const;
-};
-template<>
-struct hash_impl<RoleDenotation> {
-    size_t operator()(const RoleDenotation& denotation) const;
-};
-template<>
-struct hash_impl<ConceptDenotations> {
-    size_t operator()(const ConceptDenotations& denotations) const;
-};
-template<>
-struct hash_impl<RoleDenotations> {
-    size_t operator()(const RoleDenotations& denotations) const;
-};
-template<>
-struct hash_impl<bool> {
-    size_t operator()(const bool& value) const;
-};
-template<>
-struct hash_impl<int> {
-    size_t operator()(const int& value) const;
-};
-template<>
-struct hash_impl<std::vector<bool>> {
-    size_t operator()(const std::vector<bool>& data) const;
-};
-template<>
-struct hash_impl<std::vector<unsigned>> {
-    size_t operator()(const std::vector<unsigned>& data) const;
-};
-template<>
-struct hash_impl<std::vector<int>> {
-    size_t operator()(const std::vector<int>& data) const;
-};
+namespace std {
+    template<>
+    struct hash<dlplan::core::Constant> {
+        std::size_t operator()(const dlplan::core::Constant& constant) const;
+    };
+    template<>
+    struct hash<dlplan::core::Predicate> {
+        std::size_t operator()(const dlplan::core::Predicate& predicate) const;
+    };
+    template<>
+    struct hash<dlplan::core::State> {
+        size_t operator()(const dlplan::core::State& state) const;
+    };
+    template<>
+    struct hash<dlplan::core::ConceptDenotation> {
+        size_t operator()(const dlplan::core::ConceptDenotation& denotation) const;
+    };
+    template<>
+    struct hash<dlplan::core::RoleDenotation> {
+        size_t operator()(const dlplan::core::RoleDenotation& denotation) const;
+    };
+    template<>
+    struct hash<dlplan::core::ConceptDenotations> {
+        size_t operator()(const dlplan::core::ConceptDenotations& denotations) const;
+    };
+    template<>
+    struct hash<dlplan::core::RoleDenotations> {
+        size_t operator()(const dlplan::core::RoleDenotations& denotations) const;
+    };
+}
 
-
+namespace dlplan::core {
 /// @brief Encapsulates the result of the evaluation of a concept on a state
 ///        and provides functionality to access and modify it.
 ///
@@ -274,7 +250,7 @@ public:
     struct Cache {
         struct UniquePtrHash {
             std::size_t operator()(const std::unique_ptr<const T>& ptr) const {
-                return dlplan::core::hash<T>()(*ptr);
+                return dlplan::utils::hash_combine(*ptr);
             }
         };
 
@@ -979,24 +955,6 @@ public:
     std::shared_ptr<const Role> make_transitive_reflexive_closure(const std::shared_ptr<const Role>& role);
 };
 
-}
-
-namespace std {
-    template<>
-    struct hash<dlplan::core::Constant>
-    {
-        std::size_t operator()(const dlplan::core::Constant& constant) const {
-            return constant.hash();
-        }
-    };
-
-    template<>
-    struct hash<dlplan::core::Predicate>
-    {
-        std::size_t operator()(const dlplan::core::Predicate& predicate) const {
-            return predicate.hash();
-        }
-    };
 }
 
 #endif

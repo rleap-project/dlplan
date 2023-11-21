@@ -64,4 +64,25 @@ inline std::size_t hash_set(const std::set<T, C>& set)
 
 }
 
+namespace std {
+    template<>
+        struct hash<std::vector<bool>> {
+        size_t operator()(const std::vector<bool>& data) const {
+            return dlplan::utils::hash_vector(data);
+        }
+    };
+    template<>
+        struct hash<std::vector<unsigned>> {
+        size_t operator()(const std::vector<unsigned>& data) const {
+            return dlplan::utils::hash_vector(data);
+        }
+    };
+    template<>
+        struct hash<std::vector<int>> {
+        size_t operator()(const std::vector<int>& data) const {
+            return dlplan::utils::hash_vector(data);
+        }
+    };
+}
+
 #endif

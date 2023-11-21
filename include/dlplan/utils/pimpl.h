@@ -5,22 +5,7 @@
 #ifndef DLPLAN_INCLUDE_DLPLAN_UTILS_PIMPL_H_
 #define DLPLAN_INCLUDE_DLPLAN_UTILS_PIMPL_H_
 
-#include <boost/serialization/unique_ptr.hpp>
-
 #include <memory>
-
-
-// Forward declarations of this header.
-namespace dlplan::utils {
-template<typename T>
-class pimpl;
-}
-
-// Forward declare the serialize function template in boost::serialization namespace
-namespace boost::serialization {
-    template <typename Archive, typename T>
-    void serialize(Archive& ar, dlplan::utils::pimpl<T>& factory, const unsigned int version);
-}
 
 
 namespace dlplan::utils {
@@ -28,9 +13,6 @@ template<typename T>
 class pimpl {
 private:
     std::unique_ptr<T> m;
-
-    template<typename Archive, typename T_>
-    friend void boost::serialization::serialize(Archive& ar, pimpl<T_>& pimpl, const unsigned int version);
 
 public:
     pimpl() : m{ new T{} } { }
@@ -58,16 +40,6 @@ public:
 
     const T& operator*() const { return *m.get(); }
 };
-
-}
-
-
-namespace boost::serialization {
-template<typename Archive, typename T>
-void serialize(Archive& ar, dlplan::utils::pimpl<T>& t, const unsigned int /* version */ )
-{
-    ar & t.m;
-}
 
 }
 
