@@ -157,8 +157,7 @@ namespace boost::serialization {
 template<typename Archive>
 void serialize( Archive& ar, dlplan::policy::PolicyFactoryImpl& t, const unsigned int /* version */ )
 {
-    // TODO: add it back after the rest compiles
-    // ar & t.m_caches;
+    ar & t.m_cache;
 }
 
 template void serialize(boost::archive::text_iarchive& ar,

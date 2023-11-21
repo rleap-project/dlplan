@@ -20,7 +20,7 @@ BaseCondition::BaseCondition(int identifier) : m_identifier(identifier) { }
 
 BaseCondition::~BaseCondition() = default;
 
-bool Rule::operator<(const Rule& other) const {
+bool BaseCondition::operator<(const BaseCondition& other) const {
     return m_identifier < other.m_identifier;
 }
 

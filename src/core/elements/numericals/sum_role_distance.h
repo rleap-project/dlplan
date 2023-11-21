@@ -219,8 +219,8 @@ template<class Archive>
 void load_construct_data(Archive& ar, std::pair<const dlplan::core::SumRoleDistanceNumerical, std::weak_ptr<dlplan::core::SumRoleDistanceNumerical>>* t, const unsigned int /*version*/) {
     dlplan::core::SumRoleDistanceNumerical* first = nullptr;
     std::weak_ptr<dlplan::core::SumRoleDistanceNumerical>* second = nullptr;
-    ar >> const_cast<dlplan::core::SumRoleDistanceNumerical&>(t->first);
-    ar >> t->second;
+    ar >> const_cast<dlplan::core::SumRoleDistanceNumerical&>(*first);
+    ar >> second;
     ::new(t)std::pair<const dlplan::core::SumRoleDistanceNumerical, std::weak_ptr<dlplan::core::SumRoleDistanceNumerical>>(*first, *second);
     delete first;
     delete second;

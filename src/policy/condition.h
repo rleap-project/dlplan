@@ -69,6 +69,34 @@ namespace boost::serialization {
     void save_construct_data(Archive& ar, const dlplan::policy::GreaterNumericalCondition* t, const unsigned int version);
     template<class Archive>
     void load_construct_data(Archive& ar, dlplan::policy::GreaterNumericalCondition* t, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::policy::PositiveBooleanCondition, std::weak_ptr<dlplan::policy::PositiveBooleanCondition>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::PositiveBooleanCondition, std::weak_ptr<dlplan::policy::PositiveBooleanCondition>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::policy::PositiveBooleanCondition, std::weak_ptr<dlplan::policy::PositiveBooleanCondition>>* t, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::policy::NegativeBooleanCondition, std::weak_ptr<dlplan::policy::NegativeBooleanCondition>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::NegativeBooleanCondition, std::weak_ptr<dlplan::policy::NegativeBooleanCondition>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::policy::NegativeBooleanCondition, std::weak_ptr<dlplan::policy::NegativeBooleanCondition>>* t, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::policy::GreaterNumericalCondition, std::weak_ptr<dlplan::policy::GreaterNumericalCondition>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::GreaterNumericalCondition, std::weak_ptr<dlplan::policy::GreaterNumericalCondition>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::policy::GreaterNumericalCondition, std::weak_ptr<dlplan::policy::GreaterNumericalCondition>>* t, const unsigned int version);
+
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::policy::EqualNumericalCondition, std::weak_ptr<dlplan::policy::EqualNumericalCondition>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::EqualNumericalCondition, std::weak_ptr<dlplan::policy::EqualNumericalCondition>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::policy::EqualNumericalCondition, std::weak_ptr<dlplan::policy::EqualNumericalCondition>>* t, const unsigned int version);
 }
 
 

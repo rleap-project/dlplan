@@ -164,8 +164,8 @@ template<class Archive>
 void load_construct_data(Archive& ar, std::pair<const dlplan::core::InverseRole, std::weak_ptr<dlplan::core::InverseRole>>* t, const unsigned int /*version*/) {
     dlplan::core::InverseRole* first = nullptr;
     std::weak_ptr<dlplan::core::InverseRole>* second = nullptr;
-    ar >> const_cast<dlplan::core::InverseRole&>(t->first);
-    ar >> t->second;
+    ar >> const_cast<dlplan::core::InverseRole&>(*first);
+    ar >> second;
     ::new(t)std::pair<const dlplan::core::InverseRole, std::weak_ptr<dlplan::core::InverseRole>>(*first, *second);
     delete first;
     delete second;

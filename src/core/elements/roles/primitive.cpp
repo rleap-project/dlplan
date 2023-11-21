@@ -151,8 +151,8 @@ template<class Archive>
 void load_construct_data(Archive& ar, std::pair<const dlplan::core::PrimitiveRole, std::weak_ptr<dlplan::core::PrimitiveRole>>* t, const unsigned int /*version*/) {
     dlplan::core::PrimitiveRole* first = nullptr;
     std::weak_ptr<dlplan::core::PrimitiveRole>* second = nullptr;
-    ar >> const_cast<dlplan::core::PrimitiveRole&>(t->first);
-    ar >> t->second;
+    ar >> const_cast<dlplan::core::PrimitiveRole&>(*first);
+    ar >> second;
     ::new(t)std::pair<const dlplan::core::PrimitiveRole, std::weak_ptr<dlplan::core::PrimitiveRole>>(*first, *second);
     delete first;
     delete second;
@@ -181,7 +181,6 @@ BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::core::PrimitiveRole)
 
 
 namespace std {
-
     bool less<std::shared_ptr<const dlplan::core::PrimitiveRole>>::operator()(
         const std::shared_ptr<const dlplan::core::PrimitiveRole>& left_role,
         const std::shared_ptr<const dlplan::core::PrimitiveRole>& right_role) const {

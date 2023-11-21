@@ -71,8 +71,8 @@ inline std::size_t hash_vector(const std::vector<T>& vector)
     return aggregated_hash;
 }
 
-template<class T>
-inline std::size_t hash_set(const std::set<T>& set)
+template<class T, class C>
+inline std::size_t hash_set(const std::set<T, C>& set)
 {
     const auto hash_function = std::hash<T>();
     std::size_t aggregated_hash = 0;

@@ -151,6 +151,7 @@ void save_construct_data(Archive & ar, const dlplan::core::CountNumerical<T>* t,
     ar << t->m_vocabulary_info;
     ar << t->m_index;
     ar << t->m_element;
+    std::cout << "serialize count numerical" << std::endl;
 }
 
 template<class Archive, typename T>
@@ -180,8 +181,8 @@ template<class Archive, typename T>
 void load_construct_data(Archive& ar, std::pair<const dlplan::core::CountNumerical<T>, std::weak_ptr<dlplan::core::CountNumerical<T>>>* t, const unsigned int /*version*/) {
     dlplan::core::CountNumerical<T>* first = nullptr;
     std::weak_ptr<dlplan::core::CountNumerical<T>>* second = nullptr;
-    ar >> const_cast<dlplan::core::CountNumerical<T>&>(t->first);
-    ar >> t->second;
+    ar >> const_cast<dlplan::core::CountNumerical<T>&>(*first);
+    ar >> second;
     ::new(t)std::pair<const dlplan::core::CountNumerical<T>, std::weak_ptr<dlplan::core::CountNumerical<T>>>(*first, *second);
     delete first;
     delete second;

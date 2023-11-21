@@ -9,6 +9,7 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/set.hpp>
 #include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/weak_ptr.hpp>
 
 #include <algorithm>
 #include <sstream>
@@ -44,8 +45,8 @@ bool Rule::operator<(const Rule& other) const {
 
 size_t Rule::hash() const {
     return dlplan::utils::hash_combine(
-        m_conditions,
-        m_effects);
+        dlplan::utils::hash_set(m_conditions),
+        dlplan::utils::hash_set(m_effects));
 }
 
 bool Rule::evaluate_conditions(const core::State& source_state) const {
@@ -161,8 +162,36 @@ void serialize(Archive& ar, dlplan::policy::Rule& t, const unsigned int /* versi
     ar & t.m_effects;
 }
 
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::policy::Rule, std::weak_ptr<dlplan::policy::Rule>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::Rule, std::weak_ptr<dlplan::policy::Rule>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::policy::Rule, std::weak_ptr<dlplan::policy::Rule>>* t, const unsigned int /*version*/) {
+    dlplan::policy::Rule* first = nullptr;
+    std::weak_ptr<dlplan::policy::Rule>* second = nullptr;
+    ar >> const_cast<dlplan::policy::Rule&>(*first);
+    ar >> second;
+    ::new(t)std::pair<const dlplan::policy::Rule, std::weak_ptr<dlplan::policy::Rule>>(*first, *second);
+    delete first;
+    delete second;
+}
+
 template void serialize(boost::archive::text_iarchive& ar,
     dlplan::policy::Rule& t, const unsigned int version);
+
+template void serialize(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::policy::Rule, std::weak_ptr<dlplan::policy::Rule>>& t, const unsigned int version);
 template void serialize(boost::archive::text_oarchive& ar,
-    dlplan::policy::Rule& t, const unsigned int version);
+    std::pair<const dlplan::policy::Rule, std::weak_ptr<dlplan::policy::Rule>>& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const std::pair<const dlplan::policy::Rule, std::weak_ptr<dlplan::policy::Rule>>* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::policy::Rule, std::weak_ptr<dlplan::policy::Rule>>* t, const unsigned int version);
 }

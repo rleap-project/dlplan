@@ -41,15 +41,39 @@ namespace boost::serialization {
 
     template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::NamedBoolean& t, const unsigned int version);
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::policy::NamedBoolean, std::weak_ptr<dlplan::policy::NamedBoolean>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::NamedBoolean, std::weak_ptr<dlplan::policy::NamedBoolean>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::policy::NamedBoolean, std::weak_ptr<dlplan::policy::NamedBoolean>>* t, const unsigned int version);
 
     template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::NamedNumerical& t, const unsigned int version);
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::policy::NamedNumerical, std::weak_ptr<dlplan::policy::NamedNumerical>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::NamedNumerical, std::weak_ptr<dlplan::policy::NamedNumerical>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::policy::NamedNumerical, std::weak_ptr<dlplan::policy::NamedNumerical>>* t, const unsigned int version);
 
     template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::NamedConcept& t, const unsigned int version);
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::policy::NamedConcept, std::weak_ptr<dlplan::policy::NamedConcept>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::NamedConcept, std::weak_ptr<dlplan::policy::NamedConcept>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::policy::NamedConcept, std::weak_ptr<dlplan::policy::NamedConcept>>* t, const unsigned int version);
 
     template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::NamedRole& t, const unsigned int version);
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::policy::NamedRole, std::weak_ptr<dlplan::policy::NamedRole>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::NamedRole, std::weak_ptr<dlplan::policy::NamedRole>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::policy::NamedRole, std::weak_ptr<dlplan::policy::NamedRole>>* t, const unsigned int version);
 
     template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::BaseCondition& t, const unsigned int version);
@@ -67,9 +91,21 @@ namespace boost::serialization {
 
     template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::Rule& t, const unsigned int version);
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::policy::Rule, std::weak_ptr<dlplan::policy::Rule>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::Rule, std::weak_ptr<dlplan::policy::Rule>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::policy::Rule, std::weak_ptr<dlplan::policy::Rule>>* t, const unsigned int version);
 
     template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::Policy& t, const unsigned int version);
+    template<typename Archive>
+    void serialize(Archive& ar, std::pair<const dlplan::policy::Policy, std::weak_ptr<dlplan::policy::Policy>>& t, const unsigned int version);
+    template<class Archive>
+    void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::Policy, std::weak_ptr<dlplan::policy::Policy>>* t, const unsigned int version);
+    template<class Archive>
+    void load_construct_data(Archive& ar, std::pair<const dlplan::policy::Policy, std::weak_ptr<dlplan::policy::Policy>>* t, const unsigned int version);
 
     template <typename Archive>
     void serialize(Archive& ar, dlplan::policy::PolicyFactory& t, const unsigned int version);
@@ -640,7 +676,45 @@ namespace std {
     {
         std::size_t operator()(const dlplan::policy::Policy& policy) const;
     };
-}
 
+
+    template<>
+    struct hash<dlplan::policy::Booleans>
+    {
+        std::size_t operator()(const dlplan::policy::Booleans& booleans) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::Numericals>
+    {
+        std::size_t operator()(const dlplan::policy::Numericals& numericals) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::Concepts>
+    {
+        std::size_t operator()(const dlplan::policy::Concepts& concepts) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::Roles>
+    {
+        std::size_t operator()(const dlplan::policy::Roles& roles) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::Conditions>
+    {
+        std::size_t operator()(const dlplan::policy::Conditions& conditions) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::Effects>
+    {
+        std::size_t operator()(const dlplan::policy::Effects& effects) const;
+    };
+
+
+}
 
 #endif

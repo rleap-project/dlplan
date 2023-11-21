@@ -7,6 +7,7 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/weak_ptr.hpp>
 
 using namespace dlplan;
 
@@ -313,6 +314,90 @@ void load_construct_data(Archive& ar, dlplan::policy::EqualNumericalCondition* t
     ::new(t)dlplan::policy::EqualNumericalCondition(identifier, numerical);
 }
 
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::policy::PositiveBooleanCondition, std::weak_ptr<dlplan::policy::PositiveBooleanCondition>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::PositiveBooleanCondition, std::weak_ptr<dlplan::policy::PositiveBooleanCondition>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::policy::PositiveBooleanCondition, std::weak_ptr<dlplan::policy::PositiveBooleanCondition>>* t, const unsigned int /*version*/) {
+    dlplan::policy::PositiveBooleanCondition* first = nullptr;
+    std::weak_ptr<dlplan::policy::PositiveBooleanCondition>* second = nullptr;
+    ar >> const_cast<dlplan::policy::PositiveBooleanCondition&>(*first);
+    ar >> second;
+    ::new(t)std::pair<const dlplan::policy::PositiveBooleanCondition, std::weak_ptr<dlplan::policy::PositiveBooleanCondition>>(*first, *second);
+    delete first;
+    delete second;
+}
+
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::policy::NegativeBooleanCondition, std::weak_ptr<dlplan::policy::NegativeBooleanCondition>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::NegativeBooleanCondition, std::weak_ptr<dlplan::policy::NegativeBooleanCondition>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::policy::NegativeBooleanCondition, std::weak_ptr<dlplan::policy::NegativeBooleanCondition>>* t, const unsigned int /*version*/) {
+    dlplan::policy::NegativeBooleanCondition* first = nullptr;
+    std::weak_ptr<dlplan::policy::NegativeBooleanCondition>* second = nullptr;
+    ar >> const_cast<dlplan::policy::NegativeBooleanCondition&>(*first);
+    ar >> second;
+    ::new(t)std::pair<const dlplan::policy::NegativeBooleanCondition, std::weak_ptr<dlplan::policy::NegativeBooleanCondition>>(*first, *second);
+    delete first;
+    delete second;
+}
+
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::policy::GreaterNumericalCondition, std::weak_ptr<dlplan::policy::GreaterNumericalCondition>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::GreaterNumericalCondition, std::weak_ptr<dlplan::policy::GreaterNumericalCondition>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::policy::GreaterNumericalCondition, std::weak_ptr<dlplan::policy::GreaterNumericalCondition>>* t, const unsigned int /*version*/) {
+    dlplan::policy::GreaterNumericalCondition* first = nullptr;
+    std::weak_ptr<dlplan::policy::GreaterNumericalCondition>* second = nullptr;
+    ar >> const_cast<dlplan::policy::GreaterNumericalCondition&>(*first);
+    ar >> second;
+    ::new(t)std::pair<const dlplan::policy::GreaterNumericalCondition, std::weak_ptr<dlplan::policy::GreaterNumericalCondition>>(*first, *second);
+    delete first;
+    delete second;
+}
+
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::policy::EqualNumericalCondition, std::weak_ptr<dlplan::policy::EqualNumericalCondition>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::EqualNumericalCondition, std::weak_ptr<dlplan::policy::EqualNumericalCondition>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::policy::EqualNumericalCondition, std::weak_ptr<dlplan::policy::EqualNumericalCondition>>* t, const unsigned int /*version*/) {
+    dlplan::policy::EqualNumericalCondition* first = nullptr;
+    std::weak_ptr<dlplan::policy::EqualNumericalCondition>* second = nullptr;
+    ar >> const_cast<dlplan::policy::EqualNumericalCondition&>(*first);
+    ar >> second;
+    ::new(t)std::pair<const dlplan::policy::EqualNumericalCondition, std::weak_ptr<dlplan::policy::EqualNumericalCondition>>(*first, *second);
+    delete first;
+    delete second;
+}
+
 template void serialize(boost::archive::text_iarchive& ar,
     dlplan::policy::BooleanCondition& t, const unsigned int version);
 template void serialize(boost::archive::text_oarchive& ar,
@@ -366,9 +451,92 @@ template void save_construct_data(boost::archive::text_oarchive& ar,
     const dlplan::policy::EqualNumericalCondition* t, const unsigned int version);
 template void load_construct_data(boost::archive::text_iarchive& ar,
     dlplan::policy::EqualNumericalCondition* t, const unsigned int version);
+
+template void serialize(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::policy::PositiveBooleanCondition, std::weak_ptr<dlplan::policy::PositiveBooleanCondition>>& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    std::pair<const dlplan::policy::PositiveBooleanCondition, std::weak_ptr<dlplan::policy::PositiveBooleanCondition>>& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const std::pair<const dlplan::policy::PositiveBooleanCondition, std::weak_ptr<dlplan::policy::PositiveBooleanCondition>>* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::policy::PositiveBooleanCondition, std::weak_ptr<dlplan::policy::PositiveBooleanCondition>>* t, const unsigned int version);
+
+template void serialize(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::policy::NegativeBooleanCondition, std::weak_ptr<dlplan::policy::NegativeBooleanCondition>>& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    std::pair<const dlplan::policy::NegativeBooleanCondition, std::weak_ptr<dlplan::policy::NegativeBooleanCondition>>& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const std::pair<const dlplan::policy::NegativeBooleanCondition, std::weak_ptr<dlplan::policy::NegativeBooleanCondition>>* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::policy::NegativeBooleanCondition, std::weak_ptr<dlplan::policy::NegativeBooleanCondition>>* t, const unsigned int version);
+
+template void serialize(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::policy::GreaterNumericalCondition, std::weak_ptr<dlplan::policy::GreaterNumericalCondition>>& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    std::pair<const dlplan::policy::GreaterNumericalCondition, std::weak_ptr<dlplan::policy::GreaterNumericalCondition>>& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const std::pair<const dlplan::policy::GreaterNumericalCondition, std::weak_ptr<dlplan::policy::GreaterNumericalCondition>>* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::policy::GreaterNumericalCondition, std::weak_ptr<dlplan::policy::GreaterNumericalCondition>>* t, const unsigned int version);
+
+template void serialize(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::policy::EqualNumericalCondition, std::weak_ptr<dlplan::policy::EqualNumericalCondition>>& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    std::pair<const dlplan::policy::EqualNumericalCondition, std::weak_ptr<dlplan::policy::EqualNumericalCondition>>& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const std::pair<const dlplan::policy::EqualNumericalCondition, std::weak_ptr<dlplan::policy::EqualNumericalCondition>>* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::policy::EqualNumericalCondition, std::weak_ptr<dlplan::policy::EqualNumericalCondition>>* t, const unsigned int version);
 }
 
 BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::PositiveBooleanCondition)
 BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::NegativeBooleanCondition)
 BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::GreaterNumericalCondition)
 BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::EqualNumericalCondition)
+
+
+namespace std {
+    bool less<std::shared_ptr<const dlplan::policy::PositiveBooleanCondition>>::operator()(
+        const std::shared_ptr<const dlplan::policy::PositiveBooleanCondition>& left_condition,
+        const std::shared_ptr<const dlplan::policy::PositiveBooleanCondition>& right_condition) const {
+        return *left_condition < *right_condition;
+    }
+
+    bool less<std::shared_ptr<const dlplan::policy::NegativeBooleanCondition>>::operator()(
+        const std::shared_ptr<const dlplan::policy::NegativeBooleanCondition>& left_condition,
+        const std::shared_ptr<const dlplan::policy::NegativeBooleanCondition>& right_condition) const {
+        return *left_condition < *right_condition;
+    }
+
+    bool less<std::shared_ptr<const dlplan::policy::GreaterNumericalCondition>>::operator()(
+        const std::shared_ptr<const dlplan::policy::GreaterNumericalCondition>& left_condition,
+        const std::shared_ptr<const dlplan::policy::GreaterNumericalCondition>& right_condition) const {
+        return *left_condition < *right_condition;
+    }
+
+    bool less<std::shared_ptr<const dlplan::policy::EqualNumericalCondition>>::operator()(
+        const std::shared_ptr<const dlplan::policy::EqualNumericalCondition>& left_condition,
+        const std::shared_ptr<const dlplan::policy::EqualNumericalCondition>& right_condition) const {
+        return *left_condition < *right_condition;
+    }
+
+    std::size_t hash<dlplan::policy::PositiveBooleanCondition>::operator()(
+        const dlplan::policy::PositiveBooleanCondition& condition) const {
+        return condition.hash();
+    }
+
+    std::size_t hash<dlplan::policy::NegativeBooleanCondition>::operator()(
+        const dlplan::policy::NegativeBooleanCondition& condition) const {
+        return condition.hash();
+    }
+
+    std::size_t hash<dlplan::policy::GreaterNumericalCondition>::operator()(
+        const dlplan::policy::GreaterNumericalCondition& condition) const {
+        return condition.hash();
+    }
+
+    std::size_t hash<dlplan::policy::EqualNumericalCondition>::operator()(
+        const dlplan::policy::EqualNumericalCondition& condition) const {
+        return condition.hash();
+    }
+}

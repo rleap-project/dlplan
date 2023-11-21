@@ -179,8 +179,8 @@ template<class Archive>
 void load_construct_data(Archive& ar, std::pair<const dlplan::core::SubsetConcept, std::weak_ptr<dlplan::core::SubsetConcept>>* t, const unsigned int /*version*/) {
     dlplan::core::SubsetConcept* first = nullptr;
     std::weak_ptr<dlplan::core::SubsetConcept>* second = nullptr;
-    ar >> const_cast<dlplan::core::SubsetConcept&>(t->first);
-    ar >> t->second;
+    ar >> const_cast<dlplan::core::SubsetConcept&>(*first);
+    ar >> second;
     ::new(t)std::pair<const dlplan::core::SubsetConcept, std::weak_ptr<dlplan::core::SubsetConcept>>(*first, *second);
     delete first;
     delete second;

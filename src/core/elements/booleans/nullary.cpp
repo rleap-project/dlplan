@@ -124,8 +124,8 @@ template<class Archive>
 void load_construct_data(Archive& ar, std::pair<const dlplan::core::NullaryBoolean, std::weak_ptr<dlplan::core::NullaryBoolean>>* t, const unsigned int /*version*/) {
     dlplan::core::NullaryBoolean* first = nullptr;
     std::weak_ptr<dlplan::core::NullaryBoolean>* second = nullptr;
-    ar >> const_cast<dlplan::core::NullaryBoolean&>(t->first);
-    ar >> t->second;
+    ar >> const_cast<dlplan::core::NullaryBoolean&>(*first);
+    ar >> second;
     ::new(t)std::pair<const dlplan::core::NullaryBoolean, std::weak_ptr<dlplan::core::NullaryBoolean>>(*first, *second);
     delete first;
     delete second;

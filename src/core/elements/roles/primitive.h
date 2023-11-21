@@ -3,6 +3,8 @@
 
 #include "../../../../include/dlplan/core.h"
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/export.hpp>
 
 #include <sstream>
@@ -81,7 +83,6 @@ public:
 }
 
 BOOST_CLASS_EXPORT_KEY2(dlplan::core::PrimitiveRole, "dlplan::core::PrimitiveRole")
-
 
 namespace std {
     template<>

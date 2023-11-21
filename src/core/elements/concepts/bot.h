@@ -149,8 +149,8 @@ template<class Archive>
 void load_construct_data(Archive& ar, std::pair<const dlplan::core::BotConcept, std::weak_ptr<dlplan::core::BotConcept>>* t, const unsigned int /*version*/) {
     dlplan::core::BotConcept* first = nullptr;
     std::weak_ptr<dlplan::core::BotConcept>* second = nullptr;
-    ar >> const_cast<dlplan::core::BotConcept&>(t->first);
-    ar >> t->second;
+    ar >> const_cast<dlplan::core::BotConcept&>(*first);
+    ar >> second;
     ::new(t)std::pair<const dlplan::core::BotConcept, std::weak_ptr<dlplan::core::BotConcept>>(*first, *second);
     delete first;
     delete second;

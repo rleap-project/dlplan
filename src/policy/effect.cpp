@@ -7,6 +7,7 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/weak_ptr.hpp>
 
 using namespace dlplan;
 
@@ -433,6 +434,132 @@ void load_construct_data(Archive& ar, dlplan::policy::UnchangedNumericalEffect* 
     ::new(t)dlplan::policy::UnchangedNumericalEffect(identifier, numerical);
 }
 
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::policy::PositiveBooleanEffect, std::weak_ptr<dlplan::policy::PositiveBooleanEffect>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::PositiveBooleanEffect, std::weak_ptr<dlplan::policy::PositiveBooleanEffect>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::policy::PositiveBooleanEffect, std::weak_ptr<dlplan::policy::PositiveBooleanEffect>>* t, const unsigned int /*version*/) {
+    dlplan::policy::PositiveBooleanEffect* first = nullptr;
+    std::weak_ptr<dlplan::policy::PositiveBooleanEffect>* second = nullptr;
+    ar >> const_cast<dlplan::policy::PositiveBooleanEffect&>(*first);
+    ar >> second;
+    ::new(t)std::pair<const dlplan::policy::PositiveBooleanEffect, std::weak_ptr<dlplan::policy::PositiveBooleanEffect>>(*first, *second);
+    delete first;
+    delete second;
+}
+
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::policy::NegativeBooleanEffect, std::weak_ptr<dlplan::policy::NegativeBooleanEffect>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::NegativeBooleanEffect, std::weak_ptr<dlplan::policy::NegativeBooleanEffect>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::policy::NegativeBooleanEffect, std::weak_ptr<dlplan::policy::NegativeBooleanEffect>>* t, const unsigned int /*version*/) {
+    dlplan::policy::NegativeBooleanEffect* first = nullptr;
+    std::weak_ptr<dlplan::policy::NegativeBooleanEffect>* second = nullptr;
+    ar >> const_cast<dlplan::policy::NegativeBooleanEffect&>(*first);
+    ar >> second;
+    ::new(t)std::pair<const dlplan::policy::NegativeBooleanEffect, std::weak_ptr<dlplan::policy::NegativeBooleanEffect>>(*first, *second);
+    delete first;
+    delete second;
+}
+
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::policy::UnchangedBooleanEffect, std::weak_ptr<dlplan::policy::UnchangedBooleanEffect>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::UnchangedBooleanEffect, std::weak_ptr<dlplan::policy::UnchangedBooleanEffect>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::policy::UnchangedBooleanEffect, std::weak_ptr<dlplan::policy::UnchangedBooleanEffect>>* t, const unsigned int /*version*/) {
+    dlplan::policy::UnchangedBooleanEffect* first = nullptr;
+    std::weak_ptr<dlplan::policy::UnchangedBooleanEffect>* second = nullptr;
+    ar >> const_cast<dlplan::policy::UnchangedBooleanEffect&>(*first);
+    ar >> second;
+    ::new(t)std::pair<const dlplan::policy::UnchangedBooleanEffect, std::weak_ptr<dlplan::policy::UnchangedBooleanEffect>>(*first, *second);
+    delete first;
+    delete second;
+}
+
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::policy::IncrementNumericalEffect, std::weak_ptr<dlplan::policy::IncrementNumericalEffect>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::IncrementNumericalEffect, std::weak_ptr<dlplan::policy::IncrementNumericalEffect>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::policy::IncrementNumericalEffect, std::weak_ptr<dlplan::policy::IncrementNumericalEffect>>* t, const unsigned int /*version*/) {
+    dlplan::policy::IncrementNumericalEffect* first = nullptr;
+    std::weak_ptr<dlplan::policy::IncrementNumericalEffect>* second = nullptr;
+    ar >> const_cast<dlplan::policy::IncrementNumericalEffect&>(*first);
+    ar >> second;
+    ::new(t)std::pair<const dlplan::policy::IncrementNumericalEffect, std::weak_ptr<dlplan::policy::IncrementNumericalEffect>>(*first, *second);
+    delete first;
+    delete second;
+}
+
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::policy::DecrementNumericalEffect, std::weak_ptr<dlplan::policy::DecrementNumericalEffect>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::DecrementNumericalEffect, std::weak_ptr<dlplan::policy::DecrementNumericalEffect>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::policy::DecrementNumericalEffect, std::weak_ptr<dlplan::policy::DecrementNumericalEffect>>* t, const unsigned int /*version*/) {
+    dlplan::policy::DecrementNumericalEffect* first = nullptr;
+    std::weak_ptr<dlplan::policy::DecrementNumericalEffect>* second = nullptr;
+    ar >> const_cast<dlplan::policy::DecrementNumericalEffect&>(*first);
+    ar >> second;
+    ::new(t)std::pair<const dlplan::policy::DecrementNumericalEffect, std::weak_ptr<dlplan::policy::DecrementNumericalEffect>>(*first, *second);
+    delete first;
+    delete second;
+}
+
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::policy::UnchangedNumericalEffect, std::weak_ptr<dlplan::policy::UnchangedNumericalEffect>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::UnchangedNumericalEffect, std::weak_ptr<dlplan::policy::UnchangedNumericalEffect>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::policy::UnchangedNumericalEffect, std::weak_ptr<dlplan::policy::UnchangedNumericalEffect>>* t, const unsigned int /*version*/) {
+    dlplan::policy::UnchangedNumericalEffect* first = nullptr;
+    std::weak_ptr<dlplan::policy::UnchangedNumericalEffect>* second = nullptr;
+    ar >> const_cast<dlplan::policy::UnchangedNumericalEffect&>(*first);
+    ar >> second;
+    ::new(t)std::pair<const dlplan::policy::UnchangedNumericalEffect, std::weak_ptr<dlplan::policy::UnchangedNumericalEffect>>(*first, *second);
+    delete first;
+    delete second;
+}
+
 template void serialize(boost::archive::text_iarchive& ar,
     dlplan::policy::BooleanEffect& t, const unsigned int version);
 template void serialize(boost::archive::text_oarchive& ar,
@@ -504,6 +631,60 @@ template void save_construct_data(boost::archive::text_oarchive& ar,
     const dlplan::policy::UnchangedNumericalEffect* t, const unsigned int version);
 template void load_construct_data(boost::archive::text_iarchive& ar,
     dlplan::policy::UnchangedNumericalEffect* t, const unsigned int version);
+
+template void serialize(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::policy::PositiveBooleanEffect, std::weak_ptr<dlplan::policy::PositiveBooleanEffect>>& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    std::pair<const dlplan::policy::PositiveBooleanEffect, std::weak_ptr<dlplan::policy::PositiveBooleanEffect>>& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const std::pair<const dlplan::policy::PositiveBooleanEffect, std::weak_ptr<dlplan::policy::PositiveBooleanEffect>>* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::policy::PositiveBooleanEffect, std::weak_ptr<dlplan::policy::PositiveBooleanEffect>>* t, const unsigned int version);
+
+template void serialize(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::policy::NegativeBooleanEffect, std::weak_ptr<dlplan::policy::NegativeBooleanEffect>>& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    std::pair<const dlplan::policy::NegativeBooleanEffect, std::weak_ptr<dlplan::policy::NegativeBooleanEffect>>& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const std::pair<const dlplan::policy::NegativeBooleanEffect, std::weak_ptr<dlplan::policy::NegativeBooleanEffect>>* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::policy::NegativeBooleanEffect, std::weak_ptr<dlplan::policy::NegativeBooleanEffect>>* t, const unsigned int version);
+
+template void serialize(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::policy::UnchangedBooleanEffect, std::weak_ptr<dlplan::policy::UnchangedBooleanEffect>>& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    std::pair<const dlplan::policy::UnchangedBooleanEffect, std::weak_ptr<dlplan::policy::UnchangedBooleanEffect>>& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const std::pair<const dlplan::policy::UnchangedBooleanEffect, std::weak_ptr<dlplan::policy::UnchangedBooleanEffect>>* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::policy::UnchangedBooleanEffect, std::weak_ptr<dlplan::policy::UnchangedBooleanEffect>>* t, const unsigned int version);
+
+template void serialize(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::policy::IncrementNumericalEffect, std::weak_ptr<dlplan::policy::IncrementNumericalEffect>>& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    std::pair<const dlplan::policy::IncrementNumericalEffect, std::weak_ptr<dlplan::policy::IncrementNumericalEffect>>& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const std::pair<const dlplan::policy::IncrementNumericalEffect, std::weak_ptr<dlplan::policy::IncrementNumericalEffect>>* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::policy::IncrementNumericalEffect, std::weak_ptr<dlplan::policy::IncrementNumericalEffect>>* t, const unsigned int version);
+
+template void serialize(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::policy::DecrementNumericalEffect, std::weak_ptr<dlplan::policy::DecrementNumericalEffect>>& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    std::pair<const dlplan::policy::DecrementNumericalEffect, std::weak_ptr<dlplan::policy::DecrementNumericalEffect>>& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const std::pair<const dlplan::policy::DecrementNumericalEffect, std::weak_ptr<dlplan::policy::DecrementNumericalEffect>>* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::policy::DecrementNumericalEffect, std::weak_ptr<dlplan::policy::DecrementNumericalEffect>>* t, const unsigned int version);
+
+template void serialize(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::policy::UnchangedNumericalEffect, std::weak_ptr<dlplan::policy::UnchangedNumericalEffect>>& t, const unsigned int version);
+template void serialize(boost::archive::text_oarchive& ar,
+    std::pair<const dlplan::policy::UnchangedNumericalEffect, std::weak_ptr<dlplan::policy::UnchangedNumericalEffect>>& t, const unsigned int version);
+template void save_construct_data(boost::archive::text_oarchive& ar,
+    const std::pair<const dlplan::policy::UnchangedNumericalEffect, std::weak_ptr<dlplan::policy::UnchangedNumericalEffect>>* t, const unsigned int version);
+template void load_construct_data(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::policy::UnchangedNumericalEffect, std::weak_ptr<dlplan::policy::UnchangedNumericalEffect>>* t, const unsigned int version);
 }
 
 BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::PositiveBooleanEffect)
@@ -512,3 +693,73 @@ BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::UnchangedBooleanEffect)
 BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::IncrementNumericalEffect)
 BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::DecrementNumericalEffect)
 BOOST_CLASS_EXPORT_IMPLEMENT(dlplan::policy::UnchangedNumericalEffect)
+
+
+namespace std {
+        bool less<std::shared_ptr<const dlplan::policy::PositiveBooleanEffect>>::operator()(
+            const std::shared_ptr<const dlplan::policy::PositiveBooleanEffect>& left_effect,
+            const std::shared_ptr<const dlplan::policy::PositiveBooleanEffect>& right_effect) const {
+        return *left_effect < *right_effect;
+    }
+
+
+        bool less<std::shared_ptr<const dlplan::policy::NegativeBooleanEffect>>::operator()(
+            const std::shared_ptr<const dlplan::policy::NegativeBooleanEffect>& left_effect,
+            const std::shared_ptr<const dlplan::policy::NegativeBooleanEffect>& right_effect) const {
+        return *left_effect < *right_effect;
+    }
+
+        bool less<std::shared_ptr<const dlplan::policy::UnchangedBooleanEffect>>::operator()(
+            const std::shared_ptr<const dlplan::policy::UnchangedBooleanEffect>& left_effect,
+            const std::shared_ptr<const dlplan::policy::UnchangedBooleanEffect>& right_effect) const {
+        return *left_effect < *right_effect;
+    }
+
+        bool less<std::shared_ptr<const dlplan::policy::IncrementNumericalEffect>>::operator()(
+            const std::shared_ptr<const dlplan::policy::IncrementNumericalEffect>& left_effect,
+            const std::shared_ptr<const dlplan::policy::IncrementNumericalEffect>& right_effect) const {
+        return *left_effect < *right_effect;
+    }
+
+        bool less<std::shared_ptr<const dlplan::policy::DecrementNumericalEffect>>::operator()(
+            const std::shared_ptr<const dlplan::policy::DecrementNumericalEffect>& left_effect,
+            const std::shared_ptr<const dlplan::policy::DecrementNumericalEffect>& right_effect) const {
+        return *left_effect < *right_effect;
+    }
+
+        bool less<std::shared_ptr<const dlplan::policy::UnchangedNumericalEffect>>::operator()(
+            const std::shared_ptr<const dlplan::policy::UnchangedNumericalEffect>& left_effect,
+            const std::shared_ptr<const dlplan::policy::UnchangedNumericalEffect>& right_effect) const {
+        return *left_effect < *right_effect;
+    }
+
+        std::size_t hash<dlplan::policy::PositiveBooleanEffect>::operator()(
+            const dlplan::policy::PositiveBooleanEffect& effect) const {
+        return effect.hash();
+    }
+
+        std::size_t hash<dlplan::policy::NegativeBooleanEffect>::operator()(
+            const dlplan::policy::NegativeBooleanEffect& effect) const {
+        return effect.hash();
+    }
+
+        std::size_t hash<dlplan::policy::UnchangedBooleanEffect>::operator()(
+            const dlplan::policy::UnchangedBooleanEffect& effect) const {
+        return effect.hash();
+    }
+
+        std::size_t hash<dlplan::policy::IncrementNumericalEffect>::operator()(
+            const dlplan::policy::IncrementNumericalEffect& effect) const {
+        return effect.hash();
+    }
+
+        std::size_t hash<dlplan::policy::DecrementNumericalEffect>::operator()(
+            const dlplan::policy::DecrementNumericalEffect& effect) const {
+        return effect.hash();
+    }
+
+        std::size_t hash<dlplan::policy::UnchangedNumericalEffect>::operator()(
+            const dlplan::policy::UnchangedNumericalEffect& effect) const {
+        return effect.hash();
+    }
+}

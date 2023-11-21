@@ -180,8 +180,8 @@ template<class Archive>
 void load_construct_data(Archive& ar, std::pair<const dlplan::core::ProjectionConcept, std::weak_ptr<dlplan::core::ProjectionConcept>>* t, const unsigned int /*version*/) {
     dlplan::core::ProjectionConcept* first = nullptr;
     std::weak_ptr<dlplan::core::ProjectionConcept>* second = nullptr;
-    ar >> const_cast<dlplan::core::ProjectionConcept&>(t->first);
-    ar >> t->second;
+    ar >> const_cast<dlplan::core::ProjectionConcept&>(*first);
+    ar >> second;
     ::new(t)std::pair<const dlplan::core::ProjectionConcept, std::weak_ptr<dlplan::core::ProjectionConcept>>(*first, *second);
     delete first;
     delete second;

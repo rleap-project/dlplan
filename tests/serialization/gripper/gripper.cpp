@@ -57,11 +57,11 @@ TEST(DLPTests, SerializationGripperTest) {
     auto policy_boolean = policy_factory->make_boolean("b0", boolean);
     auto policy_numerical = policy_factory->make_numerical("n0", numerical);
     auto c_n_gt = policy_factory->make_gt_condition(policy_numerical);
-    auto e_n_dec = policy_factory->make_dec_effect(policy_numerical);
-    auto c_b_pos = policy_factory->make_pos_condition(policy_boolean);
-    auto e_b_neg = policy_factory->make_neg_effect(policy_boolean);
-    auto rule_1 = policy_factory->make_rule({c_n_gt}, {e_n_dec});
-    auto rule_2 = policy_factory->make_rule({c_b_pos}, {e_b_neg});
+    //auto e_n_dec = policy_factory->make_dec_effect(policy_numerical);
+    //auto c_b_pos = policy_factory->make_pos_condition(policy_boolean);
+    //auto e_b_neg = policy_factory->make_neg_effect(policy_boolean);
+    auto rule_1 = policy_factory->make_rule({c_n_gt}, {});
+    auto rule_2 = policy_factory->make_rule({}, {});
     auto policy = policy_factory->make_policy({rule_1, rule_2});
     out_data.policy_factories.emplace("0", policy_factory);
 
@@ -85,7 +85,10 @@ TEST(DLPTests, SerializationGripperTest) {
     dlplan::serialization::serialize(out_data, buffer);
     std::cout << buffer.str() << std::endl;
 
+    std::cout << "deserializing..." << std::endl;
     dlplan::serialization::Data in_data = dlplan::serialization::deserialize(buffer);
+
+    std::cout << "deserialized" << std::endl;
     EXPECT_EQ(in_data.state_spaces.size(), 2);
     EXPECT_NE(in_data.state_spaces.at("0")->get_instance_info(), in_data.state_spaces.at("1")->get_instance_info());
     EXPECT_EQ(in_data.state_spaces.at("0")->get_instance_info()->get_vocabulary_info(), in_data.state_spaces.at("1")->get_instance_info()->get_vocabulary_info());

@@ -175,8 +175,8 @@ template<class Archive>
 void load_construct_data(Archive& ar, std::pair<const dlplan::core::DiffRole, std::weak_ptr<dlplan::core::DiffRole>>* t, const unsigned int /*version*/) {
     dlplan::core::DiffRole* first = nullptr;
     std::weak_ptr<dlplan::core::DiffRole>* second = nullptr;
-    ar >> const_cast<dlplan::core::DiffRole&>(t->first);
-    ar >> t->second;
+    ar >> const_cast<dlplan::core::DiffRole&>(*first);
+    ar >> second;
     ::new(t)std::pair<const dlplan::core::DiffRole, std::weak_ptr<dlplan::core::DiffRole>>(*first, *second);
     delete first;
     delete second;

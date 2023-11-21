@@ -176,8 +176,8 @@ template<class Archive>
 void load_construct_data(Archive& ar, std::pair<const dlplan::core::TransitiveClosureRole, std::weak_ptr<dlplan::core::TransitiveClosureRole>>* t, const unsigned int /*version*/) {
     dlplan::core::TransitiveClosureRole* first = nullptr;
     std::weak_ptr<dlplan::core::TransitiveClosureRole>* second = nullptr;
-    ar >> const_cast<dlplan::core::TransitiveClosureRole&>(t->first);
-    ar >> t->second;
+    ar >> const_cast<dlplan::core::TransitiveClosureRole&>(*first);
+    ar >> second;
     ::new(t)std::pair<const dlplan::core::TransitiveClosureRole, std::weak_ptr<dlplan::core::TransitiveClosureRole>>(*first, *second);
     delete first;
     delete second;

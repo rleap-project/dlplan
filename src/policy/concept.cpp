@@ -7,6 +7,7 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/export.hpp>
 #include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/weak_ptr.hpp>
 
 #include <sstream>
 
@@ -73,14 +74,38 @@ void serialize(Archive& ar, dlplan::policy::NamedConcept& t, const unsigned int 
     ar & t.m_concept;
 }
 
+template<typename Archive>
+void serialize(Archive& /*ar*/, std::pair<const dlplan::policy::NamedConcept, std::weak_ptr<dlplan::policy::NamedConcept>>& /*t*/, const unsigned int /*version*/) {
+}
+
+template<class Archive>
+void save_construct_data(Archive& ar, const std::pair<const dlplan::policy::NamedConcept, std::weak_ptr<dlplan::policy::NamedConcept>>* t, const unsigned int /*version*/) {
+    ar << t->first;
+    ar << t->second;
+}
+
+template<class Archive>
+void load_construct_data(Archive& ar, std::pair<const dlplan::policy::NamedConcept, std::weak_ptr<dlplan::policy::NamedConcept>>* t, const unsigned int /*version*/) {
+    dlplan::policy::NamedConcept* first = nullptr;
+    std::weak_ptr<dlplan::policy::NamedConcept>* second = nullptr;
+    ar >> const_cast<dlplan::policy::NamedConcept&>(*first);
+    ar >> second;
+    ::new(t)std::pair<const dlplan::policy::NamedConcept, std::weak_ptr<dlplan::policy::NamedConcept>>(*first, *second);
+    delete first;
+    delete second;
+}
+
 template void serialize(boost::archive::text_iarchive& ar,
     dlplan::policy::NamedConcept& t, const unsigned int version);
+
+template void serialize(boost::archive::text_iarchive& ar,
+    std::pair<const dlplan::policy::NamedConcept, std::weak_ptr<dlplan::policy::NamedConcept>>& t, const unsigned int version);
 template void serialize(boost::archive::text_oarchive& ar,
-    dlplan::policy::NamedConcept& t, const unsigned int version);
+    std::pair<const dlplan::policy::NamedConcept, std::weak_ptr<dlplan::policy::NamedConcept>>& t, const unsigned int version);
 template void save_construct_data(boost::archive::text_oarchive& ar,
-    const dlplan::policy::NamedConcept* t, const unsigned int version);
+    const std::pair<const dlplan::policy::NamedConcept, std::weak_ptr<dlplan::policy::NamedConcept>>* t, const unsigned int version);
 template void load_construct_data(boost::archive::text_iarchive& ar,
-    dlplan::policy::NamedConcept* t, const unsigned int version);
+    std::pair<const dlplan::policy::NamedConcept, std::weak_ptr<dlplan::policy::NamedConcept>>* t, const unsigned int version);
 
 }
 

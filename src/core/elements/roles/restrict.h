@@ -180,8 +180,8 @@ template<class Archive>
 void load_construct_data(Archive& ar, std::pair<const dlplan::core::RestrictRole, std::weak_ptr<dlplan::core::RestrictRole>>* t, const unsigned int /*version*/) {
     dlplan::core::RestrictRole* first = nullptr;
     std::weak_ptr<dlplan::core::RestrictRole>* second = nullptr;
-    ar >> const_cast<dlplan::core::RestrictRole&>(t->first);
-    ar >> t->second;
+    ar >> const_cast<dlplan::core::RestrictRole&>(*first);
+    ar >> second;
     ::new(t)std::pair<const dlplan::core::RestrictRole, std::weak_ptr<dlplan::core::RestrictRole>>(*first, *second);
     delete first;
     delete second;

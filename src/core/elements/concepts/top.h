@@ -145,8 +145,8 @@ template<class Archive>
 void load_construct_data(Archive& ar, std::pair<const dlplan::core::TopConcept, std::weak_ptr<dlplan::core::TopConcept>>* t, const unsigned int /*version*/) {
     dlplan::core::TopConcept* first = nullptr;
     std::weak_ptr<dlplan::core::TopConcept>* second = nullptr;
-    ar >> const_cast<dlplan::core::TopConcept&>(t->first);
-    ar >> t->second;
+    ar >> const_cast<dlplan::core::TopConcept&>(*first);
+    ar >> second;
     ::new(t)std::pair<const dlplan::core::TopConcept, std::weak_ptr<dlplan::core::TopConcept>>(*first, *second);
     delete first;
     delete second;

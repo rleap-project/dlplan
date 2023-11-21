@@ -179,8 +179,8 @@ template<class Archive, typename T>
 void load_construct_data(Archive& ar, std::pair<const dlplan::core::EmptyBoolean<T>, std::weak_ptr<dlplan::core::EmptyBoolean<T>>>* t, const unsigned int /*version*/) {
     dlplan::core::EmptyBoolean<T>* first = nullptr;
     std::weak_ptr<dlplan::core::EmptyBoolean<T>>* second = nullptr;
-    ar >> const_cast<dlplan::core::EmptyBoolean<T>&>(t->first);
-    ar >> t->second;
+    ar >> const_cast<dlplan::core::EmptyBoolean<T>&>(*first);
+    ar >> second;
     ::new(t)std::pair<const dlplan::core::EmptyBoolean<T>, std::weak_ptr<dlplan::core::EmptyBoolean<T>>>(*first, *second);
     delete first;
     delete second;
