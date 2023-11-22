@@ -727,6 +727,10 @@ protected:
 public:
     ~BaseElement() { }
 
+    bool operator==(const Derived& other) const {
+        return static_cast<const Derived*>(this)->operator==(other);
+    }
+
     bool operator<(const Derived& other) const {
         return m_index < other.m_index;
     }
