@@ -12,7 +12,7 @@ using namespace dlplan::core;
 
 
 void init_core(py::module_ &m_core) {
-    py::class_<ConceptDenotation>(m_core, "ConceptDenotation")
+    py::class_<ConceptDenotation, std::shared_ptr<ConceptDenotation>>(m_core, "ConceptDenotation")
         .def(py::init<int>())
         .def("__eq__", &ConceptDenotation::operator==)
         .def("__ne__", &ConceptDenotation::operator!=)
@@ -31,7 +31,7 @@ void init_core(py::module_ &m_core) {
         .def("get_num_objects", &ConceptDenotation::get_num_objects)
     ;
 
-    py::class_<RoleDenotation>(m_core, "RoleDenotation")
+    py::class_<RoleDenotation, std::shared_ptr<RoleDenotation>>(m_core, "RoleDenotation")
         .def(py::init<int>())
         .def("__eq__", &RoleDenotation::operator==)
         .def("__ne__", &RoleDenotation::operator!=)
@@ -154,26 +154,38 @@ void init_core(py::module_ &m_core) {
 
     py::class_<Concept, BaseElement, std::shared_ptr<Concept>>(m_core, "Concept")
         .def("evaluate", py::overload_cast<const State&>(&Concept::evaluate, py::const_))
-        .def("evaluate", py::overload_cast<const State&, DenotationsCaches&>(&Concept::evaluate, py::const_), py::return_value_policy::reference)
-        .def("evaluate", py::overload_cast<const States&, DenotationsCaches&>(&Concept::evaluate, py::const_), py::return_value_policy::reference)
+        .def("evaluate", py::overload_cast<const State&, DenotationsCaches&>(&Concept::evaluate, py::const_))
+        .def("evaluate", [](const Concept& self, const States& states, DenotationsCaches& caches) {
+            // std::shared_ptr<const std::vector<std::shared_ptr<const ConcepDenotation>>> is not registered so we must dereference to obtain a registered type
+            return *self.evaluate(states, caches);
+        })
     ;
 
     py::class_<Role, BaseElement, std::shared_ptr<Role>>(m_core, "Role")
         .def("evaluate", py::overload_cast<const State&>(&Role::evaluate, py::const_))
-        .def("evaluate", py::overload_cast<const State&, DenotationsCaches&>(&Role::evaluate, py::const_), py::return_value_policy::reference)
-        .def("evaluate", py::overload_cast<const States&, DenotationsCaches&>(&Role::evaluate, py::const_), py::return_value_policy::reference)
+        .def("evaluate", py::overload_cast<const State&, DenotationsCaches&>(&Role::evaluate, py::const_))
+        .def("evaluate", [](const Role& self, const States& states, DenotationsCaches& caches) {
+            // std::shared_ptr<const std::vector<std::shared_ptr<const RoleDenotation>>> is not registered so we must dereference to obtain a registered type
+            return *self.evaluate(states, caches);
+        })
     ;
 
     py::class_<Numerical, BaseElement, std::shared_ptr<Numerical>>(m_core, "Numerical")
         .def("evaluate", py::overload_cast<const State&>(&Numerical::evaluate, py::const_))
         .def("evaluate", py::overload_cast<const State&, DenotationsCaches&>(&Numerical::evaluate, py::const_))
-        .def("evaluate", py::overload_cast<const States&, DenotationsCaches&>(&Numerical::evaluate, py::const_), py::return_value_policy::reference)
+        .def("evaluate", [](const Numerical& self, const States& states, DenotationsCaches& caches) {
+            // std::shared_ptr<const std::vector<std::shared_ptr<const NumericalDenotation>>> is not registered so we must dereference to obtain a registered type
+            return *self.evaluate(states, caches);
+        })
     ;
 
     py::class_<Boolean, BaseElement, std::shared_ptr<Boolean>>(m_core, "Boolean")
         .def("evaluate", py::overload_cast<const State&>(&Boolean::evaluate, py::const_))
         .def("evaluate", py::overload_cast<const State&, DenotationsCaches&>(&Boolean::evaluate, py::const_))
-        .def("evaluate", py::overload_cast<const States&, DenotationsCaches&>(&Boolean::evaluate, py::const_), py::return_value_policy::reference)
+        .def("evaluate", [](const Boolean& self, const States& states, DenotationsCaches& caches) {
+            // std::shared_ptr<const std::vector<std::shared_ptr<const BooleanDenotation>>> is not registered so we must dereference to obtain a registered type
+            return *self.evaluate(states, caches);
+        })
     ;
 
     py::class_<SyntacticElementFactory, std::shared_ptr<SyntacticElementFactory>>(m_core, "SyntacticElementFactory")

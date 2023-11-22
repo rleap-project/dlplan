@@ -36,8 +36,8 @@ class Numerical;
 class SyntacticElementFactory;
 class SyntacticElementFactoryImpl;
 
-using ConceptDenotations = std::vector<const ConceptDenotation*>;
-using RoleDenotations = std::vector<const RoleDenotation*>;
+using ConceptDenotations = std::vector<std::shared_ptr<const ConceptDenotation>>;
+using RoleDenotations = std::vector<std::shared_ptr<const RoleDenotation>>;
 using BooleanDenotations = std::vector<bool>;
 using NumericalDenotations = std::vector<int>;
 
@@ -248,27 +248,27 @@ public:
 
     template<typename T>
     struct Cache {
-        struct UniquePtrHash {
-            std::size_t operator()(const std::unique_ptr<const T>& ptr) const {
+        struct ValueHash {
+            std::size_t operator()(const std::shared_ptr<const T>& ptr) const {
                 return hash_combine(*ptr);
             }
         };
 
-        struct UniquePtrEqual {
-            bool operator()(const std::unique_ptr<const T>& left, const std::unique_ptr<const T>& right) const {
+        struct ValueEqual {
+            bool operator()(const std::shared_ptr<const T>& left, const std::shared_ptr<const T>& right) const {
                 return *left == *right;
             }
         };
 
         // We use unique_ptr such that other raw pointers do not become invalid.
-        std::unordered_set<std::unique_ptr<const T>, UniquePtrHash, UniquePtrEqual> uniqueness;
-        std::unordered_map<Key, const T*, KeyHash> per_element_instance_state_mapping;
+        std::unordered_set<std::shared_ptr<const T>, ValueHash, ValueEqual> uniqueness;
+        std::unordered_map<Key, std::shared_ptr<const T>, KeyHash> per_element_instance_state_mapping;
 
         /// @brief Inserts denotation uniquely and returns it raw pointer.
         /// @param denotation
         /// @return
-        const T* insert_denotation(T&& denotation) {
-            return uniqueness.insert(std::make_unique<T>(std::move(denotation))).first->get();
+        std::shared_ptr<const T> insert_denotation(T&& denotation) {
+            return *uniqueness.insert(std::make_shared<T>(std::move(denotation))).first;
         }
 
         /// @brief Inserts raw pointer of denotation into mapping from element, instance, and state.
@@ -276,12 +276,12 @@ public:
         /// @param instance_index
         /// @param state_index
         /// @param denotation
-        void insert_denotation(ElementIndex element, InstanceIndex instance, StateIndex state, const T* denotation) {
+        void insert_denotation(ElementIndex element, InstanceIndex instance, StateIndex state, std::shared_ptr<const T> denotation) {
             Key key{element, instance, state};
             per_element_instance_state_mapping.emplace(key, denotation);
         }
 
-        const T* get_denotation(ElementIndex element, InstanceIndex instance, StateIndex state) const {
+        std::shared_ptr<const T> get_denotation(ElementIndex element, InstanceIndex instance, StateIndex state) const {
             Key key{element, instance, state};
             auto iter = per_element_instance_state_mapping.find(key);
             if (iter != per_element_instance_state_mapping.end()) {
@@ -779,8 +779,8 @@ public:
     bool operator<(const Concept& other) const;
 
     virtual ConceptDenotation evaluate(const State& ) const = 0;
-    const ConceptDenotation* evaluate(const State& state, DenotationsCaches& caches) const;
-    const ConceptDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
+    std::shared_ptr<const ConceptDenotation> evaluate(const State& state, DenotationsCaches& caches) const;
+    std::shared_ptr<const ConceptDenotations> evaluate(const States& states, DenotationsCaches& caches) const;
 };
 
 
@@ -804,8 +804,8 @@ public:
     bool operator<(const Role& other) const;
 
     virtual RoleDenotation evaluate(const State& ) const = 0;
-    const RoleDenotation* evaluate(const State& state, DenotationsCaches& caches) const;
-    const RoleDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
+    std::shared_ptr<const RoleDenotation> evaluate(const State& state, DenotationsCaches& caches) const;
+    std::shared_ptr<const RoleDenotations> evaluate(const States& states, DenotationsCaches& caches) const;
 };
 
 
@@ -830,7 +830,7 @@ public:
 
     virtual int evaluate(const State& ) const = 0;
     int evaluate(const State& state, DenotationsCaches& caches) const;
-    const NumericalDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
+    std::shared_ptr<const NumericalDenotations> evaluate(const States& states, DenotationsCaches& caches) const;
 };
 
 
@@ -855,7 +855,7 @@ public:
 
     virtual bool evaluate(const State& ) const = 0;
     bool evaluate(const State& state, DenotationsCaches& caches) const;
-    const BooleanDenotations* evaluate(const States& states, DenotationsCaches& caches) const;
+    std::shared_ptr<const BooleanDenotations> evaluate(const States& states, DenotationsCaches& caches) const;
 };
 
 

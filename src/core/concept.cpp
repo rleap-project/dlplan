@@ -21,7 +21,7 @@ bool Concept::operator<(const Concept& other) const {
     return m_index < other.m_index;
 }
 
-const ConceptDenotation* Concept::evaluate(const State& state, DenotationsCaches& caches) const {
+std::shared_ptr<const ConceptDenotation> Concept::evaluate(const State& state, DenotationsCaches& caches) const {
     auto cached = caches.concept_denotation_cache.get_denotation(
         get_index(),
         state.get_instance_info()->get_index(),
@@ -36,7 +36,7 @@ const ConceptDenotation* Concept::evaluate(const State& state, DenotationsCaches
     return denotation;
 }
 
-const ConceptDenotations* Concept::evaluate(const States& states, DenotationsCaches& caches) const {
+std::shared_ptr<const ConceptDenotations> Concept::evaluate(const States& states, DenotationsCaches& caches) const {
     auto cached = caches.concept_denotations_cache.get_denotation(get_index(), -1, -1);
     if (cached) return cached;
     auto result_denotations = caches.concept_denotations_cache.insert_denotation(evaluate_impl(states, caches));
