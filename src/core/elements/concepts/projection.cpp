@@ -38,7 +38,7 @@ ProjectionConcept::ProjectionConcept(ElementIndex index, std::shared_ptr<Vocabul
     }
 }
 
-bool ProjectionConcept::operator==(const Concept& other) const {
+bool ProjectionConcept::are_equal_impl(const Concept& other) const {
     if (typeid(*this) == typeid(other)) {
         const auto& other_derived = static_cast<const ProjectionConcept&>(other);
         return m_is_static == other_derived.m_is_static

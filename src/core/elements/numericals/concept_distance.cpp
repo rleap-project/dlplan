@@ -61,7 +61,7 @@ ConceptDistanceNumerical::ConceptDistanceNumerical(ElementIndex index, std::shar
     : Numerical(vocabulary_info, index, concept_from->is_static() && role->is_static() && concept_to->is_static()),
         m_concept_from(concept_from), m_role(role), m_concept_to(concept_to) { }
 
-bool ConceptDistanceNumerical::operator==(const Numerical& other) const {
+bool ConceptDistanceNumerical::are_equal_impl(const Numerical& other) const {
     if (typeid(*this) == typeid(other)) {
         const auto& other_derived = static_cast<const ConceptDistanceNumerical&>(other);
         return m_is_static == other_derived.m_is_static

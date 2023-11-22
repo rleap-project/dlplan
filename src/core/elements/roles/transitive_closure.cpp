@@ -45,7 +45,7 @@ RoleDenotations TransitiveClosureRole::evaluate_impl(const States& states, Denot
 TransitiveClosureRole::TransitiveClosureRole(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role)
     : Role(vocabulary_info, index, role->is_static()), m_role(role) { }
 
-bool TransitiveClosureRole::operator==(const Role& other) const {
+bool TransitiveClosureRole::are_equal_impl(const Role& other) const {
     if (typeid(*this) == typeid(other)) {
         const auto& other_derived = static_cast<const TransitiveClosureRole&>(other);
         return m_is_static == other_derived.m_is_static

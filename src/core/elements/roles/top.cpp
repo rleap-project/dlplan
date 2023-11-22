@@ -22,7 +22,7 @@ RoleDenotations TopRole::evaluate_impl(const States& states, DenotationsCaches& 
 TopRole::TopRole(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info)
     : Role(vocabulary_info, index, true) { }
 
-bool TopRole::operator==(const Role& other) const {
+bool TopRole::are_equal_impl(const Role& other) const {
     if (typeid(*this) == typeid(other)) {
         const auto& other_derived = static_cast<const TopRole&>(other);
         return m_is_static == other_derived.m_is_static;

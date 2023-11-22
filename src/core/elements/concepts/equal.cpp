@@ -43,7 +43,7 @@ EqualConcept::EqualConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> v
     : Concept(vocabulary_info, index, role_left->is_static() && role_right->is_static()),
         m_role_left(role_left), m_role_right(role_right) { }
 
-bool EqualConcept::operator==(const Concept& other) const {
+bool EqualConcept::are_equal_impl(const Concept& other) const {
     if (typeid(*this) == typeid(other)) {
         const auto& other_derived = static_cast<const EqualConcept&>(other);
         return m_is_static == other_derived.m_is_static

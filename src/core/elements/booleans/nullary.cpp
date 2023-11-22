@@ -41,7 +41,7 @@ NullaryBoolean::NullaryBoolean(ElementIndex index, std::shared_ptr<VocabularyInf
     }
 }
 
-bool NullaryBoolean::operator==(const Boolean& other) const {
+bool NullaryBoolean::are_equal_impl(const Boolean& other) const {
     if (typeid(*this) == typeid(other)) {
         const auto& other_derived = static_cast<const NullaryBoolean&>(other);
         return m_is_static == other_derived.m_is_static

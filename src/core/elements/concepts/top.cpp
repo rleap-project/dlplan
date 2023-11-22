@@ -23,7 +23,7 @@ TopConcept::TopConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocab
     : Concept(vocabulary_info, index, true) {
 }
 
-bool TopConcept::operator==(const Concept& other) const {
+bool TopConcept::are_equal_impl(const Concept& other) const {
     if (typeid(*this) == typeid(other)) {
         const auto& other_derived = static_cast<const TopConcept&>(other);
         return m_is_static == other_derived.m_is_static;

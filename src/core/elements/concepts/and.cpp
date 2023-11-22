@@ -38,7 +38,7 @@ AndConcept::AndConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocab
     m_concept_left(concept_1->get_index() < concept_2->get_index() ? concept_1 : concept_2),
     m_concept_right(concept_1->get_index() < concept_2->get_index() ? concept_2 : concept_1) { }
 
-bool AndConcept::operator==(const Concept& other) const {
+bool AndConcept::are_equal_impl(const Concept& other) const {
     if (typeid(*this) == typeid(other)) {
         const auto& other_derived = static_cast<const AndConcept&>(other);
         return m_is_static == other_derived.m_is_static

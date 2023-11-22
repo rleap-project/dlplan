@@ -56,7 +56,7 @@ PrimitiveRole::PrimitiveRole(ElementIndex index, std::shared_ptr<VocabularyInfo>
     }
 }
 
-bool PrimitiveRole::operator==(const Role& other) const {
+bool PrimitiveRole::are_equal_impl(const Role& other) const {
     if (typeid(*this) == typeid(other)) {
         const auto& other_derived = static_cast<const PrimitiveRole&>(other);
         return m_is_static == other_derived.m_is_static

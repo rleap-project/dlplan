@@ -4,7 +4,7 @@
 namespace dlplan::core {
 
 Numerical::Numerical(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
-    : BaseElement(vocabulary_info, index, is_static) {
+    : BaseElement(index, vocabulary_info, is_static) {
 }
 
 Numerical::Numerical(const Numerical& other) = default;

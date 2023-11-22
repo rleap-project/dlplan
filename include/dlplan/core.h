@@ -709,80 +709,89 @@ public:
 };
 
 
-/// @brief Represents the abstract base class of an element with functionality
-///        for computing string representations and its complexity.
+/// @brief Represents the abstract base class of an object
+///        with functionality for computing string representations.
 template<typename Derived>
-class BaseElement {
+class Base {
 protected:
-    std::shared_ptr<VocabularyInfo> m_vocabulary_info;
-    ElementIndex m_index;
-    /**
-     * if true then element is evaluated per instance rather than per state.
-     */
-    bool m_is_static;
+    int m_index;
 
-    BaseElement(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
-        : m_vocabulary_info(vocabulary_info), m_index(index), m_is_static(is_static) { }
+    Base(int index) : m_index(index) { }
 
 public:
-    ~BaseElement() { }
+    ~Base() { }
 
-    bool operator==(const Derived& other) const {
-        return static_cast<const Derived*>(this)->operator==(other);
+    bool operator==(const Base& other) const {
+        return static_cast<const Derived*>(this)->are_equal_impl(static_cast<const Derived&>(other));
     }
 
-    bool operator<(const Derived& other) const {
+    bool operator<(const Base& other) const {
         return m_index < other.m_index;
     }
 
-    /// @brief Computes a hash value for this element.
-    /// @return 
-    size_t hash() const { 
+    /// @brief Computes a hash value for this object.
+    size_t hash() const {
         return static_cast<const Derived*>(this)->hash_impl();
     }
 
-    /// @brief Compute the canonical string representation of this element.
-    /// @return The canonical string representation of this element.
+    /// @brief Compute a canonical string representation of this object.
     std::string compute_repr() const {
-        std::stringstream ss; 
+        std::stringstream ss;
         compute_repr(ss);
         return ss.str();
     }
 
-    /// @brief Helper function to compute the canonical string representation of this element.
+    /// @brief Overload of the output stream insertion operator (operator<<).
+    friend std::ostream& operator<<(std::ostream& os, const Base& element) {
+        os << element.str();
+        return os;
+    }
+
+    /// @brief Compute a canonical string representation of this object.
     void compute_repr(std::stringstream& out) const {
         static_cast<const Derived*>(this)->compute_repr_impl(out);
     }
 
+    /// @brief Compute a string representation of this object.
+    std::string str() const {
+        return static_cast<const Derived*>(this)->str_impl();
+    }
+
+    /* Getters. */
+    int get_index() const { return m_index; }
+};
+
+
+template<typename Derived>
+class BaseElement : public Base<Derived> {
+protected:
+    std::shared_ptr<VocabularyInfo> m_vocabulary_info;
+    bool m_is_static;
+
+public:
+    BaseElement(int index, std::shared_ptr<VocabularyInfo> vocabulary_info, bool is_static)
+        : Base<Derived>(index), m_vocabulary_info(vocabulary_info), m_is_static(is_static) { }
+
+    ~BaseElement() { }
+
     /// @brief Returns the complexity of the element
     ///        measured in the size of the abstract syntax tree.
-    /// @return An integer that represents the number of element constructors in the represenation.
     int compute_complexity() const {
         return static_cast<const Derived*>(this)->compute_complexity_impl();
     }
 
     /// @brief Computes a time score for evaluating this element relative to other elements.
     ///        The scoring assumes evaluation that uses caching.
-    /// @return An integer that represents the score.
     int compute_evaluate_time_score() const {
         return static_cast<const Derived*>(this)->compute_evaluate_time_score_impl();
     }
 
-    /// @brief Overload of the output stream insertion operator (operator<<) for the BaseElement class.
-    ///        Outputs a string representation of a BaseElement object to the specified output stream.
-    /// @param os The output stream to write the string representation to.
-    /// @param denotation The BaseElement to be represented as a string.
-    /// @return A reference to the output stream after writing the string representation.
-    friend std::ostream& operator<<(std::ostream& os, const BaseElement& element) { 
-        os << element.compute_repr();
-        return os;
+    // For elements we simply return repr as a string representation.
+    std::string str_impl() const {
+        return Base<Derived>::compute_repr();
     }
 
-    /// @brief Compute a string representation of this element.
-    /// @return A string representation of this element.
-    std::string str() const { return compute_repr(); }
-
-    ElementIndex get_index() const { return m_index; }
+    /* Getters. */
     std::shared_ptr<VocabularyInfo> get_vocabulary_info() const { return m_vocabulary_info; }
     bool is_static() const { return m_is_static; }
 };
@@ -804,8 +813,7 @@ public:
     Concept& operator=(Concept&& other);
     ~Concept();
 
-    virtual bool operator==(const Concept& other) const = 0;
-
+    virtual bool are_equal_impl(const Concept& other) const = 0;
     virtual size_t hash_impl() const = 0;
     virtual void compute_repr_impl(std::stringstream& out) const = 0;
     virtual int compute_complexity_impl() const = 0;
@@ -833,8 +841,7 @@ public:
     Role& operator=(Role&& other);
     ~Role();
 
-    virtual bool operator==(const Role& other) const = 0;
-
+    virtual bool are_equal_impl(const Role& other) const = 0;
     virtual size_t hash_impl() const = 0;
     virtual void compute_repr_impl(std::stringstream& out) const = 0;
     virtual int compute_complexity_impl() const = 0;
@@ -862,8 +869,7 @@ public:
     Numerical& operator=(Numerical&& other);
     ~Numerical();
 
-    virtual bool operator==(const Numerical& other) const = 0;
-
+    virtual bool are_equal_impl(const Numerical& other) const = 0;
     virtual size_t hash_impl() const = 0;
     virtual void compute_repr_impl(std::stringstream& out) const = 0;
     virtual int compute_complexity_impl() const = 0;
@@ -891,8 +897,7 @@ public:
     Boolean& operator=(Boolean&& other);
     ~Boolean();
 
-    virtual bool operator==(const Boolean& other) const = 0;
-
+    virtual bool are_equal_impl(const Boolean& other) const = 0;
     virtual size_t hash_impl() const = 0;
     virtual void compute_repr_impl(std::stringstream& out) const = 0;
     virtual int compute_complexity_impl() const = 0;

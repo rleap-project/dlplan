@@ -64,7 +64,7 @@ RoleDistanceNumerical::RoleDistanceNumerical(ElementIndex index, std::shared_ptr
     : Numerical(vocabulary_info, index, role_from->is_static() && role->is_static() && role_to->is_static()),
         m_role_from(role_from), m_role(role), m_role_to(role_to) { }
 
-bool RoleDistanceNumerical::operator==(const Numerical& other) const {
+bool RoleDistanceNumerical::are_equal_impl(const Numerical& other) const {
     if (typeid(*this) == typeid(other)) {
         const auto& other_derived = static_cast<const RoleDistanceNumerical&>(other);
         return m_is_static == other_derived.m_is_static

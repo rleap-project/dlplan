@@ -19,7 +19,7 @@ ConceptDenotations BotConcept::evaluate_impl(const States& states, DenotationsCa
 BotConcept::BotConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info)
 : Concept(vocabulary_info, index, true) { }
 
-bool BotConcept::operator==(const Concept& other) const {
+bool BotConcept::are_equal_impl(const Concept& other) const {
     if (typeid(*this) == typeid(other)) {
         const auto& other_derived = static_cast<const BotConcept&>(other);
         return m_is_static == other_derived.m_is_static;

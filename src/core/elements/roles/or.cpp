@@ -37,7 +37,7 @@ OrRole::OrRole(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_in
     m_role_left(role_1->get_index() < role_2->get_index() ? role_1 : role_2),
     m_role_right(role_1->get_index() < role_2->get_index() ? role_2 : role_1) { }
 
-bool OrRole::operator==(const Role& other) const {
+bool OrRole::are_equal_impl(const Role& other) const {
     if (typeid(*this) == typeid(other)) {
         const auto& other_derived = static_cast<const OrRole&>(other);
         return m_is_static == other_derived.m_is_static

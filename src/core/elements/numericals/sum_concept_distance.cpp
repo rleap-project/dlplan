@@ -61,7 +61,7 @@ SumConceptDistanceNumerical::SumConceptDistanceNumerical(ElementIndex index, std
     : Numerical(vocabulary_info, index, concept_from->is_static() && role->is_static() && concept_to->is_static()),
         m_concept_from(concept_from), m_role(role), m_concept_to(concept_to) { }
 
-bool SumConceptDistanceNumerical::operator==(const Numerical& other) const {
+bool SumConceptDistanceNumerical::are_equal_impl(const Numerical& other) const {
     if (typeid(*this) == typeid(other)) {
         const auto& other_derived = static_cast<const SumConceptDistanceNumerical&>(other);
         return m_is_static == other_derived.m_is_static

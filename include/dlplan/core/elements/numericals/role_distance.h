@@ -34,7 +34,7 @@ private:
     friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
-    bool operator==(const Numerical& other) const override;
+    bool are_equal_impl(const Numerical& other) const override;
 
     size_t hash_impl() const override;
 

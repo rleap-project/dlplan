@@ -35,7 +35,7 @@ ConceptDenotations DiffConcept::evaluate_impl(const States& states, DenotationsC
 DiffConcept::DiffConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept_1, std::shared_ptr<const Concept> concept_2)
     : Concept(vocabulary_info, index, concept_1->is_static() && concept_2->is_static()), m_concept_left(concept_1), m_concept_right(concept_2) { }
 
-bool DiffConcept::operator==(const Concept& other) const {
+bool DiffConcept::are_equal_impl(const Concept& other) const {
     if (typeid(*this) == typeid(other)) {
         const auto& other_derived = static_cast<const DiffConcept&>(other);
         return m_is_static == other_derived.m_is_static

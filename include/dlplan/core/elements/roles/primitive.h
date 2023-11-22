@@ -33,7 +33,7 @@ private:
     friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
-    bool operator==(const Role& other) const override;
+    bool are_equal_impl(const Role& other) const override;
     size_t hash_impl() const override;
 
     RoleDenotation evaluate(const State& state) const override;

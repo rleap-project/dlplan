@@ -58,7 +58,7 @@ private:
     friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
-    bool operator==(const Boolean& other) const override {
+    bool are_equal_impl(const Boolean& other) const override {
         if (typeid(*this) == typeid(other)) {
             const auto& other_derived = static_cast<const EmptyBoolean<T>&>(other);
             return m_is_static == other_derived.m_is_static
