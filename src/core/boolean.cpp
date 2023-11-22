@@ -16,10 +16,6 @@ Boolean& Boolean::operator=(Boolean&& other) = default;
 
 Boolean::~Boolean() = default;
 
-bool Boolean::operator<(const Boolean& other) const {
-    return m_index < other.m_index;
-}
-
 bool Boolean::evaluate(const State& state, DenotationsCaches& caches) const {
     std::shared_ptr<const bool> cached = caches.boolean_denotation_cache.get_denotation(
         get_index(),

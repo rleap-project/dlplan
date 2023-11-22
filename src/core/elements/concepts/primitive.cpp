@@ -60,7 +60,7 @@ bool PrimitiveConcept::operator==(const Concept& other) const {
     return false;
 }
 
-size_t PrimitiveConcept::hash() const {
+size_t PrimitiveConcept::hash_impl() const {
     return hash_combine(m_is_static, m_predicate, m_pos);
 }
 
@@ -70,15 +70,15 @@ ConceptDenotation PrimitiveConcept::evaluate(const State& state) const {
     return denotation;
 }
 
-int PrimitiveConcept::compute_complexity() const {
+int PrimitiveConcept::compute_complexity_impl() const {
     return 1;
 }
 
-void PrimitiveConcept::compute_repr(std::stringstream& out) const {
+void PrimitiveConcept::compute_repr_impl(std::stringstream& out) const {
     out << "c_primitive" << "(" << m_predicate.get_name() << "," << std::to_string(m_pos) << ")";
 }
 
-int PrimitiveConcept::compute_evaluate_time_score() const {
+int PrimitiveConcept::compute_evaluate_time_score_impl() const {
     return SCORE_LINEAR;
 }
 

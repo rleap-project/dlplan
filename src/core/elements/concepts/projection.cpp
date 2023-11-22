@@ -48,7 +48,7 @@ bool ProjectionConcept::operator==(const Concept& other) const {
     return false;
 }
 
-size_t ProjectionConcept::hash() const {
+size_t ProjectionConcept::hash_impl() const {
     return hash_combine(m_is_static, m_role, m_pos);
 }
 
@@ -60,17 +60,17 @@ ConceptDenotation ProjectionConcept::evaluate(const State& state) const {
     return denotation;
 }
 
-int ProjectionConcept::compute_complexity() const {
+int ProjectionConcept::compute_complexity_impl() const {
     return m_role->compute_complexity() + 1;
 }
 
-void ProjectionConcept::compute_repr(std::stringstream& out) const {
+void ProjectionConcept::compute_repr_impl(std::stringstream& out) const {
     out << "c_projection" << "(";
     m_role->compute_repr(out);
     out << "," << std::to_string(m_pos) << ")";
 }
 
-int ProjectionConcept::compute_evaluate_time_score() const {
+int ProjectionConcept::compute_evaluate_time_score_impl() const {
     return m_role->compute_evaluate_time_score() + SCORE_QUADRATIC;
 }
 

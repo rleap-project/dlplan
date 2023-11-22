@@ -17,10 +17,6 @@ Concept& Concept::operator=(Concept&& other) = default;
 
 Concept::~Concept() = default;
 
-bool Concept::operator<(const Concept& other) const {
-    return m_index < other.m_index;
-}
-
 std::shared_ptr<const ConceptDenotation> Concept::evaluate(const State& state, DenotationsCaches& caches) const {
     auto cached = caches.concept_denotation_cache.get_denotation(
         get_index(),

@@ -37,15 +37,15 @@ private:
 public:
     bool operator==(const Numerical& other) const override;
 
-    size_t hash() const;
+    size_t hash_impl() const override;
 
     int evaluate(const State& state) const override;
 
-    int compute_complexity() const override;
+    int compute_complexity_impl() const override;
 
-    void compute_repr(std::stringstream& out) const override;
+    void compute_repr_impl(std::stringstream& out) const override;
 
-    int compute_evaluate_time_score() const override;
+    int compute_evaluate_time_score_impl() const override;
 };
 
 }

@@ -72,7 +72,7 @@ public:
         return false;
     }
 
-    size_t hash() const {
+    size_t hash_impl() const override {
         return hash_combine(m_is_static, m_element);
     }
 
@@ -84,17 +84,17 @@ public:
         return result;
     }
 
-    int compute_complexity() const override {
+    int compute_complexity_impl() const override {
         return m_element->compute_complexity() + 1;
     }
 
-    void compute_repr(std::stringstream& out) const override {
+    void compute_repr_impl(std::stringstream& out) const override {
         out << "n_count" << "(";
         m_element->compute_repr(out);
         out << ")";
     }
 
-    int compute_evaluate_time_score() const override {
+    int compute_evaluate_time_score_impl() const override {
         int score = m_element->compute_evaluate_time_score();
         if (std::is_same<T, Concept>::value) {
             score += SCORE_LINEAR;

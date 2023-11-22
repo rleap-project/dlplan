@@ -50,7 +50,7 @@ bool AllConcept::operator==(const Concept& other) const {
     return false;
 }
 
-size_t AllConcept::hash() const {
+size_t AllConcept::hash_impl() const {
     return hash_combine(m_is_static, m_role, m_concept);
 }
 
@@ -63,11 +63,11 @@ ConceptDenotation AllConcept::evaluate(const State& state) const {
     return denotation;
 }
 
-int AllConcept::compute_complexity() const {
+int AllConcept::compute_complexity_impl() const {
     return m_role->compute_complexity() + m_concept->compute_complexity() + 1;
 }
 
-void AllConcept::compute_repr(std::stringstream& out) const {
+void AllConcept::compute_repr_impl(std::stringstream& out) const {
     out << "c_all" << "(";
     m_role->compute_repr(out);
     out << ",";
@@ -75,7 +75,7 @@ void AllConcept::compute_repr(std::stringstream& out) const {
     out << ")";
 }
 
-int AllConcept::compute_evaluate_time_score() const {
+int AllConcept::compute_evaluate_time_score_impl() const {
     return m_role->compute_evaluate_time_score() + m_concept->compute_evaluate_time_score() + SCORE_QUADRATIC;
 }
 

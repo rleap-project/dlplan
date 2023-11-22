@@ -72,7 +72,7 @@ bool SumConceptDistanceNumerical::operator==(const Numerical& other) const {
     return false;
 }
 
-size_t SumConceptDistanceNumerical::hash() const {
+size_t SumConceptDistanceNumerical::hash_impl() const {
     return hash_combine(m_is_static, m_concept_from, m_role, m_concept_to);
 }
 
@@ -91,11 +91,11 @@ int SumConceptDistanceNumerical::evaluate(const State& state) const {
     return denotation;
 }
 
-int SumConceptDistanceNumerical::compute_complexity() const {
+int SumConceptDistanceNumerical::compute_complexity_impl() const {
     return m_concept_from->compute_complexity() + m_role->compute_complexity() + m_concept_to->compute_complexity() + 1;
 }
 
-void SumConceptDistanceNumerical::compute_repr(std::stringstream& out) const {
+void SumConceptDistanceNumerical::compute_repr_impl(std::stringstream& out) const {
     out << "n_sum_concept_distance" << "(";
     m_concept_from->compute_repr(out);
     out << ",";
@@ -105,7 +105,7 @@ void SumConceptDistanceNumerical::compute_repr(std::stringstream& out) const {
     out << ")";
 }
 
-int SumConceptDistanceNumerical::compute_evaluate_time_score() const {
+int SumConceptDistanceNumerical::compute_evaluate_time_score_impl() const {
     return m_concept_from->compute_evaluate_time_score() + m_role->compute_evaluate_time_score() + m_concept_to->compute_evaluate_time_score() + SCORE_QUBIC;
 }
 

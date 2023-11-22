@@ -31,7 +31,7 @@ bool TopConcept::operator==(const Concept& other) const {
     return false;
 }
 
-size_t TopConcept::hash() const {
+size_t TopConcept::hash_impl() const {
     return hash_combine(m_is_static);
 }
 
@@ -41,15 +41,15 @@ ConceptDenotation TopConcept::evaluate(const State& state) const {
     return denotation;
 }
 
-int TopConcept::compute_complexity() const {
+int TopConcept::compute_complexity_impl() const {
     return 1;
 }
 
-void TopConcept::compute_repr(std::stringstream& out) const {
+void TopConcept::compute_repr_impl(std::stringstream& out) const {
     out << "c_top";
 }
 
-int TopConcept::compute_evaluate_time_score() const {
+int TopConcept::compute_evaluate_time_score_impl() const {
     return SCORE_CONSTANT;
 }
 

@@ -50,7 +50,7 @@ bool NullaryBoolean::operator==(const Boolean& other) const {
     return false;
 }
 
-size_t NullaryBoolean::hash() const {
+size_t NullaryBoolean::hash_impl() const {
     return hash_combine(m_is_static, m_predicate);
 }
 
@@ -60,15 +60,15 @@ bool NullaryBoolean::evaluate(const State& state) const {
     return denotation;
 }
 
-int NullaryBoolean::compute_complexity() const {
+int NullaryBoolean::compute_complexity_impl() const {
     return 1;
 }
 
-void NullaryBoolean::compute_repr(std::stringstream& out) const {
+void NullaryBoolean::compute_repr_impl(std::stringstream& out) const {
     out << "b_nullary" << "(" << m_predicate.get_name() << ")";
 }
 
-int NullaryBoolean::compute_evaluate_time_score() const {
+int NullaryBoolean::compute_evaluate_time_score_impl() const {
     return SCORE_LINEAR;
 }
 

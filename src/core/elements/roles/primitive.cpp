@@ -67,7 +67,7 @@ bool PrimitiveRole::operator==(const Role& other) const {
     return false;
 }
 
-size_t PrimitiveRole::hash() const {
+size_t PrimitiveRole::hash_impl() const {
     return hash_combine(m_is_static, m_predicate, m_pos_1, m_pos_2);
 }
 
@@ -77,15 +77,15 @@ RoleDenotation PrimitiveRole::evaluate(const State& state) const {
     return denotation;
 }
 
-int PrimitiveRole::compute_complexity() const {
+int PrimitiveRole::compute_complexity_impl() const {
     return 1;
 }
 
-void PrimitiveRole::compute_repr(std::stringstream& out) const {
+void PrimitiveRole::compute_repr_impl(std::stringstream& out) const {
     out << "r_primitive" << "(" << m_predicate.get_name() << "," << std::to_string(m_pos_1) << "," << std::to_string(m_pos_2) << ")";
 }
 
-int PrimitiveRole::compute_evaluate_time_score() const {
+int PrimitiveRole::compute_evaluate_time_score_impl() const {
     return SCORE_LINEAR;
 }
 

@@ -42,7 +42,7 @@ bool IdentityRole::operator==(const Role& other) const {
     return false;
 }
 
-size_t IdentityRole::hash() const {
+size_t IdentityRole::hash_impl() const {
     return hash_combine(m_is_static, m_concept);
 }
 
@@ -54,17 +54,17 @@ RoleDenotation IdentityRole::evaluate(const State& state) const {
     return denotation;
 }
 
-int IdentityRole::compute_complexity() const {
+int IdentityRole::compute_complexity_impl() const {
     return m_concept->compute_complexity() + 1;
 }
 
-void IdentityRole::compute_repr(std::stringstream& out) const {
+void IdentityRole::compute_repr_impl(std::stringstream& out) const {
     out << "r_identity" << "(";
     m_concept->compute_repr(out);
     out << ")";
 }
 
-int IdentityRole::compute_evaluate_time_score() const {
+int IdentityRole::compute_evaluate_time_score_impl() const {
     return m_concept->compute_evaluate_time_score() + SCORE_LINEAR;
 }
 

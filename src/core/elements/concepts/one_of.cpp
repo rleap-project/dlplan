@@ -49,7 +49,7 @@ bool OneOfConcept::operator==(const Concept& other) const {
     return false;
 }
 
-size_t OneOfConcept::hash() const {
+size_t OneOfConcept::hash_impl() const {
     return hash_combine(m_is_static, m_constant);
 }
 
@@ -59,15 +59,15 @@ ConceptDenotation OneOfConcept::evaluate(const State& state) const {
     return result;
 }
 
-int OneOfConcept::compute_complexity() const {
+int OneOfConcept::compute_complexity_impl() const {
     return 1;
 }
 
-void OneOfConcept::compute_repr(std::stringstream& out) const {
+void OneOfConcept::compute_repr_impl(std::stringstream& out) const {
     out << "c_one_of" << "(" << m_constant.get_name() << ")";
 }
 
-int OneOfConcept::compute_evaluate_time_score() const {
+int OneOfConcept::compute_evaluate_time_score_impl() const {
     return SCORE_LINEAR;
 }
 

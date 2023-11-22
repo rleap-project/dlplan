@@ -49,7 +49,7 @@ bool SubsetConcept::operator==(const Concept& other) const {
     return false;
 }
 
-size_t SubsetConcept::hash() const {
+size_t SubsetConcept::hash_impl() const {
     return hash_combine(m_is_static, m_role_left, m_role_right);
 }
 
@@ -62,11 +62,11 @@ ConceptDenotation SubsetConcept::evaluate(const State& state) const {
     return denotation;
 }
 
-int SubsetConcept::compute_complexity() const {
+int SubsetConcept::compute_complexity_impl() const {
     return m_role_left->compute_complexity() + m_role_right->compute_complexity() + 1;
 }
 
-void SubsetConcept::compute_repr(std::stringstream& out) const {
+void SubsetConcept::compute_repr_impl(std::stringstream& out) const {
     out << "c_subset" << "(";
     m_role_left->compute_repr(out);
     out << ",";
@@ -74,7 +74,7 @@ void SubsetConcept::compute_repr(std::stringstream& out) const {
     out << ")";
 }
 
-int SubsetConcept::compute_evaluate_time_score() const {
+int SubsetConcept::compute_evaluate_time_score_impl() const {
     return m_role_left->compute_evaluate_time_score() + m_role_right->compute_evaluate_time_score() + SCORE_QUADRATIC;
 }
 

@@ -54,7 +54,7 @@ bool TransitiveClosureRole::operator==(const Role& other) const {
     return false;
 }
 
-size_t TransitiveClosureRole::hash() const {
+size_t TransitiveClosureRole::hash_impl() const {
     return hash_combine(m_is_static, m_role);
 }
 
@@ -66,17 +66,17 @@ RoleDenotation TransitiveClosureRole::evaluate(const State& state) const {
     return result;
 }
 
-int TransitiveClosureRole::compute_complexity() const {
+int TransitiveClosureRole::compute_complexity_impl() const {
     return m_role->compute_complexity() + 1;
 }
 
-void TransitiveClosureRole::compute_repr(std::stringstream& out) const {
+void TransitiveClosureRole::compute_repr_impl(std::stringstream& out) const {
     out << "r_transitive_closure" << "(";
     m_role->compute_repr(out);
     out << ")";
 }
 
-int TransitiveClosureRole::compute_evaluate_time_score() const {
+int TransitiveClosureRole::compute_evaluate_time_score_impl() const {
     return m_role->compute_evaluate_time_score() + SCORE_QUBIC;
 }
 

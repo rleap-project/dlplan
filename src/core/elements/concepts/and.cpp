@@ -48,7 +48,7 @@ bool AndConcept::operator==(const Concept& other) const {
     return false;
 }
 
-size_t AndConcept::hash() const {
+size_t AndConcept::hash_impl() const {
     return hash_combine(m_is_static, m_concept_left, m_concept_right);
 }
 
@@ -61,11 +61,11 @@ ConceptDenotation AndConcept::evaluate(const State& state) const {
     return result;
 }
 
-int AndConcept::compute_complexity() const {
+int AndConcept::compute_complexity_impl() const {
     return m_concept_left->compute_complexity() + m_concept_right->compute_complexity() + 1;
 }
 
-void AndConcept::compute_repr(std::stringstream& out) const {
+void AndConcept::compute_repr_impl(std::stringstream& out) const {
     out << "c_and" << "(";
     m_concept_left->compute_repr(out);
     out << ",";
@@ -73,7 +73,7 @@ void AndConcept::compute_repr(std::stringstream& out) const {
     out << ")";
 }
 
-int AndConcept::compute_evaluate_time_score() const {
+int AndConcept::compute_evaluate_time_score_impl() const {
     return m_concept_left->compute_evaluate_time_score() + m_concept_right->compute_evaluate_time_score() + SCORE_LINEAR;
 }
 

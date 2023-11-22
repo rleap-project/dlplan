@@ -49,7 +49,7 @@ bool SomeConcept::operator==(const Concept& other) const {
     return false;
 }
 
-size_t SomeConcept::hash() const {
+size_t SomeConcept::hash_impl() const {
     return hash_combine(m_is_static, m_role, m_concept);
 }
 
@@ -62,11 +62,11 @@ ConceptDenotation SomeConcept::evaluate(const State& state) const {
     return denotation;
 }
 
-int SomeConcept::compute_complexity() const {
+int SomeConcept::compute_complexity_impl() const {
     return m_role->compute_complexity() + m_concept->compute_complexity() + 1;
 }
 
-void SomeConcept::compute_repr(std::stringstream& out) const {
+void SomeConcept::compute_repr_impl(std::stringstream& out) const {
     out << "c_some" << "(";
     m_role->compute_repr(out);
     out << ",";
@@ -74,7 +74,7 @@ void SomeConcept::compute_repr(std::stringstream& out) const {
     out << ")";
 }
 
-int SomeConcept::compute_evaluate_time_score() const {
+int SomeConcept::compute_evaluate_time_score_impl() const {
     return m_role->compute_evaluate_time_score() + m_concept->compute_evaluate_time_score() + SCORE_QUADRATIC;
 }
 

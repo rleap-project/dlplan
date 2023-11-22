@@ -49,7 +49,7 @@ bool RestrictRole::operator==(const Role& other) const {
     return false;
 }
 
-size_t RestrictRole::hash() const {
+size_t RestrictRole::hash_impl() const {
     return hash_combine(m_is_static, m_role, m_concept);
 }
 
@@ -64,11 +64,11 @@ RoleDenotation RestrictRole::evaluate(const State& state) const {
     return denotation;
 }
 
-int RestrictRole::compute_complexity() const {
+int RestrictRole::compute_complexity_impl() const {
     return m_role->compute_complexity() + m_concept->compute_complexity() + 1;
 }
 
-void RestrictRole::compute_repr(std::stringstream& out) const {
+void RestrictRole::compute_repr_impl(std::stringstream& out) const {
     out << "r_restrict" << "(";
     m_role->compute_repr(out);
     out << ",";
@@ -76,7 +76,7 @@ void RestrictRole::compute_repr(std::stringstream& out) const {
     out << ")";
 }
 
-int RestrictRole::compute_evaluate_time_score() const {
+int RestrictRole::compute_evaluate_time_score_impl() const {
     return m_role->compute_evaluate_time_score() + m_concept->compute_evaluate_time_score() + SCORE_QUADRATIC;
 }
 

@@ -43,7 +43,7 @@ bool NotConcept::operator==(const Concept& other) const {
     return false;
 }
 
-size_t NotConcept::hash() const {
+size_t NotConcept::hash_impl() const {
     return hash_combine(m_is_static, m_concept);
 }
 
@@ -55,17 +55,17 @@ ConceptDenotation NotConcept::evaluate(const State& state) const {
     return denotation;
 }
 
-int NotConcept::compute_complexity() const {
+int NotConcept::compute_complexity_impl() const {
     return m_concept->compute_complexity() + 1;
 }
 
-void NotConcept::compute_repr(std::stringstream& out) const {
+void NotConcept::compute_repr_impl(std::stringstream& out) const {
     out << "c_not" << "(";
     m_concept->compute_repr(out);
     out << ")";
 }
 
-int NotConcept::compute_evaluate_time_score() const {
+int NotConcept::compute_evaluate_time_score_impl() const {
     return m_concept->compute_evaluate_time_score() + SCORE_LINEAR;
 }
 

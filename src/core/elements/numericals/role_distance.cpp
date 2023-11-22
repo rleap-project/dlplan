@@ -75,7 +75,7 @@ bool RoleDistanceNumerical::operator==(const Numerical& other) const {
     return false;
 }
 
-size_t RoleDistanceNumerical::hash() const {
+size_t RoleDistanceNumerical::hash_impl() const {
     return hash_combine(m_is_static, m_role_from, m_role, m_role_to);
 }
 
@@ -94,11 +94,11 @@ int RoleDistanceNumerical::evaluate(const State& state) const {
     return denotation;
 }
 
-int RoleDistanceNumerical::compute_complexity() const {
+int RoleDistanceNumerical::compute_complexity_impl() const {
     return m_role_from->compute_complexity() + m_role->compute_complexity() + m_role_to->compute_complexity() + 1;
 }
 
-void RoleDistanceNumerical::compute_repr(std::stringstream& out) const {
+void RoleDistanceNumerical::compute_repr_impl(std::stringstream& out) const {
     out << "n_role_distance_numerical" << "(";
     m_role_from->compute_repr(out);
     out << ",";
@@ -108,7 +108,7 @@ void RoleDistanceNumerical::compute_repr(std::stringstream& out) const {
     out << ")";
 }
 
-int RoleDistanceNumerical::compute_evaluate_time_score() const {
+int RoleDistanceNumerical::compute_evaluate_time_score_impl() const {
     return m_role_from->compute_evaluate_time_score() + m_role->compute_evaluate_time_score() + m_role_to->compute_evaluate_time_score() + SCORE_QUBIC;
 }
 

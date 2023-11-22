@@ -27,7 +27,7 @@ bool BotConcept::operator==(const Concept& other) const {
     return false;
 }
 
-size_t BotConcept::hash() const {
+size_t BotConcept::hash_impl() const {
     return hash_combine(m_is_static);
 }
 
@@ -35,15 +35,15 @@ ConceptDenotation BotConcept::evaluate(const State& state) const {
     return ConceptDenotation(state.get_instance_info()->get_objects().size());
 }
 
-int BotConcept::compute_complexity() const {
+int BotConcept::compute_complexity_impl() const {
     return 1;
 }
 
-void BotConcept::compute_repr(std::stringstream& out) const {
+void BotConcept::compute_repr_impl(std::stringstream& out) const {
     out << "c_bot";
 }
 
-int BotConcept::compute_evaluate_time_score() const {
+int BotConcept::compute_evaluate_time_score_impl() const {
     return SCORE_CONSTANT;
 }
 

@@ -41,7 +41,7 @@ bool NotRole::operator==(const Role& other) const {
     return false;
 }
 
-size_t NotRole::hash() const {
+size_t NotRole::hash_impl() const {
     return hash_combine(m_is_static, m_role);
 }
 
@@ -53,17 +53,17 @@ RoleDenotation NotRole::evaluate(const State& state) const {
     return denotation;
 }
 
-int NotRole::compute_complexity() const {
+int NotRole::compute_complexity_impl() const {
     return m_role->compute_complexity() + 1;
 }
 
-void NotRole::compute_repr(std::stringstream& out) const {
+void NotRole::compute_repr_impl(std::stringstream& out) const {
     out << "r_not" << "(";
     m_role->compute_repr(out);
     out << ")";
 }
 
-int NotRole::compute_evaluate_time_score() const {
+int NotRole::compute_evaluate_time_score_impl() const {
     return m_role->compute_evaluate_time_score() + SCORE_QUADRATIC;
 }
 

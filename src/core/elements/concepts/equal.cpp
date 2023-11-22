@@ -53,7 +53,7 @@ bool EqualConcept::operator==(const Concept& other) const {
     return false;
 }
 
-size_t EqualConcept::hash() const {
+size_t EqualConcept::hash_impl() const {
     return hash_combine(m_is_static, m_role_left, m_role_right);
 }
 
@@ -66,11 +66,11 @@ ConceptDenotation EqualConcept::evaluate(const State& state) const {
     return denotation;
 }
 
-int EqualConcept::compute_complexity() const {
+int EqualConcept::compute_complexity_impl() const {
     return m_role_left->compute_complexity() + m_role_right->compute_complexity() + 1;
 }
 
-void EqualConcept::compute_repr(std::stringstream& out) const {
+void EqualConcept::compute_repr_impl(std::stringstream& out) const {
     out << "c_equal" << "(";
     m_role_left->compute_repr(out);
     out << ",";
@@ -78,7 +78,7 @@ void EqualConcept::compute_repr(std::stringstream& out) const {
     out << ")";
 }
 
-int EqualConcept::compute_evaluate_time_score() const {
+int EqualConcept::compute_evaluate_time_score_impl() const {
     return m_role_left->compute_evaluate_time_score() + m_role_right->compute_evaluate_time_score() + SCORE_QUADRATIC;
 }
 

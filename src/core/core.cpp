@@ -3,10 +3,6 @@
 #include "element_factory.h"
 #include "../../include/dlplan/utils/hash.h"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/unique_ptr.hpp>
-
 
 namespace std {
     std::size_t hash<dlplan::core::Constant>::operator()(const dlplan::core::Constant& constant) const {

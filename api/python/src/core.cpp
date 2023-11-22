@@ -143,16 +143,13 @@ void init_core(py::module_ &m_core) {
         .def("get_instance_info", &State::get_instance_info)
     ;
 
-    py::class_<BaseElement, std::shared_ptr<BaseElement>>(m_core, "BaseElement")
-        .def("__repr__", [](const BaseElement &element) { return element.compute_repr(); })
-        .def("__str__", [](const BaseElement &element) { return element.str(); })
-        .def("compute_complexity", &BaseElement::compute_complexity)
-        .def("compute_repr", py::overload_cast<>(&BaseElement::compute_repr, py::const_))
-        .def("get_index", &BaseElement::get_index)
-        .def("get_vocabulary_info", &BaseElement::get_vocabulary_info)
-    ;
-
-    py::class_<Concept, BaseElement, std::shared_ptr<Concept>>(m_core, "Concept")
+    py::class_<Concept, std::shared_ptr<Concept>>(m_core, "Concept")
+        .def("__repr__", py::overload_cast<>(&Concept::compute_repr, py::const_))
+        .def("__str__", &Concept::str)
+        .def("compute_complexity", &Concept::compute_complexity)
+        .def("compute_repr", py::overload_cast<>(&Concept::compute_repr, py::const_))
+        .def("get_index", &Concept::get_index)
+        .def("get_vocabulary_info", &Concept::get_vocabulary_info)
         .def("evaluate", py::overload_cast<const State&>(&Concept::evaluate, py::const_))
         .def("evaluate", py::overload_cast<const State&, DenotationsCaches&>(&Concept::evaluate, py::const_))
         .def("evaluate", [](const Concept& self, const States& states, DenotationsCaches& caches) {
@@ -161,7 +158,13 @@ void init_core(py::module_ &m_core) {
         })
     ;
 
-    py::class_<Role, BaseElement, std::shared_ptr<Role>>(m_core, "Role")
+    py::class_<Role, std::shared_ptr<Role>>(m_core, "Role")
+        .def("__repr__", py::overload_cast<>(&Role::compute_repr, py::const_))
+        .def("__str__", &Role::str)
+        .def("compute_complexity", &Role::compute_complexity)
+        .def("compute_repr", py::overload_cast<>(&Role::compute_repr, py::const_))
+        .def("get_index", &Role::get_index)
+        .def("get_vocabulary_info", &Role::get_vocabulary_info)
         .def("evaluate", py::overload_cast<const State&>(&Role::evaluate, py::const_))
         .def("evaluate", py::overload_cast<const State&, DenotationsCaches&>(&Role::evaluate, py::const_))
         .def("evaluate", [](const Role& self, const States& states, DenotationsCaches& caches) {
@@ -170,7 +173,13 @@ void init_core(py::module_ &m_core) {
         })
     ;
 
-    py::class_<Numerical, BaseElement, std::shared_ptr<Numerical>>(m_core, "Numerical")
+    py::class_<Numerical, std::shared_ptr<Numerical>>(m_core, "Numerical")
+        .def("__repr__", py::overload_cast<>(&Numerical::compute_repr, py::const_))
+        .def("__str__", &Numerical::str)
+        .def("compute_complexity", &Numerical::compute_complexity)
+        .def("compute_repr", py::overload_cast<>(&Numerical::compute_repr, py::const_))
+        .def("get_index", &Numerical::get_index)
+        .def("get_vocabulary_info", &Numerical::get_vocabulary_info)
         .def("evaluate", py::overload_cast<const State&>(&Numerical::evaluate, py::const_))
         .def("evaluate", py::overload_cast<const State&, DenotationsCaches&>(&Numerical::evaluate, py::const_))
         .def("evaluate", [](const Numerical& self, const States& states, DenotationsCaches& caches) {
@@ -179,7 +188,13 @@ void init_core(py::module_ &m_core) {
         })
     ;
 
-    py::class_<Boolean, BaseElement, std::shared_ptr<Boolean>>(m_core, "Boolean")
+    py::class_<Boolean, std::shared_ptr<Boolean>>(m_core, "Boolean")
+        .def("__repr__", py::overload_cast<>(&Boolean::compute_repr, py::const_))
+        .def("__str__", &Boolean::str)
+        .def("compute_complexity", &Boolean::compute_complexity)
+        .def("compute_repr", py::overload_cast<>(&Boolean::compute_repr, py::const_))
+        .def("get_index", &Boolean::get_index)
+        .def("get_vocabulary_info", &Boolean::get_vocabulary_info)
         .def("evaluate", py::overload_cast<const State&>(&Boolean::evaluate, py::const_))
         .def("evaluate", py::overload_cast<const State&, DenotationsCaches&>(&Boolean::evaluate, py::const_))
         .def("evaluate", [](const Boolean& self, const States& states, DenotationsCaches& caches) {

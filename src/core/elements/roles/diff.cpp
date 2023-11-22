@@ -45,7 +45,7 @@ bool DiffRole::operator==(const Role& other) const {
     return false;
 }
 
-size_t DiffRole::hash() const {
+size_t DiffRole::hash_impl() const {
     return hash_combine(m_is_static, m_role_left, m_role_right);
 }
 
@@ -58,11 +58,11 @@ RoleDenotation DiffRole::evaluate(const State& state) const {
     return denotation;
 }
 
-int DiffRole::compute_complexity() const {
+int DiffRole::compute_complexity_impl() const {
     return m_role_left->compute_complexity() + m_role_right->compute_complexity() + 1;
 }
 
-void DiffRole::compute_repr(std::stringstream& out) const {
+void DiffRole::compute_repr_impl(std::stringstream& out) const {
     out << "r_diff" << "(";
     m_role_left->compute_repr(out);
     out << ",";
@@ -70,7 +70,7 @@ void DiffRole::compute_repr(std::stringstream& out) const {
     out << ")";
 }
 
-int DiffRole::compute_evaluate_time_score() const {
+int DiffRole::compute_evaluate_time_score_impl() const {
     return m_role_left->compute_evaluate_time_score() + m_role_right->compute_evaluate_time_score() + SCORE_QUADRATIC;
 }
 

@@ -30,7 +30,7 @@ bool TopRole::operator==(const Role& other) const {
     return false;
 }
 
-size_t TopRole::hash() const {
+size_t TopRole::hash_impl() const {
     return hash_combine(m_is_static);
 }
 
@@ -41,15 +41,15 @@ RoleDenotation TopRole::evaluate(const State& state) const {
 
 }
 
-int TopRole::compute_complexity() const {
+int TopRole::compute_complexity_impl() const {
     return 1;
 }
 
-void TopRole::compute_repr(std::stringstream& out) const {
+void TopRole::compute_repr_impl(std::stringstream& out) const {
     out << "r_top";
 }
 
-int TopRole::compute_evaluate_time_score() const {
+int TopRole::compute_evaluate_time_score_impl() const {
     return SCORE_CONSTANT;
 }
 

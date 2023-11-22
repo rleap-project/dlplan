@@ -42,7 +42,7 @@ bool InverseRole::operator==(const Role& other) const {
     return false;
 }
 
-size_t InverseRole::hash() const {
+size_t InverseRole::hash_impl() const {
     return hash_combine(m_is_static, m_role);
 }
 
@@ -54,17 +54,17 @@ RoleDenotation InverseRole::evaluate(const State& state) const {
     return denotation;
 }
 
-int InverseRole::compute_complexity() const {
+int InverseRole::compute_complexity_impl() const {
     return m_role->compute_complexity() + 1;
 }
 
-void InverseRole::compute_repr(std::stringstream& out) const {
+void InverseRole::compute_repr_impl(std::stringstream& out) const {
     out << "r_inverse" << "(";
     m_role->compute_repr(out);
     out << ")";
 }
 
-int InverseRole::compute_evaluate_time_score() const {
+int InverseRole::compute_evaluate_time_score_impl() const {
     return m_role->compute_evaluate_time_score() + SCORE_QUADRATIC;
 }
 

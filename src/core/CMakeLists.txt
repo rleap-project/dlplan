@@ -2,7 +2,6 @@ add_library(dlplancore STATIC)
 target_sources(dlplancore
     PRIVATE
         atom.cpp
-        base_element.cpp
         boolean.cpp
         concept_denotation.cpp
         concept.cpp

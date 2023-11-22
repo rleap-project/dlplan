@@ -45,7 +45,7 @@ bool DiffConcept::operator==(const Concept& other) const {
     return false;
 }
 
-size_t DiffConcept::hash() const {
+size_t DiffConcept::hash_impl() const {
     return hash_combine(m_is_static, m_concept_left, m_concept_right);
 }
 
@@ -58,11 +58,11 @@ ConceptDenotation DiffConcept::evaluate(const State& state) const {
     return result;
 }
 
-int DiffConcept::compute_complexity() const {
+int DiffConcept::compute_complexity_impl() const {
     return m_concept_left->compute_complexity() + m_concept_right->compute_complexity() + 1;
 }
 
-void DiffConcept::compute_repr(std::stringstream& out) const {
+void DiffConcept::compute_repr_impl(std::stringstream& out) const {
     out << "c_diff" << "(";
     m_concept_left->compute_repr(out);
     out << ",";
@@ -70,7 +70,7 @@ void DiffConcept::compute_repr(std::stringstream& out) const {
     out << ")";
 }
 
-int DiffConcept::compute_evaluate_time_score() const {
+int DiffConcept::compute_evaluate_time_score_impl() const {
     return m_concept_left->compute_evaluate_time_score() + m_concept_right->compute_evaluate_time_score() + SCORE_LINEAR;
 }
 

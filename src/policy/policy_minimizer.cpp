@@ -41,50 +41,10 @@ std::set<T, C> set_difference(const std::set<T, C>& l, const std::set<T, C>& r) 
     return result;
 }
 
-
-template<int size>
-struct CacheEntry;
 }
 
-namespace std {
-    template<int size>
-    struct hash<dlplan::policy::CacheEntry<size>> {
-        size_t operator()(const dlplan::policy::CacheEntry<size>& entry) const noexcept {
-            size_t seed = entry.rules.size();
-            hash_combine(seed, entry.feature);
-            for (const auto& rule_ptr : entry.rules) {
-                hash_combine(seed, rule_ptr);
-            }
-            return seed;
-        }
-    };
-}
 
 namespace dlplan::policy {
-/**
- * A CacheEntry represents a set of rules that can be simplified with a given feature.
-*/
-template<int size>
-struct CacheEntry {
-    const dlplan::core::BaseElement* feature;
-    std::array<const Rule*, size> rules;
-
-    CacheEntry(const dlplan::core::BaseElement* feature, std::array<const Rule*, size>&& rules)
-        : feature(feature), rules(std::move(rules)) { }
-
-    bool operator==(const CacheEntry& other) const {
-        if (this != &other) {
-            return (feature == other.feature && rules == other.rules);
-        }
-        return true;
-    }
-
-    bool operator!=(const CacheEntry& other) const {
-        return !(*this == other);
-    }
-};
-
-
 static Rules compute_dominated_rules(
     const Rules& rules) {
     Rules dominated_rules;

@@ -74,7 +74,7 @@ public:
         return false;
     }
 
-    size_t hash() const {
+    size_t hash_impl() const override {
         return hash_combine(m_is_static, m_element_left, m_element_right);
     }
 
@@ -87,11 +87,11 @@ public:
         return denotation;
     }
 
-    int compute_complexity() const override {
+    int compute_complexity_impl() const override {
         return m_element_left->compute_complexity() + m_element_right->compute_complexity() + 1;
     }
 
-    void compute_repr(std::stringstream& out) const override {
+    void compute_repr_impl(std::stringstream& out) const override {
        out << "b_inclusion" << "(";
        m_element_left->compute_repr(out);
        out << ",";
@@ -99,7 +99,7 @@ public:
        out << ")";
     }
 
-    int compute_evaluate_time_score() const override {
+    int compute_evaluate_time_score_impl() const override {
         int score = m_element_left->compute_evaluate_time_score() + m_element_right->compute_evaluate_time_score();
         if (std::is_same<T, Concept>::value) {
             score += SCORE_LINEAR;
