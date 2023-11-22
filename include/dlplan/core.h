@@ -742,6 +742,42 @@ public:
 };
 
 
+/*
+This is an idea for a common templated abstract base class.
+We want to simplify the insertion into the cache with a method
+cache.get_or_insert<Denotation>(key, denotation) that
+inserts denotation uniquely and makes it retrievable by the key for later lookup.
+
+template<typename Denotation>
+class Element : public BaseElement<Concept> {
+protected:
+    Element(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
+
+
+public:
+    Element(const Concept& other) = default;
+    Element& operator=(const Concept& other) = default;
+    Element(Concept&& other) = default;
+    Element& operator=(Concept&& other) = default;
+    ~Element() = default;
+
+    virtual bool are_equal_impl(const Concept& other) const = 0;
+    virtual size_t hash_impl() const = 0;
+    virtual void str_impl(std::stringstream& out) const = 0;
+    virtual int compute_complexity_impl() const = 0;
+    virtual int compute_evaluate_time_score_impl() const = 0;
+
+    virtual Denotation evaluate(const State& ) const = 0;
+    virtual std::shared_ptr<const Denotation> evaluate(const State& state, DenotationsCaches& caches) const = 0;
+    virtual std::shared_ptr<const std::vector<std::shared_ptr<const Denotation>>> evaluate(const States& states, DenotationsCaches& caches) const = 0;
+};
+
+using Concept = Element<ConceptDenotation>;
+using Role = Element<RoleDenotation>;
+using Boolean = Element<bool>;
+using Numerical = Element<int>;
+*/
+
 /// @brief Represents a concept element that evaluates to a concept denotation
 ///        on a given state. It can also make use of a cache during evaluation.
 class Concept : public BaseElement<Concept> {
