@@ -762,6 +762,8 @@ public:
 };
 
 
+/// @brief Represents the abstract base class of an element
+///        with functionality for computing some metric scores.
 template<typename Derived>
 class BaseElement : public Base<Derived> {
 protected:
