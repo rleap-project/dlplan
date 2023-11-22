@@ -100,13 +100,13 @@ int SumRoleDistanceNumerical::compute_complexity_impl() const {
     return m_role_from->compute_complexity() + m_role->compute_complexity() + m_role_to->compute_complexity() + 1;
 }
 
-void SumRoleDistanceNumerical::compute_repr_impl(std::stringstream& out) const {
+void SumRoleDistanceNumerical::str_impl(std::stringstream& out) const {
     out << "n_sum_role_distance" << "(";
-    m_role_from->compute_repr(out);
+    m_role_from->str(out);
     out << ",";
-    m_role->compute_repr(out);
+    m_role->str(out);
     out << ",";
-    m_role_to->compute_repr(out);
+    m_role_to->str(out);
     out << ")";
 }
 

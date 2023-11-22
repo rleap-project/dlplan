@@ -11,6 +11,7 @@
 #include <vector>
 #include <iostream>
 
+#include "common/base.h"
 #include "common/parsers/config.hpp"
 #include "utils/pimpl.h"
 #include "utils/dynamic_bitset.h"
@@ -709,59 +710,6 @@ public:
 };
 
 
-/// @brief Represents the abstract base class of an object
-///        with functionality for computing string representations.
-template<typename Derived>
-class Base {
-protected:
-    int m_index;
-
-    Base(int index) : m_index(index) { }
-
-public:
-    ~Base() { }
-
-    bool operator==(const Base& other) const {
-        return static_cast<const Derived*>(this)->are_equal_impl(static_cast<const Derived&>(other));
-    }
-
-    bool operator<(const Base& other) const {
-        return m_index < other.m_index;
-    }
-
-    /// @brief Computes a hash value for this object.
-    size_t hash() const {
-        return static_cast<const Derived*>(this)->hash_impl();
-    }
-
-    /// @brief Compute a canonical string representation of this object.
-    std::string compute_repr() const {
-        std::stringstream ss;
-        compute_repr(ss);
-        return ss.str();
-    }
-
-    /// @brief Overload of the output stream insertion operator (operator<<).
-    friend std::ostream& operator<<(std::ostream& os, const Base& element) {
-        os << element.str();
-        return os;
-    }
-
-    /// @brief Compute a canonical string representation of this object.
-    void compute_repr(std::stringstream& out) const {
-        static_cast<const Derived*>(this)->compute_repr_impl(out);
-    }
-
-    /// @brief Compute a string representation of this object.
-    std::string str() const {
-        return static_cast<const Derived*>(this)->str_impl();
-    }
-
-    /* Getters. */
-    int get_index() const { return m_index; }
-};
-
-
 /// @brief Represents the abstract base class of an element
 ///        with functionality for computing some metric scores.
 template<typename Derived>
@@ -788,11 +736,6 @@ public:
         return static_cast<const Derived*>(this)->compute_evaluate_time_score_impl();
     }
 
-    // For elements we simply return repr as a string representation.
-    std::string str_impl() const {
-        return Base<Derived>::compute_repr();
-    }
-
     /* Getters. */
     std::shared_ptr<VocabularyInfo> get_vocabulary_info() const { return m_vocabulary_info; }
     bool is_static() const { return m_is_static; }
@@ -817,7 +760,7 @@ public:
 
     virtual bool are_equal_impl(const Concept& other) const = 0;
     virtual size_t hash_impl() const = 0;
-    virtual void compute_repr_impl(std::stringstream& out) const = 0;
+    virtual void str_impl(std::stringstream& out) const = 0;
     virtual int compute_complexity_impl() const = 0;
     virtual int compute_evaluate_time_score_impl() const = 0;
 
@@ -845,7 +788,7 @@ public:
 
     virtual bool are_equal_impl(const Role& other) const = 0;
     virtual size_t hash_impl() const = 0;
-    virtual void compute_repr_impl(std::stringstream& out) const = 0;
+    virtual void str_impl(std::stringstream& out) const = 0;
     virtual int compute_complexity_impl() const = 0;
     virtual int compute_evaluate_time_score_impl() const = 0;
 
@@ -873,7 +816,7 @@ public:
 
     virtual bool are_equal_impl(const Numerical& other) const = 0;
     virtual size_t hash_impl() const = 0;
-    virtual void compute_repr_impl(std::stringstream& out) const = 0;
+    virtual void str_impl(std::stringstream& out) const = 0;
     virtual int compute_complexity_impl() const = 0;
     virtual int compute_evaluate_time_score_impl() const = 0;
 
@@ -901,7 +844,7 @@ public:
 
     virtual bool are_equal_impl(const Boolean& other) const = 0;
     virtual size_t hash_impl() const = 0;
-    virtual void compute_repr_impl(std::stringstream& out) const = 0;
+    virtual void str_impl(std::stringstream& out) const = 0;
     virtual int compute_complexity_impl() const = 0;
     virtual int compute_evaluate_time_score_impl() const = 0;
 

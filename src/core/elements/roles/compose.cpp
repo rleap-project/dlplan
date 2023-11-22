@@ -70,11 +70,11 @@ int ComposeRole::compute_complexity_impl() const {
     return m_role_left->compute_complexity() + m_role_right->compute_complexity() + 1;
 }
 
-void ComposeRole::compute_repr_impl(std::stringstream& out) const {
+void ComposeRole::str_impl(std::stringstream& out) const {
     out << "r_compose" << "(";
-    m_role_left->compute_repr(out);
+    m_role_left->str(out);
     out << ",";
-    m_role_right->compute_repr(out);
+    m_role_right->str(out);
     out << ")";
 }
 

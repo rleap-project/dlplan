@@ -74,7 +74,7 @@ int PrimitiveConcept::compute_complexity_impl() const {
     return 1;
 }
 
-void PrimitiveConcept::compute_repr_impl(std::stringstream& out) const {
+void PrimitiveConcept::str_impl(std::stringstream& out) const {
     out << "c_primitive" << "(" << m_predicate.get_name() << "," << std::to_string(m_pos) << ")";
 }
 

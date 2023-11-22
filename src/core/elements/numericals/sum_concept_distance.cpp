@@ -95,13 +95,13 @@ int SumConceptDistanceNumerical::compute_complexity_impl() const {
     return m_concept_from->compute_complexity() + m_role->compute_complexity() + m_concept_to->compute_complexity() + 1;
 }
 
-void SumConceptDistanceNumerical::compute_repr_impl(std::stringstream& out) const {
+void SumConceptDistanceNumerical::str_impl(std::stringstream& out) const {
     out << "n_sum_concept_distance" << "(";
-    m_concept_from->compute_repr(out);
+    m_concept_from->str(out);
     out << ",";
-    m_role->compute_repr(out);
+    m_role->str(out);
     out << ",";
-    m_concept_to->compute_repr(out);
+    m_concept_to->str(out);
     out << ")";
 }
 

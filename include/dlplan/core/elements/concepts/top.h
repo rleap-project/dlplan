@@ -37,7 +37,7 @@ public:
 
     int compute_complexity_impl() const override;
 
-    void compute_repr_impl(std::stringstream& out) const override;
+    void str_impl(std::stringstream& out) const override;
 
     int compute_evaluate_time_score_impl() const override;
 };

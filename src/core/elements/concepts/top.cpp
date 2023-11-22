@@ -45,7 +45,7 @@ int TopConcept::compute_complexity_impl() const {
     return 1;
 }
 
-void TopConcept::compute_repr_impl(std::stringstream& out) const {
+void TopConcept::str_impl(std::stringstream& out) const {
     out << "c_top";
 }
 

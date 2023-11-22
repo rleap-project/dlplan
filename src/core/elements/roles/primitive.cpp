@@ -81,7 +81,7 @@ int PrimitiveRole::compute_complexity_impl() const {
     return 1;
 }
 
-void PrimitiveRole::compute_repr_impl(std::stringstream& out) const {
+void PrimitiveRole::str_impl(std::stringstream& out) const {
     out << "r_primitive" << "(" << m_predicate.get_name() << "," << std::to_string(m_pos_1) << "," << std::to_string(m_pos_2) << ")";
 }
 

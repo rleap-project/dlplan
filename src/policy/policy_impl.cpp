@@ -140,13 +140,13 @@ std::string Policy::str() const {
     ss << "(:policy\n";
     ss << "(:booleans ";
     for (const auto& boolean : m_booleans) {
-        ss << "(" << boolean->get_key() << " \"" << boolean->get_boolean()->compute_repr() << "\")";
+        ss << "(" << boolean->get_key() << " \"" << boolean->get_boolean()->str() << "\")";
         if (boolean != *m_booleans.rbegin()) ss << " ";
     }
     ss << ")\n";
     ss << "(:numericals ";
     for (const auto& numerical : m_numericals) {
-        ss << "(" << numerical->get_key() << " \"" << numerical->get_numerical()->compute_repr() << "\")";
+        ss << "(" << numerical->get_key() << " \"" << numerical->get_numerical()->str() << "\")";
         if (numerical != *m_numericals.rbegin()) ss << " ";
     }
     ss << ")\n";

@@ -64,7 +64,7 @@ int NullaryBoolean::compute_complexity_impl() const {
     return 1;
 }
 
-void NullaryBoolean::compute_repr_impl(std::stringstream& out) const {
+void NullaryBoolean::str_impl(std::stringstream& out) const {
     out << "b_nullary" << "(" << m_predicate.get_name() << ")";
 }
 

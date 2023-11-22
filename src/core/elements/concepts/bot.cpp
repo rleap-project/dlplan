@@ -39,7 +39,7 @@ int BotConcept::compute_complexity_impl() const {
     return 1;
 }
 
-void BotConcept::compute_repr_impl(std::stringstream& out) const {
+void BotConcept::str_impl(std::stringstream& out) const {
     out << "c_bot";
 }
 

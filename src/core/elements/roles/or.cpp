@@ -64,11 +64,11 @@ int OrRole::compute_complexity_impl() const {
     return m_role_left->compute_complexity() + m_role_right->compute_complexity() + 1;
 }
 
-void OrRole::compute_repr_impl(std::stringstream& out) const {
+void OrRole::str_impl(std::stringstream& out) const {
     out << "r_or" << "(";
-    m_role_left->compute_repr(out);
+    m_role_left->str(out);
     out << ",";
-    m_role_right->compute_repr(out);
+    m_role_right->str(out);
     out << ")";
 }
 

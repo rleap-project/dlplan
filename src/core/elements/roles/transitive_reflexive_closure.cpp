@@ -77,9 +77,9 @@ int TransitiveReflexiveClosureRole::compute_complexity_impl() const {
     return m_role->compute_complexity() + 1;
 }
 
-void TransitiveReflexiveClosureRole::compute_repr_impl(std::stringstream& out) const {
+void TransitiveReflexiveClosureRole::str_impl(std::stringstream& out) const {
     out << "r_transitive_reflexive_closure" << "(";
-    m_role->compute_repr(out);
+    m_role->str(out);
     out << ")";
 }
 

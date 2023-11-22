@@ -65,11 +65,11 @@ int OrConcept::compute_complexity_impl() const {
     return m_concept_left->compute_complexity() + m_concept_right->compute_complexity() + 1;
 }
 
-void OrConcept::compute_repr_impl(std::stringstream& out) const {
+void OrConcept::str_impl(std::stringstream& out) const {
     out << "c_or" << "(";
-    m_concept_left->compute_repr(out);
+    m_concept_left->str(out);
     out << ",";
-    m_concept_right->compute_repr(out);
+    m_concept_right->str(out);
     out << ")";
 }
 

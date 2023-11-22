@@ -58,9 +58,9 @@ int IdentityRole::compute_complexity_impl() const {
     return m_concept->compute_complexity() + 1;
 }
 
-void IdentityRole::compute_repr_impl(std::stringstream& out) const {
+void IdentityRole::str_impl(std::stringstream& out) const {
     out << "r_identity" << "(";
-    m_concept->compute_repr(out);
+    m_concept->str(out);
     out << ")";
 }
 

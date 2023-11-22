@@ -66,7 +66,7 @@ bool PositiveBooleanCondition::evaluate(const core::State& source_state, core::D
 }
 
 std::string PositiveBooleanCondition::compute_repr() const {
-    return "(:c_b_pos \"" + m_boolean->get_boolean()->compute_repr() + "\")";
+    return "(:c_b_pos \"" + m_boolean->get_boolean()->str() + "\")";
 }
 
 std::string PositiveBooleanCondition::str() const {
@@ -99,7 +99,7 @@ bool NegativeBooleanCondition::evaluate(const core::State& source_state, core::D
 }
 
 std::string NegativeBooleanCondition::compute_repr() const {
-    return "(:c_b_neg \"" + m_boolean->get_boolean()->compute_repr() + "\")";
+    return "(:c_b_neg \"" + m_boolean->get_boolean()->str() + "\")";
 }
 
 std::string NegativeBooleanCondition::str() const {
@@ -136,7 +136,7 @@ bool EqualNumericalCondition::evaluate(const core::State& source_state, core::De
 }
 
 std::string EqualNumericalCondition::compute_repr() const {
-    return "(:c_n_eq \"" + m_numerical->get_numerical()->compute_repr() + "\")";
+    return "(:c_n_eq \"" + m_numerical->get_numerical()->str() + "\")";
 }
 
 std::string EqualNumericalCondition::str() const {
@@ -173,7 +173,7 @@ bool GreaterNumericalCondition::evaluate(const core::State& source_state, core::
 }
 
 std::string GreaterNumericalCondition::compute_repr() const {
-    return "(:c_n_gt \"" + m_numerical->get_numerical()->compute_repr() + "\")";
+    return "(:c_n_gt \"" + m_numerical->get_numerical()->str() + "\")";
 }
 
 std::string GreaterNumericalCondition::str() const {

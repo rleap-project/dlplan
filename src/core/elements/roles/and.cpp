@@ -65,11 +65,11 @@ int AndRole::compute_complexity_impl() const {
     return m_role_left->compute_complexity() + m_role_right->compute_complexity() + 1;
 }
 
-void AndRole::compute_repr_impl(std::stringstream& out) const {
+void AndRole::str_impl(std::stringstream& out) const {
     out << "r_and" << "(";
-    m_role_left->compute_repr(out);
+    m_role_left->str(out);
     out << ",";
-    m_role_right->compute_repr(out);
+    m_role_right->str(out);
     out << ")";
 }
 

@@ -144,10 +144,8 @@ void init_core(py::module_ &m_core) {
     ;
 
     py::class_<Concept, std::shared_ptr<Concept>>(m_core, "Concept")
-        .def("__repr__", py::overload_cast<>(&Concept::compute_repr, py::const_))
-        .def("__str__", &Concept::str)
+        .def("__str__",  py::overload_cast<>(&Concept::str, py::const_))
         .def("compute_complexity", &Concept::compute_complexity)
-        .def("compute_repr", py::overload_cast<>(&Concept::compute_repr, py::const_))
         .def("get_index", &Concept::get_index)
         .def("get_vocabulary_info", &Concept::get_vocabulary_info)
         .def("evaluate", py::overload_cast<const State&>(&Concept::evaluate, py::const_))
@@ -159,10 +157,8 @@ void init_core(py::module_ &m_core) {
     ;
 
     py::class_<Role, std::shared_ptr<Role>>(m_core, "Role")
-        .def("__repr__", py::overload_cast<>(&Role::compute_repr, py::const_))
-        .def("__str__", &Role::str)
+        .def("__str__", py::overload_cast<>(&Role::str, py::const_))
         .def("compute_complexity", &Role::compute_complexity)
-        .def("compute_repr", py::overload_cast<>(&Role::compute_repr, py::const_))
         .def("get_index", &Role::get_index)
         .def("get_vocabulary_info", &Role::get_vocabulary_info)
         .def("evaluate", py::overload_cast<const State&>(&Role::evaluate, py::const_))
@@ -174,10 +170,8 @@ void init_core(py::module_ &m_core) {
     ;
 
     py::class_<Numerical, std::shared_ptr<Numerical>>(m_core, "Numerical")
-        .def("__repr__", py::overload_cast<>(&Numerical::compute_repr, py::const_))
-        .def("__str__", &Numerical::str)
+        .def("__str__", py::overload_cast<>(&Numerical::str, py::const_))
         .def("compute_complexity", &Numerical::compute_complexity)
-        .def("compute_repr", py::overload_cast<>(&Numerical::compute_repr, py::const_))
         .def("get_index", &Numerical::get_index)
         .def("get_vocabulary_info", &Numerical::get_vocabulary_info)
         .def("evaluate", py::overload_cast<const State&>(&Numerical::evaluate, py::const_))
@@ -189,10 +183,8 @@ void init_core(py::module_ &m_core) {
     ;
 
     py::class_<Boolean, std::shared_ptr<Boolean>>(m_core, "Boolean")
-        .def("__repr__", py::overload_cast<>(&Boolean::compute_repr, py::const_))
-        .def("__str__", &Boolean::str)
+        .def("__str__", py::overload_cast<>(&Boolean::str, py::const_))
         .def("compute_complexity", &Boolean::compute_complexity)
-        .def("compute_repr", py::overload_cast<>(&Boolean::compute_repr, py::const_))
         .def("get_index", &Boolean::get_index)
         .def("get_vocabulary_info", &Boolean::get_vocabulary_info)
         .def("evaluate", py::overload_cast<const State&>(&Boolean::evaluate, py::const_))

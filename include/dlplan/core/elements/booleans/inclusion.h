@@ -91,11 +91,11 @@ public:
         return m_element_left->compute_complexity() + m_element_right->compute_complexity() + 1;
     }
 
-    void compute_repr_impl(std::stringstream& out) const override {
+    void str_impl(std::stringstream& out) const override {
        out << "b_inclusion" << "(";
-       m_element_left->compute_repr(out);
+       m_element_left->str(out);
        out << ",";
-       m_element_right->compute_repr(out) ;
+       m_element_right->str(out) ;
        out << ")";
     }
 

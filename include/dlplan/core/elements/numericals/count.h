@@ -88,9 +88,9 @@ public:
         return m_element->compute_complexity() + 1;
     }
 
-    void compute_repr_impl(std::stringstream& out) const override {
+    void str_impl(std::stringstream& out) const override {
         out << "n_count" << "(";
-        m_element->compute_repr(out);
+        m_element->str(out);
         out << ")";
     }
 

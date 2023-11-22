@@ -63,7 +63,7 @@ int OneOfConcept::compute_complexity_impl() const {
     return 1;
 }
 
-void OneOfConcept::compute_repr_impl(std::stringstream& out) const {
+void OneOfConcept::str_impl(std::stringstream& out) const {
     out << "c_one_of" << "(" << m_constant.get_name() << ")";
 }
 

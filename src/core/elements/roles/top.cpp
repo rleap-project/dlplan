@@ -45,7 +45,7 @@ int TopRole::compute_complexity_impl() const {
     return 1;
 }
 
-void TopRole::compute_repr_impl(std::stringstream& out) const {
+void TopRole::str_impl(std::stringstream& out) const {
     out << "r_top";
 }
 

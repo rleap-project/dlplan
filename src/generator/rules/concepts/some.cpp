@@ -13,7 +13,7 @@ void SomeConcept::generate_impl(const core::States& states, int target_complexit
                 auto element = factory.make_some_concept(r, c);
                 auto denotations = element->evaluate(states, caches);
                 if (data.m_concept_hash_table.insert(denotations).second) {
-                    data.m_reprs.push_back(element->compute_repr());
+                    data.m_reprs.push_back(element->str());
                     data.m_concepts_by_iteration[target_complexity].push_back(std::move(element));
                     increment_generated();
                 } else {

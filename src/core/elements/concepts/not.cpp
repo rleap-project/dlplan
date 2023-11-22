@@ -59,9 +59,9 @@ int NotConcept::compute_complexity_impl() const {
     return m_concept->compute_complexity() + 1;
 }
 
-void NotConcept::compute_repr_impl(std::stringstream& out) const {
+void NotConcept::str_impl(std::stringstream& out) const {
     out << "c_not" << "(";
-    m_concept->compute_repr(out);
+    m_concept->str(out);
     out << ")";
 }
 

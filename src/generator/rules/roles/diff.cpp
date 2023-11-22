@@ -13,7 +13,7 @@ void DiffRole::generate_impl(const core::States& states, int target_complexity, 
                 auto element = factory.make_diff_role(r1, r2);
                 auto denotations = element->evaluate(states, caches);
                 if (data.m_role_hash_table.insert(denotations).second) {
-                    data.m_reprs.push_back(element->compute_repr());
+                    data.m_reprs.push_back(element->str());
                     data.m_roles_by_iteration[target_complexity].push_back(std::move(element));
                     increment_generated();
                 } else {

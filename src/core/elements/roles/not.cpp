@@ -57,9 +57,9 @@ int NotRole::compute_complexity_impl() const {
     return m_role->compute_complexity() + 1;
 }
 
-void NotRole::compute_repr_impl(std::stringstream& out) const {
+void NotRole::str_impl(std::stringstream& out) const {
     out << "r_not" << "(";
-    m_role->compute_repr(out);
+    m_role->str(out);
     out << ")";
 }
 

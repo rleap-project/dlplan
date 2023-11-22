@@ -67,7 +67,7 @@ bool PositiveBooleanEffect::evaluate(const core::State&, const core::State& targ
 }
 
 std::string PositiveBooleanEffect::compute_repr() const{
-    return "(:e_b_pos \"" + m_boolean->get_boolean()->compute_repr() + "\")";
+    return "(:e_b_pos \"" + m_boolean->get_boolean()->str() + "\")";
 }
 
 std::string PositiveBooleanEffect::str() const {
@@ -100,7 +100,7 @@ bool NegativeBooleanEffect::evaluate(const core::State&, const core::State& targ
 }
 
 std::string NegativeBooleanEffect::compute_repr() const{
-    return "(:e_b_neg \"" + m_boolean->get_boolean()->compute_repr() + "\")";
+    return "(:e_b_neg \"" + m_boolean->get_boolean()->str() + "\")";
 }
 
 std::string NegativeBooleanEffect::str() const {
@@ -133,7 +133,7 @@ bool UnchangedBooleanEffect::evaluate(const core::State& source_state, const cor
 }
 
 std::string UnchangedBooleanEffect::compute_repr() const{
-    return "(:e_b_bot \"" + m_boolean->get_boolean()->compute_repr() + "\")";
+    return "(:e_b_bot \"" + m_boolean->get_boolean()->str() + "\")";
 }
 
 std::string UnchangedBooleanEffect::str() const {
@@ -174,7 +174,7 @@ bool IncrementNumericalEffect::evaluate(const core::State& source_state, const c
 }
 
 std::string IncrementNumericalEffect::compute_repr() const{
-    return "(:e_n_inc \"" + m_numerical->get_numerical()->compute_repr() + "\")";
+    return "(:e_n_inc \"" + m_numerical->get_numerical()->str() + "\")";
 }
 
 std::string IncrementNumericalEffect::str() const {
@@ -215,7 +215,7 @@ bool DecrementNumericalEffect::evaluate(const core::State& source_state, const c
 }
 
 std::string DecrementNumericalEffect::compute_repr() const{
-    return "(:e_n_dec \"" + m_numerical->get_numerical()->compute_repr() + "\")";
+    return "(:e_n_dec \"" + m_numerical->get_numerical()->str() + "\")";
 }
 
 std::string DecrementNumericalEffect::str() const {
@@ -250,7 +250,7 @@ bool UnchangedNumericalEffect::evaluate(const core::State& source_state, const c
 }
 
 std::string UnchangedNumericalEffect::compute_repr() const{
-    return "(:e_n_bot \"" + m_numerical->get_numerical()->compute_repr() + "\")";
+    return "(:e_n_bot \"" + m_numerical->get_numerical()->str() + "\")";
 }
 
 std::string UnchangedNumericalEffect::str() const {

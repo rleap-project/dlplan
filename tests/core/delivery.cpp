@@ -108,8 +108,8 @@ TEST(DLPTests, GeneratorDeliveryTest) {
             const auto& generated_denotations = generated_boolean_denotations[j];
             if (required_denotations == generated_denotations) {
                 found = true;
-                std::cout << "required: " << required_boolean_features[i]->compute_repr() << "\n"
-                          << "generated: " << generated_boolean_features[j]->compute_repr() << "\n";
+                std::cout << "required: " << required_boolean_features[i]->str() << "\n"
+                          << "generated: " << generated_boolean_features[j]->str() << "\n";
             }
         }
         EXPECT_EQ(found, true);
@@ -121,8 +121,8 @@ TEST(DLPTests, GeneratorDeliveryTest) {
             const auto& generated_denotations = generated_numerical_denotations[j];
             if (required_denotations == generated_denotations) {
                 found = true;
-                std::cout << "required: " << required_numerical_features[i]->compute_repr() << "\n"
-                          << "generated: " << generated_numerical_features[j]->compute_repr() << "\n";
+                std::cout << "required: " << required_numerical_features[i]->str() << "\n"
+                          << "generated: " << generated_numerical_features[j]->str() << "\n";
             }
         }
         EXPECT_EQ(found, true);
@@ -134,8 +134,8 @@ TEST(DLPTests, GeneratorDeliveryTest) {
             const auto& generated_denotations = generated_concept_denotations[j];
             if (required_denotations == generated_denotations) {
                 found = true;
-                std::cout << "required: " << required_concept_features[i]->compute_repr() << "\n"
-                          << "generated: " << generated_concept_features[j]->compute_repr() << "\n";
+                std::cout << "required: " << required_concept_features[i]->str() << "\n"
+                          << "generated: " << generated_concept_features[j]->str() << "\n";
             }
         }
         EXPECT_EQ(found, true);
@@ -147,8 +147,8 @@ TEST(DLPTests, GeneratorDeliveryTest) {
             const auto& generated_denotations = generated_role_denotations[j];
             if (required_denotations == generated_denotations) {
                 found = true;
-                std::cout << "required: " << required_role_features[i]->compute_repr() << "\n"
-                          << "generated: " << generated_role_features[j]->compute_repr() << "\n";
+                std::cout << "required: " << required_role_features[i]->str() << "\n"
+                          << "generated: " << generated_role_features[j]->str() << "\n";
             }
         }
         EXPECT_EQ(found, true);

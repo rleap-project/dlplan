@@ -66,11 +66,11 @@ int SomeConcept::compute_complexity_impl() const {
     return m_role->compute_complexity() + m_concept->compute_complexity() + 1;
 }
 
-void SomeConcept::compute_repr_impl(std::stringstream& out) const {
+void SomeConcept::str_impl(std::stringstream& out) const {
     out << "c_some" << "(";
-    m_role->compute_repr(out);
+    m_role->str(out);
     out << ",";
-    m_concept->compute_repr(out);
+    m_concept->str(out);
     out << ")";
 }
 

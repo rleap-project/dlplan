@@ -64,9 +64,9 @@ int ProjectionConcept::compute_complexity_impl() const {
     return m_role->compute_complexity() + 1;
 }
 
-void ProjectionConcept::compute_repr_impl(std::stringstream& out) const {
+void ProjectionConcept::str_impl(std::stringstream& out) const {
     out << "c_projection" << "(";
-    m_role->compute_repr(out);
+    m_role->str(out);
     out << "," << std::to_string(m_pos) << ")";
 }
 

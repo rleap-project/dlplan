@@ -68,11 +68,11 @@ int RestrictRole::compute_complexity_impl() const {
     return m_role->compute_complexity() + m_concept->compute_complexity() + 1;
 }
 
-void RestrictRole::compute_repr_impl(std::stringstream& out) const {
+void RestrictRole::str_impl(std::stringstream& out) const {
     out << "r_restrict" << "(";
-    m_role->compute_repr(out);
+    m_role->str(out);
     out << ",";
-    m_concept->compute_repr(out);
+    m_concept->str(out);
     out << ")";
 }
 

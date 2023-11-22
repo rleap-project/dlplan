@@ -66,11 +66,11 @@ int SubsetConcept::compute_complexity_impl() const {
     return m_role_left->compute_complexity() + m_role_right->compute_complexity() + 1;
 }
 
-void SubsetConcept::compute_repr_impl(std::stringstream& out) const {
+void SubsetConcept::str_impl(std::stringstream& out) const {
     out << "c_subset" << "(";
-    m_role_left->compute_repr(out);
+    m_role_left->str(out);
     out << ",";
-    m_role_right->compute_repr(out);
+    m_role_right->str(out);
     out << ")";
 }
 

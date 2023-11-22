@@ -58,9 +58,9 @@ int InverseRole::compute_complexity_impl() const {
     return m_role->compute_complexity() + 1;
 }
 
-void InverseRole::compute_repr_impl(std::stringstream& out) const {
+void InverseRole::str_impl(std::stringstream& out) const {
     out << "r_inverse" << "(";
-    m_role->compute_repr(out);
+    m_role->str(out);
     out << ")";
 }
 
