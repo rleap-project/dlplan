@@ -13,22 +13,14 @@ DenotationsCaches::DenotationsCaches(DenotationsCaches&& other) = default;
 
 DenotationsCaches& DenotationsCaches::operator=(DenotationsCaches&& other) = default;
 
-bool DenotationsCaches::Key::operator==(const Key& other) const {
+bool DenotationsCacheKey::operator==(const DenotationsCacheKey& other) const {
     return (element == other.element) &&
            (instance == other.instance) &&
            (state == other.state);
 }
 
-bool DenotationsCaches::Key::operator!=(const Key& other) const {
-    return !(*this == other);
-}
-
-
-std::size_t DenotationsCaches::KeyHash::operator()(const Key& key) const {
-    std::size_t seed = key.element;
-    hash_combine(seed, key.instance);
-    hash_combine(seed, key.state);
-    return seed;
+size_t DenotationsCacheKey::hash() const {
+    return hash_combine(element, instance, state);
 }
 
 }

@@ -318,3 +318,43 @@ std::shared_ptr<VocabularyInfo> SyntacticElementFactoryImpl::get_vocabulary_info
 }
 
 }
+
+namespace dlplan {
+    // explicit template instantiations
+    template class ReferenceCountedObjectFactory<core::EmptyBoolean<core::Concept>
+        , core::EmptyBoolean<core::Role>
+        , core::InclusionBoolean<core::Concept>
+        , core::InclusionBoolean<core::Role>
+        , core::NullaryBoolean
+        , core::AllConcept
+        , core::AndConcept
+        , core::BotConcept
+        , core::DiffConcept
+        , core::EqualConcept
+        , core::NotConcept
+        , core::OneOfConcept
+        , core::OrConcept
+        , core::PrimitiveConcept
+        , core::ProjectionConcept
+        , core::SomeConcept
+        , core::SubsetConcept
+        , core::TopConcept
+        , core::ConceptDistanceNumerical
+        , core::CountNumerical<core::Concept>
+        , core::CountNumerical<core::Role>
+        , core::RoleDistanceNumerical
+        , core::SumConceptDistanceNumerical
+        , core::SumRoleDistanceNumerical
+        , core::AndRole
+        , core::ComposeRole
+        , core::DiffRole
+        , core::IdentityRole
+        , core::InverseRole
+        , core::NotRole
+        , core::OrRole
+        , core::PrimitiveRole
+        , core::RestrictRole
+        , core::TopRole
+        , core::TransitiveClosureRole
+        , core::TransitiveReflexiveClosureRole>;
+}

@@ -26,7 +26,7 @@ ConceptDenotations NotConcept::evaluate_impl(const States& states, DenotationsCa
         compute_result(
             *(*concept_denotations)[i],
             denotation);
-        denotations.push_back(caches.concept_denotation_cache.insert_denotation(std::move(denotation)));
+        denotations.push_back(caches.data.insert_unique(std::move(denotation)));
     }
     return denotations;
 }

@@ -28,7 +28,7 @@ ConceptDenotations OrConcept::evaluate_impl(const States& states, DenotationsCac
             *(*concept_left_denotations)[i],
             *(*concept_right_denotations)[i],
             denotation);
-        denotations.push_back(caches.concept_denotation_cache.insert_denotation(std::move(denotation)));
+        denotations.push_back(caches.data.insert_unique(std::move(denotation)));
     }
     return denotations;
 }

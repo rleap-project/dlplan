@@ -2,11 +2,8 @@ add_library(dlplancore STATIC)
 target_sources(dlplancore
     PRIVATE
         atom.cpp
-        boolean.cpp
         concept_denotation.cpp
-        concept.cpp
         role_denotation.cpp
-        role.cpp
         state.cpp
         constant.cpp
         core.cpp
@@ -43,7 +40,6 @@ target_sources(dlplancore
         elements/roles/transitive_closure.cpp
         elements/roles/transitive_reflexive_closure.cpp
         instance_info.cpp
-        numerical.cpp
         vocabulary_info.cpp
         predicate.cpp
         object.cpp

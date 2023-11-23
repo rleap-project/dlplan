@@ -15,6 +15,7 @@
 #include "common/parsers/config.hpp"
 #include "utils/pimpl.h"
 #include "utils/dynamic_bitset.h"
+#include "utils/cache.h"
 
 
 // Forward declarations of this header
@@ -22,6 +23,7 @@ namespace dlplan::core {
 class ConceptDenotation;
 class RoleDenotation;
 class DenotationsCaches;
+struct DenotationsCacheKey;
 class Constant;
 class Predicate;
 class VocabularyInfo;
@@ -29,10 +31,6 @@ class Object;
 class Atom;
 class InstanceInfo;
 class State;
-class Concept;
-class Role;
-class Boolean;
-class Numerical;
 class SyntacticElementFactory;
 class SyntacticElementFactoryImpl;
 
@@ -91,6 +89,10 @@ namespace std {
     template<>
     struct hash<dlplan::core::RoleDenotations> {
         size_t operator()(const dlplan::core::RoleDenotations& denotations) const;
+    };
+    template<>
+    struct hash<dlplan::core::DenotationsCacheKey> {
+        std::size_t operator()(const dlplan::core::DenotationsCacheKey& key) const;
     };
 }
 
@@ -226,76 +228,22 @@ public:
     int get_num_objects() const;
 };
 
+/// @brief Encapsulates a key to store and retrieve denotations from the cache.
+struct DenotationsCacheKey {
+    ElementIndex element;
+    InstanceIndex instance;
+    StateIndex state;
+
+    bool operator==(const DenotationsCacheKey& other) const;
+
+    size_t hash() const;
+};
+
 
 /// @brief Encapsulates caches for denotations and provides functionality to
 ///        insert and retrieve denotations into and respectively from the cache.
 class DenotationsCaches {
 public:
-    // We would prefer to keep this private but non-intrusive serialization
-    // with private members requires a forward declaration which we were not able to add.
-    struct Key {
-        ElementIndex element;
-        InstanceIndex instance;
-        StateIndex state;
-
-        bool operator==(const Key& other) const;
-        bool operator!=(const Key& other) const;
-    };
-
-    struct KeyHash  {
-        std::size_t operator()(const Key& key) const;
-    };
-
-    template<typename T>
-    struct Cache {
-        struct ValueHash {
-            std::size_t operator()(const std::shared_ptr<const T>& ptr) const {
-                return hash_combine(*ptr);
-            }
-        };
-
-        struct ValueEqual {
-            bool operator()(const std::shared_ptr<const T>& left, const std::shared_ptr<const T>& right) const {
-                return *left == *right;
-            }
-        };
-
-        // We use unique_ptr such that other raw pointers do not become invalid.
-        std::unordered_set<std::shared_ptr<const T>, ValueHash, ValueEqual> uniqueness;
-        std::unordered_map<Key, std::shared_ptr<const T>, KeyHash> per_element_instance_state_mapping;
-
-        /// @brief Inserts denotation uniquely and returns it raw pointer.
-        /// @param denotation
-        /// @return
-        std::shared_ptr<const T> insert_denotation(T&& denotation) {
-            return *uniqueness.insert(std::make_shared<T>(std::move(denotation))).first;
-        }
-
-        /// @brief Inserts raw pointer of denotation into mapping from element, instance, and state.
-        /// @param element_index
-        /// @param instance_index
-        /// @param state_index
-        /// @param denotation
-        void insert_denotation(ElementIndex element, InstanceIndex instance, StateIndex state, std::shared_ptr<const T> denotation) {
-            Key key{element, instance, state};
-            per_element_instance_state_mapping.emplace(key, denotation);
-        }
-
-        std::shared_ptr<const T> get_denotation(ElementIndex element, InstanceIndex instance, StateIndex state) const {
-            Key key{element, instance, state};
-            auto iter = per_element_instance_state_mapping.find(key);
-            if (iter != per_element_instance_state_mapping.end()) {
-                return iter->second;
-            }
-            return nullptr;
-        }
-
-        void erase_denotation(ElementIndex element, InstanceIndex instance, StateIndex state) {
-            Key key{element, instance, state};
-            per_element_instance_state_mapping.erase(key);
-        }
-
-    };
 
     DenotationsCaches();
     ~DenotationsCaches();
@@ -304,17 +252,16 @@ public:
     DenotationsCaches(DenotationsCaches&& other);
     DenotationsCaches& operator=(DenotationsCaches&& other);
 
-    /// @brief Cache single denotations
-    Cache<ConceptDenotation> concept_denotation_cache;
-    Cache<RoleDenotation> role_denotation_cache;
-    Cache<bool> boolean_denotation_cache;
-    Cache<int> numerical_denotation_cache;
-
-    /// @brief Cache collection of denotations
-    Cache<ConceptDenotations> concept_denotations_cache;
-    Cache<RoleDenotations> role_denotations_cache;
-    Cache<BooleanDenotations> boolean_denotations_cache;
-    Cache<NumericalDenotations> numerical_denotations_cache;
+    // Caches denotations by key, same denotations are shared.
+    SharedObjectCache<DenotationsCacheKey,
+        ConceptDenotation,
+        RoleDenotation,
+        bool,
+        int,
+        ConceptDenotations,
+        RoleDenotations,
+        BooleanDenotations,
+        NumericalDenotations> data;
 };
 
 
@@ -742,152 +689,107 @@ public:
 };
 
 
-/*
-This is an idea for a common templated abstract base class.
-We want to simplify the insertion into the cache with a method
-cache.get_or_insert<Denotation>(key, denotation) that
-inserts denotation uniquely and makes it retrievable by the key for later lookup.
 
-template<typename Denotation>
-class Element : public BaseElement<Concept> {
+template<typename Denotation, typename DenotationList>
+class Element : public BaseElement<Element<Denotation, DenotationList>> {
 protected:
-    Element(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
+    Element(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
+       : BaseElement<Element<Denotation, DenotationList>>(index, vocabulary_info, is_static) { }
 
+    virtual Denotation evaluate_impl(const State& , DenotationsCaches& ) const = 0;
+    virtual DenotationList evaluate_impl(const States& , DenotationsCaches& ) const = 0;
 
 public:
-    Element(const Concept& other) = default;
-    Element& operator=(const Concept& other) = default;
-    Element(Concept&& other) = default;
-    Element& operator=(Concept&& other) = default;
+    Element(const Element& other) = default;
+    Element& operator=(const Element& other) = default;
+    Element(Element&& other) = default;
+    Element& operator=(Element&& other) = default;
     ~Element() = default;
 
-    virtual bool are_equal_impl(const Concept& other) const = 0;
+    virtual bool are_equal_impl(const Element& other) const = 0;
     virtual size_t hash_impl() const = 0;
     virtual void str_impl(std::stringstream& out) const = 0;
     virtual int compute_complexity_impl() const = 0;
     virtual int compute_evaluate_time_score_impl() const = 0;
 
     virtual Denotation evaluate(const State& ) const = 0;
-    virtual std::shared_ptr<const Denotation> evaluate(const State& state, DenotationsCaches& caches) const = 0;
-    virtual std::shared_ptr<const std::vector<std::shared_ptr<const Denotation>>> evaluate(const States& states, DenotationsCaches& caches) const = 0;
+    std::shared_ptr<const Denotation> evaluate(const State& state, DenotationsCaches& caches) const {
+        auto key = DenotationsCacheKey{ Base<Element<Denotation, DenotationList>>::get_index(), state.get_instance_info()->get_index(), BaseElement<Element<Denotation, DenotationList>>::is_static() ? -1 : state.get_index() };
+        auto cached = caches.data.get<Denotation>(key);
+        if (cached) return cached;
+        auto denotation = caches.data.insert_unique(evaluate_impl(state, caches));
+        caches.data.insert_mapping(key, denotation);
+        return denotation;
+    }
+    std::shared_ptr<const DenotationList> evaluate(const States& states, DenotationsCaches& caches) const {
+        auto key = DenotationsCacheKey{ Base<Element<Denotation, DenotationList>>::get_index(), -1, -1 };
+        auto cached = caches.data.get<DenotationList>(key);
+        if (cached) return cached;
+        auto result_denotations = caches.data.insert_unique(evaluate_impl(states, caches));
+        caches.data.insert_mapping(key, result_denotations);
+        return result_denotations;
+    }
 };
 
-using Concept = Element<ConceptDenotation>;
-using Role = Element<RoleDenotation>;
-using Boolean = Element<bool>;
-using Numerical = Element<int>;
-*/
+template<typename Denotation, typename DenotationList>
+class ElementLight : public BaseElement<ElementLight<Denotation, DenotationList>> {
+protected:
+    ElementLight(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
+       : BaseElement<ElementLight<Denotation, DenotationList>>(index, vocabulary_info, is_static) { }
+
+    virtual Denotation evaluate_impl(const State& , DenotationsCaches& ) const = 0;
+    virtual DenotationList evaluate_impl(const States& , DenotationsCaches& ) const = 0;
+
+public:
+    ElementLight(const ElementLight& other) = default;
+    ElementLight& operator=(const ElementLight& other) = default;
+    ElementLight(ElementLight&& other) = default;
+    ElementLight& operator=(ElementLight&& other) = default;
+    ~ElementLight() = default;
+
+    virtual bool are_equal_impl(const ElementLight& other) const = 0;
+    virtual size_t hash_impl() const = 0;
+    virtual void str_impl(std::stringstream& out) const = 0;
+    virtual int compute_complexity_impl() const = 0;
+    virtual int compute_evaluate_time_score_impl() const = 0;
+
+    virtual Denotation evaluate(const State& ) const = 0;
+    Denotation evaluate(const State& state, DenotationsCaches& caches) const {
+        auto key = DenotationsCacheKey{ Base<ElementLight<Denotation, DenotationList>>::get_index(), state.get_instance_info()->get_index(), BaseElement<ElementLight<Denotation, DenotationList>>::is_static() ? -1 : state.get_index() };
+        auto cached = caches.data.get<Denotation>(key);
+        // ElementLight dereference since the denotation should be considered by value,
+        // e.g. std::shared_ptr<const int> -> int
+        if (cached) return *cached;  // dereference the cached value
+        auto denotation = caches.data.insert_unique(evaluate_impl(state, caches));
+        caches.data.insert_mapping(key, denotation);
+        return *denotation;  // dereference the newly inserted denoation
+    }
+    std::shared_ptr<const DenotationList> evaluate(const States& states, DenotationsCaches& caches) const {
+        auto key = DenotationsCacheKey{ Base<ElementLight<Denotation, DenotationList>>::get_index(), -1, -1 };
+        auto cached = caches.data.get<DenotationList>(key);
+        if (cached) return cached;
+        auto result_denotations = caches.data.insert_unique(evaluate_impl(states, caches));
+        caches.data.insert_mapping(key, result_denotations);
+        return result_denotations;
+    }
+};
+
 
 /// @brief Represents a concept element that evaluates to a concept denotation
 ///        on a given state. It can also make use of a cache during evaluation.
-class Concept : public BaseElement<Concept> {
-protected:
-    Concept(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
-
-    virtual ConceptDenotation evaluate_impl(const State& , DenotationsCaches& ) const = 0;
-    virtual ConceptDenotations evaluate_impl(const States& , DenotationsCaches& ) const = 0;
-
-public:
-    Concept(const Concept& other);
-    Concept& operator=(const Concept& other);
-    Concept(Concept&& other);
-    Concept& operator=(Concept&& other);
-    ~Concept();
-
-    virtual bool are_equal_impl(const Concept& other) const = 0;
-    virtual size_t hash_impl() const = 0;
-    virtual void str_impl(std::stringstream& out) const = 0;
-    virtual int compute_complexity_impl() const = 0;
-    virtual int compute_evaluate_time_score_impl() const = 0;
-
-    virtual ConceptDenotation evaluate(const State& ) const = 0;
-    std::shared_ptr<const ConceptDenotation> evaluate(const State& state, DenotationsCaches& caches) const;
-    std::shared_ptr<const ConceptDenotations> evaluate(const States& states, DenotationsCaches& caches) const;
-};
-
+using Concept = Element<ConceptDenotation, ConceptDenotations>;
 
 /// @brief Represents a role element that evaluates to a role denotation
 ///        on a given state. It can also make use of a cache during evaluation.
-class Role : public BaseElement<Role> {
-protected:
-    Role(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
-
-    virtual RoleDenotation evaluate_impl(const State& , DenotationsCaches& ) const = 0;
-    virtual RoleDenotations evaluate_impl(const States& , DenotationsCaches& ) const = 0;
-
-public:
-    Role(const Role& other);
-    Role& operator=(const Role& other);
-    Role(Role&& other);
-    Role& operator=(Role&& other);
-    ~Role();
-
-    virtual bool are_equal_impl(const Role& other) const = 0;
-    virtual size_t hash_impl() const = 0;
-    virtual void str_impl(std::stringstream& out) const = 0;
-    virtual int compute_complexity_impl() const = 0;
-    virtual int compute_evaluate_time_score_impl() const = 0;
-
-    virtual RoleDenotation evaluate(const State& ) const = 0;
-    std::shared_ptr<const RoleDenotation> evaluate(const State& state, DenotationsCaches& caches) const;
-    std::shared_ptr<const RoleDenotations> evaluate(const States& states, DenotationsCaches& caches) const;
-};
-
+using Role = Element<RoleDenotation, RoleDenotations>;
 
 /// @brief Represents a numerical element that evaluates to an natural number
 ///        on a given state. It can also make use of a cache during evaluation.
-class Numerical : public BaseElement<Numerical> {
-protected:
-    Numerical(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
-
-    virtual int evaluate_impl(const State& , DenotationsCaches& ) const = 0;
-    virtual NumericalDenotations evaluate_impl(const States& , DenotationsCaches& ) const = 0;
-
-public:
-    Numerical(const Numerical& other);
-    Numerical& operator=(const Numerical& other);
-    Numerical(Numerical&& other);
-    Numerical& operator=(Numerical&& other);
-    ~Numerical();
-
-    virtual bool are_equal_impl(const Numerical& other) const = 0;
-    virtual size_t hash_impl() const = 0;
-    virtual void str_impl(std::stringstream& out) const = 0;
-    virtual int compute_complexity_impl() const = 0;
-    virtual int compute_evaluate_time_score_impl() const = 0;
-
-    virtual int evaluate(const State& ) const = 0;
-    int evaluate(const State& state, DenotationsCaches& caches) const;
-    std::shared_ptr<const NumericalDenotations> evaluate(const States& states, DenotationsCaches& caches) const;
-};
-
+using Boolean = ElementLight<bool, BooleanDenotations>;
 
 /// @brief Represents a Boolean element that evaluates to either true or false
 ///        on a given state. It can also make use of a cache during evaluation.
-class Boolean : public BaseElement<Boolean> {
-protected:
-    Boolean(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static);
-
-    virtual bool evaluate_impl(const State& , DenotationsCaches& ) const = 0;
-    virtual BooleanDenotations evaluate_impl(const States& , DenotationsCaches& ) const = 0;
-
-public:
-    Boolean(const Boolean& other);
-    Boolean& operator=(const Boolean& other);
-    Boolean(Boolean&& other);
-    Boolean& operator=(Boolean&& other);
-    ~Boolean();
-
-    virtual bool are_equal_impl(const Boolean& other) const = 0;
-    virtual size_t hash_impl() const = 0;
-    virtual void str_impl(std::stringstream& out) const = 0;
-    virtual int compute_complexity_impl() const = 0;
-    virtual int compute_evaluate_time_score_impl() const = 0;
-
-    virtual bool evaluate(const State& ) const = 0;
-    bool evaluate(const State& state, DenotationsCaches& caches) const;
-    std::shared_ptr<const BooleanDenotations> evaluate(const States& states, DenotationsCaches& caches) const;
-};
+using Numerical = ElementLight<int, NumericalDenotations>;
 
 
 /// @brief Provides functionality for the syntactically unique creation of elements.

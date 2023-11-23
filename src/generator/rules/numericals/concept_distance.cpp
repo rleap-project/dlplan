@@ -13,7 +13,7 @@ void ConceptDistanceNumerical::generate_impl(const core::States& states, int tar
             // left role must evaluate to concept denotation that contains exactly one object.
             auto c1_denotations = c1->evaluate(states, caches);
             bool one = true;
-            for (const auto denot_ptr : *c1_denotations) {
+            for (const auto& denot_ptr : *c1_denotations) {
                 if (denot_ptr->size() != 1) {
                     one = false;
                     break;
@@ -34,8 +34,6 @@ void ConceptDistanceNumerical::generate_impl(const core::States& states, int tar
                         data.m_reprs.push_back(element->str());
                         data.m_numericals_by_iteration[target_complexity].push_back(std::move(element));
                         increment_generated();
-                    } else {
-                        caches.numerical_denotations_cache.erase_denotation(element->get_index(), -1, -1);
                     }
                 }
             }
@@ -49,7 +47,7 @@ void ConceptDistanceNumerical::generate_impl(const core::States& states, int tar
             // left role must evaluate to concept denotation that contains exactly one object.
             auto c1_denotations = c1->evaluate(states, caches);
             bool one = true;
-            for (const auto denot_ptr : *c1_denotations) {
+            for (const auto& denot_ptr : *c1_denotations) {
                 if (denot_ptr->size() != 1) {
                     one = false;
                     break;
@@ -66,8 +64,6 @@ void ConceptDistanceNumerical::generate_impl(const core::States& states, int tar
                         data.m_reprs.push_back(element->str());
                         data.m_numericals_by_iteration[target_complexity].push_back(std::move(element));
                         increment_generated();
-                    } else {
-                        caches.numerical_denotations_cache.erase_denotation(element->get_index(), -1, -1);
                     }
                 }
             }

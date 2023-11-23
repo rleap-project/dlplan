@@ -25,7 +25,7 @@ RoleDenotations IdentityRole::evaluate_impl(const States& states, DenotationsCac
         compute_result(
             *(*concept_denotations)[i],
             denotation);
-        denotations.push_back(caches.role_denotation_cache.insert_denotation(std::move(denotation)));
+        denotations.push_back(caches.data.insert_unique(std::move(denotation)));
     }
     return denotations;
 }

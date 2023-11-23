@@ -17,8 +17,6 @@ void SubsetConcept::generate_impl(const core::States& states, int target_complex
                         data.m_reprs.push_back(element->str());
                         data.m_concepts_by_iteration[target_complexity].push_back(std::move(element));
                         increment_generated();
-                    } else {
-                        caches.concept_denotations_cache.erase_denotation(element->get_index(), -1, -1);
                     }
                 }
             }

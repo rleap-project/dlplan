@@ -26,6 +26,9 @@ namespace std {
     size_t hash<dlplan::core::RoleDenotations>::operator()(const dlplan::core::RoleDenotations& denotations) const {
         return dlplan::hash_vector(denotations);
     }
+    size_t hash<dlplan::core::DenotationsCacheKey>::operator()(const dlplan::core::DenotationsCacheKey& key) const {
+        return key.hash();
+    }
 }
 
 namespace dlplan::core {
@@ -242,4 +245,21 @@ std::shared_ptr<const Role>SyntacticElementFactory::make_transitive_reflexive_cl
     return m_pImpl->make_transitive_reflexive_closure(role);
 }
 
+// Explicit template instantiations
+template class Element<ConceptDenotation, ConceptDenotations>;
+template class Element<RoleDenotation, RoleDenotations>;
+template class ElementLight<bool, BooleanDenotations>;
+template class ElementLight<int, NumericalDenotations>;
+}
+
+namespace dlplan {
+template class SharedObjectCache<core::DenotationsCacheKey,
+    core::ConceptDenotation,
+    core::RoleDenotation,
+    bool,
+    int,
+    core::ConceptDenotations,
+    core::RoleDenotations,
+    core::BooleanDenotations,
+    core::NumericalDenotations>;
 }

@@ -145,4 +145,24 @@ std::shared_ptr<core::SyntacticElementFactory> PolicyFactoryImpl::get_element_fa
     return m_element_factory;
 }
 
+// Explicit template instantiations
+}
+
+namespace dlplan {
+template class ReferenceCountedObjectFactory<policy::NamedBoolean
+        , policy::NamedNumerical
+        , policy::NamedConcept
+        , policy::NamedRole
+        , policy::PositiveBooleanCondition
+        , policy::NegativeBooleanCondition
+        , policy::GreaterNumericalCondition
+        , policy::EqualNumericalCondition
+        , policy::PositiveBooleanEffect
+        , policy::NegativeBooleanEffect
+        , policy::UnchangedBooleanEffect
+        , policy::IncrementNumericalEffect
+        , policy::DecrementNumericalEffect
+        , policy::UnchangedNumericalEffect
+        , policy::Rule
+        , policy::Policy>;
 }

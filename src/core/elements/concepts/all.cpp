@@ -32,7 +32,7 @@ ConceptDenotations AllConcept::evaluate_impl(const States& states, DenotationsCa
             *(*role_denotations)[i],
             *(*concept_denotations)[i],
             denotation);
-        denotations.push_back(caches.concept_denotation_cache.insert_denotation(std::move(denotation)));
+        denotations.push_back(caches.data.insert_unique<ConceptDenotation>(std::move(denotation)));
     }
     return denotations;
 }
