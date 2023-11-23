@@ -38,7 +38,7 @@ ConceptDenotations AllConcept::evaluate_impl(const States& states, DenotationsCa
 }
 
 AllConcept::AllConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept)
-    : Concept(vocabulary_info, index, role->is_static() && concept->is_static()), m_role(role), m_concept(concept) { }
+    : Concept(index, vocabulary_info, role->is_static() && concept->is_static()), m_role(role), m_concept(concept) { }
 
 bool AllConcept::are_equal_impl(const Concept& other) const {
     if (typeid(*this) == typeid(other)) {

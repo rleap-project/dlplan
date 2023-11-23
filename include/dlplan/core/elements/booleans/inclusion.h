@@ -55,7 +55,7 @@ private:
     }
 
     InclusionBoolean(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const T> element_left, std::shared_ptr<const T> element_right)
-    : Boolean(vocabulary_info, index, element_left->is_static() && element_right->is_static()),
+    : Boolean(index, vocabulary_info, element_left->is_static() && element_right->is_static()),
       m_element_left(element_left),
       m_element_right(element_right) {
     }

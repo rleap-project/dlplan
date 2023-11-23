@@ -34,7 +34,7 @@ TEST(DLPTests, InstanceCreation) {
     auto predicate_1 = vocabulary->add_predicate("onTable", 1);
     auto predicate_2 = vocabulary->add_predicate("holding", 1);
     auto predicate_3 = vocabulary->add_predicate("on_g", 2);
-    auto instance = std::make_shared<InstanceInfo>(vocabulary, 0);
+    auto instance = std::make_shared<InstanceInfo>(0, vocabulary);
     auto atom_0 = instance->add_atom("on", {"A", "B"});
     auto atom_1 = instance->add_atom("on", {"B", "A"});
     auto atom_2 = instance->add_atom("onTable", {"A"});
@@ -48,14 +48,14 @@ TEST(DLPTests, InstanceCreation) {
     std::shared_ptr<const Numerical> numerical = factory.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))");
     EXPECT_EQ(numerical->compute_complexity(), 4);
 
-    State state_0(instance, {atom_0, atom_3}, 0);
-    State state_1(instance, {0, 3}, 1);
+    State state_0(0, instance, {atom_0, atom_3});
+    State state_1(1, instance, {0, 3});
     EXPECT_EQ(state_0, state_1);
     EXPECT_EQ(numerical->evaluate(state_0), 1);
     EXPECT_EQ(numerical->evaluate(state_1), 1);
 
-    State state_2(instance, {atom_2, atom_3});
-    State state_3(instance, {2, 3});
+    State state_2(2, instance, {atom_2, atom_3});
+    State state_3(3, instance, {2, 3});
     EXPECT_EQ(state_2, state_3);
     EXPECT_EQ(numerical->evaluate(state_2), 0);
     EXPECT_EQ(numerical->evaluate(state_3), 0);

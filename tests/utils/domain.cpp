@@ -16,7 +16,7 @@ std::shared_ptr<VocabularyInfo> construct_vocabulary_info() {
 }
 
 std::shared_ptr<InstanceInfo> construct_instance_info(std::shared_ptr<VocabularyInfo> vocabulary) {
-    auto instance = std::make_shared<InstanceInfo>(vocabulary);
+    auto instance = std::make_shared<InstanceInfo>(0, vocabulary);
     instance->add_atom("at", {"p1", "A"});
     instance->add_atom("at", {"p1", "B"});
     instance->add_atom("at", {"p2", "A"});

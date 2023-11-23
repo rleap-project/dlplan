@@ -32,7 +32,7 @@ static std::shared_ptr<VocabularyInfo> construct_vocabulary_info() {
 static std::shared_ptr<InstanceInfo> construct_instance_info(
     const std::shared_ptr<VocabularyInfo>& vocabulary) {
     // User must ensure that each InstanceInfo gets its unique index for caching.
-    auto instance = std::make_shared<InstanceInfo>(vocabulary, 0);
+    auto instance = std::make_shared<InstanceInfo>(0, vocabulary);
     instance->add_atom("on", {"a", "b"});
     instance->add_atom("on", {"b", "a"});
     instance->add_atom("ontable", {"a"});
@@ -64,8 +64,8 @@ int main() {
     const auto& atom_3 = atoms[3];
     const auto& atom_6 = atoms[6];
     // User must ensure that each State gets its unique index for caching.
-    State state_0(instance, {atom_0, atom_3, atom_6}, 0);  // a on b
-    State state_1(instance, {atom_1, atom_3, atom_6}, 1);  // b on a
+    State state_0(0, instance, {atom_0, atom_3, atom_6});  // a on b
+    State state_1(1, instance, {atom_1, atom_3, atom_6});  // b on a
     States states{state_0, state_1};
 
     auto numerical = factory.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))");

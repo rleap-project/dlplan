@@ -57,7 +57,7 @@ private:
     }
 
     CountNumerical(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const T> element)
-        : Numerical(vocabulary_info, index, element->is_static()), m_element(element) { }
+        : Numerical(index, vocabulary_info, element->is_static()), m_element(element) { }
 
     template<typename... Ts>
     friend class dlplan::ReferenceCountedObjectFactory;

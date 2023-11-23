@@ -35,9 +35,9 @@ def main():
 
     # Compute forward distances from states with options forward=true, stop_if_goal=false
     forward_distances = state_space_2_1_0.compute_distances(
-        {state_space_2_1_0.get_initial_state_index()},
-        forward=True,
-        stop_if_goal=False)
+        set([state_space_2_1_0.get_initial_state_index()]),
+        True,
+        False)
     print("Forward distances from initial state of instance_2_1_0:")
     for state_index, distance in forward_distances.items():
         print("state_index=", state_index, "distance=", distance)

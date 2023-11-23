@@ -7,11 +7,11 @@ from ..utils.denotation import create_concept_denotation, create_role_denotation
 def test_caching():
     vocabulary = VocabularyInfo()
     predicate_0 = vocabulary.add_predicate("role", 2)
-    instance = InstanceInfo(vocabulary, index=0)
+    instance = InstanceInfo(0, vocabulary)
     atom_0 = instance.add_atom("role", ["A", "B"])
 
-    state_0 = State(instance, [], index=0)
-    state_1 = State(instance, [atom_0], index=1)
+    state_0 = State(0, instance, [])
+    state_1 = State(1, instance, [atom_0])
 
     factory = SyntacticElementFactory(vocabulary)
     caches = DenotationsCaches()

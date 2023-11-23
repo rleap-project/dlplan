@@ -15,11 +15,11 @@ TEST(DLPTests, NumericalCount) {
     auto predicate_1 = vocabulary->add_predicate("concept_1", 1);
     auto predicate_2 = vocabulary->add_predicate("role_0", 2);
     auto predicate_3 = vocabulary->add_predicate("role_1", 2);
-    auto instance = std::make_shared<InstanceInfo>(vocabulary, 0);
+    auto instance = std::make_shared<InstanceInfo>(0, vocabulary);
     auto atom_0 = instance->add_atom("concept_0", {"A"});
     auto atom_1 = instance->add_atom("role_0", {"A", "B"});
 
-    State state_0(instance, {atom_0, atom_1}, 0);
+    State state_0(0, instance, {atom_0, atom_1});
 
     SyntacticElementFactory factory(vocabulary);
 

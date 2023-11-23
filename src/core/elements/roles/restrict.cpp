@@ -37,7 +37,7 @@ RoleDenotations RestrictRole::evaluate_impl(const States& states, DenotationsCac
 }
 
 RestrictRole::RestrictRole(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept)
-: Role(vocabulary_info, index, role->is_static() && concept->is_static()), m_role(role), m_concept(concept) { }
+: Role(index, vocabulary_info, role->is_static() && concept->is_static()), m_role(role), m_concept(concept) { }
 
 bool RestrictRole::are_equal_impl(const Role& other) const {
     if (typeid(*this) == typeid(other)) {

@@ -44,7 +44,7 @@ ConceptDenotations PrimitiveConcept::evaluate_impl(const States& states, Denotat
 }
 
 PrimitiveConcept::PrimitiveConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, const Predicate& predicate, int pos)
-    : Concept(vocabulary_info, index, predicate.is_static()), m_predicate(predicate), m_pos(pos) {
+    : Concept(index, vocabulary_info, predicate.is_static()), m_predicate(predicate), m_pos(pos) {
     if (m_pos >= m_predicate.get_arity()) {
         throw std::runtime_error("PrimitiveConcept::PrimitiveConcept - object index does not match predicate arity ("s + std::to_string(m_pos) + " > " + std::to_string(predicate.get_arity()) + ").");
     }

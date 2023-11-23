@@ -12,7 +12,7 @@ def generate_bw_vocabulary():
 
 
 def generate_bw_instance(vocabulary):
-    instance = InstanceInfo(vocabulary)
+    instance = InstanceInfo(-1, vocabulary)
     instance.add_atom("on", ["a", "b"])
     instance.add_atom("on", ["b", "a"])
     instance.add_atom("ontable", ["a"])
@@ -79,7 +79,7 @@ def test_factory():
     factory = SyntacticElementFactory(vocabulary)
 
     atoms = instance.get_atoms()
-    state = State(instance, [atoms[0], atoms[3], atoms[6]])
+    state = State(-1, instance, [atoms[0], atoms[3], atoms[6]])
     assert str(state) == "(instance index=-1, state index=-1, atoms={on(a,b), ontable(b), clear(a)})"
 
     numerical = factory.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))")

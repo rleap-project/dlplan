@@ -13,7 +13,7 @@ def generate_bw_vocabulary():
 
 
 def generate_bw_instance(vocabulary):
-    instance = InstanceInfo(vocabulary)
+    instance = InstanceInfo(0, vocabulary)
     instance.add_atom("on", ["a", "b"])
     instance.add_atom("on", ["b", "a"])
     instance.add_atom("ontable", ["a"])
@@ -33,9 +33,9 @@ def test_generate_exhaustively():
     generator = FeatureGenerator()
 
     atoms = instance.get_atoms()
-    state_0 = State(instance, [atoms[0], atoms[3]])  # a on b
-    state_1 = State(instance, [atoms[1], atoms[2]])  # b on a
-    state_2 = State(instance, [atoms[2], atoms[3]])  # both on table
+    state_0 = State(0, instance, [atoms[0], atoms[3]])  # a on b
+    state_1 = State(1, instance, [atoms[1], atoms[2]])  # b on a
+    state_2 = State(2, instance, [atoms[2], atoms[3]])  # both on table
     states = [state_0, state_1, state_2]
     feature_reprs = generator.generate(factory, states, 2, 2, 5, 5, 5, 180, 100000)
 

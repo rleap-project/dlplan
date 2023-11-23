@@ -33,7 +33,7 @@ RoleDenotations OrRole::evaluate_impl(const States& states, DenotationsCaches& c
 }
 
 OrRole::OrRole(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role_1, std::shared_ptr<const Role> role_2)
-    : Role(vocabulary_info, index, role_1->is_static() && role_2->is_static()),
+    : Role(index, vocabulary_info, role_1->is_static() && role_2->is_static()),
     m_role_left(role_1->get_index() < role_2->get_index() ? role_1 : role_2),
     m_role_right(role_1->get_index() < role_2->get_index() ? role_2 : role_1) { }
 

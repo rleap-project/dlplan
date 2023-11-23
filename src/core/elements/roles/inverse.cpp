@@ -31,7 +31,7 @@ RoleDenotations InverseRole::evaluate_impl(const States& states, DenotationsCach
 }
 
 InverseRole::InverseRole(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role)
-    : Role(vocabulary_info, index, role->is_static()), m_role(role) { }
+    : Role(index, vocabulary_info, role->is_static()), m_role(role) { }
 
 bool InverseRole::are_equal_impl(const Role& other) const {
     if (typeid(*this) == typeid(other)) {

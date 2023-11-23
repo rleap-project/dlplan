@@ -34,7 +34,7 @@ def construct_instance_info(vocabulary):
     Returns: the InstanceInfo
     """
     # User must ensure that each index gets its unique index for caching.
-    instance = InstanceInfo(vocabulary, index=0)
+    instance = InstanceInfo(0, vocabulary)
     instance.add_atom("on", ["a", "b"])
     instance.add_atom("on", ["b", "a"])
     instance.add_atom("ontable", ["a"])
@@ -78,9 +78,9 @@ def main():
     atom_7 = atoms[7]
     atom_8 = atoms[8]
     # User must ensure that each State gets its unique index for caching.
-    state_0 = State(instance, [atom_0, atom_3, atom_6, atom_8], 0)  # a on b
-    state_1 = State(instance, [atom_1, atom_2, atom_7, atom_8], 1)  # b on a
-    state_2 = State(instance, [atom_2, atom_3, atom_6, atom_7, atom_8], 2)  # a,b on table
+    state_0 = State(0, instance, [atom_0, atom_3, atom_6, atom_8])  # a on b
+    state_1 = State(1, instance, [atom_1, atom_2, atom_7, atom_8])  # b on a
+    state_2 = State(2, instance, [atom_2, atom_3, atom_6, atom_7, atom_8])  # a,b on table
 
     caches = DenotationsCaches()
     assert policy.evaluate(state_0, state_2, caches)
@@ -88,7 +88,6 @@ def main():
     assert not policy.evaluate(state_2, state_0, caches)
     assert not policy.evaluate(state_2, state_1, caches)
 
-    print(repr(policy))
     print(str(policy))
     print()
 
@@ -99,7 +98,6 @@ def main():
         "(:rule (:conditions (:c_b_pos b0) (:c_n_gt n0)) (:effects (:e_b_bot b0) (:e_n_dec n0)))\n" \
         ")"
     policy_in = policy_factory.parse_policy(policy_str)
-    print(repr(policy_in))
     print(str(policy_in))
     print()
 

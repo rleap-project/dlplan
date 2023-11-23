@@ -71,6 +71,14 @@ namespace std {
         std::size_t operator()(const dlplan::core::Predicate& predicate) const;
     };
     template<>
+    struct hash<dlplan::core::Object> {
+        std::size_t operator()(const dlplan::core::Object& object) const;
+    };
+    template<>
+    struct hash<dlplan::core::Atom> {
+        std::size_t operator()(const dlplan::core::Atom& atom) const;
+    };
+    template<>
     struct hash<dlplan::core::State> {
         size_t operator()(const dlplan::core::State& state) const;
     };
@@ -104,21 +112,22 @@ namespace dlplan::core {
 /// set of object indices represent the elements in the unary relation of the
 /// concept that are true in a given state. Each object index refers to an
 /// object of a common instance info.
-class ConceptDenotation {
+class ConceptDenotation : public Base<ConceptDenotation> {
 private:
     int m_num_objects;
     DynamicBitset<unsigned> m_data;
 
 public:
-    explicit ConceptDenotation(int num_objects);
+    ConceptDenotation(int num_objects);
     ConceptDenotation(const ConceptDenotation& other);
     ConceptDenotation& operator=(const ConceptDenotation& other);
     ConceptDenotation(ConceptDenotation&& other);
     ConceptDenotation& operator=(ConceptDenotation&& other);
     ~ConceptDenotation();
 
-    bool operator==(const ConceptDenotation& other) const ;
-    bool operator!=(const ConceptDenotation& other) const;
+    bool are_equal_impl(const ConceptDenotation& other) const;
+    void str_impl(std::stringstream& out) const;
+    std::size_t hash_impl() const;
 
     ConceptDenotation& operator&=(const ConceptDenotation& other);
     ConceptDenotation& operator|=(const ConceptDenotation& other);
@@ -135,21 +144,6 @@ public:
     bool intersects(const ConceptDenotation& other) const;
     bool is_subset_of(const ConceptDenotation& other) const;
 
-    /// @brief Compute the canonical string representation of this concept denotation.
-    /// @return The canonical string representation of this concept denotation.
-    std::string compute_repr() const;
-
-    /// @brief Overload of the output stream insertion operator (operator<<) for the ConceptDenotation class.
-    ///        Outputs a string representation of a ConceptDenotation object to the specified output stream.
-    /// @param os The output stream to write the string representation to.
-    /// @param denotation The ConceptDenotation to be represented as a string.
-    /// @return A reference to the output stream after writing the string representation.
-    friend std::ostream& operator<<(std::ostream& os, const ConceptDenotation& denotation);
-
-    /// @brief Compute a string representation of this concept denotation.
-    /// @return A string representation of this concept denotation.
-    std::string str() const;
-
     /// @brief Compute a vector representation of this concept denotation.
     /// @return A vector of object indices.
     ObjectIndices to_vector() const;
@@ -158,7 +152,6 @@ public:
     /// @return A vector of object indices in ascending order.
     ObjectIndices to_sorted_vector() const;
 
-    std::size_t hash() const;
     int get_num_objects() const;
 };
 
@@ -170,7 +163,7 @@ public:
 /// The set of pairs of object indices represent the elements in the binary
 /// relation of the role that are true in a given state. Each object index
 /// refers to an object of a common instance info.
-class RoleDenotation {
+class RoleDenotation : public Base<RoleDenotation> {
 private:
     int m_num_objects;
     DynamicBitset<unsigned> m_data;
@@ -183,8 +176,9 @@ public:
     RoleDenotation& operator=(RoleDenotation&& other);
     ~RoleDenotation();
 
-    bool operator==(const RoleDenotation& other) const ;
-    bool operator!=(const RoleDenotation& other) const;
+    bool are_equal_impl(const RoleDenotation& other) const ;
+    void str_impl(std::stringstream& out) const;
+    std::size_t hash_impl() const;
 
     RoleDenotation& operator&=(const RoleDenotation& other);
     RoleDenotation& operator|=(const RoleDenotation& other);
@@ -201,21 +195,6 @@ public:
     bool intersects(const RoleDenotation& other) const;
     bool is_subset_of(const RoleDenotation& other) const;
 
-    /// @brief Compute the canonical string representation of this role denotation.
-    /// @return The canonical string representation of this role denotation.
-    std::string compute_repr() const;
-
-    /// @brief Overload of the output stream insertion operator (operator<<) for the RoleDenotation class.
-    ///        Outputs a string representation of a RoleDenotation object to the specified output stream.
-    /// @param os The output stream to write the string representation to.
-    /// @param denotation The RoleDenotation to be represented as a string.
-    /// @return A reference to the output stream after writing the string representation.
-    friend std::ostream& operator<<(std::ostream& os, const RoleDenotation& denotation);
-
-    /// @brief Compute a string representation of this role denotation.
-    /// @return A string representation of this role denotation.
-    std::string str() const;
-
     /// @brief Compute a vector representation of this role denotation.
     /// @return A vector of pairs of object indices.
     PairsOfObjectIndices to_vector() const;
@@ -224,7 +203,6 @@ public:
     /// @return A vector of pairs of object indices in ascending order by first then second element.
     PairsOfObjectIndices to_sorted_vector() const;
 
-    std::size_t hash() const;
     int get_num_objects() const;
 };
 
@@ -276,14 +254,12 @@ public:
 /// set of natural numbers from 0 to n. Declaring 0 as constant allows us to
 /// define a concept `c_one_of(0)` that always evaluates to 0 for any given
 /// state.
-class Constant {
+class Constant : public Base<Constant> {
 private:
     ///< The name of the constant.
     std::string m_name;
-    ///< The index of the constant.
-    ConstantIndex m_index;
 
-    Constant(const std::string& name, ConstantIndex index);
+    Constant(ConstantIndex index, const std::string& name);
 
     friend class VocabularyInfo;
 public:
@@ -293,36 +269,9 @@ public:
     Constant& operator=(Constant&& other);
     ~Constant();
 
-    size_t hash() const;
-
-    /// @brief Compute the canonical string representation of this constant.
-    /// @return The canonical string representation of this constant.
-    std::string compute_repr() const;
-
-    /// @brief Overload of the output stream insertion operator (operator<<) for the Constant class.
-    ///        Outputs a string representation of a Constant object to the specified output stream.
-    /// @param os The output stream to write the string representation to.
-    /// @param denotation The Constant to be represented as a string.
-    /// @return A reference to the output stream after writing the string representation.
-    friend std::ostream& operator<<(std::ostream& os, const Constant& constant);
-
-    /// @brief Compute a string representation of this constant.
-    /// @return A string representation of this constant.
-    std::string str() const;
-
-    /// @brief Checks if this constant is equal to another constant.
-    /// @param other The constant to compare against.
-    /// @return True if the constants are equal, false otherwise.
-    bool operator==(const Constant& other) const;
-
-    /// @brief Checks if this constant is not equal to another constant.
-    /// @param other The constant to compare against.
-    /// @return True if the constants are not equal, false otherwise.
-    bool operator!=(const Constant& other) const;
-
-    /// @brief Retrieves the index of the constant.
-    /// @return The index of the constant.
-    ConstantIndex get_index() const;
+    bool are_equal_impl(const Constant& other) const;
+    void str_impl(std::stringstream& out) const;
+    size_t hash_impl() const;
 
     /// @brief Retrieves the name of the constant.
     /// @return The name of the constant.
@@ -337,16 +286,16 @@ public:
 /// a relation with variable-sized arity. A predicate can also be defined as
 /// static with meaning that the ground atoms in all instances over the
 /// the common planning domain will also be static.
-class Predicate {
+class Predicate : public Base<Predicate> {
 private:
     std::string m_name;
-    PredicateIndex m_index;
     int m_arity;
     bool m_is_static;
 
-    Predicate(const std::string& name, PredicateIndex index, int arity, bool is_static=false);
+    Predicate(PredicateIndex index, const std::string& name, int arity, bool is_static=false);
 
     friend class VocabularyInfo;
+
 public:
     Predicate(const Predicate& other);
     Predicate& operator=(const Predicate& other);
@@ -354,27 +303,10 @@ public:
     Predicate& operator=(Predicate&& other);
     ~Predicate();
 
-    bool operator==(const Predicate& other) const;
-    bool operator!=(const Predicate& other) const;
+    bool are_equal_impl(const Predicate& other) const;
+    void str_impl(std::stringstream& out) const;
+    size_t hash_impl() const;
 
-    size_t hash() const;
-
-    /// @brief Compute the canonical string representation of this predicate.
-    /// @return The canonical string representation of this predicate.
-    std::string compute_repr() const;
-
-    /// @brief Overload of the output stream insertion operator (operator<<) for the Predicate class.
-    ///        Outputs a string representation of a Predicate object to the specified output stream.
-    /// @param os The output stream to write the string representation to.
-    /// @param denotation The Predicate to be represented as a string.
-    /// @return A reference to the output stream after writing the string representation.
-    friend std::ostream& operator<<(std::ostream& os, const Predicate& predicate);
-
-    /// @brief Compute a string representation of this predicate.
-    /// @return A string representation of this predicate.
-    std::string str() const;
-
-    PredicateIndex get_index() const;
     const std::string& get_name() const;
     int get_arity() const;
     bool is_static() const;
@@ -389,7 +321,7 @@ public:
 /// goal versions of predicates with an additional suffix _g. This allows us
 /// to add static atoms for the atoms that are true in the goal and refer to
 /// the goal during the evaluation of elements.
-class VocabularyInfo {
+class VocabularyInfo : public Base<VocabularyInfo> {
 private:
     // we store static and dynamic predicates together.
     std::unordered_map<std::string, PredicateIndex> m_predicate_name_to_index;
@@ -406,6 +338,10 @@ public:
     VocabularyInfo& operator=(VocabularyInfo&& other);
     ~VocabularyInfo();
 
+    bool are_equal_impl(const VocabularyInfo& other) const;
+    void str_impl(std::stringstream& out) const;
+    size_t hash_impl() const;
+
     const Predicate& add_predicate(const std::string &name, int arity, bool is_static=false);
     const Constant& add_constant(const std::string& name);
 
@@ -417,34 +353,19 @@ public:
 
     const Predicate& get_predicate(const std::string& name) const;
     const Constant& get_constant(const std::string& name) const;
-
-    /// @brief Compute the canonical string representation of this vocabulary.
-    /// @return The canonical string representation of this vocabulary.
-    std::string compute_repr() const;
-
-    /// @brief Overload of the output stream insertion operator (operator<<) for the VocabularyInfo class.
-    ///        Outputs a string representation of a VocabularyInfo object to the specified output stream.
-    /// @param os The output stream to write the string representation to.
-    /// @param denotation The VocabularyInfo to be represented as a string.
-    /// @return A reference to the output stream after writing the string representation.
-    friend std::ostream& operator<<(std::ostream& os, const VocabularyInfo& vocabulary);
-
-    /// @brief Compute a string representation of this vocabulary.
-    /// @return A string representation of this vocabulary.
-    std::string str() const;
 };
 
 
 /// @brief Encapsulates the representation of an object and provides
 ///        functionality to access it.
-class Object {
+class Object : public Base<Object> {
 private:
     std::string m_name;
-    ObjectIndex m_index;
 
-    Object(const std::string& name, int index);
+    Object(ObjectIndex index, const std::string& name);
 
     friend class InstanceInfo;
+
 public:
     Object(const Object& other);
     Object& operator=(const Object& other);
@@ -452,41 +373,25 @@ public:
     Object& operator=(Object&& other);
     ~Object();
 
-    bool operator==(const Object& other) const;
-    bool operator!=(const Object& other) const;
+    bool are_equal_impl(const Object& other) const;
+    void str_impl(std::stringstream& out) const;
+    size_t hash_impl() const;
 
-    /// @brief Compute the canonical string representation of this object.
-    /// @return The canonical string representation of this object.
-    std::string compute_repr() const;
-
-    /// @brief Overload of the output stream insertion operator (operator<<) for the Object class.
-    ///        Outputs a string representation of a Object object to the specified output stream.
-    /// @param os The output stream to write the string representation to.
-    /// @param denotation The Object to be represented as a string.
-    /// @return A reference to the output stream after writing the string representation.
-    friend std::ostream& operator<<(std::ostream& os, const Object& object);
-
-    /// @brief Compute a string representation of this object.
-    /// @return A string representation of this object.
-    std::string str() const;
-
-    ObjectIndex get_index() const;
     const std::string& get_name() const;
 };
 
 
 /// @brief Encapsulates the representation of an element in the relation
 ///        of a predicate and provides functionality to access it.
-class Atom {
+class Atom : public Base<Atom> {
 private:
     std::string m_name;
-    AtomIndex m_index;
     PredicateIndex m_predicate_index;
     ObjectIndices m_object_indices;
     bool m_is_static;
 
-    Atom(const std::string& name,
-        AtomIndex index,
+    Atom(AtomIndex index,
+        const std::string& name,
         PredicateIndex predicate_index,
         const ObjectIndices &object_indices,
         bool is_static=false);
@@ -500,26 +405,11 @@ public:
     Atom& operator=(Atom&& other);
     ~Atom();
 
-    bool operator==(const Atom& other) const;
-    bool operator!=(const Atom& other) const;
-
-    /// @brief Compute the canonical string representation of this atom.
-    /// @return The canonical string representation of this atom.
-    std::string compute_repr() const;
-
-    /// @brief Overload of the output stream insertion operator (operator<<) for the Atom class.
-    ///        Outputs a string representation of a Atom object to the specified output stream.
-    /// @param os The output stream to write the string representation to.
-    /// @param denotation The Atom to be represented as a string.
-    /// @return A reference to the output stream after writing the string representation.
-    friend std::ostream& operator<<(std::ostream& os, const Atom& atom);
-
-    /// @brief Compute a string representation of this atom.
-    /// @return A string representation of this atom.
-    std::string str() const;
+    bool are_equal_impl(const Atom& other) const;
+    void str_impl(std::stringstream& out) const;
+    size_t hash_impl() const;
 
     const std::string& get_name() const;
-    AtomIndex get_index() const;
     PredicateIndex get_predicate_index() const;
     const ObjectIndices& get_object_indices() const;
     bool is_static() const;
@@ -528,10 +418,9 @@ public:
 
 /// @brief Encapsulates instance specific data and provides functionality
 ///        to access it.
-class InstanceInfo {
+class InstanceInfo : public Base<InstanceInfo> {
 private:
     std::shared_ptr<VocabularyInfo> m_vocabulary_info;
-    InstanceIndex m_index;
 
     std::unordered_map<std::string, AtomIndex> m_atom_name_to_index;
     std::vector<Atom> m_atoms;
@@ -547,12 +436,16 @@ private:
     const Atom& add_atom(const std::string& predicate_name, const std::vector<std::string>& object_names, bool is_static);
 
 public:
-    InstanceInfo(std::shared_ptr<VocabularyInfo> vocabulary_info, InstanceIndex index=-1);
+    InstanceInfo(InstanceIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info);
     InstanceInfo(const InstanceInfo& other);
     InstanceInfo& operator=(const InstanceInfo& other);
     InstanceInfo(InstanceInfo&& other);
     InstanceInfo& operator=(InstanceInfo&& other);
     ~InstanceInfo();
+
+    bool are_equal_impl(const InstanceInfo& other) const;
+    void str_impl(std::stringstream& out) const;
+    size_t hash_impl() const;
 
     const Object& add_object(const std::string& object_name);
 
@@ -572,34 +465,12 @@ public:
     const Atom& add_atom(const std::string& predicate_name, const std::vector<std::string>& object_names);
     const Atom& add_static_atom(const std::string& predicate_name, const std::vector<std::string>& object_names);
 
-    /// @brief Compute the canonical string representation of this instance.
-    /// @return The canonical string representation of this instance.
-    ///
-    /// @note This representation does not include the recursive conversion of shared resources.
-    ///       Users are responsible for handling shared resources separately if desired.
-    std::string compute_repr() const;
-
-    /// @brief Overload of the output stream insertion operator (operator<<) for the InstanceInfo class.
-    ///        Outputs a string representation of a InstanceInfo object to the specified output stream.
-    /// @param os The output stream to write the string representation to.
-    /// @param denotation The InstanceInfo to be represented as a string.
-    /// @return A reference to the output stream after writing the string representation.
-    ///
-    /// @note This representation does not include the recursive conversion of shared resources.
-    ///       Users are responsible for handling shared resources separately if desired.
-    friend std::ostream& operator<<(std::ostream& os, const InstanceInfo& instance);
-
-    /// @brief Compute a string representation of this instance.
-    /// @return A string representation of this instance.
-    std::string str() const;
-
     /// @brief Removes all atoms from the instance.
     void clear_atoms();
     /// @brief Removes all static atoms from the instance.
     void clear_static_atoms();
 
     std::shared_ptr<VocabularyInfo> get_vocabulary_info() const;
-    InstanceIndex get_index() const;
     const std::vector<Atom>& get_atoms() const;
     const std::vector<Atom>& get_static_atoms() const;
     const std::vector<Object>& get_objects() const;
@@ -610,50 +481,27 @@ public:
 
 /// @brief Encapsulates the atoms that are considered to be true in the
 ///        current situation and provides functionality to access it.
-class State {
+class State : public Base<State> {
 private:
     std::shared_ptr<InstanceInfo> m_instance_info;
     AtomIndices m_atom_indices;
-    int m_index;
 
 public:
-    State(std::shared_ptr<InstanceInfo> instance_info, const std::vector<Atom>& atoms, StateIndex index=-1);
-    State(std::shared_ptr<InstanceInfo> instance_info, const AtomIndices& atom_indices, StateIndex index=-1);
-    State(std::shared_ptr<InstanceInfo> instance_info, AtomIndices&& atom_indices, StateIndex index=-1);
+    State(StateIndex index, std::shared_ptr<InstanceInfo> instance_info, const std::vector<Atom>& atoms);
+    State(StateIndex index, std::shared_ptr<InstanceInfo> instance_info, const AtomIndices& atom_indices);
+    State(StateIndex index, std::shared_ptr<InstanceInfo> instance_info, AtomIndices&& atom_indices);
     State(const State& other);
     State& operator=(const State& other);
     State(State&& other);
     State& operator=(State&& other);
     ~State();
 
-    bool operator==(const State& other) const;
-    bool operator!=(const State& other) const;
+    bool are_equal_impl(const State& other) const;
+    void str_impl(std::stringstream& out) const;
+    size_t hash_impl() const;
 
-    /// @brief Compute the canonical string representation of this state.
-    /// @return The canonical string representation of this state.
-    ///
-    /// @note This representation does not include the recursive conversion of shared resources.
-    ///       Users are responsible for handling shared resources separately if desired.
-    std::string compute_repr() const;
-
-    /// @brief Overload of the output stream insertion operator (operator<<) for the State class.
-    ///        Outputs a string representation of a State object to the specified output stream.
-    /// @param os The output stream to write the string representation to.
-    /// @param denotation The State to be represented as a string.
-    /// @return A reference to the output stream after writing the string representation.
-    ///
-    /// @note This representation does not include the recursive conversion of shared resources.
-    ///       Users are responsible for handling shared resources separately if desired.
-    friend std::ostream& operator<<(std::ostream& os, const State& state);
-
-    /// @brief Compute a string representation of this state.
-    /// @return A string representation of this state.
-    std::string str() const;
-
-    size_t hash() const;
     std::shared_ptr<InstanceInfo> get_instance_info() const;
     const AtomIndices& get_atom_indices() const;
-    StateIndex get_index() const;
 };
 
 
@@ -693,7 +541,7 @@ public:
 template<typename Denotation, typename DenotationList>
 class Element : public BaseElement<Element<Denotation, DenotationList>> {
 protected:
-    Element(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
+    Element(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, bool is_static)
        : BaseElement<Element<Denotation, DenotationList>>(index, vocabulary_info, is_static) { }
 
     virtual Denotation evaluate_impl(const State& , DenotationsCaches& ) const = 0;
@@ -734,7 +582,7 @@ public:
 template<typename Denotation, typename DenotationList>
 class ElementLight : public BaseElement<ElementLight<Denotation, DenotationList>> {
 protected:
-    ElementLight(std::shared_ptr<VocabularyInfo> vocabulary_info, ElementIndex index, bool is_static)
+    ElementLight(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, bool is_static)
        : BaseElement<ElementLight<Denotation, DenotationList>>(index, vocabulary_info, is_static) { }
 
     virtual Denotation evaluate_impl(const State& , DenotationsCaches& ) const = 0;
@@ -757,7 +605,7 @@ public:
     Denotation evaluate(const State& state, DenotationsCaches& caches) const {
         auto key = DenotationsCacheKey{ Base<ElementLight<Denotation, DenotationList>>::get_index(), state.get_instance_info()->get_index(), BaseElement<ElementLight<Denotation, DenotationList>>::is_static() ? -1 : state.get_index() };
         auto cached = caches.data.get<Denotation>(key);
-        // ElementLight dereference since the denotation should be considered by value,
+        // ElementLight dereferences the denotation because it is cheap to copy,
         // e.g. std::shared_ptr<const int> -> int
         if (cached) return *cached;  // dereference the cached value
         auto denotation = caches.data.insert_unique(evaluate_impl(state, caches));

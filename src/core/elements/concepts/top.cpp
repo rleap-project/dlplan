@@ -20,7 +20,7 @@ ConceptDenotations TopConcept::evaluate_impl(const States& states, DenotationsCa
 }
 
 TopConcept::TopConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info)
-    : Concept(vocabulary_info, index, true) {
+    : Concept(index, vocabulary_info, true) {
 }
 
 bool TopConcept::are_equal_impl(const Concept& other) const {

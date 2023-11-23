@@ -19,7 +19,7 @@ TEST(DLPTests, NumericalRoleDistance) {
     auto predicate_3 = vocabulary->add_predicate("start2", 2);
     auto predicate_4 = vocabulary->add_predicate("end2", 2);
     auto predicate_5 = vocabulary->add_predicate("start3", 2);
-    auto instance = std::make_shared<InstanceInfo>(vocabulary, 0);
+    auto instance = std::make_shared<InstanceInfo>(0, vocabulary);
     auto atom_0 = instance->add_atom("conn", {"A", "B"});
     auto atom_1 = instance->add_atom("conn", {"B", "C"});
     auto atom_2 = instance->add_atom("conn", {"C", "A"});
@@ -31,7 +31,7 @@ TEST(DLPTests, NumericalRoleDistance) {
     auto atom_8 = instance->add_atom("start2", {"X", "B"});  // distance INF
     auto atom_9 = instance->add_atom("end2", {"X", "E"});
 
-    State state_0(instance, {atom_0, atom_1, atom_2, atom_3, atom_4, atom_5, atom_6, atom_7, atom_8, atom_9}, 0);
+    State state_0(0, instance, {atom_0, atom_1, atom_2, atom_3, atom_4, atom_5, atom_6, atom_7, atom_8, atom_9});
 
     SyntacticElementFactory factory(vocabulary);
 

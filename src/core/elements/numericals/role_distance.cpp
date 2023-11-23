@@ -61,7 +61,7 @@ NumericalDenotations RoleDistanceNumerical::evaluate_impl(const States& states, 
 }
 
 RoleDistanceNumerical::RoleDistanceNumerical(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role_from, std::shared_ptr<const Role> role, std::shared_ptr<const Role> role_to)
-    : Numerical(vocabulary_info, index, role_from->is_static() && role->is_static() && role_to->is_static()),
+    : Numerical(index, vocabulary_info, role_from->is_static() && role->is_static() && role_to->is_static()),
         m_role_from(role_from), m_role(role), m_role_to(role_to) { }
 
 bool RoleDistanceNumerical::are_equal_impl(const Numerical& other) const {

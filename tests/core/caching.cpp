@@ -12,11 +12,11 @@ namespace dlplan::tests::core
     {
         auto vocabulary = std::make_shared<VocabularyInfo>();
         auto predicate_0 = vocabulary->add_predicate("role", 2);
-        auto instance = std::make_shared<InstanceInfo>(vocabulary, 0);
+        auto instance = std::make_shared<InstanceInfo>(0, vocabulary);
         auto atom_0 = instance->add_atom("role", {"A", "B"});
 
-        State state_0(instance, std::vector<Atom>{}, 0);
-        State state_1(instance, {atom_0}, 1);
+        State state_0(0, instance, std::vector<Atom>{});
+        State state_1(1, instance, {atom_0});
 
         SyntacticElementFactory factory(vocabulary);
         DenotationsCaches caches;

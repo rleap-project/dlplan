@@ -12,10 +12,10 @@ namespace dlplan::tests::core {
 TEST(DLPTests, RoleNot) {
     auto vocabulary = std::make_shared<VocabularyInfo>();
     auto predicate_0 = vocabulary->add_predicate("role", 2);
-    auto instance = std::make_shared<InstanceInfo>(vocabulary, 0);
+    auto instance = std::make_shared<InstanceInfo>(0, vocabulary);
     auto atom_0 = instance->add_atom("role", {"A", "B"});
 
-    State state_0(instance, {atom_0}, 0);
+    State state_0(0, instance, {atom_0});
 
     SyntacticElementFactory factory(vocabulary);
 

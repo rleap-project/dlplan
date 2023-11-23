@@ -38,7 +38,7 @@ ConceptDenotations OneOfConcept::evaluate_impl(const States& states, Denotations
 }
 
 OneOfConcept::OneOfConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, const Constant& constant)
-    : Concept(vocabulary_info, index, true), m_constant(constant) { }
+    : Concept(index, vocabulary_info, true), m_constant(constant) { }
 
 bool OneOfConcept::are_equal_impl(const Concept& other) const {
     if (typeid(*this) == typeid(other)) {

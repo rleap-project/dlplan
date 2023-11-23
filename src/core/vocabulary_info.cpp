@@ -9,8 +9,9 @@ using namespace std::string_literals;
 
 
 namespace dlplan::core {
-
-VocabularyInfo::VocabularyInfo() { }
+// we assign index undefined since we do not care
+VocabularyInfo::VocabularyInfo()
+    : Base<VocabularyInfo>(std::numeric_limits<int>::max()) { }
 
 VocabularyInfo::VocabularyInfo(const VocabularyInfo& other) = default;
 
@@ -22,8 +23,29 @@ VocabularyInfo& VocabularyInfo::operator=(VocabularyInfo&& other) = default;
 
 VocabularyInfo::~VocabularyInfo() = default;
 
+bool VocabularyInfo::are_equal_impl(const VocabularyInfo& other) const {
+    if (this != &other) {
+        return m_predicates == other.m_predicates
+            && m_constants == other.m_constants;
+    }
+    return true;
+}
+
+void VocabularyInfo::str_impl(std::stringstream& out) const {
+    out << "VocabularyInfo("
+       << "constants=" << m_constants << ", "
+       << "predicates=" << m_predicates
+       << ")";
+}
+
+size_t VocabularyInfo::hash_impl() const {
+    return hash_combine(
+        hash_vector(m_predicates),
+        hash_vector(m_constants));
+}
+
 const Predicate& VocabularyInfo::add_predicate(const std::string &predicate_name, int arity, bool is_static) {
-    Predicate predicate = Predicate(predicate_name, m_predicates.size(), arity, is_static);
+    Predicate predicate = Predicate(m_predicates.size(), predicate_name, arity, is_static);
     auto result = m_predicate_name_to_index.emplace(predicate_name, m_predicates.size());
     if (!result.second) {
         return m_predicates[result.first->second];
@@ -33,7 +55,7 @@ const Predicate& VocabularyInfo::add_predicate(const std::string &predicate_name
 }
 
 const Constant& VocabularyInfo::add_constant(const std::string& constant_name) {
-    Constant constant = Constant(constant_name, m_constants.size());
+    Constant constant = Constant(m_constants.size(), constant_name);
     auto result = m_constant_name_to_index.emplace(constant_name, m_constants.size());
     if (!result.second) {
         return m_constants[result.first->second];
@@ -72,24 +94,6 @@ const Constant& VocabularyInfo::get_constant(const std::string& name) const {
         throw std::runtime_error("VocabularyInfo::get_constant - constant " + name + " does not exist.");
     }
     return m_constants[m_constant_name_to_index.at(name)];
-}
-
-std::string VocabularyInfo::compute_repr() const {
-    std::stringstream ss;
-    ss << "VocabularyInfo("
-       << "constants=" << m_constants << ", "
-       << "predicates=" << m_predicates
-       << ")";
-    return ss.str();
-}
-
-std::ostream& operator<<(std::ostream& os, const VocabularyInfo& vocabulary) {
-    os << vocabulary.compute_repr();
-    return os;
-}
-
-std::string VocabularyInfo::str() const {
-    return compute_repr();
 }
 
 }

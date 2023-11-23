@@ -163,10 +163,10 @@ TEST(DLPTests, EmpiricalMinimization) {
     auto holding_p1 = atoms[8];
     auto holding_p2 = atoms[9];
     auto holding_p3 = atoms[10];
-    auto A_A_A_B = State(instance_info, {at_roboter_A, at_p1_A, at_p2_A, at_p3_B});
-    auto B_A_A_B = State(instance_info, {at_roboter_B, at_p1_A, at_p2_A, at_p3_B});
-    auto A_H_A_B = State(instance_info, {at_roboter_A, holding_p1, at_p2_A, at_p3_B});
-    auto B_A_A_H = State(instance_info, {at_roboter_B, holding_p1, at_p2_A, at_p3_B});
+    auto A_A_A_B = State(0, instance_info, {at_roboter_A, at_p1_A, at_p2_A, at_p3_B});
+    auto B_A_A_B = State(1, instance_info, {at_roboter_B, at_p1_A, at_p2_A, at_p3_B});
+    auto A_H_A_B = State(2, instance_info, {at_roboter_A, holding_p1, at_p2_A, at_p3_B});
+    auto B_A_A_H = State(3, instance_info, {at_roboter_B, holding_p1, at_p2_A, at_p3_B});
     auto A_A_A_B_B_A_A_B = StatePair(A_A_A_B, B_A_A_B);  // move robot from A to B
     auto B_A_A_B_A_A_A_B = StatePair(B_A_A_B, A_A_A_B);  // move robot from B to A
     auto A_A_A_B_A_H_A_B = StatePair(A_A_A_B, A_H_A_B);  // pick up package 1 at A

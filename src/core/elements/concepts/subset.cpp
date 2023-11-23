@@ -37,7 +37,7 @@ ConceptDenotations SubsetConcept::evaluate_impl(const States& states, Denotation
 }
 
 SubsetConcept::SubsetConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role_left, std::shared_ptr<const Role> role_right)
-    : Concept(vocabulary_info, index, role_left->is_static() && role_right->is_static()), m_role_left(role_left), m_role_right(role_right) { }
+    : Concept(index, vocabulary_info, role_left->is_static() && role_right->is_static()), m_role_left(role_left), m_role_right(role_right) { }
 
 bool SubsetConcept::are_equal_impl(const Concept& other) const {
     if (typeid(*this) == typeid(other)) {

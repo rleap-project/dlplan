@@ -12,7 +12,7 @@ TEST(DLPTests, RoleDenotationComputeRepr) {
     RoleDenotation denotation(num_objects);
     denotation.insert({1,2});
     denotation.insert({0,1});
-    EXPECT_EQ(denotation.compute_repr(), "RoleDenotation(num_objects=4, pairs_of_object_indices=[<0,1>, <1,2>])");
+    EXPECT_EQ(denotation.str(), "RoleDenotation(num_objects=4, pairs_of_object_indices=[<0,1>, <1,2>])");
 }
 
 }

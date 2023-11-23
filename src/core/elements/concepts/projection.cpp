@@ -32,7 +32,7 @@ ConceptDenotations ProjectionConcept::evaluate_impl(const States& states, Denota
 }
 
 ProjectionConcept::ProjectionConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, const std::shared_ptr<const Role>& role, int pos)
-: Concept(vocabulary_info, index, role->is_static()), m_role(role), m_pos(pos) {
+: Concept(index, vocabulary_info, role->is_static()), m_role(role), m_pos(pos) {
     if (pos < 0 || pos > 1) {
         throw std::runtime_error("ProjectionConcept::ProjectionConcept - projection index out of range, should be 0 or 1 ("s + std::to_string(pos) + ")");
     }

@@ -34,7 +34,7 @@ ConceptDenotations AndConcept::evaluate_impl(const States& states, DenotationsCa
 }
 
 AndConcept::AndConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept_1, std::shared_ptr<const Concept> concept_2)
-    : Concept(vocabulary_info, index, concept_1->is_static() && concept_2->is_static()),
+    : Concept(index, vocabulary_info, concept_1->is_static() && concept_2->is_static()),
     m_concept_left(concept_1->get_index() < concept_2->get_index() ? concept_1 : concept_2),
     m_concept_right(concept_1->get_index() < concept_2->get_index() ? concept_2 : concept_1) { }
 

@@ -17,7 +17,7 @@ ConceptDenotations BotConcept::evaluate_impl(const States& states, DenotationsCa
 }
 
 BotConcept::BotConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info)
-: Concept(vocabulary_info, index, true) { }
+: Concept(index, vocabulary_info, true) { }
 
 bool BotConcept::are_equal_impl(const Concept& other) const {
     if (typeid(*this) == typeid(other)) {

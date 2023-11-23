@@ -33,7 +33,7 @@ def construct_instance_info(vocabulary):
     Returns: the InstanceInfo
     """
     # User must ensure that each InstanceInfo gets its unique index for caching.
-    instance = InstanceInfo(vocabulary, index=0)
+    instance = InstanceInfo(0, vocabulary)
     instance.add_atom("on", ["a", "b"])
     instance.add_atom("on", ["b", "a"])
     instance.add_atom("ontable", ["a"])
@@ -65,8 +65,8 @@ def main():
     atom_3 = atoms[3]
     atom_6 = atoms[6]
     # User must ensure that each State gets its unique index for caching.
-    state_0 = State(instance, [atom_0, atom_3, atom_6], 0)  # a on b
-    state_1 = State(instance, [atom_1, atom_3, atom_6], 1)  # b on a
+    state_0 = State(0, instance, [atom_0, atom_3, atom_6])  # a on b
+    state_1 = State(1, instance, [atom_1, atom_3, atom_6])  # b on a
     states = [state_0, state_1]
 
     numerical = factory.parse_numerical("n_count(c_and(c_primitive(on_g,0),c_primitive(on,0)))")

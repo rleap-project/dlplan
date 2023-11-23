@@ -51,7 +51,7 @@ private:
     }
 
     EmptyBoolean(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const T> element)
-        : Boolean(vocabulary_info, index, element->is_static()), m_element(element) {
+        : Boolean(index, vocabulary_info, element->is_static()), m_element(element) {
     }
 
     template<typename... Ts>

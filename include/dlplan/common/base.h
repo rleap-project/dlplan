@@ -22,6 +22,10 @@ public:
         return static_cast<const Derived*>(this)->are_equal_impl(static_cast<const Derived&>(other));
     }
 
+    bool operator!=(const Base& other) const {
+        return !(*this == other);
+    }
+
     /// @brief Less comparison of two objects based on their index.
     ///        Since objects of the same type are unique and indices
     ///        are assigned depending on order of creation,

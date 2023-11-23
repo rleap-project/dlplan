@@ -33,7 +33,7 @@ def construct_instance_info(vocabulary):
     Returns: the InstanceInfo
     """
     # User must ensure that each index gets its unique index for caching.
-    instance = InstanceInfo(vocabulary, index=0)
+    instance = InstanceInfo(0, vocabulary)
     instance.add_atom("on", ["a", "b"])
     instance.add_atom("on", ["b", "a"])
     instance.add_atom("ontable", ["a"])
@@ -66,11 +66,11 @@ def main():
     atom_7 = atoms[7]
     atom_8 = atoms[8]
     # User must ensure that each State gets its unique index for caching.
-    state_0 = State(instance, [atom_0, atom_3, atom_6, atom_8], 0)  # a on b
-    state_1 = State(instance, [atom_1, atom_2, atom_7, atom_8], 1)  # b on a
-    state_2 = State(instance, [atom_2, atom_3, atom_6, atom_7, atom_8], 2)  # a,b on table
-    state_3 = State(instance, [atom_3, atom_4, atom_7], 3)  # holding a, b on table
-    state_4 = State(instance, [atom_2, atom_5, atom_6], 4)  # holding b, a on table
+    state_0 = State(0, instance, [atom_0, atom_3, atom_6, atom_8])  # a on b
+    state_1 = State(1, instance, [atom_1, atom_2, atom_7, atom_8])  # b on a
+    state_2 = State(2, instance, [atom_2, atom_3, atom_6, atom_7, atom_8])  # a,b on table
+    state_3 = State(3, instance, [atom_3, atom_4, atom_7])  # holding a, b on table
+    state_4 = State(4, instance, [atom_2, atom_5, atom_6])  # holding b, a on table
     states = [state_0, state_1, state_2, state_3, state_4]
 
     features = generate_features(factory, states, 5, 5, 10, 10, 10, 180, 100000)

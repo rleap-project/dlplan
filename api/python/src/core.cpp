@@ -8,16 +8,16 @@
 
 namespace py = pybind11;
 
+using namespace dlplan;
 using namespace dlplan::core;
 
 
 void init_core(py::module_ &m_core) {
     py::class_<ConceptDenotation, std::shared_ptr<ConceptDenotation>>(m_core, "ConceptDenotation")
         .def(py::init<int>())
-        .def("__eq__", &ConceptDenotation::operator==)
+        .def("__eq__", &ConceptDenotation::are_equal_impl)
         .def("__ne__", &ConceptDenotation::operator!=)
-        .def("__str__", &ConceptDenotation::str)
-        .def("__repr__", &ConceptDenotation::compute_repr)
+        .def("__str__", py::overload_cast<>(&ConceptDenotation::str, py::const_))
         .def("__len__", &ConceptDenotation::size)
         .def("__hash__", &ConceptDenotation::hash)
         .def("contains", &ConceptDenotation::contains)
@@ -33,10 +33,9 @@ void init_core(py::module_ &m_core) {
 
     py::class_<RoleDenotation, std::shared_ptr<RoleDenotation>>(m_core, "RoleDenotation")
         .def(py::init<int>())
-        .def("__eq__", &RoleDenotation::operator==)
+        .def("__eq__", &RoleDenotation::are_equal_impl)
         .def("__ne__", &RoleDenotation::operator!=)
-        .def("__str__", &RoleDenotation::str)
-        .def("__repr__", &RoleDenotation::compute_repr)
+        .def("__str__", py::overload_cast<>(&RoleDenotation::str, py::const_))
         .def("__len__", &RoleDenotation::size)
         .def("__hash__", &RoleDenotation::hash)
         .def("contains", &RoleDenotation::contains)
@@ -55,19 +54,17 @@ void init_core(py::module_ &m_core) {
     ;
 
     py::class_<Constant>(m_core, "Constant")
-        .def("__eq__", &Constant::operator==)
+        .def("__eq__", &Constant::are_equal_impl)
         .def("__ne__", &Constant::operator!=)
-        .def("__repr__", &Constant::compute_repr)
-        .def("__str__", &Constant::str)
+        .def("__str__", py::overload_cast<>(&Constant::str, py::const_))
         .def("get_index", &Constant::get_index)
         .def("get_name", &Constant::get_name)
     ;
 
     py::class_<Predicate>(m_core, "Predicate")
-        .def("__eq__", &Predicate::operator==)
+        .def("__eq__", &Predicate::are_equal_impl)
         .def("__ne__", &Predicate::operator!=)
-        .def("__repr__", &Predicate::compute_repr)
-        .def("__str__", &Predicate::str)
+        .def("__str__", py::overload_cast<>(&Predicate::str, py::const_))
         .def("get_index", &Predicate::get_index)
         .def("get_name", &Predicate::get_name)
         .def("get_arity", &Predicate::get_arity)
@@ -76,8 +73,7 @@ void init_core(py::module_ &m_core) {
 
     py::class_<VocabularyInfo, std::shared_ptr<VocabularyInfo>>(m_core, "VocabularyInfo")
         .def(py::init<>())
-        .def("__repr__", &VocabularyInfo::compute_repr)
-        .def("__str__", &VocabularyInfo::str)
+        .def("__str__", py::overload_cast<>(&VocabularyInfo::str, py::const_))
         .def("add_predicate", &VocabularyInfo::add_predicate, py::arg("name"), py::arg("arity"), py::arg("is_static") = false)
         .def("add_constant", &VocabularyInfo::add_constant)
         .def("get_predicates", &VocabularyInfo::get_predicates)
@@ -87,19 +83,17 @@ void init_core(py::module_ &m_core) {
     ;
 
     py::class_<Object>(m_core, "Object")
-        .def("__eq__", &Object::operator==)
+        .def("__eq__", &Object::are_equal_impl)
         .def("__ne__", &Object::operator!=)
-        .def("__repr__", &Object::compute_repr)
-        .def("__str__", &Object::str)
+        .def("__str__", py::overload_cast<>(&Object::str, py::const_))
         .def("get_index", &Object::get_index)
         .def("get_name", &Object::get_name)
     ;
 
     py::class_<Atom>(m_core, "Atom")
-        .def("__eq__", &Atom::operator==)
+        .def("__eq__", &Atom::are_equal_impl)
         .def("__ne__", &Atom::operator!=)
-        .def("__repr__", &Atom::compute_repr)
-        .def("__str__", &Atom::str)
+        .def("__str__",  py::overload_cast<>(&Atom::str, py::const_))
         .def("get_index", &Atom::get_index)
         .def("get_name", &Atom::get_name)
         .def("get_predicate_index", &Atom::get_predicate_index)
@@ -108,9 +102,8 @@ void init_core(py::module_ &m_core) {
     ;
 
     py::class_<InstanceInfo, std::shared_ptr<InstanceInfo>>(m_core, "InstanceInfo")
-        .def(py::init<std::shared_ptr<VocabularyInfo>, int>(), py::arg("vocabulary_info"), py::arg("index") = -1)
-        .def("__repr__", &InstanceInfo::compute_repr)
-        .def("__str__", &InstanceInfo::str)
+        .def(py::init<int, std::shared_ptr<VocabularyInfo>>(), py::arg("index"), py::arg("vocabulary_info"))
+        .def("__str__",  py::overload_cast<>(&InstanceInfo::str, py::const_))
         .def("add_object", &InstanceInfo::add_object)
         .def("add_atom", py::overload_cast<const Predicate&, const std::vector<Object>&>(&InstanceInfo::add_atom))
         .def("add_atom", py::overload_cast<int, const std::vector<int>&>(&InstanceInfo::add_atom))
@@ -130,13 +123,12 @@ void init_core(py::module_ &m_core) {
     ;
 
     py::class_<State>(m_core, "State")
-        .def(py::init<std::shared_ptr<InstanceInfo>, const std::vector<Atom>&, int>(), py::arg("instance_info"), py::arg("atoms"), py::arg("index") = -1)
-        .def(py::init<std::shared_ptr<InstanceInfo>, const std::vector<int>&, int>(), py::arg("instance_info"), py::arg("atom_indices"), py::arg("index") = -1)
-        .def(py::init<std::shared_ptr<InstanceInfo>, std::vector<int>&&, int>(), py::arg("instance_info"), py::arg("atom_indices"), py::arg("index") = -1)
-        .def("__eq__", &State::operator==)
+        .def(py::init<int, std::shared_ptr<InstanceInfo>, const std::vector<Atom>&>(), py::arg("index"), py::arg("instance_info"), py::arg("atoms"))
+        .def(py::init<int, std::shared_ptr<InstanceInfo>, const std::vector<int>&>(), py::arg("index"), py::arg("instance_info"), py::arg("atom_indices"))
+        .def(py::init<int, std::shared_ptr<InstanceInfo>, std::vector<int>&&>(), py::arg("index"), py::arg("instance_info"), py::arg("atom_indices"))
+        .def("__eq__", &State::are_equal_impl)
         .def("__ne__", &State::operator!=)
-        .def("__repr__", &State::str)
-        .def("__str__", &State::str)
+        .def("__str__",  py::overload_cast<>(&State::str, py::const_))
         .def("__hash__", &State::hash)
         .def("get_index", &State::get_index)
         .def("get_atom_indices", &State::get_atom_indices)

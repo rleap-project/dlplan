@@ -13,13 +13,13 @@ TEST(DLPTests, ConceptNot) {
     auto vocabulary = std::make_shared<VocabularyInfo>();
     auto predicate_0 = vocabulary->add_predicate("concept_1", 1);
     auto predicate_1 = vocabulary->add_predicate("concept_2", 1);
-    auto instance = std::make_shared<InstanceInfo>(vocabulary, 0);
+    auto instance = std::make_shared<InstanceInfo>(0, vocabulary);
     auto atom_0 = instance->add_atom("concept_1", {"A"});
     auto atom_1 = instance->add_atom("concept_1", {"B"});
     auto atom_2 = instance->add_atom("concept_2", {"B"});
     auto atom_3 = instance->add_atom("concept_2", {"C"});
 
-    State state_0(instance, {atom_0, atom_1, atom_2, atom_3}, 0);
+    State state_0(0, instance, {atom_0, atom_1, atom_2, atom_3});
 
     SyntacticElementFactory factory(vocabulary);
 

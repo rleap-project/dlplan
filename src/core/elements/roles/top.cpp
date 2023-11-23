@@ -20,7 +20,7 @@ RoleDenotations TopRole::evaluate_impl(const States& states, DenotationsCaches& 
 }
 
 TopRole::TopRole(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info)
-    : Role(vocabulary_info, index, true) { }
+    : Role(index, vocabulary_info, true) { }
 
 bool TopRole::are_equal_impl(const Role& other) const {
     if (typeid(*this) == typeid(other)) {

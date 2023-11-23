@@ -12,7 +12,7 @@ TEST(DLPTests, ConceptDenotationComputeRepr) {
     ConceptDenotation denotation(num_objects);
     denotation.insert(2);
     denotation.insert(0);
-    EXPECT_EQ(denotation.compute_repr(), "ConceptDenotation(num_objects=4, object_indices=[0, 2])");
+    EXPECT_EQ(denotation.str(), "ConceptDenotation(num_objects=4, object_indices=[0, 2])");
 }
 
 }

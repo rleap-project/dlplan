@@ -33,7 +33,7 @@ RoleDenotations DiffRole::evaluate_impl(const States& states, DenotationsCaches&
 }
 
 DiffRole::DiffRole(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role_left, std::shared_ptr<const Role> role_right)
-    : Role(vocabulary_info, index, (role_left->is_static() && role_right->is_static())), m_role_left(role_left), m_role_right(role_right)  { }
+    : Role(index, vocabulary_info, (role_left->is_static() && role_right->is_static())), m_role_left(role_left), m_role_right(role_right)  { }
 
 bool DiffRole::are_equal_impl(const Role& other) const {
     if (typeid(*this) == typeid(other)) {

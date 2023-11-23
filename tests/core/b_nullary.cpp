@@ -10,10 +10,10 @@ namespace dlplan::tests::core {
 TEST(DLPTests, BooleanNullary) {
     auto vocabulary = std::make_shared<VocabularyInfo>();
     auto predicate_0 = vocabulary->add_predicate("predicate", 0);
-    auto instance = std::make_shared<InstanceInfo>(vocabulary, 0);
+    auto instance = std::make_shared<InstanceInfo>(0, vocabulary);
     auto atom_0 = instance->add_atom("predicate", {});
-    State state_0(instance, {atom_0}, 0);
-    State state_1(instance, std::vector<Atom>(), 1);
+    State state_0(0, instance, {atom_0});
+    State state_1(1, instance, std::vector<Atom>());
 
     SyntacticElementFactory factory(vocabulary);
 

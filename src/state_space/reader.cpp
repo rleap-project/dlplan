@@ -141,7 +141,7 @@ static std::pair<StateMapping, StateIndicesSet> parse_states_file(const std::str
                 atom_indices.push_back(new_atom_index);
             }
         }
-        auto result = states.emplace(state_index, core::State(instance_info, atom_indices, state_index));
+        auto result = states.emplace(state_index, core::State(state_index, instance_info, atom_indices));
         if (!result.second) {
             throw std::runtime_error("StateSpaceGenerator::parse_states_file - tried parsing duplicate states.");
         }
@@ -201,7 +201,7 @@ GeneratorResult read(std::shared_ptr<VocabularyInfo> vocabulary_info, int index)
         parse_constants_file("constants.txt", *new_vocabulary_info);
         vocabulary_info = new_vocabulary_info;
     }
-    auto instance_info = std::make_shared<core::InstanceInfo>(vocabulary_info, index);
+    auto instance_info = std::make_shared<core::InstanceInfo>(index, vocabulary_info);
     auto new_atom_indices = parse_atoms_file("atoms.txt", *instance_info);
     parse_static_atoms_file("static-atoms.txt", *instance_info);
     parse_goal_atoms_file("goal-atoms.txt", *instance_info);

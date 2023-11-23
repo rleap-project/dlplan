@@ -13,14 +13,14 @@ namespace dlplan::tests::core
     {
         auto vocabulary = std::make_shared<VocabularyInfo>();
         auto predicate_0 = vocabulary->add_predicate("conn", 2);
-        auto instance = std::make_shared<InstanceInfo>(vocabulary, 0);
+        auto instance = std::make_shared<InstanceInfo>(0, vocabulary);
         auto atom_0 = instance->add_atom("conn", {"A", "B"});
         auto atom_1 = instance->add_atom("conn", {"B", "C"});
         auto atom_2 = instance->add_atom("conn", {"C", "A"});
         auto atom_3 = instance->add_atom("conn", {"D", "E"});
         auto atom_4 = instance->add_atom("conn", {"E", "A"});
 
-        State state_0(instance, {atom_0, atom_1, atom_2, atom_3, atom_4}, 0);
+        State state_0(0, instance, {atom_0, atom_1, atom_2, atom_3, atom_4});
 
         SyntacticElementFactory factory(vocabulary);
 
