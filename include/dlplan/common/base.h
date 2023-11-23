@@ -43,7 +43,7 @@ public:
 
     /// @brief Compute a string representation of this object.
     void str(std::stringstream& out) const {
-        return static_cast<const Derived*>(this)->str_impl(out);
+        static_cast<const Derived*>(this)->str_impl(out);
     }
 
     /// @brief Compute a string representation of this object.

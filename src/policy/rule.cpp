@@ -8,7 +8,7 @@
 
 namespace dlplan::policy {
 Rule::Rule(int identifier, const Conditions& conditions, const Effects& effects)
-    : m_identifier(identifier), m_conditions(conditions), m_effects(effects) {
+    : Base<Rule>(identifier), m_conditions(conditions), m_effects(effects) {
 }
 
 Rule::Rule(const Rule& other) = default;
@@ -21,18 +21,15 @@ Rule& Rule::operator=(Rule&& other) = default;
 
 Rule::~Rule() = default;
 
-bool Rule::operator==(const Rule& other) const {
+bool Rule::are_equal_impl(const Rule& other) const {
     if (this != &other) {
         return m_conditions == other.m_conditions
             && m_effects == other.m_effects;
     }
     return true;
 }
-bool Rule::operator<(const Rule& other) const {
-    return m_identifier < other.m_identifier;
-}
 
-size_t Rule::hash() const {
+size_t Rule::hash_impl() const {
     return hash_combine(
         hash_set(m_conditions),
         hash_set(m_effects));
@@ -66,54 +63,23 @@ bool Rule::evaluate_effects(const core::State& source_state, const core::State& 
     return true;
 }
 
-std::string Rule::compute_repr() const {
-    std::stringstream ss;
-    ss << "(:rule (:conditions ";
-    // sort conditions by repr to obtain canonical representation
-    std::vector<std::shared_ptr<const BaseCondition>> sorted_conditions(m_conditions.begin(), m_conditions.end());
-    std::sort(sorted_conditions.begin(), sorted_conditions.end(), [&](const auto& l, const auto& r){
-        return l->compute_repr() < r->compute_repr();
-    });
-    for (const auto& c : sorted_conditions) {
-        ss << c->compute_repr();
-        if (c != *sorted_conditions.rbegin()) {
-            ss << " ";
-        }
-    }
-    ss << ") (:effects ";
-    // sort conditions by repr to obtain canonical representation
-    std::vector<std::shared_ptr<const BaseEffect>> sorted_effects(m_effects.begin(), m_effects.end());
-    std::sort(sorted_effects.begin(), sorted_effects.end(), [&](const auto& l, const auto& r){
-        return l->compute_repr() < r->compute_repr();
-    });
-    for (const auto& e : sorted_effects) {
-        ss << e->compute_repr();
-        if (e != *sorted_effects.rbegin()) {
-            ss << " ";
-        }
-    }
-    ss << "))";
-    return ss.str();
-}
 
-std::string Rule::str() const {
-    std::stringstream ss;
-    ss << "(:rule (:conditions ";
+void Rule::str_impl(std::stringstream& out) const {
+    out << "(:rule (:conditions ";
     for (const auto& c : m_conditions) {
-        ss << c->str();
+        out << c->str();
         if (c != *m_conditions.rbegin()) {
-            ss << " ";
+            out << " ";
         }
     }
-    ss << ") (:effects ";
+    out << ") (:effects ";
     for (const auto& e : m_effects) {
-        ss << e->str();
+        out << e->str();
         if (e != *m_effects.rbegin()) {
-            ss << " ";
+            out << " ";
         }
     }
-    ss << "))";
-    return ss.str();
+    out << "))";
 }
 
 int Rule::compute_evaluate_time_score() const {
@@ -125,10 +91,6 @@ int Rule::compute_evaluate_time_score() const {
         score += effect->compute_evaluate_time_score();
     }
     return score;
-}
-
-int Rule::get_index() const {
-    return m_identifier;
 }
 
 const Conditions& Rule::get_conditions() const {

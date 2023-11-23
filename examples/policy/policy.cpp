@@ -99,7 +99,6 @@ int main() {
     assert(!policy->evaluate(state_2, state_0, caches));
     assert(!policy->evaluate(state_2, state_1, caches));
 
-    std::cout << policy->compute_repr() << std::endl << std::endl;
     std::cout << policy->str() << std::endl << std::endl;
 
     std::cout << "Parsing policy:" << std::endl;
@@ -110,7 +109,6 @@ int main() {
         "(:rule (:conditions (:c_b_pos b0) (:c_n_gt n0)) (:effects (:e_b_bot b0) (:e_n_dec n0)))\n"
         ")";
     auto policy_in = policy_factory.parse_policy(policy_str);
-    std::cout << policy_in->compute_repr() << std::endl << std::endl;
     std::cout << policy_in->str() << std::endl << std::endl;
 
     return 0;

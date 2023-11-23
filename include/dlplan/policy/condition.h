@@ -17,34 +17,26 @@ class ReferenceCountedObjectFactory;
 
 namespace dlplan::policy {
 
-class BooleanCondition : public BaseCondition {
+template<typename Element>
+class NamedElementCondition : public BaseCondition {
 protected:
-    const std::shared_ptr<const NamedBoolean> m_boolean;
+    std::shared_ptr<const Element> m_named_element;
 
-    BooleanCondition(int identifier, std::shared_ptr<const NamedBoolean> boolean);
+    NamedElementCondition(int identifier, const std::shared_ptr<const Element>& named_element)
+        : BaseCondition(identifier), m_named_element(named_element) { }
 
-    int compute_evaluate_time_score() const override;
+public:
+    virtual ~NamedElementCondition() = default;
 
-    std::shared_ptr<const NamedBoolean> get_boolean() const override;
+    int compute_evaluate_time_score() const override {
+        return m_named_element->compute_evaluate_time_score();
+    }
 
-    std::shared_ptr<const NamedNumerical> get_numerical() const override;
+    std::shared_ptr<const Element> get_named_element() const { return m_named_element; }
 };
 
 
-class NumericalCondition : public BaseCondition {
-protected:
-    const std::shared_ptr<const NamedNumerical> m_numerical;
-
-    NumericalCondition(int identifier, std::shared_ptr<const NamedNumerical> numerical);
-
-    int compute_evaluate_time_score() const override;
-
-    std::shared_ptr<const NamedBoolean> get_boolean() const override;
-    std::shared_ptr<const NamedNumerical> get_numerical() const override;
-};
-
-
-class PositiveBooleanCondition : public BooleanCondition {
+class PositiveBooleanCondition : public NamedElementCondition<NamedBoolean>, public std::enable_shared_from_this<PositiveBooleanCondition> {
 private:
     PositiveBooleanCondition(int identifier, std::shared_ptr<const NamedBoolean> boolean);
 
@@ -52,18 +44,17 @@ private:
     friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
-    bool operator==(const BaseCondition& other) const override;
-
-    size_t hash() const override;
+    bool are_equal_impl(const BaseCondition& other) const override;
+    void str_impl(std::stringstream& out) const override;
+    size_t hash_impl() const override;
 
     bool evaluate(const core::State& source_state) const override;
     bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const override;
 
-    std::string compute_repr() const override;
-    std::string str() const override;
+    void accept(BaseConditionVisitor& visitor) const override;
 };
 
-class NegativeBooleanCondition : public BooleanCondition {
+class NegativeBooleanCondition : public NamedElementCondition<NamedBoolean>, public std::enable_shared_from_this<NegativeBooleanCondition> {
 private:
     NegativeBooleanCondition(int identifier, std::shared_ptr<const NamedBoolean> boolean);
 
@@ -71,18 +62,17 @@ private:
     friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
-    bool operator==(const BaseCondition& other) const override;
-
-    size_t hash() const override;
+    bool are_equal_impl(const BaseCondition& other) const override;
+    size_t hash_impl() const override;
+    void str_impl(std::stringstream& out) const override;
 
     bool evaluate(const core::State& source_state) const override;
     bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const override;
 
-    std::string compute_repr() const override;
-    std::string str() const override;
+    void accept(BaseConditionVisitor& visitor) const override;
 };
 
-class EqualNumericalCondition : public NumericalCondition {
+class EqualNumericalCondition : public NamedElementCondition<NamedNumerical>, public std::enable_shared_from_this<EqualNumericalCondition> {
 private:
     EqualNumericalCondition(int identifier, std::shared_ptr<const NamedNumerical> numerical);
 
@@ -90,18 +80,17 @@ private:
     friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
-    bool operator==(const BaseCondition& other) const override;
-
-    size_t hash() const override;
+    bool are_equal_impl(const BaseCondition& other) const override;
+    size_t hash_impl() const override;
+    void str_impl(std::stringstream& out) const override;
 
     bool evaluate(const core::State& source_state) const override;
     bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const override;
 
-    std::string compute_repr() const override;
-    std::string str() const override;
+    void accept(BaseConditionVisitor& visitor) const override;
 };
 
-class GreaterNumericalCondition : public NumericalCondition {
+class GreaterNumericalCondition : public NamedElementCondition<NamedNumerical>, public std::enable_shared_from_this<GreaterNumericalCondition> {
 private:
     GreaterNumericalCondition(int identifier, std::shared_ptr<const NamedNumerical> numerical);
 
@@ -109,15 +98,23 @@ private:
     friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
-    bool operator==(const BaseCondition& other) const override;
-
-    size_t hash() const override;
+    bool are_equal_impl(const BaseCondition& other) const override;
+    size_t hash_impl() const override;
+    void str_impl(std::stringstream& out) const override;
 
     bool evaluate(const core::State& source_state) const override;
     bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const override;
 
-    std::string compute_repr() const override;
-    std::string str() const override;
+    void accept(BaseConditionVisitor& visitor) const override;
+};
+
+/// @brief Defines an interface for visiting conditions.
+class BaseConditionVisitor {
+public:
+    virtual void visit(const std::shared_ptr<const PositiveBooleanCondition>& condition) = 0;
+    virtual void visit(const std::shared_ptr<const NegativeBooleanCondition>& condition) = 0;
+    virtual void visit(const std::shared_ptr<const GreaterNumericalCondition>& condition) = 0;
+    virtual void visit(const std::shared_ptr<const EqualNumericalCondition>& condition) = 0;
 };
 
 }

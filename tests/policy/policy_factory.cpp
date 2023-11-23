@@ -33,9 +33,11 @@ TEST(DLPTests, PolicyBuilderTest) {
     // E.g. canonicity
     policy_factory.make_rule({c_b_pos_2}, {e_b_neg_1});
     auto policy = policy_factory.make_policy({policy_factory.make_rule({c_b_pos_2}, {e_b_neg_1})});
-    EXPECT_EQ(policy->compute_repr(),
+    EXPECT_EQ(policy->str(),
         "(:policy\n"
-        "(:rule (:conditions (:c_b_pos \"b_empty(c_primitive(package,0))\")) (:effects (:e_b_neg \"b_empty(r_primitive(at,0,1))\")))\n"
+        "(:booleans (b1 \"b_empty(c_primitive(package,0))\") (b0 \"b_empty(r_primitive(at,0,1))\"))\n"
+        "(:numericals )\n"
+        "(:rule (:conditions (:c_b_pos b1)) (:effects (:e_b_neg b0)))\n"
         ")"
     );
 }

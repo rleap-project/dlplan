@@ -10,251 +10,220 @@ using namespace dlplan;
 
 namespace dlplan::policy {
 
-BooleanEffect::BooleanEffect(int identifier, std::shared_ptr<const NamedBoolean> boolean)
-    : BaseEffect(identifier), m_boolean(boolean) { }
-
-int BooleanEffect::compute_evaluate_time_score() const {
-    return m_boolean->compute_evaluate_time_score();
-}
-
-std::shared_ptr<const NamedBoolean> BooleanEffect::get_boolean() const {
-    return m_boolean;
-}
-
-std::shared_ptr<const NamedNumerical> BooleanEffect::get_numerical() const {
-    return nullptr;
-}
-
-
-NumericalEffect::NumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical)
-    : BaseEffect(identifier), m_numerical(numerical) { }
-
-int NumericalEffect::compute_evaluate_time_score() const {
-    return m_numerical->compute_evaluate_time_score();
-}
-
-std::shared_ptr<const NamedBoolean> NumericalEffect::get_boolean() const {
-    return nullptr;
-}
-
-std::shared_ptr<const NamedNumerical> NumericalEffect::get_numerical() const {
-    return m_numerical;
-}
-
 
 PositiveBooleanEffect::PositiveBooleanEffect(int identifier, std::shared_ptr<const NamedBoolean> boolean)
-    : BooleanEffect(identifier, boolean) {}
+    : NamedElementEffect<NamedBoolean>(identifier, boolean) {}
 
-bool PositiveBooleanEffect::operator==(const BaseEffect& other) const {
+bool PositiveBooleanEffect::are_equal_impl(const BaseEffect& other) const {
     if (typeid(*this) == typeid(other)) {
         if (this == &other) return true;
         const auto& other_derived = static_cast<const PositiveBooleanEffect&>(other);
-        return m_boolean == other_derived.m_boolean;
+        return m_named_element == other_derived.m_named_element;
     }
     return false;
 }
 
-size_t PositiveBooleanEffect::hash() const {
-    return hash_combine(m_boolean);
+size_t PositiveBooleanEffect::hash_impl() const {
+    return hash_combine(m_named_element);
 }
 
 bool PositiveBooleanEffect::evaluate(const core::State&, const core::State& target_state) const {
-    return m_boolean->get_boolean()->evaluate(target_state);
+    return m_named_element->get_element()->evaluate(target_state);
 }
 
 bool PositiveBooleanEffect::evaluate(const core::State&, const core::State& target_state, core::DenotationsCaches& caches) const {
-    return m_boolean->get_boolean()->evaluate(target_state, caches);
+    return m_named_element->get_element()->evaluate(target_state, caches);
 }
 
-std::string PositiveBooleanEffect::compute_repr() const{
-    return "(:e_b_pos \"" + m_boolean->get_boolean()->str() + "\")";
+void PositiveBooleanEffect::str_impl(std::stringstream& out) const {
+    out << "(:e_b_pos " + m_named_element->get_key() + ")";
 }
 
-std::string PositiveBooleanEffect::str() const {
-    return "(:e_b_pos " + m_boolean->get_key() + ")";
+void PositiveBooleanEffect::accept(BaseEffectVisitor& visitor) const {
+    visitor.visit(this->shared_from_this());
 }
 
 
 NegativeBooleanEffect::NegativeBooleanEffect(int identifier, std::shared_ptr<const NamedBoolean> boolean)
-    : BooleanEffect(identifier, boolean) {}
+    : NamedElementEffect<NamedBoolean>(identifier, boolean) {}
 
-bool NegativeBooleanEffect::operator==(const BaseEffect& other) const {
+bool NegativeBooleanEffect::are_equal_impl(const BaseEffect& other) const {
     if (typeid(*this) == typeid(other)) {
         if (this == &other) return true;
         const auto& other_derived = static_cast<const NegativeBooleanEffect&>(other);
-        return m_boolean == other_derived.m_boolean;
+        return m_named_element == other_derived.m_named_element;
     }
     return false;
 }
 
-size_t NegativeBooleanEffect::hash() const {
-    return hash_combine(m_boolean);
+size_t NegativeBooleanEffect::hash_impl() const {
+    return hash_combine(m_named_element);
 }
 
 bool NegativeBooleanEffect::evaluate(const core::State&, const core::State& target_state) const {
-    return !m_boolean->get_boolean()->evaluate(target_state);
+    return !m_named_element->get_element()->evaluate(target_state);
 }
 
 bool NegativeBooleanEffect::evaluate(const core::State&, const core::State& target_state, core::DenotationsCaches& caches) const {
-    return !m_boolean->get_boolean()->evaluate(target_state, caches);
+    return !m_named_element->get_element()->evaluate(target_state, caches);
 }
 
-std::string NegativeBooleanEffect::compute_repr() const{
-    return "(:e_b_neg \"" + m_boolean->get_boolean()->str() + "\")";
+void NegativeBooleanEffect::str_impl(std::stringstream& out) const {
+    out << "(:e_b_neg " + m_named_element->get_key() + ")";
 }
 
-std::string NegativeBooleanEffect::str() const {
-    return "(:e_b_neg " + m_boolean->get_key() + ")";
+void NegativeBooleanEffect::accept(BaseEffectVisitor& visitor) const {
+    visitor.visit(this->shared_from_this());
 }
 
 
 UnchangedBooleanEffect::UnchangedBooleanEffect(int identifier, std::shared_ptr<const NamedBoolean> boolean)
-    : BooleanEffect(identifier, boolean) {}
+    : NamedElementEffect<NamedBoolean>(identifier, boolean) {}
 
-bool UnchangedBooleanEffect::operator==(const BaseEffect& other) const {
+bool UnchangedBooleanEffect::are_equal_impl(const BaseEffect& other) const {
     if (typeid(*this) == typeid(other)) {
         if (this == &other) return true;
         const auto& other_derived = static_cast<const UnchangedBooleanEffect&>(other);
-        return m_boolean == other_derived.m_boolean;
+        return m_named_element == other_derived.m_named_element;
     }
     return false;
 }
 
-size_t UnchangedBooleanEffect::hash() const {
-    return hash_combine(m_boolean);
+size_t UnchangedBooleanEffect::hash_impl() const {
+    return hash_combine(m_named_element);
 }
 
 bool UnchangedBooleanEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
-    return m_boolean->get_boolean()->evaluate(source_state) == m_boolean->get_boolean()->evaluate(target_state);
+    return m_named_element->get_element()->evaluate(source_state) == m_named_element->get_element()->evaluate(target_state);
 }
 
 bool UnchangedBooleanEffect::evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
-    return m_boolean->get_boolean()->evaluate(source_state, caches) == m_boolean->get_boolean()->evaluate(target_state, caches);
+    return m_named_element->get_element()->evaluate(source_state, caches) == m_named_element->get_element()->evaluate(target_state, caches);
 }
 
-std::string UnchangedBooleanEffect::compute_repr() const{
-    return "(:e_b_bot \"" + m_boolean->get_boolean()->str() + "\")";
+void UnchangedBooleanEffect::str_impl(std::stringstream& out) const {
+    out << "(:e_b_bot " + m_named_element->get_key() + ")";
 }
 
-std::string UnchangedBooleanEffect::str() const {
-    return "(:e_b_bot " + m_boolean->get_key() + ")";
+void UnchangedBooleanEffect::accept(BaseEffectVisitor& visitor) const {
+    visitor.visit(this->shared_from_this());
 }
 
 
 IncrementNumericalEffect::IncrementNumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical)
-    : NumericalEffect(identifier, numerical) {}
+    : NamedElementEffect<NamedNumerical>(identifier, numerical) {}
 
-bool IncrementNumericalEffect::operator==(const BaseEffect& other) const {
+bool IncrementNumericalEffect::are_equal_impl(const BaseEffect& other) const {
     if (typeid(*this) == typeid(other)) {
         if (this == &other) return true;
         const auto& other_derived = static_cast<const IncrementNumericalEffect&>(other);
-        return m_numerical == other_derived.m_numerical;
+        return m_named_element == other_derived.m_named_element;
     }
     return false;
 }
 
-size_t IncrementNumericalEffect::hash() const {
-    return hash_combine(m_numerical);
+size_t IncrementNumericalEffect::hash_impl() const {
+    return hash_combine(m_named_element);
 }
 
 bool IncrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
-    int source_eval = m_numerical->get_numerical()->evaluate(source_state);
-    int target_eval = m_numerical->get_numerical()->evaluate(target_state);
+    int source_eval = m_named_element->get_element()->evaluate(source_state);
+    int target_eval = m_named_element->get_element()->evaluate(target_state);
     if (source_eval == INF) return false;
     if (target_eval == INF) return false;
     return source_eval < target_eval;
 }
 
 bool IncrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
-    int source_eval = m_numerical->get_numerical()->evaluate(source_state, caches);
-    int target_eval = m_numerical->get_numerical()->evaluate(target_state, caches);
+    int source_eval = m_named_element->get_element()->evaluate(source_state, caches);
+    int target_eval = m_named_element->get_element()->evaluate(target_state, caches);
     if (source_eval == INF) return false;
     if (target_eval == INF) return false;
     return source_eval < target_eval;
 }
 
-std::string IncrementNumericalEffect::compute_repr() const{
-    return "(:e_n_inc \"" + m_numerical->get_numerical()->str() + "\")";
+void IncrementNumericalEffect::str_impl(std::stringstream& out) const {
+    out << "(:e_n_inc " + m_named_element->get_key() + ")";
 }
 
-std::string IncrementNumericalEffect::str() const {
-    return "(:e_n_inc " + m_numerical->get_key() + ")";
+void IncrementNumericalEffect::accept(BaseEffectVisitor& visitor) const {
+    visitor.visit(this->shared_from_this());
 }
 
 
 DecrementNumericalEffect::DecrementNumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical)
-    : NumericalEffect(identifier, numerical) {}
+    : NamedElementEffect<NamedNumerical>(identifier, numerical) {}
 
-bool DecrementNumericalEffect::operator==(const BaseEffect& other) const {
+bool DecrementNumericalEffect::are_equal_impl(const BaseEffect& other) const {
     if (typeid(*this) == typeid(other)) {
         if (this == &other) return true;
         const auto& other_derived = static_cast<const DecrementNumericalEffect&>(other);
-        return m_numerical == other_derived.m_numerical;
+        return m_named_element == other_derived.m_named_element;
     }
     return false;
 }
 
-size_t DecrementNumericalEffect::hash() const {
-    return hash_combine(m_numerical);
+size_t DecrementNumericalEffect::hash_impl() const {
+    return hash_combine(m_named_element);
 }
 
 bool DecrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
-    int source_eval = m_numerical->get_numerical()->evaluate(source_state);
-    int target_eval = m_numerical->get_numerical()->evaluate(target_state);
+    int source_eval = m_named_element->get_element()->evaluate(source_state);
+    int target_eval = m_named_element->get_element()->evaluate(target_state);
     if (source_eval == INF) return false;
     if (target_eval == INF) return false;
     return source_eval > target_eval;
 }
 
 bool DecrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
-    int source_eval = m_numerical->get_numerical()->evaluate(source_state, caches);
-    int target_eval = m_numerical->get_numerical()->evaluate(target_state, caches);
+    int source_eval = m_named_element->get_element()->evaluate(source_state, caches);
+    int target_eval = m_named_element->get_element()->evaluate(target_state, caches);
     if (source_eval == INF) return false;
     if (target_eval == INF) return false;
     return source_eval > target_eval;
 }
 
-std::string DecrementNumericalEffect::compute_repr() const{
-    return "(:e_n_dec \"" + m_numerical->get_numerical()->str() + "\")";
+void DecrementNumericalEffect::str_impl(std::stringstream& out) const {
+    out << "(:e_n_dec " + m_named_element->get_key() + ")";
 }
 
-std::string DecrementNumericalEffect::str() const {
-    return "(:e_n_dec " + m_numerical->get_key() + ")";
+void DecrementNumericalEffect::accept(BaseEffectVisitor& visitor) const {
+    visitor.visit(this->shared_from_this());
 }
 
 
 UnchangedNumericalEffect::UnchangedNumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical)
-    : NumericalEffect(identifier, numerical) {}
+    : NamedElementEffect<NamedNumerical>(identifier, numerical) {}
 
-bool UnchangedNumericalEffect::operator==(const BaseEffect& other) const {
+bool UnchangedNumericalEffect::are_equal_impl(const BaseEffect& other) const {
     if (typeid(*this) == typeid(other)) {
         if (this == &other) return true;
         const auto& other_derived = static_cast<const UnchangedNumericalEffect&>(other);
-        return m_numerical == other_derived.m_numerical;
+        return m_named_element == other_derived.m_named_element;
     }
     return false;
 }
 
-size_t UnchangedNumericalEffect::hash() const {
-    return hash_combine(m_numerical);
+size_t UnchangedNumericalEffect::hash_impl() const {
+    return hash_combine(m_named_element);
 }
 
 bool UnchangedNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
-    return m_numerical->get_numerical()->evaluate(source_state) == m_numerical->get_numerical()->evaluate(target_state);
+    return m_named_element->get_element()->evaluate(source_state) == m_named_element->get_element()->evaluate(target_state);
 }
 
 bool UnchangedNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
-    int source_eval = m_numerical->get_numerical()->evaluate(source_state, caches);
-    int target_eval = m_numerical->get_numerical()->evaluate(target_state, caches);
+    int source_eval = m_named_element->get_element()->evaluate(source_state, caches);
+    int target_eval = m_named_element->get_element()->evaluate(target_state, caches);
     return source_eval == target_eval;
 }
 
-std::string UnchangedNumericalEffect::compute_repr() const{
-    return "(:e_n_bot \"" + m_numerical->get_numerical()->str() + "\")";
+void UnchangedNumericalEffect::str_impl(std::stringstream& out) const {
+    out << "(:e_n_bot " + m_named_element->get_key() + ")";
 }
 
-std::string UnchangedNumericalEffect::str() const {
-    return "(:e_n_bot " + m_numerical->get_key() + ")";
+void UnchangedNumericalEffect::accept(BaseEffectVisitor& visitor) const {
+    visitor.visit(this->shared_from_this());
 }
 
 }

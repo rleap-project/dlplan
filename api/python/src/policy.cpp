@@ -16,56 +16,45 @@ using namespace dlplan;
 
 void init_policy(py::module_ &m_policy) {
     py::class_<policy::NamedBoolean, std::shared_ptr<policy::NamedBoolean>>(m_policy, "NamedBoolean")
-        .def("__repr__", &policy::NamedBoolean::compute_repr)
-        .def("__str__", &policy::NamedBoolean::str)
+        .def("__str__", py::overload_cast<>(&policy::NamedBoolean::str, py::const_))
         .def("get_key", &policy::NamedBoolean::get_key)
-        .def("get_boolean", &policy::NamedBoolean::get_boolean)
+        .def("get_element", &policy::NamedBoolean::get_element)
     ;
 
     py::class_<policy::NamedNumerical, std::shared_ptr<policy::NamedNumerical>>(m_policy, "NamedNumerical")
-        .def("__repr__", &policy::NamedNumerical::compute_repr)
-        .def("__str__", &policy::NamedNumerical::str)
+        .def("__str__", py::overload_cast<>(&policy::NamedNumerical::str, py::const_))
         .def("get_key", &policy::NamedNumerical::get_key)
-        .def("get_numerical", &policy::NamedNumerical::get_numerical)
+        .def("get_element", &policy::NamedNumerical::get_element)
     ;
 
     py::class_<policy::NamedConcept, std::shared_ptr<policy::NamedConcept>>(m_policy, "NamedConcept")
-        .def("__repr__", &policy::NamedConcept::compute_repr)
-        .def("__str__", &policy::NamedConcept::str)
+        .def("__str__", py::overload_cast<>(&policy::NamedConcept::str, py::const_))
         .def("get_key", &policy::NamedConcept::get_key)
-        .def("get_concept", &policy::NamedConcept::get_concept)
+        .def("get_element", &policy::NamedConcept::get_element)
     ;
 
     py::class_<policy::NamedRole, std::shared_ptr<policy::NamedRole>>(m_policy, "NamedRole")
-        .def("__repr__", &policy::NamedRole::compute_repr)
-        .def("__str__", &policy::NamedRole::str)
+        .def("__str__", py::overload_cast<>(&policy::NamedRole::str, py::const_))
         .def("get_key", &policy::NamedRole::get_key)
-        .def("get_role", &policy::NamedRole::get_role)
+        .def("get_element", &policy::NamedRole::get_element)
     ;
 
     py::class_<policy::BaseCondition, std::shared_ptr<policy::BaseCondition>>(m_policy, "BaseCondition")
-        .def("__repr__", &policy::BaseCondition::compute_repr)
-        .def("__str__", &policy::BaseCondition::str)
+        .def("__str__", py::overload_cast<>(&policy::BaseCondition::str, py::const_))
         .def("evaluate", py::overload_cast<const core::State&>(&policy::BaseCondition::evaluate, py::const_))
         .def("evaluate",  py::overload_cast<const core::State&, core::DenotationsCaches&>(&policy::BaseCondition::evaluate, py::const_))
         .def("get_index", &policy::BaseCondition::get_index)
-        .def("get_boolean", &policy::BaseCondition::get_boolean)
-        .def("get_numerical", &policy::BaseCondition::get_numerical)
     ;
 
     py::class_<policy::BaseEffect, std::shared_ptr<policy::BaseEffect>>(m_policy, "BaseEffect")
-        .def("__repr__", &policy::BaseEffect::compute_repr)
-        .def("__str__", &policy::BaseEffect::str)
+        .def("__str__", py::overload_cast<>(&policy::BaseEffect::str, py::const_))
         .def("evaluate", py::overload_cast<const core::State&, const core::State&>(&policy::BaseEffect::evaluate, py::const_))
         .def("evaluate",  py::overload_cast<const core::State&, const core::State&, core::DenotationsCaches&>(&policy::BaseEffect::evaluate, py::const_))
         .def("get_index", &policy::BaseEffect::get_index)
-        .def("get_boolean", &policy::BaseEffect::get_boolean)
-        .def("get_numerical", &policy::BaseEffect::get_numerical)
     ;
 
     py::class_<policy::Rule, std::shared_ptr<policy::Rule>>(m_policy, "Rule")
-        .def("__repr__", &policy::Rule::compute_repr)
-        .def("__str__", &policy::Rule::str)
+        .def("__str__", py::overload_cast<>(&policy::Rule::str, py::const_))
         .def("evaluate_conditions", py::overload_cast<const core::State&>(&policy::Rule::evaluate_conditions, py::const_))
         .def("evaluate_conditions", py::overload_cast<const core::State&, core::DenotationsCaches&>(&policy::Rule::evaluate_conditions, py::const_))
         .def("evaluate_effects", py::overload_cast<const core::State&, const core::State&>(&policy::Rule::evaluate_effects, py::const_))
@@ -76,8 +65,7 @@ void init_policy(py::module_ &m_policy) {
     ;
 
     py::class_<policy::Policy, std::shared_ptr<policy::Policy>>(m_policy, "Policy")
-        .def("__repr__", &policy::Policy::compute_repr)
-        .def("__str__", &policy::Policy::str)
+        .def("__str__", py::overload_cast<>(&policy::Policy::str, py::const_))
         .def("evaluate", py::overload_cast<const core::State&, const core::State&>(&policy::Policy::evaluate, py::const_))
         .def("evaluate", py::overload_cast<const core::State&, const core::State&, core::DenotationsCaches&>(&policy::Policy::evaluate, py::const_))
         .def("evaluate_conditions", py::overload_cast<const core::State&>(&policy::Policy::evaluate_conditions, py::const_))

@@ -1,16 +1,12 @@
 add_library(dlplanpolicy STATIC)
 target_sources(dlplanpolicy
     PRIVATE
-        boolean.cpp
-        concept.cpp
         condition.cpp
         effect.cpp
-        numerical.cpp
         policy_factory.cpp
         policy_impl.cpp
         policy_minimizer.cpp
         policy.cpp
-        role.cpp
         rule.cpp
         parsers/syntactic/parser_instantiations.cpp
         parsers/semantic/context.cpp

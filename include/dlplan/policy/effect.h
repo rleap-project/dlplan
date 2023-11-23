@@ -15,33 +15,29 @@ class ReferenceCountedObjectFactory;
 
 
 namespace dlplan::policy {
-class BooleanEffect : public BaseEffect {
+template<typename Element>
+class NamedElementEffect : public BaseEffect {
 protected:
-    std::shared_ptr<const NamedBoolean> m_boolean;
+    std::shared_ptr<const Element> m_named_element;
 
-    BooleanEffect(int identifier, std::shared_ptr<const NamedBoolean> boolean);
+    NamedElementEffect(int identifier, const std::shared_ptr<const Element>& named_element)
+        : BaseEffect(identifier), m_named_element(named_element) { }
 
-    int compute_evaluate_time_score() const override;
+    template<typename... Ts>
+    friend class dlplan::ReferenceCountedObjectFactory;
 
-    std::shared_ptr<const NamedBoolean> get_boolean() const override;
-    std::shared_ptr<const NamedNumerical> get_numerical() const override;
+public:
+    virtual ~NamedElementEffect() = default;
+
+    int compute_evaluate_time_score() const override {
+        return m_named_element->compute_evaluate_time_score();
+    }
+
+    std::shared_ptr<const Element> get_named_element() const { return m_named_element; }
 };
 
 
-class NumericalEffect : public BaseEffect {
-protected:
-    std::shared_ptr<const NamedNumerical> m_numerical;
-
-    NumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical);
-
-    int compute_evaluate_time_score() const override;
-
-    std::shared_ptr<const NamedBoolean> get_boolean() const override;
-    std::shared_ptr<const NamedNumerical> get_numerical() const override;
-};
-
-
-class PositiveBooleanEffect : public BooleanEffect {
+class PositiveBooleanEffect : public NamedElementEffect<NamedBoolean>, public std::enable_shared_from_this<PositiveBooleanEffect> {
 private:
     PositiveBooleanEffect(int identifier, std::shared_ptr<const NamedBoolean> boolean);
 
@@ -49,18 +45,16 @@ private:
     friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
-    bool operator==(const BaseEffect& other) const override;
-
-    size_t hash() const override;
+    bool are_equal_impl(const BaseEffect& other) const override;
+    size_t hash_impl() const override;
+    void str_impl(std::stringstream& out) const override;
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
-
-    std::string compute_repr() const override;
-    std::string str() const override;
+    void accept(BaseEffectVisitor& visitor) const override;
 };
 
-class NegativeBooleanEffect : public BooleanEffect {
+class NegativeBooleanEffect : public NamedElementEffect<NamedBoolean>, public std::enable_shared_from_this<NegativeBooleanEffect> {
 private:
     NegativeBooleanEffect(int identifier, std::shared_ptr<const NamedBoolean> boolean);
 
@@ -68,18 +62,16 @@ private:
     friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
-    bool operator==(const BaseEffect& other) const override;
-
-    size_t hash() const override;
+    bool are_equal_impl(const BaseEffect& other) const override;
+    size_t hash_impl() const override;
+    void str_impl(std::stringstream& out) const override;
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
-
-    std::string compute_repr() const override;
-    std::string str() const override;
+    void accept(BaseEffectVisitor& visitor) const override;
 };
 
-class UnchangedBooleanEffect : public BooleanEffect {
+class UnchangedBooleanEffect : public NamedElementEffect<NamedBoolean>, public std::enable_shared_from_this<UnchangedBooleanEffect> {
 private:
     UnchangedBooleanEffect(int identifier, std::shared_ptr<const NamedBoolean> boolean);
 
@@ -87,18 +79,16 @@ private:
     friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
-    bool operator==(const BaseEffect& other) const override;
-
-    size_t hash() const override;
+    bool are_equal_impl(const BaseEffect& other) const override;
+    size_t hash_impl() const override;
+    void str_impl(std::stringstream& out) const override;
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
-
-    std::string compute_repr() const override;
-    std::string str() const override;
+    void accept(BaseEffectVisitor& visitor) const override;
 };
 
-class IncrementNumericalEffect : public NumericalEffect {
+class IncrementNumericalEffect : public NamedElementEffect<NamedNumerical>, public std::enable_shared_from_this<IncrementNumericalEffect> {
 private:
     IncrementNumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical);
 
@@ -106,18 +96,16 @@ private:
     friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
-    bool operator==(const BaseEffect& other) const override;
-
-    size_t hash() const override;
+    bool are_equal_impl(const BaseEffect& other) const override;
+    size_t hash_impl() const override;
+    void str_impl(std::stringstream& out) const override;
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
-
-    std::string compute_repr() const override;
-    std::string str() const override;
+    void accept(BaseEffectVisitor& visitor) const override;
 };
 
-class DecrementNumericalEffect : public NumericalEffect {
+class DecrementNumericalEffect : public NamedElementEffect<NamedNumerical>, public std::enable_shared_from_this<DecrementNumericalEffect> {
 private:
     DecrementNumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical);
 
@@ -125,18 +113,16 @@ private:
     friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
-    bool operator==(const BaseEffect& other) const override;
-
-    size_t hash() const override;
+    bool are_equal_impl(const BaseEffect& other) const override;
+    size_t hash_impl() const override;
+    void str_impl(std::stringstream& out) const override;
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
-
-    std::string compute_repr() const override;
-    std::string str() const override;
+    void accept(BaseEffectVisitor& visitor) const override;
 };
 
-class UnchangedNumericalEffect : public NumericalEffect {
+class UnchangedNumericalEffect : public NamedElementEffect<NamedNumerical>, public std::enable_shared_from_this<UnchangedNumericalEffect> {
 private:
     UnchangedNumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical);
 
@@ -144,15 +130,24 @@ private:
     friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
-    bool operator==(const BaseEffect& other) const override;
-
-    size_t hash() const override;
+    bool are_equal_impl(const BaseEffect& other) const override;
+    size_t hash_impl() const override;
+    void str_impl(std::stringstream& out) const override;
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
+    void accept(BaseEffectVisitor& visitor) const override;
+};
 
-    std::string compute_repr() const override;
-    std::string str() const override;
+/// @brief Defines an interface for visiting effects.
+class BaseEffectVisitor {
+public:
+    virtual void visit(const std::shared_ptr<const PositiveBooleanEffect>& effect) = 0;
+    virtual void visit(const std::shared_ptr<const NegativeBooleanEffect>& effect) = 0;
+    virtual void visit(const std::shared_ptr<const UnchangedBooleanEffect>& effect) = 0;
+    virtual void visit(const std::shared_ptr<const IncrementNumericalEffect>& effect) = 0;
+    virtual void visit(const std::shared_ptr<const DecrementNumericalEffect>& effect) = 0;
+    virtual void visit(const std::shared_ptr<const UnchangedNumericalEffect>& effect) = 0;
 };
 
 }

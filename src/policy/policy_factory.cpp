@@ -63,7 +63,7 @@ std::shared_ptr<const Policy> PolicyFactoryImpl::parse_policy(
 
 std::shared_ptr<const NamedBoolean> PolicyFactoryImpl::make_boolean(const std::string& key, const std::shared_ptr<const core::Boolean>& boolean) {
     auto result = m_cache.get_or_create<NamedBoolean>(key, boolean);
-    if (!result.created && (result.object->get_boolean() != boolean)) {
+    if (!result.created && (result.object->get_element() != boolean)) {
         throw std::runtime_error("Failed to make boolean because a different boolean with the same key already exists.");
     }
     return result.object;
@@ -71,7 +71,7 @@ std::shared_ptr<const NamedBoolean> PolicyFactoryImpl::make_boolean(const std::s
 
 std::shared_ptr<const NamedNumerical> PolicyFactoryImpl::make_numerical(const std::string& key, const std::shared_ptr<const core::Numerical>& numerical) {
     auto result = m_cache.get_or_create<NamedNumerical>(key, numerical);
-    if (!result.created && (result.object->get_numerical() != numerical)) {
+    if (!result.created && (result.object->get_element() != numerical)) {
         throw std::runtime_error("Failed to make numerical because a different numerical with the same key already exists.");
     }
     return result.object;
@@ -79,7 +79,7 @@ std::shared_ptr<const NamedNumerical> PolicyFactoryImpl::make_numerical(const st
 
 std::shared_ptr<const NamedConcept> PolicyFactoryImpl::make_concept(const std::string& key, const std::shared_ptr<const core::Concept>& concept_) {
     auto result = m_cache.get_or_create<NamedConcept>(key, concept_);
-    if (!result.created && (result.object->get_concept() != concept_)) {
+    if (!result.created && (result.object->get_element() != concept_)) {
         throw std::runtime_error("Failed to make concept because a different concept with the same key already exists.");
     }
     return result.object;
@@ -87,7 +87,7 @@ std::shared_ptr<const NamedConcept> PolicyFactoryImpl::make_concept(const std::s
 
 std::shared_ptr<const NamedRole> PolicyFactoryImpl::make_role(const std::string& key, const std::shared_ptr<const core::Role>& role) {
     auto result = m_cache.get_or_create<NamedRole>(key, role);
-    if (!result.created && (result.object->get_role() != role)) {
+    if (!result.created && (result.object->get_element() != role)) {
         throw std::runtime_error("Failed to make role because a different role with the same key already exists.");
     }
     return result.object;

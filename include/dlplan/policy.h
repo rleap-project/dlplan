@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 
+#include "common/base.h"
 #include "common/parsers/config.hpp"
 #include "core.h"
 #include "utils/pimpl.h"
@@ -16,16 +17,14 @@
 
 // Forward declarations of this header
 namespace dlplan::policy {
-class NamedBoolean;
-class NamedNumerical;
-class NamedConcept;
-class NamedRole;
 class PolicyFactoryImpl;
 class BaseCondition;
 class BaseEffect;
 class Rule;
 class Policy;
 class PolicyFactory;
+class BaseConditionVisitor;
+class BaseEffectVisitor;
 }
 
 
@@ -44,18 +43,13 @@ struct ScoreCompare {
         const std::shared_ptr<T>& l,
         const std::shared_ptr<T>& r) const {
         if (l->compute_evaluate_time_score() == r->compute_evaluate_time_score()) {
-            return l->compute_repr() < r->compute_repr();
+            return l->get_index() < r->get_index();
         }
         return l->compute_evaluate_time_score() < r->compute_evaluate_time_score();
     }
 };
 
-using Booleans = std::set<std::shared_ptr<const NamedBoolean>, ScoreCompare<const NamedBoolean>>;
-using Numericals = std::set<std::shared_ptr<const NamedNumerical>, ScoreCompare<const NamedNumerical>>;
-using Concepts = std::set<std::shared_ptr<const NamedConcept>, ScoreCompare<const NamedConcept>>;
-using Roles = std::set<std::shared_ptr<const NamedRole>, ScoreCompare<const NamedRole>>;
-using Conditions = std::set<std::shared_ptr<const BaseCondition>, ScoreCompare<const BaseCondition>>;
-using Effects = std::set<std::shared_ptr<const BaseEffect>, ScoreCompare<const BaseEffect>>;
+
 using Rules = std::set<std::shared_ptr<const Rule>, ScoreCompare<const Rule>>;
 using Policies = std::set<std::shared_ptr<const Policy>, ScoreCompare<const Policy>>;
 
@@ -65,215 +59,103 @@ using StatePairs = std::vector<StatePair>;
 
 /// @brief Wrappers around core elements to add an additional key
 ///        that can potentially add some more human readable meaning.
-class NamedBoolean {
+template<typename Element>
+class NamedElement : public Base<NamedElement<Element>> {
 private:
-    int m_identifier;
     std::string m_key;
-    std::shared_ptr<const core::Boolean> m_boolean;
+    std::shared_ptr<const Element> m_element;
 
-    NamedBoolean(int identifier, const std::string& key, std::shared_ptr<const core::Boolean> boolean);
+    NamedElement(int identifier, const std::string& key, std::shared_ptr<const Element> element)
+        : Base<NamedElement<Element>>(identifier), m_key(key), m_element(element) { }
 
     template<typename... Ts>
     friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
-    NamedBoolean(const NamedBoolean& other);
-    NamedBoolean& operator=(const NamedBoolean& other);
-    NamedBoolean(NamedBoolean&& other);
-    NamedBoolean& operator=(NamedBoolean&& other);
-    ~NamedBoolean();
+    NamedElement(const NamedElement& other) = default;
+    NamedElement& operator=(const NamedElement& other) = default;
+    NamedElement(NamedElement&& other) = default;
+    NamedElement& operator=(NamedElement&& other) = default;
+    ~NamedElement() = default;
 
-    bool operator==(const NamedBoolean& other) const;
-    bool operator<(const NamedBoolean& other) const;
+    bool are_equal_impl(const NamedElement& other) const {
+        if (this != &other) {
+            return (m_key == other.m_key)
+                && (m_element == other.m_element);
+        }
+        return true;
+    }
+    size_t hash_impl() const { return hash_combine(m_key, m_element); }
+    void str_impl(std::stringstream& out) const { out << "(" << m_key << " \"" << m_element->str() << "\")"; }
 
-    size_t hash() const;
+    int compute_evaluate_time_score() const { return m_element->compute_evaluate_time_score(); }
 
-    int compute_evaluate_time_score() const;
-    std::string compute_repr() const;
-    std::string str() const;
-
-    const std::string& get_key() const;
-    std::shared_ptr<const core::Boolean> get_boolean() const;
+    const std::string& get_key() const { return m_key; }
+    const std::shared_ptr<const Element>& get_element() const { return m_element; }
 };
 
 
-class NamedNumerical {
-private:
-    int m_identifier;
-    std::string m_key;
-    std::shared_ptr<const core::Numerical> m_numerical;
+using NamedBoolean = NamedElement<core::Boolean>;
+using NamedNumerical = NamedElement<core::Numerical>;
+using NamedConcept = NamedElement<core::Concept>;
+using NamedRole = NamedElement<core::Role>;
 
-    NamedNumerical(int identifier, const std::string& key, std::shared_ptr<const core::Numerical> numerical);
-
-    template<typename... Ts>
-    friend class dlplan::ReferenceCountedObjectFactory;
-
-public:
-    NamedNumerical(const NamedNumerical& other);
-    NamedNumerical& operator=(const NamedNumerical& other);
-    NamedNumerical(NamedNumerical&& other);
-    NamedNumerical& operator=(NamedNumerical&& other);
-    ~NamedNumerical();
-
-    bool operator==(const NamedNumerical& other) const;
-    bool operator<(const NamedNumerical& other) const;
-
-    size_t hash() const;
-
-    int compute_evaluate_time_score() const;
-    std::string compute_repr() const;
-    std::string str() const;
-
-    const std::string& get_key() const;
-    std::shared_ptr<const core::Numerical> get_numerical() const;
-};
-
-
-class NamedConcept {
-private:
-    int m_identifier;
-    std::string m_key;
-    std::shared_ptr<const core::Concept> m_concept;
-
-    NamedConcept(int identifier, const std::string& key, std::shared_ptr<const core::Concept> concept);
-
-    template<typename... Ts>
-    friend class dlplan::ReferenceCountedObjectFactory;
-
-public:
-    NamedConcept(const NamedConcept& other);
-    NamedConcept& operator=(const NamedConcept& other);
-    NamedConcept(NamedConcept&& other);
-    NamedConcept& operator=(NamedConcept&& other);
-    ~NamedConcept();
-
-    bool operator==(const NamedConcept& other) const;
-    bool operator<(const NamedConcept& other) const;
-
-    size_t hash() const;
-
-    int compute_evaluate_time_score() const;
-    std::string compute_repr() const;
-    std::string str() const;
-
-    const std::string& get_key() const;
-    std::shared_ptr<const core::Concept> get_concept() const;
-};
-
-
-class NamedRole {
-private:
-    int m_identifier;
-    std::string m_key;
-    std::shared_ptr<const core::Role> m_role;
-
-    NamedRole(int identifier, const std::string& key, std::shared_ptr<const core::Role> role);
-
-    template<typename... Ts>
-    friend class dlplan::ReferenceCountedObjectFactory;
-
-public:
-    NamedRole(const NamedRole& other);
-    NamedRole& operator=(const NamedRole& other);
-    NamedRole(NamedRole&& other);
-    NamedRole& operator=(NamedRole&& other);
-    ~NamedRole();
-
-    bool operator==(const NamedRole& other) const;
-    bool operator<(const NamedRole& other) const;
-
-    size_t hash() const;
-
-    int compute_evaluate_time_score() const;
-    std::string compute_repr() const;
-    std::string str() const;
-
-    const std::string& get_key() const;
-    std::shared_ptr<const core::Role> get_role() const;
-};
-
+using Booleans = std::set<std::shared_ptr<const NamedBoolean>, ScoreCompare<const NamedBoolean>>;
+using Numericals = std::set<std::shared_ptr<const NamedNumerical>, ScoreCompare<const NamedNumerical>>;
+using Concepts = std::set<std::shared_ptr<const NamedConcept>, ScoreCompare<const NamedConcept>>;
+using Roles = std::set<std::shared_ptr<const NamedRole>, ScoreCompare<const NamedRole>>;
 
 /// @brief Represents the abstract base class of a feature condition and
 ///        provides functionality to access its underlying data and for
 ///        the evaluation on a state.
-class BaseCondition {
+class BaseCondition : public Base<BaseCondition> {
 protected:
-    int m_identifier;
-
     explicit BaseCondition(int identifier);
-
-    template<typename... Ts>
-    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     virtual ~BaseCondition();
 
-    virtual bool operator==(const BaseCondition& other) const = 0;
-    bool operator<(const BaseCondition& other) const;
-
-    virtual size_t hash() const = 0;
+    virtual bool are_equal_impl(const BaseCondition& other) const = 0;
+    virtual size_t hash_impl() const = 0;
+    virtual void str_impl(std::stringstream& out) const = 0;
+    virtual int compute_evaluate_time_score() const = 0;
 
     virtual bool evaluate(const core::State& source_state) const = 0;
     virtual bool evaluate(const core::State& source_state, core::DenotationsCaches& caches) const = 0;
-
-    virtual std::string compute_repr() const = 0;
-    virtual std::string str() const = 0;
-
-    /// @brief Computes a time score for evaluating this condition relative to other conditions.
-    ///        The scoring assumes evaluation that uses caching.
-    /// @return An integer that represents the score.
-    virtual int compute_evaluate_time_score() const = 0;
-
-    int get_index() const;
-    virtual std::shared_ptr<const NamedBoolean> get_boolean() const = 0;
-    virtual std::shared_ptr<const NamedNumerical> get_numerical() const = 0;
+    virtual void accept(BaseConditionVisitor& visitor) const = 0;
 };
 
 
 /// @brief Represents the abstract base class of a feature effect and
 ///        provides functionality to access its underlying data and for
 ///        the evaluation on a pair of states.
-class BaseEffect {
+class BaseEffect : public Base<BaseEffect> {
 protected:
-    int m_identifier;
-
     explicit BaseEffect(int identifier);
-
-    template<typename... Ts>
-    friend class dlplan::ReferenceCountedObjectFactory;
 
 public:
     virtual ~BaseEffect();
 
-    virtual bool operator==(const BaseEffect& other) const = 0;
-    bool operator<(const BaseEffect& other) const;
-
-    virtual size_t hash() const = 0;
+    virtual bool are_equal_impl(const BaseEffect& other) const = 0;
+    virtual size_t hash_impl() const = 0;
+    virtual void str_impl(std::stringstream& out) const = 0;
+    virtual int compute_evaluate_time_score() const = 0;
 
     virtual bool evaluate(const core::State& source_state, const core::State& target_state) const = 0;
     virtual bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const = 0;
-
-    virtual std::string compute_repr() const = 0;
-    virtual std::string str() const = 0;
-
-    /// @brief Computes a time score for evaluating this effect relative to other effects.
-    ///        The scoring assumes evaluation that uses caching.
-    /// @return An integer that represents the score.
-    virtual int compute_evaluate_time_score() const = 0;
-
-    int get_index() const;
-    virtual std::shared_ptr<const NamedBoolean> get_boolean() const = 0;
-    virtual std::shared_ptr<const NamedNumerical> get_numerical() const = 0;
+    virtual void accept(BaseEffectVisitor& visitor) const = 0;
 };
+
+using Conditions = std::set<std::shared_ptr<const BaseCondition>, ScoreCompare<const BaseCondition>>;
+using Effects = std::set<std::shared_ptr<const BaseEffect>, ScoreCompare<const BaseEffect>>;
 
 
 /// @brief Implements a policy rule of the form C->E with where C is a set of
 ///        feature conditions and E is a set of feature effects. Provides
 ///        functionality to access its underlying data and for the evaluation
 ///        on a pair of states.
-class Rule {
+class Rule : public Base<Rule> {
 private:
-    int m_identifier;
     Conditions m_conditions;
     Effects m_effects;
 
@@ -289,25 +171,16 @@ public:
     Rule& operator=(Rule&& other);
     ~Rule();
 
-    bool operator==(const Rule& other) const;
-    bool operator<(const Rule& other) const;
+    bool are_equal_impl(const Rule& other) const;
+    size_t hash_impl() const;
+    void str_impl(std::stringstream& out) const;
+    int compute_evaluate_time_score() const;
 
     bool evaluate_conditions(const core::State& source_state) const;
     bool evaluate_conditions(const core::State& source_state, core::DenotationsCaches& caches) const;
     bool evaluate_effects(const core::State& source_state, const core::State& target_state) const;
     bool evaluate_effects(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const;
 
-    std::string compute_repr() const;
-    std::string str() const;
-
-    size_t hash() const;
-
-    /// @brief Computes a time score for evaluating this rule relative to other rules.
-    ///        The scoring assumes evaluation that uses caching.
-    /// @return An integer that represents the score.
-    int compute_evaluate_time_score() const;
-
-    int get_index() const;
     const Conditions& get_conditions() const;
     const Effects& get_effects() const;
 };
@@ -317,9 +190,8 @@ public:
 ///        Boolean and a set of numerical features. Provides functionality
 ///        to access its underlying data and for the evaluation on a pair of
 ///        states.
-class Policy {
+class Policy : public Base<Policy> {
 private:
-    int m_identifier;
     Booleans m_booleans;
     Numericals m_numericals;
     Rules m_rules;
@@ -336,10 +208,11 @@ public:
     Policy& operator=(Policy&& other);
     ~Policy();
 
-    bool operator==(const Policy& other) const;
-    bool operator<(const Policy& other) const;
+    bool are_equal_impl(const Policy& other) const;
+    size_t hash_impl() const;
+    void str_impl(std::stringstream& out) const;
+    int compute_evaluate_time_score() const;
 
-    size_t hash() const;
 
     /**
      * Approach 1: naive approach to evaluate (s,s')
@@ -355,15 +228,6 @@ public:
     std::shared_ptr<const Rule> evaluate_effects(const core::State& source_state, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules) const;
     std::shared_ptr<const Rule> evaluate_effects(const core::State& source_state, const core::State& target_state, const std::vector<std::shared_ptr<const Rule>>& rules, core::DenotationsCaches& caches) const;
 
-    std::string compute_repr() const;
-    std::string str() const;
-
-    /// @brief Computes a time score for evaluating this condition relative to other conditions.
-    ///        The scoring assumes evaluation that uses caching.
-    /// @return An integer that represents the score.
-    int compute_evaluate_time_score() const;
-
-    int get_index() const;
     const Booleans& get_booleans() const;
     const Numericals& get_numericals() const;
     const Rules& get_rules() const;

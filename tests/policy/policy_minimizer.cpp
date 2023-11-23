@@ -35,10 +35,10 @@ TEST(DLPTests, StructuralMinimization) {
     auto minimized_policy = PolicyMinimizer().minimize(input_policy, policy_factory);
     auto result_policy = policy_factory.parse_policy(minimized_policy_textual);
     std::cout << "Input policy:" << std::endl
-              << input_policy->compute_repr() << std::endl << std::endl
+              << input_policy->str() << std::endl << std::endl
               << "Minimized policy:" << std::endl
-              << minimized_policy->compute_repr() << std::endl;
-    EXPECT_EQ(minimized_policy->compute_repr(), result_policy->compute_repr());
+              << minimized_policy->str() << std::endl;
+    EXPECT_EQ(minimized_policy->str(), result_policy->str());
 }
 
 
@@ -66,10 +66,10 @@ TEST(DLPTests, StructuralMinimization2) {
     auto minimized_policy = PolicyMinimizer().minimize(input_policy, policy_factory);
     auto result_policy = policy_factory.parse_policy(minimized_policy_textual);
     std::cout << "Input policy:" << std::endl
-              << input_policy->compute_repr() << std::endl << std::endl
+              << input_policy->str() << std::endl << std::endl
               << "Minimized policy:" << std::endl
-              << minimized_policy->compute_repr() << std::endl;
-    EXPECT_EQ(minimized_policy->compute_repr(), result_policy->compute_repr());
+              << minimized_policy->str() << std::endl;
+    EXPECT_EQ(minimized_policy->str(), result_policy->str());
 }
 
 
@@ -98,10 +98,10 @@ TEST(DLPTests, StructuralMinimization3) {
     auto minimized_policy = PolicyMinimizer().minimize(input_policy, policy_factory);
     auto result_policy = policy_factory.parse_policy(minimized_policy_textual);
     std::cout << "Input policy:" << std::endl
-              << input_policy->compute_repr() << std::endl << std::endl
+              << input_policy->str() << std::endl << std::endl
               << "Minimized policy:" << std::endl
-              << minimized_policy->compute_repr() << std::endl;
-    EXPECT_EQ(minimized_policy->compute_repr(), result_policy->compute_repr());
+              << minimized_policy->str() << std::endl;
+    EXPECT_EQ(minimized_policy->str(), result_policy->str());
 }
 
 
@@ -128,10 +128,10 @@ TEST(DLPTests, StructuralMinimization4) {
     auto minimized_policy = PolicyMinimizer().minimize(input_policy, policy_factory);
     auto result_policy = policy_factory.parse_policy(minimized_policy_textual);
     std::cout << "Input policy:" << std::endl
-              << input_policy->compute_repr() << std::endl << std::endl
+              << input_policy->str() << std::endl << std::endl
               << "Minimized policy:" << std::endl
-              << minimized_policy->compute_repr() << std::endl;
-    EXPECT_EQ(minimized_policy->compute_repr(), result_policy->compute_repr());
+              << minimized_policy->str() << std::endl;
+    EXPECT_EQ(minimized_policy->str(), result_policy->str());
 }
 
 
@@ -180,10 +180,10 @@ TEST(DLPTests, EmpiricalMinimization) {
     auto minimized_policy = PolicyMinimizer().minimize(input_policy, true_state_pairs, false_state_pairs, policy_factory);
     auto result_policy = policy_factory.parse_policy(minimized_policy_textual);
     std::cout << "Input policy:" << std::endl
-              << input_policy->compute_repr() << std::endl << std::endl
+              << input_policy->str() << std::endl << std::endl
               << "Minimized policy:" << std::endl
-              << minimized_policy->compute_repr() << std::endl;
-    EXPECT_EQ(minimized_policy->compute_repr(), result_policy->compute_repr());
+              << minimized_policy->str() << std::endl;
+    EXPECT_EQ(minimized_policy->str(), result_policy->str());
 }
 
 }

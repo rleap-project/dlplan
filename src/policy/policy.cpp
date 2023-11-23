@@ -14,32 +14,14 @@ using namespace dlplan;
 namespace dlplan::policy {
 
 
-BaseCondition::BaseCondition(int identifier) : m_identifier(identifier) { }
+BaseCondition::BaseCondition(int identifier) : Base<BaseCondition>(identifier) { }
 
 BaseCondition::~BaseCondition() = default;
 
-bool BaseCondition::operator<(const BaseCondition& other) const {
-    return m_identifier < other.m_identifier;
-}
 
-
-int BaseCondition::get_index() const {
-    return m_identifier;
-}
-
-
-BaseEffect::BaseEffect(int identifier) : m_identifier(identifier) { }
+BaseEffect::BaseEffect(int identifier) : Base<BaseEffect>(identifier) { }
 
 BaseEffect::~BaseEffect() = default;
-
-bool BaseEffect::operator<(const BaseEffect& other) const {
-    return m_identifier < other.m_identifier;
-}
-
-
-int BaseEffect::get_index() const {
-    return m_identifier;
-}
 
 
 PolicyFactory::PolicyFactory(std::shared_ptr<core::SyntacticElementFactory> element_factory)
