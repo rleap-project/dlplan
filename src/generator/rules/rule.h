@@ -2,6 +2,7 @@
 #define DLPLAN_SRC_GENERATOR_FEATURE_GENERATOR_RULES_RULE_H_
 
 #include "../../../include/dlplan/core.h"
+#include "../../../src/utils/logging.h"
 
 #include <string>
 #include <iostream>
@@ -45,7 +46,7 @@ public:
 
     void print_statistics() const {
         if (m_enabled) {
-            std::cout << "    " << get_name() << ": " << m_count << std::endl;
+          utils::g_log << "    " << get_name() << ": " << m_count << std::endl;
         }
     }
 
