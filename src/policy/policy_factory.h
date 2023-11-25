@@ -26,12 +26,21 @@ private:
         , NegativeBooleanCondition
         , GreaterNumericalCondition
         , EqualNumericalCondition
+        , GreaterConceptCondition
+        , EqualConceptCondition
         , PositiveBooleanEffect
         , NegativeBooleanEffect
         , UnchangedBooleanEffect
         , IncrementNumericalEffect
         , DecrementNumericalEffect
         , UnchangedNumericalEffect
+        , GreaterNumericalEffect
+        , EqualNumericalEffect
+        , IncrementConceptEffect
+        , DecrementConceptEffect
+        , UnchangedConceptEffect
+        , GreaterConceptEffect
+        , EqualConceptEffect
         , Rule
         , Policy> m_cache;
 
@@ -57,12 +66,21 @@ public:
     std::shared_ptr<const BaseCondition> make_neg_condition(const std::shared_ptr<const NamedBoolean>& boolean);
     std::shared_ptr<const BaseCondition> make_gt_condition(const std::shared_ptr<const NamedNumerical>& numerical);
     std::shared_ptr<const BaseCondition> make_eq_condition(const std::shared_ptr<const NamedNumerical>& numerical);
+    std::shared_ptr<const BaseCondition> make_gt_condition(const std::shared_ptr<const NamedConcept>& concept_);
+    std::shared_ptr<const BaseCondition> make_eq_condition(const std::shared_ptr<const NamedConcept>& concept_);
     std::shared_ptr<const BaseEffect> make_pos_effect(const std::shared_ptr<const NamedBoolean>& boolean);
     std::shared_ptr<const BaseEffect> make_neg_effect(const std::shared_ptr<const NamedBoolean>& boolean);
     std::shared_ptr<const BaseEffect> make_bot_effect(const std::shared_ptr<const NamedBoolean>& boolean);
     std::shared_ptr<const BaseEffect> make_inc_effect(const std::shared_ptr<const NamedNumerical>& numerical);
     std::shared_ptr<const BaseEffect> make_dec_effect(const std::shared_ptr<const NamedNumerical>& numerical);
     std::shared_ptr<const BaseEffect> make_bot_effect(const std::shared_ptr<const NamedNumerical>& numerical);
+    std::shared_ptr<const BaseEffect> make_gt_effect(const std::shared_ptr<const NamedNumerical>& numerical);
+    std::shared_ptr<const BaseEffect> make_eq_effect(const std::shared_ptr<const NamedNumerical>& numerical);
+    std::shared_ptr<const BaseEffect> make_inc_effect(const std::shared_ptr<const NamedConcept>& concept_);
+    std::shared_ptr<const BaseEffect> make_dec_effect(const std::shared_ptr<const NamedConcept>& concept_);
+    std::shared_ptr<const BaseEffect> make_bot_effect(const std::shared_ptr<const NamedConcept>& concept_);
+    std::shared_ptr<const BaseEffect> make_gt_effect(const std::shared_ptr<const NamedConcept>& concept_);
+    std::shared_ptr<const BaseEffect> make_eq_effect(const std::shared_ptr<const NamedConcept>& concept_);
 
     std::shared_ptr<const Rule> make_rule(const Conditions& conditions, const Effects& effects);
 

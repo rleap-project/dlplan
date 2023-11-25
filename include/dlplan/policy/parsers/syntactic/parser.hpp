@@ -39,12 +39,21 @@ namespace dlplan::policy
         struct NegativeBooleanConditionClass;
         struct GreaterNumericalConditionClass;
         struct EqualNumericalConditionClass;
+        struct GreaterConceptConditionClass;
+        struct EqualConceptConditionClass;
         struct PositiveBooleanEffectClass;
         struct NegativeBooleanEffectClass;
         struct UnchangedBooleanEffectClass;
         struct IncrementNumericalEffectClass;
         struct DecrementNumericalEffectClass;
         struct UnchangedNumericalEffectClass;
+        struct GreaterNumericalEffectClass;
+        struct EqualNumericalEffectClass;
+        struct IncrementConceptEffectClass;
+        struct DecrementConceptEffectClass;
+        struct UnchangedConceptEffectClass;
+        struct GreaterConceptEffectClass;
+        struct EqualConceptEffectClass;
         struct FeatureConditionClass;
         struct FeatureEffectClass;
         struct RuleClass;
@@ -77,16 +86,25 @@ namespace dlplan::policy
         typedef x3::rule<RoleReferenceClass, ast::RoleReference> role_reference_type;
         typedef x3::rule<RolesClass, ast::Roles> roles_type;
 
-        typedef x3::rule<PositiveBooleanConditionClass, ast::PositiveBooleanConditionEntry> positive_boolean_condition_type;
-        typedef x3::rule<NegativeBooleanConditionClass, ast::NegativeBooleanConditionEntry> negative_boolean_condition_type;
-        typedef x3::rule<GreaterNumericalConditionClass, ast::GreaterNumericalConditionEntry> greater_numerical_condition_type;
-        typedef x3::rule<EqualNumericalConditionClass, ast::EqualNumericalConditionEntry> equal_numerical_condition_type;
-        typedef x3::rule<PositiveBooleanEffectClass, ast::PositiveBooleanEffectEntry> positive_boolean_effect_type;
-        typedef x3::rule<NegativeBooleanEffectClass, ast::NegativeBooleanEffectEntry> negative_boolean_effect_type;
-        typedef x3::rule<UnchangedBooleanEffectClass, ast::UnchangedBooleanEffectEntry> unchanged_boolean_effect_type;
-        typedef x3::rule<IncrementNumericalEffectClass, ast::IncrementNumericalEffectEntry> increment_numerical_effect_type;
+        typedef x3::rule<PositiveBooleanConditionClass, ast::PositiveBooleanCondition> positive_boolean_condition_type;
+        typedef x3::rule<NegativeBooleanConditionClass, ast::NegativeBooleanCondition> negative_boolean_condition_type;
+        typedef x3::rule<GreaterNumericalConditionClass, ast::GreaterNumericalCondition> greater_numerical_condition_type;
+        typedef x3::rule<EqualNumericalConditionClass, ast::EqualNumericalCondition> equal_numerical_condition_type;
+        typedef x3::rule<GreaterConceptConditionClass, ast::GreaterConceptCondition> greater_concept_condition_type;
+        typedef x3::rule<EqualConceptConditionClass, ast::EqualConceptCondition> equal_concept_condition_type;
+        typedef x3::rule<PositiveBooleanEffectClass, ast::PositiveBooleanEffect> positive_boolean_effect_type;
+        typedef x3::rule<NegativeBooleanEffectClass, ast::NegativeBooleanEffect> negative_boolean_effect_type;
+        typedef x3::rule<UnchangedBooleanEffectClass, ast::UnchangedBooleanEffect> unchanged_boolean_effect_type;
+        typedef x3::rule<IncrementNumericalEffectClass, ast::IncrementNumericalEffect> increment_numerical_effect_type;
         typedef x3::rule<DecrementNumericalEffectClass, ast::DecrementNumericalEffect> decrement_numerical_effect_type;
         typedef x3::rule<UnchangedNumericalEffectClass, ast::UnchangedNumericalEffect> unchanged_numerical_effect_type;
+        typedef x3::rule<GreaterNumericalEffectClass, ast::GreaterNumericalEffect> greater_numerical_effect_type;
+        typedef x3::rule<EqualNumericalEffectClass, ast::EqualNumericalEffect> equal_numerical_effect_type;
+        typedef x3::rule<IncrementConceptEffectClass, ast::IncrementConceptEffect> increment_concept_effect_type;
+        typedef x3::rule<DecrementConceptEffectClass, ast::DecrementConceptEffect> decrement_concept_effect_type;
+        typedef x3::rule<UnchangedConceptEffectClass, ast::UnchangedConceptEffect> unchanged_concept_effect_type;
+        typedef x3::rule<GreaterConceptEffectClass, ast::GreaterConceptEffect> greater_concept_effect_type;
+        typedef x3::rule<EqualConceptEffectClass, ast::EqualConceptEffect> equal_concept_effect_type;
         typedef x3::rule<FeatureConditionClass, ast::FeatureCondition> feature_condition_type;
         typedef x3::rule<FeatureEffectClass, ast::FeatureEffect> feature_effect_type;
 
@@ -102,8 +120,8 @@ namespace dlplan::policy
             role_definition_type, role_implementation_type, role_type, role_reference_type, roles_type,
             positive_boolean_condition_type, negative_boolean_condition_type,
             greater_numerical_condition_type, equal_numerical_condition_type,
-            positive_boolean_effect_type, negative_boolean_effect_type, unchanged_boolean_effect_type,
-            increment_numerical_effect_type, decrement_numerical_effect_type, unchanged_numerical_effect_type,
+            positive_boolean_effect_type, negative_boolean_effect_type, unchanged_boolean_effect_type, greater_concept_condition_type, equal_concept_condition_type,
+            increment_numerical_effect_type, decrement_numerical_effect_type, unchanged_numerical_effect_type, greater_numerical_effect_type, equal_numerical_effect_type, increment_concept_effect_type, decrement_concept_effect_type, unchanged_concept_effect_type, greater_concept_effect_type, equal_concept_effect_type,
             feature_condition_type, feature_effect_type,
             rule_type, rules_type, policy_type)
     }
@@ -136,6 +154,8 @@ namespace dlplan::policy
 
     parser::positive_boolean_condition_type const& positive_boolean_condition();
     parser::negative_boolean_condition_type const& negative_boolean_condition();
+    parser::greater_concept_condition_type const& greater_concept_condition();
+    parser::equal_concept_condition_type const& equal_concept_condition();
     parser::greater_numerical_condition_type const& greater_numerical_condition();
     parser::equal_numerical_condition_type const& equal_numerical_condition();
     parser::positive_boolean_effect_type const& positive_boolean_effect();
@@ -144,6 +164,13 @@ namespace dlplan::policy
     parser::increment_numerical_effect_type const& increment_numerical_effect();
     parser::decrement_numerical_effect_type const& decrement_numerical_effect();
     parser::unchanged_numerical_effect_type const& unchanged_numerical_effect();
+    parser::greater_numerical_effect_type const& greater_numerical_effect();
+    parser::equal_numerical_effect_type const& equal_numerical_effect();
+    parser::increment_concept_effect_type const& increment_concept_effect();
+    parser::decrement_concept_effect_type const& decrement_concept_effect();
+    parser::unchanged_concept_effect_type const& unchanged_concept_effect();
+    parser::greater_concept_effect_type const& greater_concept_effect();
+    parser::equal_concept_effect_type const& equal_concept_effect();
 
     parser::feature_condition_type const& feature_condition();
     parser::feature_effect_type const& feature_effect();

@@ -631,11 +631,11 @@ using Concept = Element<ConceptDenotation, ConceptDenotations>;
 ///        on a given state. It can also make use of a cache during evaluation.
 using Role = Element<RoleDenotation, RoleDenotations>;
 
-/// @brief Represents a numerical element that evaluates to an natural number
+/// @brief Represents a Boolean element that evaluates to either true or false
 ///        on a given state. It can also make use of a cache during evaluation.
 using Boolean = ElementLight<bool, BooleanDenotations>;
 
-/// @brief Represents a Boolean element that evaluates to either true or false
+/// @brief Represents a numerical element that evaluates to an natural number
 ///        on a given state. It can also make use of a cache during evaluation.
 using Numerical = ElementLight<int, NumericalDenotations>;
 

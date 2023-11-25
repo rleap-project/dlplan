@@ -213,42 +213,52 @@ std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedRole>
 }
 
 std::shared_ptr<const BaseCondition> parse(
-    const ast::PositiveBooleanConditionEntry& node, const error_handler_type& error_handler, Context& context) {
+    const ast::PositiveBooleanCondition& node, const error_handler_type& error_handler, Context& context) {
     return context.policy_factory.make_pos_condition(parse(node.reference, error_handler, context));
 }
 
 std::shared_ptr<const BaseCondition> parse(
-    const ast::NegativeBooleanConditionEntry& node, const error_handler_type& error_handler, Context& context) {
+    const ast::NegativeBooleanCondition& node, const error_handler_type& error_handler, Context& context) {
     return context.policy_factory.make_neg_condition(parse(node.reference, error_handler, context));
 }
 
 std::shared_ptr<const BaseCondition> parse(
-    const ast::GreaterNumericalConditionEntry& node, const error_handler_type& error_handler, Context& context) {
+    const ast::GreaterNumericalCondition& node, const error_handler_type& error_handler, Context& context) {
     return context.policy_factory.make_gt_condition(parse(node.reference, error_handler, context));
 }
 
 std::shared_ptr<const BaseCondition> parse(
-    const ast::EqualNumericalConditionEntry& node, const error_handler_type& error_handler, Context& context) {
+    const ast::EqualNumericalCondition& node, const error_handler_type& error_handler, Context& context) {
+    return context.policy_factory.make_eq_condition(parse(node.reference, error_handler, context));
+}
+
+std::shared_ptr<const BaseCondition> parse(
+    const ast::GreaterConceptCondition& node, const error_handler_type& error_handler, Context& context) {
+    return context.policy_factory.make_gt_condition(parse(node.reference, error_handler, context));
+}
+
+std::shared_ptr<const BaseCondition> parse(
+    const ast::EqualConceptCondition& node, const error_handler_type& error_handler, Context& context) {
     return context.policy_factory.make_eq_condition(parse(node.reference, error_handler, context));
 }
 
 std::shared_ptr<const BaseEffect> parse(
-    const ast::PositiveBooleanEffectEntry& node, const error_handler_type& error_handler, Context& context) {
+    const ast::PositiveBooleanEffect& node, const error_handler_type& error_handler, Context& context) {
     return context.policy_factory.make_pos_effect(parse(node.reference, error_handler, context));
 }
 
 std::shared_ptr<const BaseEffect> parse(
-    const ast::NegativeBooleanEffectEntry& node, const error_handler_type& error_handler, Context& context) {
+    const ast::NegativeBooleanEffect& node, const error_handler_type& error_handler, Context& context) {
     return context.policy_factory.make_neg_effect(parse(node.reference, error_handler, context));
 }
 
 std::shared_ptr<const BaseEffect> parse(
-    const ast::UnchangedBooleanEffectEntry& node, const error_handler_type& error_handler, Context& context) {
+    const ast::UnchangedBooleanEffect& node, const error_handler_type& error_handler, Context& context) {
     return context.policy_factory.make_bot_effect(parse(node.reference, error_handler, context));
 }
 
 std::shared_ptr<const BaseEffect> parse(
-    const ast::IncrementNumericalEffectEntry& node, const error_handler_type& error_handler, Context& context) {
+    const ast::IncrementNumericalEffect& node, const error_handler_type& error_handler, Context& context) {
     return context.policy_factory.make_inc_effect(parse(node.reference, error_handler, context));
 }
 
@@ -262,12 +272,46 @@ std::shared_ptr<const BaseEffect> parse(
     return context.policy_factory.make_bot_effect(parse(node.reference, error_handler, context));
 }
 
+std::shared_ptr<const BaseEffect> parse(
+    const ast::GreaterNumericalEffect& node, const error_handler_type& error_handler, Context& context) {
+    return context.policy_factory.make_gt_effect(parse(node.reference, error_handler, context));
+}
+
+std::shared_ptr<const BaseEffect> parse(
+    const ast::EqualNumericalEffect& node, const error_handler_type& error_handler, Context& context) {
+    return context.policy_factory.make_eq_effect(parse(node.reference, error_handler, context));
+}
+
+std::shared_ptr<const BaseEffect> parse(
+    const ast::IncrementConceptEffect& node, const error_handler_type& error_handler, Context& context) {
+    return context.policy_factory.make_inc_effect(parse(node.reference, error_handler, context));
+}
+
+std::shared_ptr<const BaseEffect> parse(
+    const ast::DecrementConceptEffect& node, const error_handler_type& error_handler, Context& context) {
+    return context.policy_factory.make_dec_effect(parse(node.reference, error_handler, context));
+}
+
+std::shared_ptr<const BaseEffect> parse(
+    const ast::UnchangedConceptEffect& node, const error_handler_type& error_handler, Context& context) {
+    return context.policy_factory.make_bot_effect(parse(node.reference, error_handler, context));
+}
+
+std::shared_ptr<const BaseEffect> parse(
+    const ast::GreaterConceptEffect& node, const error_handler_type& error_handler, Context& context) {
+    return context.policy_factory.make_gt_effect(parse(node.reference, error_handler, context));
+}
+
+std::shared_ptr<const BaseEffect> parse(
+    const ast::EqualConceptEffect& node, const error_handler_type& error_handler, Context& context) {
+    return context.policy_factory.make_eq_effect(parse(node.reference, error_handler, context));
+}
+
 std::shared_ptr<const BaseCondition> parse(
     const ast::FeatureCondition& node, const error_handler_type& error_handler, Context& context) {
     ParseVisitor<std::shared_ptr<const BaseCondition>> visitor(error_handler, context);
     return boost::apply_visitor(visitor, node);
 }
-
 
 std::shared_ptr<const BaseEffect> parse(
     const ast::FeatureEffect& node, const error_handler_type& error_handler, Context& context) {

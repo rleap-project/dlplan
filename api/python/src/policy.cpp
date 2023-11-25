@@ -77,23 +77,42 @@ void init_policy(py::module_ &m_policy) {
         .def("get_numericals", &policy::Policy::get_numericals)
     ;
 
+// py::overload_cast<>(&policy::PolicyFactory::str, py::const_)
+
     py::class_<policy::PolicyFactory, std::shared_ptr<policy::PolicyFactory>>(m_policy, "PolicyFactory")
         .def(py::init<std::shared_ptr<core::SyntacticElementFactory>>())
         .def("make_boolean", &policy::PolicyFactory::make_boolean)
         .def("make_numerical", &policy::PolicyFactory::make_numerical)
         .def("make_concept", &policy::PolicyFactory::make_concept)
         .def("make_role", &policy::PolicyFactory::make_role)
+
         .def("make_pos_condition", &policy::PolicyFactory::make_pos_condition)
         .def("make_neg_condition", &policy::PolicyFactory::make_neg_condition)
-        .def("make_gt_condition", &policy::PolicyFactory::make_gt_condition)
-        .def("make_eq_condition", &policy::PolicyFactory::make_eq_condition)
+
+        .def("make_gt_condition", py::overload_cast<const std::shared_ptr<const policy::NamedNumerical>&>(&policy::PolicyFactory::make_gt_condition))
+        .def("make_eq_condition", py::overload_cast<const std::shared_ptr<const policy::NamedNumerical>&>(&policy::PolicyFactory::make_eq_condition))
+
+        .def("make_gt_condition", py::overload_cast<const std::shared_ptr<const policy::NamedConcept>&>(&policy::PolicyFactory::make_gt_condition))
+        .def("make_eq_condition", py::overload_cast<const std::shared_ptr<const policy::NamedConcept>&>(&policy::PolicyFactory::make_eq_condition))
+
         .def("make_pos_effect", &policy::PolicyFactory::make_pos_effect)
         .def("make_neg_effect", &policy::PolicyFactory::make_neg_effect)
-        .def("make_inc_effect", &policy::PolicyFactory::make_inc_effect)
-        .def("make_dec_effect", &policy::PolicyFactory::make_dec_effect)
         .def("make_bot_effect", py::overload_cast<const std::shared_ptr<const policy::NamedBoolean>&>(&policy::PolicyFactory::make_bot_effect))
+
+        .def("make_inc_effect", py::overload_cast<const std::shared_ptr<const policy::NamedNumerical>&>(&policy::PolicyFactory::make_inc_effect))
+        .def("make_dec_effect", py::overload_cast<const std::shared_ptr<const policy::NamedNumerical>&>(&policy::PolicyFactory::make_dec_effect))
         .def("make_bot_effect", py::overload_cast<const std::shared_ptr<const policy::NamedNumerical>&>(&policy::PolicyFactory::make_bot_effect))
+        .def("make_gt_effect", py::overload_cast<const std::shared_ptr<const policy::NamedNumerical>&>(&policy::PolicyFactory::make_gt_effect))
+        .def("make_eq_effect", py::overload_cast<const std::shared_ptr<const policy::NamedNumerical>&>(&policy::PolicyFactory::make_eq_effect))
+
+        .def("make_inc_effect", py::overload_cast<const std::shared_ptr<const policy::NamedConcept>&>(&policy::PolicyFactory::make_inc_effect))
+        .def("make_dec_effect", py::overload_cast<const std::shared_ptr<const policy::NamedConcept>&>(&policy::PolicyFactory::make_dec_effect))
+        .def("make_gt_effect", py::overload_cast<const std::shared_ptr<const policy::NamedConcept>&>(&policy::PolicyFactory::make_gt_effect))
+        .def("make_eq_effect", py::overload_cast<const std::shared_ptr<const policy::NamedConcept>&>(&policy::PolicyFactory::make_eq_effect))
+        .def("make_bot_effect", py::overload_cast<const std::shared_ptr<const policy::NamedConcept>&>(&policy::PolicyFactory::make_bot_effect))
+
         .def("make_rule", &policy::PolicyFactory::make_rule)
+
         .def("make_policy", &policy::PolicyFactory::make_policy)
         .def("parse_policy", py::overload_cast<const std::string&, const std::string&>(&policy::PolicyFactory::parse_policy), py::arg("description"), py::arg("filename") = "")
     ;

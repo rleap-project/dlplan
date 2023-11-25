@@ -74,12 +74,21 @@ namespace dlplan::policy::parser
     negative_boolean_condition_type const negative_boolean_condition = "negative_boolean_condition";
     greater_numerical_condition_type const greater_numerical_condition = "greater_numerical_condition";
     equal_numerical_condition_type const equal_numerical_condition = "equal_numerical_condition";
+    greater_concept_condition_type const greater_concept_condition = "greater_concept_condition";
+    equal_concept_condition_type const equal_concept_condition = "equal_concept_condition";
     positive_boolean_effect_type const positive_boolean_effect = "positive_boolean_effect";
     negative_boolean_effect_type const negative_boolean_effect = "negative_boolean_effect";
     unchanged_boolean_effect_type const unchanged_boolean_effect = "unchanged_boolean_effect";
     increment_numerical_effect_type const increment_numerical_effect = "increment_numerical_effect";
     decrement_numerical_effect_type const decrement_numerical_effect = "decrement_numerical_effect";
     unchanged_numerical_effect_type const unchanged_numerical_effect = "unchanged_numerical_effect";
+    greater_numerical_effect_type const greater_numerical_effect = "greater_numerical_effect";
+    equal_numerical_effect_type const equal_numerical_effect = "equal_numerical_effect";
+    increment_concept_effect_type const increment_concept_effect = "increment_concept_effect";
+    decrement_concept_effect_type const decrement_concept_effect = "decrement_concept_effect";
+    unchanged_concept_effect_type const unchanged_concept_effect = "unchanged_concept_effect";
+    greater_concept_effect_type const greater_concept_effect = "greater_concept_effect";
+    equal_concept_effect_type const equal_concept_effect = "equal_concept_effect";
 
     feature_condition_type const feature_condition = "feature_condition";
     feature_effect_type const feature_effect = "feature_effect";
@@ -124,6 +133,8 @@ namespace dlplan::policy::parser
     const auto negative_boolean_condition_def = lit('(') >> lit(":c_b_neg") > boolean_reference > lit(')');
     const auto greater_numerical_condition_def = lit('(') >> lit(":c_n_gt") > numerical_reference > lit(')');
     const auto equal_numerical_condition_def = lit('(') >> lit(":c_n_eq") > numerical_reference > lit(')');
+    const auto greater_concept_condition_def = lit('(') >> lit(":c_c_gt") > concept_reference > lit(')');
+    const auto equal_concept_condition_def = lit('(') >> lit(":c_c_eq") > concept_reference > lit(')');
 
     const auto positive_boolean_effect_def = lit('(') >> lit(":e_b_pos") > boolean_reference > lit(')');
     const auto negative_boolean_effect_def = lit('(') >> lit(":e_b_neg") > boolean_reference > lit(')');
@@ -131,12 +142,21 @@ namespace dlplan::policy::parser
     const auto increment_numerical_effect_def = lit('(') >> lit(":e_n_inc") > numerical_reference > lit(')');
     const auto decrement_numerical_effect_def = lit('(') >> lit(":e_n_dec") > numerical_reference > lit(')');
     const auto unchanged_numerical_effect_def = lit('(') >> lit(":e_n_bot") > numerical_reference > lit(')');
+    const auto greater_numerical_effect_def = lit('(') >> lit(":e_n_gt") > numerical_reference > lit(')');
+    const auto equal_numerical_effect_def = lit('(') >> lit(":e_n_eq") > numerical_reference > lit(')');
+    const auto increment_concept_effect_def = lit('(') >> lit(":e_c_inc") > concept_reference > lit(')');
+    const auto decrement_concept_effect_def = lit('(') >> lit(":e_c_dec") > concept_reference > lit(')');
+    const auto unchanged_concept_effect_def = lit('(') >> lit(":e_c_bot") > concept_reference > lit(')');
+    const auto greater_concept_effect_def = lit('(') >> lit(":e_c_gt") > concept_reference > lit(')');
+    const auto equal_concept_effect_def = lit('(') >> lit(":e_c_eq") > concept_reference > lit(')');
 
-    const auto feature_condition_def =
-        positive_boolean_condition | negative_boolean_condition | greater_numerical_condition | equal_numerical_condition;
+    const auto feature_condition_def = positive_boolean_condition | negative_boolean_condition
+        | greater_numerical_condition | equal_numerical_condition
+        | greater_concept_condition | equal_concept_condition;
 
-    const auto feature_effect_def =
-        positive_boolean_effect | negative_boolean_effect | unchanged_boolean_effect | increment_numerical_effect | decrement_numerical_effect | unchanged_numerical_effect;
+    const auto feature_effect_def =  positive_boolean_effect | negative_boolean_effect | unchanged_boolean_effect
+        | increment_numerical_effect | decrement_numerical_effect | unchanged_numerical_effect | greater_numerical_effect | equal_numerical_effect
+        | increment_concept_effect | decrement_concept_effect | unchanged_concept_effect | greater_concept_effect | equal_concept_effect;
 
     const auto rule_def = lit('(') >> lit(":rule")
         > lit('(') > lit(":conditions") >> *feature_condition > lit(')')
@@ -157,8 +177,8 @@ namespace dlplan::policy::parser
         numerical_definition, numerical_implementation, numerical, numerical_reference, numericals,
         concept_definition, concept_implementation, concept, concept_reference, concepts,
         role_definition, role_implementation, role, role_reference, roles,
-        positive_boolean_condition, negative_boolean_condition, greater_numerical_condition, equal_numerical_condition,
-        positive_boolean_effect, negative_boolean_effect, unchanged_boolean_effect, increment_numerical_effect, decrement_numerical_effect, unchanged_numerical_effect,
+        positive_boolean_condition, negative_boolean_condition, greater_numerical_condition, equal_numerical_condition, greater_concept_condition, equal_concept_condition,
+        positive_boolean_effect, negative_boolean_effect, unchanged_boolean_effect, increment_numerical_effect, decrement_numerical_effect, unchanged_numerical_effect, greater_numerical_effect, equal_numerical_effect, increment_concept_effect, decrement_concept_effect, unchanged_concept_effect, greater_concept_effect, equal_concept_effect,
         feature_condition, feature_effect, rule, rules, policy, policy_root)
 
     ///////////////////////////////////////////////////////////////////////////
@@ -286,6 +306,12 @@ namespace dlplan::policy
     parser::equal_numerical_condition_type const& equal_numerical_condition() {
         return parser::equal_numerical_condition;
     }
+    parser::greater_concept_condition_type const& greater_concept_condition() {
+        return parser::greater_concept_condition;
+    }
+    parser::equal_concept_condition_type const& equal_concept_condition() {
+        return parser::equal_concept_condition;
+    }
     parser::positive_boolean_effect_type const& positive_boolean_effect() {
         return parser::positive_boolean_effect;
     }
@@ -303,6 +329,27 @@ namespace dlplan::policy
     }
     parser::unchanged_numerical_effect_type const& unchanged_numerical_effect() {
         return parser::unchanged_numerical_effect;
+    }
+    parser::greater_numerical_effect_type const& greater_numerical_effect() {
+        return parser::greater_numerical_effect;
+    }
+    parser::equal_numerical_effect_type const& equal_numerical_effect() {
+        return parser::equal_numerical_effect;
+    }
+    parser::increment_concept_effect_type const& increment_concept_effect() {
+        return parser::increment_concept_effect;
+    }
+    parser::decrement_concept_effect_type const& decrement_concept_effect() {
+        return parser::decrement_concept_effect;
+    }
+    parser::unchanged_concept_effect_type const& unchanged_concept_effect() {
+        return parser::unchanged_concept_effect;
+    }
+    parser::greater_concept_effect_type const& greater_concept_effect() {
+        return parser::greater_concept_effect;
+    }
+    parser::equal_concept_effect_type const& equal_concept_effect() {
+        return parser::equal_concept_effect;
     }
 
     parser::feature_condition_type const& feature_condition() {

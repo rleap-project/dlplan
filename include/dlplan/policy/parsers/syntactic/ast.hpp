@@ -38,18 +38,25 @@ namespace dlplan::policy::ast
     struct ConceptReference;
     struct Concepts;
 
-    struct BooleanDefinition;
-    struct BooleanImplementation;
     struct PositiveBooleanCondition;
     struct NegativeBooleanCondition;
     struct GreaterNumericalCondition;
     struct EqualNumericalCondition;
+    struct GreaterConceptCondition;
+    struct EqualConceptCondition;
     struct PositiveBooleanEffect;
     struct NegativeBooleanEffect;
     struct UnchangedBooleanEffect;
     struct IncrementNumericalEffect;
     struct DecrementNumericalEffect;
     struct UnchangedNumericalEffect;
+    struct GreaterNumericalEffect;
+    struct EqualNumericalEffect;
+    struct IncrementConceptEffect;
+    struct DecrementConceptEffect;
+    struct UnchangedConceptEffect;
+    struct GreaterConceptEffect;
+    struct EqualConceptEffect;
 
     struct FeatureCondition;
     struct FeatureEffect;
@@ -159,46 +166,56 @@ namespace dlplan::policy::ast
 
 
     /* Condition and effects */
-    struct PositiveBooleanConditionEntry : x3::position_tagged {
+    struct PositiveBooleanCondition : x3::position_tagged {
         BooleanReference reference;
     };
 
-    struct NegativeBooleanConditionEntry : x3::position_tagged {
+    struct NegativeBooleanCondition : x3::position_tagged {
         BooleanReference reference;
     };
 
-    struct GreaterNumericalConditionEntry : x3::position_tagged {
+    struct GreaterNumericalCondition : x3::position_tagged {
         NumericalReference reference;
     };
 
-    struct EqualNumericalConditionEntry : x3::position_tagged {
+    struct EqualNumericalCondition : x3::position_tagged {
         NumericalReference reference;
+    };
+
+    struct GreaterConceptCondition : x3::position_tagged {
+        ConceptReference reference;
+    };
+
+    struct EqualConceptCondition : x3::position_tagged {
+        ConceptReference reference;
     };
 
     struct FeatureCondition : x3::position_tagged,
         x3::variant<
-            x3::forward_ast<PositiveBooleanConditionEntry>,
-            x3::forward_ast<NegativeBooleanConditionEntry>,
-            x3::forward_ast<GreaterNumericalConditionEntry>,
-            x3::forward_ast<EqualNumericalConditionEntry>> {
+            x3::forward_ast<PositiveBooleanCondition>,
+            x3::forward_ast<NegativeBooleanCondition>,
+            x3::forward_ast<GreaterNumericalCondition>,
+            x3::forward_ast<EqualNumericalCondition>,
+            x3::forward_ast<GreaterConceptCondition>,
+            x3::forward_ast<EqualConceptCondition>> {
         using base_type::base_type;
         using base_type::operator=;
     };
 
 
-    struct PositiveBooleanEffectEntry : x3::position_tagged {
+    struct PositiveBooleanEffect : x3::position_tagged {
         BooleanReference reference;
     };
 
-    struct NegativeBooleanEffectEntry : x3::position_tagged {
+    struct NegativeBooleanEffect : x3::position_tagged {
         BooleanReference reference;
     };
 
-    struct UnchangedBooleanEffectEntry : x3::position_tagged {
+    struct UnchangedBooleanEffect : x3::position_tagged {
         BooleanReference reference;
     };
 
-    struct IncrementNumericalEffectEntry : x3::position_tagged {
+    struct IncrementNumericalEffect : x3::position_tagged {
         NumericalReference reference;
     };
 
@@ -210,14 +227,49 @@ namespace dlplan::policy::ast
         NumericalReference reference;
     };
 
+    struct GreaterNumericalEffect : x3::position_tagged {
+        NumericalReference reference;
+    };
+
+    struct EqualNumericalEffect : x3::position_tagged {
+        NumericalReference reference;
+    };
+
+    struct IncrementConceptEffect : x3::position_tagged {
+        ConceptReference reference;
+    };
+
+    struct DecrementConceptEffect : x3::position_tagged {
+        ConceptReference reference;
+    };
+
+    struct UnchangedConceptEffect : x3::position_tagged {
+        ConceptReference reference;
+    };
+
+    struct GreaterConceptEffect : x3::position_tagged {
+        ConceptReference reference;
+    };
+
+    struct EqualConceptEffect : x3::position_tagged {
+        ConceptReference reference;
+    };
+
     struct FeatureEffect : x3::position_tagged,
         x3::variant<
-            x3::forward_ast<PositiveBooleanEffectEntry>,
-            x3::forward_ast<NegativeBooleanEffectEntry>,
-            x3::forward_ast<UnchangedBooleanEffectEntry>,
-            x3::forward_ast<IncrementNumericalEffectEntry>,
+            x3::forward_ast<PositiveBooleanEffect>,
+            x3::forward_ast<NegativeBooleanEffect>,
+            x3::forward_ast<UnchangedBooleanEffect>,
+            x3::forward_ast<IncrementNumericalEffect>,
             x3::forward_ast<DecrementNumericalEffect>,
-            x3::forward_ast<UnchangedNumericalEffect>> {
+            x3::forward_ast<UnchangedNumericalEffect>,
+            x3::forward_ast<GreaterNumericalEffect>,
+            x3::forward_ast<EqualNumericalEffect>,
+            x3::forward_ast<IncrementConceptEffect>,
+            x3::forward_ast<DecrementConceptEffect>,
+            x3::forward_ast<UnchangedConceptEffect>,
+            x3::forward_ast<GreaterConceptEffect>,
+            x3::forward_ast<EqualConceptEffect>> {
         using base_type::base_type;
         using base_type::operator=;
     };

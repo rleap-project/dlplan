@@ -14,9 +14,10 @@ namespace dlplan::policy {
 struct InsertNamedElementFromCondition : public BaseConditionVisitor {
     Booleans& booleans;
     Numericals& numericals;
+    Concepts& concepts;
 
-    InsertNamedElementFromCondition(Booleans& booleans_, Numericals& numericals_)
-        : booleans(booleans_), numericals(numericals_) { }
+    InsertNamedElementFromCondition(Booleans& booleans_, Numericals& numericals_, Concepts& concepts_)
+        : booleans(booleans_), numericals(numericals_), concepts(concepts_) { }
 
     void visit(const std::shared_ptr<const PositiveBooleanCondition>& condition) override {
         booleans.insert(condition->get_named_element());
@@ -33,15 +34,24 @@ struct InsertNamedElementFromCondition : public BaseConditionVisitor {
     void visit(const std::shared_ptr<const EqualNumericalCondition>& condition) override {
         numericals.insert(condition->get_named_element());
     }
+
+    void visit(const std::shared_ptr<const GreaterConceptCondition>& condition) override {
+        concepts.insert(condition->get_named_element());
+    }
+
+    void visit(const std::shared_ptr<const EqualConceptCondition>& condition) override {
+        concepts.insert(condition->get_named_element());
+    }
 };
 
 
 struct InsertNamedElementFromEffect : public BaseEffectVisitor {
     Booleans& booleans;
     Numericals& numericals;
+    Concepts& concepts;
 
-    InsertNamedElementFromEffect(Booleans& booleans_, Numericals& numericals_)
-        : booleans(booleans_), numericals(numericals_) { }
+    InsertNamedElementFromEffect(Booleans& booleans_, Numericals& numericals_, Concepts& concepts_)
+        : booleans(booleans_), numericals(numericals_), concepts(concepts_) { }
 
     void visit(const std::shared_ptr<const PositiveBooleanEffect>& effect) override {
         booleans.insert(effect->get_named_element());
@@ -67,14 +77,42 @@ struct InsertNamedElementFromEffect : public BaseEffectVisitor {
         numericals.insert(effect->get_named_element());
     }
 
+    void visit(const std::shared_ptr<const GreaterNumericalEffect>& effect) override {
+        numericals.insert(effect->get_named_element());
+    }
+
+    void visit(const std::shared_ptr<const EqualNumericalEffect>& effect) override {
+        numericals.insert(effect->get_named_element());
+    }
+
+    void visit(const std::shared_ptr<const IncrementConceptEffect>& effect) override {
+        concepts.insert(effect->get_named_element());
+    }
+
+    void visit(const std::shared_ptr<const DecrementConceptEffect>& effect) override {
+        concepts.insert(effect->get_named_element());
+    }
+
+    void visit(const std::shared_ptr<const UnchangedConceptEffect>& effect) override {
+        concepts.insert(effect->get_named_element());
+    }
+
+    void visit(const std::shared_ptr<const GreaterConceptEffect>& effect) override {
+        concepts.insert(effect->get_named_element());
+    }
+
+    void visit(const std::shared_ptr<const EqualConceptEffect>& effect) override {
+        concepts.insert(effect->get_named_element());
+    }
 };
 
 
 Policy::Policy(int identifier, const Rules& rules)
     : Base<Policy>(identifier), m_rules(rules) {
     // Retrieve boolean and numericals from the rules.
-    InsertNamedElementFromCondition condition_visitor(m_booleans, m_numericals);
-    InsertNamedElementFromEffect effect_visitor(m_booleans, m_numericals);
+    Concepts concepts;
+    InsertNamedElementFromCondition condition_visitor(m_booleans, m_numericals, concepts);
+    InsertNamedElementFromEffect effect_visitor(m_booleans, m_numericals, concepts);
     for (const auto& rule : m_rules) {
         for (const auto& condition : rule->get_conditions()) {
             condition->accept(condition_visitor);

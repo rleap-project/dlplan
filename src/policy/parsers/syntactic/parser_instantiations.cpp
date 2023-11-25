@@ -76,6 +76,20 @@ namespace dlplan::policy::parser
         decrement_numerical_effect_type, iterator_type, context_type)
     BOOST_SPIRIT_INSTANTIATE(
         unchanged_numerical_effect_type, iterator_type, context_type)
+    BOOST_SPIRIT_INSTANTIATE(
+        greater_numerical_effect_type, iterator_type, context_type)
+    BOOST_SPIRIT_INSTANTIATE(
+        equal_numerical_effect_type, iterator_type, context_type)
+    BOOST_SPIRIT_INSTANTIATE(
+        increment_concept_effect_type, iterator_type, context_type)
+    BOOST_SPIRIT_INSTANTIATE(
+        decrement_concept_effect_type, iterator_type, context_type)
+    BOOST_SPIRIT_INSTANTIATE(
+        unchanged_concept_effect_type, iterator_type, context_type)
+    BOOST_SPIRIT_INSTANTIATE(
+        greater_concept_effect_type, iterator_type, context_type)
+    BOOST_SPIRIT_INSTANTIATE(
+        equal_concept_effect_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
         feature_condition_type, iterator_type, context_type)

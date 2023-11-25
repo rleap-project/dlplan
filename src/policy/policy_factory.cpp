@@ -109,6 +109,14 @@ std::shared_ptr<const BaseCondition> PolicyFactoryImpl::make_eq_condition(const 
     return m_cache.get_or_create<EqualNumericalCondition>(numerical).object;
 }
 
+std::shared_ptr<const BaseCondition> PolicyFactoryImpl::make_gt_condition(const std::shared_ptr<const NamedConcept>& concept_) {
+    return m_cache.get_or_create<GreaterConceptCondition>(concept_).object;
+}
+
+std::shared_ptr<const BaseCondition> PolicyFactoryImpl::make_eq_condition(const std::shared_ptr<const NamedConcept>& concept_) {
+    return m_cache.get_or_create<EqualConceptCondition>(concept_).object;
+}
+
 std::shared_ptr<const BaseEffect> PolicyFactoryImpl::make_pos_effect(const std::shared_ptr<const NamedBoolean>& boolean) {
     return m_cache.get_or_create<PositiveBooleanEffect>(boolean).object;
 }
@@ -131,6 +139,34 @@ std::shared_ptr<const BaseEffect> PolicyFactoryImpl::make_dec_effect(const std::
 
 std::shared_ptr<const BaseEffect> PolicyFactoryImpl::make_bot_effect(const std::shared_ptr<const NamedNumerical>& numerical) {
     return m_cache.get_or_create<UnchangedNumericalEffect>(numerical).object;
+}
+
+std::shared_ptr<const BaseEffect> PolicyFactoryImpl::make_gt_effect(const std::shared_ptr<const NamedNumerical>& numerical) {
+    return m_cache.get_or_create<GreaterNumericalEffect>(numerical).object;
+}
+
+std::shared_ptr<const BaseEffect> PolicyFactoryImpl::make_eq_effect(const std::shared_ptr<const NamedNumerical>& numerical) {
+    return m_cache.get_or_create<EqualNumericalEffect>(numerical).object;
+}
+
+std::shared_ptr<const BaseEffect> PolicyFactoryImpl::make_inc_effect(const std::shared_ptr<const NamedConcept>& concept_) {
+    return m_cache.get_or_create<IncrementConceptEffect>(concept_).object;
+}
+
+std::shared_ptr<const BaseEffect> PolicyFactoryImpl::make_dec_effect(const std::shared_ptr<const NamedConcept>& concept_) {
+    return m_cache.get_or_create<DecrementConceptEffect>(concept_).object;
+}
+
+std::shared_ptr<const BaseEffect> PolicyFactoryImpl::make_bot_effect(const std::shared_ptr<const NamedConcept>& concept_) {
+    return m_cache.get_or_create<UnchangedConceptEffect>(concept_).object;
+}
+
+std::shared_ptr<const BaseEffect> PolicyFactoryImpl::make_gt_effect(const std::shared_ptr<const NamedConcept>& concept_) {
+    return m_cache.get_or_create<GreaterConceptEffect>(concept_).object;
+}
+
+std::shared_ptr<const BaseEffect> PolicyFactoryImpl::make_eq_effect(const std::shared_ptr<const NamedConcept>& concept_) {
+    return m_cache.get_or_create<EqualConceptEffect>(concept_).object;
 }
 
 std::shared_ptr<const Rule> PolicyFactoryImpl::make_rule(const Conditions& conditions, const Effects& effects) {

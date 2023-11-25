@@ -33,6 +33,10 @@ public:
         return m_named_element->compute_evaluate_time_score();
     }
 
+    size_t hash_impl() const override {
+        return hash_combine(m_named_element);
+    }
+
     std::shared_ptr<const Element> get_named_element() const { return m_named_element; }
 };
 
@@ -46,7 +50,6 @@ private:
 
 public:
     bool are_equal_impl(const BaseEffect& other) const override;
-    size_t hash_impl() const override;
     void str_impl(std::stringstream& out) const override;
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
@@ -63,7 +66,6 @@ private:
 
 public:
     bool are_equal_impl(const BaseEffect& other) const override;
-    size_t hash_impl() const override;
     void str_impl(std::stringstream& out) const override;
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
@@ -80,7 +82,6 @@ private:
 
 public:
     bool are_equal_impl(const BaseEffect& other) const override;
-    size_t hash_impl() const override;
     void str_impl(std::stringstream& out) const override;
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
@@ -97,7 +98,6 @@ private:
 
 public:
     bool are_equal_impl(const BaseEffect& other) const override;
-    size_t hash_impl() const override;
     void str_impl(std::stringstream& out) const override;
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
@@ -114,7 +114,6 @@ private:
 
 public:
     bool are_equal_impl(const BaseEffect& other) const override;
-    size_t hash_impl() const override;
     void str_impl(std::stringstream& out) const override;
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
@@ -131,13 +130,128 @@ private:
 
 public:
     bool are_equal_impl(const BaseEffect& other) const override;
-    size_t hash_impl() const override;
     void str_impl(std::stringstream& out) const override;
 
     bool evaluate(const core::State& source_state, const core::State& target_state) const override;
     bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
     void accept(BaseEffectVisitor& visitor) const override;
 };
+
+class GreaterNumericalEffect : public NamedElementEffect<NamedNumerical>, public std::enable_shared_from_this<GreaterNumericalEffect> {
+private:
+    GreaterNumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical);
+
+    template<typename... Ts>
+    friend class dlplan::ReferenceCountedObjectFactory;
+
+public:
+    bool are_equal_impl(const BaseEffect& other) const override;
+    void str_impl(std::stringstream& out) const override;
+
+    bool evaluate(const core::State& source_state, const core::State& target_state) const override;
+    bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
+    void accept(BaseEffectVisitor& visitor) const override;
+};
+
+class EqualNumericalEffect : public NamedElementEffect<NamedNumerical>, public std::enable_shared_from_this<EqualNumericalEffect> {
+private:
+    EqualNumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical);
+
+    template<typename... Ts>
+    friend class dlplan::ReferenceCountedObjectFactory;
+
+public:
+    bool are_equal_impl(const BaseEffect& other) const override;
+    void str_impl(std::stringstream& out) const override;
+
+    bool evaluate(const core::State& source_state, const core::State& target_state) const override;
+    bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
+    void accept(BaseEffectVisitor& visitor) const override;
+
+};
+
+class IncrementConceptEffect : public NamedElementEffect<NamedConcept>, public std::enable_shared_from_this<IncrementConceptEffect> {
+private:
+    IncrementConceptEffect(int identifier, std::shared_ptr<const NamedConcept> concept);
+
+    template<typename... Ts>
+    friend class dlplan::ReferenceCountedObjectFactory;
+
+public:
+    bool are_equal_impl(const BaseEffect& other) const override;
+    void str_impl(std::stringstream& out) const override;
+
+    bool evaluate(const core::State& source_state, const core::State& target_state) const override;
+    bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
+    void accept(BaseEffectVisitor& visitor) const override;
+};
+
+class DecrementConceptEffect : public NamedElementEffect<NamedConcept>, public std::enable_shared_from_this<DecrementConceptEffect> {
+private:
+    DecrementConceptEffect(int identifier, std::shared_ptr<const NamedConcept> concept);
+
+    template<typename... Ts>
+    friend class dlplan::ReferenceCountedObjectFactory;
+
+public:
+    bool are_equal_impl(const BaseEffect& other) const override;
+    void str_impl(std::stringstream& out) const override;
+
+    bool evaluate(const core::State& source_state, const core::State& target_state) const override;
+    bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
+    void accept(BaseEffectVisitor& visitor) const override;
+};
+
+class UnchangedConceptEffect : public NamedElementEffect<NamedConcept>, public std::enable_shared_from_this<UnchangedConceptEffect> {
+private:
+    UnchangedConceptEffect(int identifier, std::shared_ptr<const NamedConcept> concept);
+
+    template<typename... Ts>
+    friend class dlplan::ReferenceCountedObjectFactory;
+
+public:
+    bool are_equal_impl(const BaseEffect& other) const override;
+    void str_impl(std::stringstream& out) const override;
+
+    bool evaluate(const core::State& source_state, const core::State& target_state) const override;
+    bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
+    void accept(BaseEffectVisitor& visitor) const override;
+
+};
+
+class GreaterConceptEffect : public NamedElementEffect<NamedConcept>, public std::enable_shared_from_this<GreaterConceptEffect> {
+private:
+    GreaterConceptEffect(int identifier, std::shared_ptr<const NamedConcept> concept);
+
+    template<typename... Ts>
+    friend class dlplan::ReferenceCountedObjectFactory;
+
+public:
+    bool are_equal_impl(const BaseEffect& other) const override;
+    void str_impl(std::stringstream& out) const override;
+
+    bool evaluate(const core::State& source_state, const core::State& target_state) const override;
+    bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
+    void accept(BaseEffectVisitor& visitor) const override;
+};
+
+class EqualConceptEffect : public NamedElementEffect<NamedConcept>, public std::enable_shared_from_this<EqualConceptEffect> {
+private:
+    EqualConceptEffect(int identifier, std::shared_ptr<const NamedConcept> concept);
+
+    template<typename... Ts>
+    friend class dlplan::ReferenceCountedObjectFactory;
+
+public:
+    bool are_equal_impl(const BaseEffect& other) const override;
+    void str_impl(std::stringstream& out) const override;
+
+    bool evaluate(const core::State& source_state, const core::State& target_state) const override;
+    bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
+    void accept(BaseEffectVisitor& visitor) const override;
+
+};
+
 
 /// @brief Defines an interface for visiting effects.
 class BaseEffectVisitor {
@@ -148,6 +262,13 @@ public:
     virtual void visit(const std::shared_ptr<const IncrementNumericalEffect>& effect) = 0;
     virtual void visit(const std::shared_ptr<const DecrementNumericalEffect>& effect) = 0;
     virtual void visit(const std::shared_ptr<const UnchangedNumericalEffect>& effect) = 0;
+    virtual void visit(const std::shared_ptr<const GreaterNumericalEffect>& effect) = 0;
+    virtual void visit(const std::shared_ptr<const EqualNumericalEffect>& effect) = 0;
+    virtual void visit(const std::shared_ptr<const IncrementConceptEffect>& effect) = 0;
+    virtual void visit(const std::shared_ptr<const DecrementConceptEffect>& effect) = 0;
+    virtual void visit(const std::shared_ptr<const UnchangedConceptEffect>& effect) = 0;
+    virtual void visit(const std::shared_ptr<const GreaterConceptEffect>& effect) = 0;
+    virtual void visit(const std::shared_ptr<const EqualConceptEffect>& effect) = 0;
 };
 
 }
@@ -203,6 +324,62 @@ namespace std {
     };
 
     template<>
+    struct less<std::shared_ptr<const dlplan::policy::GreaterNumericalEffect>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::GreaterNumericalEffect>& left_effect,
+            const std::shared_ptr<const dlplan::policy::GreaterNumericalEffect>& right_effect) const;
+    };
+
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::EqualNumericalEffect>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::EqualNumericalEffect>& left_effect,
+            const std::shared_ptr<const dlplan::policy::EqualNumericalEffect>& right_effect) const;
+    };
+
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::IncrementConceptEffect>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::IncrementConceptEffect>& left_effect,
+            const std::shared_ptr<const dlplan::policy::IncrementConceptEffect>& right_effect) const;
+    };
+
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::DecrementConceptEffect>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::DecrementConceptEffect>& left_effect,
+            const std::shared_ptr<const dlplan::policy::DecrementConceptEffect>& right_effect) const;
+    };
+
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::UnchangedConceptEffect>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::UnchangedConceptEffect>& left_effect,
+            const std::shared_ptr<const dlplan::policy::UnchangedConceptEffect>& right_effect) const;
+    };
+
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::GreaterConceptEffect>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::GreaterConceptEffect>& left_effect,
+            const std::shared_ptr<const dlplan::policy::GreaterConceptEffect>& right_effect) const;
+    };
+
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::EqualConceptEffect>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::EqualConceptEffect>& left_effect,
+            const std::shared_ptr<const dlplan::policy::EqualConceptEffect>& right_effect) const;
+    };
+
+    template<>
     struct hash<dlplan::policy::PositiveBooleanEffect>
     {
         std::size_t operator()(const dlplan::policy::PositiveBooleanEffect& effect) const;
@@ -236,6 +413,48 @@ namespace std {
     struct hash<dlplan::policy::UnchangedNumericalEffect>
     {
         std::size_t operator()(const dlplan::policy::UnchangedNumericalEffect& effect) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::GreaterNumericalEffect>
+    {
+        std::size_t operator()(const dlplan::policy::GreaterNumericalEffect& effect) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::EqualNumericalEffect>
+    {
+        std::size_t operator()(const dlplan::policy::EqualNumericalEffect& effect) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::IncrementConceptEffect>
+    {
+        std::size_t operator()(const dlplan::policy::IncrementConceptEffect& effect) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::DecrementConceptEffect>
+    {
+        std::size_t operator()(const dlplan::policy::DecrementConceptEffect& effect) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::UnchangedConceptEffect>
+    {
+        std::size_t operator()(const dlplan::policy::UnchangedConceptEffect& effect) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::GreaterConceptEffect>
+    {
+        std::size_t operator()(const dlplan::policy::GreaterConceptEffect& effect) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::EqualConceptEffect>
+    {
+        std::size_t operator()(const dlplan::policy::EqualConceptEffect& effect) const;
     };
 }
 
