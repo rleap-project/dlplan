@@ -194,6 +194,7 @@ class Policy : public Base<Policy> {
 private:
     Booleans m_booleans;
     Numericals m_numericals;
+    Concepts m_concepts;
     Rules m_rules;
 
     Policy(int identifier, const Rules& rules);
@@ -230,6 +231,7 @@ public:
 
     const Booleans& get_booleans() const;
     const Numericals& get_numericals() const;
+    const Concepts& get_concepts() const;
     const Rules& get_rules() const;
 };
 

@@ -75,6 +75,7 @@ void init_policy(py::module_ &m_policy) {
         .def("get_rules", &policy::Policy::get_rules)
         .def("get_booleans", &policy::Policy::get_booleans)
         .def("get_numericals", &policy::Policy::get_numericals)
+        .def("get_concepts", &policy::Policy::get_concepts)
     ;
 
 // py::overload_cast<>(&policy::PolicyFactory::str, py::const_)

@@ -109,10 +109,9 @@ struct InsertNamedElementFromEffect : public BaseEffectVisitor {
 
 Policy::Policy(int identifier, const Rules& rules)
     : Base<Policy>(identifier), m_rules(rules) {
-    // Retrieve boolean and numericals from the rules.
-    Concepts concepts;
-    InsertNamedElementFromCondition condition_visitor(m_booleans, m_numericals, concepts);
-    InsertNamedElementFromEffect effect_visitor(m_booleans, m_numericals, concepts);
+    // Retrieve boolean, numericals, and concepts from the rules.
+    InsertNamedElementFromCondition condition_visitor(m_booleans, m_numericals, m_concepts);
+    InsertNamedElementFromEffect effect_visitor(m_booleans, m_numericals, m_concepts);
     for (const auto& rule : m_rules) {
         for (const auto& condition : rule->get_conditions()) {
             condition->accept(condition_visitor);
@@ -239,6 +238,10 @@ const Booleans& Policy::get_booleans() const {
 
 const Numericals& Policy::get_numericals() const {
     return m_numericals;
+}
+
+const Concepts& Policy::get_concepts() const {
+    return m_concepts;
 }
 
 const Rules& Policy::get_rules() const {
