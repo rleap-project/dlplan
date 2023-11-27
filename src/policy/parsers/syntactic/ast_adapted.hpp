@@ -58,6 +58,6 @@ BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::EqualConceptEffect, reference)
 
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Rule, feature_conditions, feature_effects)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Rules, rules)
-BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Policy, booleans, numericals, rules)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Policy, booleans, numericals, concepts, roles, rules)
 
 #endif

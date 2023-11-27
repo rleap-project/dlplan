@@ -343,8 +343,12 @@ Rules parse(
 
 std::shared_ptr<const Policy> parse(
     const ast::Policy& node, const dlplan::error_handler_type& error_handler, Context& context) {
-    parse(node.booleans, error_handler, context);
-    parse(node.numericals, error_handler, context);
+    if (node.booleans.has_value()) {
+        parse(node.booleans.value(), error_handler, context);
+    }
+    if (node.numericals.has_value()) {
+        parse(node.numericals.value(), error_handler, context);
+    }
     return context.policy_factory.make_policy(parse(node.rules, error_handler, context));
 }
 

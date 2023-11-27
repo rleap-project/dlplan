@@ -165,8 +165,10 @@ namespace dlplan::policy::parser
     const auto rules_def = *rule;
 
     const auto policy_def = lit('(') > lit(":policy")
-        > booleans
-        > numericals
+        > -booleans
+        > -numericals
+        > -concepts
+        > -roles
         > rules
         > lit(')');
     const auto policy_root_def = policy;

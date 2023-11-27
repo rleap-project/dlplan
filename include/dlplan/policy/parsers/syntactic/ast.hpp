@@ -5,6 +5,7 @@
 
 #include <boost/spirit/home/x3/support/ast/position_tagged.hpp>
 #include <boost/spirit/home/x3/support/ast/variant.hpp>
+#include <boost/optional.hpp>
 
 #include <vector>
 
@@ -285,8 +286,10 @@ namespace dlplan::policy::ast
 
     /* Policy */
     struct Policy : x3::position_tagged {
-        Booleans booleans;
-        Numericals numericals;
+        boost::optional<Booleans> booleans;
+        boost::optional<Numericals> numericals;
+        boost::optional<Concepts> concepts;
+        boost::optional<Roles> roles;
         Rules rules;
     };
 }
