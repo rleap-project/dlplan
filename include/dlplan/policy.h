@@ -113,6 +113,11 @@ protected:
     explicit BaseCondition(int identifier);
 
 public:
+    // delete copy/move to prevent accidental object slicing when passed by value
+    BaseCondition(const BaseCondition& other) = delete;
+    BaseCondition& operator=(const BaseCondition& other) = delete;
+    BaseCondition(BaseCondition&& other) = delete;
+    BaseCondition& operator=(BaseCondition&& other) = delete;
     virtual ~BaseCondition();
 
     virtual bool are_equal_impl(const BaseCondition& other) const = 0;
@@ -134,6 +139,11 @@ protected:
     explicit BaseEffect(int identifier);
 
 public:
+    // delete copy/move to prevent accidental object slicing when passed by value
+    BaseEffect(const BaseEffect& other) = delete;
+    BaseEffect& operator=(const BaseEffect& other) = delete;
+    BaseEffect(BaseEffect&& other) = delete;
+    BaseEffect& operator=(BaseEffect&& other) = delete;
     virtual ~BaseEffect();
 
     virtual bool are_equal_impl(const BaseEffect& other) const = 0;
