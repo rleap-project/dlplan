@@ -27,7 +27,9 @@ struct ValueEqual {
 
 template<typename T>
 struct PerTypeCache {
+    // Weak_ptr cannot be key, so we use a shared_ptr<const T>.
     std::unordered_map<std::shared_ptr<const T>, std::weak_ptr<T>, ValueHash<T>, ValueEqual<T>> data;
+    // For removal, we use an additional mapping from the identifier to the key of the data map.
     std::unordered_map<int, std::shared_ptr<const T>> identifier_to_key;
 };
 
@@ -75,6 +77,7 @@ public:
             ++m_count;
             new_insertion = true;
             t_cache->identifier_to_key.emplace(identifier, key);
+            /* Must explicitly call the constructor of T to give exclusive access to the factory. */
             cached = sp = std::shared_ptr<T>(
                 new T(identifier, std::forward<Args>(args)...),
                 [parent=t_cache, identifier](T* x)
@@ -85,6 +88,8 @@ public:
                         parent->data.erase(key);
                         parent->identifier_to_key.erase(identifier);
                     }
+                    /* After cache removal, we can call the objects destructor
+                       and recursively call the deleter of children if their ref count goes to 0 */
                     delete x;
                 }
             );
