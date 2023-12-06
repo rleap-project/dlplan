@@ -27,8 +27,8 @@ struct ValueEqual {
 
 template<typename T>
 struct PerTypeCache {
-    std::unordered_map<std::shared_ptr<T>, std::weak_ptr<T>, ValueHash<T>, ValueEqual<T>> data;
-    std::unordered_map<int, std::shared_ptr<T>> identifier_to_key;
+    std::unordered_map<std::shared_ptr<const T>, std::weak_ptr<T>, ValueHash<T>, ValueEqual<T>> data;
+    std::unordered_map<int, std::shared_ptr<const T>> identifier_to_key;
 };
 
 template<typename T>
