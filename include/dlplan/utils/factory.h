@@ -47,7 +47,7 @@ private:
     std::tuple<std::shared_ptr<PerTypeCache<Ts>>...> m_cache;
 
     // Identifiers are shared since types can be polymorphic
-    int m_count = -1;
+    int m_count = 0;
 
 public:
     ReferenceCountedObjectFactory()
@@ -61,7 +61,7 @@ public:
     template<typename T, typename... Args>
     GetOrCreateResult<T> get_or_create(Args&&... args) {
         auto& t_cache = std::get<std::shared_ptr<PerTypeCache<T>>>(m_cache);
-        int identifier = ++m_count;
+        int identifier = m_count;
         /* Must explicitly call the constructor of T to give exclusive access to the factory. */
         auto key = std::shared_ptr<T>(new T(identifier, std::forward<Args>(args)...));
         /* we must declare sp before locking the mutex
@@ -71,8 +71,8 @@ public:
         sp = cached.lock();
         // std::lock_guard<std::mutex> hold(t_cache->mutex);
         bool new_insertion = false;
-
         if (!sp) {
+            ++m_count;
             new_insertion = true;
             t_cache->identifier_to_key.emplace(identifier, key);
             cached = sp = std::shared_ptr<T>(
