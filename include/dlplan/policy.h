@@ -112,12 +112,13 @@ class BaseCondition : public Base<BaseCondition> {
 protected:
     explicit BaseCondition(int identifier);
 
+    // protected copy/move to prevent accidental object slicing when passed by value
+    BaseCondition(const BaseCondition& other) = default;
+    BaseCondition& operator=(const BaseCondition& other) = default;
+    BaseCondition(BaseCondition&& other) = default;
+    BaseCondition& operator=(BaseCondition&& other) = default;
+
 public:
-    // delete copy/move to prevent accidental object slicing when passed by value
-    BaseCondition(const BaseCondition& other) = delete;
-    BaseCondition& operator=(const BaseCondition& other) = delete;
-    BaseCondition(BaseCondition&& other) = delete;
-    BaseCondition& operator=(BaseCondition&& other) = delete;
     virtual ~BaseCondition();
 
     virtual bool are_equal_impl(const BaseCondition& other) const = 0;
@@ -138,12 +139,13 @@ class BaseEffect : public Base<BaseEffect> {
 protected:
     explicit BaseEffect(int identifier);
 
+    // protected copy/move to prevent accidental object slicing when passed by value
+    BaseEffect(const BaseEffect& other) = default;
+    BaseEffect& operator=(const BaseEffect& other) = default;
+    BaseEffect(BaseEffect&& other) = default;
+    BaseEffect& operator=(BaseEffect&& other) = default;
+
 public:
-    // delete copy/move to prevent accidental object slicing when passed by value
-    BaseEffect(const BaseEffect& other) = delete;
-    BaseEffect& operator=(const BaseEffect& other) = delete;
-    BaseEffect(BaseEffect&& other) = delete;
-    BaseEffect& operator=(BaseEffect&& other) = delete;
     virtual ~BaseEffect();
 
     virtual bool are_equal_impl(const BaseEffect& other) const = 0;

@@ -42,8 +42,8 @@ private:
     template<typename T>
     struct PerTypeCache {
         // cannot use weak_ptr<T> in set, so we use it as value in map.
-        // shared_ptr<T> is key because 
-        //   1) polymorphic types do not have copy/move 
+        // shared_ptr<T> is key because
+        //   1) polymorphic types do not have copy/move
         //   2) mapping from identifier to key for deletion
         // We could use raw pointer as key since we do not need reference counting.
         std::unordered_map<std::shared_ptr<const T>, std::weak_ptr<T>, ValueHash<T>, ValueEqual<T>> data;
@@ -81,7 +81,7 @@ public:
         auto& t_cache = std::get<PerTypeCache<T>>(m_cache->data);
         int identifier = m_cache->count;
         /* Must explicitly call the constructor of T to give exclusive access to the factory. */
-        auto key = std::shared_ptr<T>(new T(identifier, std::forward<Args>(args)...));
+        auto key = std::make_shared<T>(T(identifier, std::forward<Args>(args)...));
         auto& cached = t_cache.data[key];
         sp = cached.lock();
         bool new_insertion = false;

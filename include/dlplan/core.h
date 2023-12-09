@@ -544,15 +544,16 @@ protected:
     Element(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, bool is_static)
        : BaseElement<Element<Denotation, DenotationList>>(index, vocabulary_info, is_static) { }
 
+    // protected copy/move to prevent accidental object slicing when passed by value
+    Element(const Element& other) = default;
+    Element& operator=(const Element& other) = default;
+    Element(Element&& other) = default;
+    Element& operator=(Element&& other) = default;
+
     virtual Denotation evaluate_impl(const State& , DenotationsCaches& ) const = 0;
     virtual DenotationList evaluate_impl(const States& , DenotationsCaches& ) const = 0;
 
 public:
-    // delete copy/move to prevent accidental object slicing when passed by value
-    Element(const Element& other) = delete;
-    Element& operator=(const Element& other) = delete;
-    Element(Element&& other) = delete;
-    Element& operator=(Element&& other) = delete;
     virtual ~Element() = default;
 
     virtual bool are_equal_impl(const Element& other) const = 0;
@@ -586,15 +587,16 @@ protected:
     ElementLight(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, bool is_static)
        : BaseElement<ElementLight<Denotation, DenotationList>>(index, vocabulary_info, is_static) { }
 
+    // protected copy/move to prevent accidental object slicing when passed by value
+    ElementLight(const ElementLight& other) = default;
+    ElementLight& operator=(const ElementLight& other) = default;
+    ElementLight(ElementLight&& other) = default;
+    ElementLight& operator=(ElementLight&& other) = default;
+
     virtual Denotation evaluate_impl(const State& , DenotationsCaches& ) const = 0;
     virtual DenotationList evaluate_impl(const States& , DenotationsCaches& ) const = 0;
 
 public:
-    // delete copy/move to prevent accidental object slicing when passed by value
-    ElementLight(const ElementLight& other) = delete;
-    ElementLight& operator=(const ElementLight& other) = delete;
-    ElementLight(ElementLight&& other) = delete;
-    ElementLight& operator=(ElementLight&& other) = delete;
     virtual ~ElementLight() = default;
 
     virtual bool are_equal_impl(const ElementLight& other) const = 0;
