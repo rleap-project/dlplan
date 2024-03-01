@@ -1,4 +1,4 @@
-find_package(pybind11 CONFIG REQUIRED PATHS "${CMAKE_PREFIX_PATH}/share/cmake/pybind11" NO_DEFAULT_PATH)
+find_package(pybind11 CONFIG REQUIRED PATHS ${CMAKE_PREFIX_PATH} NO_DEFAULT_PATH)
 # Set result variables
 find_package(pybind11)
 
