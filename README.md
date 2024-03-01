@@ -47,7 +47,7 @@ The novelty component provides functionality for width-based planning and learni
 
 ### 3.1. Installing the Dependencies
 
-DLPlan depends a fraction of [Boost's](boost.org) header-only libraries (Fusion, Spirit x3, Container), its performance benchmarking framework depends on [GoogleBenchmark](https://github.com/google/benchmark), and its testing framework depends on [GoogleTest](https://github.com/google/googletest).
+DLPlan depends a fraction of [Boost's](boost.org) header-only libraries (Fusion, Spirit x3, Container), its performance benchmarking framework depends on [GoogleBenchmark](https://github.com/google/benchmark), its testing framework depends on [GoogleTest](https://github.com/google/googletest), its Python bindings depends on [pybind11](https://pybind11.readthedocs.io/en/stable/index.html).
 
 We provide a CMake Superbuild project that takes care of downloading, building, and installing all dependencies.
 
@@ -90,6 +90,8 @@ find_package(dlplan 0.1 REQUIRED COMPONENTS core generator policy statespace nov
 - -DBUILD_TESTS:BOOL=TRUE enables compilation of tests
 
 ### 3.4. Building the Python Interface
+
+Use the following command, if you are only interested in using the Python interface, which takes care of building and installing the Python bindings and all dependencies.
 
 ```console
 pip install dlplan
