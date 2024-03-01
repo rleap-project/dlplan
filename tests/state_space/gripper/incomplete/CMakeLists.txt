@@ -15,6 +15,7 @@ add_custom_target(state_space_gripper_incomplete_instance ALL
 target_link_libraries(state_space_gripper_incomplete_tests
     PRIVATE
         dlplan::statespace
-        GTest::GTest)
+        GTest::GTest
+        GTest::Main)
 
 add_test(state_space_gripper_incomplete_gtests state_space_gripper_incomplete_tests)

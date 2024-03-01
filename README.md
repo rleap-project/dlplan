@@ -45,7 +45,7 @@ The novelty component provides functionality for width-based planning and learni
 
 ## 3. Building and Installing
 
-### 3.0. Installing the Dependencies
+### 3.1. Installing the Dependencies
 
 DLPlan depends a fraction of [Boost's](boost.org) header-only libraries (Fusion, Spirit x3, Container), its performance benchmarking framework depends on [GoogleBenchmark](https://github.com/google/benchmark), and its testing framework depends on [GoogleTest](https://github.com/google/googletest).
 
@@ -58,24 +58,21 @@ cmake -S dependencies -B dependencies/build -DCMAKE_INSTALL_PREFIX=dependencies/
 cmake --build dependencies/build -j16
 ```
 
-### 3.1. Building the C++ Interface
-
-Dependencies
-- Python3
-- Boost (boost.org)
+### 3.2. Building the C++ Interface
 
 Create python virtual environment and install dependencies
 ```console
 python3 -m venv --prompt dlplan .venv
 source .venv/bin/activate
-pip install pybind11 pybind11-global state_space_generator
+pip install state_space_generator
 ```
 
 Run the following from the project root to build the library.
 By default, the library compiles in `Debug` mode.
+
 ```console
 # Configure with installation prefixes of all dependencies
-cmake -S . -B build -DCMAKE_PREFIX_PATH=${PWD}/dependencies/installs
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=${PWD}/dependencies/installs
 # Build
 cmake --build build -j16
 # Install (optional)
@@ -88,16 +85,13 @@ list(APPEND CMAKE_PREFIX_PATH "<path/to/dlplan_install_dir>")
 find_package(dlplan 0.1 REQUIRED COMPONENTS core generator policy statespace novelty serialization)
 ```
 
-### 3.2. Additional Compile Flags
+### 3.3. Additional Compile Flags
 
 - -DBUILD_TESTS:BOOL=TRUE enables compilation of tests
 
-### 3.3. Building the Python Interface
+### 3.4. Building the Python Interface
 
 ```console
-python3 -m venv --prompt dlplan .venv
-source .venv/bin/activate
-pip install -r requirements.txt
 pip install dlplan
 ```
 

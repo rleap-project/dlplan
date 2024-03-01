@@ -18,6 +18,7 @@ target_link_libraries(generator_delivery_tests
     PRIVATE
         dlplan::generator
         dlplan::statespace
-        GTest::GTest)
+        GTest::GTest
+        GTest::Main)
 
 add_test(generator_delivery_gtests generator_delivery_tests)

@@ -17,6 +17,7 @@ target_link_libraries(novelty_gripper_tests
         dlplan::statespace
         dlplan::core
         dlplan::novelty
-        GTest::GTest)
+        GTest::GTest
+        GTest::Main)
 
 add_test(novelty_gripper_gtests novelty_gripper_tests)

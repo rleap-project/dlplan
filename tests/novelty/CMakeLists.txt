@@ -13,6 +13,7 @@ target_sources(
 target_link_libraries(novelty_tests
     PRIVATE
         dlplan::novelty
-        GTest::GTest)
+        GTest::GTest
+        GTest::Main)
 
 add_test(novelty_gtests novelty_tests)

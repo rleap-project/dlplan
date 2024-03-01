@@ -37,5 +37,5 @@ jobs:
           cmake --build build -j$(nproc)
 
       - name: Test
-        working-directory: ${{runner.workspace}}/build/tests
+        working-directory: build/tests
         run: GTEST_OUTPUT=xml:test-results/ GTEST_COLOR=1 ctest -V
