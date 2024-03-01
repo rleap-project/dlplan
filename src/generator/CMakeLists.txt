@@ -1,38 +1,16 @@
 add_library(dlplangenerator STATIC)
+
+file(GLOB_RECURSE GENERATOR_SRC_FILES
+    "*.cpp" "**/*.cpp")
+file(GLOB_RECURSE GENERATOR_PRIVATE_HEADER_FILES
+    "*.h" "**/*.h")
+file(GLOB_RECURSE GENERATOR_PUBLIC_HEADER_FILES
+    "../include/dlplan/generator.h"
+    "../include/dlplan/generator/*.h" "../include/dlplan/generator/**/*.h")
+
 target_sources(dlplangenerator
     PRIVATE
-        feature_generator.cpp
-        generator.cpp
-        rules/booleans/empty.cpp
-        rules/booleans/inclusion.cpp
-        rules/booleans/nullary.cpp
-        rules/numericals/concept_distance.cpp
-        rules/numericals/count.cpp
-        rules/concepts/all.cpp
-        rules/concepts/and.cpp
-        rules/concepts/bot.cpp
-        rules/concepts/diff.cpp
-        rules/concepts/equal.cpp
-        rules/concepts/not.cpp
-        rules/concepts/one_of.cpp
-        rules/concepts/or.cpp
-        rules/concepts/primitive.cpp
-        rules/concepts/projection.cpp
-        rules/concepts/some.cpp
-        rules/concepts/subset.cpp
-        rules/concepts/top.cpp
-        rules/roles/and.cpp
-        rules/roles/compose.cpp
-        rules/roles/diff.cpp
-        rules/roles/identity.cpp
-        rules/roles/inverse.cpp
-        rules/roles/not.cpp
-        rules/roles/or.cpp
-        rules/roles/primitive.cpp
-        rules/roles/restrict.cpp
-        rules/roles/top.cpp
-        rules/roles/transitive_closure.cpp
-        rules/roles/transitive_reflexive_closure.cpp
+        ${GENERATOR_SRC_FILES} ${GENERATOR_PRIVATE_HEADER_FILES} ${GENERATOR_PUBLIC_HEADER_FILES}
         ../utils/logging.cpp
         ../utils/countdown_timer.cpp
 )

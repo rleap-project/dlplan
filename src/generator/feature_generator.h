@@ -37,6 +37,8 @@
 
 #include "rules/rule.h"
 
+#include "../../include/dlplan/generator.h"
+
 #include <unordered_map>
 #include <unordered_set>
 #include <memory>
@@ -47,7 +49,6 @@ namespace dlplan::generator {
 struct GeneratorData;
 
 using Rule_Ptr = std::shared_ptr<rules::Rule>;
-using FeatureRepresentations = std::vector<std::string>;
 
 class FeatureGeneratorImpl {
 private:
@@ -132,7 +133,7 @@ public:
     /**
      * Exhaustively generates features with pairwise disjoint feature evaluations on the states.
      */
-    FeatureRepresentations generate(
+    GeneratedFeatures generate(
         core::SyntacticElementFactory& factory,
         const core::States& states,
         int concept_complexity_limit,

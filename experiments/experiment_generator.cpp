@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
     auto syntactic_element_factory = core::SyntacticElementFactory(state_space.get_instance_info()->get_vocabulary_info());
     core::States states;
     std::for_each(state_space.get_states().begin(), state_space.get_states().end(), [&](const auto& pair){ states.push_back(pair.second); });
-    auto feature_reprs = generator::generate_features(
+    auto [generated_booleans, generated_numericals, generated_concepts, generated_roles] = generator::generate_features(
         syntactic_element_factory,
         states,
         concept_complexity_limit,
@@ -51,28 +51,18 @@ int main(int argc, char** argv) {
         time_limit,
         feature_limit);
 
-    std::vector<std::shared_ptr<const core::Boolean>> boolean_features;
-    std::vector<std::shared_ptr<const core::Numerical>> numerical_features;
-    for (const auto& repr : feature_reprs) {
-        if (repr.substr(0, 2) == "b_") {
-            boolean_features.push_back(syntactic_element_factory.parse_boolean(repr));
-        } else if (repr.substr(0, 2) == "n_") {
-            numerical_features.push_back(syntactic_element_factory.parse_numerical(repr));
-        }
-    }
-
     std::cout << "Started element evaluation" << std::endl;
-    std::cout << "Number of booleans: " << boolean_features.size() << std::endl;
-    std::cout << "Number of numericals: " << numerical_features.size() << std::endl;
+    std::cout << "Number of booleans: " << generated_booleans.size() << std::endl;
+    std::cout << "Number of numericals: " << generated_numericals.size() << std::endl;
 
     {
         auto start = std::chrono::steady_clock::now();
         for (int i = 0; i < num_iterations; ++i) {
             for (const auto& pair : state_space.get_states()) {
-                for (const auto& boolean : boolean_features) {
+                for (const auto& boolean : generated_booleans) {
                     boolean->evaluate(pair.second);
                 }
-                for (const auto& numerical : numerical_features) {
+                for (const auto& numerical : generated_numericals) {
                     numerical->evaluate(pair.second);
                 }
             }
@@ -88,10 +78,10 @@ int main(int argc, char** argv) {
         core::DenotationsCaches caches;
         for (int i = 0; i < std::atoi(argv[10]); ++i) {
             for (const auto& pair : state_space.get_states()) {
-                for (const auto& boolean : boolean_features) {
+                for (const auto& boolean : generated_booleans) {
                     boolean->evaluate(pair.second, caches);
                 }
-                for (const auto& numerical : numerical_features) {
+                for (const auto& numerical : generated_numericals) {
                     numerical->evaluate(pair.second, caches);
                 }
             }
@@ -106,10 +96,10 @@ int main(int argc, char** argv) {
         auto start = std::chrono::steady_clock::now();
         core::DenotationsCaches caches;
         for (int i = 0; i < std::atoi(argv[10]); ++i) {
-            for (const auto& boolean : boolean_features) {
+            for (const auto& boolean : generated_booleans) {
                 boolean->evaluate(states, caches);
             }
-            for (const auto& numerical : numerical_features) {
+            for (const auto& numerical : generated_numericals) {
                 numerical->evaluate(states, caches);
             }
         }

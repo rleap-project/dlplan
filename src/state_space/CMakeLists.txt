@@ -1,9 +1,17 @@
 add_library(dlplanstatespace STATIC)
+
+file(GLOB_RECURSE STATE_SPACE_SRC_FILES
+    "*.cpp" "**/*.cpp")
+file(GLOB_RECURSE STATE_SPACE_PRIVATE_HEADER_FILES
+    "*.h" "**/*.h")
+file(GLOB_RECURSE STATE_SPACE_PUBLIC_HEADER_FILES
+    "../include/dlplan/state_space.h"
+    "../include/dlplan/state_space/*.h" "../include/dlplan/state_space/**/*.h")
+
 target_sources(dlplanstatespace
     PRIVATE
-        generator.cpp
-        reader.cpp
-        state_space.cpp)
+        ${STATE_SPACE_SRC_FILES} ${STATE_SPACE_PRIVATE_HEADER_FILES} ${STATE_SPACE_PUBLIC_HEADER_FILES}
+)
 
 target_link_libraries(dlplanstatespace
     PUBLIC

@@ -73,10 +73,19 @@ def main():
     state_4 = State(4, instance, [atom_2, atom_5, atom_6])  # holding b, a on table
     states = [state_0, state_1, state_2, state_3, state_4]
 
-    features = generate_features(factory, states, 5, 5, 10, 10, 10, 180, 100000)
+    generated_booleans, generated_numericals, generated_concepts, generated_roles = generate_features(factory, states, 5, 5, 10, 10, 10, 180, 100000)
 
-    for feature in features:
-        print(feature)
+    for boolean in generated_booleans:
+        print(str(boolean))
+
+    for numerical in generated_numericals:
+        print(str(numerical))
+
+    for concept in generated_concepts:
+        print(str(concept))
+
+    for role in generated_roles:
+        print(str(role))
 
 
 if __name__ == "__main__":

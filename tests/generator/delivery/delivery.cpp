@@ -34,37 +34,23 @@ TEST(DLPTests, GeneratorDeliveryTest) {
     SyntacticElementFactory syntactic_element_factory(vocabulary_info);
     States states;
     std::for_each(state_space.get_states().begin(), state_space.get_states().end(), [&](const auto& pair){states.push_back(pair.second); });
-    auto feature_reprs = feature_generator.generate(syntactic_element_factory, states, 9, 9, 9, 9, 15, 1000, 100000);
-    std::vector<std::shared_ptr<const Boolean>> generated_boolean_features;
-    std::vector<std::shared_ptr<const Numerical>> generated_numerical_features;
-    std::vector<std::shared_ptr<const Concept>> generated_concept_features;
-    std::vector<std::shared_ptr<const Role>> generated_role_features;
-    for (const auto& repr : feature_reprs) {
-        if (repr.substr(0, 2) == "b_") {
-            generated_boolean_features.push_back(syntactic_element_factory.parse_boolean(repr));
-        } else if (repr.substr(0, 2) == "n_") {
-            generated_numerical_features.push_back(syntactic_element_factory.parse_numerical(repr));
-        } else if (repr.substr(0, 2) == "c_") {
-            generated_concept_features.push_back(syntactic_element_factory.parse_concept(repr));
-        } else if (repr.substr(0, 2) == "r_") {
-            generated_role_features.push_back(syntactic_element_factory.parse_role(repr));
-        }
-    }
+    const auto [generated_booleans, generated_numericals, generated_concepts, generated_roles] = feature_generator.generate(syntactic_element_factory, states, 9, 9, 9, 9, 15, 1000, 100000);
+
     DenotationsCaches caches;
     std::vector<std::shared_ptr<const BooleanDenotations>> generated_boolean_denotations;
-    for (const auto& boolean : generated_boolean_features) {
+    for (const auto& boolean : generated_booleans) {
         generated_boolean_denotations.push_back(boolean->evaluate(states, caches));
     }
     std::vector<std::shared_ptr<const NumericalDenotations>> generated_numerical_denotations;
-    for (const auto& numerical : generated_numerical_features) {
+    for (const auto& numerical : generated_numericals) {
         generated_numerical_denotations.push_back(numerical->evaluate(states, caches));
     }
     std::vector<std::shared_ptr<const ConceptDenotations>> generated_concept_denotations;
-    for (const auto& concept_ : generated_concept_features) {
+    for (const auto& concept_ : generated_concepts) {
         generated_concept_denotations.push_back(concept_->evaluate(states, caches));
     }
     std::vector<std::shared_ptr<const RoleDenotations>> generated_role_denotations;
-    for (const auto& role : generated_role_features) {
+    for (const auto& role : generated_roles) {
         generated_role_denotations.push_back(role->evaluate(states, caches));
     }
 
@@ -108,7 +94,7 @@ TEST(DLPTests, GeneratorDeliveryTest) {
             if (required_denotations == generated_denotations) {
                 found = true;
                 std::cout << "required: " << required_boolean_features[i]->str() << "\n"
-                          << "generated: " << generated_boolean_features[j]->str() << "\n";
+                          << "generated: " << generated_booleans[j]->str() << "\n";
             }
         }
         EXPECT_EQ(found, true);
@@ -121,7 +107,7 @@ TEST(DLPTests, GeneratorDeliveryTest) {
             if (required_denotations == generated_denotations) {
                 found = true;
                 std::cout << "required: " << required_numerical_features[i]->str() << "\n"
-                          << "generated: " << generated_numerical_features[j]->str() << "\n";
+                          << "generated: " << generated_numericals[j]->str() << "\n";
             }
         }
         EXPECT_EQ(found, true);
@@ -134,7 +120,7 @@ TEST(DLPTests, GeneratorDeliveryTest) {
             if (required_denotations == generated_denotations) {
                 found = true;
                 std::cout << "required: " << required_concept_features[i]->str() << "\n"
-                          << "generated: " << generated_concept_features[j]->str() << "\n";
+                          << "generated: " << generated_concepts[j]->str() << "\n";
             }
         }
         EXPECT_EQ(found, true);
@@ -147,7 +133,7 @@ TEST(DLPTests, GeneratorDeliveryTest) {
             if (required_denotations == generated_denotations) {
                 found = true;
                 std::cout << "required: " << required_role_features[i]->str() << "\n"
-                          << "generated: " << generated_role_features[j]->str() << "\n";
+                          << "generated: " << generated_roles[j]->str() << "\n";
             }
         }
         EXPECT_EQ(found, true);

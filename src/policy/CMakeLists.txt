@@ -1,16 +1,16 @@
 add_library(dlplanpolicy STATIC)
+
+file(GLOB_RECURSE POLICY_SRC_FILES
+    "*.cpp" "**/*.cpp")
+file(GLOB_RECURSE POLICY_PRIVATE_HEADER_FILES
+    "*.h" "**/*.h")
+file(GLOB_RECURSE POLICY_PUBLIC_HEADER_FILES
+    "../include/dlplan/policy.h"
+    "../include/dlplan/policy/*.h" "../include/dlplan/policy/**/*.h")
+
 target_sources(dlplanpolicy
     PRIVATE
-        condition.cpp
-        effect.cpp
-        policy_factory.cpp
-        policy_impl.cpp
-        policy_minimizer.cpp
-        policy.cpp
-        rule.cpp
-        parsers/syntactic/parser_instantiations.cpp
-        parsers/semantic/context.cpp
-        parsers/semantic/parser.cpp
+        ${POLICY_SRC_FILES} ${POLICY_PRIVATE_HEADER_FILES} ${POLICY_PUBLIC_HEADER_FILES}
         ../common/parsers/utility.cpp
         ../common/parsers/filesystem.cpp)
 

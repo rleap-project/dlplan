@@ -92,7 +92,7 @@ FeatureGeneratorImpl& FeatureGeneratorImpl::operator=(FeatureGeneratorImpl&& oth
 
 FeatureGeneratorImpl::~FeatureGeneratorImpl() = default;
 
-FeatureRepresentations FeatureGeneratorImpl::generate(
+GeneratedFeatures FeatureGeneratorImpl::generate(
     core::SyntacticElementFactory& factory,
     const core::States& states,
     int concept_complexity_limit,
@@ -118,7 +118,7 @@ FeatureRepresentations FeatureGeneratorImpl::generate(
     generate_inductively(states, concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, count_numerical_complexity_limit, distance_numerical_complexity_limit, data, caches);
     // Restore previous sigint handler
     std::signal(SIGINT, pre_sigint_handler);
-    return data.m_reprs;
+    return data.m_generated_features;
 }
 
 void FeatureGeneratorImpl::generate_base(

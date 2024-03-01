@@ -10,7 +10,7 @@ void CountNumerical::generate_impl(const core::States& states, int target_comple
         auto element = factory.make_count_numerical(concept_);
         auto denotations = element->evaluate(states, caches);
         if (data.m_numerical_hash_table.insert(denotations).second) {
-            data.m_reprs.push_back(element->str());
+            std::get<1>(data.m_generated_features).push_back(element);
             data.m_numericals_by_iteration[target_complexity].push_back(std::move(element));
             increment_generated();
         }
@@ -19,7 +19,7 @@ void CountNumerical::generate_impl(const core::States& states, int target_comple
         auto element = factory.make_count_numerical(role);
         auto denotations = element->evaluate(states, caches);
         if (data.m_numerical_hash_table.insert(denotations).second) {
-            data.m_reprs.push_back(element->str());
+            std::get<1>(data.m_generated_features).push_back(element);
             data.m_numericals_by_iteration[target_complexity].push_back(std::move(element));
             increment_generated();
         }

@@ -74,10 +74,21 @@ int main() {
     State state_4(4, instance, {atom_2, atom_5, atom_6});  // holding b, a on table
     States states({state_0, state_1, state_2, state_3, state_4});
 
-    FeatureRepresentations features = generate_features(factory, states, 5, 5, 10, 10, 10, 180, 100000);
-    //FeatureRepresentations features = generate_features(factory, states, 2, 2, 2, 2, 2, 180, 100000);
+    auto [generated_booleans, generated_numericals, generated_concepts, generated_roles] = generate_features(factory, states, 5, 5, 10, 10, 10, 180, 100000);
 
-    for (const auto& feature : features) {
-        std::cout << feature << std::endl;
+    for (const auto& boolean : generated_booleans) {
+        std::cout << boolean->str() << std::endl;
+    }
+
+    for (const auto& numerical : generated_numericals) {
+        std::cout << numerical->str() << std::endl;
+    }
+
+    for (const auto& concept_ : generated_concepts) {
+        std::cout << concept_->str() << std::endl;
+    }
+
+    for (const auto& role : generated_roles) {
+        std::cout << role->str() << std::endl;
     }
 }

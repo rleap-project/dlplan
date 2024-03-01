@@ -37,8 +37,5 @@ def test_generate_exhaustively():
     state_1 = State(1, instance, [atoms[1], atoms[2]])  # b on a
     state_2 = State(2, instance, [atoms[2], atoms[3]])  # both on table
     states = [state_0, state_1, state_2]
-    feature_reprs = generator.generate(factory, states, 2, 2, 5, 5, 5, 180, 100000)
-
-    boolean_reprs = [repr for repr in feature_reprs if repr.startswith("b_")]
-    numerical_reprs = [repr for repr in feature_reprs if repr.startswith("n_")]
+    generated_booleans, generated_numericals, generated_concepts, generated_roles = generator.generate(factory, states, 2, 2, 5, 5, 5, 180, 100000)
 

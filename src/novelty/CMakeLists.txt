@@ -1,13 +1,16 @@
 add_library(dlplannovelty STATIC)
+
+file(GLOB_RECURSE NOVELTY_SRC_FILES
+    "*.cpp" "**/*.cpp")
+file(GLOB_RECURSE NOVELTY_PRIVATE_HEADER_FILES
+    "*.h" "**/*.h")
+file(GLOB_RECURSE NOVELTY_PUBLIC_HEADER_FILES
+    "../include/dlplan/novelty.h"
+    "../include/dlplan/novelty/*.h" "../include/dlplan/novelty/**/*.h")
+
 target_sources(dlplannovelty
     PRIVATE
-        novelty_base.cpp
-        novelty_table.cpp
-        novelty.cpp
-        tuple_graph_builder.cpp
-        tuple_graph.cpp
-        tuple_index_generator.cpp
-        tuple_node.cpp
+        ${NOVELTY_SRC_FILES} ${NOVELTY_PRIVATE_HEADER_FILES} ${NOVELTY_PUBLIC_HEADER_FILES}
         ../utils/math.cpp
     )
 target_link_libraries(dlplannovelty

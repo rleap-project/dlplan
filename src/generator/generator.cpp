@@ -27,7 +27,7 @@ FeatureGenerator& FeatureGenerator::operator=(FeatureGenerator&& other) {
 
 FeatureGenerator::~FeatureGenerator() = default;
 
-FeatureRepresentations FeatureGenerator::generate(
+GeneratedFeatures FeatureGenerator::generate(
     core::SyntacticElementFactory& factory,
     const core::States& states,
     int concept_complexity_limit,
@@ -160,7 +160,7 @@ void FeatureGenerator::set_generate_transitive_reflexive_closure_role(bool enabl
     m_pImpl->set_generate_transitive_reflexive_closure_role(enable);
 }
 
-FeatureRepresentations generate_features(
+GeneratedFeatures generate_features(
     core::SyntacticElementFactory& factory,
     const core::States& states,
     int concept_complexity_limit,

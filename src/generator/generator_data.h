@@ -3,6 +3,7 @@
 
 #include "../utils/countdown_timer.h"
 #include "../../include/dlplan/core.h"
+#include "../../include/dlplan/generator.h"
 
 #include <iostream>
 #include <numeric>
@@ -21,7 +22,7 @@ struct GeneratorData {
     std::vector<std::vector<std::shared_ptr<const core::Numerical>>> m_numericals_by_iteration;
     std::vector<std::vector<std::shared_ptr<const core::Concept>>> m_concepts_by_iteration;
     std::vector<std::vector<std::shared_ptr<const core::Role>>> m_roles_by_iteration;
-    std::vector<std::string> m_reprs;
+    GeneratedFeatures m_generated_features;
 
     // resource constraints
     int m_complexity;
@@ -52,7 +53,7 @@ struct GeneratorData {
     }
 
     bool reached_resource_limit() {
-      return (static_cast<int>(m_reprs.size()) >= m_feature_limit || m_timer.is_expired());
+      return (static_cast<int>(std::get<0>(m_generated_features).size() + std::get<1>(m_generated_features).size() + std::get<2>(m_generated_features).size() + std::get<3>(m_generated_features).size()) >= m_feature_limit || m_timer.is_expired());
     }
 };
 

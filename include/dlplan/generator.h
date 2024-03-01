@@ -6,6 +6,7 @@
 
 #include <string>
 #include <vector>
+#include <tuple>
 
 #include "core.h"
 #include "utils/pimpl.h"
@@ -14,7 +15,12 @@
 namespace dlplan::generator {
 class FeatureGeneratorImpl;
 using States = std::vector<core::State>;
-using FeatureRepresentations = std::vector<std::string>;
+using GeneratedFeatures = std::tuple<
+    std::vector<std::shared_ptr<const core::Boolean>>,
+    std::vector<std::shared_ptr<const core::Numerical>>,
+    std::vector<std::shared_ptr<const core::Concept>>,
+    std::vector<std::shared_ptr<const core::Role>>
+>;
 
 /// @brief Provides functionality for automatically generating state features
 ///        that are distinguishable on a finite set of states.
@@ -30,7 +36,7 @@ public:
     FeatureGenerator& operator=(FeatureGenerator&& other);
     ~FeatureGenerator();
 
-    FeatureRepresentations generate(
+    GeneratedFeatures generate(
         core::SyntacticElementFactory& factory,
         const core::States& states,
         int concept_complexity_limit=9,
@@ -75,7 +81,7 @@ public:
 
 
 /// @brief Generates state features that are distinguishable on a finite set of states.
-extern FeatureRepresentations generate_features(
+extern GeneratedFeatures generate_features(
     core::SyntacticElementFactory& factory,
     const core::States& states,
     int concept_complexity_limit=9,
