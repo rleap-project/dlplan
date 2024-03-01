@@ -25,20 +25,16 @@ jobs:
           python -m pip install setuptools wheel twine state_space_generator
           python -m pip install -r requirements.txt
 
-      - name: Install boost
-        id: install-boost
+      - name: Configure, Build, and Install Dependencies
         run: |
-          bash .github/workflows/scripts/install_boost.sh
-          echo "BOOST_ROOT=${{runner.workspace}}/dlplan/boost_1_82_0" >> "$GITHUB_OUTPUT"
+          cd dependencies
+          cmake -S . -B build -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dependencies/installs
+          cmake --build build -j$(nproc)
 
-      - name: Configure CMake
-        run: cmake -DENABLE_TESTING:BOOL=TRUE -S $GITHUB_WORKSPACE -B ${{runner.workspace}}/build
-        env:
-          BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
-
-      - name: Build
-        working-directory: ${{runner.workspace}}/build
-        run: export CXXFLAGS="-Werror" && cmake --build .
+      - name: Configure, and Build DLPlan
+        run: |
+          cmake -DBUILD_TESTS:BOOL=TRUE -S . -B build -DCMAKE_PREFIX_PATH=$GITHUB_WORKSPACE/dependencies/installs
+          cmake --build build -j$(nproc)
 
       - name: Test
         working-directory: ${{runner.workspace}}/build/tests

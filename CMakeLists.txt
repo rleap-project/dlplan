@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.21)
 
 ##############################################################
 # Language setup
@@ -27,8 +27,8 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
         STRING "Choose the type of build." FORCE)
 endif()
 
-option(ENABLE_TESTING "Enables compilation of tests." OFF)
-if (ENABLE_TESTING)
+option(BUILD_TESTS "Enables compilation of tests." OFF)
+if (BUILD_TESTS)
     message("Building tests enabled.")
 else()
     message("Building tests disabled.")
@@ -56,8 +56,11 @@ configure_ccache()
 
 # Boost
 configure_boost()
-find_package(Boost ${BOOST_MIN_VERSION} REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS})
+find_package(Boost ${BOOST_MIN_VERSION} REQUIRED PATHS ${CMAKE_PREFIX_PATH} NO_DEFAULT_PATH)
+if(Boost_FOUND)
+  include_directories(${Boost_INCLUDE_DIRS})
+  message(STATUS "Found Boost: ${Boost_DIR} (found version ${Boost_VERSION})")
+endif()
 
 ##############################################################
 # Add library and executable targets
@@ -67,7 +70,7 @@ add_subdirectory(src)
 add_subdirectory(examples)
 add_subdirectory(experiments)
 
-if (ENABLE_TESTING)
+if (BUILD_TESTS)
     add_subdirectory(tests)
 endif()
 

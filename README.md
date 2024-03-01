@@ -45,6 +45,19 @@ The novelty component provides functionality for width-based planning and learni
 
 ## 3. Building and Installing
 
+### 3.0. Installing the Dependencies
+
+DLPlan depends a fraction of [Boost's](boost.org) header-only libraries (Fusion, Spirit x3, Container), its performance benchmarking framework depends on [GoogleBenchmark](https://github.com/google/benchmark), and its testing framework depends on [GoogleTest](https://github.com/google/googletest).
+
+We provide a CMake Superbuild project that takes care of downloading, building, and installing all dependencies.
+
+```console
+# Configure dependencies
+cmake -S dependencies -B dependencies/build -DCMAKE_INSTALL_PREFIX=dependencies/installs
+# Build and install dependencies
+cmake --build dependencies/build -j16
+```
+
 ### 3.1. Building the C++ Interface
 
 Dependencies
@@ -61,19 +74,12 @@ pip install pybind11 pybind11-global state_space_generator
 Run the following from the project root to build the library.
 By default, the library compiles in `Debug` mode.
 ```console
-cmake -S . -B build
-cmake --build build -j4
-```
-
-To build the library in `Release` mode, run
-```console
-cmake -DCMAKE_BUILD_TYPE=Release -S . -B build
-cmake --build build -j4
-```
-
-To install the library, run
-```console
-cmake --install build --prefix=<path/to/dlplan_install_dir>
+# Configure with installation prefixes of all dependencies
+cmake -S . -B build -DCMAKE_PREFIX_PATH=${PWD}/dependencies/installs
+# Build
+cmake --build build -j16
+# Install (optional)
+cmake --install build --prefix=<path/to/installation-directory>
 ```
 
 To use DLPlan in other cmake projects, add the following in the root CMakeLists.txt
@@ -84,7 +90,7 @@ find_package(dlplan 0.1 REQUIRED COMPONENTS core generator policy statespace nov
 
 ### 3.2. Additional Compile Flags
 
-- DENABLE_TESTING:BOOL=TRUE enables compilation of tests
+- -DBUILD_TESTS:BOOL=TRUE enables compilation of tests
 
 ### 3.3. Building the Python Interface
 

@@ -9,7 +9,7 @@ from pathlib import Path
 from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
-__version__ = "0.3.11"
+__version__ = "0.3.12"
 HERE = Path(__file__).resolve().parent
 
 
@@ -32,19 +32,27 @@ class CMakeBuild(build_ext):
 
         cfg = "Debug" if self.debug else "Release"
 
+        # Build dependencies
+        subprocess.run(
+            ["cmake", "-S", f"{ext.sourcedir}/dependencies", "-B", f"{self.build_temp}/dependencies/build", f"-DCMAKE_INSTALL_PREFIX={self.build_temp}/dependencies/installs"], cwd=ext.sourcedir, check=True
+        )
+
+        subprocess.run(
+            ["cmake", "--build", f"{self.build_temp}/dependencies/build", "-j16"]
+        )
+
+        # Build dlplan
         cmake_args = [
             "-DDLPLAN_PYTHON=On",
             f"-DDLPLAN_VERSION_INFO={__version__}",
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}",
-            "-DENABLE_TESTING:bool=false",
+            "-DBUILD_TESTS:bool=false",
             f"-DPYTHON_EXECUTABLE={sys.executable}",
             f"-DCMAKE_BUILD_TYPE={cfg}",  # not used on MSVC, but no harm
+            f"-DCMAKE_PREFIX_PATH={self.build_temp}/dependencies/installs"
         ]
         build_args = []
         build_args += ["--target", ext.name]
-
-        if not os.path.exists(self.build_temp):
-            os.makedirs(self.build_temp)
 
         subprocess.check_call(
             ["cmake", ext.sourcedir] + cmake_args, cwd=self.build_temp
@@ -64,7 +72,7 @@ setup(
     url="https://github.com/rleap-project/dlplan",
     description="A library for using description logics features in planning",
     long_description="",
-    install_requires=["pybind11==2.10.4", "pybind11-global==2.10.4", "state_space_generator==0.1.9", "cmake>=3.16.3"],
+    install_requires=["pybind11==2.10.4", "pybind11-global==2.10.4", "state_space_generator==0.1.9", "cmake>=3.21"],
     packages=find_packages(where="api/python/src"),
     package_dir={"": "api/python/src"},
     package_data={

@@ -26,12 +26,6 @@ jobs:
           python -m pip install -r requirements.txt
           python -m pip install setuptools wheel twine
 
-      - name: Install boost
-        id: install-boost
-        run: |
-          bash .github/workflows/scripts/install_boost.sh
-          echo "BOOST_ROOT=${{runner.workspace}}/dlplan/boost_1_82_0" >> "$GITHUB_OUTPUT"
-
       - name: Build and install
         run: python -m pip install --verbose .[test]
         env:

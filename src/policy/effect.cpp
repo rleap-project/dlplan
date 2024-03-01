@@ -113,16 +113,16 @@ bool IncrementNumericalEffect::are_equal_impl(const BaseEffect& other) const {
 bool IncrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
     int source_eval = m_named_element->get_element()->evaluate(source_state);
     int target_eval = m_named_element->get_element()->evaluate(target_state);
-    if (source_eval == INF) return false;
-    if (target_eval == INF) return false;
+    //if (source_eval == INF) return false;
+    //if (target_eval == INF) return false;
     return source_eval < target_eval;
 }
 
 bool IncrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
     int source_eval = m_named_element->get_element()->evaluate(source_state, caches);
     int target_eval = m_named_element->get_element()->evaluate(target_state, caches);
-    if (source_eval == INF) return false;
-    if (target_eval == INF) return false;
+    //if (source_eval == INF) return false;
+    //if (target_eval == INF) return false;
     return source_eval < target_eval;
 }
 
@@ -150,16 +150,16 @@ bool DecrementNumericalEffect::are_equal_impl(const BaseEffect& other) const {
 bool DecrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
     int source_eval = m_named_element->get_element()->evaluate(source_state);
     int target_eval = m_named_element->get_element()->evaluate(target_state);
-    if (source_eval == INF) return false;
-    if (target_eval == INF) return false;
+    //if (source_eval == INF) return false;
+    //if (target_eval == INF) return false;
     return source_eval > target_eval;
 }
 
 bool DecrementNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
     int source_eval = m_named_element->get_element()->evaluate(source_state, caches);
     int target_eval = m_named_element->get_element()->evaluate(target_state, caches);
-    if (source_eval == INF) return false;
-    if (target_eval == INF) return false;
+    //if (source_eval == INF) return false;
+    //if (target_eval == INF) return false;
     return source_eval > target_eval;
 }
 
@@ -191,8 +191,8 @@ bool UnchangedNumericalEffect::evaluate(const core::State& source_state, const c
 bool UnchangedNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
     int source_eval = m_named_element->get_element()->evaluate(source_state, caches);
     int target_eval = m_named_element->get_element()->evaluate(target_state, caches);
-    if (source_eval == INF) return false;
-    if (target_eval == INF) return false;
+    //if (source_eval == INF) return false;
+    //if (target_eval == INF) return false;
     return source_eval == target_eval;
 }
 
@@ -219,13 +219,13 @@ bool GreaterNumericalEffect::are_equal_impl(const BaseEffect& other) const {
 
 bool GreaterNumericalEffect::evaluate(const core::State&, const core::State& target_state) const {
     int target_eval = m_named_element->get_element()->evaluate(target_state);
-    if (target_eval == INF) return false;
+    //if (target_eval == INF) return false;
     return target_eval > 0;
 }
 
 bool GreaterNumericalEffect::evaluate(const core::State&, const core::State& target_state, core::DenotationsCaches& caches) const {
     int target_eval = m_named_element->get_element()->evaluate(target_state, caches);
-    if (target_eval == INF) return false;
+    //if (target_eval == INF) return false;
     return target_eval > 0;
 }
 
@@ -252,13 +252,13 @@ bool EqualNumericalEffect::are_equal_impl(const BaseEffect& other) const {
 
 bool EqualNumericalEffect::evaluate(const core::State&, const core::State& target_state) const {
     int target_eval = m_named_element->get_element()->evaluate(target_state);
-    if (target_eval == INF) return false;
+    //if (target_eval == INF) return false;
     return target_eval == 0;
 }
 
 bool EqualNumericalEffect::evaluate(const core::State&, const core::State& target_state, core::DenotationsCaches& caches) const {
     int target_eval = m_named_element->get_element()->evaluate(target_state, caches);
-    if (target_eval == INF) return false;
+    //if (target_eval == INF) return false;
     return target_eval == 0;
 }
 
@@ -286,16 +286,16 @@ bool IncrementConceptEffect::are_equal_impl(const BaseEffect& other) const {
 bool IncrementConceptEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
     int source_eval = m_named_element->get_element()->evaluate(source_state).size();
     int target_eval = m_named_element->get_element()->evaluate(target_state).size();
-    if (source_eval == INF) return false;
-    if (target_eval == INF) return false;
+    //if (source_eval == INF) return false;
+    //if (target_eval == INF) return false;
     return source_eval < target_eval;
 }
 
 bool IncrementConceptEffect::evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
     int source_eval = m_named_element->get_element()->evaluate(source_state, caches)->size();
     int target_eval = m_named_element->get_element()->evaluate(target_state, caches)->size();
-    if (source_eval == INF) return false;
-    if (target_eval == INF) return false;
+    //if (source_eval == INF) return false;
+    //if (target_eval == INF) return false;
     return source_eval < target_eval;
 }
 
@@ -323,16 +323,16 @@ bool DecrementConceptEffect::are_equal_impl(const BaseEffect& other) const {
 bool DecrementConceptEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
     int source_eval = m_named_element->get_element()->evaluate(source_state).size();
     int target_eval = m_named_element->get_element()->evaluate(target_state).size();
-    if (source_eval == INF) return false;
-    if (target_eval == INF) return false;
+    //if (source_eval == INF) return false;
+    //if (target_eval == INF) return false;
     return source_eval > target_eval;
 }
 
 bool DecrementConceptEffect::evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
     int source_eval = m_named_element->get_element()->evaluate(source_state, caches)->size();
     int target_eval = m_named_element->get_element()->evaluate(target_state, caches)->size();
-    if (source_eval == INF) return false;
-    if (target_eval == INF) return false;
+    //if (source_eval == INF) return false;
+    //if (target_eval == INF) return false;
     return source_eval > target_eval;
 }
 
@@ -360,16 +360,16 @@ bool UnchangedConceptEffect::are_equal_impl(const BaseEffect& other) const {
 bool UnchangedConceptEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
     int source_eval = m_named_element->get_element()->evaluate(source_state).size();
     int target_eval = m_named_element->get_element()->evaluate(target_state).size();
-    if (source_eval == INF) return false;
-    if (target_eval == INF) return false;
+    //if (source_eval == INF) return false;
+    //if (target_eval == INF) return false;
     return source_eval == target_eval;
 }
 
 bool UnchangedConceptEffect::evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
     int source_eval = m_named_element->get_element()->evaluate(source_state, caches)->size();
     int target_eval = m_named_element->get_element()->evaluate(target_state, caches)->size();
-    if (source_eval == INF) return false;
-    if (target_eval == INF) return false;
+    //if (source_eval == INF) return false;
+    //if (target_eval == INF) return false;
     return source_eval == target_eval;
 }
 
@@ -396,13 +396,13 @@ bool GreaterConceptEffect::are_equal_impl(const BaseEffect& other) const {
 
 bool GreaterConceptEffect::evaluate(const core::State&, const core::State& target_state) const {
     int target_eval = m_named_element->get_element()->evaluate(target_state).size();
-    if (target_eval == INF) return false;
+    //if (target_eval == INF) return false;
     return target_eval > 0;
 }
 
 bool GreaterConceptEffect::evaluate(const core::State&, const core::State& target_state, core::DenotationsCaches& caches) const {
     int target_eval = m_named_element->get_element()->evaluate(target_state, caches)->size();
-    if (target_eval == INF) return false;
+    //if (target_eval == INF) return false;
     return target_eval > 0;
 }
 
@@ -429,13 +429,13 @@ bool EqualConceptEffect::are_equal_impl(const BaseEffect& other) const {
 
 bool EqualConceptEffect::evaluate(const core::State&, const core::State& target_state) const {
     int target_eval = m_named_element->get_element()->evaluate(target_state).size();
-    if (target_eval == INF) return false;
+    //if (target_eval == INF) return false;
     return target_eval == 0;
 }
 
 bool EqualConceptEffect::evaluate(const core::State&, const core::State& target_state, core::DenotationsCaches& caches) const {
     int target_eval = m_named_element->get_element()->evaluate(target_state, caches)->size();
-    if (target_eval == INF) return false;
+    //if (target_eval == INF) return false;
     return target_eval == 0;
 }
 
