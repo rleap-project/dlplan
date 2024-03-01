@@ -94,23 +94,26 @@ TupleNodeIndices TupleGraphBuilder::compute_nodes_layer(TupleNodeIndices& prev_t
 }
 
 void TupleGraphBuilder::build_width_equal_0_tuple_graph() {
-    TupleNodeIndex node_index = m_nodes.size();
+    TupleNodeIndex initial_node_index = m_nodes.size();
     TupleIndex tuple_index = m_novelty_base->atom_indices_to_tuple_index({});
-    m_node_indices_by_distance.push_back({node_index});
-    m_nodes.push_back({TupleNode(node_index, tuple_index, {m_root_state_index})});
+    m_node_indices_by_distance.push_back({initial_node_index});
+    m_nodes.push_back({TupleNode(initial_node_index, tuple_index, {m_root_state_index})});
     m_state_indices_by_distance.push_back({m_root_state_index});
     const auto& it = m_state_space->get_forward_successor_state_indices().find(m_root_state_index);
     if (it != m_state_space->get_forward_successor_state_indices().end()) {
         TupleNodeIndices curr_tuple_layer;
         StateIndices curr_state_layer;
         for (const auto& target_index : it->second) {
-            node_index = m_nodes.size();
+            TupleNodeIndex node_index = m_nodes.size();
             curr_tuple_layer.push_back(node_index);
             m_nodes.push_back(TupleNode(node_index, tuple_index, {target_index}));
+            m_nodes[initial_node_index].add_successor(node_index);
+            m_nodes[node_index].add_predecessor(initial_node_index);
             curr_state_layer.push_back(target_index);
         }
         m_node_indices_by_distance.push_back(curr_tuple_layer);
         m_state_indices_by_distance.push_back(curr_state_layer);
+
     }
 }
 
