@@ -55,6 +55,7 @@ configure_ccache()
 #find_package(PythonLibs REQUIRED)
 
 # Boost
+message(${CMAKE_PREFIX_PATH})
 configure_boost()
 find_package(Boost ${BOOST_MIN_VERSION} REQUIRED PATHS ${CMAKE_PREFIX_PATH} NO_DEFAULT_PATH)
 if(Boost_FOUND)
@@ -74,6 +75,7 @@ if (BUILD_TESTS)
     add_subdirectory(tests)
 endif()
 
+set(DLPLAN_PYTHON On)
 if(DLPLAN_PYTHON)
   add_subdirectory(api/python)
 endif()

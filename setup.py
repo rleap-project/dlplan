@@ -32,13 +32,17 @@ class CMakeBuild(build_ext):
 
         cfg = "Debug" if self.debug else "Release"
 
+        temp_directory = Path.cwd() / self.build_temp
+        # Create the temporary build directory, if it does not already exist
+        os.makedirs(temp_directory, exist_ok=True)
+
         # Build dependencies
         subprocess.run(
-            ["cmake", "-S", f"{ext.sourcedir}/dependencies", "-B", f"{self.build_temp}/dependencies/build", f"-DCMAKE_INSTALL_PREFIX={self.build_temp}/dependencies/installs"], cwd=ext.sourcedir, check=True
+            ["cmake", "-S", f"{ext.sourcedir}/dependencies", "-B", f"{str(temp_directory)}/dependencies/build", f"-DCMAKE_INSTALL_PREFIX={str(temp_directory)}/dependencies/installs"], cwd=str(temp_directory), check=True
         )
 
         subprocess.run(
-            ["cmake", "--build", f"{self.build_temp}/dependencies/build", "-j16"]
+            ["cmake", "--build", f"{str(temp_directory)}/dependencies/build", "-j16"]
         )
 
         # Build dlplan
@@ -49,16 +53,16 @@ class CMakeBuild(build_ext):
             "-DBUILD_TESTS:bool=false",
             f"-DPYTHON_EXECUTABLE={sys.executable}",
             f"-DCMAKE_BUILD_TYPE={cfg}",  # not used on MSVC, but no harm
-            f"-DCMAKE_PREFIX_PATH={self.build_temp}/dependencies/installs"
+            f"-DCMAKE_PREFIX_PATH={str(temp_directory)}/dependencies/installs"
         ]
         build_args = []
         build_args += ["--target", ext.name]
 
-        subprocess.check_call(
-            ["cmake", ext.sourcedir] + cmake_args, cwd=self.build_temp
+        subprocess.run(
+            ["cmake", "-S", ext.sourcedir, "-B", f"{str(temp_directory)}/build"] + cmake_args, cwd=str(temp_directory), check=True
         )
-        subprocess.check_call(
-            ["cmake", "--build", ".", f"-j{multiprocessing.cpu_count()}"] + build_args, cwd=self.build_temp
+        subprocess.run(
+            ["cmake", "--build", f"{str(temp_directory)}/build", f"-j{multiprocessing.cpu_count()}"] + build_args, cwd=str(temp_directory), check=True
         )
 
 
