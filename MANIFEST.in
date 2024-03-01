@@ -5,8 +5,12 @@ include pyproject.toml
 include README.md
 include requirements.txt
 include setup.py
-include tox.ini
 include Config.cmake.in
+include dependencies/benchmark/CMakeLists.txt
+include dependencies/boost/CMakeLists.txt
+include dependencies/googletest/CMakeLists.txt
+include dependencies/pybind11/CMakeLists.txt
+include dependencies/CMakeLists.txt
 recursive-include api/python/ *
 recursive-include examples/ *
 recursive-include experiments/ *

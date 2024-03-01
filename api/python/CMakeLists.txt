@@ -1,4 +1,5 @@
-find_package(pybind11 CONFIG REQUIRED)
+find_package(pybind11 CONFIG REQUIRED PATHS ${CMAKE_PREFIX_PATH} NO_DEFAULT_PATH)
+
 pybind11_add_module(_dlplan MODULE)
 target_sources(_dlplan
     PRIVATE
