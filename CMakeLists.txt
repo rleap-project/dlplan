@@ -50,10 +50,6 @@ include("configure_ccache")
 # CCache
 configure_ccache()
 
-# Python
-#find_package(Python REQUIRED)
-#find_package(PythonLibs REQUIRED)
-
 # Boost
 message(${CMAKE_PREFIX_PATH})
 configure_boost()
