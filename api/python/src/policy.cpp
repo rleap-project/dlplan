@@ -7,7 +7,8 @@
 
 #include "../../../include/dlplan/core.h"
 #include "../../../include/dlplan/policy.h"
-
+#include "../../../include/dlplan/policy/condition.h"
+#include "../../../include/dlplan/policy/effect.h"
 
 namespace py = pybind11;
 
@@ -46,11 +47,51 @@ void init_policy(py::module_ &m_policy) {
         .def("get_index", &policy::BaseCondition::get_index)
     ;
 
+    py::class_<policy::PositiveBooleanCondition, policy::BaseCondition, std::shared_ptr<policy::PositiveBooleanCondition>>(m_policy, "PositiveBooleanCondition")
+        .def("get_named_element", &policy::PositiveBooleanCondition::get_named_element)
+    ;
+
+    py::class_<policy::NegativeBooleanCondition, policy::BaseCondition, std::shared_ptr<policy::NegativeBooleanCondition>>(m_policy, "NegativeBooleanCondition")
+        .def("get_named_element", &policy::NegativeBooleanCondition::get_named_element)
+    ;
+
+    py::class_<policy::GreaterNumericalCondition, policy::BaseCondition, std::shared_ptr<policy::GreaterNumericalCondition>>(m_policy, "GreaterNumericalCondition")
+        .def("get_named_element", &policy::GreaterNumericalCondition::get_named_element)
+    ;
+
+    py::class_<policy::EqualNumericalCondition, policy::BaseCondition, std::shared_ptr<policy::EqualNumericalCondition>>(m_policy, "EqualNumericalCondition")
+        .def("get_named_element", &policy::EqualNumericalCondition::get_named_element)
+    ;
+
     py::class_<policy::BaseEffect, std::shared_ptr<policy::BaseEffect>>(m_policy, "BaseEffect")
         .def("__str__", py::overload_cast<>(&policy::BaseEffect::str, py::const_))
         .def("evaluate", py::overload_cast<const core::State&, const core::State&>(&policy::BaseEffect::evaluate, py::const_))
         .def("evaluate",  py::overload_cast<const core::State&, const core::State&, core::DenotationsCaches&>(&policy::BaseEffect::evaluate, py::const_))
         .def("get_index", &policy::BaseEffect::get_index)
+    ;
+
+    py::class_<policy::PositiveBooleanEffect, policy::BaseEffect, std::shared_ptr<policy::PositiveBooleanEffect>>(m_policy, "PositiveBooleanEffect")
+        .def("get_named_element", &policy::PositiveBooleanEffect::get_named_element)
+    ;
+
+    py::class_<policy::NegativeBooleanEffect, policy::BaseEffect, std::shared_ptr<policy::NegativeBooleanEffect>>(m_policy, "NegativeBooleanEffect")
+        .def("get_named_element", &policy::NegativeBooleanEffect::get_named_element)
+    ;
+
+    py::class_<policy::UnchangedBooleanEffect, policy::BaseEffect, std::shared_ptr<policy::UnchangedBooleanEffect>>(m_policy, "UnchangedBooleanEffect")
+        .def("get_named_element", &policy::UnchangedBooleanEffect::get_named_element)
+    ;
+
+    py::class_<policy::DecrementNumericalEffect, policy::BaseEffect, std::shared_ptr<policy::DecrementNumericalEffect>>(m_policy, "DecrementNumericalEffect")
+        .def("get_named_element", &policy::DecrementNumericalEffect::get_named_element)
+    ;
+
+    py::class_<policy::IncrementNumericalEffect, policy::BaseEffect, std::shared_ptr<policy::IncrementNumericalEffect>>(m_policy, "IncrementNumericalEffect")
+        .def("get_named_element", &policy::IncrementNumericalEffect::get_named_element)
+    ;
+
+    py::class_<policy::UnchangedNumericalEffect, policy::BaseEffect, std::shared_ptr<policy::UnchangedNumericalEffect>>(m_policy, "UnchangedNumericalEffect")
+        .def("get_named_element", &policy::UnchangedNumericalEffect::get_named_element)
     ;
 
     py::class_<policy::Rule, std::shared_ptr<policy::Rule>>(m_policy, "Rule")

@@ -6,7 +6,7 @@ Example illustrating the policy component.
 
 from dlplan.core import VocabularyInfo, InstanceInfo, State, SyntacticElementFactory, \
     DenotationsCaches
-from dlplan.policy import PolicyFactory
+from dlplan.policy import PolicyFactory, PositiveBooleanEffect, DecrementNumericalEffect
 
 
 def construct_vocabulary_info():

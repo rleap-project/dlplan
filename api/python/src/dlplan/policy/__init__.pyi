@@ -37,6 +37,22 @@ class BaseCondition:
     def get_index(self) -> int: ...
 
 
+class PositiveBooleanCondition(BaseCondition):
+    def get_named_element(self) -> NamedBoolean: ...
+
+
+class NegativeBooleanCondition(BaseCondition):
+    def get_named_element(self) -> NamedBoolean: ...
+
+
+class GreaterNumericalCondition(BaseCondition):
+    def get_named_element(self) -> NamedNumerical: ...
+
+
+class EqualNumericalCondition(BaseCondition):
+    def get_named_element(self) -> NamedNumerical: ...
+
+
 class BaseEffect:
     def __str__(self) -> str: ...
     @overload
@@ -44,6 +60,30 @@ class BaseEffect:
     @overload
     def evaluate(self, source_state: State, target_state: State, caches: DenotationsCaches) -> bool: ...
     def get_index(self) -> int: ...
+
+
+class PositiveBooleanEffect(BaseEffect):
+    def get_named_element(self) -> NamedBoolean: ...
+
+
+class NegativeBooleanEffect(BaseEffect):
+    def get_named_element(self) -> NamedBoolean: ...
+
+
+class UnchangedBooleanEffect(BaseEffect):
+    def get_named_element(self) -> NamedBoolean: ...
+
+
+class DecrementNumericalEffect(BaseEffect):
+    def get_named_element(self) -> NamedNumerical: ...
+
+
+class IncrementNumericalEffect(BaseEffect):
+    def get_named_element(self) -> NamedNumerical: ...
+
+
+class UnchangedNumericalEffect(BaseEffect):
+    def get_named_element(self) -> NamedNumerical: ...
 
 
 class Rule:
