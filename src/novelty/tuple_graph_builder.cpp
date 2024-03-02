@@ -130,7 +130,6 @@ void TupleGraphBuilder::build_width_equal_0_tuple_graph() {
             TupleNodeIndex node_index = m_nodes.size();
             curr_tuple_layer.push_back(node_index);
             auto tuple_node = TupleNode(node_index, node_index, {target_index});
-            std::cout << node_index << std::endl;
             m_nodes.push_back(tuple_node);
             m_nodes[initial_node_index].add_successor(node_index);
             m_nodes[node_index].add_predecessor(initial_node_index);
