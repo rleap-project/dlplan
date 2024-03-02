@@ -28,6 +28,8 @@ using AtomIndices = std::vector<AtomIndex>;
 using TupleIndex = int;
 using TupleIndices = std::vector<TupleIndex>;
 
+using StateIndicesSet = std::set<int>;
+
 using TupleNodeIndex = int;
 using TupleNodeIndices = std::vector<TupleNodeIndex>;
 using TupleNodes = std::vector<TupleNode>;
@@ -154,12 +156,12 @@ class TupleNode
 private:
     TupleNodeIndex m_index;
     TupleIndex m_tuple_index;
-    state_space::StateIndices m_state_indices;
+    StateIndicesSet m_state_indices;
     TupleNodeIndices m_predecessors;
     TupleNodeIndices m_successors;
 
-    TupleNode(TupleNodeIndex index, TupleIndex tuple_index, const state_space::StateIndices &state_indices);
-    TupleNode(TupleNodeIndex index, TupleIndex tuple_index, state_space::StateIndices &&state_indices);
+    TupleNode(TupleNodeIndex index, TupleIndex tuple_index, const StateIndicesSet &state_indices);
+    TupleNode(TupleNodeIndex index, TupleIndex tuple_index, StateIndicesSet &&state_indices);
 
     void add_predecessor(TupleIndex tuple_index);
     void add_successor(TupleIndex tuple_index);
@@ -191,7 +193,7 @@ public:
 
     TupleNodeIndex get_index() const;
     TupleIndex get_tuple_index() const;
-    const state_space::StateIndices &get_state_indices() const;
+    const StateIndicesSet &get_state_indices() const;
     const TupleIndices &get_predecessors() const;
     const TupleIndices &get_successors() const;
 };
@@ -214,7 +216,8 @@ public:
     TupleGraph(
         std::shared_ptr<const NoveltyBase> novelty_base,
         std::shared_ptr<const state_space::StateSpace> state_space,
-        state_space::StateIndex root_state_index);
+        state_space::StateIndex root_state_index,
+        bool enable_pruning = true);
     TupleGraph(const TupleGraph &other);
     TupleGraph &operator=(const TupleGraph &other);
     TupleGraph(TupleGraph &&other);

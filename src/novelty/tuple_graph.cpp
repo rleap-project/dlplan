@@ -15,7 +15,8 @@ namespace dlplan::novelty {
 TupleGraph::TupleGraph(
     std::shared_ptr<const NoveltyBase> novelty_base,
     std::shared_ptr<const state_space::StateSpace> state_space,
-    StateIndex root_state_index)
+    StateIndex root_state_index,
+    bool enable_pruning)
     : m_novelty_base(novelty_base),
       m_state_space(state_space),
       m_root_state_index(root_state_index) {
@@ -25,7 +26,7 @@ TupleGraph::TupleGraph(
     if (!m_novelty_base) {
         throw std::runtime_error("TupleGraph::TupleGraph - state_space is nullptr.");
     }
-    TupleGraphBuilderResult result = TupleGraphBuilder(novelty_base, state_space, root_state_index).get_result();
+    TupleGraphBuilderResult result = TupleGraphBuilder(novelty_base, state_space, root_state_index, enable_pruning).get_result();
     m_nodes = std::move(result.nodes);
     m_node_indices_by_distance = std::move(result.node_indices_by_distance);
     m_state_indices_by_distance = std::move(result.state_indices_by_distance);
@@ -45,14 +46,10 @@ std::string TupleGraph::compute_repr() const {
     // Step 1: Sort nodes, compute index remapping
     TupleNodes nodes = m_nodes;
     std::sort(nodes.begin(), nodes.end(), [](const TupleNode& l, const TupleNode& r){
-        StateIndices l_sorted_state_indices = l.get_state_indices();
-        std::sort(l_sorted_state_indices.begin(), l_sorted_state_indices.end());
-        StateIndices r_sorted_state_indices = r.get_state_indices();
-        std::sort(r_sorted_state_indices.begin(), r_sorted_state_indices.end());
-        if (l_sorted_state_indices == r_sorted_state_indices) {
+        if (l.get_state_indices() == r.get_state_indices()) {
             return l.get_tuple_index() < r.get_tuple_index();
         }
-        return l_sorted_state_indices < r_sorted_state_indices;
+        return l.get_state_indices() < r.get_state_indices();
     });
     std::vector<TupleNodeIndex> remapping(nodes.size());
     for (size_t i = 0; i < nodes.size(); ++i) {
@@ -152,8 +149,8 @@ std::string TupleGraph::to_dot(int verbosity_level) const {
             }
             result << "}<BR/>";
             result << "states={";
-            const auto& state_indices = tuple_node.get_state_indices();
-            for (size_t i = 0; i < state_indices.size(); ++i) {
+            size_t i = 0;
+            for (const auto& state_index : tuple_node.get_state_indices()) {
                 if (i != 0) {
                     result << ",";
                     if (verbosity_level >= 1) {
@@ -161,10 +158,11 @@ std::string TupleGraph::to_dot(int verbosity_level) const {
                     }
                 }
                 if (verbosity_level >= 1) {
-                    result << m_state_space->get_states().at(state_indices[i]).str();
+                    result << m_state_space->get_states().at(state_index).str();
                 } else {
-                    result << state_indices[i];
+                    result << state_index;
                 }
+                ++i;
             }
             result << "}>]\n";
         }

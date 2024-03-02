@@ -4,15 +4,13 @@
 
 #include <sstream>
 
-using namespace dlplan::state_space;
-
 
 namespace dlplan::novelty {
 
-TupleNode::TupleNode(TupleNodeIndex index, TupleIndex tuple_index, const StateIndices& state_indices)
+TupleNode::TupleNode(TupleNodeIndex index, TupleIndex tuple_index, const StateIndicesSet& state_indices)
     : m_index(index), m_tuple_index(tuple_index), m_state_indices(state_indices) { }
 
-TupleNode::TupleNode(TupleNodeIndex index, TupleIndex tuple_index, StateIndices&& state_indices)
+TupleNode::TupleNode(TupleNodeIndex index, TupleIndex tuple_index, StateIndicesSet&& state_indices)
     : m_index(index), m_tuple_index(tuple_index), m_state_indices(std::move(state_indices)) { }
 
 TupleNode::TupleNode(const TupleNode& other) = default;
@@ -35,8 +33,6 @@ void TupleNode::add_successor(TupleIndex tuple_index) {
 
 std::string TupleNode::compute_repr() const {
     std::stringstream ss;
-    state_space::StateIndices sorted_state_indices(m_state_indices.begin(), m_state_indices.end());
-    std::sort(sorted_state_indices.begin(), sorted_state_indices.end());
     TupleIndices sorted_predecessors(m_predecessors.begin(), m_predecessors.end());
     std::sort(sorted_predecessors.begin(), sorted_predecessors.end());
     TupleIndices sorted_successors(m_successors.begin(), m_successors.end());
@@ -44,7 +40,7 @@ std::string TupleNode::compute_repr() const {
     ss << "TupleNode("
        << "index=" << m_index << ", "
        << "tuple_index=" << m_tuple_index << ", "
-       << "state_indices=" << sorted_state_indices << ", "
+       << "state_indices=" << m_state_indices << ", "
        << "predecessors=" << sorted_predecessors << ", "
        << "successors=" << sorted_successors
        << ")";
@@ -70,7 +66,7 @@ TupleIndex TupleNode::get_tuple_index() const {
     return m_tuple_index;
 }
 
-const StateIndices& TupleNode::get_state_indices() const {
+const StateIndicesSet& TupleNode::get_state_indices() const {
     return m_state_indices;
 }
 

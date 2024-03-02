@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
+#include <set>
 
 
 namespace dlplan::utils {
@@ -84,10 +85,24 @@ std::ostream &operator<<(std::ostream &stream, const std::vector<T> &vec) {
 template<class T>
 std::ostream &operator<<(std::ostream &stream, const std::unordered_set<T> &set) {
     stream << "{";
-    for (size_t i = 0; i < set.size(); ++i) {
-        if (i != 0)
-            stream << ", ";
-        stream << set[i];
+    size_t i = 0;
+    for (const auto& element : set) {
+        if (i != 0) stream << ", ";
+        stream << element;
+        ++i;
+    }
+    stream << "}";
+    return stream;
+}
+
+template<class T>
+std::ostream &operator<<(std::ostream &stream, const std::set<T> &set) {
+    stream << "{";
+    size_t i = 0;
+    for (const auto& element : set) {
+        if (i != 0) stream << ", ";
+        stream << element;
+        ++i;
     }
     stream << "}";
     return stream;

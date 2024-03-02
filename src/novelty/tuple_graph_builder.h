@@ -22,6 +22,7 @@ private:
     std::shared_ptr<const NoveltyBase> m_novelty_base;
     std::shared_ptr<const state_space::StateSpace> m_state_space;
     state_space::StateIndex m_root_state_index;
+    bool m_enable_pruning;
     // output
     TupleNodes m_nodes;
     std::vector<TupleNodeIndices> m_node_indices_by_distance;
@@ -29,7 +30,7 @@ private:
     // temporary objects
     NoveltyTable m_novelty_table;
     std::unordered_map<StateIndex, TupleIndices> m_state_index_to_novel_tuple_indices;
-    std::unordered_map<TupleIndex, StateIndices> m_novel_tuple_index_to_state_indices;
+    std::unordered_map<TupleIndex, StateIndicesSet> m_novel_tuple_index_to_state_indices;
 
 private:
     /// @brief Computes all nodes in next layer, given the current layer and
@@ -65,6 +66,10 @@ private:
         TupleNodeIndex cur_node_index,
         std::unordered_map<TupleIndex, TupleNodeIndex> &novel_tuple_index_to_node);
 
+    /// @brief Return true iff the underlying set of states is a super set or equal
+    ///        to the underlying set of states of another subgoal tuple.
+    bool test_prune(const std::vector<TupleNode>& tuple_node_layer, const TupleNode& tuple_node);
+
     void build_width_equal_0_tuple_graph();
 
     void build_width_greater_0_tuple_graph();
@@ -73,7 +78,8 @@ public:
     TupleGraphBuilder(
         std::shared_ptr<const NoveltyBase> novelty_base,
         std::shared_ptr<const state_space::StateSpace> state_space,
-        StateIndex root_state);
+        StateIndex root_state,
+        bool enable_pruning = true);
 
     TupleGraphBuilderResult get_result();
 };
