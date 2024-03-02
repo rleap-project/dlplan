@@ -43,14 +43,12 @@ TupleGraph& TupleGraph::operator=(TupleGraph&& other) = default;
 TupleGraph::~TupleGraph() = default;
 
 std::string TupleGraph::compute_repr() const {
-    // Step 1: Sort nodes, compute index remapping
+    // Step 1: Sort tuple nodes by tuple index, compute index remapping
     TupleNodes nodes = m_nodes;
     std::sort(nodes.begin(), nodes.end(), [](const TupleNode& l, const TupleNode& r){
-        if (l.get_state_indices() == r.get_state_indices()) {
-            return l.get_tuple_index() < r.get_tuple_index();
-        }
-        return l.get_state_indices() < r.get_state_indices();
+        return l.get_tuple_index() < r.get_tuple_index();
     });
+    // Remap node indices to get a canonical representation
     std::vector<TupleNodeIndex> remapping(nodes.size());
     for (size_t i = 0; i < nodes.size(); ++i) {
         remapping[nodes[i].get_index()] = i;  // old to new index
