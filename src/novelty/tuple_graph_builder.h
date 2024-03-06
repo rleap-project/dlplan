@@ -45,13 +45,14 @@ private:
 
     /// @brief Computes all tuples that are novel in any state of the given layer.
     /// @param current_state_layer
-    TupleIndices
+    TupleIndicesSet
     compute_novel_tuple_indices_layer(
         const StateIndices& curr_state_layer);
 
     /// @brief Computes all nodes in next layer, given the ones in the current layer.
     TupleNodeIndices
     compute_nodes_layer(
+        const TupleIndicesSet& curr_novel_tuple_indices,
         TupleNodeIndices& prev_tuple_layer);
 
     /// @brief Computes all successor tuples in next layer for the tuple in current layer
@@ -63,6 +64,7 @@ private:
     ///        in current layer with cur_node_index.
     void
     extend_nodes(
+        const TupleIndicesSet& curr_novel_tuple_indices,
         TupleNodeIndex cur_node_index,
         std::unordered_map<TupleIndex, TupleNodeIndex> &novel_tuple_index_to_node);
 

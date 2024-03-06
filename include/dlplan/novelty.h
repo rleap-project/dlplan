@@ -27,11 +27,13 @@ using AtomIndices = std::vector<AtomIndex>;
 
 using TupleIndex = int;
 using TupleIndices = std::vector<TupleIndex>;
+using TupleIndicesSet = std::unordered_set<TupleIndex>;
 
 using StateIndicesSet = std::set<int>;
 
 using TupleNodeIndex = int;
 using TupleNodeIndices = std::vector<TupleNodeIndex>;
+using TupleNodeIndicesSet = std::unordered_set<TupleNodeIndex>;
 using TupleNodes = std::vector<TupleNode>;
 
 /// @brief Implements a perfect hash function between tuple index and atom indices.
