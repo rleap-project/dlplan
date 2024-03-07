@@ -62,6 +62,20 @@ inline std::size_t hash_set(const std::set<T, C>& set)
     return aggregated_hash;
 }
 
+template<class Container>
+inline std::size_t hash_container(const Container& container)
+{
+    using T = typename Container::value_type;
+    const auto hash_function = std::hash<T>();
+    std::size_t aggregated_hash = 0;
+    for (const auto& item : container)
+    {
+        const auto item_hash = hash_function(item);
+        hash_combine(aggregated_hash, item_hash);
+    }
+    return aggregated_hash;
+}
+
 }
 
 namespace std {

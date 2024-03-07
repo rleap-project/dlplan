@@ -24,6 +24,50 @@ std::ostream& operator<<(
     return os;
 }
 
+/// @brief Prints a vector to the output stream.
+template<typename T>
+std::ostream& operator<<(
+    std::ostream& os,
+    const std::unordered_set<T>& set)
+{
+    os << "{";
+    size_t i = 0;
+    for (const auto element : set)
+    {
+        if (i != 0)
+        {
+            os << ", ";
+        }
+        os << element;
+        ++i;
+    }
+    os << "}";
+
+    return os;
+}
+
+/// @brief Prints a vector to the output stream.
+template<typename T>
+std::ostream& operator<<(
+    std::ostream& os,
+    const std::set<T>& set)
+{
+    os << "{";
+    size_t i = 0;
+    for (const auto element : set)
+    {
+        if (i != 0)
+        {
+            os << ", ";
+        }
+        os << element;
+        ++i;
+    }
+    os << "}";
+
+    return os;
+}
+
 StateIndices TupleGraphBuilder::compute_state_layer(
     const StateIndices& current_layer,
     StateIndicesSet& visited_state_indices)
@@ -101,6 +145,7 @@ TupleGraphBuilder::extend_states(TupleIndex cur_node_index) const {
     return extended;
 }
 
+/*
 void TupleGraphBuilder::extend_nodes(
     const TupleIndicesSet& curr_novel_tuple_indices,
     TupleNodeIndex cur_node_index,
@@ -109,6 +154,7 @@ void TupleGraphBuilder::extend_nodes(
         std::vector<TupleNode> curr_tuple_node_layer;
         auto extended = extend_states(cur_node_index);
 
+        TupleIndices extended_tuple_indices;
         for (const auto& pair : extended)
         {
             const auto succ_tuple_index = pair.first;
@@ -117,15 +163,16 @@ void TupleGraphBuilder::extend_nodes(
             if (curr_novel_tuple_indices.count(succ_tuple_index)
                 && cur_node_extended_states.size() == m_nodes[cur_node_index].get_state_indices().size())
             {
-                int succ_node_index = m_nodes.size();
                 auto find = novel_tuple_index_to_node.find(succ_tuple_index);
 
                 if (find == novel_tuple_index_to_node.end())
                 {
                     auto tuple_node = TupleNode(
-                        succ_node_index,
+                        -1,  // unregistered
                         succ_tuple_index,
                         m_novel_tuple_index_to_state_indices.at(succ_tuple_index));
+                    next_tuple_node_layer.push_back(tuple_node);
+
                     if (!m_enable_pruning || !test_prune(curr_tuple_node_layer, tuple_node)) {
                         curr_tuple_node_layer.push_back(tuple_node);
                         m_nodes.push_back(tuple_node);
@@ -133,6 +180,7 @@ void TupleGraphBuilder::extend_nodes(
                         m_nodes[cur_node_index].add_successor(succ_node_index);
                         m_nodes[succ_node_index].add_predecessor(cur_node_index);
                     }
+
                 }
                 else
                 {
@@ -143,23 +191,108 @@ void TupleGraphBuilder::extend_nodes(
             }
         }
 }
+*/
+
+
+
+struct SetHash {
+    size_t operator()(const StateIndicesSet& set) const {
+        return hash_container(set);
+    }
+};
+
+
+struct SetEqual {
+    bool operator()(const StateIndicesSet& lhs, const StateIndicesSet& rhs) const {
+        return lhs == rhs;
+    }
+};
+
 
 TupleNodeIndices TupleGraphBuilder::compute_nodes_layer(
     const TupleIndicesSet& curr_novel_tuple_indices,
     TupleNodeIndices& prev_tuple_layer)
 {
-    TupleNodeIndices curr_tuple_layer;
-    std::unordered_map<TupleIndex, TupleNodeIndex> novel_tuple_index_to_node;
-
+    TupleIndicesSet curr_extended_tuple_indices;
+    std::unordered_map<TupleIndex, TupleNodeIndicesSet> predecessor_tuple_nodes;
     for (auto& cur_node_index : prev_tuple_layer)
     {
-        extend_nodes(curr_novel_tuple_indices, cur_node_index, novel_tuple_index_to_node);
+        auto extended = extend_states(cur_node_index);
+
+        TupleIndices extended_tuple_indices;
+        for (const auto& pair : extended)
+        {
+            const auto succ_tuple_index = pair.first;
+            const auto& cur_node_extended_states = pair.second;
+
+            // Check whether all optimal plans for cur_node_index can be extended into optimal plans for succ_tuple_index
+            if (curr_novel_tuple_indices.count(succ_tuple_index)
+                && cur_node_extended_states.size() == m_nodes[cur_node_index].get_state_indices().size())
+            {
+                curr_extended_tuple_indices.insert(succ_tuple_index);
+
+                predecessor_tuple_nodes[succ_tuple_index].insert(cur_node_index);
+            }
+        }
+    }
+    //std::cout << "curr_extended_tuple_indices: " << curr_extended_tuple_indices << std::endl;
+
+    // Compute ordering "supset" t > t' iff S*(t) supset S*(t')
+    std::unordered_map<TupleIndex, TupleIndicesSet> supset_subgoals;
+    for (const auto tuple_index_1 : curr_extended_tuple_indices)
+    {
+        const auto& subgoals_1 = m_novel_tuple_index_to_state_indices.at(tuple_index_1);
+
+        // create empty entry
+        supset_subgoals[tuple_index_1] = TupleIndicesSet{};
+
+        for (const auto tuple_index_2 : curr_extended_tuple_indices)
+        {
+            const auto& subgoals_2 = m_novel_tuple_index_to_state_indices.at(tuple_index_2);
+            //std::cout << "tuple_index_1: " << tuple_index_1 << " subgoals_1: " << subgoals_1 << " tuple_index_2: " << tuple_index_2 << " subgoals_2: " << subgoals_2 << std::endl;
+            if ((subgoals_1.size() != subgoals_2.size())
+                && std::includes(
+                subgoals_1.begin(), subgoals_1.end(),
+                subgoals_2.begin(), subgoals_2.end()))
+            {
+                supset_subgoals[tuple_index_1].insert(tuple_index_2);
+                //std::cout << tuple_index_1 << " > " << tuple_index_2 << std::endl;
+            }
+        }
     }
 
-    for (auto& pair : novel_tuple_index_to_node)
+    // From each minimal element according to "supset" pick one representative
+    std::unordered_map<StateIndicesSet, TupleIndex, SetHash, SetEqual> curr_tuple_indices;
+    for (const auto& [tuple_index, supsets] : supset_subgoals)
     {
-        curr_tuple_layer.push_back(pair.second);
+        if (supsets.empty())
+        {
+            const auto& subgoals = m_novel_tuple_index_to_state_indices.at(tuple_index);
+
+            if (!curr_tuple_indices.count(subgoals))
+            {
+                curr_tuple_indices.emplace(subgoals, tuple_index);
+            }
+        }
     }
+
+    // Create nodes
+    TupleNodeIndices curr_tuple_layer;
+    for (const auto& [_, tuple_index] : curr_tuple_indices)
+    {
+        //std::cout << "tuple_index: " << tuple_index << std::endl;
+        auto node_index = m_nodes.size();
+        const auto& subgoals = m_novel_tuple_index_to_state_indices.at(tuple_index);
+        m_nodes.push_back(TupleNode(node_index, tuple_index, subgoals));
+        curr_tuple_layer.push_back(node_index);
+
+        for (const auto predecessor_node_index : predecessor_tuple_nodes[tuple_index])
+        {
+            m_nodes[predecessor_node_index].add_successor(node_index);
+            m_nodes[node_index].add_predecessor(predecessor_node_index);
+        }
+    }
+
     return curr_tuple_layer;
 }
 
@@ -208,24 +341,15 @@ void TupleGraphBuilder::build_width_equal_0_tuple_graph()
 void TupleGraphBuilder::build_width_greater_0_tuple_graph()
 {
     StateIndicesSet visited_state_indices;
+
     // 1. Initialize root state with distance = 0
     m_state_indices_by_distance.push_back(StateIndices{m_root_state_index});
-    TupleNodeIndices initial_tuple_layer;
+    TupleNodeIndex node_index = m_nodes.size();
+    TupleIndex tuple_index = m_novelty_base->atom_indices_to_tuple_index({});
+    TupleNode tuple_node = TupleNode(node_index, tuple_index, StateIndicesSet{m_root_state_index});
+    m_nodes.push_back(tuple_node);
+    m_node_indices_by_distance.push_back(TupleNodeIndices{node_index});
     TupleIndices tuple_indices = m_novelty_table.compute_novel_tuple_indices(m_state_space->get_states().at(m_root_state_index).get_atom_indices());
-    std::vector<TupleNode> curr_tuple_node_layer;
-
-    for (const auto tuple_index : tuple_indices)
-    {
-        int node_index = m_nodes.size();
-        auto tuple_node = TupleNode(node_index, tuple_index, StateIndicesSet{m_root_state_index});
-        if (!m_enable_pruning || !test_prune(curr_tuple_node_layer, tuple_node))
-        {
-            curr_tuple_node_layer.push_back(tuple_node);
-            m_nodes.push_back(tuple_node);
-            initial_tuple_layer.push_back(node_index);
-        }
-    }
-    m_node_indices_by_distance.push_back(std::move(initial_tuple_layer));
     m_novelty_table.insert_tuple_indices(tuple_indices, false);
     visited_state_indices.insert(m_root_state_index);
 
@@ -233,13 +357,15 @@ void TupleGraphBuilder::build_width_greater_0_tuple_graph()
     for (int distance = 1; ; ++distance)
     {
         StateIndices curr_state_layer = compute_state_layer(m_state_indices_by_distance[distance-1], visited_state_indices);
-        auto novel_tuples = compute_novel_tuple_indices_layer(curr_state_layer);
+        //std::cout << "curr_state_layer: " << curr_state_layer << std::endl;
+        auto novel_tuple_indices = compute_novel_tuple_indices_layer(curr_state_layer);
+        //std::cout << "novel_tuple_indices: " << novel_tuple_indices << std::endl;
 
-        if (novel_tuples.empty())
+        if (novel_tuple_indices.empty())
         {
             break;
         }
-        TupleNodeIndices curr_tuple_layer = compute_nodes_layer(novel_tuples, m_node_indices_by_distance[distance-1]);
+        TupleNodeIndices curr_tuple_layer = compute_nodes_layer(novel_tuple_indices, m_node_indices_by_distance[distance-1]);
 
         if (curr_tuple_layer.empty())
         {
