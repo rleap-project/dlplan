@@ -22,7 +22,6 @@ private:
     std::shared_ptr<const NoveltyBase> m_novelty_base;
     std::shared_ptr<const state_space::StateSpace> m_state_space;
     state_space::StateIndex m_root_state_index;
-    bool m_enable_pruning;
     // output
     TupleNodes m_nodes;
     std::vector<TupleNodeIndices> m_node_indices_by_distance;
@@ -60,18 +59,6 @@ private:
     std::unordered_map<TupleIndex, StateIndicesSet>
     extend_states(TupleIndex cur_node_index) const;
 
-    /// @brief Creates all nodes in next layer that are successors for the node
-    ///        in current layer with cur_node_index.
-    void
-    extend_nodes(
-        const TupleIndicesSet& curr_novel_tuple_indices,
-        TupleNodeIndex cur_node_index,
-        std::unordered_map<TupleIndex, TupleNodeIndex> &novel_tuple_index_to_node);
-
-    /// @brief Return true iff the underlying set of states is a super set or equal
-    ///        to the underlying set of states of another subgoal tuple.
-    bool test_prune(const std::vector<TupleNode>& tuple_node_layer, const TupleNode& tuple_node);
-
     void build_width_equal_0_tuple_graph();
 
     void build_width_greater_0_tuple_graph();
@@ -80,8 +67,7 @@ public:
     TupleGraphBuilder(
         std::shared_ptr<const NoveltyBase> novelty_base,
         std::shared_ptr<const state_space::StateSpace> state_space,
-        StateIndex root_state,
-        bool enable_pruning = true);
+        StateIndex root_state);
 
     TupleGraphBuilderResult get_result();
 };

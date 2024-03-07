@@ -218,8 +218,7 @@ public:
     TupleGraph(
         std::shared_ptr<const NoveltyBase> novelty_base,
         std::shared_ptr<const state_space::StateSpace> state_space,
-        state_space::StateIndex root_state_index,
-        bool enable_pruning = true);
+        state_space::StateIndex root_state_index);
     TupleGraph(const TupleGraph &other);
     TupleGraph &operator=(const TupleGraph &other);
     TupleGraph(TupleGraph &&other);

@@ -43,7 +43,7 @@ void init_novelty(py::module_ &m_novelty) {
     ;
 
     py::class_<TupleGraph, std::shared_ptr<TupleGraph>>(m_novelty, "TupleGraph")
-        .def(py::init<std::shared_ptr<const NoveltyBase>, std::shared_ptr<const StateSpace>, StateIndex, bool>())
+        .def(py::init<std::shared_ptr<const NoveltyBase>, std::shared_ptr<const StateSpace>, StateIndex>())
         .def("__repr__", &TupleGraph::compute_repr)
         .def("__str__", &TupleGraph::str)
         .def("to_dot", &TupleGraph::to_dot)
