@@ -172,7 +172,7 @@ public:
 
 class IncrementConceptEffect : public NamedElementEffect<NamedConcept>, public std::enable_shared_from_this<IncrementConceptEffect> {
 private:
-    IncrementConceptEffect(int identifier, std::shared_ptr<const NamedConcept> concept);
+    IncrementConceptEffect(int identifier, std::shared_ptr<const NamedConcept> concept_);
 
     template<typename... Ts>
     friend class dlplan::ReferenceCountedObjectFactory;
@@ -188,7 +188,7 @@ public:
 
 class DecrementConceptEffect : public NamedElementEffect<NamedConcept>, public std::enable_shared_from_this<DecrementConceptEffect> {
 private:
-    DecrementConceptEffect(int identifier, std::shared_ptr<const NamedConcept> concept);
+    DecrementConceptEffect(int identifier, std::shared_ptr<const NamedConcept> concept_);
 
     template<typename... Ts>
     friend class dlplan::ReferenceCountedObjectFactory;
@@ -204,7 +204,7 @@ public:
 
 class UnchangedConceptEffect : public NamedElementEffect<NamedConcept>, public std::enable_shared_from_this<UnchangedConceptEffect> {
 private:
-    UnchangedConceptEffect(int identifier, std::shared_ptr<const NamedConcept> concept);
+    UnchangedConceptEffect(int identifier, std::shared_ptr<const NamedConcept> concept_);
 
     template<typename... Ts>
     friend class dlplan::ReferenceCountedObjectFactory;
@@ -221,7 +221,7 @@ public:
 
 class GreaterConceptEffect : public NamedElementEffect<NamedConcept>, public std::enable_shared_from_this<GreaterConceptEffect> {
 private:
-    GreaterConceptEffect(int identifier, std::shared_ptr<const NamedConcept> concept);
+    GreaterConceptEffect(int identifier, std::shared_ptr<const NamedConcept> concept_);
 
     template<typename... Ts>
     friend class dlplan::ReferenceCountedObjectFactory;
@@ -237,7 +237,7 @@ public:
 
 class EqualConceptEffect : public NamedElementEffect<NamedConcept>, public std::enable_shared_from_this<EqualConceptEffect> {
 private:
-    EqualConceptEffect(int identifier, std::shared_ptr<const NamedConcept> concept);
+    EqualConceptEffect(int identifier, std::shared_ptr<const NamedConcept> concept_);
 
     template<typename... Ts>
     friend class dlplan::ReferenceCountedObjectFactory;

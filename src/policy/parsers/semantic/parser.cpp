@@ -135,7 +135,7 @@ std::string parse(
 }
 std::shared_ptr<const dlplan::core::Concept> parse(
     const ast::ConceptImplementation& node, const dlplan::error_handler_type& error_handler, Context& context) {
-    return dlplan::core::parse(node.concept, error_handler, *context.policy_factory.get_element_factory());
+    return dlplan::core::parse(node.concept_, error_handler, *context.policy_factory.get_element_factory());
 }
 
 std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedConcept>> parse(

@@ -60,7 +60,7 @@ namespace dlplan::policy::parser
 
     concept_definition_type const concept_definition = "concept_definition";
     concept_implementation_type const concept_implementation = "concept_implementation";
-    concept_type const concept = "concept";
+    concept_type const concept_ = "concept_";
     concept_reference_type const concept_reference = "concept_reference";
     concepts_type const concepts = "concepts";
 
@@ -119,9 +119,9 @@ namespace dlplan::policy::parser
 
     const auto concept_definition_def = name;
     const auto concept_implementation_def = dlplan::core::concept_();
-    const auto concept_def = lit('(') > concept_definition > lit('"') > concept_implementation > lit('"') > lit(')');
+    const auto concept__def = lit('(') > concept_definition > lit('"') > concept_implementation > lit('"') > lit(')');
     const auto concept_reference_def = name;
-    const auto concepts_def = lit('(') >> lit(":concepts") > *concept > lit(')');
+    const auto concepts_def = lit('(') >> lit(":concepts") > *concept_ > lit(')');
 
     const auto role_definition_def = name;
     const auto role_implementation_def = dlplan::core::role();
@@ -177,7 +177,7 @@ namespace dlplan::policy::parser
         name,
         boolean_definition, boolean_implementation, boolean, boolean_reference, booleans,
         numerical_definition, numerical_implementation, numerical, numerical_reference, numericals,
-        concept_definition, concept_implementation, concept, concept_reference, concepts,
+        concept_definition, concept_implementation, concept_, concept_reference, concepts,
         role_definition, role_implementation, role, role_reference, roles,
         positive_boolean_condition, negative_boolean_condition, greater_numerical_condition, equal_numerical_condition, greater_concept_condition, equal_concept_condition,
         positive_boolean_effect, negative_boolean_effect, unchanged_boolean_effect, increment_numerical_effect, decrement_numerical_effect, unchanged_numerical_effect, greater_numerical_effect, equal_numerical_effect, increment_concept_effect, decrement_concept_effect, unchanged_concept_effect, greater_concept_effect, equal_concept_effect,
@@ -270,8 +270,8 @@ namespace dlplan::policy
     parser::concept_implementation_type const& concept_implementation() {
         return parser::concept_implementation;
     }
-    parser::concept_type const& concept() {
-        return parser::concept;
+    parser::concept_type const& concept_() {
+        return parser::concept_;
     }
     parser::concept_reference_type const& concept_reference() {
         return parser::concept_reference;

@@ -142,7 +142,7 @@ namespace dlplan::policy
 
     parser::concept_definition_type const& concept_definition();
     parser::concept_implementation_type const& concept_implementation();
-    parser::concept_type const& concept();
+    parser::concept_type const& concept_();
     parser::concept_reference_type const& concept_reference();
     parser::concepts_type const& concepts();
 

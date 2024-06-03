@@ -24,7 +24,7 @@ BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::NumericalReference, key)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Numericals, definitions)
 
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::ConceptDefinition, key)
-BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::ConceptImplementation, concept)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::ConceptImplementation, concept_)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Concept, definition, implementation)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::ConceptReference, key)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Concepts, definitions)

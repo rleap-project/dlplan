@@ -110,7 +110,7 @@ public:
 
 class GreaterConceptCondition : public NamedElementCondition<NamedConcept>, public std::enable_shared_from_this<GreaterConceptCondition> {
 private:
-    GreaterConceptCondition(int identifier, std::shared_ptr<const NamedConcept> concept_);
+    GreaterConceptCondition(int identifier, std::shared_ptr<const NamedConcept> concept__);
 
     template<typename... Ts>
     friend class dlplan::ReferenceCountedObjectFactory;
@@ -127,7 +127,7 @@ public:
 
 class EqualConceptCondition : public NamedElementCondition<NamedConcept>, public std::enable_shared_from_this<EqualConceptCondition> {
 private:
-    EqualConceptCondition(int identifier, std::shared_ptr<const NamedConcept> concept_);
+    EqualConceptCondition(int identifier, std::shared_ptr<const NamedConcept> concept__);
 
     template<typename... Ts>
     friend class dlplan::ReferenceCountedObjectFactory;

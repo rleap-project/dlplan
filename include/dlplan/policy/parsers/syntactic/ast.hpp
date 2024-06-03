@@ -126,7 +126,7 @@ namespace dlplan::policy::ast
     };
 
     struct ConceptImplementation {
-        core::ast::Concept concept;
+        core::ast::Concept concept_;
     };
 
     struct Concept : x3::position_tagged {
