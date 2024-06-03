@@ -3,8 +3,6 @@
 
 #include "hash.h"
 
-#include <boost/serialization/vector.hpp>
-
 #include <cassert>
 #include <limits>
 #include <vector>
