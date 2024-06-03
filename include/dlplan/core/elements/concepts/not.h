@@ -27,7 +27,7 @@ private:
 
     ConceptDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const override;
 
-    NotConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept);
+    NotConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept_);
 
     template<typename... Ts>
     friend class dlplan::ReferenceCountedObjectFactory;

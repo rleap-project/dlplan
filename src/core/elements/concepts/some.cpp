@@ -36,8 +36,8 @@ ConceptDenotations SomeConcept::evaluate_impl(const States& states, DenotationsC
     return denotations;
 }
 
-SomeConcept::SomeConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept)
-    : Concept(index, vocabulary_info, role->is_static() && concept->is_static()), m_role(role), m_concept(concept) { }
+SomeConcept::SomeConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Role> role, std::shared_ptr<const Concept> concept_)
+    : Concept(index, vocabulary_info, role->is_static() && concept_->is_static()), m_role(role), m_concept(concept_) { }
 
 bool SomeConcept::are_equal_impl(const Concept& other) const {
     if (typeid(*this) == typeid(other)) {

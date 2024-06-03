@@ -31,8 +31,8 @@ ConceptDenotations NotConcept::evaluate_impl(const States& states, DenotationsCa
     return denotations;
 }
 
-NotConcept::NotConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept)
-    : Concept(index, vocabulary_info, concept->is_static()), m_concept(concept){ }
+NotConcept::NotConcept(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept_)
+    : Concept(index, vocabulary_info, concept_->is_static()), m_concept(concept_){ }
 
 bool NotConcept::are_equal_impl(const Concept& other) const {
     if (typeid(*this) == typeid(other)) {

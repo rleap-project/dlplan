@@ -30,8 +30,8 @@ RoleDenotations IdentityRole::evaluate_impl(const States& states, DenotationsCac
     return denotations;
 }
 
-IdentityRole::IdentityRole(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept)
-    : Role(index, vocabulary_info, concept->is_static()), m_concept(concept) { }
+IdentityRole::IdentityRole(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const Concept> concept_)
+    : Role(index, vocabulary_info, concept_->is_static()), m_concept(concept_) { }
 
 bool IdentityRole::are_equal_impl(const Role& other) const {
     if (typeid(*this) == typeid(other)) {
