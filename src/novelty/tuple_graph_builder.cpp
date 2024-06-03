@@ -224,6 +224,7 @@ TupleNodeIndices TupleGraphBuilder::compute_nodes_layer(
     // Create nodes
     TupleNodeIndices curr_tuple_layer;
     for (const auto& [_, tuple_index] : curr_tuple_indices)
+    //for (const auto& [tuple_index, _] : m_novel_tuple_index_to_state_indices)
     {
         auto node_index = m_nodes.size();
         const auto& subgoals = m_novel_tuple_index_to_state_indices.at(tuple_index);
