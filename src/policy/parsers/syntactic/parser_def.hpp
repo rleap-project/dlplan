@@ -159,8 +159,8 @@ namespace dlplan::policy::parser
         | greater_concept_condition | equal_concept_condition;
 
     const auto feature_effect_def =  positive_boolean_effect | negative_boolean_effect | unchanged_boolean_effect
-        | increment_numerical_effect | increment_or_unchanged_numerical_effect
-        | decrement_numerical_effect | decrement_or_unchanged_numerical_effect
+        | increment_or_unchanged_numerical_effect | increment_numerical_effect
+        | decrement_or_unchanged_numerical_effect | decrement_numerical_effect
         | unchanged_numerical_effect | greater_numerical_effect | equal_numerical_effect
         | increment_concept_effect | decrement_concept_effect | unchanged_concept_effect | greater_concept_effect | equal_concept_effect;
 
