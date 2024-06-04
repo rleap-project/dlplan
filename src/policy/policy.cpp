@@ -117,8 +117,16 @@ std::shared_ptr<const BaseEffect> PolicyFactory::make_inc_effect(const std::shar
     return m_pImpl->make_inc_effect(numerical);
 }
 
+std::shared_ptr<const BaseEffect> PolicyFactory::make_inc_bot_effect(const std::shared_ptr<const NamedNumerical>& numerical) {
+    return m_pImpl->make_inc_bot_effect(numerical);
+}
+
 std::shared_ptr<const BaseEffect> PolicyFactory::make_dec_effect(const std::shared_ptr<const NamedNumerical>& numerical) {
     return m_pImpl->make_dec_effect(numerical);
+}
+
+std::shared_ptr<const BaseEffect> PolicyFactory::make_dec_bot_effect(const std::shared_ptr<const NamedNumerical>& numerical) {
+    return m_pImpl->make_dec_bot_effect(numerical);
 }
 
 std::shared_ptr<const BaseEffect> PolicyFactory::make_bot_effect(const std::shared_ptr<const NamedNumerical>& numerical) {

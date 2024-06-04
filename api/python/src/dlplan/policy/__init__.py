@@ -4,4 +4,6 @@ from _dlplan import NamedBoolean, NamedNumerical, NamedConcept, NamedRole, \
     PositiveBooleanCondition, NegativeBooleanCondition, \
     GreaterNumericalCondition, EqualNumericalCondition, \
     PositiveBooleanEffect, NegativeBooleanEffect, UnchangedBooleanEffect, \
-    DecrementNumericalEffect, IncrementNumericalEffect, UnchangedNumericalEffect
+    DecrementNumericalEffect, DecrementOrUnchangedNumericalEffect, \
+    IncrementNumericalEffect, IncrementOrUnchangedNumericalEffect, \
+    UnchangedNumericalEffect

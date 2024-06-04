@@ -135,6 +135,44 @@ void IncrementNumericalEffect::accept(BaseEffectVisitor& visitor) const {
 }
 
 
+
+IncrementOrUnchangedNumericalEffect::IncrementOrUnchangedNumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical)
+    : NamedElementEffect<NamedNumerical>(identifier, numerical) {}
+
+bool IncrementOrUnchangedNumericalEffect::are_equal_impl(const BaseEffect& other) const {
+    if (typeid(*this) == typeid(other)) {
+        if (this == &other) return true;
+        const auto& other_derived = static_cast<const IncrementOrUnchangedNumericalEffect&>(other);
+        return m_named_element == other_derived.m_named_element;
+    }
+    return false;
+}
+
+bool IncrementOrUnchangedNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
+    int source_eval = m_named_element->get_element()->evaluate(source_state);
+    int target_eval = m_named_element->get_element()->evaluate(target_state);
+    //if (source_eval == INF) return false;
+    //if (target_eval == INF) return false;
+    return source_eval <= target_eval;
+}
+
+bool IncrementOrUnchangedNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
+    int source_eval = m_named_element->get_element()->evaluate(source_state, caches);
+    int target_eval = m_named_element->get_element()->evaluate(target_state, caches);
+    //if (source_eval == INF) return false;
+    //if (target_eval == INF) return false;
+    return source_eval <= target_eval;
+}
+
+void IncrementOrUnchangedNumericalEffect::str_impl(std::stringstream& out) const {
+    out << "(:e_n_inc_bot " + m_named_element->get_key() + ")";
+}
+
+void IncrementOrUnchangedNumericalEffect::accept(BaseEffectVisitor& visitor) const {
+    visitor.visit(this->shared_from_this());
+}
+
+
 DecrementNumericalEffect::DecrementNumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical)
     : NamedElementEffect<NamedNumerical>(identifier, numerical) {}
 
@@ -168,6 +206,43 @@ void DecrementNumericalEffect::str_impl(std::stringstream& out) const {
 }
 
 void DecrementNumericalEffect::accept(BaseEffectVisitor& visitor) const {
+    visitor.visit(this->shared_from_this());
+}
+
+
+DecrementOrUnchangedNumericalEffect::DecrementOrUnchangedNumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical)
+    : NamedElementEffect<NamedNumerical>(identifier, numerical) {}
+
+bool DecrementOrUnchangedNumericalEffect::are_equal_impl(const BaseEffect& other) const {
+    if (typeid(*this) == typeid(other)) {
+        if (this == &other) return true;
+        const auto& other_derived = static_cast<const DecrementOrUnchangedNumericalEffect&>(other);
+        return m_named_element == other_derived.m_named_element;
+    }
+    return false;
+}
+
+bool DecrementOrUnchangedNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state) const {
+    int source_eval = m_named_element->get_element()->evaluate(source_state);
+    int target_eval = m_named_element->get_element()->evaluate(target_state);
+    //if (source_eval == INF) return false;
+    //if (target_eval == INF) return false;
+    return source_eval >= target_eval;
+}
+
+bool DecrementOrUnchangedNumericalEffect::evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const {
+    int source_eval = m_named_element->get_element()->evaluate(source_state, caches);
+    int target_eval = m_named_element->get_element()->evaluate(target_state, caches);
+    //if (source_eval == INF) return false;
+    //if (target_eval == INF) return false;
+    return source_eval >= target_eval;
+}
+
+void DecrementOrUnchangedNumericalEffect::str_impl(std::stringstream& out) const {
+    out << "(:e_n_dec_bot " + m_named_element->get_key() + ")";
+}
+
+void DecrementOrUnchangedNumericalEffect::accept(BaseEffectVisitor& visitor) const {
     visitor.visit(this->shared_from_this());
 }
 
@@ -476,9 +551,21 @@ namespace std {
         return *left_effect < *right_effect;
     }
 
+    bool less<std::shared_ptr<const dlplan::policy::IncrementOrUnchangedNumericalEffect>>::operator()(
+        const std::shared_ptr<const dlplan::policy::IncrementOrUnchangedNumericalEffect>& left_effect,
+        const std::shared_ptr<const dlplan::policy::IncrementOrUnchangedNumericalEffect>& right_effect) const {
+        return *left_effect < *right_effect;
+    }
+
     bool less<std::shared_ptr<const dlplan::policy::DecrementNumericalEffect>>::operator()(
         const std::shared_ptr<const dlplan::policy::DecrementNumericalEffect>& left_effect,
         const std::shared_ptr<const dlplan::policy::DecrementNumericalEffect>& right_effect) const {
+        return *left_effect < *right_effect;
+    }
+
+    bool less<std::shared_ptr<const dlplan::policy::DecrementOrUnchangedNumericalEffect>>::operator()(
+        const std::shared_ptr<const dlplan::policy::DecrementOrUnchangedNumericalEffect>& left_effect,
+        const std::shared_ptr<const dlplan::policy::DecrementOrUnchangedNumericalEffect>& right_effect) const {
         return *left_effect < *right_effect;
     }
 
@@ -550,8 +637,18 @@ namespace std {
         return effect.hash();
     }
 
+    std::size_t hash<dlplan::policy::IncrementOrUnchangedNumericalEffect>::operator()(
+        const dlplan::policy::IncrementOrUnchangedNumericalEffect& effect) const {
+        return effect.hash();
+    }
+
     std::size_t hash<dlplan::policy::DecrementNumericalEffect>::operator()(
         const dlplan::policy::DecrementNumericalEffect& effect) const {
+        return effect.hash();
+    }
+
+    std::size_t hash<dlplan::policy::DecrementOrUnchangedNumericalEffect>::operator()(
+        const dlplan::policy::DecrementOrUnchangedNumericalEffect& effect) const {
         return effect.hash();
     }
 

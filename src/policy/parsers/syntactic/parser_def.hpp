@@ -80,7 +80,9 @@ namespace dlplan::policy::parser
     negative_boolean_effect_type const negative_boolean_effect = "negative_boolean_effect";
     unchanged_boolean_effect_type const unchanged_boolean_effect = "unchanged_boolean_effect";
     increment_numerical_effect_type const increment_numerical_effect = "increment_numerical_effect";
+    increment_or_unchanged_numerical_effect_type const increment_or_unchanged_numerical_effect = "increment_or_unchanged_numerical_effect";
     decrement_numerical_effect_type const decrement_numerical_effect = "decrement_numerical_effect";
+    decrement_or_unchanged_numerical_effect_type const decrement_or_unchanged_numerical_effect = "decrement_or_unchanged_numerical_effect";
     unchanged_numerical_effect_type const unchanged_numerical_effect = "unchanged_numerical_effect";
     greater_numerical_effect_type const greater_numerical_effect = "greater_numerical_effect";
     equal_numerical_effect_type const equal_numerical_effect = "equal_numerical_effect";
@@ -140,7 +142,9 @@ namespace dlplan::policy::parser
     const auto negative_boolean_effect_def = lit('(') >> lit(":e_b_neg") > boolean_reference > lit(')');
     const auto unchanged_boolean_effect_def = lit('(') >> lit(":e_b_bot") > boolean_reference > lit(')');
     const auto increment_numerical_effect_def = lit('(') >> lit(":e_n_inc") > numerical_reference > lit(')');
+    const auto increment_or_unchanged_numerical_effect_def = lit('(') >> lit(":e_n_inc_bot") > numerical_reference > lit(')');
     const auto decrement_numerical_effect_def = lit('(') >> lit(":e_n_dec") > numerical_reference > lit(')');
+    const auto decrement_or_unchanged_numerical_effect_def = lit('(') >> lit(":e_n_dec_bot") > numerical_reference > lit(')');
     const auto unchanged_numerical_effect_def = lit('(') >> lit(":e_n_bot") > numerical_reference > lit(')');
     const auto greater_numerical_effect_def = lit('(') >> lit(":e_n_gt") > numerical_reference > lit(')');
     const auto equal_numerical_effect_def = lit('(') >> lit(":e_n_eq") > numerical_reference > lit(')');
@@ -155,7 +159,9 @@ namespace dlplan::policy::parser
         | greater_concept_condition | equal_concept_condition;
 
     const auto feature_effect_def =  positive_boolean_effect | negative_boolean_effect | unchanged_boolean_effect
-        | increment_numerical_effect | decrement_numerical_effect | unchanged_numerical_effect | greater_numerical_effect | equal_numerical_effect
+        | increment_numerical_effect | increment_or_unchanged_numerical_effect
+        | decrement_numerical_effect | decrement_or_unchanged_numerical_effect
+        | unchanged_numerical_effect | greater_numerical_effect | equal_numerical_effect
         | increment_concept_effect | decrement_concept_effect | unchanged_concept_effect | greater_concept_effect | equal_concept_effect;
 
     const auto rule_def = lit('(') >> lit(":rule")
@@ -180,7 +186,10 @@ namespace dlplan::policy::parser
         concept_definition, concept_implementation, concept_, concept_reference, concepts,
         role_definition, role_implementation, role, role_reference, roles,
         positive_boolean_condition, negative_boolean_condition, greater_numerical_condition, equal_numerical_condition, greater_concept_condition, equal_concept_condition,
-        positive_boolean_effect, negative_boolean_effect, unchanged_boolean_effect, increment_numerical_effect, decrement_numerical_effect, unchanged_numerical_effect, greater_numerical_effect, equal_numerical_effect, increment_concept_effect, decrement_concept_effect, unchanged_concept_effect, greater_concept_effect, equal_concept_effect,
+        positive_boolean_effect, negative_boolean_effect, unchanged_boolean_effect,
+        increment_numerical_effect, increment_or_unchanged_numerical_effect,
+        decrement_numerical_effect, decrement_or_unchanged_numerical_effect,
+        unchanged_numerical_effect, greater_numerical_effect, equal_numerical_effect, increment_concept_effect, decrement_concept_effect, unchanged_concept_effect, greater_concept_effect, equal_concept_effect,
         feature_condition, feature_effect, rule, rules, policy, policy_root)
 
     ///////////////////////////////////////////////////////////////////////////
@@ -216,7 +225,9 @@ namespace dlplan::policy::parser
     struct NegativeBooleanEffectClass : x3::annotate_on_success {};
     struct UnchangedBooleanEffectClass : x3::annotate_on_success {};
     struct IncrementNumericalEffectClass : x3::annotate_on_success {};
+    struct IncrementOrUnchangedNumericalEffectClass : x3::annotate_on_success {};
     struct DecrementNumericalEffectClass : x3::annotate_on_success {};
+    struct DecrementOrUnchangedNumericalEffectClass : x3::annotate_on_success {};
     struct UnchangedNumericalEffectClass : x3::annotate_on_success {};
     struct FeatureConditionClass : x3::annotate_on_success {};
     struct FeatureEffectClass : x3::annotate_on_success {};
@@ -326,8 +337,14 @@ namespace dlplan::policy
     parser::increment_numerical_effect_type const& increment_numerical_effect() {
         return parser::increment_numerical_effect;
     }
+    parser::increment_or_unchanged_numerical_effect_type const& increment_or_unchanged_numerical_effect() {
+        return parser::increment_or_unchanged_numerical_effect;
+    }
     parser::decrement_numerical_effect_type const& decrement_numerical_effect() {
         return parser::decrement_numerical_effect;
+    }
+    parser::decrement_or_unchanged_numerical_effect_type const& decrement_or_unchanged_numerical_effect() {
+        return parser::decrement_or_unchanged_numerical_effect;
     }
     parser::unchanged_numerical_effect_type const& unchanged_numerical_effect() {
         return parser::unchanged_numerical_effect;

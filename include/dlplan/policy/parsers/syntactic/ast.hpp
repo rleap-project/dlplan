@@ -49,7 +49,9 @@ namespace dlplan::policy::ast
     struct NegativeBooleanEffect;
     struct UnchangedBooleanEffect;
     struct IncrementNumericalEffect;
+    struct IncrementOrUnchangedNumericalEffect;
     struct DecrementNumericalEffect;
+    struct DecrementOrUnchangedNumericalEffect;
     struct UnchangedNumericalEffect;
     struct GreaterNumericalEffect;
     struct EqualNumericalEffect;
@@ -220,7 +222,15 @@ namespace dlplan::policy::ast
         NumericalReference reference;
     };
 
+    struct IncrementOrUnchangedNumericalEffect : x3::position_tagged {
+        NumericalReference reference;
+    };
+
     struct DecrementNumericalEffect : x3::position_tagged {
+        NumericalReference reference;
+    };
+
+    struct DecrementOrUnchangedNumericalEffect : x3::position_tagged {
         NumericalReference reference;
     };
 
@@ -262,7 +272,9 @@ namespace dlplan::policy::ast
             x3::forward_ast<NegativeBooleanEffect>,
             x3::forward_ast<UnchangedBooleanEffect>,
             x3::forward_ast<IncrementNumericalEffect>,
+            x3::forward_ast<IncrementOrUnchangedNumericalEffect>,
             x3::forward_ast<DecrementNumericalEffect>,
+            x3::forward_ast<DecrementOrUnchangedNumericalEffect>,
             x3::forward_ast<UnchangedNumericalEffect>,
             x3::forward_ast<GreaterNumericalEffect>,
             x3::forward_ast<EqualNumericalEffect>,

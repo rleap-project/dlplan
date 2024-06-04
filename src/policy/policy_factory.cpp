@@ -133,8 +133,16 @@ std::shared_ptr<const BaseEffect> PolicyFactoryImpl::make_inc_effect(const std::
     return m_cache.get_or_create<IncrementNumericalEffect>(numerical).object;
 }
 
+std::shared_ptr<const BaseEffect> PolicyFactoryImpl::make_inc_bot_effect(const std::shared_ptr<const NamedNumerical>& numerical) {
+    return m_cache.get_or_create<IncrementOrUnchangedNumericalEffect>(numerical).object;
+}
+
 std::shared_ptr<const BaseEffect> PolicyFactoryImpl::make_dec_effect(const std::shared_ptr<const NamedNumerical>& numerical) {
     return m_cache.get_or_create<DecrementNumericalEffect>(numerical).object;
+}
+
+std::shared_ptr<const BaseEffect> PolicyFactoryImpl::make_dec_bot_effect(const std::shared_ptr<const NamedNumerical>& numerical) {
+    return m_cache.get_or_create<DecrementOrUnchangedNumericalEffect>(numerical).object;
 }
 
 std::shared_ptr<const BaseEffect> PolicyFactoryImpl::make_bot_effect(const std::shared_ptr<const NamedNumerical>& numerical) {

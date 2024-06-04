@@ -263,8 +263,18 @@ std::shared_ptr<const BaseEffect> parse(
 }
 
 std::shared_ptr<const BaseEffect> parse(
+    const ast::IncrementOrUnchangedNumericalEffect& node, const error_handler_type& error_handler, Context& context) {
+    return context.policy_factory.make_inc_bot_effect(parse(node.reference, error_handler, context));
+}
+
+std::shared_ptr<const BaseEffect> parse(
     const ast::DecrementNumericalEffect& node, const error_handler_type& error_handler, Context& context) {
     return context.policy_factory.make_dec_effect(parse(node.reference, error_handler, context));
+}
+
+std::shared_ptr<const BaseEffect> parse(
+    const ast::DecrementOrUnchangedNumericalEffect& node, const error_handler_type& error_handler, Context& context) {
+    return context.policy_factory.make_dec_bot_effect(parse(node.reference, error_handler, context));
 }
 
 std::shared_ptr<const BaseEffect> parse(

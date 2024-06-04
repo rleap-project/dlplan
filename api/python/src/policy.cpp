@@ -86,8 +86,16 @@ void init_policy(py::module_ &m_policy) {
         .def("get_named_element", &policy::DecrementNumericalEffect::get_named_element)
     ;
 
+    py::class_<policy::DecrementOrUnchangedNumericalEffect, policy::BaseEffect, std::shared_ptr<policy::DecrementOrUnchangedNumericalEffect>>(m_policy, "DecrementOrUnchangedNumericalEffect")
+        .def("get_named_element", &policy::DecrementOrUnchangedNumericalEffect::get_named_element)
+    ;
+
     py::class_<policy::IncrementNumericalEffect, policy::BaseEffect, std::shared_ptr<policy::IncrementNumericalEffect>>(m_policy, "IncrementNumericalEffect")
         .def("get_named_element", &policy::IncrementNumericalEffect::get_named_element)
+    ;
+
+    py::class_<policy::IncrementOrUnchangedNumericalEffect, policy::BaseEffect, std::shared_ptr<policy::IncrementOrUnchangedNumericalEffect>>(m_policy, "IncrementOrUnchangedNumericalEffect")
+        .def("get_named_element", &policy::IncrementOrUnchangedNumericalEffect::get_named_element)
     ;
 
     py::class_<policy::UnchangedNumericalEffect, policy::BaseEffect, std::shared_ptr<policy::UnchangedNumericalEffect>>(m_policy, "UnchangedNumericalEffect")
@@ -142,7 +150,9 @@ void init_policy(py::module_ &m_policy) {
         .def("make_bot_effect", py::overload_cast<const std::shared_ptr<const policy::NamedBoolean>&>(&policy::PolicyFactory::make_bot_effect))
 
         .def("make_inc_effect", py::overload_cast<const std::shared_ptr<const policy::NamedNumerical>&>(&policy::PolicyFactory::make_inc_effect))
+        .def("make_inc_bot_effect", py::overload_cast<const std::shared_ptr<const policy::NamedNumerical>&>(&policy::PolicyFactory::make_inc_bot_effect))
         .def("make_dec_effect", py::overload_cast<const std::shared_ptr<const policy::NamedNumerical>&>(&policy::PolicyFactory::make_dec_effect))
+        .def("make_dec_bot_effect", py::overload_cast<const std::shared_ptr<const policy::NamedNumerical>&>(&policy::PolicyFactory::make_dec_bot_effect))
         .def("make_bot_effect", py::overload_cast<const std::shared_ptr<const policy::NamedNumerical>&>(&policy::PolicyFactory::make_bot_effect))
         .def("make_gt_effect", py::overload_cast<const std::shared_ptr<const policy::NamedNumerical>&>(&policy::PolicyFactory::make_gt_effect))
         .def("make_eq_effect", py::overload_cast<const std::shared_ptr<const policy::NamedNumerical>&>(&policy::PolicyFactory::make_eq_effect))

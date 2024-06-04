@@ -69,7 +69,15 @@ struct InsertNamedElementFromEffect : public BaseEffectVisitor {
         numericals.insert(effect->get_named_element());
     }
 
+    void visit(const std::shared_ptr<const IncrementOrUnchangedNumericalEffect>& effect) override {
+        numericals.insert(effect->get_named_element());
+    }
+
     void visit(const std::shared_ptr<const DecrementNumericalEffect>& effect) override {
+        numericals.insert(effect->get_named_element());
+    }
+
+    void visit(const std::shared_ptr<const DecrementOrUnchangedNumericalEffect>& effect) override {
         numericals.insert(effect->get_named_element());
     }
 

@@ -105,9 +105,41 @@ public:
     void accept(BaseEffectVisitor& visitor) const override;
 };
 
+class IncrementOrUnchangedNumericalEffect : public NamedElementEffect<NamedNumerical>, public std::enable_shared_from_this<IncrementOrUnchangedNumericalEffect> {
+private:
+    IncrementOrUnchangedNumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical);
+
+    template<typename... Ts>
+    friend class dlplan::ReferenceCountedObjectFactory;
+
+public:
+    bool are_equal_impl(const BaseEffect& other) const override;
+    void str_impl(std::stringstream& out) const override;
+
+    bool evaluate(const core::State& source_state, const core::State& target_state) const override;
+    bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
+    void accept(BaseEffectVisitor& visitor) const override;
+};
+
 class DecrementNumericalEffect : public NamedElementEffect<NamedNumerical>, public std::enable_shared_from_this<DecrementNumericalEffect> {
 private:
     DecrementNumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical);
+
+    template<typename... Ts>
+    friend class dlplan::ReferenceCountedObjectFactory;
+
+public:
+    bool are_equal_impl(const BaseEffect& other) const override;
+    void str_impl(std::stringstream& out) const override;
+
+    bool evaluate(const core::State& source_state, const core::State& target_state) const override;
+    bool evaluate(const core::State& source_state, const core::State& target_state, core::DenotationsCaches& caches) const override;
+    void accept(BaseEffectVisitor& visitor) const override;
+};
+
+class DecrementOrUnchangedNumericalEffect : public NamedElementEffect<NamedNumerical>, public std::enable_shared_from_this<DecrementOrUnchangedNumericalEffect> {
+private:
+    DecrementOrUnchangedNumericalEffect(int identifier, std::shared_ptr<const NamedNumerical> numerical);
 
     template<typename... Ts>
     friend class dlplan::ReferenceCountedObjectFactory;
@@ -260,7 +292,9 @@ public:
     virtual void visit(const std::shared_ptr<const NegativeBooleanEffect>& effect) = 0;
     virtual void visit(const std::shared_ptr<const UnchangedBooleanEffect>& effect) = 0;
     virtual void visit(const std::shared_ptr<const IncrementNumericalEffect>& effect) = 0;
+    virtual void visit(const std::shared_ptr<const IncrementOrUnchangedNumericalEffect>& effect) = 0;
     virtual void visit(const std::shared_ptr<const DecrementNumericalEffect>& effect) = 0;
+    virtual void visit(const std::shared_ptr<const DecrementOrUnchangedNumericalEffect>& effect) = 0;
     virtual void visit(const std::shared_ptr<const UnchangedNumericalEffect>& effect) = 0;
     virtual void visit(const std::shared_ptr<const GreaterNumericalEffect>& effect) = 0;
     virtual void visit(const std::shared_ptr<const EqualNumericalEffect>& effect) = 0;
@@ -308,11 +342,27 @@ namespace std {
     };
 
     template<>
+    struct less<std::shared_ptr<const dlplan::policy::IncrementOrUnchangedNumericalEffect>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::IncrementOrUnchangedNumericalEffect>& left_effect,
+            const std::shared_ptr<const dlplan::policy::IncrementOrUnchangedNumericalEffect>& right_effect) const;
+    };
+
+    template<>
     struct less<std::shared_ptr<const dlplan::policy::DecrementNumericalEffect>>
     {
         bool operator()(
             const std::shared_ptr<const dlplan::policy::DecrementNumericalEffect>& left_effect,
             const std::shared_ptr<const dlplan::policy::DecrementNumericalEffect>& right_effect) const;
+    };
+
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::DecrementOrUnchangedNumericalEffect>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::DecrementOrUnchangedNumericalEffect>& left_effect,
+            const std::shared_ptr<const dlplan::policy::DecrementOrUnchangedNumericalEffect>& right_effect) const;
     };
 
     template<>
@@ -404,9 +454,21 @@ namespace std {
     };
 
     template<>
+    struct hash<dlplan::policy::IncrementOrUnchangedNumericalEffect>
+    {
+        std::size_t operator()(const dlplan::policy::IncrementOrUnchangedNumericalEffect& effect) const;
+    };
+
+    template<>
     struct hash<dlplan::policy::DecrementNumericalEffect>
     {
         std::size_t operator()(const dlplan::policy::DecrementNumericalEffect& effect) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::DecrementOrUnchangedNumericalEffect>
+    {
+        std::size_t operator()(const dlplan::policy::DecrementOrUnchangedNumericalEffect& effect) const;
     };
 
     template<>

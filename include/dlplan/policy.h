@@ -294,7 +294,9 @@ public:
     std::shared_ptr<const BaseEffect> make_neg_effect(const std::shared_ptr<const NamedBoolean>& boolean);
     std::shared_ptr<const BaseEffect> make_bot_effect(const std::shared_ptr<const NamedBoolean>& boolean);
     std::shared_ptr<const BaseEffect> make_inc_effect(const std::shared_ptr<const NamedNumerical>& numerical);
+    std::shared_ptr<const BaseEffect> make_inc_bot_effect(const std::shared_ptr<const NamedNumerical>& numerical);
     std::shared_ptr<const BaseEffect> make_dec_effect(const std::shared_ptr<const NamedNumerical>& numerical);
+    std::shared_ptr<const BaseEffect> make_dec_bot_effect(const std::shared_ptr<const NamedNumerical>& numerical);
     std::shared_ptr<const BaseEffect> make_bot_effect(const std::shared_ptr<const NamedNumerical>& numerical);
     std::shared_ptr<const BaseEffect> make_gt_effect(const std::shared_ptr<const NamedNumerical>& numerical);
     std::shared_ptr<const BaseEffect> make_eq_effect(const std::shared_ptr<const NamedNumerical>& numerical);
