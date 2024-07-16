@@ -395,6 +395,13 @@ parse(const ast::RestrictRole& node, const error_handler_type& error_handler, Sy
 }
 
 std::shared_ptr<const core::Role>
+parse(const ast::TilCRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+    return context.make_til_c_role(
+        parse(node.role, error_handler, context),
+        parse(node.concept_, error_handler, context));
+}
+
+std::shared_ptr<const core::Role>
 parse(const ast::TopRole&, const error_handler_type&, SyntacticElementFactory& context) {
     return context.make_top_role();
 }

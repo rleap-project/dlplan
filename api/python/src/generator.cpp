@@ -42,6 +42,7 @@ void init_generator(py::module_ &m_generator) {
         .def("set_generate_or_role", &FeatureGenerator::set_generate_or_role)
         .def("set_generate_primitive_role", &FeatureGenerator::set_generate_primitive_role)
         .def("set_generate_restrict_role", &FeatureGenerator::set_generate_restrict_role)
+        .def("set_generate_til_c_role", &FeatureGenerator::set_generate_til_c_role)
         .def("set_generate_top_role", &FeatureGenerator::set_generate_top_role)
         .def("set_generate_transitive_closure_role", &FeatureGenerator::set_generate_transitive_closure_role)
         .def("set_generate_transitive_reflexive_closure_role", &FeatureGenerator::set_generate_transitive_reflexive_closure_role)
@@ -84,6 +85,7 @@ void init_generator(py::module_ &m_generator) {
         py::arg("generate_or_role") = false,
         py::arg("generate_primitive_role") = true,
         py::arg("generate_restrict_role") = true,
+        py::arg("generate_til_c_role") = true,
         py::arg("generate_top_role") = false,
         py::arg("generate_transitive_closure_role") = true,
         py::arg("generate_transitive_reflexive_closure_role") = false);

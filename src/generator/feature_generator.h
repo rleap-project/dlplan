@@ -24,6 +24,7 @@
 #include "rules/roles/or.h"
 #include "rules/roles/primitive.h"
 #include "rules/roles/restrict.h"
+#include "rules/roles/til_c.h"
 #include "rules/roles/top.h"
 #include "rules/roles/transitive_closure.h"
 #include "rules/roles/transitive_reflexive_closure.h"
@@ -91,6 +92,7 @@ private:
     Rule_Ptr r_identity;
     Rule_Ptr r_inverse;
     Rule_Ptr r_restrict;
+    Rule_Ptr r_til_c;
     Rule_Ptr r_compose;
     Rule_Ptr r_transitive_closure;
     Rule_Ptr r_transitive_reflexive_closure;
@@ -174,6 +176,7 @@ public:
     void set_generate_or_role(bool enable);
     void set_generate_primitive_role(bool enable);
     void set_generate_restrict_role(bool enable);
+    void set_generate_til_c_role(bool enable);
     void set_generate_top_role(bool enable);
     void set_generate_transitive_closure_role(bool enable);
     void set_generate_transitive_reflexive_closure_role(bool enable);

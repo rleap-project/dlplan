@@ -68,3 +68,5 @@ transitions.txt
 output.sas
 run.log
 *.dot
+
+dependencies/
