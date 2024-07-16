@@ -148,6 +148,10 @@ void FeatureGenerator::set_generate_restrict_role(bool enable) {
     m_pImpl->set_generate_restrict_role(enable);
 }
 
+void FeatureGenerator::set_generate_til_c_role(bool enable) {
+    m_pImpl->set_generate_til_c_role(enable);
+}
+
 void FeatureGenerator::set_generate_top_role(bool enable) {
     m_pImpl->set_generate_top_role(enable);
 }
@@ -197,6 +201,7 @@ GeneratedFeatures generate_features(
     bool generate_or_role,
     bool generate_primitive_role,
     bool generate_restrict_role,
+    bool generate_til_c_role,
     bool generate_top_role,
     bool generate_transitive_closure_role,
     bool generate_transitive_reflexive_closure_role) {
@@ -228,6 +233,7 @@ GeneratedFeatures generate_features(
     generator.set_generate_or_role(generate_or_role);
     generator.set_generate_primitive_role(generate_primitive_role);
     generator.set_generate_restrict_role(generate_restrict_role);
+    generator.set_generate_til_c_role(generate_til_c_role);
     generator.set_generate_top_role(generate_top_role);
     generator.set_generate_transitive_closure_role(generate_transitive_closure_role);
     generator.set_generate_transitive_reflexive_closure_role(generate_transitive_reflexive_closure_role);

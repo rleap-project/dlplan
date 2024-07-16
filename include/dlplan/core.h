@@ -735,6 +735,7 @@ public:
     std::shared_ptr<const Role> make_or_role(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right);
     std::shared_ptr<const Role> make_primitive_role(const Predicate& predicate, int pos_1, int pos_2);
     std::shared_ptr<const Role> make_restrict_role(const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept_);
+    std::shared_ptr<const Role> make_til_c_role(const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept_);
     std::shared_ptr<const Role> make_top_role();
     std::shared_ptr<const Role> make_transitive_closure(const std::shared_ptr<const Role>& role);
     std::shared_ptr<const Role> make_transitive_reflexive_closure(const std::shared_ptr<const Role>& role);

@@ -82,6 +82,8 @@ extern std::shared_ptr<const core::Role> parse(const ast::PrimitiveRole& node, c
 
 extern std::shared_ptr<const core::Role> parse(const ast::RestrictRole& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
 
+extern std::shared_ptr<const core::Role> parse(const ast::TilCRole& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
+
 extern std::shared_ptr<const core::Role> parse(const ast::TopRole&, const dlplan::error_handler_type&, SyntacticElementFactory& context);
 
 extern std::shared_ptr<const core::Role> parse(const ast::TransitiveClosureRole& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);

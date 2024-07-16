@@ -74,6 +74,7 @@ public:
     void set_generate_or_role(bool enable);
     void set_generate_primitive_role(bool enable);
     void set_generate_restrict_role(bool enable);
+    void set_generate_til_c_role(bool enable);
     void set_generate_top_role(bool enable);
     void set_generate_transitive_closure_role(bool enable);
     void set_generate_transitive_reflexive_closure_role(bool enable);
@@ -118,6 +119,7 @@ extern GeneratedFeatures generate_features(
     bool generate_or_role=false,
     bool generate_primitive_role=true,
     bool generate_restrict_role=true,
+    bool generate_til_c_role=true,
     bool generate_top_role=false,
     bool generate_transitive_closure_role=true,
     bool generate_transitive_reflexive_closure_role=false);

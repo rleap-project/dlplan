@@ -31,6 +31,7 @@
 #include "../../include/dlplan/core/elements/roles/or.h"
 #include "../../include/dlplan/core/elements/roles/primitive.h"
 #include "../../include/dlplan/core/elements/roles/restrict.h"
+#include "../../include/dlplan/core/elements/roles/til_c.h"
 #include "../../include/dlplan/core/elements/roles/top.h"
 #include "../../include/dlplan/core/elements/roles/transitive_closure.h"
 #include "../../include/dlplan/core/elements/roles/transitive_reflexive_closure.h"
@@ -80,6 +81,7 @@ private:
         , OrRole
         , PrimitiveRole
         , RestrictRole
+        , TilCRole
         , TopRole
         , TransitiveClosureRole
         , TransitiveReflexiveClosureRole> m_cache;
@@ -143,6 +145,7 @@ public:
     std::shared_ptr<const Role> make_or_role(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right);
     std::shared_ptr<const Role> make_primitive_role(const Predicate& predicate, int pos_1, int pos_2);
     std::shared_ptr<const Role> make_restrict_role(const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept_);
+    std::shared_ptr<const Role> make_til_c_role(const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept_);
     std::shared_ptr<const Role> make_top_role();
     std::shared_ptr<const Role> make_transitive_closure(const std::shared_ptr<const Role>& role);
     std::shared_ptr<const Role> make_transitive_reflexive_closure(const std::shared_ptr<const Role>& role);

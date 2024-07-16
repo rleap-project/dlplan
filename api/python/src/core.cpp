@@ -231,6 +231,7 @@ void init_core(py::module_ &m_core) {
         .def("make_or_role", &SyntacticElementFactory::make_or_role)
         .def("make_primitive_role", &SyntacticElementFactory::make_primitive_role)
         .def("make_restrict_role", &SyntacticElementFactory::make_restrict_role)
+        .def("make_til_c_role", &SyntacticElementFactory::make_til_c_role)
         .def("make_top_role", &SyntacticElementFactory::make_top_role)
         .def("make_transitive_closure", &SyntacticElementFactory::make_transitive_closure)
         .def("make_transitive_reflexive_closure", &SyntacticElementFactory::make_transitive_reflexive_closure)

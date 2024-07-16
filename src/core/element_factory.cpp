@@ -301,6 +301,10 @@ std::shared_ptr<const Role> SyntacticElementFactoryImpl::make_restrict_role(cons
     return m_cache.get_or_create<RestrictRole>(m_vocabulary_info, role, concept_).object;
 }
 
+std::shared_ptr<const Role> SyntacticElementFactoryImpl::make_til_c_role(const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept_) {
+    return m_cache.get_or_create<TilCRole>(m_vocabulary_info, role, concept_).object;
+}
+
 std::shared_ptr<const Role> SyntacticElementFactoryImpl::make_top_role() {
     return m_cache.get_or_create<TopRole>(m_vocabulary_info).object;
 }
@@ -354,6 +358,7 @@ namespace dlplan {
         , core::OrRole
         , core::PrimitiveRole
         , core::RestrictRole
+        , core::TilCRole
         , core::TopRole
         , core::TransitiveClosureRole
         , core::TransitiveReflexiveClosureRole>;

@@ -68,6 +68,7 @@ namespace dlplan::core::parser
     struct OrRoleClass;
     struct PrimitiveRoleClass;
     struct RestrictRoleClass;
+    struct TilCRoleClass;
     struct TopRoleClass;
     struct TransitiveClosureRoleClass;
     struct TransitiveReflexiveClosureRoleClass;
@@ -184,6 +185,9 @@ namespace dlplan::core::parser
 
     x3::rule<RestrictRoleClass, ast::RestrictRole> const
         restrict_role = "restrict_role";
+
+    x3::rule<TilCRoleClass, ast::TilCRole> const
+        til_c_role = "til_c_role";
 
     x3::rule<TopRoleClass, ast::TopRole> const
         top_role = "top_role";
@@ -373,6 +377,7 @@ namespace dlplan::core::parser
     struct OrRoleClass : x3::annotate_on_success {};
     struct PrimitiveRoleClass : x3::annotate_on_success {};
     struct RestrictRoleClass : x3::annotate_on_success {};
+    struct TilCRoleClass : x3::annotate_on_success {};
     struct TopRoleClass : x3::annotate_on_success {};
     struct TransitiveClosureRoleClass : x3::annotate_on_success {};
     struct TransitiveReflexiveClosureRoleClass : x3::annotate_on_success {};

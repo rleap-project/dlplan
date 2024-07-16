@@ -239,6 +239,10 @@ std::shared_ptr<const Role>SyntacticElementFactory::make_restrict_role(const std
     return m_pImpl->make_restrict_role(role, concept_);
 }
 
+std::shared_ptr<const Role>SyntacticElementFactory::make_til_c_role(const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept_) {
+    return m_pImpl->make_til_c_role(role, concept_);
+}
+
 std::shared_ptr<const Role>SyntacticElementFactory::make_top_role() {
     return m_pImpl->make_top_role();
 }

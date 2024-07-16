@@ -48,6 +48,7 @@ namespace dlplan::core::ast
     struct OrRole;
     struct PrimitiveRole;
     struct RestrictRole;
+    struct TilCRole;
     struct TopRole;
     struct TransitiveClosureRole;
     struct TransitiveReflexiveClosureRole;
@@ -120,6 +121,7 @@ namespace dlplan::core::ast
         x3::forward_ast<NotRole>,
         x3::forward_ast<OrRole>,
         x3::forward_ast<RestrictRole>,
+        x3::forward_ast<TilCRole>,
         x3::forward_ast<TopRole>,
         x3::forward_ast<TransitiveClosureRole>,
         x3::forward_ast<TransitiveReflexiveClosureRole>> {
@@ -284,6 +286,11 @@ namespace dlplan::core::ast
     };
 
     struct RestrictRole : x3::position_tagged {
+        Role role;
+        Concept concept_;
+    };
+
+    struct TilCRole : x3::position_tagged {
         Role role;
         Concept concept_;
     };

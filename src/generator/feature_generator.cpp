@@ -43,6 +43,7 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
       r_identity(std::make_shared<rules::IdentityRole>()),
       r_inverse(std::make_shared<rules::InverseRole>()),
       r_restrict(std::make_shared<rules::RestrictRole>()),
+      r_til_c(std::make_shared<rules::TilCRole>()),
       r_compose(std::make_shared<rules::ComposeRole>()),
       r_transitive_closure(std::make_shared<rules::TransitiveClosureRole>()),
       r_transitive_reflexive_closure(std::make_shared<rules::TransitiveReflexiveClosureRole>()) {
@@ -71,6 +72,7 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
     m_role_inductive_rules.emplace_back(r_diff);
     m_role_inductive_rules.emplace_back(r_identity);
     m_role_inductive_rules.emplace_back(r_inverse);
+    m_role_inductive_rules.emplace_back(r_til_c);
     m_role_inductive_rules.emplace_back(r_compose);
     m_role_inductive_rules.emplace_back(r_transitive_closure);
     m_role_inductive_rules.emplace_back(r_transitive_reflexive_closure);
@@ -297,6 +299,10 @@ void FeatureGeneratorImpl::set_generate_primitive_role(bool enable) {
 
 void FeatureGeneratorImpl::set_generate_restrict_role(bool enable) {
     r_restrict->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_til_c_role(bool enable) {
+    r_til_c->set_enabled(enable);
 }
 
 void FeatureGeneratorImpl::set_generate_top_role(bool enable) {
