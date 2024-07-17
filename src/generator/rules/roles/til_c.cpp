@@ -7,6 +7,7 @@
 
 namespace dlplan::generator::rules {
 void TilCRole::generate_impl(const core::States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) {
+    return;
     //TODO
     if (target_complexity == 3)
     {

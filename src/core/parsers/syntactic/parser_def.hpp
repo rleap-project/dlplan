@@ -298,6 +298,8 @@ namespace dlplan::core::parser
 
     const auto restrict_role_def = lit("r_restrict") > lit('(') > role > lit(',') > concept_ > lit(')');
 
+    const auto til_c_role_def = lit("r_til_c") > lit('(') > role > lit(',') > concept_ > lit(')');
+
     // Note: Need this semantic action to synthesize the empty struct
     const auto top_role_def = lit("r_top") >> x3::attr(ast::TopRole{});
 
@@ -316,7 +318,7 @@ namespace dlplan::core::parser
     const auto numerical_root_def = eps > numerical;
 
     // Note: non recursive comes first, i.e., primitive_role
-    const auto role_def = primitive_role | and_role | compose_role | diff_role | identity_role | inverse_role | not_role | or_role | restrict_role | top_role | transitive_closure_role | transitive_reflexive_closure_role;
+    const auto role_def = primitive_role | and_role | compose_role | diff_role | identity_role | inverse_role | not_role | or_role | restrict_role | til_c_role | top_role | transitive_closure_role | transitive_reflexive_closure_role;
     const auto role_root_def = eps > role;
 
     const auto concept_or_role_def = concept_ | role;
@@ -336,7 +338,7 @@ namespace dlplan::core::parser
         empty_boolean, inclusion_boolean, nullary_boolean,
         all_concept, and_concept, bot_concept, diff_concept, equal_concept, not_concept, one_of_concept, or_concept, primitive_concept, projection_concept, some_concept, subset_concept, top_concept,
         concept_distance_numerical, count_numerical, role_distance_numerical, sum_concept_distance_numerical, sum_role_distance_numerical,
-        and_role, compose_role, diff_role, identity_role, inverse_role, not_role, or_role, primitive_role, restrict_role, top_role, transitive_closure_role, transitive_reflexive_closure_role)
+        and_role, compose_role, diff_role, identity_role, inverse_role, not_role, or_role, primitive_role, restrict_role, til_c_role, top_role, transitive_closure_role, transitive_reflexive_closure_role)
 
     ///////////////////////////////////////////////////////////////////////////
     // Annotation and Error handling

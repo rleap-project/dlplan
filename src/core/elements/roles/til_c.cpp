@@ -5,8 +5,31 @@ namespace dlplan::core
 
     void TilCRole::compute_result(const RoleDenotation &role_denot, const ConceptDenotation &concept_denot, RoleDenotation &result) const
     {
-        //TODO
-        result = role_denot;
+        auto concept_object_indicies = concept_denot.to_vector();
+
+        std::unordered_set<ObjectIndex> current(concept_object_indicies.begin(), concept_object_indicies.end()), next;
+        std::unordered_set<ObjectIndex> visited(concept_object_indicies.begin(), concept_object_indicies.end());
+
+        std::unordered_map<ObjectIndex, std::unordered_set<ObjectIndex>> inv_edges;
+
+        for(auto& pair : role_denot.to_vector()) {
+            auto& [from, to] = pair;
+            inv_edges[to].insert(from);
+        }
+
+        while(current.size() > 0) {
+            for(auto& to : current) {
+                for(auto& from : inv_edges[to]) {
+                    if(! visited.contains(from)) {
+                        result.insert(std::make_pair(from, to));
+                        next.insert(from);
+                    }
+                }
+            }
+            visited.insert(next.begin(), next.end());
+            current = next;
+            next.clear();
+        }
     }
 
     RoleDenotation TilCRole::evaluate_impl(const State &state, DenotationsCaches &caches) const
