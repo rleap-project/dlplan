@@ -30,6 +30,7 @@ TEST(DLPTests, GeneratorDeliveryTest) {
     feature_generator.set_generate_not_role(false);
     feature_generator.set_generate_or_role(false);
     feature_generator.set_generate_top_role(false);
+    feature_generator.set_generate_til_c_role(false);
     feature_generator.set_generate_transitive_reflexive_closure_role(false);
     SyntacticElementFactory syntactic_element_factory(vocabulary_info);
     States states;
