@@ -87,7 +87,7 @@ find_package(dlplan 0.1 REQUIRED COMPONENTS core generator policy statespace nov
 
 ### 3.3. Additional Compile Flags
 
-- -DBUILD_TESTS:BOOL=TRUE enables compilation of tests
+- `-DBUILD_TESTS:BOOL=TRUE` enables compilation of tests
 
 ### 3.4. Building the Python Interface
 
@@ -116,7 +116,7 @@ python3 examples/generator/generator.py
 
 You can run the C++ tests with:
 ```console
-cd build && ctest
+cd build/tests && ctest
 ```
 
 The Python bindings also come with their own set of tests. Run them with
