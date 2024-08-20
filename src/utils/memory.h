@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <utility>
+#include <vector>
 
 namespace dlplan::utils {
 
@@ -21,6 +22,7 @@ namespace dlplan::utils {
 extern void reserve_extra_memory_padding(int memory_in_mb);
 extern void release_extra_memory_padding();
 extern bool extra_memory_padding_is_reserved();
+
 }
 
 #endif
