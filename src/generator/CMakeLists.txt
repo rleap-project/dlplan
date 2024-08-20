@@ -11,8 +11,9 @@ file(GLOB_RECURSE GENERATOR_PUBLIC_HEADER_FILES
 target_sources(dlplangenerator
     PRIVATE
         ${GENERATOR_SRC_FILES} ${GENERATOR_PRIVATE_HEADER_FILES} ${GENERATOR_PUBLIC_HEADER_FILES}
-        ../utils/logging.cpp
-        ../utils/countdown_timer.cpp
+        "../utils/logging.h" "../utils/logging.cpp"
+        "../utils/countdown_timer.h" "../utils/countdown_timer.cpp"
+        "../utils/memory.h" "../utils/memory.cpp"
 )
 target_link_libraries(dlplangenerator
     PUBLIC

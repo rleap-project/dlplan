@@ -11,6 +11,7 @@ file(GLOB_RECURSE STATE_SPACE_PUBLIC_HEADER_FILES
 target_sources(dlplanstatespace
     PRIVATE
         ${STATE_SPACE_SRC_FILES} ${STATE_SPACE_PRIVATE_HEADER_FILES} ${STATE_SPACE_PUBLIC_HEADER_FILES}
+        "../utils/memory.h" "../utils/memory.cpp"
 )
 
 target_link_libraries(dlplanstatespace

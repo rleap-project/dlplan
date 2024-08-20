@@ -1,6 +1,7 @@
 #include "../../include/dlplan/generator.h"
 
 #include "feature_generator.h"
+#include "../utils/memory.h"
 
 
 namespace dlplan::generator {
@@ -37,7 +38,14 @@ GeneratedFeatures FeatureGenerator::generate(
     int distance_numerical_complexity_limit,
     int time_limit,
     int feature_limit) {
-    return m_pImpl->generate(factory, states, concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, count_numerical_complexity_limit, distance_numerical_complexity_limit, time_limit, feature_limit);
+
+    utils::reserve_extra_memory_padding(1);
+
+    auto features = m_pImpl->generate(factory, states, concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, count_numerical_complexity_limit, distance_numerical_complexity_limit, time_limit, feature_limit);
+
+    utils::release_extra_memory_padding();
+
+    return features;
 }
 
 void FeatureGenerator::set_generate_empty_boolean(bool enable) {
