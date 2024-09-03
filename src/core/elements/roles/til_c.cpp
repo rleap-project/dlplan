@@ -96,7 +96,7 @@ namespace dlplan::core
 
     void TilCRole::str_impl(std::stringstream &out) const
     {
-        out << "r_and" << "(";
+        out << "r_til_c" << "(";
         m_role->str(out);
         out << ",";
         m_concept->str(out);
