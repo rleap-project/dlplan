@@ -3,7 +3,6 @@
 #include "generator.h"
 #include "reader.h"
 #include "../utils/collections.h"
-#include "../utils/memory.h"
 
 #include <algorithm>
 #include <deque>
@@ -357,12 +356,8 @@ GeneratorResult generate_state_space(
     int max_time,
     int max_num_states) {
 
-    utils::reserve_extra_memory_padding(1);
-
     generator::generate_state_space_files(domain_file, instance_file, max_time, max_num_states);
     auto result = reader::read(vocabulary_info, index);
-
-    utils::release_extra_memory_padding();
 
     return result;
 }

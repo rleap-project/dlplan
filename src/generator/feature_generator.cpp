@@ -103,9 +103,11 @@ GeneratedFeatures FeatureGeneratorImpl::generate(
     int count_numerical_complexity_limit,
     int distance_numerical_complexity_limit,
     int time_limit,
-    int feature_limit) {
+    int feature_limit)
+{
     // Allow termination with ctrl+c
     auto pre_sigint_handler = std::signal(SIGINT, exit_sigint_handler);
+
     // Initialize statistics in each rule.
     for (auto& r : m_primitive_rules) r->initialize();
     for (auto& r : m_concept_inductive_rules) r->initialize();
@@ -117,9 +119,21 @@ GeneratedFeatures FeatureGeneratorImpl::generate(
     // Initialize cache.
     core::DenotationsCaches caches;
     generate_base(states, data, caches);
-    generate_inductively(states, concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, count_numerical_complexity_limit, distance_numerical_complexity_limit, data, caches);
+
+    try
+    {
+        generate_inductively(states, concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, count_numerical_complexity_limit, distance_numerical_complexity_limit, data, caches);
+        //auto x = new char[std::numeric_limits<std::size_t>::max() / 10];
+        //x[1] = 1;
+    }
+    catch (const std::bad_alloc& e)
+    {
+        std::cout << "Feature generation stopped prematurely due to catching memory exception: " << e.what()  << std::endl;
+    }
+
     // Restore previous sigint handler
     std::signal(SIGINT, pre_sigint_handler);
+
     return data.m_generated_features;
 }
 
