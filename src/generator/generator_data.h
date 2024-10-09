@@ -45,6 +45,10 @@ struct GeneratorData {
         m_feature_limit(feature_limit),
         m_timer(time_limit) { }
 
+    int get_num_features() {
+      return std::get<0>(m_generated_features).size() + std::get<1>(m_generated_features).size() + std::get<2>(m_generated_features).size() + std::get<3>(m_generated_features).size();
+    }
+
     void print_statistics() const {
         std::cout << "Total concept elements: " << std::accumulate(m_concepts_by_iteration.begin(), m_concepts_by_iteration.end(), 0, [&](int current_sum, const auto& e){ return current_sum + e.size(); }) << std::endl
                   << "Total role elements: " << std::accumulate(m_roles_by_iteration.begin(), m_roles_by_iteration.end(), 0, [&](int current_sum, const auto& e){ return current_sum + e.size(); }) << std::endl
@@ -53,7 +57,7 @@ struct GeneratorData {
     }
 
     bool reached_resource_limit() {
-      return (static_cast<int>(std::get<0>(m_generated_features).size() + std::get<1>(m_generated_features).size() + std::get<2>(m_generated_features).size() + std::get<3>(m_generated_features).size()) >= m_feature_limit || m_timer.is_expired());
+      return (get_num_features() >= m_feature_limit || m_timer.is_expired());
     }
 };
 

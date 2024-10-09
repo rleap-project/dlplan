@@ -163,6 +163,7 @@ void FeatureGeneratorImpl::generate_inductively(
     utils::g_log << "Started generating composite features. " << std::endl;
     int max_complexity = std::max({concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, count_numerical_complexity_limit, distance_numerical_complexity_limit});
     for (int target_complexity = 2; target_complexity <= max_complexity; ++target_complexity) {  // every composition adds at least one complexity
+        const auto num_features = data.get_num_features();
         if (target_complexity <= concept_complexity_limit) {
             if (data.reached_resource_limit()) break;
             for (const auto& rule : m_concept_inductive_rules) {
@@ -195,6 +196,11 @@ void FeatureGeneratorImpl::generate_inductively(
         utils::g_log << "Complexity " << target_complexity << ":" << std::endl;
         data.print_statistics();
         print_statistics();
+
+        if (num_features == data.get_num_features()) {
+            utils::g_log << "Feature generation converged." << std::endl;
+            break;
+        }
     }
     utils::g_log << "Finished generating composite features." << std::endl;
 }
