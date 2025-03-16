@@ -26,9 +26,10 @@ namespace dlplan::utils {
 class Log {
 private:
     bool line_has_started = false;
-    const bool silent = true;
+    bool silent = false;
 
 public:
+    Log();
     template<typename T>
     Log &operator<<(const T &elem) {
         if (silent) {
@@ -46,13 +47,12 @@ public:
 
     using manip_function = std::ostream &(*)(std::ostream &);
     Log &operator<<(manip_function f) {
+        if (silent) {
+            return *this;
+        }
         if (f == static_cast<manip_function>(&std::endl)) {
             line_has_started = false;
         }
-        if (silent) {
-          return *this;
-        }
-
         std::cout << f;
         return *this;
     }
